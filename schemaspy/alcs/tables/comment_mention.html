@@ -74,6 +74,19 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>comment_mention</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-text-o"></i>
+                            <h3 id="Description" class="box-title">Description</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body clearfix">
+                            <p>Links comment mentions with the corresponding user</p>
+                        </div><!-- /.box-body -->
+                    </div>
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -326,29 +339,60 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="comment.html" target="_top" title="comment" alt="" coords="288,121,527,297">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,228,244,404">
-<area shape="rect" id="node3" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="571,5,964,339">
+<area shape="rect" id="node1" href="comment.html" target="_top" title="comment" alt="" coords="313,121,577,297">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,227,269,608">
+<area shape="rect" id="node3" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="621,5,1057,339">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/comment_mention.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="167,5,448,93">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,253,123,341">
-<area shape="rect" id="node3" href="card.html" target="_top" title="card" alt="" coords="249,147,366,235">
-<area shape="rect" id="node4" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="492,76,685,164">
-<area shape="rect" id="node5" href="comment.html" target="_top" title="comment" alt="" coords="507,183,670,271">
-<area shape="rect" id="node6" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="729,20,1123,353">
-<area shape="rect" id="node7" href="document.html" target="_top" title="document" alt="" coords="223,324,391,412">
-<area shape="rect" id="node8" href="notification.html" target="_top" title="notification" alt="" coords="217,429,397,517">
-<area shape="rect" id="node9" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="213,535,402,623">
+<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="213,5,524,93">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,396,132,484">
+<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="176,111,561,199">
+<area shape="rect" id="node4" href="card.html" target="_top" title="card" alt="" coords="305,252,432,340">
+<area shape="rect" id="node5" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="605,181,817,269">
+<area shape="rect" id="node6" href="comment.html" target="_top" title="comment" alt="" coords="624,288,799,376">
+<area shape="rect" id="node7" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="861,125,1297,459">
+<area shape="rect" id="node8" href="document.html" target="_top" title="document" alt="" coords="278,429,459,517">
+<area shape="rect" id="node9" href="message.html" target="_top" title="message" alt="" coords="284,535,453,623">
+<area shape="rect" id="node10" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="189,640,548,728">
+<area shape="rect" id="node11" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="211,745,526,833">
+<area shape="rect" id="node12" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="265,851,472,939">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/comment_mention.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="comment.html" target="_top" title="comment" alt="" coords="313,121,577,297">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,227,269,608">
+<area shape="rect" id="node3" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="621,5,1057,339">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/comment_mention.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="472,216,783,304">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="264,428,391,516">
+<area shape="rect" id="node4" href="configuration.html" target="_top" title="configuration" alt="" coords="5,425,220,513">
+<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="435,5,820,93">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="564,357,691,445">
+<area shape="rect" id="node6" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="864,393,1076,481">
+<area shape="rect" id="node7" href="comment.html" target="_top" title="comment" alt="" coords="883,288,1057,376">
+<area shape="rect" id="node8" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1120,177,1556,511">
+<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="537,745,718,833">
+<area shape="rect" id="node10" href="message.html" target="_top" title="message" alt="" coords="543,535,712,623">
+<area shape="rect" id="node11" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="448,640,807,728">
+<area shape="rect" id="node12" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="470,851,785,939">
+<area shape="rect" id="node13" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="524,111,731,199">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/comment_mention.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

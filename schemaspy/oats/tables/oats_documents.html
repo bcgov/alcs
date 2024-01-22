@@ -546,20 +546,20 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>oats_docu_chk</td>
-                                    <td>((((alr_application_id IS NOT NULL) AND (issue_id IS NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NULL) AND (planning_review_id IS NOT NULL))))</td>
-                                </tr>
-                                <tr>
                                     <td>oats_od_risri_chk</td>
                                     <td>(((referenced_in_staff_rpt_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
-                                    <td>oats_od_alvi_chk</td>
-                                    <td>(((app_lg_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    <td>oats_docu_chk</td>
+                                    <td>((((alr_application_id IS NOT NULL) AND (issue_id IS NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NULL) AND (planning_review_id IS NOT NULL))))</td>
                                 </tr>
                                 <tr>
                                     <td>oats_od_pvi_chk</td>
                                     <td>(((publicly_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_od_alvi_chk</td>
+                                    <td>(((app_lg_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -584,55 +584,55 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="oats_documents.html" target="_top" title="oats_documents" alt="" coords="773,99,1183,696">
-<area shape="rect" id="node2" href="oats_alr_applications.html" target="_top" title="oats_alr_applications" alt="" coords="18,169,339,521">
-<area shape="rect" id="node3" href="oats_document_codes.html" target="_top" title="oats_document_codes" alt="" coords="429,5,697,152">
-<area shape="rect" id="node4" href="oats_document_source_codes.html" target="_top" title="oats_document_source_codes" alt="" coords="396,435,729,552">
-<area shape="rect" id="node5" href="oats_issues.html" target="_top" title="oats_issues" alt="" coords="5,617,352,852">
-<area shape="rect" id="node6" href="oats_planning_reviews.html" target="_top" title="oats_planning_reviews" alt="" coords="418,241,707,417">
-<area shape="rect" id="node7" href="oats_subject_properties.html" target="_top" title="oats_subject_properties" alt="" coords="421,569,705,775">
+<area shape="rect" id="node1" href="oats_documents.html" target="_top" title="oats_documents" alt="" coords="845,99,1296,696">
+<area shape="rect" id="node2" href="oats_alr_applications.html" target="_top" title="oats_alr_applications" alt="" coords="19,169,373,521">
+<area shape="rect" id="node3" href="oats_document_codes.html" target="_top" title="oats_document_codes" alt="" coords="467,5,765,152">
+<area shape="rect" id="node4" href="oats_document_source_codes.html" target="_top" title="oats_document_source_codes" alt="" coords="431,435,801,552">
+<area shape="rect" id="node5" href="oats_issues.html" target="_top" title="oats_issues" alt="" coords="5,617,387,852">
+<area shape="rect" id="node6" href="oats_planning_reviews.html" target="_top" title="oats_planning_reviews" alt="" coords="455,241,777,417">
+<area shape="rect" id="node7" href="oats_subject_properties.html" target="_top" title="oats_subject_properties" alt="" coords="458,569,774,775">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/oats_documents.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="oats_accomplishments.html" target="_top" title="oats_accomplishments" alt="" coords="783,779,1059,867">
-<area shape="rect" id="node2" href="oats_alr_applications.html" target="_top" title="oats_alr_applications" alt="" coords="401,835,661,923">
-<area shape="rect" id="node10" href="oats_alc_staffs.html" target="_top" title="oats_alc_staffs" alt="" coords="67,780,271,868">
-<area shape="rect" id="node11" href="oats_application_class_codes.html" target="_top" title="oats_application_class_codes" alt="" coords="5,885,332,973">
-<area shape="rect" id="node3" href="oats_adjacent_land_uses.html" target="_top" title="oats_adjacent_land_uses" alt="" coords="776,884,1067,972">
-<area shape="rect" id="node4" href="oats_alr_appl_components.html" target="_top" title="oats_alr_appl_components" alt="" coords="1586,848,1893,936">
-<area shape="rect" id="node5" href="oats_alr_appl_decisions.html" target="_top" title="oats_alr_appl_decisions" alt="" coords="1184,989,1464,1077">
-<area shape="rect" id="node6" href="oats_reconsideration_requests.html" target="_top" title="oats_reconsideration_requests" alt="" coords="749,989,1093,1077">
-<area shape="rect" id="node7" href="oats_alr_application_meetings.html" target="_top" title="oats_alr_application_meetings" alt="" coords="752,1131,1091,1219">
-<area shape="rect" id="node8" href="oats_alr_application_parties.html" target="_top" title="oats_alr_application_parties" alt="" coords="761,1624,1081,1712">
-<area shape="rect" id="node9" href="oats_person_organizations.html" target="_top" title="oats_person_organizations" alt="" coords="376,1799,685,1887">
-<area shape="rect" id="node12" href="oats_alr_unvalidated_app_data.html" target="_top" title="oats_alr_unvalidated_app_data" alt="" coords="749,1236,1093,1324">
-<area shape="rect" id="node13" href="oats_committee_recommendations.html" target="_top" title="oats_committee_recommendations" alt="" coords="729,1341,1113,1429">
-<area shape="rect" id="node14" href="oats_complaint_appeals.html" target="_top" title="oats_complaint_appeals" alt="" coords="1181,1975,1467,2063">
-<area shape="rect" id="node15" href="oats_issues.html" target="_top" title="oats_issues" alt="" coords="833,1907,1009,1995">
-<area shape="rect" id="node23" href="oats_complaint_codes.html" target="_top" title="oats_complaint_codes" alt="" coords="397,2009,665,2097">
-<area shape="rect" id="node24" href="oats_inquiry_codes.html" target="_top" title="oats_inquiry_codes" alt="" coords="409,1904,652,1992">
-<area shape="rect" id="node16" href="oats_documents.html" target="_top" title="oats_documents" alt="" coords="1535,1649,1944,2247">
-<area shape="rect" id="node17" href="oats_document_codes.html" target="_top" title="oats_document_codes" alt="" coords="1190,1528,1458,1675">
-<area shape="rect" id="node18" href="oats_document_source_codes.html" target="_top" title="oats_document_source_codes" alt="" coords="1157,2080,1491,2197">
-<area shape="rect" id="node19" href="oats_planning_reviews.html" target="_top" title="oats_planning_reviews" alt="" coords="1179,2320,1469,2496">
-<area shape="rect" id="node20" href="oats_subject_properties.html" target="_top" title="oats_subject_properties" alt="" coords="1182,1728,1466,1816">
-<area shape="rect" id="node32" href="oats_planning_review_codes.html" target="_top" title="oats_planning_review_codes" alt="" coords="761,2313,1082,2401">
-<area shape="rect" id="node37" href="oats_properties.html" target="_top" title="oats_properties" alt="" coords="814,1765,1029,1853">
-<area shape="rect" id="node21" href="oats_email_notifications.html" target="_top" title="oats_email_notifications" alt="" coords="777,5,1066,93">
-<area shape="rect" id="node22" href="oats_issue_notes.html" target="_top" title="oats_issue_notes" alt="" coords="1212,2215,1436,2303">
-<area shape="rect" id="node25" href="oats_land_use_permits.html" target="_top" title="oats_land_use_permits" alt="" coords="785,111,1058,199">
-<area shape="rect" id="node26" href="oats_local_gov_actions.html" target="_top" title="oats_local_gov_actions" alt="" coords="785,216,1057,304">
-<area shape="rect" id="node27" href="oats_local_gov_services.html" target="_top" title="oats_local_gov_services" alt="" coords="782,321,1061,409">
-<area shape="rect" id="node28" href="oats_local_government_reports.html" target="_top" title="oats_local_government_reports" alt="" coords="747,1519,1095,1607">
-<area shape="rect" id="node29" href="oats_notice_intent_info_rqst.html" target="_top" title="oats_notice_intent_info_rqst" alt="" coords="761,427,1082,515">
-<area shape="rect" id="node30" href="oats_planning_decisions.html" target="_top" title="oats_planning_decisions" alt="" coords="1596,2375,1883,2463">
-<area shape="rect" id="node31" href="oats_planning_review_notes.html" target="_top" title="oats_planning_review_notes" alt="" coords="1579,2269,1900,2357">
-<area shape="rect" id="node33" href="oats_property_interests.html" target="_top" title="oats_property_interests" alt="" coords="1597,1476,1881,1564">
-<area shape="rect" id="node34" href="oats_related_alr_applications.html" target="_top" title="oats_related_alr_applications" alt="" coords="756,532,1087,620">
-<area shape="rect" id="node35" href="oats_staff_journal_entries.html" target="_top" title="oats_staff_journal_entries" alt="" coords="771,637,1072,725">
-<area shape="rect" id="node36" href="oats_stop_work_order_rcpnts.html" target="_top" title="oats_stop_work_order_rcpnts" alt="" coords="1159,1833,1489,1921">
+<area shape="rect" id="node1" href="oats_accomplishments.html" target="_top" title="oats_accomplishments" alt="" coords="862,779,1166,867">
+<area shape="rect" id="node2" href="oats_alr_applications.html" target="_top" title="oats_alr_applications" alt="" coords="443,835,731,923">
+<area shape="rect" id="node10" href="oats_alc_staffs.html" target="_top" title="oats_alc_staffs" alt="" coords="75,780,301,868">
+<area shape="rect" id="node11" href="oats_application_class_codes.html" target="_top" title="oats_application_class_codes" alt="" coords="5,885,371,973">
+<area shape="rect" id="node3" href="oats_adjacent_land_uses.html" target="_top" title="oats_adjacent_land_uses" alt="" coords="853,884,1175,972">
+<area shape="rect" id="node4" href="oats_alr_appl_components.html" target="_top" title="oats_alr_appl_components" alt="" coords="1739,848,2079,936">
+<area shape="rect" id="node5" href="oats_alr_appl_decisions.html" target="_top" title="oats_alr_appl_decisions" alt="" coords="1299,989,1611,1077">
+<area shape="rect" id="node6" href="oats_reconsideration_requests.html" target="_top" title="oats_reconsideration_requests" alt="" coords="823,989,1205,1077">
+<area shape="rect" id="node7" href="oats_alr_application_meetings.html" target="_top" title="oats_alr_application_meetings" alt="" coords="825,1131,1203,1219">
+<area shape="rect" id="node8" href="oats_alr_application_parties.html" target="_top" title="oats_alr_application_parties" alt="" coords="836,1624,1192,1712">
+<area shape="rect" id="node9" href="oats_person_organizations.html" target="_top" title="oats_person_organizations" alt="" coords="415,1799,759,1887">
+<area shape="rect" id="node12" href="oats_alr_unvalidated_app_data.html" target="_top" title="oats_alr_unvalidated_app_data" alt="" coords="823,1236,1205,1324">
+<area shape="rect" id="node13" href="oats_committee_recommendations.html" target="_top" title="oats_committee_recommendations" alt="" coords="803,1341,1225,1429">
+<area shape="rect" id="node14" href="oats_complaint_appeals.html" target="_top" title="oats_complaint_appeals" alt="" coords="1297,1975,1613,2063">
+<area shape="rect" id="node15" href="oats_issues.html" target="_top" title="oats_issues" alt="" coords="917,1907,1111,1995">
+<area shape="rect" id="node23" href="oats_complaint_codes.html" target="_top" title="oats_complaint_codes" alt="" coords="439,2009,735,2097">
+<area shape="rect" id="node24" href="oats_inquiry_codes.html" target="_top" title="oats_inquiry_codes" alt="" coords="453,1904,721,1992">
+<area shape="rect" id="node16" href="oats_documents.html" target="_top" title="oats_documents" alt="" coords="1684,1649,2135,2247">
+<area shape="rect" id="node17" href="oats_document_codes.html" target="_top" title="oats_document_codes" alt="" coords="1306,1528,1603,1675">
+<area shape="rect" id="node18" href="oats_document_source_codes.html" target="_top" title="oats_document_source_codes" alt="" coords="1269,2080,1640,2197">
+<area shape="rect" id="node19" href="oats_planning_reviews.html" target="_top" title="oats_planning_reviews" alt="" coords="1293,2320,1616,2496">
+<area shape="rect" id="node20" href="oats_subject_properties.html" target="_top" title="oats_subject_properties" alt="" coords="1297,1728,1613,1816">
+<area shape="rect" id="node32" href="oats_planning_review_codes.html" target="_top" title="oats_planning_review_codes" alt="" coords="835,2313,1193,2401">
+<area shape="rect" id="node37" href="oats_properties.html" target="_top" title="oats_properties" alt="" coords="896,1765,1132,1853">
+<area shape="rect" id="node21" href="oats_email_notifications.html" target="_top" title="oats_email_notifications" alt="" coords="855,5,1173,93">
+<area shape="rect" id="node22" href="oats_issue_notes.html" target="_top" title="oats_issue_notes" alt="" coords="1331,2215,1579,2303">
+<area shape="rect" id="node25" href="oats_land_use_permits.html" target="_top" title="oats_land_use_permits" alt="" coords="862,111,1166,199">
+<area shape="rect" id="node26" href="oats_local_gov_actions.html" target="_top" title="oats_local_gov_actions" alt="" coords="862,216,1166,304">
+<area shape="rect" id="node27" href="oats_local_gov_services.html" target="_top" title="oats_local_gov_services" alt="" coords="857,321,1171,409">
+<area shape="rect" id="node28" href="oats_local_government_reports.html" target="_top" title="oats_local_government_reports" alt="" coords="820,1519,1208,1607">
+<area shape="rect" id="node29" href="oats_notice_intent_info_rqst.html" target="_top" title="oats_notice_intent_info_rqst" alt="" coords="835,427,1193,515">
+<area shape="rect" id="node30" href="oats_planning_decisions.html" target="_top" title="oats_planning_decisions" alt="" coords="1749,2375,2069,2463">
+<area shape="rect" id="node31" href="oats_planning_review_notes.html" target="_top" title="oats_planning_review_notes" alt="" coords="1731,2269,2088,2357">
+<area shape="rect" id="node33" href="oats_property_interests.html" target="_top" title="oats_property_interests" alt="" coords="1751,1476,2067,1564">
+<area shape="rect" id="node34" href="oats_related_alr_applications.html" target="_top" title="oats_related_alr_applications" alt="" coords="831,532,1197,620">
+<area shape="rect" id="node35" href="oats_staff_journal_entries.html" target="_top" title="oats_staff_journal_entries" alt="" coords="847,637,1181,725">
+<area shape="rect" id="node36" href="oats_stop_work_order_rcpnts.html" target="_top" title="oats_stop_work_order_rcpnts" alt="" coords="1271,1833,1638,1921">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/oats_documents.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

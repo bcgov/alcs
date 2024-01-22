@@ -74,6 +74,19 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>application_reconsideration_outcome_type</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-text-o"></i>
+                            <h3 id="Description" class="box-title">Description</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body clearfix">
+                            <p>Code table for possible application reconsideration review outcomes</p>
+                        </div><!-- /.box-body -->
+                    </div>
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -220,6 +233,11 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="application_reconsideration.decision_outcome_code references application_reconsideration_outcome_type.code via FK_5ff8560b8706d509474e4124435"><a href='application_reconsideration.html'>application_reconsideration</a><span class='relatedKey'>.decision_outcome_code</span></td>
+                                                <td class="constraint detail">FK_5ff8560b8706d509474e4124435</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="application_reconsideration.review_outcome_code references application_reconsideration_outcome_type.code via FK_bcb7f86e9e22f3632cf52135540"><a href='application_reconsideration.html'>application_reconsideration</a><span class='relatedKey'>.review_outcome_code</span></td>
                                                 <td class="constraint detail">FK_bcb7f86e9e22f3632cf52135540</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
@@ -314,20 +332,20 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="624,155,945,389">
-<area shape="rect" id="node2" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="5,5,580,309">
+<area shape="rect" id="node1" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="687,96,1051,360">
+<area shape="rect" id="node2" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="5,5,643,309">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_reconsideration_outcome_type.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="366,5,542,93">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="5,200,123,288">
-<area shape="rect" id="node3" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1151,195,1405,283">
-<area shape="rect" id="node4" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="785,260,1107,495">
-<area shape="rect" id="node5" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="167,111,741,415">
-<area shape="rect" id="node6" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="271,468,637,556">
-<area shape="rect" id="node7" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="1449,229,1833,317">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="399,5,591,93">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="5,200,132,288">
+<area shape="rect" id="node3" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1265,149,1547,237">
+<area shape="rect" id="node4" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="857,215,1221,479">
+<area shape="rect" id="node5" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="176,111,813,415">
+<area shape="rect" id="node6" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="291,468,698,556">
+<area shape="rect" id="node7" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="1591,184,2020,272">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_reconsideration_outcome_type.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

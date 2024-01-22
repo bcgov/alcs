@@ -74,6 +74,19 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>user</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-text-o"></i>
+                            <h3 id="Description" class="box-title">Description</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body clearfix">
+                            <p>Authenticated users and their attributes</p>
+                        </div><!-- /.box-body -->
+                    </div>
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -208,6 +221,11 @@
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
+                                                <td title="application_submission_review.created_by_uuid references user.uuid via FK_9e40c625d904c15cc05b9a04ff9"><a href='application_submission_review.html'>application_submission_review</a><span class='relatedKey'>.created_by_uuid</span></td>
+                                                <td class="constraint detail">FK_9e40c625d904c15cc05b9a04ff9</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="card.assignee_uuid references user.uuid via FK_e91ded29d40ce244c61402e65fe"><a href='card.html'>card</a><span class='relatedKey'>.assignee_uuid</span></td>
                                                 <td class="constraint detail">FK_e91ded29d40ce244c61402e65fe</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
@@ -233,13 +251,23 @@
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
-                                                <td title="notification.actor_uuid references user.uuid via FK_fc0e9a26b0a8f7c76658ca1c6ca"><a href='notification.html'>notification</a><span class='relatedKey'>.actor_uuid</span></td>
-                                                <td class="constraint detail">FK_fc0e9a26b0a8f7c76658ca1c6ca</td>
+                                                <td title="message.actor_uuid references user.uuid via FK_f9d295dbeac38c6b05f0994b415"><a href='message.html'>message</a><span class='relatedKey'>.actor_uuid</span></td>
+                                                <td class="constraint detail">FK_f9d295dbeac38c6b05f0994b415</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
-                                                <td title="notification.receiver_uuid references user.uuid via FK_b776eec36c2a6b6879c14241e91"><a href='notification.html'>notification</a><span class='relatedKey'>.receiver_uuid</span></td>
-                                                <td class="constraint detail">FK_b776eec36c2a6b6879c14241e91</td>
+                                                <td title="message.receiver_uuid references user.uuid via FK_23212dcb31290e8972bd4e8aa4d"><a href='message.html'>message</a><span class='relatedKey'>.receiver_uuid</span></td>
+                                                <td class="constraint detail">FK_23212dcb31290e8972bd4e8aa4d</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="notice_of_intent_submission.created_by_uuid references user.uuid via FK_ad65e20b0787e13906e0f36f1cf"><a href='notice_of_intent_submission.html'>notice_of_intent_submission</a><span class='relatedKey'>.created_by_uuid</span></td>
+                                                <td class="constraint detail">FK_ad65e20b0787e13906e0f36f1cf</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="notification_submission.created_by_uuid references user.uuid via FK_99aed25adf97bc0591103e246c2"><a href='notification_submission.html'>notification_submission</a><span class='relatedKey'>.created_by_uuid</span></td>
+                                                <td class="constraint detail">FK_99aed25adf97bc0591103e246c2</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
@@ -273,7 +301,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="display_name">display_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="display_name">display_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -285,6 +313,11 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="user.display_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -324,7 +357,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="name">name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="name">name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -336,12 +369,17 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="user.name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="given_name">given_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="given_name">given_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -353,12 +391,17 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="user.given_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="family_name">family_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="family_name">family_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -370,6 +413,11 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="user.family_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -392,7 +440,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="idir_user_name">idir_user_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="idir_user_name">idir_user_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -404,6 +452,11 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="user.idir_user_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -426,7 +479,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="bceid_user_name">bceid_user_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="bceid_user_name">bceid_user_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -438,6 +491,11 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="user.bceid_user_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -489,6 +547,28 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="business_name">business_name</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="user.business_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -560,54 +640,149 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="443,5,887,240">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,392,399,1048">
-<area shape="rect" id="node3" href="card.html" target="_top" title="card" alt="" coords="545,293,784,528">
-<area shape="rect" id="node4" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="931,165,1169,371">
-<area shape="rect" id="node5" href="comment.html" target="_top" title="comment" alt="" coords="931,388,1169,564">
-<area shape="rect" id="node6" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1213,421,1456,597">
-<area shape="rect" id="node7" href="document.html" target="_top" title="document" alt="" coords="545,617,784,793">
-<area shape="rect" id="node8" href="notification.html" target="_top" title="notification" alt="" coords="575,811,755,987">
-<area shape="rect" id="node9" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="545,1004,784,1209">
+<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="497,5,992,211">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,741,441,1427">
+<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="552,228,937,521">
+<area shape="rect" id="node4" href="card.html" target="_top" title="card" alt="" coords="613,575,877,809">
+<area shape="rect" id="node5" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1048,447,1312,652">
+<area shape="rect" id="node6" href="comment.html" target="_top" title="comment" alt="" coords="1048,669,1312,845">
+<area shape="rect" id="node7" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1356,703,1620,879">
+<area shape="rect" id="node8" href="document.html" target="_top" title="document" alt="" coords="613,899,877,1104">
+<area shape="rect" id="node9" href="message.html" target="_top" title="message" alt="" coords="655,1121,835,1297">
+<area shape="rect" id="node10" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="485,1315,1004,1491">
+<area shape="rect" id="node11" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="587,1508,902,1743">
+<area shape="rect" id="node12" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="613,1760,877,1995">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/user.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="757,113,933,201">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="503,429,621,517">
-<area shape="rect" id="node11" href="user.html" target="_top" title="user" alt="" coords="5,837,399,1493">
-<area shape="rect" id="node14" href="board.html" target="_top" title="board" alt="" coords="137,321,267,409">
-<area shape="rect" id="node15" href="card_status.html" target="_top" title="card_status" alt="" coords="113,427,291,515">
-<area shape="rect" id="node16" href="card_type.html" target="_top" title="card_type" alt="" coords="121,532,283,620">
-<area shape="rect" id="node3" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1055,715,1405,803">
-<area shape="rect" id="node4" href="document.html" target="_top" title="document" alt="" coords="725,712,964,888">
-<area shape="rect" id="node5" href="application_document.html" target="_top" title="application_document" alt="" coords="1094,609,1366,697">
-<area shape="rect" id="node6" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1083,5,1377,93">
-<area shape="rect" id="node7" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1496,941,1735,1029">
-<area shape="rect" id="node8" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1008,925,1452,1160">
-<area shape="rect" id="node12" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="746,1047,943,1135">
-<area shape="rect" id="node13" href="application_status.html" target="_top" title="application_status" alt="" coords="726,905,963,993">
-<area shape="rect" id="node9" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1497,685,1734,773">
-<area shape="rect" id="node10" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1069,112,1391,200">
-<area shape="rect" id="node17" href="card_history.html" target="_top" title="card_history" alt="" coords="752,219,937,307">
-<area shape="rect" id="node18" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="748,1152,941,1240">
-<area shape="rect" id="node19" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="443,1151,681,1239">
-<area shape="rect" id="node20" href="comment.html" target="_top" title="comment" alt="" coords="763,1257,926,1345">
-<area shape="rect" id="node21" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1109,1292,1351,1380">
-<area shape="rect" id="node22" href="covenant.html" target="_top" title="covenant" alt="" coords="765,324,925,412">
-<area shape="rect" id="node23" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="735,571,954,659">
-<area shape="rect" id="node24" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1034,820,1426,908">
-<area shape="rect" id="node25" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1062,504,1398,592">
-<area shape="rect" id="node26" href="notification.html" target="_top" title="notification" alt="" coords="472,957,652,1133">
-<area shape="rect" id="node27" href="planning_review.html" target="_top" title="planning_review" alt="" coords="734,429,955,517">
-<area shape="rect" id="node28" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1111,281,1349,487">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="829,781,1021,869">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="554,851,681,939">
+<area shape="rect" id="node11" href="user.html" target="_top" title="user" alt="" coords="5,1232,441,1917">
+<area shape="rect" id="node15" href="board.html" target="_top" title="board" alt="" coords="153,953,293,1041">
+<area shape="rect" id="node16" href="card_status.html" target="_top" title="card_status" alt="" coords="125,743,321,831">
+<area shape="rect" id="node17" href="card_type.html" target="_top" title="card_type" alt="" coords="134,848,313,936">
+<area shape="rect" id="node3" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1167,1868,1555,1956">
+<area shape="rect" id="node4" href="document.html" target="_top" title="document" alt="" coords="793,1421,1057,1627">
+<area shape="rect" id="node5" href="application_document.html" target="_top" title="application_document" alt="" coords="1211,1001,1510,1089">
+<area shape="rect" id="node6" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1199,5,1522,93">
+<area shape="rect" id="node7" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1821,769,2083,857">
+<area shape="rect" id="node8" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1113,216,1608,421">
+<area shape="rect" id="node12" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="817,571,1033,659">
+<area shape="rect" id="node9" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1821,512,2083,600">
+<area shape="rect" id="node10" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1183,111,1538,199">
+<area shape="rect" id="node13" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1168,439,1553,732">
+<area shape="rect" id="node14" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="1688,225,2216,313">
+<area shape="rect" id="node18" href="card_history.html" target="_top" title="card_history" alt="" coords="823,360,1027,448">
+<area shape="rect" id="node19" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="819,1316,1031,1404">
+<area shape="rect" id="node20" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="485,1387,749,1475">
+<area shape="rect" id="node21" href="comment.html" target="_top" title="comment" alt="" coords="838,1857,1013,1945">
+<area shape="rect" id="node22" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1229,2079,1492,2167">
+<area shape="rect" id="node23" href="covenant.html" target="_top" title="covenant" alt="" coords="839,465,1012,553">
+<area shape="rect" id="node24" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1810,331,2094,419">
+<area shape="rect" id="node25" href="message.html" target="_top" title="message" alt="" coords="527,1628,707,1804">
+<area shape="rect" id="node26" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="805,1211,1045,1299">
+<area shape="rect" id="node27" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1143,1973,1578,2061">
+<area shape="rect" id="node28" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1188,1569,1533,1657">
+<area shape="rect" id="node29" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1175,1464,1546,1552">
+<area shape="rect" id="node30" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="1797,1569,2107,1657">
+<area shape="rect" id="node31" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1101,1675,1620,1851">
+<area shape="rect" id="node32" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="1797,1675,2107,1763">
+<area shape="rect" id="node33" href="notice_of_intent_submission_to__fcf833b2.html" target="_top" title="notice_of_intent_submission_to_submission_status" alt="" coords="1664,1780,2240,1868">
+<area shape="rect" id="node34" href="notification.html" target="_top" title="notification" alt="" coords="827,1031,1023,1119">
+<area shape="rect" id="node35" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1210,1359,1511,1447">
+<area shape="rect" id="node36" href="notification_parcel.html" target="_top" title="notification_parcel" alt="" coords="1819,1109,2085,1197">
+<area shape="rect" id="node37" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1203,1107,1518,1341">
+<area shape="rect" id="node38" href="notification_submission_to_subm_de1feb40.html" target="_top" title="notification_submission_to_submission_status" alt="" coords="1686,1215,2218,1303">
+<area shape="rect" id="node39" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="1799,1004,2105,1092">
+<area shape="rect" id="node40" href="planning_review.html" target="_top" title="planning_review" alt="" coords="804,676,1047,764">
+<area shape="rect" id="node41" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1229,749,1493,984">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/user.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="756,955,1251,1160">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="264,835,700,1520">
+<area shape="rect" id="node4" href="configuration.html" target="_top" title="configuration" alt="" coords="5,1175,220,1292">
+<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="811,5,1196,299">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="871,1213,1135,1448">
+<area shape="rect" id="node6" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1307,1085,1571,1291">
+<area shape="rect" id="node7" href="comment.html" target="_top" title="comment" alt="" coords="1307,1308,1571,1484">
+<area shape="rect" id="node8" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1615,1341,1879,1517">
+<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="871,1537,1135,1743">
+<area shape="rect" id="node10" href="message.html" target="_top" title="message" alt="" coords="913,316,1093,492">
+<area shape="rect" id="node11" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="744,509,1263,685">
+<area shape="rect" id="node12" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="846,1760,1161,1995">
+<area shape="rect" id="node13" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="871,703,1135,937">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/user.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="1192,729,1384,817">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="927,872,1054,960">
+<area shape="rect" id="node3" href="local_government.html" target="_top" title="local_government" alt="" coords="863,1009,1119,1097">
+<area shape="rect" id="node13" href="user.html" target="_top" title="user" alt="" coords="321,1499,757,2184">
+<area shape="rect" id="node18" href="board.html" target="_top" title="board" alt="" coords="469,869,609,957">
+<area shape="rect" id="node19" href="card_status.html" target="_top" title="card_status" alt="" coords="441,975,637,1063">
+<area shape="rect" id="node20" href="card_type.html" target="_top" title="card_type" alt="" coords="450,764,629,852">
+<area shape="rect" id="node10" href="configuration.html" target="_top" title="configuration" alt="" coords="5,1815,220,1903">
+<area shape="rect" id="node4" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1519,1692,1907,1780">
+<area shape="rect" id="node5" href="document.html" target="_top" title="document" alt="" coords="1197,1465,1379,1553">
+<area shape="rect" id="node6" href="application_document.html" target="_top" title="application_document" alt="" coords="1563,1272,1862,1360">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1551,445,1874,533">
+<area shape="rect" id="node8" href="application_owner.html" target="_top" title="application_owner" alt="" coords="2173,761,2435,849">
+<area shape="rect" id="node9" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1465,1049,1960,1255">
+<area shape="rect" id="node14" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="1180,1292,1396,1380">
+<area shape="rect" id="node11" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="2173,1233,2435,1321">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1535,551,1890,639">
+<area shape="rect" id="node15" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1520,2295,1905,2383">
+<area shape="rect" id="node16" href="application_submission_search_view.html" target="_top" title="application_submission_search_view" alt="" coords="321,2353,757,2417">
+<area shape="rect" id="node17" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="2040,1111,2568,1199">
+<area shape="rect" id="node21" href="card_history.html" target="_top" title="card_history" alt="" coords="1186,624,1390,712">
+<area shape="rect" id="node22" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1182,1659,1394,1747">
+<area shape="rect" id="node23" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="859,1695,1123,1783">
+<area shape="rect" id="node24" href="comment.html" target="_top" title="comment" alt="" coords="1201,1836,1375,1924">
+<area shape="rect" id="node25" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1581,2096,1844,2184">
+<area shape="rect" id="node26" href="covenant.html" target="_top" title="covenant" alt="" coords="1201,940,1375,1028">
+<area shape="rect" id="node27" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="2162,252,2446,340">
+<area shape="rect" id="node28" href="holiday_entity.html" target="_top" title="holiday_entity" alt="" coords="429,2435,650,2523">
+<area shape="rect" id="node29" href="inbox_application_submission_view.html" target="_top" title="inbox_application_submission_view" alt="" coords="327,2540,751,2604">
+<area shape="rect" id="node30" href="message.html" target="_top" title="message" alt="" coords="901,1872,1081,2048">
+<area shape="rect" id="node31" href="migrations.html" target="_top" title="migrations" alt="" coords="445,2621,634,2709">
+<area shape="rect" id="node32" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="1168,835,1408,923">
+<area shape="rect" id="node33" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="2139,656,2469,744">
+<area shape="rect" id="node34" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1527,656,1898,744">
+<area shape="rect" id="node35" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="2636,1137,3071,1225">
+<area shape="rect" id="node36" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1540,1445,1885,1533">
+<area shape="rect" id="node37" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="2149,1356,2459,1444">
+<area shape="rect" id="node38" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1453,1797,1972,1973">
+<area shape="rect" id="node39" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="2149,1505,2459,1593">
+<area shape="rect" id="node40" href="notice_of_intent_submission_search_view.html" target="_top" title="notice_of_intent_submission_search_view" alt="" coords="298,2727,781,2791">
+<area shape="rect" id="node41" href="notice_of_intent_submission_to__fcf833b2.html" target="_top" title="notice_of_intent_submission_to_submission_status" alt="" coords="2016,1800,2592,1888">
+<area shape="rect" id="node42" href="notification.html" target="_top" title="notification" alt="" coords="1190,1151,1386,1239">
+<area shape="rect" id="node43" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1562,1551,1863,1639">
+<area shape="rect" id="node44" href="notification_parcel.html" target="_top" title="notification_parcel" alt="" coords="2171,1937,2437,2025">
+<area shape="rect" id="node45" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1555,1991,1870,2079">
+<area shape="rect" id="node46" href="notification_submission_search_view.html" target="_top" title="notification_submission_search_view" alt="" coords="320,2808,759,2872">
+<area shape="rect" id="node47" href="notification_submission_to_subm_de1feb40.html" target="_top" title="notification_submission_to_submission_status" alt="" coords="2038,2043,2570,2131">
+<area shape="rect" id="node48" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="2151,2180,2457,2268">
+<area shape="rect" id="node49" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1167,1045,1409,1133">
+<area shape="rect" id="node50" href="public_application_submission_s_21a213ce.html" target="_top" title="public_application_submission_search_view" alt="" coords="288,2889,791,2953">
+<area shape="rect" id="node51" href="public_notice_of_intent_submiss_882223b5.html" target="_top" title="public_notice_of_intent_submission_search_view" alt="" coords="264,5,815,69">
+<area shape="rect" id="node52" href="public_notification_submission__33ffb967.html" target="_top" title="public_notification_submission_search_view" alt="" coords="286,87,793,151">
+<area shape="rect" id="node53" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1581,761,1845,996">
+<area shape="rect" id="node54" href="typeorm_metadata.html" target="_top" title="typeorm_metadata" alt="" coords="405,168,673,256">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/user.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

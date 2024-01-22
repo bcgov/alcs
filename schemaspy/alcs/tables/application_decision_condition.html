@@ -74,6 +74,19 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>application_decision_condition</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-text-o"></i>
+                            <h3 id="Description" class="box-title">Description</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body clearfix">
+                            <p>Fields present on the application decision conditions</p>
+                        </div><!-- /.box-body -->
+                    </div>
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -202,6 +215,21 @@
                                     <td>gen_random_uuid()</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_decision_condition_component.application_decision_condition_uuid references application_decision_condition.uuid via FK_9471c8341a43328f1705e5cc2bf"><a href='application_decision_condition_component.html'>application_decision_condition_component</a><span class='relatedKey'>.application_decision_condition_uuid</span></td>
+                                                <td class="constraint detail">FK_9471c8341a43328f1705e5cc2bf</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_decision_condition_component_plan_number.application_decision_condition_uuid references application_decision_condition.uuid via FK_e9c8eae0a03c6816475ece8a702"><a href='application_decision_condition__a335ba65.html'>application_decision_condition_component_plan_number</a><span class='relatedKey'>.application_decision_condition_uuid</span></td>
+                                                <td class="constraint detail">FK_e9c8eae0a03c6816475ece8a702</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_decision_condition_to_component_lot.condition_uuid references application_decision_condition.uuid via FK_6b5ee63fc75f3a551029c07bc38"><a href='application_decision_condition__b3768bc3.html'>application_decision_condition_to_component_lot</a><span class='relatedKey'>.condition_uuid</span></td>
+                                                <td class="constraint detail">FK_6b5ee63fc75f3a551029c07bc38</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -323,9 +351,9 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="component_uuid">component_uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
+                                    <td><span id="completion_date">completion_date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -335,14 +363,43 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application_decision_condition.component_uuid references application_decision_component.uuid via FK_9745fcca6616819f804a129fef4"><a href='application_decision_component.html'>application_decision_component</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_9745fcca6616819f804a129fef4</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
-                                    <td></td>
+                                    <td><p>Condition Completion date</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="superseded_date">superseded_date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Condition Superseded date</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="oats_condition_id">oats_condition_id</span></td>
+                                    <td>int8</td>
+                                    <td>19</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.application_decision_condition.</p></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -403,31 +460,35 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="380,495,804,671">
-<area shape="rect" id="node2" href="application_decision.html" target="_top" title="application_decision" alt="" coords="5,404,336,815">
-<area shape="rect" id="node3" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="848,5,1316,456">
-<area shape="rect" id="node4" href="application_decision_condition_type.html" target="_top" title="application_decision_condition_type" alt="" coords="397,331,787,477">
+<area shape="rect" id="node1" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="484,5,1003,515">
+<area shape="rect" id="node2" href="application_decision.html" target="_top" title="application_decision" alt="" coords="40,116,405,497">
+<area shape="rect" id="node3" href="application_decision_condition_type.html" target="_top" title="application_decision_condition_type" alt="" coords="5,515,440,661">
+<area shape="rect" id="node4" href="application_decision_condition_component.html" target="_top" title="application_decision_condition_component" alt="" coords="1114,15,1614,137">
+<area shape="rect" id="node5" href="application_decision_condition__a335ba65.html" target="_top" title="application_decision_condition_component_plan_number" alt="" coords="1047,155,1681,301">
+<area shape="rect" id="node6" href="application_decision_condition__b3768bc3.html" target="_top" title="application_decision_condition_to_component_lot" alt="" coords="1082,319,1646,495">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_decision_condition.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="847,308,1101,396">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,73,181,161">
-<area shape="rect" id="node3" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="304,252,648,340">
-<area shape="rect" id="node4" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="225,357,727,445">
-<area shape="rect" id="node5" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="293,463,659,551">
-<area shape="rect" id="node6" href="linked_resolution_outcome_type.html" target="_top" title="linked_resolution_outcome_type" alt="" coords="297,568,655,656">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="329,673,623,761">
-<area shape="rect" id="node8" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="283,147,669,235">
-<area shape="rect" id="node9" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="315,5,637,93">
-<area shape="rect" id="node10" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="1236,680,1597,768">
-<area shape="rect" id="node11" href="application_decision_component_type.html" target="_top" title="application_decision_component_type" alt="" coords="771,677,1177,765">
-<area shape="rect" id="node12" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="1656,85,2124,536">
-<area shape="rect" id="node13" href="application_decision_condition_type.html" target="_top" title="application_decision_condition_type" alt="" coords="1221,411,1612,557">
-<area shape="rect" id="node14" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1241,305,1592,393">
-<area shape="rect" id="node15" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="1243,575,1591,663">
-<area shape="rect" id="node16" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="1225,124,1609,212">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="879,529,1244,911">
+<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,849,197,937">
+<area shape="rect" id="node3" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="329,603,712,691">
+<area shape="rect" id="node4" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="241,708,800,796">
+<area shape="rect" id="node5" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="317,497,724,585">
+<area shape="rect" id="node6" href="application_modification.html" target="_top" title="application_modification" alt="" coords="359,849,682,937">
+<area shape="rect" id="node7" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="306,392,735,480">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="343,955,698,1043">
+<area shape="rect" id="node9" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="1382,532,1782,620">
+<area shape="rect" id="node10" href="application_decision_component_lot.html" target="_top" title="application_decision_component_lot" alt="" coords="1985,533,2420,621">
+<area shape="rect" id="node11" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="1323,5,1841,515">
+<area shape="rect" id="node12" href="application_decision_condition_type.html" target="_top" title="application_decision_condition_type" alt="" coords="844,331,1279,477">
+<area shape="rect" id="node13" href="application_decision_condition_component.html" target="_top" title="application_decision_condition_component" alt="" coords="1953,229,2453,352">
+<area shape="rect" id="node14" href="application_decision_condition__a335ba65.html" target="_top" title="application_decision_condition_component_plan_number" alt="" coords="1885,369,2520,516">
+<area shape="rect" id="node15" href="application_decision_condition__b3768bc3.html" target="_top" title="application_decision_condition_to_component_lot" alt="" coords="2564,299,3128,475">
+<area shape="rect" id="node16" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1388,637,1776,725">
+<area shape="rect" id="node17" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="1389,756,1775,844">
+<area shape="rect" id="node18" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="1367,915,1797,1003">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_decision_condition.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

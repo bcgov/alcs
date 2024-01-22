@@ -74,6 +74,19 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>application_owner</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-text-o"></i>
+                            <h3 id="Description" class="box-title">Description</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body clearfix">
+                            <p>Contact information, type, and corporate summary document UUID for owner or primary contact</p>
+                        </div><!-- /.box-body -->
+                    </div>
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -216,7 +229,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="first_name">first_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="first_name">first_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -228,12 +241,17 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_owner.first_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="last_name">last_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="last_name">last_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -245,12 +263,17 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_owner.last_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="organization_name">organization_name</span></td>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="organization_name">organization_name</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -262,6 +285,11 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="application_owner.organization_name&#39;s name implies that it&#39;s a child of configuration.name, but it doesn&#39;t reference that column."><a href='configuration.html'>configuration</a><span class='relatedKey'>.name</span></td>
+                                                <td class="constraint detail">Implied Constraint</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -336,7 +364,7 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_owner.type_code references application_owner_type.code via FK_05181ec6491ee0aa527bd55c714"><a href='application_owner_type.html'>application_owner_type</a><span class='relatedKey'>.code</span></td>
+                                                <td title="application_owner.type_code references owner_type.code via FK_05181ec6491ee0aa527bd55c714"><a href='owner_type.html'>owner_type</a><span class='relatedKey'>.code</span></td>
                                                 <td class="constraint detail">FK_05181ec6491ee0aa527bd55c714</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
@@ -362,6 +390,74 @@
                                                 <td class="constraint detail">FK_4e3d14c8a4b41430bfc7b2ed5e2</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="oats_person_organization_id">oats_person_organization_id</span></td>
+                                    <td>int8</td>
+                                    <td>19</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_person_organization to alcs.application_owner. Note that this id is unique only in scope of parcel.</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="oats_property_interest_id">oats_property_interest_id</span></td>
+                                    <td>int8</td>
+                                    <td>19</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_property_interest to alcs.application_owner. Note that this id is unique only in scope of parcel.</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="oats_application_party_id">oats_application_party_id</span></td>
+                                    <td>int8</td>
+                                    <td>19</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_application_parties to alcs.application_owner.</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="crown_land_owner_type">crown_land_owner_type</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
                                     <td></td>
@@ -421,34 +517,85 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="493,5,945,485">
-<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="5,524,449,759">
-<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="87,79,367,343">
-<area shape="rect" id="node4" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="85,360,369,507">
-<area shape="rect" id="node5" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="989,125,1464,248">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="544,5,1044,603">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="5,524,500,729">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="97,79,408,343">
+<area shape="rect" id="node4" href="owner_type.html" target="_top" title="owner_type" alt="" coords="121,360,385,507">
+<area shape="rect" id="node5" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1088,125,1616,248">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_owner.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="613,5,893,269">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="239,304,415,392">
-<area shape="rect" id="node3" href="document.html" target="_top" title="document" alt="" coords="243,67,411,155">
-<area shape="rect" id="node4" href="application_document_code.html" target="_top" title="application_document_code" alt="" coords="167,172,487,260">
-<area shape="rect" id="node10" href="user.html" target="_top" title="user" alt="" coords="5,285,123,373">
-<area shape="rect" id="node5" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1019,113,1471,593">
-<area shape="rect" id="node6" href="application_submission.html" target="_top" title="application_submission" alt="" coords="531,451,975,685">
-<area shape="rect" id="node7" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="611,287,895,433">
-<area shape="rect" id="node11" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="228,577,425,665">
-<area shape="rect" id="node12" href="application_status.html" target="_top" title="application_status" alt="" coords="208,436,445,524">
-<area shape="rect" id="node8" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1126,8,1363,96">
-<area shape="rect" id="node9" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1515,120,1989,243">
+<area shape="rect" id="node1" href="application_document.html" target="_top" title="application_document" alt="" coords="548,132,859,396">
+<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="198,265,390,353">
+<area shape="rect" id="node3" href="document.html" target="_top" title="document" alt="" coords="203,160,385,248">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="176,371,412,459">
+<area shape="rect" id="node10" href="user.html" target="_top" title="user" alt="" coords="5,300,132,388">
+<area shape="rect" id="node5" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1009,216,1509,813">
+<area shape="rect" id="node6" href="application_submission.html" target="_top" title="application_submission" alt="" coords="456,413,951,619">
+<area shape="rect" id="node7" href="owner_type.html" target="_top" title="owner_type" alt="" coords="571,881,835,1028">
+<area shape="rect" id="node11" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="186,512,402,600">
+<area shape="rect" id="node8" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1128,5,1389,93">
+<area shape="rect" id="node9" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1567,169,2095,292">
+<area shape="rect" id="node12" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="995,111,1523,199">
+<area shape="rect" id="node13" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1117,831,1401,919">
+<area shape="rect" id="node14" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="1104,936,1413,1024">
+<area shape="rect" id="node15" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="1105,1041,1412,1129">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_owner.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="544,5,1044,603">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="5,769,500,975">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="97,324,408,588">
+<area shape="rect" id="node4" href="configuration.html" target="_top" title="configuration" alt="" coords="145,189,360,307">
+<area shape="rect" id="node5" href="owner_type.html" target="_top" title="owner_type" alt="" coords="121,605,385,752">
+<area shape="rect" id="node6" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="1088,125,1616,248">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application_owner.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="920,560,1112,648">
+<area shape="rect" id="node2" href="local_government.html" target="_top" title="local_government" alt="" coords="411,569,667,657">
+<area shape="rect" id="node8" href="configuration.html" target="_top" title="configuration" alt="" coords="5,932,220,1049">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1309,325,1620,589">
+<area shape="rect" id="node4" href="document.html" target="_top" title="document" alt="" coords="925,349,1107,437">
+<area shape="rect" id="node5" href="document_code.html" target="_top" title="document_code" alt="" coords="898,455,1134,543">
+<area shape="rect" id="node12" href="user.html" target="_top" title="user" alt="" coords="476,685,603,773">
+<area shape="rect" id="node6" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1770,5,2270,603">
+<area shape="rect" id="node7" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1217,607,1712,812">
+<area shape="rect" id="node9" href="owner_type.html" target="_top" title="owner_type" alt="" coords="884,1029,1148,1176">
+<area shape="rect" id="node13" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="908,701,1124,789">
+<area shape="rect" id="node10" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1889,620,2151,708">
+<area shape="rect" id="node11" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="2328,372,2856,495">
+<area shape="rect" id="node14" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1272,829,1657,917">
+<area shape="rect" id="node15" href="application_submission_search_view.html" target="_top" title="application_submission_search_view" alt="" coords="321,875,757,939">
+<area shape="rect" id="node16" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="1756,725,2284,813">
+<area shape="rect" id="node17" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1878,1683,2162,1771">
+<area shape="rect" id="node18" href="holiday_entity.html" target="_top" title="holiday_entity" alt="" coords="429,1024,650,1112">
+<area shape="rect" id="node19" href="inbox_application_submission_view.html" target="_top" title="inbox_application_submission_view" alt="" coords="327,1129,751,1193">
+<area shape="rect" id="node20" href="migrations.html" target="_top" title="migrations" alt="" coords="445,1211,634,1299">
+<area shape="rect" id="node21" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="375,1316,704,1404">
+<area shape="rect" id="node22" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="1310,935,1619,1023">
+<area shape="rect" id="node23" href="notice_of_intent_submission_search_view.html" target="_top" title="notice_of_intent_submission_search_view" alt="" coords="298,1473,781,1537">
+<area shape="rect" id="node24" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="859,1392,1173,1480">
+<area shape="rect" id="node25" href="notification_submission_search_view.html" target="_top" title="notification_submission_search_view" alt="" coords="320,1623,759,1687">
+<area shape="rect" id="node26" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="1311,1533,1618,1621">
+<area shape="rect" id="node27" href="public_application_submission_s_21a213ce.html" target="_top" title="public_application_submission_search_view" alt="" coords="288,1772,791,1836">
+<area shape="rect" id="node28" href="public_notice_of_intent_submiss_882223b5.html" target="_top" title="public_notice_of_intent_submission_search_view" alt="" coords="264,1853,815,1917">
+<area shape="rect" id="node29" href="public_notification_submission__33ffb967.html" target="_top" title="public_notification_submission_search_view" alt="" coords="286,1935,793,1999">
+<area shape="rect" id="node30" href="typeorm_metadata.html" target="_top" title="typeorm_metadata" alt="" coords="405,2016,673,2104">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_owner.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

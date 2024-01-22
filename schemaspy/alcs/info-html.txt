@@ -1,5 +1,5 @@
-date=2023-09-01 16:29:25+0000
-os=Linux 5.15.0-1041-azure
+date=2024-01-22 18:04:26+0000
+os=Linux 6.2.0-1018-azure
 schemaspy-version=7.0.0-SNAPSHOT
-schemaspy-revision=f1ae084864f45b648930214f206d668d91174537
-renderer=Graphviz dot 2.47.1 
+schemaspy-revision=6e5b6ce763d7dbe8090894164d7bc8604f86037d
+renderer=Graphviz dot 2.43.0 

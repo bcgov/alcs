@@ -74,6 +74,19 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>application_parcel_owners_application_owner</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-text-o"></i>
+                            <h3 id="Description" class="box-title">Description</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body clearfix">
+                            <p>Links application parcels with their owners</p>
+                        </div><!-- /.box-body -->
+                    </div>
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -219,27 +232,50 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="347,100,925,228">
-<area shape="rect" id="node2" href="application_owner.html" target="_top" title="application_owner" alt="" coords="5,228,303,433">
-<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="5,5,303,211">
+<area shape="rect" id="node1" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="377,100,1017,228">
+<area shape="rect" id="node2" href="application_owner.html" target="_top" title="application_owner" alt="" coords="5,228,333,521">
+<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="5,5,333,211">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_parcel_owners_appli_455f9d2c.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="431,228,728,433">
-<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="55,216,337,304">
-<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="60,111,332,199">
-<area shape="rect" id="node4" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="54,321,338,409">
-<area shape="rect" id="node5" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="431,5,728,211">
-<area shape="rect" id="node6" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="5,5,387,93">
-<area shape="rect" id="node7" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="772,100,1351,228">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="360,228,688,521">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="5,260,316,348">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="11,148,310,236">
+<area shape="rect" id="node4" href="owner_type.html" target="_top" title="owner_type" alt="" coords="63,377,259,465">
+<area shape="rect" id="node5" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="360,5,688,211">
+<area shape="rect" id="node6" href="parcel_ownership_type.html" target="_top" title="parcel_ownership_type" alt="" coords="7,37,314,125">
+<area shape="rect" id="node7" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="732,100,1372,228">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_parcel_owners_appli_455f9d2c.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="377,100,1017,228">
+<area shape="rect" id="node2" href="application_owner.html" target="_top" title="application_owner" alt="" coords="5,228,333,521">
+<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="5,5,333,211">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application_parcel_owners_appli_455f9d2c.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="360,260,688,553">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="5,216,316,304">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="11,111,310,199">
+<area shape="rect" id="node4" href="configuration.html" target="_top" title="configuration" alt="" coords="53,321,268,409">
+<area shape="rect" id="node5" href="owner_type.html" target="_top" title="owner_type" alt="" coords="63,427,259,515">
+<area shape="rect" id="node6" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="360,37,688,243">
+<area shape="rect" id="node7" href="parcel_ownership_type.html" target="_top" title="parcel_ownership_type" alt="" coords="7,5,314,93">
+<area shape="rect" id="node8" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="732,132,1372,260">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_parcel_owners_appli_455f9d2c.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

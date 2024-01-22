@@ -74,6 +74,19 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>application_submission</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-text-o"></i>
+                            <h3 id="Description" class="box-title">Description</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div><!-- /.box-header -->
+                        <div class="box-body clearfix">
+                            <p>Portal intake form fields for applications</p>
+                        </div><!-- /.box-body -->
+                    </div>
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -196,7 +209,7 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
-                                    <td><p>Quantify and describe in detail all agriculture that currently takes place on the parcel(s).</p></td>
+                                    <td><p>Describe all agriculture that currently takes place on the parcel(s).</p></td>
                                 </tr>
                                 <tr>
                                     <td><span id="parcels_agriculture_improvement_description">parcels_agriculture_improvement_description</span></td>
@@ -213,7 +226,7 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
-                                    <td><p>Quantify and describe in detail all agricultural improvements made to the parcel(s).</p></td>
+                                    <td><p>Describe all agricultural improvements made to the parcel(s).</p></td>
                                 </tr>
                                 <tr>
                                     <td><span id="parcels_non_agriculture_use_description">parcels_non_agriculture_use_description</span></td>
@@ -230,7 +243,7 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
-                                    <td><p>Quantify and describe all non-agricultural uses that currently take place on the parcel(s).</p></td>
+                                    <td><p>Describe all other uses that currently take place on the parcel(s).</p></td>
                                 </tr>
                                 <tr>
                                     <td><span id="north_land_use_type">north_land_use_type</span></td>
@@ -369,28 +382,6 @@
                                     <td><p>Description of the land uses surrounding the parcel(s) under application on the West.</p></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="status_code">status_code</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="application_submission.status_code references application_status.code via FK_d2fb7c905282b86706cad8ef0ab"><a href='application_status.html'>application_status</a><span class='relatedKey'>.code</span></td>
-                                                <td class="constraint detail">FK_d2fb7c905282b86706cad8ef0ab</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td><span id="primary_contact_owner_uuid">primary_contact_owner_uuid</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
@@ -425,23 +416,6 @@
                                     <td><p>Application Type Code from ALCS System</p></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="status_history">status_history</span></td>
-                                    <td>jsonb</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>&#39;[]&#39;::jsonb</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td><p>JSONB Column containing the status history of the Application</p></td>
-                                </tr>
-                                <tr>
                                     <td><span id="has_other_parcels_in_community">has_other_parcels_in_community</span></td>
                                     <td>bool</td>
                                     <td>1</td>
@@ -461,24 +435,7 @@
                                 <tr>
                                     <td><span id="nfu_hectares">nfu_hectares</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="nfu_purpose">nfu_purpose</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -544,9 +501,9 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="nfu_total_fill_placement">nfu_total_fill_placement</span></td>
+                                    <td><span id="nfu_total_fill_area">nfu_total_fill_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -595,40 +552,6 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="nfu_project_duration_amount">nfu_project_duration_amount</span></td>
-                                    <td>numeric</td>
-                                    <td>12,2</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="nfu_project_duration_unit">nfu_project_duration_unit</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td><span id="nfu_fill_type_description">nfu_fill_type_description</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
@@ -647,23 +570,6 @@
                                 </tr>
                                 <tr>
                                     <td><span id="nfu_fill_origin_description">nfu_fill_origin_description</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="tur_purpose">tur_purpose</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
@@ -733,7 +639,7 @@
                                 <tr>
                                     <td><span id="tur_total_corridor_area">tur_total_corridor_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -782,23 +688,6 @@
                                                 <td class="constraint detail">FK_bf4913015d41f8bb129407e493e</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="subd_purpose">subd_purpose</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
                                     <td></td>
@@ -888,6 +777,16 @@
                                             <tr>
                                                 <td title="application_parcel.application_submission_uuid references application_submission.uuid via FK_df7ec267eba52ce3234ff1f2d33"><a href='application_parcel.html'>application_parcel</a><span class='relatedKey'>.application_submission_uuid</span></td>
                                                 <td class="constraint detail">FK_df7ec267eba52ce3234ff1f2d33</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_submission_to_submission_status.submission_uuid references application_submission.uuid via FK_9b9f3f74a8502b01bbf93bd7b77"><a href='application_submission_to_submi_587693a5.html'>application_submission_to_submission_status</a><span class='relatedKey'>.submission_uuid</span></td>
+                                                <td class="constraint detail">FK_9b9f3f74a8502b01bbf93bd7b77</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="covenant_transferee.application_submission_uuid references application_submission.uuid via FK_a1c022ef4e1785b2877cb6aab69"><a href='covenant_transferee.html'>covenant_transferee</a><span class='relatedKey'>.application_submission_uuid</span></td>
+                                                <td class="constraint detail">FK_a1c022ef4e1785b2877cb6aab69</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
@@ -1001,91 +900,6 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="soil_is_noi_follow_up">soil_is_noi_follow_up</span></td>
-                                    <td>bool</td>
-                                    <td>1</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="soil_noi_ids">soil_noi_ids</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="soil_has_previous_alc_authorization">soil_has_previous_alc_authorization</span></td>
-                                    <td>bool</td>
-                                    <td>1</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="soil_application_ids">soil_application_ids</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="soil_purpose">soil_purpose</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td><span id="soil_type_removed">soil_type_removed</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
@@ -1139,7 +953,7 @@
                                 <tr>
                                     <td><span id="soil_to_remove_area">soil_to_remove_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1207,7 +1021,7 @@
                                 <tr>
                                     <td><span id="soil_already_removed_area">soil_already_removed_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1242,40 +1056,6 @@
                                     <td><span id="soil_already_removed_average_depth">soil_already_removed_average_depth</span></td>
                                     <td>numeric</td>
                                     <td>12,2</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="soil_project_duration_amount">soil_project_duration_amount</span></td>
-                                    <td>numeric</td>
-                                    <td>12,2</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="soil_project_duration_unit">soil_project_duration_unit</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1343,7 +1123,7 @@
                                 <tr>
                                     <td><span id="soil_to_place_area">soil_to_place_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1411,7 +1191,7 @@
                                 <tr>
                                     <td><span id="soil_already_placed_area">soil_already_placed_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1516,26 +1296,9 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="naru_purpose">naru_purpose</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td><span id="naru_floor_area">naru_floor_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1669,40 +1432,6 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="naru_project_duration_amount">naru_project_duration_amount</span></td>
-                                    <td>numeric</td>
-                                    <td>12,2</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="naru_project_duration_unit">naru_project_duration_unit</span></td>
-                                    <td>text</td>
-                                    <td>2147483647</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td><span id="naru_to_place_volume">naru_to_place_volume</span></td>
                                     <td>numeric</td>
                                     <td>12,2</td>
@@ -1722,7 +1451,7 @@
                                 <tr>
                                     <td><span id="naru_to_place_area">naru_to_place_area</span></td>
                                     <td>numeric</td>
-                                    <td>12,2</td>
+                                    <td>15,5</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1757,6 +1486,380 @@
                                     <td><span id="naru_to_place_average_depth">naru_to_place_average_depth</span></td>
                                     <td>numeric</td>
                                     <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="naru_sleeping_units">naru_sleeping_units</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="naru_agri_tourism">naru_agri_tourism</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="purpose">purpose</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="prescribed_body">prescribed_body</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="incl_excl_hectares">incl_excl_hectares</span></td>
+                                    <td>numeric</td>
+                                    <td>15,5</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="excl_why_land">excl_why_land</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="incl_agriculture_support">incl_agriculture_support</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="incl_improvements">incl_improvements</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="excl_share_government_borders">excl_share_government_borders</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="incl_government_owns_all_parcels">incl_government_owns_all_parcels</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="nfu_average_fill_depth">nfu_average_fill_depth</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_is_follow_up">soil_is_follow_up</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_follow_up_ids">soil_follow_up_ids</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="cove_area_impacted">cove_area_impacted</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="cove_has_draft">cove_has_draft</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="cove_farm_impact">cove_farm_impact</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="returned_to_lfng_comment">returned_to_lfng_comment</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Used to store comments when an Application is returned to the L/FNG by ALC Staff</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="other_parcels_description">other_parcels_description</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Stores the data user entered about other parcels in their community</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="naru_project_duration">naru_project_duration</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="nfu_project_duration">nfu_project_duration</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_project_duration">soil_project_duration</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="fill_project_duration">fill_project_duration</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
@@ -1825,52 +1928,112 @@
                                 <ul class="nav nav-tabs pull-left ui-sortable-handle">
                                     <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
                                     <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
                                 </ul>
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1016,1127,1313,1332">
-<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="373,32,972,2917">
-<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="48,1149,287,1325">
-<area shape="rect" id="node5" href="application.html" target="_top" title="application" alt="" coords="5,5,329,269">
-<area shape="rect" id="node6" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="48,2381,287,2528">
-<area shape="rect" id="node7" href="application_status.html" target="_top" title="application_status" alt="" coords="48,475,287,621">
-<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1016,1349,1313,1555">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1219,655,1547,948">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="408,32,1075,3064">
+<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="53,973,317,1355">
+<area shape="rect" id="node5" href="application.html" target="_top" title="application" alt="" coords="5,5,364,269">
+<area shape="rect" id="node6" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="53,1971,317,2117">
+<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1219,965,1547,1171">
+<area shape="rect" id="node7" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="1119,1188,1647,1335">
+<area shape="rect" id="node8" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1219,1352,1547,1616">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_submission.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="669,252,993,516">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="398,601,515,689">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="288,416,625,504">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,380,244,468">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="345,274,568,362">
-<area shape="rect" id="node20" href="user.html" target="_top" title="user" alt="" coords="5,772,244,948">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1701,320,1956,408">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1189,320,1484,408">
-<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1176,530,1497,618">
-<area shape="rect" id="node9" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1170,73,1503,161">
-<area shape="rect" id="node10" href="application_document.html" target="_top" title="application_document" alt="" coords="1201,846,1473,934">
-<area shape="rect" id="node11" href="document.html" target="_top" title="document" alt="" coords="373,884,541,972">
-<area shape="rect" id="node12" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1701,178,1956,266">
-<area shape="rect" id="node13" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1213,178,1460,266">
-<area shape="rect" id="node14" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1680,809,1977,1014">
-<area shape="rect" id="node15" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1037,1162,1636,4048">
-<area shape="rect" id="node16" href="application_owner_type.html" target="_top" title="application_owner_type" alt="" coords="1195,636,1479,724">
-<area shape="rect" id="node21" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="712,3512,951,3658">
-<area shape="rect" id="node22" href="application_status.html" target="_top" title="application_status" alt="" coords="712,1605,951,1752">
-<area shape="rect" id="node17" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1680,1032,1977,1237">
-<area shape="rect" id="node18" href="application_parcel_ownership_type.html" target="_top" title="application_parcel_ownership_type" alt="" coords="1146,1057,1527,1145">
-<area shape="rect" id="node19" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="2021,924,2496,1012">
-<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1163,425,1510,513">
-<area shape="rect" id="node24" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="735,533,928,621">
-<area shape="rect" id="node25" href="comment.html" target="_top" title="comment" alt="" coords="750,832,913,920">
-<area shape="rect" id="node26" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1215,952,1458,1040">
-<area shape="rect" id="node27" href="notification.html" target="_top" title="notification" alt="" coords="367,706,547,794">
-<area shape="rect" id="node28" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1242,741,1431,829">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="716,339,1075,603">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="429,856,556,944">
+<area shape="rect" id="node3" href="local_government.html" target="_top" title="local_government" alt="" coords="365,503,621,591">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,467,269,555">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="371,361,615,449">
+<area shape="rect" id="node22" href="user.html" target="_top" title="user" alt="" coords="5,1045,269,1427">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1953,341,2234,429">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1291,288,1613,376">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1275,393,1629,481">
+<area shape="rect" id="node9" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="2465,403,2865,491">
+<area shape="rect" id="node10" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="763,692,1027,839">
+<area shape="rect" id="node11" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1267,5,1637,93">
+<area shape="rect" id="node12" href="application_document.html" target="_top" title="application_document" alt="" coords="1303,640,1601,728">
+<area shape="rect" id="node13" href="document.html" target="_top" title="document" alt="" coords="805,961,986,1049">
+<area shape="rect" id="node14" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1953,111,2234,199">
+<area shape="rect" id="node15" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1316,111,1588,199">
+<area shape="rect" id="node16" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1929,772,2257,1065">
+<area shape="rect" id="node17" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1119,956,1785,3988">
+<area shape="rect" id="node18" href="owner_type.html" target="_top" title="owner_type" alt="" coords="1354,745,1550,833">
+<area shape="rect" id="node19" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1929,549,2257,755">
+<area shape="rect" id="node20" href="parcel_ownership_type.html" target="_top" title="parcel_ownership_type" alt="" coords="1299,535,1605,623">
+<area shape="rect" id="node21" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="2401,612,2929,700">
+<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1259,4005,1645,4093">
+<area shape="rect" id="node24" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="1829,3196,2357,3343">
+<area shape="rect" id="node25" href="application_submission_status_type.html" target="_top" title="application_submission_status_type" alt="" coords="1235,4216,1669,4304">
+<area shape="rect" id="node26" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="789,856,1001,944">
+<area shape="rect" id="node27" href="comment.html" target="_top" title="comment" alt="" coords="808,1139,983,1227">
+<area shape="rect" id="node28" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1321,4111,1583,4199">
+<area shape="rect" id="node29" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1929,1505,2257,1769">
+<area shape="rect" id="node30" href="message.html" target="_top" title="message" alt="" coords="408,1316,577,1404">
+<area shape="rect" id="node31" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="313,645,672,733">
+<area shape="rect" id="node32" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="335,751,650,839">
+<area shape="rect" id="node33" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1349,851,1555,939">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_submission.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1219,655,1547,948">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="408,32,1075,3064">
+<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="53,973,317,1355">
+<area shape="rect" id="node5" href="application.html" target="_top" title="application" alt="" coords="5,5,364,269">
+<area shape="rect" id="node6" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="53,1971,317,2117">
+<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1219,965,1547,1171">
+<area shape="rect" id="node7" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="1119,1188,1647,1335">
+<area shape="rect" id="node8" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1219,1352,1547,1616">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/application_submission.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="975,953,1333,1217">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="688,848,815,936">
+<area shape="rect" id="node3" href="local_government.html" target="_top" title="local_government" alt="" coords="623,3808,879,3896">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="264,3808,528,3896">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="629,1015,873,1103">
+<area shape="rect" id="node23" href="user.html" target="_top" title="user" alt="" coords="264,3409,528,3791">
+<area shape="rect" id="node18" href="configuration.html" target="_top" title="configuration" alt="" coords="5,4055,220,4143">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="2211,340,2493,428">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1549,216,1872,304">
+<area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1533,321,1888,409">
+<area shape="rect" id="node9" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="2724,383,3124,471">
+<area shape="rect" id="node10" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="1022,2889,1286,3036">
+<area shape="rect" id="node11" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1525,851,1896,939">
+<area shape="rect" id="node12" href="application_document.html" target="_top" title="application_document" alt="" coords="1561,956,1860,1044">
+<area shape="rect" id="node13" href="document.html" target="_top" title="document" alt="" coords="661,3913,842,4001">
+<area shape="rect" id="node14" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="2211,535,2493,623">
+<area shape="rect" id="node15" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1575,535,1847,623">
+<area shape="rect" id="node16" href="application_owner.html" target="_top" title="application_owner" alt="" coords="2188,3953,2516,4247">
+<area shape="rect" id="node17" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1377,1061,2044,4093">
+<area shape="rect" id="node19" href="owner_type.html" target="_top" title="owner_type" alt="" coords="1613,4432,1809,4520">
+<area shape="rect" id="node20" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="2188,1477,2516,1683">
+<area shape="rect" id="node21" href="parcel_ownership_type.html" target="_top" title="parcel_ownership_type" alt="" coords="1557,745,1864,833">
+<area shape="rect" id="node22" href="application_parcel_owners_appli_455f9d2c.html" target="_top" title="application_parcel_owners_application_owner" alt="" coords="2660,2717,3188,2805">
+<area shape="rect" id="node24" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1518,4147,1903,4235">
+<area shape="rect" id="node25" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="2088,1268,2616,1415">
+<area shape="rect" id="node26" href="application_submission_status_type.html" target="_top" title="application_submission_status_type" alt="" coords="1494,640,1927,728">
+<area shape="rect" id="node27" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1048,848,1260,936">
+<area shape="rect" id="node28" href="comment.html" target="_top" title="comment" alt="" coords="1067,633,1241,721">
+<area shape="rect" id="node29" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1579,5,1842,93">
+<area shape="rect" id="node30" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="2188,4264,2516,4528">
+<area shape="rect" id="node31" href="message.html" target="_top" title="message" alt="" coords="667,565,836,653">
+<area shape="rect" id="node32" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="572,707,931,795">
+<area shape="rect" id="node33" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="594,4055,909,4143">
+<area shape="rect" id="node34" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1607,111,1814,199">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/application_submission.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

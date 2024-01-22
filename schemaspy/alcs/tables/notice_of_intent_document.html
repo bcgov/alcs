@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>notice_of_intent_document - postgres.alcs</title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
+        <!-- Bootstrap 3.3.5 -->
+        <link rel="stylesheet" href="../bower/admin-lte/bootstrap/css/bootstrap.min.css">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="../bower/font-awesome/css/font-awesome.min.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="../bower/ionicons/css/ionicons.min.css">
+        <!-- DataTables -->
+        <link rel="stylesheet" href="../bower/datatables.net-bs/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" href="../bower/datatables.net-buttons-bs/css/buttons.bootstrap.min.css">
+        <!-- Code Mirror -->
+        <link rel="stylesheet" href="../bower/codemirror/codemirror.css">
+        <!-- Fonts -->
+        <link href='../fonts/indieflower/indie-flower.css' rel='stylesheet' type='text/css'>
+        <link href='../fonts/source-sans-pro/source-sans-pro.css' rel='stylesheet' type='text/css'>
+
+        <!-- Theme style -->
+        <link rel="stylesheet" href="../bower/admin-lte/dist/css/AdminLTE.min.css">
+        <!-- Salvattore -->
+        <link rel="stylesheet" href="../bower/salvattore/salvattore.css">
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+           folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="../bower/admin-lte/dist/css/skins/_all-skins.min.css">
+        <!-- SchemaSpy -->
+        <link rel="stylesheet" href="../schemaSpy.css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="../bower/html5shiv/html5shiv.min.js"></script>
+        <script src="../bower/respond/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+    <body class="hold-transition skin-blue layout-top-nav">
+        <div class="wrapper">
+            <header class="main-header">
+                <nav class="navbar navbar-static-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a href="../../index.html" class="navbar-brand"><b>postgres</b></a><span class="navbar-brand" style="padding-left: 0">.alcs</span>
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"><i class="fa fa-bars"></i></button>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                            <ul class="nav navbar-nav">
+                                <li><a href="../index.html">Tables <span class="sr-only">(current)</span></a></li>
+                                <li><a href="../columns.html" title="All of the columns in the schema">Columns</a></li>
+                                <li><a href="../constraints.html" title="Useful for diagnosing error messages that just give constraint name or number">Constraints</a></li>
+                                <li><a href="../relationships.html" title="Diagram of table relationships">Relationships</a></li>
+                                <li><a href="../orphans.html" title="View of tables with neither parents nor children">Orphan&nbsp;Tables</a></li>
+                                <li><a href="../anomalies.html" title="Things that might not be quite right">Anomalies</a></li>
+                                <li><a href="../routines.html" title="Procedures and functions">Routines</a></li>
+                            </ul>
+                        </div>
+                        <!-- /.navbar-collapse -->
+                        <!-- Navbar Right Menu -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </header>
+            <!-- Main content -->
+            <!-- Full Width Column -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>notice_of_intent_document</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                </section>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                            <h3 id="Columns" class="box-title">Columns</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <table
+                                    id="standard_table"
+                                    class="table table-bordered table-striped dataTable"
+                                    role="grid"
+                                    data-paging="true"
+                                    data-page-length="10"
+                                    data-length-change="false">
+                                <thead align='left'>
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th title='Are nulls allowed?'>Nulls</th>
+                                    <th title='Is column automatically updated?'>Auto</th>
+                                    <th title='Default value'>Default</th>
+                                    <th title='Columns in tables that reference this column'>Children</th>
+                                    <th title='Columns in tables that are referenced by this column'>Parents</th>
+                                    <th title='Comments' class="toggle"><span>Comments</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>gen_random_uuid()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="notice_of_intent_owner.corporate_summary_uuid references notice_of_intent_document.uuid via FK_a27c5e1999ea94ce0dc0c923fb3"><a href='notice_of_intent_owner.html'>notice_of_intent_owner</a><span class='relatedKey'>.corporate_summary_uuid</span></td>
+                                                <td class="constraint detail">FK_a27c5e1999ea94ce0dc0c923fb3</td>
+                                                <td class="constraint detail"><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="notice_of_intent_parcel.certificate_of_title_uuid references notice_of_intent_document.uuid via FK_7b405f7700af3398ec38b70d634"><a href='notice_of_intent_parcel.html'>notice_of_intent_parcel</a><span class='relatedKey'>.certificate_of_title_uuid</span></td>
+                                                <td class="constraint detail">FK_7b405f7700af3398ec38b70d634</td>
+                                                <td class="constraint detail"><span title='Null on delete:&#10;Foreign key to parent set to NULL when parent deleted'>N</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="type_code">type_code</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="notice_of_intent_document.type_code references document_code.code via FK_1bb9a71eab11ae830030ca24233"><a href='document_code.html'>document_code</a><span class='relatedKey'>.code</span></td>
+                                                <td class="constraint detail">FK_1bb9a71eab11ae830030ca24233</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="description">description</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="notice_of_intent_uuid">notice_of_intent_uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="notice_of_intent_document.notice_of_intent_uuid references notice_of_intent.uuid via FK_5f66a229039f4b95f461cb54cba"><a href='notice_of_intent.html'>notice_of_intent</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_5f66a229039f4b95f461cb54cba</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="document_uuid">document_uuid</span></td>
+                                    <td>uuid</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                            <tr>
+                                                <td title="notice_of_intent_document.document_uuid references document.uuid via FK_be3bff8cd4ff2275f9a5a8e880b"><a href='document.html'>document</a><span class='relatedKey'>.uuid</span></td>
+                                                <td class="constraint detail">FK_be3bff8cd4ff2275f9a5a8e880b</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="visibility_flags">visibility_flags</span></td>
+                                    <td>_text</td>
+                                    <td>2147483647</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>&#39;{}&#39;::text[]</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="oats_document_id">oats_document_id</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>used only for oats etl process</p></td>
+                                </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="oats_application_id">oats_application_id</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>used only for oats etl process</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_created_by">audit_created_by</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>used only for oats etl process</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-sitemap"></i>
+                            <h3 id="Indexes" class="box-title">Indexes</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <table
+                                    id="indexes_table"
+                                    class="table table-bordered table-striped dataTable"
+                                    role="grid"
+                                    data-paging="true"
+                                    data-page-length="10"
+                                    data-length-change="false">
+                                <thead>
+                                <tr>
+                                    <th>Constraint Name</th>
+                                    <th>Type</th>
+                                    <th>Sort</th>
+                                    <th>Column(s)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_6463ef00f1ec1842240b3c2e29a</td>
+                                    <td>Primary key</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>uuid</td>
+                                </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> OATS_NOI_UQ_DOCUMENTS</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
+                                    <td>oats_document_id + oats_application_id</td>
+                                </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> REL_be3bff8cd4ff2275f9a5a8e880</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span></td>
+                                    <td>document_uuid</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div><!-- /.box-body -->
+                    </div>
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-code-fork"></i>
+                            <h3 id="Relationships" class="box-title">Relationships</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="nav-tabs-custom"><!-- Tabs within a box -->
+                                <h5>Close relationships within degrees of separation</h5>
+                                <ul class="nav nav-tabs pull-left ui-sortable-handle">
+                                    <li class="active"><a href="#oneDegreeImg-chart" data-toggle="tab" aria-expanded="true">One</a></li>
+                                    <li class=""><a href="#twodegreesDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two degrees</a></li>
+                                    <li class=""><a href="#oneimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">One implied</a></li>
+                                    <li class=""><a href="#twoimpliedDegreeImg-chart" data-toggle="tab" aria-expanded="true">Two implied</a></li>
+                                </ul>
+                                <div class="tab-content no-padding">
+                                    <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="408,260,872,593">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="53,632,317,837">
+<area shape="rect" id="node3" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="5,351,364,615">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="53,157,317,333">
+<area shape="rect" id="node5" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="916,5,1291,299">
+<area shape="rect" id="node6" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="916,316,1291,521">
+</map>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/notice_of_intent_document.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1148,5,1536,93">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="697,144,961,349">
+<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="74,868,201,956">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1193,147,1491,235">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="697,367,961,543">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="396,851,523,939">
+<area shape="rect" id="node7" href="local_government.html" target="_top" title="local_government" alt="" coords="331,956,587,1044">
+<area shape="rect" id="node8" href="application_region.html" target="_top" title="application_region" alt="" coords="5,991,269,1079">
+<area shape="rect" id="node9" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="649,904,1008,1168">
+<area shape="rect" id="node10" href="notice_of_intent_type.html" target="_top" title="notice_of_intent_type" alt="" coords="313,1097,605,1185">
+<area shape="rect" id="node11" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="1699,357,2028,445">
+<area shape="rect" id="node12" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1157,357,1527,445">
+<area shape="rect" id="node13" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="2189,216,2623,304">
+<area shape="rect" id="node14" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1110,604,1574,937">
+<area shape="rect" id="node15" href="notice_of_intent_meeting.html" target="_top" title="notice_of_intent_meeting" alt="" coords="1177,955,1507,1043">
+<area shape="rect" id="node16" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="1676,572,2051,865">
+<area shape="rect" id="node17" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1163,1165,1521,1253">
+<area shape="rect" id="node18" href="owner_type.html" target="_top" title="owner_type" alt="" coords="1244,499,1440,587">
+<area shape="rect" id="node19" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="1676,1049,2051,1255">
+<area shape="rect" id="node20" href="parcel_ownership_type.html" target="_top" title="parcel_ownership_type" alt="" coords="1189,1376,1495,1464">
+<area shape="rect" id="node21" href="notice_of_intent_parcel_owners__6fffb03c.html" target="_top" title="notice_of_intent_parcel_owners_notice_of_intent_owner" alt="" coords="2095,729,2717,817">
+<area shape="rect" id="node22" href="notice_of_intent_subtype_notice_931dee5f.html" target="_top" title="notice_of_intent_subtype_notice_of_intent_subtype" alt="" coords="1052,1060,1632,1148">
+<area shape="rect" id="node23" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1191,252,1493,340">
+<area shape="rect" id="node24" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1239,1271,1445,1359">
+</map>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/notice_of_intent_document.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="408,260,872,593">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="53,632,317,837">
+<area shape="rect" id="node3" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="5,351,364,615">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="53,157,317,333">
+<area shape="rect" id="node5" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="916,5,1291,299">
+<area shape="rect" id="node6" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="916,316,1291,521">
+</map>
+                                        <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/notice_of_intent_document.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                    <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
+                                        <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
+<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1407,255,1795,343">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="955,199,1219,404">
+<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="333,939,459,1027">
+<area shape="rect" id="node7" href="configuration.html" target="_top" title="configuration" alt="" coords="5,939,220,1027">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1451,8,1750,96">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="955,5,1219,181">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="655,931,781,1019">
+<area shape="rect" id="node8" href="local_government.html" target="_top" title="local_government" alt="" coords="590,1072,846,1160">
+<area shape="rect" id="node9" href="application_region.html" target="_top" title="application_region" alt="" coords="264,1123,528,1211">
+<area shape="rect" id="node10" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="908,921,1267,1185">
+<area shape="rect" id="node11" href="notice_of_intent_type.html" target="_top" title="notice_of_intent_type" alt="" coords="572,1213,864,1301">
+<area shape="rect" id="node12" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="1957,799,2287,887">
+<area shape="rect" id="node13" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1415,852,1786,940">
+<area shape="rect" id="node14" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="2447,464,2882,552">
+<area shape="rect" id="node15" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1369,396,1833,729">
+<area shape="rect" id="node16" href="notice_of_intent_meeting.html" target="_top" title="notice_of_intent_meeting" alt="" coords="1436,1204,1765,1292">
+<area shape="rect" id="node17" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="1935,1344,2309,1637">
+<area shape="rect" id="node18" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1421,1309,1780,1397">
+<area shape="rect" id="node19" href="owner_type.html" target="_top" title="owner_type" alt="" coords="1503,1523,1699,1611">
+<area shape="rect" id="node20" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="1935,985,2309,1191">
+<area shape="rect" id="node21" href="parcel_ownership_type.html" target="_top" title="parcel_ownership_type" alt="" coords="1447,993,1754,1081">
+<area shape="rect" id="node22" href="notice_of_intent_parcel_owners__6fffb03c.html" target="_top" title="notice_of_intent_parcel_owners_notice_of_intent_owner" alt="" coords="2353,1181,2976,1269">
+<area shape="rect" id="node23" href="notice_of_intent_subtype_notice_931dee5f.html" target="_top" title="notice_of_intent_subtype_notice_of_intent_subtype" alt="" coords="1311,1099,1891,1187">
+<area shape="rect" id="node24" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1450,113,1751,201">
+<area shape="rect" id="node25" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1497,747,1704,835">
+</map>
+                                        <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/notice_of_intent_document.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div>
+                </section>
+                <script>
+                    var config = {
+                        pagination: true
+                    }
+                </script>
+            </div>
+            <!-- /.content-wrapper -->
+            <footer class="main-footer">
+                <div>
+                    <div class="pull-right hidden-xs">
+                        <a href="https://github.com/schemaspy/schemaspy" title="GitHub for SchemaSpy"><i class="fa fa-github-square fa-2x"></i></a>
+                        <a href="http://stackoverflow.com/questions/tagged/schemaspy" title="StackOverflow for SchemaSpy"><i class="fa fa-stack-overflow fa-2x"></i></a>
+                    </div>
+                    <strong>Generated by <a href="http://schemaspy.org/" class="logo-text"><i class="fa fa-database"></i> SchemaSpy 7.0.0-SNAPSHOT</a></strong>
+                </div>
+                <!-- /.container -->
+            </footer>
+        </div>
+        <!-- ./wrapper -->
+
+        <!-- jQuery 2.2.3 -->
+        <script src="../bower/admin-lte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+        <script src="../bower/admin-lte/plugins/jQueryUI/jquery-ui.min.js"></script>
+        <!-- Bootstrap 3.3.5 -->
+        <script src="../bower/admin-lte/bootstrap/js/bootstrap.min.js"></script>
+        <!-- DataTables -->
+        <script src="../bower/datatables.net/jquery.dataTables.min.js"></script>
+        <script src="../bower/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+        <script src="../bower/datatables.net-buttons/dataTables.buttons.min.js"></script>
+        <script src="../bower/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+        <script src="../bower/datatables.net-buttons/buttons.html5.min.js"></script>
+        <script src="../bower/datatables.net-buttons/buttons.print.min.js"></script>
+        <script src="../bower/datatables.net-buttons/buttons.colVis.min.js"></script>
+        <!-- SheetJS -->
+        <script src="../bower/js-xlsx/xlsx.full.min.js"></script>
+        <!-- pdfmake -->
+        <script src="../bower/pdfmake/pdfmake.min.js"></script>
+        <script src="../bower/pdfmake/vfs_fonts.js"></script>
+        <!-- SlimScroll -->
+        <script src="../bower/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+        <!-- FastClick -->
+        <script src="../bower/admin-lte/plugins/fastclick/fastclick.js"></script>
+        <!-- Salvattore -->
+        <script src="../bower/salvattore/salvattore.min.js"></script>
+        <!-- AnchorJS -->
+        <script src="../bower/anchor-js/anchor.min.js"></script>
+        <!-- CodeMirror -->
+        <script src="../bower/codemirror/codemirror.js"></script>
+        <script src="../bower/codemirror/sql.js"></script>
+        <!-- AdminLTE App -->
+        <script src="../bower/admin-lte/dist/js/app.min.js"></script>
+        <script src="table.js"></script>
+        <script src="../schemaSpy.js"></script>
+    </body>
+</html>
