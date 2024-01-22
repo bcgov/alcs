@@ -35,7 +35,7 @@ WITH
             JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
             JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
         WHERE
-            oo.organization_type_cd IN ('MUNI','FN','RD')
+            oo.organization_type_cd IN ('MUNI','FN','RD','RM')
     ),
     alcs_gov AS (
         SELECT
