@@ -10,6 +10,7 @@ from .submissions import (
     clean_primary_contacts,
     insert_application_submission_review,
     clean_reviews,
+    update_application_submissions
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields
@@ -55,6 +56,7 @@ def process_application_etl(batch_size):
     process_alcs_application_prep_fields(batch_size)
     update_application_date_rx_all_items(batch_size)
     process_alcs_app_submissions(batch_size)
+    update_application_submissions()
     insert_application_submission_review(batch_size)
     process_application_statuses(batch_size)
     process_application_parcels(batch_size)
