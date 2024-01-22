@@ -1,11 +1,9 @@
 INSERT INTO alcs.application_submission_to_submission_status(submission_uuid, status_type_code) -- retrieve applications from OATS that have only 1 proposal component
     WITH application_components_grouped AS (
-        SELECT oaac.alr_application_id
-        FROM oats.oats_alr_appl_components oaac
-            JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
-        WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN') AND oaac.alr_change_code <> 'SRW'
-        GROUP BY oaac.alr_application_id
-        HAVING count(oaac.alr_application_id) < 2 -- ignore applications with multiple components
+        SELECT oaa.alr_application_id
+        FROM oats.alcs_etl_applications_nois oaa
+        WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
+            and oaa.alr_change_code <> 'SRW'
     ),
     -- alcs_submissions_with_statuses is required for development environment only. Production environment does not have submissions.
     alcs_submissions_with_statuses AS (

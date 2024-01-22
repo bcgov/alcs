@@ -46,6 +46,7 @@ class PdfTemplate {
 }
 
 const NO_DATA = 'No Data';
+const NOT_APPLICABLE = 'Not Applicable';
 
 @Injectable()
 export class GenerateSubmissionDocumentService {
@@ -228,26 +229,29 @@ export class GenerateSubmissionDocumentService {
     );
 
     const data = {
-      noData: 'No Data',
+      noData: NO_DATA,
       generatedDateTime: dayjs
         .tz(new Date(), 'Canada/Pacific')
         .format('MMM DD, YYYY hh:mm:ss Z'),
-
       purpose: submission.purpose,
       fileNumber: submission.fileNumber,
       localGovernment: localGovernment?.name,
       status: submission.status.statusType,
       applicant: submission.applicant,
-      hasOtherParcelsInCommunity: formatBooleanToYesNoString(
-        submission.hasOtherParcelsInCommunity,
-      ),
+      hasOtherParcelsInCommunity:
+        formatBooleanToYesNoString(submission.hasOtherParcelsInCommunity) ??
+        NO_DATA,
       otherParcelsDescription: submission.otherParcelsDescription,
-      selectedThirdPartyAgent: primaryContact?.type.code !== OWNER_TYPE.AGENT,
-      primaryContact,
+      selectedThirdPartyAgent: primaryContact?.type.code === OWNER_TYPE.AGENT,
+      primaryContactFirstName: primaryContact?.firstName,
+      primaryContactLastName: primaryContact?.lastName,
+      primaryContactOrganizationName: primaryContact?.organizationName,
+      primaryContactEmail: primaryContact?.email,
+      primaryContactPhoneNumber: primaryContact?.phoneNumber,
       primaryContactType: primaryContact?.type?.label,
       organizationText:
         primaryContact?.type.code === OWNER_TYPE.CROWN
-          ? 'Ministry/Department Responsible'
+          ? 'Department'
           : 'Organization (If Applicable)',
       isGovernmentSetup:
         !localGovernment || localGovernment.bceidBusinessGuid !== null,
@@ -288,6 +292,7 @@ export class GenerateSubmissionDocumentService {
   private mapParcelsWithOwners(parcels: ApplicationParcel[]) {
     return parcels.map((e) => ({
       ...e,
+      pid: this.formatPid(e.pid),
       noData: NO_DATA,
       purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
       certificateOfTitle: e.certificateOfTitle?.document.fileName,
@@ -295,6 +300,7 @@ export class GenerateSubmissionDocumentService {
       owners: e.owners.map((o) => ({
         ...o,
         noData: NO_DATA,
+        notApplicable: NOT_APPLICABLE,
         name: `${o.firstName} ${o.lastName}`,
         organizationName: o.organizationName,
         corporateSummary: o.corporateSummary?.document.fileName,
@@ -378,5 +384,13 @@ export class GenerateSubmissionDocumentService {
     };
 
     return pdfData;
+  }
+
+  private formatPid(pid?: string | null) {
+    const matches = pid?.match(/(.{1,3})/g);
+    if (matches) {
+      return matches.join('-');
+    }
+    return undefined;
   }
 }
