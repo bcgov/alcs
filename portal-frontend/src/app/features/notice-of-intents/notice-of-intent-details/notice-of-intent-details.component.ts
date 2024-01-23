@@ -124,7 +124,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
 
       const isSelfApplicant = owners.length === 1 && this.primaryContact?.type.code === OWNER_TYPE.INDIVIDUAL;
       const isGovernmentContact = this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT;
-      this.needsAuthorizationLetter = !isGovernmentContact && !isSelfApplicant;
+      this.needsAuthorizationLetter = isGovernmentContact || !isSelfApplicant;
     }
   }
 }
