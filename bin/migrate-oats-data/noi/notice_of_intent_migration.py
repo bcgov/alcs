@@ -80,7 +80,7 @@ from .noi_decisions.noi_conditions import (
     clean_notice_of_intent_conditions_to_components,
 )
 
-from .set_hide_from_portal_on_noi import set_notice_of_intent_visibility
+from .set_notice_of_intent_visibility import set_notice_of_intent_visibility
 
 
 def init_notice_of_intent(batch_size):

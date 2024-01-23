@@ -49,7 +49,7 @@ from .decisions.app_reconsiderations import (
     update_application_reconsiderations,
 )
 
-from .set_hide_from_portal_on_application import set_application_visibility
+from .set_application_visibility import set_application_visibility
 
 
 def process_application_etl(batch_size):
