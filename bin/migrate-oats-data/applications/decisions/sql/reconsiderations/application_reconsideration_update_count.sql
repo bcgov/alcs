@@ -6,7 +6,7 @@ WITH alcs_reconsiderations_resulting_decisions AS (
         appd.oats_alr_appl_decision_id,
         appr.audit_created_by
     FROM alcs.application_reconsideration appr
-        JOIN alcs.application_decision appd ON appd.modifies_uuid = appr."uuid"
+        JOIN alcs.application_decision appd ON appd.reconsiders_uuid = appr."uuid"
         JOIN alcs.application app ON app."uuid" = appr.application_uuid
 )
 SELECT count(*)

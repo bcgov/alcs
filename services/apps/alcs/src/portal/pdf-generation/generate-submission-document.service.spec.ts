@@ -22,6 +22,7 @@ import { ApplicationOwnerService } from '../application-submission/application-o
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
 import { GenerateSubmissionDocumentService } from './generate-submission-document.service';
 
 dayjs.extend(utc);
@@ -36,6 +37,7 @@ describe('GenerateSubmissionDocumentService', () => {
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockApplicationDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockTransfereeService: DeepMocked<CovenantTransfereeService>;
 
   let mockSubmissionStatus;
 
@@ -47,6 +49,7 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationParcelService = createMock();
     mockApplicationOwnerService = createMock();
     mockApplicationDocumentService = createMock();
+    mockTransfereeService = createMock();
 
     mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(
       new LocalGovernment(),
@@ -76,6 +79,10 @@ describe('GenerateSubmissionDocumentService', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockApplicationDocumentService,
+        },
+        {
+          provide: CovenantTransfereeService,
+          useValue: mockTransfereeService,
         },
       ],
     }).compile();
