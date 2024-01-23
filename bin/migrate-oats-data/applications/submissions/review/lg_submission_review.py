@@ -143,9 +143,10 @@ def _map_data(row):
 
 
 def _map_ocp_designation(row):
-    if row["community_pln_compliance_ind"] == "X":
+    compliance_ind = row.get("community_pln_compliance_ind")
+    if compliance_ind == "X":
         return False
-    elif row["community_pln_compliance_ind"] == "N":
+    elif compliance_ind in ["N", "Y"]:
         return True
     else:
         return None
@@ -161,9 +162,10 @@ def _map_ocp_consistency(row):
 
 
 def _map_zoning(row):
-    if row["zoning_compliance_ind"] == "X":
+    compliance_ind = row.get("zoning_compliance_ind")
+    if compliance_ind == "X":
         return False
-    elif row["zoning_compliance_ind"] == "N":
+    elif compliance_ind in ["N", "Y"]:
         return True
     else:
         return None
