@@ -40,6 +40,7 @@ describe('InboxNoticeOfIntentService', () => {
       andWhere: jest.fn().mockReturnThis(),
       setParameters: jest.fn().mockReturnThis(),
       leftJoin: jest.fn().mockReturnThis(),
+      withDeleted: jest.fn().mockReturnThis(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

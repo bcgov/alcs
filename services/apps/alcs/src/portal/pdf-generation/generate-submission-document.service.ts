@@ -26,6 +26,7 @@ import { ApplicationParcel } from '../application-submission/application-parcel/
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
 
 export enum APPLICATION_SUBMISSION_TYPES {
   NFUP = 'NFUP',
@@ -63,6 +64,7 @@ export class GenerateSubmissionDocumentService {
     @Inject(forwardRef(() => ApplicationOwnerService))
     private ownerService: ApplicationOwnerService,
     private applicationDocumentService: ApplicationDocumentService,
+    private transfereeService: CovenantTransfereeService,
   ) {}
 
   async generate(fileNumber: string, user: User) {
@@ -72,12 +74,15 @@ export class GenerateSubmissionDocumentService {
         user,
       );
 
-    const template = await this.getPdfTemplateBySubmissionType(submission);
+    const template = await this.getPdfTemplateBySubmissionType(
+      submission,
+      user,
+    );
 
     if (template) {
       return await this.documentGenerationService.generateDocument(
         `${fileNumber}_submission_Date_Time`,
-        `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${
+        `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/submissions/${
           template.templateName
         }`,
         template.payload,
@@ -159,6 +164,7 @@ export class GenerateSubmissionDocumentService {
 
   private async getPdfTemplateBySubmissionType(
     submission: ApplicationSubmission,
+    user: User,
   ): Promise<PdfTemplate | undefined> {
     const documents = await this.applicationDocumentService.list(
       submission.fileNumber,
@@ -179,6 +185,34 @@ export class GenerateSubmissionDocumentService {
       case APPLICATION_SUBMISSION_TYPES.SUBD:
         payload = this.populateSubdData(payload, submission, documents);
         return { payload, templateName: 'subd-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.ROSO:
+        payload = this.populateSoilFields(payload, submission, documents);
+        return { payload, templateName: 'roso-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.POFO:
+        payload = this.populateSoilFields(payload, submission, documents);
+        return { payload, templateName: 'pofo-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.PFRS:
+        payload = this.populateSoilFields(payload, submission, documents);
+        return { payload, templateName: 'pfrs-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.INCL:
+        payload = await this.populateInclExclFields(
+          payload,
+          submission,
+          documents,
+          user,
+        );
+        return { payload, templateName: 'incl-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.EXCL:
+        payload = await this.populateInclExclFields(
+          payload,
+          submission,
+          documents,
+          user,
+        );
+        return { payload, templateName: 'excl-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.COVE:
+        payload = await this.populateCoveFields(payload, submission, documents);
+        return { payload, templateName: 'cove-submission-template.docx' };
       default:
         this.logger.error(
           `Could not find template for application submission type ${submission.typeCode}`,
@@ -342,8 +376,6 @@ export class GenerateSubmissionDocumentService {
 
     pdfData = {
       ...pdfData,
-
-      // TUR Proposal
       turAgriculturalActivities: submission.turAgriculturalActivities,
       turReduceNegativeImpacts: submission.turReduceNegativeImpacts,
       turOutsideLands: submission.turOutsideLands,
@@ -362,14 +394,9 @@ export class GenerateSubmissionDocumentService {
     const homesiteSeverance = documents.filter(
       (document) => document.type?.code === DOCUMENT_TYPE.HOMESITE_SEVERANCE,
     );
-    const proposalMap = documents.filter(
-      (document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP,
-    );
 
     pdfData = {
       ...pdfData,
-
-      // SUBD Proposal
       subdSuitability: submission.subdSuitability,
       subdAgricultureSupport: submission.subdAgricultureSupport,
       subdIsHomeSiteSeverance: formatBooleanToYesNoString(
@@ -378,9 +405,148 @@ export class GenerateSubmissionDocumentService {
       subdProposedLots: submission.subdProposedLots.map((lot, index) => ({
         ...lot,
         index: index + 1,
+        noData: NO_DATA,
       })),
       homesiteSeverance: homesiteSeverance.map((d) => d.document),
-      proposalMap: proposalMap.find((d) => d)?.document.fileName,
+    };
+
+    return pdfData;
+  }
+
+  private populateSoilFields(
+    pdfData: any,
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+  ) {
+    const crossSections = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS,
+    );
+
+    const reclamationPlans = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN,
+    );
+
+    const noticesOfWork = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.NOTICE_OF_WORK,
+    );
+
+    pdfData = {
+      ...pdfData,
+      fillProjectDuration: submission.fillProjectDuration,
+      soilIsFollowUp: formatBooleanToYesNoString(submission.soilIsFollowUp),
+      soilFollowUpIDs: submission.soilFollowUpIDs,
+      soilProjectDuration: submission.soilProjectDuration,
+      soilTypeRemoved: submission.soilTypeRemoved,
+      soilReduceNegativeImpacts: submission.soilReduceNegativeImpacts,
+      soilToRemoveVolume: submission.soilToRemoveVolume,
+      soilToRemoveArea: submission.soilToRemoveArea,
+      soilToRemoveMaximumDepth: submission.soilToRemoveMaximumDepth,
+      soilToRemoveAverageDepth: submission.soilToRemoveAverageDepth,
+      soilAlreadyRemovedVolume: submission.soilAlreadyRemovedVolume,
+      soilAlreadyRemovedArea: submission.soilAlreadyRemovedArea,
+      soilAlreadyRemovedMaximumDepth: submission.soilAlreadyRemovedMaximumDepth,
+      soilAlreadyRemovedAverageDepth: submission.soilAlreadyRemovedAverageDepth,
+
+      soilToPlaceVolume: submission.soilToPlaceVolume,
+      soilToPlaceArea: submission.soilToPlaceArea,
+      soilToPlaceMaximumDepth: submission.soilToPlaceMaximumDepth,
+      soilToPlaceAverageDepth: submission.soilToPlaceAverageDepth,
+      soilAlreadyPlacedVolume: submission.soilAlreadyPlacedVolume,
+      soilAlreadyPlacedArea: submission.soilAlreadyPlacedArea,
+      soilAlreadyPlacedMaximumDepth: submission.soilAlreadyPlacedMaximumDepth,
+      soilAlreadyPlacedAverageDepth: submission.soilAlreadyPlacedAverageDepth,
+      soilFillTypeToPlace: submission.soilFillTypeToPlace,
+      soilAlternativeMeasures: submission.soilAlternativeMeasures,
+
+      crossSections: crossSections.map((d) => d.document),
+      reclamationPlans: reclamationPlans.map((d) => d.document),
+      noticesOfWork: noticesOfWork.map((d) => d.document),
+      soilIsExtractionOrMining: formatBooleanToYesNoString(
+        submission.soilIsExtractionOrMining,
+      ),
+      soilHasSubmittedNotice: formatBooleanToYesNoString(
+        submission.soilHasSubmittedNotice,
+      ),
+    };
+
+    return pdfData;
+  }
+
+  private async populateInclExclFields(
+    pdfData: any,
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+    user: User,
+  ) {
+    let userGovernment: LocalGovernment | null = null;
+    if (user.bceidBusinessGuid) {
+      userGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
+    }
+
+    const proofOfAdvertising = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+    );
+
+    const proofOfSignage = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+    );
+
+    const publicHearingReports = documents.filter(
+      (document) =>
+        document.type?.code === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+    );
+
+    pdfData = {
+      ...pdfData,
+      userGovernmentName: userGovernment?.name,
+      inclExclHectares: submission.inclExclHectares,
+      inclAgricultureSupport: submission.inclAgricultureSupport,
+      inclImprovements: submission.inclImprovements,
+      inclGovernmentOwnsAllParcels: formatBooleanToYesNoString(
+        submission.inclGovernmentOwnsAllParcels,
+      ),
+      prescribedBody: submission.prescribedBody,
+      exclShareGovernmentBorders: formatBooleanToYesNoString(
+        submission.exclShareGovernmentBorders,
+      ),
+      exclWhyLand: submission.exclWhyLand,
+      proofOfAdvertising: proofOfAdvertising.map((d) => d.document),
+      proofOfSignage: proofOfSignage.map((d) => d.document),
+      publicHearingReports: publicHearingReports.map((d) => d.document),
+    };
+
+    return pdfData;
+  }
+
+  private async populateCoveFields(
+    pdfData: any,
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+  ) {
+    const draftCovenants = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.SRW_TERMS,
+    );
+
+    const transferees = await this.transfereeService.fetchBySubmissionUuid(
+      submission.uuid,
+    );
+    const mappedTransferees = transferees.map((t) => ({
+      type: t.type.label,
+      fullName: `${t.firstName} ${t.lastName}`,
+      organizationName: t.organizationName ?? NOT_APPLICABLE,
+      phone: t.phoneNumber,
+      email: t.email,
+    }));
+
+    pdfData = {
+      ...pdfData,
+      transferees: mappedTransferees,
+      coveAreaImpacted: submission.coveAreaImpacted,
+      coveFarmImpact: submission.coveFarmImpact,
+      coveHasDraft: formatBooleanToYesNoString(submission.coveHasDraft),
+      draftCovenants: draftCovenants.map((d) => d.document),
     };
 
     return pdfData;
