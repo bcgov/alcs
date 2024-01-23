@@ -45,6 +45,7 @@ export class InboxApplicationService {
 
   private compileApplicationGroupBySearchQuery(query) {
     query = query
+      .withDeleted()
       .innerJoinAndMapOne(
         'appSearch.applicationType',
         'appSearch.applicationType',
