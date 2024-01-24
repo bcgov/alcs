@@ -9,6 +9,4 @@ from .migrate_application import (
     init_applications,
 )
 
-from .set_hide_from_portal_on_application import (
-    set_hide_from_portal_on_application,
-)
+from .set_application_visibility import set_application_visibility
