@@ -245,7 +245,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.pdfGenerationService.generateSubmission(fileNumber);
+      await this.pdfGenerationService.generateAppSubmission(fileNumber);
     }
   }
 

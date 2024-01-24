@@ -4,6 +4,7 @@ import { FastifyReply } from 'fastify';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { User } from '../../user/user.entity';
+import { GenerateNoiSubmissionDocumentService } from './generate-noi-submission-document.service';
 import { GenerateReviewDocumentService } from './generate-review-document.service';
 import { GenerateSubmissionDocumentService } from './generate-submission-document.service';
 import { PdfGenerationController } from './pdf-generation.controller';
@@ -11,10 +12,12 @@ import { PdfGenerationController } from './pdf-generation.controller';
 describe('PdfGenerationController', () => {
   let controller: PdfGenerationController;
   let mockSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
+  let mockNoiSubmissionDocumentService: DeepMocked<GenerateNoiSubmissionDocumentService>;
   let mockReviewDocumentService: DeepMocked<GenerateReviewDocumentService>;
 
   beforeEach(async () => {
     mockSubmissionDocumentService = createMock();
+    mockNoiSubmissionDocumentService = createMock();
     mockReviewDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -23,6 +26,10 @@ describe('PdfGenerationController', () => {
         {
           provide: GenerateSubmissionDocumentService,
           useValue: mockSubmissionDocumentService,
+        },
+        {
+          provide: GenerateNoiSubmissionDocumentService,
+          useValue: mockNoiSubmissionDocumentService,
         },
         {
           provide: GenerateReviewDocumentService,
@@ -57,6 +64,24 @@ describe('PdfGenerationController', () => {
     });
 
     expect(mockSubmissionDocumentService.generate).toBeCalledTimes(1);
+    expect(mockResponse.type).toBeCalledWith('application/pdf');
+    expect(mockResponse.send).toBeCalledWith('fake');
+  });
+
+  it('should successfully call service for generateNoiSubmission', async () => {
+    mockNoiSubmissionDocumentService.generate.mockResolvedValue({
+      data: 'fake',
+    } as any);
+
+    const mockResponse = createMock<DeepMocked<FastifyReply>>();
+
+    await controller.generateNoiSubmission(mockResponse, 'fake-id', {
+      user: {
+        entity: new User(),
+      },
+    });
+
+    expect(mockNoiSubmissionDocumentService.generate).toBeCalledTimes(1);
     expect(mockResponse.type).toBeCalledWith('application/pdf');
     expect(mockResponse.send).toBeCalledWith('fake');
   });

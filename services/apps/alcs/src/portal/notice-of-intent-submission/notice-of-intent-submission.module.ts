@@ -13,6 +13,7 @@ import { ParcelOwnershipType } from '../../common/entities/parcel-ownership-type
 import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
+import { PdfGenerationModule } from '../pdf-generation/pdf-generation.module';
 import { NoticeOfIntentOwnerController } from './notice-of-intent-owner/notice-of-intent-owner.controller';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentOwnerService } from './notice-of-intent-owner/notice-of-intent-owner.service';
@@ -41,6 +42,7 @@ import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.s
     forwardRef(() => BoardModule),
     LocalGovernmentModule,
     FileNumberModule,
+    PdfGenerationModule,
   ],
   controllers: [
     NoticeOfIntentSubmissionController,

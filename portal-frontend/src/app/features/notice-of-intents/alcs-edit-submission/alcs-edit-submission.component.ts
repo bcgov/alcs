@@ -8,7 +8,6 @@ import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-do
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDraftService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission-draft.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
@@ -59,7 +58,6 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   constructor(
     private noticeOfIntentSubmissionDraftService: NoticeOfIntentSubmissionDraftService,
-    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
