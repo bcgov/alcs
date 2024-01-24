@@ -10,3 +10,5 @@ from .migrate_application import (
 )
 
 from .set_application_visibility import set_application_visibility
+
+from .application_decision_date import process_alcs_application_decision_date
