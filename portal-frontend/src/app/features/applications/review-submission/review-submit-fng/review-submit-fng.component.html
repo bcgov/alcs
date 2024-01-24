@@ -46,7 +46,7 @@
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
-            {{ _applicationReview.phoneNumber }}
+            {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000'  }}
             <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>
@@ -153,7 +153,7 @@
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
-            {{ _applicationReview.phoneNumber }}
+            {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000'  }}
             <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>

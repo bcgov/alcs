@@ -333,7 +333,7 @@
             </div>
             <div class="row">
               <div class="key"><strong>Phone Number:</strong></div>
-              <div class="value">{{ selectedOwner.phoneNumber }}</div>
+              <div class="value">{{ selectedOwner.phoneNumber ?? '' | mask : '(000) 000-0000'  }}</div>
             </div>
             <div class="row">
               <div class="key"><strong>Email:</strong></div>
