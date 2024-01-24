@@ -199,6 +199,7 @@ export class NoticeOfIntentSubmissionController {
 
       await this.noticeOfIntentSubmissionService.submitToAlcs(
         validatedApplicationSubmission,
+        req.user.entity,
       );
 
       const { primaryContact, submissionGovernment } =

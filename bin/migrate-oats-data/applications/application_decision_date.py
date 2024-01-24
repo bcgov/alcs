@@ -6,23 +6,21 @@ from common import (
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
-etl_name = "process_alcs_notice_of_intent_decision_date"
+etl_name = "process_alcs_application_decision_date"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def process_alcs_notice_of_intent_decision_date(
-    conn=None, batch_size=BATCH_UPLOAD_SIZE
-):
+def process_alcs_application_decision_date(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    Imports decision_date from oats to alcs.notice_of_intent.decision_date. alcs.notice_of_intent.decision_date is the date of the first decision
+    Imports decision_date from oats to alcs.application.decision_date. alcs.application.decision_date is the date of the first decision
     In OATS the first decision date is stored in oats.oats_alr_appl_decisions. All subsequent decisions in OATS are the linked to reconsiderations and not application directly.
     """
 
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "noi/sql/notice_of_intent_base/notice_of_intent_decision_date/notice_of_intent_decision_date_count.sql",
+            "applications/sql/application_decision_date/application_decision_date_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -30,21 +28,21 @@ def process_alcs_notice_of_intent_decision_date(
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
 
-        logger.info(f" Total Notice of Intents data to update: {count_total}")
+        logger.info(f" Total Application data to update: {count_total}")
 
         failed_inserts = 0
         successful_updates_count = 0
         last_application_id = 0
 
         with open(
-            "noi/sql/notice_of_intent_base/notice_of_intent_decision_date/notice_of_intent_decision_date.sql",
+            "applications/sql/application_decision_date/application_decision_date.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE decision_date_for_nois.alr_application_id > {last_application_id} ORDER BY decision_date_for_nois.alr_application_id;"
+                    f"{application_sql} WHERE decision_date_for_applications.alr_application_id > {last_application_id} ORDER BY decision_date_for_applications.alr_application_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -62,11 +60,11 @@ def process_alcs_notice_of_intent_decision_date(
                     last_application_id = dict(rows[-1])["alr_application_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated application_id: {last_application_id}"
+                        f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated applications so far {successful_updates_count}; last updated application_id: {last_application_id}"
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
-                    logger.exception()
+                    logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
@@ -88,10 +86,10 @@ def _update_fee_fields_records(conn, batch_size, cursor, rows):
 
 def _get_update_query_from_oats_alr_applications_fields():
     query = """
-                UPDATE alcs.notice_of_intent
+                UPDATE alcs.application
                 SET decision_date = COALESCE(%(decision_date)s, decision_date)
                 WHERE
-                    alcs.notice_of_intent.file_number = %(alr_application_id)s::TEXT;
+                    file_number = %(alr_application_id)s::TEXT;
             """
     return query
 

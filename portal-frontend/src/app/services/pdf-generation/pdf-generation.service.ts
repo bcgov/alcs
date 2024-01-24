@@ -24,36 +24,36 @@ export class PdfGenerationService {
     private overlayService: OverlaySpinnerService
   ) {}
 
-  async generateSubmission(fileNumber: string) {
-    try {
-      this.overlayService.showSpinner();
-      const httpOptions = {
-        responseType: 'blob' as 'json',
-      };
-      const data = await firstValueFrom(
-        this.httpClient.get(`${this.serviceUrl}/${fileNumber}/submission`, httpOptions)
-      );
+  async generateAppSubmission(fileNumber: string) {
+    return await this.downloadPdf(
+      `${this.serviceUrl}/${fileNumber}/submission`,
+      `${fileNumber}_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`
+    );
+  }
 
-      return openPdfFile(`${fileNumber}_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, data);
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to generate pdf, please try again later');
-    } finally {
-      this.overlayService.hideSpinner();
-    }
-
-    return;
+  async generateNoiSubmission(fileNumber: string) {
+    return await this.downloadPdf(
+      `${this.serviceUrl}/${fileNumber}/noi-submission`,
+      `${fileNumber}_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`
+    );
   }
 
   async generateReview(fileNumber: string) {
+    return await this.downloadPdf(
+      `${this.serviceUrl}/${fileNumber}/review`,
+      `${fileNumber}-Review_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`
+    );
+  }
+
+  private async downloadPdf(url: string, fileName: string) {
     try {
       this.overlayService.showSpinner();
       const httpOptions = {
         responseType: 'blob' as 'json',
       };
-      const data = await firstValueFrom(this.httpClient.get(`${this.serviceUrl}/${fileNumber}/review`, httpOptions));
+      const data = await firstValueFrom(this.httpClient.get(url, httpOptions));
 
-      return openPdfFile(`${fileNumber}-Review_${moment().format('MMM_DD_YYYY_hh-mm_Z')}`, data);
+      return openPdfFile(fileName, data);
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to generate pdf, please try again later');
