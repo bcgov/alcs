@@ -2,6 +2,7 @@ import { Controller, Get, Param, Req, Res, UseGuards } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
+import { GenerateNoiSubmissionDocumentService } from './generate-noi-submission-document.service';
 import { GenerateReviewDocumentService } from './generate-review-document.service';
 import { GenerateSubmissionDocumentService } from './generate-submission-document.service';
 
@@ -10,6 +11,7 @@ import { GenerateSubmissionDocumentService } from './generate-submission-documen
 export class PdfGenerationController {
   constructor(
     private submissionDocumentService: GenerateSubmissionDocumentService,
+    private noiSubmissionDocumentService: GenerateNoiSubmissionDocumentService,
     private reviewDocumentService: GenerateReviewDocumentService,
   ) {}
 
@@ -21,6 +23,24 @@ export class PdfGenerationController {
   ) {
     const user = req.user.entity as User;
     const result = await this.submissionDocumentService.generate(
+      fileNumber,
+      user,
+    );
+
+    if (result) {
+      resp.type('application/pdf');
+      resp.send(result.data);
+    }
+  }
+
+  @Get(':fileNumber/noi-submission')
+  async generateNoiSubmission(
+    @Res() resp: FastifyReply,
+    @Param('fileNumber') fileNumber: string,
+    @Req() req,
+  ) {
+    const user = req.user.entity as User;
+    const result = await this.noiSubmissionDocumentService.generate(
       fileNumber,
       user,
     );

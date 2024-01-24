@@ -9,6 +9,7 @@ import { NoticeOfIntentParcelUpdateDto } from '../notice-of-intent-submission/no
 import { NoticeOfIntentParcelService } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
+import { GenerateNoiSubmissionDocumentService } from '../pdf-generation/generate-noi-submission-document.service';
 
 @Injectable()
 export class NoticeOfIntentSubmissionDraftService {
@@ -21,6 +22,7 @@ export class NoticeOfIntentSubmissionDraftService {
     private noticeOfIntentParcelService: NoticeOfIntentParcelService,
     private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private generateNoiSubmissionDocumentService: GenerateNoiSubmissionDocumentService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string, user: User) {
@@ -89,9 +91,8 @@ export class NoticeOfIntentSubmissionDraftService {
       parcels: [],
       owners: [],
     });
-    const savedSubmission = await this.noticeOfIntentSubmissionRepository.save(
-      newSubmission,
-    );
+    const savedSubmission =
+      await this.noticeOfIntentSubmissionRepository.save(newSubmission);
     const statuses =
       await this.noticeOfIntentSubmissionStatusService.getCopiedStatuses(
         originalSubmission.uuid,
@@ -217,12 +218,11 @@ export class NoticeOfIntentSubmissionDraftService {
     draft.isDraft = false;
     await this.noticeOfIntentSubmissionRepository.save(draft);
 
-    //Generate PDF
-    //TODO: Turn this back on for PDFs
-    // await this.generateSubmissionDocumentService.generateUpdate(
-    //   fileNumber,
-    //   user,
-    // );
+    await this.generateNoiSubmissionDocumentService.generateUpdate(
+      fileNumber,
+      user,
+    );
+
     this.logger.debug(`Published Draft for file number ${fileNumber}`);
   }
 

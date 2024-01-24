@@ -52,7 +52,7 @@ describe('PdfGenerationService', () => {
     const getPdfFile = jest.spyOn(fileModule, 'openPdfFile');
     getPdfFile.mockReturnValue(undefined);
 
-    await service.generateSubmission('fake');
+    await service.generateAppSubmission('fake');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockHttpClient.get).toBeCalledWith(`${environment.apiUrl}/pdf-generation/fake/submission`, {

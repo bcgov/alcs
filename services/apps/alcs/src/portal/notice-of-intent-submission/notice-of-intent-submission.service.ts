@@ -1,8 +1,8 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -10,10 +10,10 @@ import {
   Not,
   Repository,
 } from 'typeorm';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
@@ -24,6 +24,8 @@ import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
+import { GenerateNoiSubmissionDocumentService } from '../pdf-generation/generate-noi-submission-document.service';
+import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import {
   NoticeOfIntentSubmissionDetailedDto,
@@ -31,10 +33,9 @@ import {
   NoticeOfIntentSubmissionUpdateDto,
 } from './notice-of-intent-submission.dto';
 import {
-  PORTAL_TO_ALCS_STRUCTURE_MAP,
   NoticeOfIntentSubmission,
+  PORTAL_TO_ALCS_STRUCTURE_MAP,
 } from './notice-of-intent-submission.entity';
-import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 
 @Injectable()
 export class NoticeOfIntentSubmissionService {
@@ -57,6 +58,8 @@ export class NoticeOfIntentSubmissionService {
     @InjectRepository(NoticeOfIntentSubmissionStatusType)
     private noticeOfIntentStatusRepository: Repository<NoticeOfIntentSubmissionStatusType>,
     private noticeOfIntentService: NoticeOfIntentService,
+    @Inject(forwardRef(() => GenerateNoiSubmissionDocumentService))
+    private generateNoiSubmissionDocumentService: GenerateNoiSubmissionDocumentService,
     private localGovernmentService: LocalGovernmentService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     private fileNumberService: FileNumberService,
@@ -311,6 +314,7 @@ export class NoticeOfIntentSubmissionService {
 
   async submitToAlcs(
     noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
+    user: User,
   ) {
     try {
       const subtypes = this.populateNoiSubtype(noticeOfIntentSubmission);
@@ -328,6 +332,11 @@ export class NoticeOfIntentSubmissionService {
         noticeOfIntentSubmission.uuid,
         NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         submittedNoi.dateSubmittedToAlc,
+      );
+
+      await this.generateNoiSubmissionDocumentService.generateAndAttach(
+        submittedNoi.fileNumber,
+        user,
       );
 
       return submittedNoi;

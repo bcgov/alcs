@@ -289,7 +289,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.pdfGenerationService.generateSubmission(fileNumber);
+      await this.pdfGenerationService.generateAppSubmission(fileNumber);
     }
   }
 
