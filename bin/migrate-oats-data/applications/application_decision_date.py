@@ -11,9 +11,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def process_alcs_application_decision_date(
-    conn=None, batch_size=BATCH_UPLOAD_SIZE
-):
+def process_alcs_application_decision_date(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     Imports decision_date from oats to alcs.application.decision_date. alcs.application.decision_date is the date of the first decision
     In OATS the first decision date is stored in oats.oats_alr_appl_decisions. All subsequent decisions in OATS are the linked to reconsiderations and not application directly.
@@ -66,7 +64,7 @@ def process_alcs_application_decision_date(
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
-                    logger.exception()
+                    logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
