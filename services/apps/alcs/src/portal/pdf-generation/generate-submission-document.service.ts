@@ -179,6 +179,9 @@ export class GenerateSubmissionDocumentService {
       case APPLICATION_SUBMISSION_TYPES.NFUP:
         payload = this.populateNfuData(payload, submission);
         return { payload, templateName: 'nfu-submission-template.docx' };
+      case APPLICATION_SUBMISSION_TYPES.NARU:
+        payload = this.populateNaruData(payload, submission);
+        return { payload, templateName: 'naru-submission-template.docx' };
       case APPLICATION_SUBMISSION_TYPES.TURP:
         payload = this.populateTurData(payload, submission, documents);
         return { payload, templateName: 'tur-submission-template.docx' };
@@ -362,6 +365,34 @@ export class GenerateSubmissionDocumentService {
       nfuAverageFillDepth: submission.nfuAverageFillDepth,
       nfuFillVolume: submission.nfuFillVolume,
       nfuProjectDuration: submission.nfuProjectDuration,
+    };
+  }
+
+  private populateNaruData(pdfData: any, submission: ApplicationSubmission) {
+    return {
+      ...pdfData,
+      naruSubtypeLabel: submission.naruSubtype?.label,
+      naruSubtypeCode: submission.naruSubtypeCode,
+      naruFloorArea: submission.naruFloorArea,
+      naruResidenceNecessity: submission.naruResidenceNecessity,
+      naruLocationRationale: submission.naruLocationRationale,
+      naruInfrastructure: submission.naruInfrastructure,
+      naruExistingStructures: submission.naruExistingStructures,
+      naruSleepingUnits: submission.naruSleepingUnits,
+      naruAgriTourism: submission.naruAgriTourism,
+      showImportFill: submission.naruWillImportFill,
+      naruWillImportFill: formatBooleanToYesNoString(
+        submission.naruWillImportFill,
+      ),
+
+      // NFU Proposal => Soil and Fill
+      naruFillType: submission.naruFillType,
+      naruFillOrigin: submission.naruFillOrigin,
+      naruProjectDuration: submission.naruProjectDuration,
+      naruToPlaceMaximumDepth: submission.naruToPlaceMaximumDepth,
+      naruToPlaceAverageDepth: submission.naruToPlaceAverageDepth,
+      naruToPlaceVolume: submission.naruToPlaceVolume,
+      naruToPlaceArea: submission.naruToPlaceArea,
     };
   }
 
