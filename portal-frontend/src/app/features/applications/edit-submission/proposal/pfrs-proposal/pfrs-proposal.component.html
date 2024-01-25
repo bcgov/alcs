@@ -84,7 +84,7 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
@@ -403,6 +403,13 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
       </div>
+      <div
+        *ngIf="isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="isExtractionOrMining.errors?.['required']">This field is required</div>
+      </div>
     </div>
 
     <div class="full-row">
@@ -434,6 +441,13 @@
             >No
           </mat-button-toggle>
         </mat-button-toggle-group>
+      </div>
+      <div
+        *ngIf="hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hasSubmittedNotice.errors?.['required']">This field is required</div>
       </div>
     </div>
 

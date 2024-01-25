@@ -159,7 +159,7 @@
         <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
       </div>
       <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
-      <span class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</span>
+      <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="alternativeMeasures">
