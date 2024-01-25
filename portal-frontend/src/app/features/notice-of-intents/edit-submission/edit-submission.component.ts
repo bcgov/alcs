@@ -9,6 +9,7 @@ import {
   NoticeOfIntentSubmissionDetailedDto,
 } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
@@ -69,6 +70,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private pdfGenerationService: PdfGenerationService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -192,7 +194,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      //TODO: Hook this up later
+      await this.pdfGenerationService.generateNoiSubmission(fileNumber);
     }
   }
 

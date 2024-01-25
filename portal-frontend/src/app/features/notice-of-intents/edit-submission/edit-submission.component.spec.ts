@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { EditSubmissionComponent } from './edit-submission.component';
@@ -23,6 +24,10 @@ describe('EditSubmissionComponent', () => {
         },
         {
           provide: NoticeOfIntentDocumentService,
+          useValue: {},
+        },
+        {
+          provide: PdfGenerationService,
           useValue: {},
         },
         {
