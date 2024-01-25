@@ -407,12 +407,29 @@ export class ParcelEntryComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((result) => {
       if (result) {
+        this.parcelForm.patchValue(
+          {
+            isConfirmedByApplicant: false,
+          },
+          { emitEvent: false }
+        );
+
         if (result.type === 'delete') {
           this.onOwnersDeleted.emit();
         }
         this.onOwnersUpdated.emit();
       }
     });
+  }
+
+  onEditOwner() {
+    this.parcelForm.patchValue(
+      {
+        isConfirmedByApplicant: false,
+      },
+      { emitEvent: false }
+    );
+    this.onOwnersUpdated.emit();
   }
 
   private isOwnerInParcel(owner: NoticeOfIntentOwnerDto): boolean {
@@ -565,6 +582,13 @@ export class ParcelEntryComponent implements OnInit {
       this.ownerInput.setValidators([Validators.required]);
       this.ownerInput.setErrors({ required: true });
     }
+
+    this.parcelForm.patchValue(
+      {
+        isConfirmedByApplicant: false,
+      },
+      { emitEvent: false }
+    );
 
     if (this.isCrownLand && updatedArray.length > 0) {
       this.ownerInput.disable();

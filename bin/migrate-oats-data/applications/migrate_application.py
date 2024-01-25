@@ -50,7 +50,11 @@ from .decisions.app_reconsiderations import (
 )
 
 from .set_application_visibility import set_application_visibility
+
 from .update_app_created_date import update_application_created_date
+
+from .application_decision_date import process_alcs_application_decision_date
+
 
 def process_application_etl(batch_size):
     process_alcs_application_prep_fields(batch_size)
@@ -59,6 +63,7 @@ def process_application_etl(batch_size):
     process_alcs_app_submissions(batch_size)
     update_application_submissions()
     insert_application_submission_review(batch_size)
+    process_alcs_application_decision_date(batch_size)
     process_application_statuses(batch_size)
     process_application_parcels(batch_size)
     process_application_owners(batch_size)

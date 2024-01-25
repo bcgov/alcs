@@ -555,8 +555,9 @@
       </div>
 
       <app-soil-table
-        [disabled]="willImportFill.value !== 'true'"
         tableHeader="Fill to be Placed"
+        [disabled]="willImportFill.value !== 'true'"
+        [touchAll]="showErrors"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
