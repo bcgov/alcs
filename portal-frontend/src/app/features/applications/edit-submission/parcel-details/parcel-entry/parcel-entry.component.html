@@ -236,7 +236,7 @@
           [submissionUuid]="submissionUuid"
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
-          (onOwnersUpdated)="onOwnersUpdated.emit()"
+          (onOwnersUpdated)="onEditOwner()"
           (onOwnerRemoved)="onRemoveOwner($event)"
           (onOwnersDeleted)="onDeleteOwner()"
           [documentService]="applicationDocumentService"
