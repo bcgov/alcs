@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
@@ -48,8 +48,8 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
   reportOfPublicHearing: ApplicationDocumentDto[] = [];
 
   constructor(
-    private router: Router,
     private applicationSubmissionService: ApplicationSubmissionService,
+    private pdfGenerationService: PdfGenerationService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
     toastService: ToastService
@@ -114,6 +114,10 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
   async attachReportOfPublicHearing(file: FileHandle) {
     const res = await this.attachFile(file, DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING);
     this.showReportOfPublicHearingVirus = !res;
+  }
+
+  async onDownloadPdf() {
+    await this.pdfGenerationService.generateAppSubmission(this.fileId);
   }
 
   protected async save() {
