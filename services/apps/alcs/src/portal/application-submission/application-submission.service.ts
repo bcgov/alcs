@@ -704,11 +704,18 @@ export class ApplicationSubmissionService {
     application: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    application.nfuHectares = updateDto.nfuHectares || application.nfuHectares;
-    application.nfuOutsideLands =
-      updateDto.nfuOutsideLands || application.nfuOutsideLands;
-    application.nfuAgricultureSupport =
-      updateDto.nfuAgricultureSupport || application.nfuAgricultureSupport;
+    application.nfuHectares = filterUndefined(
+      updateDto.nfuHectares,
+      application.nfuHectares,
+    );
+    application.nfuOutsideLands = filterUndefined(
+      updateDto.nfuOutsideLands,
+      application.nfuOutsideLands,
+    );
+    application.nfuAgricultureSupport = filterUndefined(
+      updateDto.nfuAgricultureSupport,
+      application.nfuAgricultureSupport,
+    );
     application.nfuWillImportFill = filterUndefined(
       updateDto.nfuWillImportFill,
       application.nfuWillImportFill,
