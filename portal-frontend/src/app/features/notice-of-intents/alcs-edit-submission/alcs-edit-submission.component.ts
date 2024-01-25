@@ -8,6 +8,7 @@ import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-do
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDraftService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission-draft.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
@@ -59,6 +60,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private noticeOfIntentSubmissionDraftService: NoticeOfIntentSubmissionDraftService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private pdfGenerationService: PdfGenerationService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -202,7 +204,9 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   }
 
   async onDownloadPdf(fileNumber: string | undefined) {
-    //TODO: Add this
+    if (fileNumber) {
+      await this.pdfGenerationService.generateNoiSubmission(fileNumber);
+    }
   }
 
   async onExit() {

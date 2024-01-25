@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Run alcs
 
-Run `npm install --legacy-peer-deps`
+Run `npm install`
 Run `npm run start`
 
 ## Code scaffolding

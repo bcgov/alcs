@@ -31,7 +31,6 @@ export class ApplicationExpiryConsumer extends WorkerHost {
         const applicationsNumbers = applicationsToProcess.map(
           (ap) => ap.fileNumber,
         );
-        // FIXME: this will be refactored once we have the templating engine
         const body = `
       <p>Following applications near expiration:</p>
       ${applicationsNumbers.join('<br/>')}`;
