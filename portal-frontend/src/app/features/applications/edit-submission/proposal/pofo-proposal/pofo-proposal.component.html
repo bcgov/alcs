@@ -121,6 +121,7 @@
       </app-info-banner>
       <app-soil-table
         tableHeader="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -132,6 +133,7 @@
       >
       <app-soil-table
         tableHeader="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="alreadyFilledTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
