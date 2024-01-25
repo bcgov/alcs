@@ -177,7 +177,6 @@ export class NoticeOfIntentAdvancedSearchService {
     searchDto: SearchRequestDto,
     query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
   ) {
-    // TODO check dates toIsoString
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
         'noiSearch.date_submitted_to_alc >= :date_submitted_from_alc',

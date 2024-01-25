@@ -7,7 +7,6 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  // TODO: remove this dragon once deployment is done
   title = 'portal-frontend';
 
   showHeaderFooter = true;

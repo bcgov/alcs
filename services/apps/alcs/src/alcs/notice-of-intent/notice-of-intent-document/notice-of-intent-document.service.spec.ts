@@ -248,44 +248,43 @@ describe('NoticeOfIntentDocumentService', () => {
     expect(res).toBeDefined();
   });
 
-  // TODO: Re-enabled when adding Step 7
-  // it('should set the type and description for multiple files', async () => {
-  //   const mockDocument1 = new NoticeOfIntentDocument({
-  //     typeCode: DOCUMENT_TYPE.DECISION_DOCUMENT,
-  //     description: undefined,
-  //   });
-  //   const mockDocument2 = new NoticeOfIntentDocument({
-  //     typeCode: DOCUMENT_TYPE.DECISION_DOCUMENT,
-  //     description: undefined,
-  //   });
-  //   mockRepository.findOne
-  //     .mockResolvedValueOnce(mockDocument1)
-  //     .mockResolvedValueOnce(mockDocument2);
-  //   mockRepository.save.mockResolvedValue(new NoticeOfIntentDocument());
-  //   const mockUpdates = [
-  //     {
-  //       uuid: '1',
-  //       type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-  //       description: 'Secret Documents',
-  //     },
-  //     {
-  //       uuid: '2',
-  //       type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-  //       description: 'New Description',
-  //     },
-  //   ];
-  //
-  //   const res = await service.updateDescriptionAndType(mockUpdates, '');
-  //
-  //   expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
-  //   expect(mockRepository.save).toHaveBeenCalledTimes(2);
-  //   expect(res).toBeDefined();
-  //   expect(res.length).toEqual(2);
-  //   expect(mockDocument1.typeCode).toEqual(DOCUMENT_TYPE.CERTIFICATE_OF_TITLE);
-  //   expect(mockDocument1.description).toEqual('Secret Documents');
-  //   expect(mockDocument2.typeCode).toEqual(DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
-  //   expect(mockDocument2.description).toEqual('New Description');
-  // });
+  it('should set the type and description for multiple files', async () => {
+    const mockDocument1 = new NoticeOfIntentDocument({
+      typeCode: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      description: undefined,
+    });
+    const mockDocument2 = new NoticeOfIntentDocument({
+      typeCode: DOCUMENT_TYPE.DECISION_DOCUMENT,
+      description: undefined,
+    });
+    mockRepository.findOne
+      .mockResolvedValueOnce(mockDocument1)
+      .mockResolvedValueOnce(mockDocument2);
+    mockRepository.save.mockResolvedValue(new NoticeOfIntentDocument());
+    const mockUpdates = [
+      {
+        uuid: '1',
+        type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        description: 'Secret Documents',
+      },
+      {
+        uuid: '2',
+        type: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        description: 'New Description',
+      },
+    ];
+
+    const res = await service.updateDescriptionAndType(mockUpdates, '');
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(2);
+    expect(res).toBeDefined();
+    expect(res.length).toEqual(2);
+    expect(mockDocument1.typeCode).toEqual(DOCUMENT_TYPE.CERTIFICATE_OF_TITLE);
+    expect(mockDocument1.description).toEqual('Secret Documents');
+    expect(mockDocument2.typeCode).toEqual(DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
+    expect(mockDocument2.description).toEqual('New Description');
+  });
 
   it('should create a record for external documents', async () => {
     mockRepository.save.mockResolvedValue(new NoticeOfIntentDocument());

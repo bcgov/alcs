@@ -134,7 +134,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
         });
       }
       await this.applicationParcelService.update(parcelsToUpdate);
-      //TODO: Do we need to reload submission?
     }
   }
 
