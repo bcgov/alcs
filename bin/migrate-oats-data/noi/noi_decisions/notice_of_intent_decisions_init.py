@@ -2,7 +2,7 @@ from common import (
     OATS_ETL_USER,
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
-    BATCH_UPLOAD_SIZE
+    BATCH_UPLOAD_SIZE,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -133,6 +133,8 @@ def _get_insert_query():
                 rescinded_comment =  COALESCE(EXCLUDED.rescinded_comment, alcs.notice_of_intent_decision.rescinded_comment),
                 rescinded_date =  COALESCE(EXCLUDED.rescinded_date, alcs.notice_of_intent_decision.rescinded_date),
                 is_subject_to_conditions = COALESCE(EXCLUDED.is_subject_to_conditions, alcs.notice_of_intent_decision.is_subject_to_conditions),
+                was_released = True,
+                is_draft = False,
                 oats_alr_appl_decision_id = EXCLUDED.oats_alr_appl_decision_id;
     """
     return query

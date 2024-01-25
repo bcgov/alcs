@@ -1,5 +1,5 @@
 <h3>Notice of Intent Prep</h3>
-<section *ngIf="noticeOfIntent?.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT">
+<section *ngIf="noticeOfIntent && noticeOfIntent.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS">
   <h5>Proposal Components - {{ noticeOfIntent?.type?.label }}</h5>
   <div class="input-table">
     <div>

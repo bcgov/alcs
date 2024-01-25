@@ -71,7 +71,7 @@
     </div>
     <div class="subheading2 grid-1">Phone</div>
     <div class="grid-double">
-      {{ primaryContact?.phoneNumber }}
+      {{ primaryContact?.phoneNumber ?? '' | mask : '(000) 000-0000' }}
       <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.phoneNumber"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
         >Invalid Format</app-validation-error

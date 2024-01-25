@@ -411,6 +411,16 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
+  onEditOwner() {
+    this.parcelForm.patchValue(
+      {
+        isConfirmedByApplicant: false,
+      },
+      { emitEvent: false }
+    );
+    this.onOwnersUpdated.emit();
+  }
+
   onEditCrownOwner(owner: ApplicationOwnerDto) {
     let dialog;
     dialog = this.dialog.open(CrownOwnerDialogComponent, {
@@ -424,6 +434,13 @@ export class ParcelEntryComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((result) => {
       if (result) {
+        this.parcelForm.patchValue(
+          {
+            isConfirmedByApplicant: false,
+          },
+          { emitEvent: false }
+        );
+
         this.onOwnersUpdated.emit();
         if (result.type === 'delete') {
           this.onRemoveOwner(result.uuid);
@@ -583,6 +600,13 @@ export class ParcelEntryComponent implements OnInit {
     } else {
       this.ownerInput.enable();
     }
+
+    this.parcelForm.patchValue(
+      {
+        isConfirmedByApplicant: false,
+      },
+      { emitEvent: false }
+    );
 
     this.parcel.owners = updatedArray;
     this.filteredOwners = this.mapOwners(this.owners);

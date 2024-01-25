@@ -112,7 +112,7 @@ def _get_insert_query():
                     %(created_at)s,
                     %(date)s,
                     %(decision_description)s,
-                    false,
+                    true,
                     false,
                     %(outcome_code)s,
                     %(rescinded_comment)s,
@@ -133,6 +133,9 @@ def _get_insert_query():
                 rescinded_comment =  COALESCE(EXCLUDED.rescinded_comment, alcs.application_decision.rescinded_comment),
                 rescinded_date =  COALESCE(EXCLUDED.rescinded_date, alcs.application_decision.rescinded_date),
                 is_subject_to_conditions = COALESCE(EXCLUDED.is_subject_to_conditions, alcs.application_decision.is_subject_to_conditions),
+                was_released = True,
+                is_draft = False,
+                chair_review_required = COALESCE(EXCLUDED.chair_review_required, true),
                 oats_alr_appl_decision_id = EXCLUDED.oats_alr_appl_decision_id;
     """
     return query
