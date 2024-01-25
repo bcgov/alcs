@@ -124,7 +124,10 @@ def _map_data(row):
 def _get_name(row):
     first_name = row.get("first_name", "")
     middle_name = row.get("middle_name", "")
-    return f"{first_name} {middle_name}".strip()
+    name = f"{first_name} {middle_name}".strip()
+    if row.get("organization_name") and name == "None":
+        return None
+    return name
 
 
 @inject_conn_pool
