@@ -210,6 +210,7 @@
         *ngIf="!isMobile"
         tableHeader="Soil to be Removed"
         tableHeader2="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="removalTableData"
         [(data2)]="fillToPlaceTableData"
         (dataChange)="markDirty()"
@@ -218,12 +219,14 @@
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Soil to be Removed"
+        [touchAll]="showErrors"
         [(data)]="removalTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="fillToPlaceTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -237,6 +240,7 @@
         *ngIf="!isMobile"
         tableHeader="Soil already Removed"
         tableHeader2="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="alreadyRemovedTableData"
         [(data2)]="fillAlreadyPlacedTableData"
         (dataChange)="markDirty()"
@@ -245,12 +249,14 @@
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Soil already Removed"
+        [touchAll]="showErrors"
         [(data)]="alreadyRemovedTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="fillAlreadyPlacedTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>

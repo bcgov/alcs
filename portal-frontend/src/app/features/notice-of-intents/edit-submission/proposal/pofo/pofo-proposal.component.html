@@ -160,6 +160,7 @@
       >
       <app-soil-table
         tableHeader="Fill to be placed"
+        [touchAll]="showErrors"
         [(data)]="fillToPlaceTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -170,6 +171,7 @@
       </mat-label>
       <app-soil-table
         tableHeader="Fill already placed"
+        [touchAll]="showErrors"
         [(data)]="fillAlreadyPlacedTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
