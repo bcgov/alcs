@@ -1,5 +1,5 @@
 WITH appl_components_grouped AS (
-    SELECT oaa.alr_application_id
+    SELECT *
     FROM oats.alcs_etl_applications_nois oaa
     WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
         and oaa.alr_change_code <> 'SRW'
@@ -36,7 +36,7 @@ SELECT aa.file_number,
     oa.ministry_notice_ind
 FROM appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
-    JOIN oats.oats_alr_appl_components oc ON acg.alr_application_id = oc.alr_application_id
+    JOIN oats.oats_alr_appl_components oc ON acg.alr_appl_component_id = oc.alr_appl_component_id
     JOIN oats.oats_alr_applications oa ON acg.alr_application_id = oa.alr_application_id
     LEFT JOIN alcs."user" au ON oa.created_guid = au.bceid_guid
 WHERE aa.type_code <> 'SRW'
