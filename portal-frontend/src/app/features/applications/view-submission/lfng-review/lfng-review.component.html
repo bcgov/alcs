@@ -13,7 +13,7 @@
       >
         Download PDF
       </button>
-      <button mat-flat-button color="primary" *ngIf="application && application.canEdit" 
+      <button mat-flat-button color="primary" *ngIf="application && application.canEdit"
         [routerLink]="'/application/' + application.fileNumber + '/edit'">
         <div class="continue-button-content">
           <span>Continue Application</span>
@@ -23,8 +23,8 @@
       <button (click)="onReview(application.fileNumber)"  mat-flat-button color="primary"
         *ngIf="
           application && application.canReview && (
-          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG || 
-          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG || 
+          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
           application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
         ">
         <div class="continue-button-content">
@@ -128,7 +128,7 @@
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
-            {{ applicationReview.phoneNumber }}
+            {{ applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000'  }}
             <app-no-data *ngIf="!applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>
