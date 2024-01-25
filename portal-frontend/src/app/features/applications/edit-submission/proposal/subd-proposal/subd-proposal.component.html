@@ -44,9 +44,9 @@
         />
         <span *ngIf="lotsProposed.value" matTextSuffix>lots</span>
       </mat-form-field>
-      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+      <div *ngIf="lotsProposed.invalid && (lotsProposed.dirty || lotsProposed.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
-        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+        <div *ngIf="lotsProposed.errors?.['required']">This field is required</div>
       </div>
       <mat-hint class="subtext">
         Example: If the proposal is to subdivide a 5 ha lot with road dedication from a 20 ha parcel, the total number
