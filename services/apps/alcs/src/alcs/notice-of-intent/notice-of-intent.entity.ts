@@ -227,6 +227,13 @@ export class NoticeOfIntent extends Base {
   })
   proposalEndDate2?: Date | null;
 
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the noi was created in OATS',
+    nullable: true,
+  })
+  createdAt?: Date | null;
+
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,
   })

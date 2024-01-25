@@ -122,6 +122,7 @@
       </app-info-banner>
       <app-soil-table
         tableHeader="Soil to be Removed"
+        [touchAll]="showErrors"
         [(data)]="removalTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -133,6 +134,7 @@
       >
       <app-soil-table
         tableHeader="Soil already Removed"
+        [touchAll]="showErrors"
         [(data)]="alreadyRemovedTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>

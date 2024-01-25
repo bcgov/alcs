@@ -1,8 +1,9 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserDto } from '../../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../../services/authentication/authentication.service';
 import { CodeService } from '../../../services/code/code.service';
@@ -19,12 +20,16 @@ describe('InboxComponent', () => {
   let mockAuthService: DeepMocked<AuthenticationService>;
   let mockCodeService: DeepMocked<CodeService>;
 
+  let activatedRoute: DeepMocked<ActivatedRoute>;
+
   beforeEach(async () => {
     mockInboxService = createMock();
     mockAuthService = createMock();
     mockCodeService = createMock();
+    activatedRoute = createMock();
 
     mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
+    Object.assign(activatedRoute, { paramMap: new Observable<ParamMap>() });
 
     await TestBed.configureTestingModule({
       imports: [MatAutocompleteModule],
@@ -37,6 +42,10 @@ describe('InboxComponent', () => {
         {
           provide: CodeService,
           useValue: mockCodeService,
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: activatedRoute,
         },
         {
           provide: StatusService,

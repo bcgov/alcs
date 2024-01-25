@@ -84,7 +84,7 @@
                 </div>
                 <div class="row">
                   <div class="key"><strong>Phone Number:</strong></div>
-                  <div class="value">{{ phoneNumber.value }}</div>
+                  <div class="value">{{ phoneNumber.value ?? '' | mask : '(000) 000-0000'  }}</div>
                 </div>
                 <div class="row">
                   <div class="key"><strong>Email:</strong></div>

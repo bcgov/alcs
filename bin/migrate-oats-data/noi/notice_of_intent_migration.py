@@ -28,6 +28,7 @@ from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_tabl
 from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_rx_all_items import (
     update_notice_of_intent_date_rx_all_items,
 )
+from .oats_to_alcs_notice_of_intent_table_etl.update_notice_of_intent_created_date import update_noi_created_date
 
 from .notice_of_intent_submissions.parcels import (
     init_notice_of_intent_parcels,
@@ -130,6 +131,8 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_base_fields(batch_size)
 
     update_notice_of_intent_date_rx_all_items(batch_size)
+
+    update_noi_created_date(batch_size)
 
     process_alcs_notice_of_intent_decision_date(batch_size)
 

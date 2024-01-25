@@ -121,6 +121,7 @@
       </app-info-banner>
       <app-soil-table
         tableHeader="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -132,6 +133,7 @@
       >
       <app-soil-table
         tableHeader="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="alreadyFilledTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -178,11 +180,11 @@
         ></textarea>
       </mat-form-field>
       <div
-        *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
+        *ngIf="alternativeMeasures.invalid && (alternativeMeasures.dirty || alternativeMeasures.touched)"
         class="field-error"
       >
         <mat-icon>warning</mat-icon>
-        <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
+        <div *ngIf="alternativeMeasures.errors?.['required']">This field is required</div>
       </div>
       <mat-hint class="subtext">
         Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
