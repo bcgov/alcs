@@ -26,6 +26,7 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
 
   $destroy = new Subject<void>();
+  isLoading = false;
 
   SUBMISSION_STATUS = SUBMISSION_STATUS;
 
@@ -80,14 +81,15 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async onReview(fileId: string) {
+    this.isLoading = true;
     if (this.application?.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
-      // FIXME: Service call is being called twice on banner button click causing error toast
       const review = await this.applicationReviewService.startReview(fileId);
       if (!review) {
         return;
       }
     }
     await this.router.navigateByUrl(`application/${fileId}/review`);
+    this.isLoading = false;
   }
 
   async openFile(uuid: string) {
