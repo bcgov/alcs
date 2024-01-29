@@ -205,7 +205,6 @@
       >
       to obtain a recent copy (not older than 1 year) of the Certificate of Title
     </div>
-    {{ parcelForm.controls.pid.disabled }}
     <app-file-drag-drop
       id="certificate-of-title-upload"
       [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
@@ -333,7 +332,7 @@
             </div>
             <div class="row">
               <div class="key"><strong>Phone Number:</strong></div>
-              <div class="value">{{ selectedOwner.phoneNumber ?? '' | mask : '(000) 000-0000'  }}</div>
+              <div class="value">{{ selectedOwner.phoneNumber ?? '' | mask : '(000) 000-0000' }}</div>
             </div>
             <div class="row">
               <div class="key"><strong>Email:</strong></div>
