@@ -69,7 +69,7 @@ def update_document_source(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     logger.exception()
                     conn.rollback()
                     failed_inserts_count = count_total - successful_updates_count
-                    last_application_id = last_application_id + 1
+                    last_document_id = last_document_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts_count}"
