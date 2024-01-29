@@ -1,7 +1,8 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { RemoveFileConfirmationDialogComponent } from '../../../features/applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import {
@@ -12,13 +13,12 @@ import {
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
 import { NoticeOfIntentOwnerCreateDto } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
+import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../dto/document.dto';
 import { OWNER_TYPE } from '../../dto/owner.dto';
 import { FileHandle } from '../../file-drag-drop/drag-drop.directive';
-import { RemoveFileConfirmationDialogComponent } from '../../../features/applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 
 @Component({
   selector: 'app-owner-dialog',
@@ -40,6 +40,7 @@ export class OwnerDialogComponent {
   existingUuid: string | undefined;
   files: ApplicationDocumentDto[] = [];
   showFileErrors = false;
+  isLoading = false;
 
   form = new FormGroup({
     type: this.type,
@@ -108,6 +109,7 @@ export class OwnerDialogComponent {
         return;
       }
 
+      this.isLoading = true;
       let documentUuid;
       if (this.pendingFile) {
         documentUuid = await this.uploadPendingFile(this.pendingFile);
@@ -128,6 +130,7 @@ export class OwnerDialogComponent {
       };
 
       const res = await this.data.ownerService.create(createDto);
+      this.isLoading = false;
       this.dialogRef.close({
         ...res,
         action: 'create',
@@ -159,6 +162,7 @@ export class OwnerDialogComponent {
 
   async onSave() {
     if (this.form.valid) {
+      this.isLoading = true;
       const document = await this.uploadPendingFile(this.pendingFile);
       const updateDto: ApplicationOwnerUpdateDto = {
         organizationName: this.organizationName.getRawValue(),
@@ -176,6 +180,7 @@ export class OwnerDialogComponent {
           action: 'edit',
         });
       }
+      this.isLoading = false;
     } else {
       this.form.markAllAsTouched();
     }
