@@ -40,7 +40,6 @@ export class ClamAVService {
       const { isInfected } = await this.scanner.scanStream(response.data);
       return isInfected;
     } catch (err) {
-      //TODO: What do we do if ClamAV is down?
       this.logger.error(err);
     }
   }

@@ -8,8 +8,7 @@ WORKDIR /app
 COPY package.json .
 
 # Install dependencies
-# TODO: Replace with ci when fixed - https://github.com/ng-select/ng-select/issues/2111
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Copy the source code to the /app directory
 COPY . .

@@ -1,6 +1,6 @@
 -- this script selects difference between fields that do not require mapping
 WITH apps_with_one_or_zero_component_only AS (
-    SELECT oaa.alr_application_id
+    SELECT *
     FROM oats.alcs_etl_applications_nois oaa
     WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
         and oaa.alr_change_code <> 'SRW'
@@ -30,7 +30,7 @@ oats_app_data AS (
         JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oats_asub.alr_application_id
         AND oaa.application_class_code in ('LOA', 'BLK', 'SCH', 'NAN')
         AND oaac.alr_change_code <> 'SRW'
-        JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = oats_asub.alr_application_id
+        JOIN oats.oats_alr_appl_components oaac ON oaac.alr_appl_component_id = oats_asub.alr_appl_component_id
 )
 SELECT oats_app.alr_application_id,
     as2.purpose,

@@ -147,7 +147,7 @@
         <mat-form-field appearance="outline">
           <textarea
             formControlName="farmImpact"
-            #purposeText
+            #farmImpactText
             maxlength="4000"
             id="farmImpact"
             matInput
@@ -158,7 +158,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="farmImpact.errors?.['required']">This field is required</div>
         </div>
-        <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
+        <div class="subtext">Characters left: {{ 4000 - farmImpactText.textLength }}</div>
       </div>
       <div class="full-row">
         <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>

@@ -1,5 +1,5 @@
 WITH appl_components_grouped AS (
-    SELECT oaa.alr_application_id
+    SELECT *
     FROM oats.alcs_etl_applications_nois oaa
     WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
         and oaa.alr_change_code <> 'SRW'
@@ -26,5 +26,5 @@ SELECT oaa.alr_application_id,
     oaa.legacy_application_nbr,
     oaa.submitted_to_alc_date
 FROM appl_components_grouped acg
-    JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = acg.alr_application_id
+    JOIN oats.oats_alr_appl_components oaac ON oaac.alr_appl_component_id = acg.alr_appl_component_id
     JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = acg.alr_application_id
