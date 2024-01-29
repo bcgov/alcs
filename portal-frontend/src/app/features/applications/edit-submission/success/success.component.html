@@ -9,11 +9,11 @@
     <span *ngIf="governmentFee">
       The {{ localGovernmentName }} portion of the fee is <strong>${{ governmentFee }}</strong
       ><br /><br />
+      Please contact the {{ localGovernmentName }} to determine the preferred form of payment.<br /><br />
     </span>
     <span *ngIf="localGovernmentName && !governmentFee">
-      There is no application fee to for an {{ appLabel }} application.<br /><br />
+      There is no application fee for an {{ appLabel }} application.<br /><br />
     </span>
-    Please contact the {{ localGovernmentName }} to determine the preferred form of payment.<br /><br />
     Until the {{ localGovernmentName }} resolves to forward your application to the ALC, the ALC cannot view your
     submission. Any updates to your submission must be provided to the {{ localGovernmentName }}.
   </ng-container>
@@ -22,7 +22,6 @@
       You have submitted a <strong>{{ appLabel }}</strong> application to the
       <strong>Agricultural Land Commission</strong> for their review and decision. </span
     ><br /><br /><br />
-
     <ng-container *ngIf="alcFee">
       Application Fee is <strong>${{ alcFee }}</strong
       ><br /><br />
