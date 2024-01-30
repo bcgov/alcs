@@ -356,7 +356,11 @@ export class GenerateNoiSubmissionDocumentService {
         submission.soilIsRemovingSoilForNewStructure,
       ),
       soilProposedStructures: submission.soilProposedStructures.map(
-        (structure, index) => ({ ...structure, index }),
+        (structure, index) => ({
+          area: structure.area ?? NO_DATA,
+          type: structure.type ?? NO_DATA,
+          index: index + 1,
+        }),
       ),
       soilStructureFarmUseReason: submission.soilStructureFarmUseReason,
       soilStructureResidentialUseReason:

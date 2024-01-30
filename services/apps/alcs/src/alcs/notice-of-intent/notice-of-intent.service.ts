@@ -2,10 +2,10 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -23,13 +23,13 @@ import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { CodeService } from '../code/code.service';
 import { LocalGovernmentService } from '../local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
+import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import {
   CreateNoticeOfIntentServiceDto,
   NoticeOfIntentDto,
@@ -332,6 +332,14 @@ export class NoticeOfIntentService {
       updateDto.hideFromPortal,
       noticeOfIntent.hideFromPortal,
     );
+
+    if (updateDto.typeCode) {
+      noticeOfIntent.type = await this.typeRepository.findOneOrFail({
+        where: {
+          code: updateDto.typeCode,
+        },
+      });
+    }
 
     await this.repository.save(noticeOfIntent);
 
