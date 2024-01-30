@@ -136,6 +136,14 @@ export class NoticeOfIntentSubmissionService {
       );
     }
 
+    if (!noticeOfIntentSubmission.isDraft && updateDto.typeCode) {
+      await this.noticeOfIntentService.update(
+        noticeOfIntentSubmission.fileNumber,
+        {
+          typeCode: updateDto.typeCode,
+        },
+      );
+    }
     return this.getByUuid(submissionUuid, user);
   }
 

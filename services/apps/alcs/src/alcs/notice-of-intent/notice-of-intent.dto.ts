@@ -142,6 +142,10 @@ export class UpdateNoticeOfIntentDto {
   dateSubmittedToAlc?: number;
 
   @IsOptional()
+  @IsString()
+  typeCode?: string;
+
+  @IsOptional()
   @IsBoolean()
   hideFromPortal?: boolean;
 

@@ -208,6 +208,15 @@ export class ApplicationSubmissionService {
       );
     }
 
+    if (!applicationSubmission.isDraft && updateDto.typeCode) {
+      await this.applicationService.updateByFileNumber(
+        applicationSubmission.fileNumber,
+        {
+          typeCode: updateDto.typeCode,
+        },
+      );
+    }
+
     return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
