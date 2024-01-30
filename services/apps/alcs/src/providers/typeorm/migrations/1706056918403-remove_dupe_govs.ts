@@ -47,7 +47,7 @@ export class RemoveDupeGovs1706056918403 implements MigrationInterface {
       UPDATE "alcs"."application" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
       UPDATE "alcs"."notice_of_intent" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
       UPDATE "alcs"."planning_review" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
-      UPDATE "alcs"."covenant" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc5';
+      UPDATE "alcs"."covenant" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
 
       DELETE FROM "alcs"."local_government" WHERE "uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
     `);
