@@ -66,6 +66,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
             data["alr_change_code"] == ALRChangeCode.EXC.value
             or data["alr_change_code"] == ALRChangeCode.INC.value
         ):
+            data = _map_proposal_background(data)
             inc_exc_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.NAR.value:
             data["rsdntl_use_type_code"] = str(
@@ -81,10 +82,12 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
             data["alr_change_code"] == ALRChangeCode.EXT.value
             or data["alr_change_code"] == ALRChangeCode.FILL.value
         ):
+            data = _map_proposal_background(data)
             soil_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.SCH.value:
             data = _map_duration_field(data, "remove_duration")
             data = _map_duration_field(data, "fill_duration")
+            data = _map_proposal_background(data)
             pfrs_data_list.append(data)
         else:
             other_data_list.append(data)
@@ -124,4 +127,28 @@ def get_soil_data(rows, cursor):
 def _map_duration_field(data, field_key):
     duration = data.get(field_key)
     data[field_key] = f"{duration} months" if duration is not None else None
+    return data
+
+
+def _map_proposal_background(data):
+    background_data = data.get("proposal_background_desc")
+    background_summary = None
+    if background_data and len(background_data) > 10:
+        background_summary = (
+            f' {data["proposal_summary_desc"]} . Background: {background_data}'
+        )
+
+    if data["alr_change_code"] == ALRChangeCode.INC.value:
+        data[
+            "proposal_summary_desc"
+        ] = f"{data.get('proposal_summary_desc','')} {background_summary}"
+        data[
+            "proposal_background_desc"
+        ] = None  # cleat excl_why_land field since it is not applicable to Inclusion component
+    if data["alr_change_code"] in [
+        ALRChangeCode.EXT.value,
+        ALRChangeCode.FILL.value,
+        ALRChangeCode.SCH.value,
+    ]:
+        data["proposal_summary_desc"] = background_summary
     return data
