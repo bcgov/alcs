@@ -14,28 +14,28 @@
       <div>
         <div class="subheading2">Payment Date</div>
         <app-inline-datepicker
-          [value]="application?.feePaidDate"
+          [value]="application.feePaidDate"
           (save)="updateApplicationDate('feePaidDate', $event)"
         ></app-inline-datepicker>
       </div>
       <div>
         <div class="subheading2">Payment Amount</div>
         <app-inline-number
-          [value]="application?.feeAmount"
+          [value]="application.feeAmount"
           (save)="updateApplicationNumber('feeAmount', $event)"
         ></app-inline-number>
       </div>
       <div>
         <div class="subheading2">Split with L/FNG</div>
         <app-inline-boolean
-          [selectedValue]="application?.feeSplitWithLg ?? null"
+          [selectedValue]="application.feeSplitWithLg ?? null"
           (save)="updateApplicationBoolean('feeSplitWithLg', $event)"
         ></app-inline-boolean>
       </div>
       <div>
         <div class="subheading2">Fee Waived</div>
         <app-inline-boolean
-          [selectedValue]="application?.feeWaived ?? null"
+          [selectedValue]="application.feeWaived ?? null"
           (save)="updateApplicationBoolean('feeWaived', $event)"
         ></app-inline-boolean>
       </div>
