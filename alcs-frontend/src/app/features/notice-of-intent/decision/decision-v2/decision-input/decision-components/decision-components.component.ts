@@ -58,7 +58,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     private toastService: ToastService,
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private submissionService: NoticeOfIntentSubmissionService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +100,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           agCapMap: this.noticeOfIntent.agCapMap,
           agCapConsultant: this.noticeOfIntent.agCapConsultant,
           noticeOfIntentDecisionComponentType: this.decisionComponentTypes.find(
-            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+            (e) => e.code === typeCode && e.uiCode !== 'COPY',
           )!,
         };
 
@@ -189,7 +189,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
 
   private patchPfrsFields(component: NoticeOfIntentDecisionComponentDto) {
     this.patchRosoFields(component);
-    this.patchRosoFields(component);
+    this.patchPofoFields(component);
     component.endDate2 = this.noticeOfIntent.proposalEndDate2;
   }
 
