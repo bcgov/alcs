@@ -144,7 +144,7 @@ def _map_proposal_background(data):
         ] = f"{data.get('proposal_summary_desc','')} {background_summary}"
         data[
             "proposal_background_desc"
-        ] = None  # cleat excl_why_land field since it is not applicable to Inclusion component
+        ] = None  # clean excl_why_land field since it is not applicable to Inclusion component
     if data["alr_change_code"] in [
         ALRChangeCode.EXT.value,
         ALRChangeCode.FILL.value,
