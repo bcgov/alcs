@@ -153,7 +153,6 @@ def get_insert_query(unique_fields, unique_values):
 
 def get_insert_query_for_nfu():
     unique_fields = """, nfu_hectares,
-                        nfu_will_import_fill,
                         nfu_fill_volume,
                         nfu_max_fill_depth,
                         nfu_project_duration,
@@ -164,7 +163,6 @@ def get_insert_query_for_nfu():
                         nfu_outside_lands
                         """
     unique_values = """, %(alr_area)s,
-                        %(import_fill)s,
                         %(total_fill)s,
                         %(max_fill_depth)s,
                         %(fill_duration)s,
@@ -179,7 +177,6 @@ def get_insert_query_for_nfu():
 
 def get_insert_query_for_naru():
     unique_fields = """,
-                        naru_will_import_fill,
                         naru_to_place_volume,
                         naru_to_place_maximum_depth,
                         naru_to_place_average_depth,
@@ -197,7 +194,6 @@ def get_insert_query_for_naru():
                         naru_location_rationale
                         """
     unique_values = """,
-                        %(import_fill)s,
                         %(total_fill)s,
                         %(max_fill_depth)s,
                         %(max_fill_depth)s,

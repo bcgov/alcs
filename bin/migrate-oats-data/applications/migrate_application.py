@@ -61,7 +61,7 @@ def process_application_etl(batch_size):
     update_application_date_rx_all_items(batch_size)
     update_application_created_date(batch_size)
     process_alcs_app_submissions(batch_size)
-    update_application_submissions()
+    update_application_submissions(batch_size)
     insert_application_submission_review(batch_size)
     process_alcs_application_decision_date(batch_size)
     process_application_statuses(batch_size)

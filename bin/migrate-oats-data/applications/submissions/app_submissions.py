@@ -13,7 +13,8 @@ from .data_insert import (
     insert_app_sub_records,
     update_covenant_farm_impact,
     update_covenant_area_impacted,
-    update_covenant_draft
+    update_covenant_draft,
+    update_submission_fill_import,
 )
 
 etl_name = "process_alcs_app_submissions"
@@ -110,7 +111,8 @@ def clean_application_submission(conn=None):
 
     conn.commit()
 
-def update_application_submissions():
+def update_application_submissions(batch_size):
     update_covenant_draft()
     update_covenant_area_impacted()
     update_covenant_farm_impact()
+    update_submission_fill_import(batch_size)
