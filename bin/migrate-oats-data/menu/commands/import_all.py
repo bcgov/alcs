@@ -18,6 +18,7 @@ from documents import (
     import_oats_app_documents,
     link_alcs_docs_to_noi_docs,
     link_alcs_docs_to_app_docs,
+    update_document_source,
 )
 from staff_journal_users import populate_default_staff_journal_user
 
@@ -43,6 +44,9 @@ def import_all(console, args):
 
         console.log("Importing OATS app_documents into ALCS:")
         import_oats_app_documents(batch_size=import_batch_size)
+
+        console.log("Updating documents:")
+        update_document_source(batch_size=import_batch_size)
 
         console.log("Processing ALCS application documents:")
         link_alcs_docs_to_app_docs(batch_size=import_batch_size)

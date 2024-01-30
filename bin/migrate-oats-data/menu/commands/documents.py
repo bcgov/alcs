@@ -3,6 +3,7 @@ from documents import (
     import_oats_app_documents,
     link_alcs_docs_to_noi_docs,
     link_alcs_docs_to_app_docs,
+    update_document_source,
 )
 
 
@@ -16,6 +17,7 @@ def document_import(console, args):
 
         import_oats_app_documents(batch_size=import_batch_size)
         import_oats_noi_documents(batch_size=import_batch_size)
+        update_document_source(batch_size=import_batch_size)
 
 
 def app_document_import(console, args):
