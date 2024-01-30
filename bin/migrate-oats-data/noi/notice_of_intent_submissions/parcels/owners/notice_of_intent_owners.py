@@ -2,6 +2,8 @@ from common import (
     setup_and_get_logger,
     BATCH_UPLOAD_SIZE,
     OATS_ETL_USER,
+    to_alcs_format,
+    get_now_with_offset,
     ALCSOwnershipType,
     ALCSOwnerType,
 )
@@ -27,7 +29,7 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
         logger.info(f"Total Notice of Intents data to insert: {count_total}")
 
         failed_inserts = 0
-        successful_updates_count = 0
+        successful_insert_count = 0
         last_subject_property = 0
         last_person_organization_id = 0
 
@@ -49,10 +51,10 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
                 try:
                     records_to_be_inserted_count = len(rows)
 
-                    _insert_records(conn, cursor, rows)
+                    _insert_records(conn, cursor, rows, successful_insert_count)
 
-                    successful_updates_count = (
-                        successful_updates_count + records_to_be_inserted_count
+                    successful_insert_count = (
+                        successful_insert_count + records_to_be_inserted_count
                     )
 
                     last_record = dict(rows[-1])
@@ -60,25 +62,25 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
                     last_person_organization_id = last_record["person_organization_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert notice of intents owners so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert notice of intents owners so far {successful_insert_count}; last updated {last_subject_property} {last_person_organization_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
                     conn.rollback()
-                    failed_inserts = count_total - successful_updates_count
+                    failed_inserts = count_total - successful_insert_count
                     last_person_organization_id = last_person_organization_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful inserts {successful_updates_count}, total failed inserts {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful inserts {successful_insert_count}, total failed inserts {failed_inserts}"
     )
 
 
-def _insert_records(conn, cursor, rows):
+def _insert_records(conn, cursor, rows, insert_index):
     number_of_rows_to_insert = len(rows)
 
     if number_of_rows_to_insert > 0:
         insert_query = _compile_owner_insert_query(number_of_rows_to_insert)
-        rows_to_insert = _prepare_data_to_insert(rows)
+        rows_to_insert = _prepare_data_to_insert(rows, insert_index)
         cursor.execute(insert_query, rows_to_insert)
         conn.commit()
 
@@ -96,23 +98,25 @@ def _compile_owner_insert_query(number_of_rows_to_insert):
                             type_code, 
                             oats_person_organization_id,
                             oats_property_interest_id,
-                            audit_created_by
+                            audit_created_by,
+                            audit_created_at
                         )
                         VALUES{owners_to_insert}
                         ON CONFLICT DO NOTHING;
     """
 
 
-def _prepare_data_to_insert(rows):
+def _prepare_data_to_insert(rows, insert_index):
     row_without_last_element = []
     for row in rows:
-        mapped_row = _map_data(row)
+        mapped_row = _map_data(row, insert_index)
         row_without_last_element.append(tuple(mapped_row.values()))
+        insert_index += 1
 
     return row_without_last_element
 
 
-def _map_data(row):
+def _map_data(row, insert_index):
     return {
         "first_name": _get_name(row),
         "last_name": row["last_name"],
@@ -124,6 +128,7 @@ def _map_data(row):
         "oats_person_organization_id": row["person_organization_id"],
         "oats_property_interest_id": row["property_interest_id"],
         "audit_created_by": OATS_ETL_USER,
+        "audit_created_at": to_alcs_format(get_now_with_offset(insert_index)),
     }
 
 
