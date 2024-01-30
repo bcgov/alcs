@@ -194,7 +194,6 @@ def get_insert_query_for_naru():
                         naru_location_rationale
                         """
     unique_values = """,
-                        %(import_fill)s,
                         %(total_fill)s,
                         %(max_fill_depth)s,
                         %(max_fill_depth)s,
