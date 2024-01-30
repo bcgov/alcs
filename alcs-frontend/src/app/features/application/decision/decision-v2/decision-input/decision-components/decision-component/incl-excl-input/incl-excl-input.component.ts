@@ -7,5 +7,5 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./incl-excl-input.component.scss'],
 })
 export class InclExclInputComponent {
-  @Input() form!: FormGroup;
+  @Input() form?: FormGroup;
 }
