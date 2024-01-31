@@ -168,9 +168,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
                 "audit_created_by": OATS_ETL_USER,
                 "end_date": end_date,
                 "end_date2": end_date2,
-                "expiry_date": add_timezone_and_keep_date_part(
-                    row.get("decision_expiry_date")
-                ),
+                "expiry_date": None,
                 "application_decision_component_type_code": _map_component_type_code(
                     row
                 ),
@@ -188,7 +186,39 @@ def _prepare_oats_alr_applications_data(row_data_list):
             ALRChangeCode.INC.value,
             ALRChangeCode.EXC.value,
             ALRChangeCode.SDV.value,
-            ALRChangeCode.NAR.value,
+            ALRChangeCode.CSC.value,
+        ]:
+            mapped_row = {
+                "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
+                if row.get("agri_capability_code")
+                else None,
+                "ag_cap_consultant": row.get("agri_cap_consultant"),
+                "ag_cap_map": row.get("agri_cap_map"),
+                "ag_cap_source": str(
+                    OatsToAlcsAgCapSource[row["capability_source_code"]].value
+                )
+                if row.get("capability_source_code")
+                else None,
+                "alr_area": row.get("component_area"),
+                "audit_created_by": OATS_ETL_USER,
+                "end_date": None,
+                "end_date2": None,
+                "expiry_date": add_timezone_and_keep_date_part(
+                    row.get("decision_expiry_date")
+                ),
+                "application_decision_component_type_code": _map_component_type_code(
+                    row
+                ),
+                "application_decision_uuid": row.get("decision_uuid"),
+                "alr_appl_component_id": row.get("component_id"),
+                "naru_type_code": None,
+                "nonfarm_use_subtype_code": None,
+                "nonfarm_use_type_code": None,
+                "applicant_type": _map_legislation_to_applicant_type(row),
+            }
+            data_list.append(mapped_row)
+
+        elif row.get("alr_change_code", None) in [
             ALRChangeCode.NFU.value,
         ]:
             nfu_type, nfu_subtype, nfu_end_date = _map_oats_to_alcs_nfu(row)
@@ -207,6 +237,37 @@ def _prepare_oats_alr_applications_data(row_data_list):
                 "audit_created_by": OATS_ETL_USER,
                 "end_date": nfu_end_date,
                 "end_date2": None,
+                "expiry_date": None,
+                "application_decision_component_type_code": _map_component_type_code(
+                    row
+                ),
+                "application_decision_uuid": row.get("decision_uuid"),
+                "alr_appl_component_id": row.get("component_id"),
+                "naru_type_code": _map_naru_subtype(row),
+                "nonfarm_use_subtype_code": nfu_subtype,
+                "nonfarm_use_type_code": nfu_type,
+                "applicant_type": _map_legislation_to_applicant_type(row),
+            }
+            data_list.append(mapped_row)
+
+        elif row.get("alr_change_code", None) in [
+            ALRChangeCode.NAR.value,
+        ]:
+            mapped_row = {
+                "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
+                if row.get("agri_capability_code")
+                else None,
+                "ag_cap_consultant": row.get("agri_cap_consultant"),
+                "ag_cap_map": row.get("agri_cap_map"),
+                "ag_cap_source": str(
+                    OatsToAlcsAgCapSource[row["capability_source_code"]].value
+                )
+                if row.get("capability_source_code")
+                else None,
+                "alr_area": row.get("component_area"),
+                "audit_created_by": OATS_ETL_USER,
+                "end_date": add_timezone_and_keep_date_part(row.get("nonfarm_use_end_date")),
+                "end_date2": None,
                 "expiry_date": add_timezone_and_keep_date_part(
                     row.get("decision_expiry_date")
                 ),
@@ -216,8 +277,8 @@ def _prepare_oats_alr_applications_data(row_data_list):
                 "application_decision_uuid": row.get("decision_uuid"),
                 "alr_appl_component_id": row.get("component_id"),
                 "naru_type_code": _map_naru_subtype(row),
-                "nonfarm_use_subtype_code": nfu_subtype,
-                "nonfarm_use_type_code": nfu_type,
+                "nonfarm_use_subtype_code": None,
+                "nonfarm_use_type_code": None,
                 "applicant_type": _map_legislation_to_applicant_type(row),
             }
             data_list.append(mapped_row)
@@ -253,6 +314,9 @@ def _map_component_type_code(row):
 
     if alr_change_code == ALRChangeCode.NAR.value:
         return "NARU"
+    
+    if alr_change_code == ALRChangeCode.CSC.value:
+        return "COVE"
 
     return None
 
@@ -270,13 +334,22 @@ def _map_oats_to_alcs_nfu(data):
             oats_type_code, oats_subtype_code
         )
 
-    data["nonfarm_use_end_date"] = add_timezone_and_keep_date_part(
-        data.get("nonfarm_use_end_date", None)
-    )
-
     nfu_type = data["nonfarm_use_type_code"]
     nfu_subtype = data["nonfarm_use_subtype_code"]
-    nfu_end_date = data["nonfarm_use_end_date"]
+    end_date = add_timezone_and_keep_date_part(
+        data.get("nonfarm_use_end_date", None)
+    )
+    expiry_date = add_timezone_and_keep_date_part(
+        data.get("decision_expiry_date", None)
+    )
+    if end_date and expiry_date:
+        nfu_end_date = max(end_date, expiry_date)
+    elif end_date:
+        nfu_end_date = end_date
+    elif expiry_date:
+        nfu_end_date = expiry_date
+    else:
+        nfu_end_date = None
 
     return nfu_type, nfu_subtype, nfu_end_date
 
@@ -311,7 +384,15 @@ def _map_naru_subtype(row):
 
 def _map_end_date(row):
     alr_change_code = row.get("alr_change_code")
-    date = add_timezone_and_keep_date_part(row.get("nonfarm_use_end_date"))
+    end_date = add_timezone_and_keep_date_part(row.get("nonfarm_use_end_date"))
+    expiry_date = add_timezone_and_keep_date_part(row.get("decision_expiry_date"))
+    date = None
+    if end_date and expiry_date:
+        date = max(end_date, expiry_date)
+    elif end_date:
+        date = end_date
+    elif expiry_date:
+        date = expiry_date
 
     if alr_change_code in [
         ALRChangeCode.SCH.value,
