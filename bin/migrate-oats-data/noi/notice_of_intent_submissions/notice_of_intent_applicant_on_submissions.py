@@ -86,20 +86,27 @@ def _update_records(conn, batch_size, cursor, rows):
 def _prepare_data(rows):
     data_list = []
     for row in rows:
-        data_list.append(_map_data(row))
+        parsed_data = _map_data(row)
+        if parsed_data:
+            data_list.append(parsed_data)
 
     return data_list
 
 
 def _map_data(row):
     applicant = (
-        row.get("last_name") if row.get("last_name") else row.get("organization_name")
+        row.get("last_name")
+        if row.get("last_name", None)
+        else row.get("organization_name", None)
     )
 
-    if applicant and row.get("owner_count_extension"):
-        applicant = f"{applicant} {row.get('owner_count_extension')}"
+    if applicant:
+        if row.get("owner_count_extension"):
+            applicant = f"{applicant} {row.get('owner_count_extension')}"
 
-    return {"applicant": applicant, "submission_uuid": row["submission_uuid"]}
+        return {"applicant": applicant, "submission_uuid": row["submission_uuid"]}
+
+    return None
 
 
 _update_query = """
