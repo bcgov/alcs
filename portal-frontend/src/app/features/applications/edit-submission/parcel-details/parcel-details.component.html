@@ -30,7 +30,7 @@
       [submissionUuid]="submissionUuid"
       [showErrors]="showErrors"
       (onFormGroupChange)="onParcelFormChange($event)"
-      (onOwnersUpdated)="onOwnersUpdated()"
+      (onOwnersUpdated)="reloadApplication()"
       (onOwnersDeleted)="reloadApplication()"
       (onSaveProgress)="onSave()"
     ></app-parcel-entry>
