@@ -18,6 +18,7 @@ from .notice_of_intent_submissions import (
     process_alcs_notice_of_intent_decision_released_status,
     process_alcs_notice_of_intent_cancelled_status,
     update_alcs_notice_of_intent_soil_fill_fields,
+    process_notice_of_intent_applicant_on_submissions
 )
 from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date import (
     process_alcs_notice_of_intent_decision_date,
@@ -171,6 +172,8 @@ def process_notice_of_intent(batch_size):
     init_notice_of_intent_primary_contacts(batch_size)
 
     link_notice_of_intent_primary_contacts(batch_size)
+
+    process_notice_of_intent_applicant_on_submissions(batch_size)
 
     process_noi_staff_journal(batch_size)
 
