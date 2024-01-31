@@ -5,7 +5,7 @@ import { NoticeOfIntentParcelService } from '../../../../services/notice-of-inte
 @Component({
   selector: 'app-parcel-prep',
   templateUrl: './parcel-prep.component.html',
-  styleUrls: ['./parcel-prep.component.scss']
+  styleUrls: ['./parcel-prep.component.scss'],
 })
 export class ParcelPrepComponent implements OnChanges {
   @Input() fileNumber = '';
@@ -22,13 +22,19 @@ export class ParcelPrepComponent implements OnChanges {
     uuid: string;
   }[] = [];
 
-  constructor(private parcelService: NoticeOfIntentParcelService, private router: Router) {}
+  constructor(
+    private parcelService: NoticeOfIntentParcelService,
+    private router: Router,
+  ) {}
 
   async loadParcels(fileNumber: string) {
     const parcels = await this.parcelService.fetchParcels(fileNumber);
     this.parcels = parcels.map((parcel) => ({
       ...parcel,
-      owners: `${parcel.owners[0].displayName} ${parcel.owners.length > 1 ? ' et al.' : ''}`,
+      owners:
+        parcel.owners.length !== 0
+          ? `${parcel.owners[0].displayName} ${parcel.owners.length > 1 ? ' et al.' : ''}`
+          : 'No Owners',
       fullOwners: parcel.owners.map((owner) => owner.displayName).join(', '),
       hasManyOwners: parcel.owners.length > 1,
     }));
