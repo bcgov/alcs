@@ -147,141 +147,47 @@ def _get_insert_query():
 def _prepare_oats_alr_applications_data(row_data_list):
     data_list = []
     for row in row_data_list:
-        if row.get("alr_change_code", None) in [
-            ALRChangeCode.SCH.value,
-            ALRChangeCode.FILL.value,
-            ALRChangeCode.EXT.value,
-        ]:
-            end_date, end_date2 = _map_end_date(row)
-            mapped_row = {
-                "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
-                if row.get("agri_capability_code")
-                else None,
-                "ag_cap_consultant": row.get("agri_cap_consultant"),
-                "ag_cap_map": row.get("agri_cap_map"),
-                "ag_cap_source": str(
-                    OatsToAlcsAgCapSource[row["capability_source_code"]].value
-                )
-                if row.get("capability_source_code")
-                else None,
-                "alr_area": row.get("component_area"),
-                "audit_created_by": OATS_ETL_USER,
-                "end_date": end_date,
-                "end_date2": end_date2,
-                "expiry_date": None,
-                "application_decision_component_type_code": _map_component_type_code(
-                    row
-                ),
-                "application_decision_uuid": row.get("decision_uuid"),
-                "alr_appl_component_id": row.get("component_id"),
-                "naru_type_code": None,
-                "nonfarm_use_subtype_code": None,
-                "nonfarm_use_type_code": None,
-                "applicant_type": None,
-            }
-            data_list.append(mapped_row)
-
-        elif row.get("alr_change_code", None) in [
-            ALRChangeCode.TUR.value,
-            ALRChangeCode.INC.value,
-            ALRChangeCode.EXC.value,
-            ALRChangeCode.SDV.value,
-            ALRChangeCode.CSC.value,
-        ]:
-            mapped_row = {
-                "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
-                if row.get("agri_capability_code")
-                else None,
-                "ag_cap_consultant": row.get("agri_cap_consultant"),
-                "ag_cap_map": row.get("agri_cap_map"),
-                "ag_cap_source": str(
-                    OatsToAlcsAgCapSource[row["capability_source_code"]].value
-                )
-                if row.get("capability_source_code")
-                else None,
-                "alr_area": row.get("component_area"),
-                "audit_created_by": OATS_ETL_USER,
-                "end_date": None,
-                "end_date2": None,
-                "expiry_date": add_timezone_and_keep_date_part(
-                    row.get("decision_expiry_date")
-                ),
-                "application_decision_component_type_code": _map_component_type_code(
-                    row
-                ),
-                "application_decision_uuid": row.get("decision_uuid"),
-                "alr_appl_component_id": row.get("component_id"),
-                "naru_type_code": None,
-                "nonfarm_use_subtype_code": None,
-                "nonfarm_use_type_code": None,
-                "applicant_type": _map_legislation_to_applicant_type(row),
-            }
-            data_list.append(mapped_row)
-
-        elif row.get("alr_change_code", None) in [
-            ALRChangeCode.NFU.value,
-        ]:
-            nfu_type, nfu_subtype, nfu_end_date = _map_oats_to_alcs_nfu(row)
-            mapped_row = {
-                "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
-                if row.get("agri_capability_code")
-                else None,
-                "ag_cap_consultant": row.get("agri_cap_consultant"),
-                "ag_cap_map": row.get("agri_cap_map"),
-                "ag_cap_source": str(
-                    OatsToAlcsAgCapSource[row["capability_source_code"]].value
-                )
-                if row.get("capability_source_code")
-                else None,
-                "alr_area": row.get("component_area"),
-                "audit_created_by": OATS_ETL_USER,
-                "end_date": nfu_end_date,
-                "end_date2": None,
-                "expiry_date": None,
-                "application_decision_component_type_code": _map_component_type_code(
-                    row
-                ),
-                "application_decision_uuid": row.get("decision_uuid"),
-                "alr_appl_component_id": row.get("component_id"),
-                "naru_type_code": _map_naru_subtype(row),
-                "nonfarm_use_subtype_code": nfu_subtype,
-                "nonfarm_use_type_code": nfu_type,
-                "applicant_type": _map_legislation_to_applicant_type(row),
-            }
-            data_list.append(mapped_row)
-
-        elif row.get("alr_change_code", None) in [
-            ALRChangeCode.NAR.value,
-        ]:
-            mapped_row = {
-                "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
-                if row.get("agri_capability_code")
-                else None,
-                "ag_cap_consultant": row.get("agri_cap_consultant"),
-                "ag_cap_map": row.get("agri_cap_map"),
-                "ag_cap_source": str(
-                    OatsToAlcsAgCapSource[row["capability_source_code"]].value
-                )
-                if row.get("capability_source_code")
-                else None,
-                "alr_area": row.get("component_area"),
-                "audit_created_by": OATS_ETL_USER,
-                "end_date": add_timezone_and_keep_date_part(row.get("nonfarm_use_end_date")),
-                "end_date2": None,
-                "expiry_date": add_timezone_and_keep_date_part(
-                    row.get("decision_expiry_date")
-                ),
-                "application_decision_component_type_code": _map_component_type_code(
-                    row
-                ),
-                "application_decision_uuid": row.get("decision_uuid"),
-                "alr_appl_component_id": row.get("component_id"),
-                "naru_type_code": _map_naru_subtype(row),
-                "nonfarm_use_subtype_code": None,
-                "nonfarm_use_type_code": None,
-                "applicant_type": _map_legislation_to_applicant_type(row),
-            }
-            data_list.append(mapped_row)
+        component_type = _check_change_code(row)
+        end_date, end_date2 = _map_end_date(row)
+        nfu_type, nfu_subtype, nfu_end_date = _map_oats_to_alcs_nfu(row)
+        mapped_row = {
+            "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
+            if row.get("agri_capability_code")
+            else None,
+            "ag_cap_consultant": row.get("agri_cap_consultant"),
+            "ag_cap_map": row.get("agri_cap_map"),
+            "ag_cap_source": str(
+                OatsToAlcsAgCapSource[row["capability_source_code"]].value
+            )
+            if row.get("capability_source_code")
+            else None,
+            "alr_area": row.get("component_area"),
+            "audit_created_by": OATS_ETL_USER,
+            "end_date": _pick_end_date(row, component_type, end_date, nfu_end_date),
+            "end_date2": end_date2
+            if component_type == "soil_type"
+            else None,
+            "expiry_date": add_timezone_and_keep_date_part(
+                row.get("decision_expiry_date"))
+            if component_type == "NAR_type" or component_type == "misc_type"
+            else None,
+            "application_decision_component_type_code": _map_component_type_code(
+                row
+            ),
+            "application_decision_uuid": row.get("decision_uuid"),
+            "alr_appl_component_id": row.get("component_id"),
+            "naru_type_code": _map_naru_subtype(row)
+            if component_type == "NAR_type"
+            else None,
+            "nonfarm_use_subtype_code": nfu_subtype
+            if component_type == "NFU_type"
+            else None,
+            "nonfarm_use_type_code": nfu_type
+            if component_type == "NFU_type"
+            else None,
+            "applicant_type": _map_legislation_to_applicant_type(row),
+        }
+        data_list.append(mapped_row)
 
     return data_list
 
@@ -320,6 +226,44 @@ def _map_component_type_code(row):
 
     return None
 
+def _check_change_code(row):
+    code = row.get("alr_change_code", None)
+    if code in [
+            ALRChangeCode.SCH.value,
+            ALRChangeCode.FILL.value,
+            ALRChangeCode.EXT.value,
+        ]:
+        return "soil_type"
+    elif code in [
+            ALRChangeCode.TUR.value,
+            ALRChangeCode.INC.value,
+            ALRChangeCode.EXC.value,
+            ALRChangeCode.SDV.value,
+            ALRChangeCode.CSC.value,
+        ]:
+        return "misc_type"
+    elif code in [
+            ALRChangeCode.NFU.value,
+        ]:
+        return "NFU_type"
+    elif code in [
+            ALRChangeCode.NAR.value,
+        ]:
+        return "NAR_type"
+    else:
+        return None
+    
+def _pick_end_date(data, component_type, end_date, nfu_end_date):
+    if component_type == "soil_type":
+        return end_date
+    elif component_type == "misc_type":
+        return None
+    elif component_type == "NFU_type":
+        return nfu_end_date
+    elif component_type == "NAR_type":
+        return add_timezone_and_keep_date_part(data.get("nonfarm_use_end_date"))
+    else:
+        return None
 
 def _map_oats_to_alcs_nfu(data):
     oats_type_code = data["nonfarm_use_type_code"]
