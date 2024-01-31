@@ -261,7 +261,7 @@ def _pick_end_date(data, component_type, end_date, nfu_end_date):
     elif component_type == "NFU_type":
         return nfu_end_date
     elif component_type == "NAR_type":
-        return add_timezone_and_keep_date_part(data.get("nonfarm_use_end_date"))
+        return add_timezone_and_keep_date_part(data.get("rsdntl_use_end_date"))
     else:
         return None
 
