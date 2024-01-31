@@ -347,6 +347,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onAddNewOwner() {
+    this.onSaveProgress.emit();
     const dialog = this.dialog.open(OwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -366,6 +367,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onAddNewGovernmentContact() {
+    this.onSaveProgress.emit();
     const dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
