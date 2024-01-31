@@ -52,7 +52,7 @@ def process_notice_of_intent_applicant_on_submissions(
                     successful_updates_count = (
                         successful_updates_count + records_to_be_updated_count
                     )
-                    last_updated_id = dict(rows[-1])["document_id"]
+                    last_updated_id = dict(rows[-1])["submission_uuid"]
 
                     logger.debug(
                         f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated submission_uuid: {last_updated_id}"
