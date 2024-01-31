@@ -11,6 +11,7 @@ from .submissions import (
     insert_application_submission_review,
     clean_reviews,
     update_application_submissions,
+    process_application_applicant_on_submissions
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields
@@ -67,6 +68,7 @@ def process_application_etl(batch_size):
     process_application_statuses(batch_size)
     process_application_parcels(batch_size)
     process_application_owners(batch_size)
+    process_application_applicant_on_submissions(batch_size)
     process_app_staff_journal(batch_size)
     process_application_decisions(batch_size)
     set_application_visibility()
