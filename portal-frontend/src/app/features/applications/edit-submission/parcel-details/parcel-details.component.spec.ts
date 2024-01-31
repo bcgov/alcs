@@ -15,7 +15,6 @@ describe('ParcelDetailsComponent', () => {
   let fixture: ComponentFixture<ParcelDetailsComponent>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
-  let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockMatDialog: DeepMocked<MatDialog>;
   let applicationPipe = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
@@ -25,7 +24,6 @@ describe('ParcelDetailsComponent', () => {
     mockApplicationParcelService = createMock();
     mockToastService = createMock();
     mockMatDialog = createMock();
-    mockApplicationOwnerService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelDetailsComponent],
@@ -37,10 +35,6 @@ describe('ParcelDetailsComponent', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockApplicationParcelService,
-        },
-        {
-          provide: ApplicationOwnerService,
-          useValue: mockApplicationOwnerService,
         },
         {
           provide: ToastService,

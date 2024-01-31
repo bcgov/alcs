@@ -51,6 +51,7 @@
             />
           </mat-form-field>
           <button
+            type="button"
             class="lookup-search-button"
             mat-flat-button
             color="primary"
@@ -61,7 +62,14 @@
           </button>
         </div>
         <div class="lookup-bottom-row">
-          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">
+          <button
+            type="button"
+            class="reset-button"
+            mat-stroked-button
+            color="accent"
+            (click)="onReset()"
+            [disabled]="_disabled"
+          >
             Reset
           </button>
           <span class="float-right">
@@ -246,6 +254,7 @@
       </div>
       <button
         class="new-owner"
+        type="button"
         *ngIf="enableAddNewOwner"
         mat-flat-button
         (click)="onAddNewOwner()"
@@ -280,7 +289,7 @@
             <div class="owner-option">
               <div *ngIf="owners.length != 0">No owner matching search</div>
               <div *ngIf="owners.length === 0">No owners added</div>
-              <button mat-flat-button color="primary">Add new owner</button>
+              <button type="button" mat-flat-button color="primary">Add new owner</button>
             </div>
           </mat-option>
         </mat-autocomplete>
@@ -293,6 +302,7 @@
     <ng-container *ngIf="isCrownLand">
       <p>Add the contact information of an employee who works in the department or ministry for the Crown parcel</p>
       <button
+        type="button"
         class="new-owner"
         *ngIf="enableAddNewOwner"
         (click)="onAddNewGovernmentContact()"
@@ -349,7 +359,7 @@
               <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
             </div>
             <div class="row">
-              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>
+              <button type="button" [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>
                 Edit information
               </button>
             </div>

@@ -35,10 +35,8 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   isDirty = false;
 
   constructor(
-    private router: Router,
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationParcelService: ApplicationParcelService,
-    private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
     private dialog: MatDialog
   ) {
@@ -157,16 +155,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
           this.parcels = this.parcels.filter((parcel) => parcel.uuid !== parcelUuid);
         }
       });
-  }
-
-  async onOwnersUpdated() {
-    const owners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
-    if (owners) {
-      const parcelOwners = owners.filter(
-        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
-      );
-      this.$owners.next(parcelOwners);
-    }
   }
 
   async reloadApplication() {

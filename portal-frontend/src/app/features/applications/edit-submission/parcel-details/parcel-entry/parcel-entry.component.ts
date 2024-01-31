@@ -188,14 +188,19 @@ export class ParcelEntryComponent implements OnInit {
 
   async onSearch() {
     let result;
-    if (this.searchBy.getRawValue() === 'pin') {
-      result = await this.parcelService.getByPin(this.pidPin.getRawValue()!);
-    } else {
-      result = await this.parcelService.getByPid(this.pidPin.getRawValue()!);
+    const searchValue = this.pidPin.getRawValue();
+    if (!searchValue || searchValue.length === 0) {
+      return;
     }
 
-    this.onReset();
+    if (this.searchBy.getRawValue() === 'pin') {
+      result = await this.parcelService.getByPin(searchValue);
+    } else {
+      result = await this.parcelService.getByPid(searchValue);
+    }
+
     if (result) {
+      this.onReset();
       this.legalDescription.setValue(result.legalDescription);
       this.mapArea.setValue(result.mapArea);
 
