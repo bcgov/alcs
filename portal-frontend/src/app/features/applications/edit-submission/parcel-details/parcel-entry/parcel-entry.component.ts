@@ -367,7 +367,6 @@ export class ParcelEntryComponent implements OnInit {
     });
     dialog.beforeClosed().subscribe((createdDto) => {
       if (createdDto) {
-        this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
         this.updateParcelOwners(updatedArray);
       }
@@ -386,7 +385,6 @@ export class ParcelEntryComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((createdDto) => {
       if (createdDto) {
-        this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
         this.updateParcelOwners(updatedArray);
       }
