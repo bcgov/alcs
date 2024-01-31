@@ -1,10 +1,10 @@
 <section>
-  <div class='split'>
+  <div class="split">
     <h3>Components</h3>
     <div>
       <button
-        [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
         type="button"
+        [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
         [matMenuTriggerFor]="decisionComponentMenu"
         mat-flat-button
         color="primary"
@@ -17,6 +17,7 @@
 
   <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
     <button
+      type="button"
       *ngFor="let componentType of decisionComponentTypes"
       mat-menu-item
       (click)="onAddNewComponent(componentType.uiCode, componentType.code)"
@@ -33,7 +34,7 @@
       [(data)]="components[index]"
       [codes]="codes"
       (dataChange)="onChange()"
-      (remove)='onRemove(index)'
+      (remove)="onRemove(index)"
     ></app-decision-component>
   </div>
 </section>

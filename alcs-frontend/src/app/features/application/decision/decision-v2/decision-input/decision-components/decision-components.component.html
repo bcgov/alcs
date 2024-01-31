@@ -17,6 +17,7 @@
 
   <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
     <button
+      type="button"
       *ngFor="let componentType of decisionComponentTypes"
       mat-menu-item
       (click)="onAddNewComponent(componentType.uiCode, componentType.code)"
