@@ -37,6 +37,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationParcelService: ApplicationParcelService,
+    private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
     private dialog: MatDialog
   ) {
@@ -165,5 +166,15 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   expandedParcel: string = '';
   openParcel(index: string) {
     this.expandedParcel = index;
+  }
+
+  async reloadOwners() {
+    const owners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
+    if (owners) {
+      const parcelOwners = owners.filter(
+        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+      );
+      this.$owners.next(parcelOwners);
+    }
   }
 }

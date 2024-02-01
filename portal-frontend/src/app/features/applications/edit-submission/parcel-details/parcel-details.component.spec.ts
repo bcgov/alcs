@@ -15,6 +15,7 @@ describe('ParcelDetailsComponent', () => {
   let fixture: ComponentFixture<ParcelDetailsComponent>;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
+  let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockMatDialog: DeepMocked<MatDialog>;
   let applicationPipe = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
@@ -22,6 +23,7 @@ describe('ParcelDetailsComponent', () => {
   beforeEach(async () => {
     mockHttpClient = createMock();
     mockApplicationParcelService = createMock();
+    mockApplicationOwnerService = createMock();
     mockToastService = createMock();
     mockMatDialog = createMock();
 
@@ -35,6 +37,10 @@ describe('ParcelDetailsComponent', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockApplicationParcelService,
+        },
+        {
+          provide: ApplicationOwnerService,
+          useValue: mockApplicationOwnerService,
         },
         {
           provide: ToastService,

@@ -1,6 +1,5 @@
 <div class="owner-table-wrapper">
   <table class="owner-table" mat-table [dataSource]="dataSource">
-
     <ng-container matColumnDef="displayName">
       <th mat-header-cell *matHeaderCellDef>Land Owners</th>
       <td mat-cell *matCellDef="let element">{{ element.displayName }}</td>
@@ -52,8 +51,11 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell class="actions" *matCellDef="let element">
-        <button [disabled]="_disabled" (click)="onEdit(element)" mat-stroked-button color="primary">Edit</button>
+        <button type="button" [disabled]="_disabled" (click)="onEdit(element)" mat-stroked-button color="primary">
+          Edit
+        </button>
         <button
+          type="button"
           [disabled]="_disabled"
           *ngIf="parcelUuid"
           (click)="onRemove(element.uuid)"
