@@ -18,6 +18,7 @@ import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
   styleUrls: ['./parcel-owners.component.scss'],
 })
 export class ParcelOwnersComponent {
+  @Output() saveParcel = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<void>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
   @Output() onOwnersDeleted = new EventEmitter<string>();
@@ -64,6 +65,7 @@ export class ParcelOwnersComponent {
 
   onEdit(owner: ApplicationOwnerDto) {
     let dialog;
+    this.saveParcel.emit();
     if (owner.type.code === OWNER_TYPE.CROWN) {
       dialog = this.dialog.open(CrownOwnerDialogComponent, {
         data: {

@@ -272,8 +272,9 @@ export class ParcelEntryComponent implements OnInit {
         this.purchaseDate.enable();
       }
 
-      this.updateParcelOwners([]);
       this.filteredOwners = this.mapOwners(this.owners);
+      this.selectedOwner = undefined;
+      this.updateParcelOwners([]);
       this.pid.updateValueAndValidity();
     };
 
@@ -347,12 +348,12 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async beforeFileUploadOpened() {
+  saveParcelProgress() {
     this.onSaveProgress.emit();
   }
 
   onAddNewOwner() {
-    this.onSaveProgress.emit();
+    this.saveParcelProgress();
     const dialog = this.dialog.open(OwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -367,12 +368,13 @@ export class ParcelEntryComponent implements OnInit {
         this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
         this.updateParcelOwners(updatedArray);
+        this.onOwnersUpdated.emit();
       }
     });
   }
 
   onAddNewGovernmentContact() {
-    this.onSaveProgress.emit();
+    this.saveParcelProgress();
     const dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -402,6 +404,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onEditCrownOwner(owner: NoticeOfIntentOwnerDto) {
+    this.saveParcelProgress();
     let dialog;
     dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
@@ -429,7 +432,7 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  onEditOwner() {
+  onOwnerEdited() {
     this.parcelForm.patchValue(
       {
         isConfirmedByApplicant: false,
