@@ -2,6 +2,7 @@ from common import (
     BATCH_UPLOAD_SIZE,
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
+    OatsToAlcsDocumentSourceCode,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -124,6 +125,9 @@ def _get_document_source(data):
     alcs_source = data.get("source", "")
     if alcs_source != 'oats_etl' and alcs_source:
         return alcs_source
-    # Source is ALC/APP/LG as per 1558
-    else:
-        return source
+    elif source:
+        source = str(
+                OatsToAlcsDocumentSourceCode[source].value
+            )
+
+    return source
