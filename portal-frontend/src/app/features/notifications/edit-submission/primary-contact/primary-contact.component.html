@@ -64,7 +64,14 @@
         <div>
           <label for="email">Email</label>
           <mat-form-field appearance="outline">
-            <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+            <input
+              (change)="onChangeConfirmationEmail()"
+              id="email"
+              type="email"
+              matInput
+              placeholder="Enter Email"
+              formControlName="email"
+            />
           </mat-form-field>
           <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
             <mat-icon>warning</mat-icon>
@@ -85,7 +92,10 @@
               autocomplete="off"
             />
           </mat-form-field>
-          <div *ngIf="confirmEmail.invalid && (confirmEmail.dirty || confirmEmail.touched)" class="field-error">
+          <div
+            *ngIf="confirmEmail.invalid && (email.dirty || email.touched || confirmEmail.dirty || confirmEmail.touched)"
+            class="field-error"
+          >
             <mat-icon>warning</mat-icon>
             <div *ngIf="confirmEmail.errors?.['required']">This field is required</div>
             <div *ngIf="confirmEmail.errors?.['email']">Invalid format</div>
