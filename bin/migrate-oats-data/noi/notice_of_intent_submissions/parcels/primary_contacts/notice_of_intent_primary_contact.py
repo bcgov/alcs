@@ -111,7 +111,7 @@ def _map_data(row):
     return {
         "first_name": _get_name(row),
         "last_name": row["last_name"],
-        "organization_name": row["organization_name"],
+        "organization_name": _get_organization_name(row),
         "notice_of_intent_submission_uuid": row["notice_of_intent_submission_uuid"],
         "email": row["email_address"],
         "phone_number": row.get("phone_number", "cell_phone_number"),
@@ -119,6 +119,12 @@ def _map_data(row):
         "oats_application_party_id": row["alr_application_party_id"],
         "audit_created_by": OATS_ETL_USER,
     }
+
+
+def _get_organization_name(row):
+    return (
+        f"{row.get('organization_name','')} {row.get('alias_name', '')}".strip() or None
+    )
 
 
 def _get_name(row):
