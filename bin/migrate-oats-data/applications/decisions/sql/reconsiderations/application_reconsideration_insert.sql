@@ -14,7 +14,8 @@ alcs_modifications AS (
         appm.submitted_date::DATE AS submitted_date,
         appd.resolution_number,
         appd.resolution_year,
-        appd.oats_alr_appl_decision_id
+        appd.oats_alr_appl_decision_id,
+        app.file_number
     FROM alcs.application_modification appm
         LEFT JOIN alcs.application_decision appd ON appd.reconsiders_uuid = appm."uuid"
         JOIN alcs.application app ON app."uuid" = appm.application_uuid
@@ -48,7 +49,7 @@ FROM oats.oats_reconsideration_requests orr
         )
         OR (
             appm.submitted_date = orr.received_date::DATE
-            AND arrd.file_number = orr.alr_application_id::TEXT
+            AND appm.file_number = orr.alr_application_id::TEXT
         )
     )
 WHERE arrd."uuid" IS NULL
