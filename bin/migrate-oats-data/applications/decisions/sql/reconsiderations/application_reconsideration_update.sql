@@ -9,7 +9,6 @@ WITH alcs_reconsiderations_resulting_decisions AS (
     FROM alcs.application_reconsideration appr
         LEFT JOIN alcs.application_decision appd ON appd.reconsiders_uuid = appr."uuid"
         JOIN alcs.application app ON app."uuid" = appr.application_uuid
-    WHERE file_number = '58220'
 ),
 alcs_modifications AS (
     SELECT appm."uuid",
