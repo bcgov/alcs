@@ -165,7 +165,12 @@ def clean_application_reconsiderations(conn=None):
     logger.info("Start application_reconsideration cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.application_reconsideration WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by is NULL"
+            f"""
+                DELETE FROM alcs.application_reconsideration WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by is NULL;
+                UPDATE alcs.application_reconsideration 
+                SET oats_reconsideration_request_id = NULL
+                WHERE oats_reconsideration_request_id IS NOT NULL;
+            """
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
