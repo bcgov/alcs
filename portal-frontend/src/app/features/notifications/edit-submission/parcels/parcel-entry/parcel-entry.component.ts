@@ -105,8 +105,8 @@ export class ParcelEntryComponent implements OnInit {
       result = await this.parcelService.getByPid(this.pidPin.getRawValue()!);
     }
 
-    this.onReset();
     if (result) {
+      this.onReset();
       this.legalDescription.setValue(result.legalDescription);
       this.mapArea.setValue(result.mapArea);
 

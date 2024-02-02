@@ -44,6 +44,7 @@
             <input id="lookup-pid" matInput [placeholder]="pidPinPlaceholder" formControlName="pidPin" />
           </mat-form-field>
           <button
+            type="button"
             class="lookup-search-button"
             mat-flat-button
             color="primary"
@@ -54,7 +55,9 @@
           </button>
         </div>
         <div class="lookup-bottom-row">
-          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()">Reset</button>
+          <button type="button" class="reset-button" mat-stroked-button color="accent" (click)="onReset()">
+            Reset
+          </button>
           <span class="float-right">
             <a class="subtext" href=" https://ltsa.ca/products-services/parcelmap-bc/" target="_blank" rel="noreferrer">
               Powered by PMBC!
