@@ -4,7 +4,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent/noi-document/noi-document.dto';
 import { NoiDocumentService } from '../../../../../services/notice-of-intent/noi-document/noi-document.service';
 import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
-import { NoticeOfIntentSubmissionDto } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
+import {
+  NoticeOfIntentParcelDto,
+  NoticeOfIntentSubmissionDto,
+} from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../../shared/dto/parcel-ownership.type.dto';
 
 @Component({
@@ -18,11 +21,8 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
   @Input() noticeOfIntent!: NoticeOfIntentSubmissionDto;
   @Input() files: NoticeOfIntentDocumentDto[] = [];
 
-  pageTitle: string = 'Notice of Intent Parcels';
-  showCertificateOfTitle: boolean = true;
-
   fileId: string = '';
-  parcels: any[] = [];
+  parcels: NoticeOfIntentParcelDto[] = [];
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   private anchorededParcelUuid: string | undefined;
@@ -30,7 +30,7 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
   constructor(
     private noiDocumentService: NoiDocumentService,
     private parcelService: NoticeOfIntentParcelService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {

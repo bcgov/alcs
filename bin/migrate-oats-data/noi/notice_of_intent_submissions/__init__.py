@@ -40,3 +40,6 @@ from .statuses.notice_of_intent_status_cancelled import (
 from .notice_of_intent_fill_fields_update import (
     update_alcs_notice_of_intent_soil_fill_fields,
 )
+from .notice_of_intent_applicant_on_submissions import (
+    process_notice_of_intent_applicant_on_submissions,
+)

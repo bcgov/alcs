@@ -186,7 +186,7 @@
   <div>
     <app-decision-documents
       (beforeDocumentUpload)="onSubmit(true, true)"
-      [showError]="form.touched && !existingDecision?.documents?.length"
+      [showError]="showErrors && !existingDecision?.documents?.length"
     ></app-decision-documents>
   </div>
 
@@ -196,7 +196,7 @@
     [fileNumber]="fileNumber"
     [components]="components"
     (componentsChange)="onComponentChange($event)"
-    [showError]="form.touched && components.length < 1 && requireComponents"
+    [showError]="showErrors && components.length < 1 && requireComponents"
   >
   </app-decision-components>
 
@@ -207,7 +207,7 @@
       [components]="components"
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
-      [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
+      [showError]="showErrors && conditionUpdates.length < 1 && showConditions"
     ></app-app-decision-conditions>
   </div>
 

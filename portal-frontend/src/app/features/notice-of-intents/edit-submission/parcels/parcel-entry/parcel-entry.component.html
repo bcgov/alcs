@@ -44,6 +44,7 @@
             <input id="lookup-pid" matInput [placeholder]="pidPinPlaceholder" formControlName="pidPin" />
           </mat-form-field>
           <button
+            type="button"
             class="lookup-search-button"
             mat-flat-button
             color="primary"
@@ -54,7 +55,9 @@
           </button>
         </div>
         <div class="lookup-bottom-row">
-          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()">Reset</button>
+          <button type="button" class="reset-button" mat-stroked-button color="accent" (click)="onReset()">
+            Reset
+          </button>
           <span class="float-right">
             <a class="subtext" href=" https://ltsa.ca/products-services/parcelmap-bc/" target="_blank" rel="noreferrer">
               Powered by PMBC!
@@ -211,7 +214,7 @@
       (uploadFiles)="attachFile($event, parcel.uuid)"
       (deleteFile)="deleteFile($event)"
       (openFile)="openFile($event)"
-      (beforeFileUploadOpened)="beforeFileUploadOpened()"
+      (beforeFileUploadOpened)="saveParcelProgress()"
       [showErrors]="showErrors"
       [isRequired]="isCertificateOfTitleRequired"
       [showVirusError]="showVirusError"
@@ -231,7 +234,8 @@
           [submissionUuid]="submissionUuid"
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
-          (onOwnersUpdated)="onEditOwner()"
+          (saveParcel)="saveParcelProgress()"
+          (onOwnersUpdated)="onOwnerEdited()"
           (onOwnerRemoved)="onOwnerRemoved($event)"
           (onOwnersDeleted)="onDeleteOwner()"
           [ownerService]="noticeOfIntentOwnerService"
@@ -239,6 +243,7 @@
         ></app-parcel-owners>
       </div>
       <button
+        type="button"
         class="new-owner"
         *ngIf="enableAddNewOwner"
         (click)="onAddNewOwner()"
@@ -274,7 +279,7 @@
             <div class="owner-option">
               <div *ngIf="owners.length != 0">No owner matching search</div>
               <div *ngIf="owners.length === 0">No owners added</div>
-              <button mat-flat-button color="primary">Add new owner</button>
+              <button type="button" mat-flat-button color="primary">Add new owner</button>
             </div>
           </mat-option>
         </mat-autocomplete>
@@ -287,6 +292,7 @@
     <ng-container *ngIf="isCrownLand">
       <p>Add the contact information of an employee who works in the department or ministry for the Crown parcel</p>
       <button
+        type="button"
         class="new-owner"
         *ngIf="enableAddNewOwner"
         (click)="onAddNewGovernmentContact()"
@@ -343,7 +349,7 @@
               <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
             </div>
             <div class="row">
-              <button (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
+              <button type="button" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
             </div>
           </div>
         </div>

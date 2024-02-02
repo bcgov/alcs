@@ -186,14 +186,19 @@ export class ParcelEntryComponent implements OnInit {
 
   async onSearch() {
     let result;
-    if (this.searchBy.getRawValue() === 'pin') {
-      result = await this.parcelService.getByPin(this.pidPin.getRawValue()!);
-    } else {
-      result = await this.parcelService.getByPid(this.pidPin.getRawValue()!);
+    const searchValue = this.pidPin.value;
+    if (!searchValue || searchValue.length === 0) {
+      return;
     }
 
-    this.onReset();
+    if (this.searchBy.getRawValue() === 'pin') {
+      result = await this.parcelService.getByPin(searchValue);
+    } else {
+      result = await this.parcelService.getByPid(searchValue);
+    }
+
     if (result) {
+      this.onReset();
       this.legalDescription.setValue(result.legalDescription);
       this.mapArea.setValue(result.mapArea);
 
@@ -267,8 +272,9 @@ export class ParcelEntryComponent implements OnInit {
         this.purchaseDate.enable();
       }
 
-      this.updateParcelOwners([]);
       this.filteredOwners = this.mapOwners(this.owners);
+      this.selectedOwner = undefined;
+      this.updateParcelOwners([]);
       this.pid.updateValueAndValidity();
     };
 
@@ -342,11 +348,12 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async beforeFileUploadOpened() {
+  saveParcelProgress() {
     this.onSaveProgress.emit();
   }
 
   onAddNewOwner() {
+    this.saveParcelProgress();
     const dialog = this.dialog.open(OwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -361,11 +368,13 @@ export class ParcelEntryComponent implements OnInit {
         this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
         this.updateParcelOwners(updatedArray);
+        this.onOwnersUpdated.emit();
       }
     });
   }
 
   onAddNewGovernmentContact() {
+    this.saveParcelProgress();
     const dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -395,6 +404,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onEditCrownOwner(owner: NoticeOfIntentOwnerDto) {
+    this.saveParcelProgress();
     let dialog;
     dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
@@ -422,7 +432,7 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  onEditOwner() {
+  onOwnerEdited() {
     this.parcelForm.patchValue(
       {
         isConfirmedByApplicant: false,

@@ -116,13 +116,13 @@ def _prepare_oats_data(row_data_list):
 
 
 def _map_fields(data):
-    summery = data.get("proposal_summary_desc", "")
+    summary = data.get("proposal_summary_desc", "")
     background_description = data.get("proposal_background_desc", "")
 
-    if not summery and not background_description:
+    if not summary and (not background_description or len(background_description) < 11):
         data["purpose"] = NO_DATA_IN_OATS
     else:
-        data["purpose"] = f"{summery} {background_description}"
+        data["purpose"] = f"{summary} {background_description}"
 
     data["soil_is_follow_up"] = data["ministry_notice_ref_no"] != None
     data["soil_has_submitted_notice"] = data["followup_noi_number"] != None

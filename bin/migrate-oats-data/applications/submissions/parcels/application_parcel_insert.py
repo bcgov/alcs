@@ -4,6 +4,8 @@ from common import (
     OATS_ETL_USER,
     add_timezone_and_keep_date_part,
     OatsToAlcsOwnershipType,
+    to_alcs_format,
+    get_now_with_offset,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
@@ -32,7 +34,7 @@ def init_application_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         last_subject_property_id = 0
 
         with open(
-        "applications/submissions/sql/parcels/application_parcels_insert.sql",
+            "applications/submissions/sql/parcels/application_parcels_insert.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -49,7 +51,7 @@ def init_application_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 try:
                     records_to_be_inserted_count = len(rows)
 
-                    _insert_records(conn, cursor, rows)
+                    _insert_records(conn, cursor, rows, successful_inserts_count)
 
                     successful_inserts_count = (
                         successful_inserts_count + records_to_be_inserted_count
@@ -71,26 +73,27 @@ def init_application_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     )
 
 
-def _insert_records(conn, cursor, rows):
+def _insert_records(conn, cursor, rows, insert_index):
     number_of_rows_to_insert = len(rows)
 
     if number_of_rows_to_insert > 0:
         insert_query = _compile_application_insert_query(number_of_rows_to_insert)
-        rows_to_insert = _prepare_data_to_insert(rows)
+        rows_to_insert = _prepare_data_to_insert(rows, insert_index)
         cursor.execute(insert_query, rows_to_insert)
         conn.commit()
 
 
-def _prepare_data_to_insert(rows):
+def _prepare_data_to_insert(rows, insert_index):
     row_without_last_element = []
     for row in rows:
-        mapped_row = _map_data(row)
+        mapped_row = _map_data(row, insert_index)
         row_without_last_element.append(tuple(mapped_row.values()))
+        insert_index += 1
 
     return row_without_last_element
 
 
-def _map_data(row):
+def _map_data(row, insert_index):
     return {
         "application_submission_uuid": row["application_submission_uuid"],
         "audit_created_by": OATS_ETL_USER,
@@ -108,6 +111,7 @@ def _map_data(row):
         "purchased_date": _map_purchased_date(row["purchase_date"]),
         "oats_subject_property_id": row["subject_property_id"],
         "oats_property_id": row["property_id"],
+        "audit_created_at": to_alcs_format(get_now_with_offset(insert_index)),
     }
 
 
@@ -145,7 +149,8 @@ def _compile_application_insert_query(number_of_rows_to_insert):
                         pin,
                         purchased_date,
                         oats_subject_property_id,
-                        oats_property_id
+                        oats_property_id,
+                        audit_created_at
                     )
                     VALUES{parcels_to_insert}
                     ON CONFLICT DO NOTHING

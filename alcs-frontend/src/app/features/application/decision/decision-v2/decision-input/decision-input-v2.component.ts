@@ -60,6 +60,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   showConditions = false;
   conditionsValid = true;
   componentsValid = true;
+  showErrors = false;
   index = 1;
 
   fileNumber: string = '';
@@ -521,6 +522,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   private runValidation() {
     this.form.markAllAsTouched();
+    this.showErrors = true;
     const requiresConditions = this.showConditions;
     const requiresComponents = this.showComponents && this.requireComponents;
 

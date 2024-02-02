@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 
@@ -46,3 +46,13 @@ def set_time(date_str, hour=0, minute=0, second=0):
 
     dt = dt.replace(hour=hour, minute=minute, second=second, microsecond=0)
     return dt.strftime("%Y-%m-%d %H:%M:%S.%f %z")
+
+
+def get_now_with_offset(offset_milliseconds):
+    return datetime.now(pytz.timezone("US/Pacific")) + timedelta(
+        milliseconds=offset_milliseconds
+    )
+
+
+def to_alcs_format(date_with_tz):
+    return date_with_tz.strftime("%Y-%m-%d %H:%M:%S.%f %z")

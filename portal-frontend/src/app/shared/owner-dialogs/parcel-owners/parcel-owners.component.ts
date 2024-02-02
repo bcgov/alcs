@@ -2,13 +2,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { PARCEL_OWNERSHIP_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
+import { PARCEL_OWNERSHIP_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentOwnerDto } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
-import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
 import { OWNER_TYPE } from '../../dto/owner.dto';
 import { CrownOwnerDialogComponent } from '../crown-owner-dialog/crown-owner-dialog.component';
 import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
@@ -19,6 +18,7 @@ import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
   styleUrls: ['./parcel-owners.component.scss'],
 })
 export class ParcelOwnersComponent {
+  @Output() saveParcel = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<void>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
   @Output() onOwnersDeleted = new EventEmitter<string>();
@@ -61,14 +61,11 @@ export class ParcelOwnersComponent {
   _disabled = false;
   displayedColumns = ['displayName', 'organizationName', 'phone', 'email', 'corporateSummary', 'actions'];
 
-  constructor(
-    private dialog: MatDialog,
-    private confDialogService: ConfirmationDialogService,
-    private applicationDocumentService: ApplicationDocumentService
-  ) {}
+  constructor(private dialog: MatDialog, private applicationDocumentService: ApplicationDocumentService) {}
 
   onEdit(owner: ApplicationOwnerDto) {
     let dialog;
+    this.saveParcel.emit();
     if (owner.type.code === OWNER_TYPE.CROWN) {
       dialog = this.dialog.open(CrownOwnerDialogComponent, {
         data: {

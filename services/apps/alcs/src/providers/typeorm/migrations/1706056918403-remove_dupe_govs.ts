@@ -44,16 +44,31 @@ export class RemoveDupeGovs1706056918403 implements MigrationInterface {
 
     //Northern Rockies (Historical)
     await queryRunner.query(`
+      UPDATE "alcs"."application" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
+      UPDATE "alcs"."notice_of_intent" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
+      UPDATE "alcs"."planning_review" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
+      UPDATE "alcs"."covenant" SET "local_government_uuid" = '55f665bc-c91b-4bbb-85c2-39691088b297' WHERE "local_government_uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
+
       DELETE FROM "alcs"."local_government" WHERE "uuid" = '02afc23a-088c-4c09-aa69-b5c6c516cabc';
     `);
 
     //Village of Canal Flats
     await queryRunner.query(`
+      UPDATE "alcs"."application" SET "local_government_uuid" = '2627cced-4317-4291-aa17-499e273632cb' WHERE "local_government_uuid" = '6c0079df-2647-445f-9718-4433e9761eac';
+      UPDATE "alcs"."notice_of_intent" SET "local_government_uuid" = '2627cced-4317-4291-aa17-499e273632cb' WHERE "local_government_uuid" = '6c0079df-2647-445f-9718-4433e9761eac';
+      UPDATE "alcs"."planning_review" SET "local_government_uuid" = '2627cced-4317-4291-aa17-499e273632cb' WHERE "local_government_uuid" = '6c0079df-2647-445f-9718-4433e9761eac';
+      UPDATE "alcs"."covenant" SET "local_government_uuid" = '2627cced-4317-4291-aa17-499e273632cb' WHERE "local_government_uuid" = '6c0079df-2647-445f-9718-4433e9761eac';
+
       DELETE FROM "alcs"."local_government" WHERE "uuid" = '6c0079df-2647-445f-9718-4433e9761eac';
     `);
 
     //Village of Port Clements
     await queryRunner.query(`
+      UPDATE "alcs"."application" SET "local_government_uuid" = '81ace6dd-e590-4a45-80f1-50c592a4985e' WHERE "local_government_uuid" = '18bd941a-7c0f-44fe-9d12-a084d2a5f372';
+      UPDATE "alcs"."notice_of_intent" SET "local_government_uuid" = '81ace6dd-e590-4a45-80f1-50c592a4985e' WHERE "local_government_uuid" = '18bd941a-7c0f-44fe-9d12-a084d2a5f372';
+      UPDATE "alcs"."planning_review" SET "local_government_uuid" = '81ace6dd-e590-4a45-80f1-50c592a4985e' WHERE "local_government_uuid" = '18bd941a-7c0f-44fe-9d12-a084d2a5f372';
+      UPDATE "alcs"."covenant" SET "local_government_uuid" = '81ace6dd-e590-4a45-80f1-50c592a4985e' WHERE "local_government_uuid" = '18bd941a-7c0f-44fe-9d12-a084d2a5f372';
+
       DELETE FROM "alcs"."local_government" WHERE "uuid" = '18bd941a-7c0f-44fe-9d12-a084d2a5f372';
     `);
   }

@@ -32,7 +32,7 @@ export class SubtaskComponent implements OnInit, OnDestroy {
   constructor(
     private homeService: HomeService,
     private userService: UserService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
   ) {}
 
   ngOnInit(): void {
@@ -91,16 +91,20 @@ export class SubtaskComponent implements OnInit, OnDestroy {
     ];
 
     if (this.showNoi) {
-      this.totalSubtaskCount = this.noticeOfIntentSubtasks.length;
+      this.totalSubtaskCount = this.noticeOfIntentSubtasks.length + this.notificationSubtasks.length;
     }
 
     if (this.showAppAndNonApp) {
-      this.totalSubtaskCount = this.applicationSubtasks.length + this.nonApplicationSubtasks.length;
+      this.totalSubtaskCount =
+        this.applicationSubtasks.length + this.nonApplicationSubtasks.length + this.notificationSubtasks.length;
     }
 
     if (this.showAppAndNonApp && this.showNoi) {
       this.totalSubtaskCount =
-        this.applicationSubtasks.length + this.noticeOfIntentSubtasks.length + this.nonApplicationSubtasks.length;
+        this.applicationSubtasks.length +
+        this.noticeOfIntentSubtasks.length +
+        this.nonApplicationSubtasks.length +
+        this.notificationSubtasks.length;
     }
   }
 

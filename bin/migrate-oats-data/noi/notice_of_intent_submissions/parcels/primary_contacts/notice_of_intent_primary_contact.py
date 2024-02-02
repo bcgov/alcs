@@ -111,7 +111,7 @@ def _map_data(row):
     return {
         "first_name": _get_name(row),
         "last_name": row["last_name"],
-        "organization_name": row["organization_name"],
+        "organization_name": _get_organization_name(row),
         "notice_of_intent_submission_uuid": row["notice_of_intent_submission_uuid"],
         "email": row["email_address"],
         "phone_number": row.get("phone_number", "cell_phone_number"),
@@ -121,11 +121,17 @@ def _map_data(row):
     }
 
 
+def _get_organization_name(row):
+    return (
+        f"{row.get('organization_name','')} {row.get('alias_name', '')}".strip() or None
+    )
+
+
 def _get_name(row):
     first_name = row.get("first_name", "")
     middle_name = row.get("middle_name", "")
     name = f"{first_name} {middle_name}".strip()
-    if row.get("organization_name") and name == "None":
+    if name == "None":
         return None
     return name
 
