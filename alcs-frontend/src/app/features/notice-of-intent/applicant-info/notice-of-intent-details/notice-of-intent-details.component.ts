@@ -61,7 +61,6 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnChanges, OnDest
     this.authorizationLetters = documents.filter(
       (document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
     );
-    debugger;
     this.files = documents;
   }
 }
