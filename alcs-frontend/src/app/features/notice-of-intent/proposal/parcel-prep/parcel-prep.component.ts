@@ -11,16 +11,18 @@ export class ParcelPrepComponent implements OnChanges {
   @Input() fileNumber = '';
 
   displayedColumns = ['number', 'pid', 'pin', 'civicAddress', 'area', 'alrArea', 'owners', 'actions'];
-  parcels: {
-    pin?: string;
-    pid?: string;
-    mapAreaHectares: string;
-    alrArea: number;
-    owners: string;
-    fullOwners: string;
-    hasManyOwners: boolean;
-    uuid: string;
-  }[] = [];
+  parcels:
+    | {
+        pin?: string;
+        pid?: string;
+        mapAreaHectares: string;
+        alrArea: number;
+        owners: string;
+        fullOwners: string;
+        hasManyOwners: boolean;
+        uuid: string;
+      }[]
+    | undefined;
 
   constructor(
     private parcelService: NoticeOfIntentParcelService,

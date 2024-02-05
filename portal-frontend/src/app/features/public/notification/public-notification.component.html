@@ -36,6 +36,9 @@
   <div class="navigation">
     <mat-tab-group [(selectedIndex)]="selectedIndex">
       <mat-tab label="Applicant Submission">
+        <div *ngIf="!submission" class="center">
+          <mat-spinner></mat-spinner>
+        </div>
         <div *ngIf="submission" class="content">
           <section>
             <div class="header">
