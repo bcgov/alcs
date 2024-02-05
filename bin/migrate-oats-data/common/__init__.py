@@ -12,3 +12,4 @@ from .oats_to_alcs_parcel_enum import *
 from .oats_decision_enum import *
 from .oats_legislation_to_alcs_applicant_enum import *
 from .oats_to_alcs_nfu_type_enum import *
+from .oats_to_alcs_document_source_code import *
