@@ -41,7 +41,14 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field class="lookup-input" appearance="outline">
-            <input id="lookup-pid" matInput [placeholder]="pidPinPlaceholder" formControlName="pidPin" />
+            <input
+              id="lookup-pid"
+              matInput
+              formControlName="pidPin"
+              [placeholder]="pidPinPlaceholder"
+              [maxlength]="searchBy.value === 'pin' ? 16 : 11"
+              [mask]="searchBy.value === 'pin' ? '0*' : '000-000-000'"
+            />
           </mat-form-field>
           <button
             type="button"
