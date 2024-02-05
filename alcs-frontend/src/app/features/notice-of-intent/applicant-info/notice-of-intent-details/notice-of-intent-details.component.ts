@@ -56,11 +56,12 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnChanges, OnDest
     this.otherFiles = documents.filter(
       (document) =>
         document.type &&
-        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code)
+        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code),
     );
     this.authorizationLetters = documents.filter(
-      (document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER
+      (document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
     );
+    debugger;
     this.files = documents;
   }
 }
