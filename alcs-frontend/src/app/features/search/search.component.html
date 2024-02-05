@@ -237,7 +237,7 @@
       type="submit"
       mat-flat-button
       color="primary"
-      [disabled]="formEmpty || !searchForm.valid"
+      [disabled]="formEmpty || !searchForm.valid || isLoading"
     >
       Search
     </button>
@@ -246,7 +246,6 @@
 
 <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
   <h2 class="search-title">Search Results:</h2>
-
   <mat-tab-group id="results" mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>
     <mat-tab>
       <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
@@ -259,7 +258,9 @@
         [regions]="regions"
         (tableChange)="onTableChange($event)"
       ></app-application-search-table>
-      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      <div class="center">
+        <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      </div>
     </mat-tab>
 
     <mat-tab>
@@ -273,7 +274,9 @@
         [regions]="regions"
         (tableChange)="onTableChange($event)"
       ></app-notice-of-intent-search-table>
-      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      <div class="center">
+        <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      </div>
     </mat-tab>
 
     <mat-tab>
@@ -286,7 +289,9 @@
         (tableChange)="onTableChange($event)"
       >
       </app-non-application-search-table>
-      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      <div class="center">
+        <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      </div>
     </mat-tab>
 
     <mat-tab>
@@ -299,7 +304,9 @@
         (tableChange)="onTableChange($event)"
       >
       </app-notification-search-table>
-      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      <div class="center">
+        <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </div>

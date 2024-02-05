@@ -41,13 +41,8 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
     });
   }
 
-  async onOpenFile(uuid: string) {
-    const file = this.files.find((file) => file.uuid === uuid);
-    if (file) {
-      await this.noiDocumentService.download(file.uuid, file.fileName);
-    } else {
-      console.error('Failed to find File in Array');
-    }
+  async onOpenFile(file: NoticeOfIntentDocumentDto) {
+    await this.noiDocumentService.download(file.uuid, file.fileName);
   }
 
   async loadParcels(fileNumber: string) {
