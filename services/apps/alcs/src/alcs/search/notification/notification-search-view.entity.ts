@@ -45,6 +45,7 @@ export class SearchNotificationSubmissionStatusType {
         'noti',
         'noti.file_number = noti_sub.file_number',
       )
+      .withDeleted()
       .innerJoinAndSelect(
         NotificationType,
         'notificationType',
