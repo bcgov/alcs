@@ -44,6 +44,7 @@ export class SearchNoticeOfIntentSubmissionStatusType {
       )
       .from(NoticeOfIntentSubmission, 'nois')
       .innerJoin(NoticeOfIntent, 'noi', 'noi.file_number = nois.file_number')
+      .withDeleted()
       .innerJoinAndSelect(
         NoticeOfIntentType,
         'noticeOfIntentType',
