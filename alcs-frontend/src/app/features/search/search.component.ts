@@ -183,10 +183,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   async onSubmit() {
     this.pageIndex = 0;
     const searchParams = this.getSearchParams();
+    this.searchResultsHidden = false;
     this.isLoading = true;
     const result = await this.searchService.advancedSearchFetch(searchParams);
 
-    this.searchResultsHidden = false;
     this.isLoading = false;
     this.toastService.showSuccessToast('Results updated');
 
