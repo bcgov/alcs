@@ -76,7 +76,7 @@
         <div>
           <mat-label for="status">Status</mat-label>
           <mat-form-field appearance="outline">
-            <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
+            <mat-select [multiple]="true" id="status" [formControl]="portalStatusControl">
               <mat-option *ngFor="let status of allStatuses" [value]="status.code">
                 {{ status.label }}
               </mat-option>

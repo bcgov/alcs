@@ -205,6 +205,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   async onClear() {
     this.searchForm.reset();
+    this.pageIndex = 0;
     await this.populateTable();
     this.tabIndex = TAB_ORDER[this.currentTabName];
     if (this.fileTypeFilterDropDownComponent) {
@@ -317,6 +318,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     this.pageIndex = event.pageIndex;
     this.itemsPerPage = event.itemsPerPage;
 
+    this.isLoading = true;
     switch (event.tableType) {
       case 'APP':
         await this.onApplicationSearch();
@@ -330,6 +332,7 @@ export class InboxComponent implements OnInit, OnDestroy {
       default:
         this.toastService.showErrorToast('Not implemented');
     }
+    this.isLoading = false;
   }
 
   onFileTypeChange(fileTypes: string[]) {
