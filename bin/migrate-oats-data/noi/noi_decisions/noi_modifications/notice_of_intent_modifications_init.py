@@ -143,7 +143,12 @@ def clean_notice_of_intent_modifications(conn=None):
     logger.info("Start notice_of_intent_modification cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.notice_of_intent_modification WHERE audit_created_by = '{OATS_ETL_USER}'"
+            f"""
+                DELETE FROM alcs.notice_of_intent_modification WHERE audit_created_by = '{OATS_ETL_USER}';
+                UPDATE alcs.notice_of_intent_modification
+                SET oats_reconsideration_request_id = NULL
+                WHERE oats_reconsideration_request_id IS NOT NULL;
+            """
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
