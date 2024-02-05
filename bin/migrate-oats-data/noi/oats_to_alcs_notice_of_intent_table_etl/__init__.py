@@ -3,3 +3,4 @@ from .oats_to_alcs_notice_of_intent_table_etl import (
 )
 from .notice_of_intent_rx_all_items import update_notice_of_intent_date_rx_all_items
 from .update_notice_of_intent_created_date import update_noi_created_date
+from .notice_of_intent_update_ack_incomplete import update_notice_of_intent_incomplete_date
