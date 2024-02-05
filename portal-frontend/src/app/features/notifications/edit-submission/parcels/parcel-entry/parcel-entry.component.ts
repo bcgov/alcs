@@ -106,7 +106,6 @@ export class ParcelEntryComponent implements OnInit {
     }
 
     if (result) {
-      this.onReset();
       this.legalDescription.setValue(result.legalDescription);
       this.mapArea.setValue(result.mapArea);
 
