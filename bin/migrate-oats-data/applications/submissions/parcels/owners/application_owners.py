@@ -133,10 +133,13 @@ def _map_data(row, insert_index):
 
 
 def _get_organization_name(row):
-    return (
-        f"{row.get('organization_name','')} {row.get('alias_name', '')}".strip() or None
-    )
+    organization_name = (row.get("organization_name") or "").strip()
+    alias_name = (row.get("alias_name") or "").strip()
 
+    if not organization_name and not alias_name:
+        return None
+
+    return f"{organization_name} {alias_name}".strip()
 
 def _get_name(row):
     first_name = row.get("first_name", None)
