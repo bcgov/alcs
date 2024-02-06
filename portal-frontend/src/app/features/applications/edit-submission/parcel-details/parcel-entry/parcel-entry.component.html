@@ -44,10 +44,10 @@
             <input
               id="lookup-pid"
               matInput
-              [placeholder]="pidPinPlaceholder"
-              maxlength="11"
-              mask="000-000-000"
               formControlName="pidPin"
+              [placeholder]="pidPinPlaceholder"
+              [maxlength]="searchBy.value === 'pin' ? 16 : 11"
+              [mask]="searchBy.value === 'pin' ? '0*' : '000-000-000'"
             />
           </mat-form-field>
           <button

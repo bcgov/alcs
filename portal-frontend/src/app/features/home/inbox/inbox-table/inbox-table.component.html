@@ -58,6 +58,7 @@
     </table>
     <mat-paginator
       [length]="_totalCount"
+      [pageIndex]="pageIndex"
       [pageSize]="10"
       [pageSizeOptions]="[5, 10, 25, 100]"
       (page)="onPageChange($event)"

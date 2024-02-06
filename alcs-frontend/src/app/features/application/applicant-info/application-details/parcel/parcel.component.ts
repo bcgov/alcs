@@ -16,13 +16,12 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
   $destroy = new Subject<void>();
 
   @Input() application!: ApplicationSubmissionDto;
-  @Input() files: ApplicationDocumentDto[] = [];
 
   pageTitle: string = 'Application Parcels';
   showCertificateOfTitle: boolean = true;
 
   fileId: string = '';
-  parcels: any[] = [];
+  parcels: any[] | undefined;
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   private anchorededParcelUuid: string | undefined;

@@ -1,9 +1,11 @@
 <section>
   <h1>Welcome to the ALC Public Search</h1>
   <app-warning-banner>
-    This search returns only publicly available information from submissions created as of July 2015. To view older decisions, visit the
-    <a href="https://www.alc.gov.bc.ca/application-decision-search/">Applications and Decisions</a> section of the ALC website. 
-    Applicants and local or First Nation governments should <a routerLink="/login">log in to the Portal</a> to view their detailed submissions.
+    This search returns only publicly available information from submissions created as of July 2015. To view older
+    decisions, visit the
+    <a href="https://www.alc.gov.bc.ca/application-decision-search/">Applications and Decisions</a> section of the ALC
+    website. Applicants and local or First Nation governments should <a routerLink="/login">log in to the Portal</a> to
+    view their detailed submissions.
   </app-warning-banner>
 
   <h3>Search by one or more of the following fields:</h3>
@@ -154,6 +156,7 @@
           *ngIf="!isMobile"
           [applications]="applications"
           [totalCount]="applicationTotal"
+          [pageIndex]="pageIndex"
           [statuses]="statuses"
           (tableChange)="onTableChange($event)"
         ></app-application-search-table>
@@ -175,6 +178,7 @@
           *ngIf="!isMobile"
           [noticeOfIntents]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
+          [pageIndex]="pageIndex"
           [statuses]="statuses"
           (tableChange)="onTableChange($event)"
         ></app-notice-of-intent-search-table>
@@ -195,6 +199,7 @@
         <app-notification-search-table
           *ngIf="!isMobile"
           [statuses]="statuses"
+          [pageIndex]="pageIndex"
           [notifications]="notifications"
           [totalCount]="notificationTotal"
           (tableChange)="onTableChange($event)"

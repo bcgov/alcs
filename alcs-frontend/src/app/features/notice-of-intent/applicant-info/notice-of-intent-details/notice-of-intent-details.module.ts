@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../../../shared/shared.module';
 import { AdditionalInformationComponent } from './additional-information/additional-information.component';
@@ -18,7 +19,7 @@ import { RosoDetailsComponent } from './roso-details/roso-details.component';
     NoticeOfIntentDetailsComponent,
     AdditionalInformationComponent,
   ],
-  imports: [CommonModule, SharedModule, NgxMaskPipe],
+  imports: [CommonModule, SharedModule, NgxMaskPipe, MatProgressSpinnerModule, NgIf],
   exports: [NoticeOfIntentDetailsComponent],
 })
 export class NoticeOfIntentDetailsModule {}

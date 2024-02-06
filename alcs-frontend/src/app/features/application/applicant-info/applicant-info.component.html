@@ -14,4 +14,7 @@
       [showEdit]="true"
     ></app-application-details>
   </div>
+  <div class="center">
+    <mat-spinner *ngIf="!application || !submission"></mat-spinner>
+  </div>
 </div>
