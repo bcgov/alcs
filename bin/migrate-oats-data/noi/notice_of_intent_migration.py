@@ -177,7 +177,7 @@ def process_notice_of_intent(batch_size):
 
     link_notice_of_intent_primary_contacts(batch_size)
 
-    process_notice_of_intent_applicant_on_submissions(batch_size)
+    # process_notice_of_intent_applicant_on_submissions(batch_size)
 
     process_noi_staff_journal(batch_size)
 

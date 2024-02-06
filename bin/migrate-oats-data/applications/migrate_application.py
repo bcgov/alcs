@@ -69,7 +69,7 @@ def process_application_etl(batch_size):
     update_application_incomplete_date(batch_size)
     process_application_parcels(batch_size)
     process_application_owners(batch_size)
-    process_application_applicant_on_submissions(batch_size)
+    # process_application_applicant_on_submissions(batch_size)
     process_app_staff_journal(batch_size)
     process_application_decisions(batch_size)
     set_application_visibility()
