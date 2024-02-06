@@ -11,7 +11,7 @@ import { ApplicationSubmissionDto } from '../../../../services/application-submi
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../../shared/custom-stepper/custom-stepper.component';
-import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-submission.component';
 import { SubmitConfirmationDialogComponent } from '../submit-confirmation-dialog/submit-confirmation-dialog.component';
@@ -81,7 +81,9 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
         (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
       );
       this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
-      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
+      this.otherAttachments = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+      );
     });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
