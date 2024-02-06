@@ -260,13 +260,13 @@ export class ParcelEntryComponent implements OnInit {
         this.searchBy.setValue(null);
         this.pidPinPlaceholder = '';
         this.isCrownLand = true;
-        this.pid.addValidators([Validators.required]);
+        this.pid.removeValidators([Validators.required]);
         this.purchaseDate.disable();
       } else {
         this.searchBy.setValue('pid');
         this.pidPinPlaceholder = 'Type 9 digit PID';
         this.isCrownLand = false;
-        this.pid.removeValidators([Validators.required]);
+        this.pid.addValidators([Validators.required]);
         this.crownLandOwnerType.setValue(null);
         this.purchaseDate.enable();
       }
