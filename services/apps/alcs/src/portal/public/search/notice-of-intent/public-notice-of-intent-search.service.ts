@@ -191,7 +191,7 @@ export class PublicNoticeOfIntentSearchService {
     query = query.leftJoin(
       NoticeOfIntentDecision,
       'decision',
-      'decision.notice_of_intent_uuid = "noiSearch"."notice_of_intent_uuid"',
+      'decision.notice_of_intent_uuid = "noiSearch"."notice_of_intent_uuid" AND decision.is_draft = FALSE',
     );
     return query;
   }

@@ -198,7 +198,7 @@ export class PublicApplicationSearchService {
     query = query.leftJoin(
       ApplicationDecision,
       'decision',
-      'decision.application_uuid = "appSearch"."application_uuid"',
+      'decision.application_uuid = "appSearch"."application_uuid" AND decision.is_draft = FALSE',
     );
     return query;
   }
