@@ -1058,7 +1058,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="28" name="application_region_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
       </table>
-      <table name="application_submission_status_type" numRows="13" remarks="Code table for possible application portal statuses" schema="alcs" type="TABLE">
+      <table name="application_submission_status_type" remarks="Code table for possible application portal statuses" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1149,7 +1149,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_allowed_card_types_card_type" numRows="51" remarks="Card types allowed on each kanban board" schema="alcs" type="TABLE">
+      <table name="board_allowed_card_types_card_type" remarks="Card types allowed on each kanban board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_08dbb99476efaa2d0eed8ee1f7a" implied="false" onDeleteCascade="true" schema="alcs" table="board"/>
          </column>
@@ -1189,7 +1189,7 @@
             <column ascending="true" name="board_uuid"/>
          </index>
       </table>
-      <table name="board_status" numRows="125" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
+      <table name="board_status" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1551,7 +1551,7 @@
             <column ascending="true" name="oats_document_id"/>
          </index>
       </table>
-      <table name="document_code" numRows="63" remarks="Code table for possible document types" schema="alcs" type="TABLE">
+      <table name="document_code" numRows="59" remarks="Code table for possible document types" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1610,7 +1610,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" numRows="100" remarks="Holidays used by the application active day tracking function" schema="alcs" type="TABLE">
+      <table name="holiday_entity" remarks="Holidays used by the application active day tracking function" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="Unique identifier that is safe to share." size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="Unique name of the stat holiday." size="2147483647" type="varchar" typeCode="12">
             <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
@@ -1714,7 +1714,7 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="22" name="date_submitted_to_alc" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
       </table>
-      <table name="local_government" numRows="187" remarks="Status, type, BCeID, and contact info of local or first nation governments" schema="alcs" type="TABLE">
+      <table name="local_government" numRows="148" remarks="Status, type, BCeID, and contact info of local or first nation governments" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1764,7 +1764,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="migrations" numRows="303" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
+      <table name="migrations" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('alcs.migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -3038,7 +3038,7 @@
             <column ascending="true" name="notification_uuid"/>
          </index>
       </table>
-      <table name="typeorm_metadata" numRows="10" remarks="" schema="alcs" type="TABLE">
+      <table name="typeorm_metadata" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="database" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="schema" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
