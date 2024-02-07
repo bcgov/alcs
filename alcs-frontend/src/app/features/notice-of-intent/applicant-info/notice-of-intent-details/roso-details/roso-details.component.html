@@ -41,7 +41,7 @@
     </div>
     <div class="grid-1"><strong>Area</strong></div>
     <div class="grid-2">
-      {{ _noiSubmission.soilToRemoveArea }} <span *ngIf="_noiSubmission.soilToRemoveArea">ha</span>
+      {{ _noiSubmission.soilToRemoveArea }} <span *ngIf="_noiSubmission.soilToRemoveArea">m<sup>2</sup></span>
     </div>
     <div class="grid-1"><strong>Maximum Depth</strong></div>
     <div class="grid-2">
@@ -69,7 +69,7 @@
     <div class="grid-1"><strong>Area</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="_noiSubmission.soilAlreadyRemovedArea !== null">ha</span>
+      <span *ngIf="_noiSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
     </div>
     <div class="grid-1"><strong>Maximum Depth</strong></div>
     <div class="grid-2">
@@ -107,7 +107,7 @@
 
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of crossSections" (click)="openFile(file)">
+      <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
         {{ file.fileName }}
       </a>
     </div>

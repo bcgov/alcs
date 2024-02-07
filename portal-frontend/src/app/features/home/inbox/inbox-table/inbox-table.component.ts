@@ -1,9 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { TableChange } from '../../../public/search/search.interface';
 import { InboxResultDto } from '../inbox.component';
 
@@ -12,42 +10,32 @@ import { InboxResultDto } from '../inbox.component';
   templateUrl: './inbox-table.component.html',
   styleUrls: ['./inbox-table.component.scss'],
 })
-export class InboxTableComponent implements OnDestroy {
-  $destroy = new Subject<void>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort?: MatSort;
-
+export class InboxTableComponent {
   _items: InboxResultDto[] = [];
   @Input() set items(applications: InboxResultDto[]) {
     this._items = applications;
+    this.isLoading = false;
     this.dataSource = new MatTableDataSource<InboxResultDto>(applications);
   }
 
-  _totalCount = 0;
-  @Input() set totalCount(count: number) {
-    this._totalCount = count;
-
-    // this will ensure the reset of subscriber once the table is hidden because of empty
-    this.initSorting();
-  }
-
+  @Input() totalCount: number = 0;
   @Input() type = 'Applications';
+  @Input() pageIndex: number = 0;
+
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns: string[] = ['fileNumber', 'dateCreated', 'applicant', 'applicationType', 'status', 'lastUpdated'];
   dataSource = new MatTableDataSource<InboxResultDto>();
-  @Input() pageIndex: number = 0;
   itemsPerPage = 10;
   total = 0;
   sortDirection = 'DESC';
   sortField = 'lastUpdate';
-
-  private subscribedToSort = false;
+  isLoading = false;
 
   constructor(private router: Router) {}
 
-  async onTableChange() {
+  onTableChange() {
+    this.isLoading = true;
     this.tableChange.emit({
       pageIndex: this.pageIndex,
       itemsPerPage: this.itemsPerPage,
@@ -61,33 +49,7 @@ export class InboxTableComponent implements OnDestroy {
     this.pageIndex = $event.pageIndex;
     this.itemsPerPage = $event.pageSize;
 
-    await this.onTableChange();
-  }
-
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  private initSorting() {
-    if (this._totalCount <= 0) {
-      this.subscribedToSort = false;
-    }
-
-    // push subscription to next render cycle, after the table is rendered
-    setTimeout(() => {
-      if (this.sort && !this.subscribedToSort) {
-        this.subscribedToSort = true;
-        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-          this.paginator.pageIndex = 0;
-          this.pageIndex = 0;
-          this.sortDirection = sortObj.direction.toUpperCase();
-          this.sortField = sortObj.active;
-
-          await this.onTableChange();
-        });
-      }
-    });
+    this.onTableChange();
   }
 
   async onRowClick(link: string) {
