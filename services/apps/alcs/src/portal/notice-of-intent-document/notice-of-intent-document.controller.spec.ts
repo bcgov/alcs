@@ -121,6 +121,19 @@ describe('NoticeOfIntentDocumentController', () => {
     const res = await controller.open('fake-uuid', mockRequest);
 
     expect(res.url).toEqual(fakeUrl);
+    expect(noiDocumentService.getInlineUrl).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for download', async () => {
+    const fakeUrl = 'fake-url';
+    noiDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    noiDocumentService.get.mockResolvedValue(mockDocument);
+    mockNoiSubmissionService.canAccessDocument.mockResolvedValue(true);
+
+    const res = await controller.download('fake-uuid', mockRequest);
+
+    expect(res.url).toEqual(fakeUrl);
+    expect(noiDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service to attach external document', async () => {
