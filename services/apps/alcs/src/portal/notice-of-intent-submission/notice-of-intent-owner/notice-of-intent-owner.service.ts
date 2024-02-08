@@ -155,6 +155,7 @@ export class NoticeOfIntentOwnerService {
 
     //If attaching new document and old one was defined, delete it
     if (
+      updateDto.corporateSummaryUuid &&
       existingOwner.corporateSummaryUuid !== updateDto.corporateSummaryUuid &&
       existingOwner.corporateSummary
     ) {
