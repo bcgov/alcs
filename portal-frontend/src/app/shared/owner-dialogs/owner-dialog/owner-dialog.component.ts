@@ -163,7 +163,12 @@ export class OwnerDialogComponent {
   async onSave() {
     if (this.form.valid) {
       this.isLoading = true;
-      const document = await this.uploadPendingFile(this.pendingFile);
+
+      let document;
+      if (this.pendingFile) {
+        document = await this.uploadPendingFile(this.pendingFile);
+      }
+
       const updateDto: ApplicationOwnerUpdateDto = {
         organizationName: this.organizationName.getRawValue(),
         firstName: this.firstName.getRawValue(),
