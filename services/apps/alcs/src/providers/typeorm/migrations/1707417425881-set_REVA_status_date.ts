@@ -30,8 +30,8 @@ export class SetREVAStatusDate1707417425881 implements MigrationInterface {
             FROM
                 applications
             WHERE
-                "submission_uuid" = applications."uuid";
-                AND status_type_code = 'REVA'
+                "submission_uuid" = applications."uuid"
+                AND status_type_code = 'REVA';
     `);
   }
 
