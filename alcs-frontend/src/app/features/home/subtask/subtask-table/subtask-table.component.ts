@@ -10,6 +10,7 @@ import {
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
+import { CardType } from '../../../../shared/card/card.component';
 
 @Component({
   selector: 'app-subtask-table',
@@ -28,7 +29,14 @@ export class SubtaskTableComponent {
   RECON_TYPE_LABEL = RECON_TYPE_LABEL;
   NOTIFICATION_LABEL = NOTIFICATION_LABEL;
 
-  constructor(private router: Router, private cardSubtaskService: CardSubtaskService) {}
+  CardType = CardType;
+
+  maxActiveDays = 61;
+
+  constructor(
+    private router: Router,
+    private cardSubtaskService: CardSubtaskService,
+  ) {}
 
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
@@ -40,7 +48,7 @@ export class SubtaskTableComponent {
 
   async openCard(subtask: HomepageSubtaskDto) {
     await this.router.navigateByUrl(
-      `/board/${subtask.card.boardCode}?card=${subtask.card.uuid}&type=${subtask.card.type}`
+      `/board/${subtask.card.boardCode}?card=${subtask.card.uuid}&type=${subtask.card.type}`,
     );
   }
 
