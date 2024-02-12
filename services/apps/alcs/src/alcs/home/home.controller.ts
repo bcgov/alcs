@@ -314,11 +314,12 @@ export class HomeController {
 
     const result: HomepageSubtaskDTO[] = [];
     for (const noticeOfIntent of noticeOfIntents) {
+      const activeDays = timeMap.get(noticeOfIntent.uuid)?.activeDays;
+
       if (noticeOfIntent.card) {
         for (const subtask of noticeOfIntent.card.subtasks) {
           result.push({
-            activeDays:
-              timeMap.get(noticeOfIntent.uuid)?.activeDays ?? undefined,
+            activeDays: activeDays ?? undefined,
             type: subtask.type,
             createdAt: subtask.createdAt.getTime(),
             assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
