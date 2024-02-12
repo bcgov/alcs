@@ -2,6 +2,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class UpdateDocumentMimeType1707773296341 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    // update etl imported pdf mime_type to application/pdf
     await queryRunner.query(
       `WITH documents_with_extensions AS (
             SELECT 
@@ -23,6 +24,7 @@ export class UpdateDocumentMimeType1707773296341 implements MigrationInterface {
             FROM pdf_documents
             WHERE pdf_documents.uuid = alcs."document"."uuid" AND alcs."document".audit_created_by = 'oats_etl';`,
     );
+    // update etl imported documents other then pdf to generic mime_type
     await queryRunner.query(`
             WITH documents_with_extensions AS (
             SELECT 
