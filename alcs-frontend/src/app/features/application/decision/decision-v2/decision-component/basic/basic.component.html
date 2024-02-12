@@ -1,5 +1,9 @@
 <div>
-  <div class="subheading2">ALR Area Impacted (ha)</div>
+  <div class="subheading2">
+    ALR Area Impacted
+    <ng-container *ngIf="component.applicationDecisionComponentTypeCode !== 'NARU'">(ha)</ng-container>
+    <ng-container *ngIf="component.applicationDecisionComponentTypeCode === 'NARU'">(m<sup>2</sup>)</ng-container>
+  </div>
   <app-inline-number
     [value]="component.alrArea?.toString()"
     (save)="onSaveAlrArea($event)"
