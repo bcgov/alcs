@@ -147,6 +147,7 @@ describe('HomeController', () => {
     mockNotificationService.getBy.mockResolvedValue([]);
     mockNotificationService.mapToDtos.mockResolvedValue([]);
 
+    mockNoticeOfIntentService.getTimes.mockResolvedValue(new Map());
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
       new Map(),
     );
@@ -364,6 +365,7 @@ describe('HomeController', () => {
     });
 
     it('should call NOI Service and map it', async () => {
+      const activeDays = 5;
       const mockNoi = new NoticeOfIntent({
         applicant: 'fake-applicant',
         fileNumber: 'fileNumber',
@@ -371,6 +373,17 @@ describe('HomeController', () => {
       });
       mockNoticeOfIntentService.getWithIncompleteSubtaskByType.mockResolvedValue(
         [mockNoi],
+      );
+      mockNoticeOfIntentService.getTimes.mockResolvedValue(
+        new Map([
+          [
+            mockNoi.uuid,
+            {
+              activeDays,
+              pausedDays: null,
+            },
+          ],
+        ]),
       );
 
       const res = await controller.getIncompleteSubtasksByType(
@@ -384,6 +397,7 @@ describe('HomeController', () => {
 
       expect(res[0].title).toContain(mockNoi.fileNumber);
       expect(res[0].title).toContain(mockNoi.applicant);
+      expect(res[0].activeDays).toBe(activeDays);
     });
 
     it('should call NOI Modification Service and map it', async () => {
