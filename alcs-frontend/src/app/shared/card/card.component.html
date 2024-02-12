@@ -38,7 +38,7 @@
           class="day-count active-days center"
           matTooltip="Active days: {{ cardData.activeDays }} "
         >
-          <mat-icon title="Active Days">calendar_month</mat-icon>
+          <mat-icon>calendar_month</mat-icon>
           <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center">
             {{  cardData.activeDays }}
           </span>
@@ -51,7 +51,7 @@
           class="day-count center"
           matTooltip="Paused days: {{ cardData.pausedDays }} "
         >
-          <mat-icon title="Active Days">pause</mat-icon>
+          <mat-icon>pause</mat-icon>
           <span class="center">{{ cardData.pausedDays }}</span>
         </div>
         <div *ngIf="cardData.activeDays && cardData.dueDate !== undefined" class="due-date center">
