@@ -10,7 +10,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBMNoiApplicantHtml,
   generateSUBMNoiGovernmentHtml,
@@ -154,23 +153,6 @@ export class NoticeOfIntentSubmissionController {
       throw new BadRequestException(
         'Can only cancel in progress Notice of Intents',
       );
-    }
-
-    const { primaryContact, submissionGovernment } =
-      await this.statusEmailService.getNoticeOfIntentEmailData(
-        noticeOfIntentSubmission,
-      );
-
-    if (primaryContact) {
-      await this.statusEmailService.sendNoticeOfIntentStatusEmail({
-        generateStatusHtml: generateCANCNoticeOfIntentHtml,
-        status: NOI_SUBMISSION_STATUS.CANCELLED,
-        noticeOfIntentSubmission,
-        government: submissionGovernment,
-        parentType: PARENT_TYPE.APPLICATION,
-        primaryContact,
-        ccGovernment: !!submissionGovernment,
-      });
     }
 
     await this.noticeOfIntentSubmissionService.cancel(noticeOfIntentSubmission);
