@@ -129,7 +129,11 @@ export class NoticeOfIntentController {
         noticeOfIntentSubmission,
       );
 
-    if (primaryContact) {
+    if (
+      primaryContact &&
+      noticeOfIntentSubmission.status.statusTypeCode !==
+        NOI_SUBMISSION_STATUS.IN_PROGRESS
+    ) {
       await this.statusEmailService.sendNoticeOfIntentStatusEmail({
         generateStatusHtml: generateCANCNoticeOfIntentHtml,
         status: NOI_SUBMISSION_STATUS.CANCELLED,

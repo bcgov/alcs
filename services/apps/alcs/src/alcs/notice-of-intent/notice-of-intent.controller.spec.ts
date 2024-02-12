@@ -13,6 +13,7 @@ import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
@@ -161,7 +162,13 @@ describe('NoticeOfIntentController', () => {
     mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
       {} as any,
     );
-    mockSubmissionService.get.mockResolvedValue(new NoticeOfIntentSubmission());
+    mockSubmissionService.get.mockResolvedValue(
+      new NoticeOfIntentSubmission({
+        status: new NoticeOfIntentSubmissionToSubmissionStatus({
+          statusTypeCode: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        }),
+      }),
+    );
     mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
       primaryContact: new NoticeOfIntentOwner(),
     } as any);
@@ -181,6 +188,38 @@ describe('NoticeOfIntentController', () => {
     expect(
       mockStatusEmailService.sendNoticeOfIntentStatusEmail,
     ).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not send an email when cancelling in progress NOI', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+    mockSubmissionService.get.mockResolvedValue(
+      new NoticeOfIntentSubmission({
+        status: new NoticeOfIntentSubmissionToSubmissionStatus({
+          statusTypeCode: NOI_SUBMISSION_STATUS.IN_PROGRESS,
+        }),
+      }),
+    );
+    mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
+      primaryContact: new NoticeOfIntentOwner(),
+    } as any);
+    mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
+
+    await controller.cancel('file-number');
+
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('file-number', NOI_SUBMISSION_STATUS.CANCELLED);
+    expect(
+      mockStatusEmailService.getNoticeOfIntentEmailData,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
+    ).toHaveBeenCalledTimes(0);
   });
 
   it('should call through to submission service for uncancel', async () => {
