@@ -11,9 +11,9 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
-import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
+import { NfuChangeWillFillConfirmationDialogComponent } from './nfu-change-will-fill-confirmation-dialog/nfu-change-will-fill-confirmation-dialog.component';
 
 @Component({
   selector: 'app-nfu-proposal',
@@ -24,13 +24,14 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
   currentStep = EditApplicationSteps.Proposal;
 
   fillTableData: SoilTableData = {};
+  fillTableDisabled = true;
   showProposalMapVirus = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   outsideLands = new FormControl<string | null>(null, [Validators.required]);
   agricultureSupport = new FormControl<string | null>(null, [Validators.required]);
-  willImportFill = new FormControl<string | null>(null, [Validators.required]);
+  willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   projectDuration = new FormControl<string | null>(
     {
       disabled: true,
@@ -100,8 +101,8 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
         };
 
         if (applicationSubmission.nfuWillImportFill !== null) {
-          this.willImportFill.setValue(applicationSubmission.nfuWillImportFill ? 'true' : 'false');
-          this.onChangeFill(applicationSubmission.nfuWillImportFill ? 'true' : 'false');
+          this.willImportFill.setValue(applicationSubmission.nfuWillImportFill);
+          this.onChangeFill(applicationSubmission.nfuWillImportFill);
         }
 
         if (this.showErrors) {
@@ -140,7 +141,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
         purpose,
         nfuOutsideLands,
         nfuAgricultureSupport,
-        nfuWillImportFill: parseStringToBoolean(nfuWillImportFill),
+        nfuWillImportFill: nfuWillImportFill,
         nfuTotalFillArea: this.fillTableData.area ?? null,
         nfuMaxFillDepth: this.fillTableData.maximumDepth ?? null,
         nfuAverageFillDepth: this.fillTableData.averageDepth ?? null,
@@ -155,19 +156,47 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
     }
   }
 
-  onChangeFill(value: string) {
-    if (value === 'true') {
+  onChangeFill(willImportFill: boolean) {
+    const hasValues =
+      this.projectDuration.value ||
+      this.fillOriginDescription.value ||
+      this.fillTypeDescription.value ||
+      this.fillTableData.area ||
+      this.fillTableData.averageDepth ||
+      this.fillTableData.maximumDepth ||
+      this.fillTableData.volume;
+
+    if (!willImportFill && hasValues) {
+      this.dialog
+        .open(NfuChangeWillFillConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe((confirmed) => {
+          this.updateFillFields(!confirmed);
+          this.willImportFill.setValue(!confirmed);
+        });
+    } else {
+      this.updateFillFields(willImportFill);
+    }
+  }
+
+  updateFillFields(willImportFill: boolean) {
+    this.fillTableDisabled = !willImportFill;
+
+    if (willImportFill) {
       this.projectDuration.enable();
-      this.fillTypeDescription.enable();
       this.fillOriginDescription.enable();
+      this.fillTypeDescription.enable();
     } else {
       this.projectDuration.disable();
-      this.fillTypeDescription.disable();
       this.fillOriginDescription.disable();
+      this.fillTypeDescription.disable();
 
       this.projectDuration.setValue(null);
-      this.fillTypeDescription.setValue(null);
       this.fillOriginDescription.setValue(null);
+      this.fillTypeDescription.setValue(null);
     }
   }
 

@@ -1,0 +1,16 @@
+<div mat-dialog-title>
+  <h4>Do you need to import any fill to construct or conduct the proposed Non-farm use?</h4>
+</div>
+
+<div mat-dialog-content class="content">
+  <div>
+    <app-warning-banner>
+      Changing the answer to this question will remove some content already saved to this page. Do you want to continue?
+    </app-warning-banner>
+
+    <div class="step-controls">
+      <button mat-stroked-button color="primary" (click)="onDecide(false)">cancel</button>
+      <button mat-flat-button color="primary" (click)="onDecide(true)">confirm</button>
+    </div>
+  </div>
+</div>
