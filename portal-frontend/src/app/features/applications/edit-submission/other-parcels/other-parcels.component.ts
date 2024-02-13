@@ -1,16 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, takeUntil } from 'rxjs';
-import {
-  ApplicationOwnerDetailedDto,
-  ApplicationOwnerDto,
-} from '../../../../services/application-owner/application-owner.dto';
-import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
+import { takeUntil } from 'rxjs';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { ToastService } from '../../../../services/toast/toast.service';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-submission.component';
