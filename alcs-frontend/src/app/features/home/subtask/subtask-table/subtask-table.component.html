@@ -72,6 +72,7 @@
     <th mat-header-cell *matHeaderCellDef>Assignee</th>
     <td class="assignee-column" mat-cell *matCellDef="let element">
       <ng-select
+        #assigneeSelect
         class="subtask-assignee"
         [items]="users"
         bindLabel="prettyName"
