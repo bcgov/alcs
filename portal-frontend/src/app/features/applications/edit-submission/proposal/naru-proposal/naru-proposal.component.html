@@ -556,7 +556,7 @@
 
       <app-soil-table
         tableHeader="Fill to be Placed"
-        [disabled]="!willImportFill.value"
+        [disabled]="fillTableDisabled"
         [touchAll]="showErrors"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"

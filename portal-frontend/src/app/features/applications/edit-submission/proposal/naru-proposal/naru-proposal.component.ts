@@ -19,6 +19,7 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
+import { ChangeWillFillConfirmationDialogComponent } from './change-will-fill-confirmation-dialog/change-will-fill-confirmation-dialog.component';
 
 @Component({
   selector: 'app-naru-proposal',
@@ -65,6 +66,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   proposalMap: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
+  fillTableDisabled = true;
 
   form = new FormGroup({
     subtype: this.subtype,
@@ -174,6 +176,34 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   onChangeFill(willImportFill: boolean) {
+    const hasValues =
+      this.projectDuration.value ||
+      this.fillOrigin.value ||
+      this.fillType.value ||
+      this.fillTableData.area ||
+      this.fillTableData.averageDepth ||
+      this.fillTableData.maximumDepth ||
+      this.fillTableData.volume;
+
+    if (!willImportFill && hasValues) {
+      this.dialog
+        .open(ChangeWillFillConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe((confirmed) => {
+          this.updateFillFields(!confirmed);
+          this.willImportFill.setValue(!confirmed);
+        });
+    } else {
+      this.updateFillFields(willImportFill);
+    }
+  }
+
+  updateFillFields(willImportFill: boolean) {
+    this.fillTableDisabled = !willImportFill;
+
     if (willImportFill) {
       this.projectDuration.enable();
       this.fillOrigin.enable();
