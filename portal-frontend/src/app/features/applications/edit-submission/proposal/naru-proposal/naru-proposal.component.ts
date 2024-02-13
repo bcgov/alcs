@@ -15,7 +15,6 @@ import { CodeService } from '../../../../../services/code/code.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
-import { formatBooleanToYesNoString } from '../../../../../shared/utils/boolean-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
@@ -41,7 +40,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   existingStructures = new FormControl<string | null>(null, [Validators.required]);
   sleepingUnits = new FormControl<string | null>(null, [Validators.required]);
   agriTourism = new FormControl<string | null>(null, [Validators.required]);
-  willImportFill = new FormControl<string | null>(null, [Validators.required]);
+  willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   fillType = new FormControl<string | null>(
     {
       disabled: true,
@@ -107,7 +106,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         this.form.patchValue({
           subtype: applicationSubmission.naruSubtype?.code,
           existingStructures: applicationSubmission.naruExistingStructures,
-          willImportFill: formatBooleanToYesNoString(applicationSubmission.naruWillImportFill),
+          willImportFill: applicationSubmission.naruWillImportFill,
           fillType: applicationSubmission.naruFillType,
           fillOrigin: applicationSubmission.naruFillOrigin,
           floorArea: applicationSubmission.naruFloorArea ? applicationSubmission.naruFloorArea.toString() : null,
@@ -124,10 +123,9 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         this.previousSubtype = applicationSubmission.naruSubtype?.code ?? null;
 
         if (applicationSubmission.naruWillImportFill !== null) {
-          const willImportFill = applicationSubmission.naruWillImportFill ? 'true' : 'false';
-          this.onChangeFill(willImportFill);
+          this.onChangeFill(applicationSubmission.naruWillImportFill);
           this.form.patchValue({
-            willImportFill,
+            willImportFill: applicationSubmission.naruWillImportFill,
           });
         }
 
@@ -175,8 +173,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  onChangeFill(value: string) {
-    if (value === 'true') {
+  onChangeFill(willImportFill: boolean) {
+    if (willImportFill) {
       this.projectDuration.enable();
       this.fillOrigin.enable();
       this.fillType.enable();
@@ -211,7 +209,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         naruExistingStructures: existingStructures,
-        naruWillImportFill: willImportFill !== undefined ? willImportFill === 'true' : null,
+        naruWillImportFill: willImportFill,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,
