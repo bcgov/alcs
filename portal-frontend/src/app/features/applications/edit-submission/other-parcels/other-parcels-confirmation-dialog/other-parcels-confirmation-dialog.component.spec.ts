@@ -2,15 +2,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog.component';
+import { OtherParcelsConfirmationDialogComponent } from './other-parcels-confirmation-dialog.component';
 
 describe('OtherParcelConfirmationDialogComponent', () => {
-  let component: PrimaryContactConfirmationDialogComponent;
-  let fixture: ComponentFixture<PrimaryContactConfirmationDialogComponent>;
+  let component: OtherParcelsConfirmationDialogComponent;
+  let fixture: ComponentFixture<OtherParcelsConfirmationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PrimaryContactConfirmationDialogComponent],
+      declarations: [OtherParcelsConfirmationDialogComponent],
       providers: [
         {
           provide: MatDialog,
@@ -28,7 +28,7 @@ describe('OtherParcelConfirmationDialogComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PrimaryContactConfirmationDialogComponent);
+    fixture = TestBed.createComponent(OtherParcelsConfirmationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

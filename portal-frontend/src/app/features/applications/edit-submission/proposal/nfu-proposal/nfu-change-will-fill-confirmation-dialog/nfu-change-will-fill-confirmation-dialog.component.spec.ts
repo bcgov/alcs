@@ -2,15 +2,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog.component';
+import { NfuChangeWillFillConfirmationDialogComponent } from './nfu-change-will-fill-confirmation-dialog.component';
 
-describe('ChangeSubtypeConfirmationDialogComponent', () => {
-  let component: ChangeSubtypeConfirmationDialogComponent;
-  let fixture: ComponentFixture<ChangeSubtypeConfirmationDialogComponent>;
+describe('NfuChangeWillFillConfirmationDialogComponent', () => {
+  let component: NfuChangeWillFillConfirmationDialogComponent;
+  let fixture: ComponentFixture<NfuChangeWillFillConfirmationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ChangeSubtypeConfirmationDialogComponent],
+      declarations: [NfuChangeWillFillConfirmationDialogComponent],
       providers: [
         {
           provide: MatDialog,
@@ -24,7 +24,7 @@ describe('ChangeSubtypeConfirmationDialogComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ChangeSubtypeConfirmationDialogComponent);
+    fixture = TestBed.createComponent(NfuChangeWillFillConfirmationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

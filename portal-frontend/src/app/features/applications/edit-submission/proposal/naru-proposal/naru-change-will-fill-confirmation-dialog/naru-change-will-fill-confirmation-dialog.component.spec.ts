@@ -2,15 +2,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog.component';
+import { NaruChangeWillFillConfirmationDialogComponent } from './naru-change-will-fill-confirmation-dialog.component';
 
-describe('ChangeSubtypeConfirmationDialogComponent', () => {
-  let component: ChangeSubtypeConfirmationDialogComponent;
-  let fixture: ComponentFixture<ChangeSubtypeConfirmationDialogComponent>;
+describe('NaruChangeWillFillConfirmationDialogComponent', () => {
+  let component: NaruChangeWillFillConfirmationDialogComponent;
+  let fixture: ComponentFixture<NaruChangeWillFillConfirmationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ChangeSubtypeConfirmationDialogComponent],
+      declarations: [NaruChangeWillFillConfirmationDialogComponent],
       providers: [
         {
           provide: MatDialog,
@@ -24,7 +24,7 @@ describe('ChangeSubtypeConfirmationDialogComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ChangeSubtypeConfirmationDialogComponent);
+    fixture = TestBed.createComponent(NaruChangeWillFillConfirmationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
