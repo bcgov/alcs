@@ -38,7 +38,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
 import { SuccessComponent } from './success/success.component';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact/primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 import { OtherParcelsConfirmationDialogComponent } from './other-parcels/other-parcels-confirmation-dialog/other-parcels-confirmation-dialog.component';
-import { ChangeWillFillConfirmationDialogComponent } from './proposal/naru-proposal/change-will-fill-confirmation-dialog/change-will-fill-confirmation-dialog.component';
+import { NaruChangeWillFillConfirmationDialogComponent } from './proposal/naru-proposal/naru-change-will-fill-confirmation-dialog/naru-change-will-fill-confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,7 @@ import { ChangeWillFillConfirmationDialogComponent } from './proposal/naru-propo
     PrimaryContactComponent,
     PrimaryContactConfirmationDialogComponent,
     OtherParcelsConfirmationDialogComponent,
-    ChangeWillFillConfirmationDialogComponent,
+    NaruChangeWillFillConfirmationDialogComponent,
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
     NfuProposalComponent,
@@ -100,7 +100,7 @@ import { ChangeWillFillConfirmationDialogComponent } from './proposal/naru-propo
     PrimaryContactComponent,
     PrimaryContactConfirmationDialogComponent,
     OtherParcelsConfirmationDialogComponent,
-    ChangeWillFillConfirmationDialogComponent,
+    NaruChangeWillFillConfirmationDialogComponent,
     ReviewAndSubmitComponent,
     NfuProposalComponent,
     TurProposalComponent,

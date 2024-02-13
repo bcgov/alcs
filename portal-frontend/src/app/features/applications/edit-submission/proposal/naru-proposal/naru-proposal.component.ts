@@ -19,7 +19,7 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
-import { ChangeWillFillConfirmationDialogComponent } from './change-will-fill-confirmation-dialog/change-will-fill-confirmation-dialog.component';
+import { NaruChangeWillFillConfirmationDialogComponent } from './naru-change-will-fill-confirmation-dialog/naru-change-will-fill-confirmation-dialog.component';
 
 @Component({
   selector: 'app-naru-proposal',
@@ -187,7 +187,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
     if (!willImportFill && hasValues) {
       this.dialog
-        .open(ChangeWillFillConfirmationDialogComponent, {
+        .open(NaruChangeWillFillConfirmationDialogComponent, {
           panelClass: 'no-padding',
           disableClose: true,
         })
