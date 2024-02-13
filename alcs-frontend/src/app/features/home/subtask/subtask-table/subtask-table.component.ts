@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HomepageSubtaskDto } from '../../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../../services/card/card-subtask/card-subtask.service';
 import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
+import { NgSelectComponent } from '@ng-select/ng-select';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
@@ -19,6 +20,8 @@ import {
 export class SubtaskTableComponent {
   @Input() subtasks: HomepageSubtaskDto[] = [];
   @Input() users: AssigneeDto[] = [];
+  @ViewChild('assigneeSelect')
+  assigneeSelect!: NgSelectComponent;
 
   displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
 
@@ -46,5 +49,6 @@ export class SubtaskTableComponent {
 
   async onAssigneeSelected(assignee: UserDto, uuid: string) {
     await this.cardSubtaskService.update(uuid, { assignee: assignee ? assignee.uuid : null });
+    this.assigneeSelect.blur();
   }
 }
