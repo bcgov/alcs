@@ -22,6 +22,13 @@ export class AddBoundaryAmendments1707851049233 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "alcs"."application_boundary_amendments_to_components" ADD CONSTRAINT "FK_991ebae155fdffa94befd0c20a1" FOREIGN KEY ("application_decision_component_uuid") REFERENCES "alcs"."application_decision_component"("uuid") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
+
+    await queryRunner.query(
+      `COMMENT ON TABLE "alcs"."application_boundary_amendment" IS 'Used by ALC GIS Staff to track Inclusion / Exclusion decisions and their ALR boundary impact over time';`,
+    );
+    await queryRunner.query(
+      `COMMENT ON TABLE "alcs"."application_boundary_amendments_to_components" IS 'Links Boundary Amendments to the Decision Components they result from';`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

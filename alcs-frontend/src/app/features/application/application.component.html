@@ -14,7 +14,7 @@
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
             *ngIf="
-              (route.portalOnly ? isApplicantSubmission : true) &&
+              (!route.portalOnly || isApplicantSubmission) &&
               (route.appTypes ? route.appTypes.includes(application.type.code) : true)
             "
             [routerLink]="route.path ? route.path : './'"
