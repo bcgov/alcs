@@ -41,7 +41,7 @@ export class SetApplicantOnApplicationSubmission1707760907222
                         SELECT count(*)
                         FROM alcs.application_parcel_owners_application_owner
                         WHERE application_parcel_uuid = ranked_owners.application_parcel_uuid
-                    ) > 1 THEN 'et al.'
+                    ) > 1 THEN ' et al.'
                     ELSE ''
                 END
             ) as applicant,
