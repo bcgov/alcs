@@ -21,3 +21,7 @@ CREATE OR REPLACE FUNCTION random_lorem_ipsum() RETURNS text AS $$
         
 END;
 $$ LANGUAGE plpgsql;"""
+
+
+def get_update_column_query(column_name):
+    return f"{column_name} = CASE WHEN {column_name} IS NOT NULL THEN %s ELSE NULL END"

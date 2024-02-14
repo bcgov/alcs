@@ -2,9 +2,10 @@ from common import setup_and_get_logger
 from db import inject_conn_pool
 from ..lorem_ipsum import lorem_ipsum_string
 from faker import Faker
-from ..utils import log_process, lorem_ipsum_function_query
+from ..utils import log_process, lorem_ipsum_function_query, get_update_column_query
 
 from .application import obfuscate_application_related_data
+from .covenant import obfuscate_covenant_related_data
 
 logger = setup_and_get_logger("prod_data_obfuscation")
 
@@ -15,23 +16,23 @@ def process_alcs_data():
     # _update_description_columns()
     # _delete_data_from_tables()
     # _update_body_columns()
-    _update_comment_columns()
+    # _update_comment_columns()
 
     # users
-    _update_with_random_alcs_users()
+    # _update_with_random_alcs_users()
 
     # documents
-    _update_with_random_alcs_documents()
+    # _update_with_random_alcs_documents()
 
     # application
-    obfuscate_application_related_data()
+    # obfuscate_application_related_data()
 
     # covenants
-    _update_with_random_alcs_covenant()
+    obfuscate_covenant_related_data()
 
     # notice of intent
-    _update_with_random_alcs_notice_of_intent()
-    _update_with_random_alcs_notice_of_intent_decision()
+    # _update_with_random_alcs_notice_of_intent()
+    # _update_with_random_alcs_notice_of_intent_decision()
 
 
 @log_process(logger, "update_description_columns")
@@ -198,37 +199,6 @@ def _update_with_random_alcs_users(conn=None):
         logger.exception(err)
 
 
-@log_process(logger, "update_with_random_alcs_covenant")
-@inject_conn_pool
-def _update_with_random_alcs_covenant(conn=None):
-    # Set Faker for generating random names
-    fake = Faker()
-
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT uuid FROM alcs.covenant")
-            record_ids = cursor.fetchall()
-
-            for r_id in record_ids:
-                sql_query = """
-                            UPDATE alcs.covenant 
-                            SET applicant = CASE WHEN applicant IS NOT NULL THEN %s ELSE applicant END
-                            WHERE uuid = %s;
-                """
-                cursor.execute(
-                    sql_query,
-                    (
-                        fake.name(),
-                        r_id[0],
-                    ),
-                )
-
-            conn.commit()
-    except Exception as err:
-        conn.rollback()
-        logger.exception(err)
-
-
 @log_process(logger, "update_with_random_alcs_documents")
 @inject_conn_pool
 def _update_with_random_alcs_documents(conn=None):
@@ -262,6 +232,67 @@ def _update_with_random_alcs_documents(conn=None):
         logger.exception(err)
 
 
+@log_process(logger, "update_with_random_alcs_local_government")
+@inject_conn_pool
+def _update_with_random_alcs_local_government(conn=None):
+    fake_latin = Faker("la")
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT uuid FROM alcs.local_government")
+            record_ids = cursor.fetchall()
+
+            for r_id in record_ids:
+                sql_query = f"""
+                            UPDATE alcs.local_government 
+                            SET {get_update_column_query("emails")},
+                            WHERE uuid = %s;
+                """
+                cursor.execute(
+                    sql_query,
+                    (
+                        "[]",
+                        r_id[0],
+                    ),
+                )
+
+            conn.commit()
+    except Exception as err:
+        conn.rollback()
+        logger.exception(err)
+
+
+@log_process(logger, "update_with_random_alcs_local_government")
+@inject_conn_pool
+def _update_with_random_alcs_message(conn=None):
+    fake = Faker()
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT uuid FROM alcs.message")
+            record_ids = cursor.fetchall()
+
+            for r_id in record_ids:
+                sql_query = f"""
+                            UPDATE alcs.message 
+                            SET {get_update_column_query("title")},
+                            WHERE uuid = %s;
+                """
+                cursor.execute(
+                    sql_query,
+                    (
+                        "[]",
+                        r_id[0],
+                    ),
+                )
+
+            conn.commit()
+    except Exception as err:
+        conn.rollback()
+        logger.exception(err)
+
+
+# TODO move to notice_of_intent
 @log_process(logger, "update_with_random_alcs_notice_of_intent")
 @inject_conn_pool
 def _update_with_random_alcs_notice_of_intent(conn=None):

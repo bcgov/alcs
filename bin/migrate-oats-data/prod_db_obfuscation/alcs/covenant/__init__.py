@@ -1,0 +1,1 @@
+from covenant import obfuscate_covenant_related_data
