@@ -13,7 +13,7 @@ import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.direc
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
-import { NfuChangeWillFillConfirmationDialogComponent } from './nfu-change-will-fill-confirmation-dialog/nfu-change-will-fill-confirmation-dialog.component';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-nfu-proposal',
@@ -72,6 +72,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
     private applicationSubmissionService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
+    private confirmationDialogService: ConfirmationDialogService,
     toastService: ToastService
   ) {
     super(applicationDocumentService, dialog, toastService);
@@ -167,12 +168,11 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
       this.fillTableData.volume;
 
     if (!willImportFill && hasValues) {
-      this.dialog
-        .open(NfuChangeWillFillConfirmationDialogComponent, {
-          panelClass: 'no-padding',
-          disableClose: true,
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Do you need to import any fill to construct or conduct the proposed Non-farm use?',
+          body: 'Changing the answer to this question will remove content already saved to this page. Do you want to continue?',
         })
-        .beforeClosed()
         .subscribe((confirmed) => {
           this.updateFillFields(!confirmed);
           this.willImportFill.setValue(!confirmed);

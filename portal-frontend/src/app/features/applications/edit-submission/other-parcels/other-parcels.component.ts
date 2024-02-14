@@ -5,8 +5,7 @@ import { ApplicationSubmissionDetailedDto } from '../../../../services/applicati
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
-import { OtherParcelsConfirmationDialogComponent } from './other-parcels-confirmation-dialog/other-parcels-confirmation-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-other-parcels',
@@ -33,11 +32,11 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
 
   application?: ApplicationSubmissionDetailedDto;
 
-  dialog;
-
-  constructor(private applicationService: ApplicationSubmissionService, dialog: MatDialog) {
+  constructor(
+    private applicationService: ApplicationSubmissionService,
+    private confirmationDialogService: ConfirmationDialogService
+  ) {
     super();
-    this.dialog = dialog;
   }
 
   ngOnInit(): void {
@@ -82,12 +81,12 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
 
   onChangeOtherParcels(hasOtherParcels: boolean) {
     if (!hasOtherParcels && this.otherParcelsDescription.value) {
-      this.dialog
-        .open(OtherParcelsConfirmationDialogComponent, {
-          panelClass: 'no-padding',
-          disableClose: true,
+      this.confirmationDialogService
+        .openDialog({
+          title:
+            'Do any of the land owners added previously own or lease other parcels that might inform this application process?',
+          body: 'Changing the answer to this question will remove content already saved to this page. Do you want to continue?',
         })
-        .beforeClosed()
         .subscribe((confirmed) => {
           this.updateParcelDescription(!confirmed);
           this.hasOtherParcelsInCommunity.setValue(!confirmed);

@@ -19,7 +19,7 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
-import { NaruChangeWillFillConfirmationDialogComponent } from './naru-change-will-fill-confirmation-dialog/naru-change-will-fill-confirmation-dialog.component';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-naru-proposal',
@@ -93,6 +93,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     private codeService: CodeService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
+    private confirmationDialogService: ConfirmationDialogService,
     toastService: ToastService
   ) {
     super(applicationDocumentService, dialog, toastService);
@@ -186,12 +187,11 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       this.fillTableData.volume;
 
     if (!willImportFill && hasValues) {
-      this.dialog
-        .open(NaruChangeWillFillConfirmationDialogComponent, {
-          panelClass: 'no-padding',
-          disableClose: true,
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Do you need to import any fill to construct or conduct the proposed Non-farm use?',
+          body: 'Changing the answer to this question will remove content already saved to this page. Do you want to continue?',
         })
-        .beforeClosed()
         .subscribe((confirmed) => {
           this.updateFillFields(!confirmed);
           this.willImportFill.setValue(!confirmed);
