@@ -41,7 +41,7 @@ export class SetApplicantOnNoiSubmission1707760803513
                         SELECT count(*)
                         FROM alcs.notice_of_intent_parcel_owners_notice_of_intent_owner
                         WHERE notice_of_intent_parcel_uuid = ranked_owners.notice_of_intent_parcel_uuid
-                    ) > 1 THEN 'et al.'
+                    ) > 1 THEN ' et al.'
                     ELSE ''
                 END
             ) as applicant,

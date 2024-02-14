@@ -6,7 +6,7 @@ export class SetApplicantOnNoi1707760810880 implements MigrationInterface {
         UPDATE alcs.notice_of_intent 
         SET applicant = notice_of_intent_submission.applicant
         FROM alcs.notice_of_intent_submission 
-        WHERE alcs.notice_of_intent.file_number = alcs.notice_of_intent_submission.file_number;
+        WHERE alcs.notice_of_intent.file_number = alcs.notice_of_intent_submission.file_number AND alcs.notice_of_intent_submission.applicant IS NOT NULL;
     `);
   }
 
