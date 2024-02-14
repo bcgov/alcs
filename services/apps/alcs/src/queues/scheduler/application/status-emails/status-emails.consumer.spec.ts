@@ -45,7 +45,16 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
   });
 
   it('should send email and update submissionToStatus entry of IN_REVIEW_BY_ALC status', async () => {
-    const mockSubmission = new ApplicationSubmission({ fileNumber: 'fake' });
+    const mockSubmission = new ApplicationSubmission({
+      fileNumber: 'fake',
+      submissionStatuses: [
+        new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+          effectiveDate: new Date(),
+        }),
+      ],
+    });
+    mockSubmission.populateCurrentStatus();
     const mockPrimaryContact = new ApplicationOwner();
     const mockLocalGovernment = new LocalGovernment();
 
@@ -97,7 +106,16 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
   });
 
   it('should send email and update submissionToStatus entry of ALC_DECISION status', async () => {
-    const mockSubmission = new ApplicationSubmission({ fileNumber: 'fake' });
+    const mockSubmission = new ApplicationSubmission({
+      fileNumber: 'fake',
+      submissionStatuses: [
+        new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.ALC_DECISION,
+          effectiveDate: new Date(),
+        }),
+      ],
+    });
+    mockSubmission.populateCurrentStatus();
     const mockPrimaryContact = new ApplicationOwner();
     const mockLocalGovernment = new LocalGovernment();
     const mockDocuments = [{ name: 'fake-document', url: 'fake-url' }];
