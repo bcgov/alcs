@@ -16,7 +16,7 @@ import { DecisionModule } from './decision/decision.module';
 import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
-import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
+import { InfoRequestDialogComponent } from './info-requests/info-request-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
 import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { ReturnApplicationDialogComponent } from './lfng-info/return-application-dialog/return-application-dialog.component';
