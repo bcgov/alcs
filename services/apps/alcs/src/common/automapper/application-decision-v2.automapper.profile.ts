@@ -1,6 +1,8 @@
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
+import { ApplicationBoundaryAmendmentDto } from '../../alcs/application-decision/application-boundary-amendment/application-boundary-amendment.dto';
+import { ApplicationBoundaryAmendment } from '../../alcs/application-decision/application-boundary-amendment/application-boundary-amendment.entity';
 import { ApplicationCeoCriterionCode } from '../../alcs/application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-code.entity';
 import {
@@ -325,6 +327,25 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionConditionComponentPlanNumber,
         ApplicationDecisionConditionComponentDto,
+      );
+
+      createMap(
+        mapper,
+        ApplicationBoundaryAmendment,
+        ApplicationBoundaryAmendmentDto,
+        forMember(
+          (dto) => dto.decisionComponents,
+          mapFrom((entity) =>
+            entity.decisionComponents.map((decisionComponent) => ({
+              label: `${
+                decisionComponent.applicationDecision.resolutionNumber
+                  ? `#${decisionComponent.applicationDecision.resolutionNumber}/${decisionComponent.applicationDecision.resolutionYear}`
+                  : `Draft`
+              } ${decisionComponent.applicationDecisionComponentType.label}`,
+              uuid: decisionComponent.uuid,
+            })),
+          ),
+        ),
       );
     };
   }

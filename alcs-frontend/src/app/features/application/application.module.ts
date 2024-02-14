@@ -12,6 +12,8 @@ import { ApplicationMeetingDialogComponent } from './application-meeting/applica
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
 import { appChildRoutes, ApplicationComponent } from './application.component';
+import { BoundaryAmendmentComponent } from './boundary-amendment/boundary-amendment.component';
+import { EditBoundaryAmendmentDialogComponent } from './boundary-amendment/edit-boundary-amendment-dialog/edit-boundary-amendment-dialog.component';
 import { DecisionModule } from './decision/decision.module';
 import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
@@ -82,6 +84,8 @@ const routes: Routes = [
     ParcelPrepComponent,
     UncancelApplicationDialogComponent,
     ReturnApplicationDialogComponent,
+    BoundaryAmendmentComponent,
+    EditBoundaryAmendmentDialogComponent,
   ],
   imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })

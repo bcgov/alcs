@@ -9,11 +9,14 @@
       [showStatus]="true"
       [submissionStatusService]="applicationStatusService"
     ></app-details-header>
-    <div class="content">
+    <div class="content" *ngIf="application">
       <div *ngIf="showSubmittedToAlcMenuItems" class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
-            *ngIf="route.portalOnly ? isApplicantSubmission : true"
+            *ngIf="
+              (route.portalOnly ? isApplicantSubmission : true) &&
+              (route.appTypes ? route.appTypes.includes(application.type.code) : true)
+            "
             [routerLink]="route.path ? route.path : './'"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: route.path === '' }"

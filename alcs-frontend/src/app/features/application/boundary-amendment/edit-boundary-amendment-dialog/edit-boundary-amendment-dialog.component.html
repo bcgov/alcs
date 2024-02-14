@@ -1,0 +1,60 @@
+<div mat-dialog-title>
+  <h2 class="card-title">{{ data ? 'Edit' : 'Create' }} Boundary Amendment</h2>
+</div>
+<mat-dialog-content style="height: 100%">
+  <form class="content" [formGroup]="form">
+    <mat-label for="type" class="toggle-label">Amendment Type*</mat-label>
+    <mat-button-toggle-group [formControl]="type" id="type">
+      <mat-button-toggle value="Exclude Land from the ALR Boundary"
+        >Exclude Land from the ALR Boundary</mat-button-toggle
+      >
+      <mat-button-toggle value="Include Land to the ALR Boundary">Include Land to the ALR Boundary</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <div class="grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Decision Components</mat-label>
+        <mat-select [multiple]="true" id="components" [formControl]="decisionComponents">
+          <mat-option *ngFor="let component of selectableComponents" [value]="component.value">{{
+            component.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label for="area">Area Included or Excluded (ha)</mat-label>
+        <input
+          matInput
+          min="0.01"
+          mask="separator.5"
+          thousandSeparator=","
+          separatorLimit="9999999999"
+          id="area"
+          [formControl]="area"
+          type="text"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label for="year">ALR Boundary Amendment Year</mat-label>
+        <mat-select id="year" [formControl]="year">
+          <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label for="period">ALR Boundary Amendment Period</mat-label>
+        <mat-select id="period" [formControl]="period">
+          <mat-option value="1">1</mat-option>
+          <mat-option value="2">2</mat-option>
+          <mat-option value="3">3</mat-option>
+          <mat-option value="4">4</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div class="button-container">
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false">Close</button>
+    <button mat-flat-button color="primary" type="button" [disabled]="!form.valid" (click)="onConfirm()">Save</button>
+  </div>
+</mat-dialog-actions>
