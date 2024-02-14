@@ -15,7 +15,7 @@
         class="input"
         id="has-other-parcels"
         [formControl]="hasOtherParcelsInCommunity"
-        (change)="onChangeOtherParcels($event)"
+        (change)="onChangeOtherParcels($event.value)"
       >
         <mat-button-toggle
           class="toggle-button"
@@ -24,7 +24,7 @@
               hasOtherParcelsInCommunity.invalid &&
               (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
           }"
-          value="true"
+          [value]="true"
           >Yes
         </mat-button-toggle>
         <mat-button-toggle
@@ -34,7 +34,7 @@
               hasOtherParcelsInCommunity.invalid &&
               (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
           }"
-          value="false"
+          [value]="false"
           >No
         </mat-button-toggle>
       </mat-button-toggle-group>
