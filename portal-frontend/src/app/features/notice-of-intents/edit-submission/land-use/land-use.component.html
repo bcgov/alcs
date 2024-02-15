@@ -135,6 +135,8 @@
             <mat-form-field appearance="outline">
               <input
                 id="northLandUseTypeDescription"
+                #northLandUseTypeDescriptionText
+                maxlength="500"
                 placeholder="Specific Activity"
                 matInput
                 formControlName="northLandUseTypeDescription"
@@ -151,6 +153,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="northLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - northLandUseTypeDescriptionText.value.length }}</div>
           </div>
         </div>
       </div>
@@ -178,6 +181,8 @@
             <mat-form-field appearance="outline">
               <input
                 id="eastLandUseTypeDescription"
+                #eastLandUseTypeDescriptionText
+                maxlength="500"
                 placeholder="Specific Activity"
                 matInput
                 formControlName="eastLandUseTypeDescription"
@@ -194,6 +199,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="eastLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - eastLandUseTypeDescriptionText.value.length }}</div>
           </div>
         </div>
       </div>
@@ -221,6 +227,8 @@
             <mat-form-field appearance="outline">
               <input
                 id="southLandUseTypeDescription"
+                #southLandUseTypeDescriptionText
+                maxlength="500"
                 placeholder="Specific Activity"
                 matInput
                 formControlName="southLandUseTypeDescription"
@@ -237,6 +245,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="southLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - southLandUseTypeDescriptionText.value.length }}</div>
           </div>
         </div>
       </div>
@@ -264,6 +273,8 @@
             <mat-form-field appearance="outline">
               <input
                 id="westLandUseTypeDescription"
+                #westLandUseTypeDescriptionText
+                maxlength="500"
                 placeholder="Specific Activity"
                 matInput
                 formControlName="westLandUseTypeDescription"
@@ -280,6 +291,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="westLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - westLandUseTypeDescriptionText.value.length }}</div>
           </div>
         </div>
       </div>

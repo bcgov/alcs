@@ -34,6 +34,30 @@ export class NoticeOfIntentSubmissionDraftService {
   }
 
   async updatePending(fileId: string, updateDto: NoticeOfIntentSubmissionUpdateDto) {
+    if (updateDto.northLandUseTypeDescription && updateDto.northLandUseTypeDescription.length > 500) {
+      this.toastService.showErrorToast('North land use type description exceeds maximum length of 500 characters');
+      return undefined;
+    }
+    if (updateDto.eastLandUseTypeDescription && updateDto.eastLandUseTypeDescription.length > 500) {
+      this.toastService.showErrorToast('East land use type description exceeds maximum length of 500 characters');
+      return undefined;
+    }
+    if (updateDto.southLandUseTypeDescription && updateDto.southLandUseTypeDescription.length > 500) {
+      this.toastService.showErrorToast('South land use type description exceeds maximum length of 500 characters');
+      return undefined;
+    }
+    if (updateDto.westLandUseTypeDescription && updateDto.westLandUseTypeDescription.length > 500) {
+      this.toastService.showErrorToast('West land use type description exceeds maximum length of 500 characters');
+      return undefined;
+    }
+    if (updateDto.fillProjectDuration && updateDto.fillProjectDuration.length > 500) {
+      this.toastService.showErrorToast('Project duration exceeds maximum length of 500 characters');
+      return undefined;
+    }
+    if (updateDto.soilProjectDuration && updateDto.soilProjectDuration.length > 500) {
+      this.toastService.showErrorToast('Project duration exceeds maximum length of 500 characters');
+      return undefined;
+    }
     try {
       this.overlayService.showSpinner();
       const result = await firstValueFrom(
