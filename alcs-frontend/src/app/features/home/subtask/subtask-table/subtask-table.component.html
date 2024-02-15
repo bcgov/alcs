@@ -80,6 +80,8 @@
         [ngModel]="element.assignee?.prettyName"
         [searchFn]="filterAssigneeList"
         (change)="onAssigneeSelected($event, element.uuid)"
+        (clear)="onAssigneeClearOrClose(assigneeSelect)"
+        (close)="onAssigneeClearOrClose(assigneeSelect)"
         appendTo="body"
       >
         <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
