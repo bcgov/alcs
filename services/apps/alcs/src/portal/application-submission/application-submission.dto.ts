@@ -18,6 +18,8 @@ import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ProposedLot } from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
+export const MAX_LANDUSE_FIELD_LENGTH = 500;
+export const MAX_PROJECT_DURATION_FIELD_LENGTH = 500;
 
 export class NaruSubtypeDto extends BaseCodeDto {}
 
@@ -378,6 +380,7 @@ export class ApplicationSubmissionUpdateDto {
   northLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   northLandUseTypeDescription?: string;
 
@@ -386,6 +389,7 @@ export class ApplicationSubmissionUpdateDto {
   eastLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   eastLandUseTypeDescription?: string;
 
@@ -394,6 +398,7 @@ export class ApplicationSubmissionUpdateDto {
   southLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   southLandUseTypeDescription?: string;
 
@@ -402,6 +407,7 @@ export class ApplicationSubmissionUpdateDto {
   westLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   westLandUseTypeDescription?: string;
 
@@ -445,6 +451,7 @@ export class ApplicationSubmissionUpdateDto {
   nfuFillVolume?: number | null;
 
   @IsString()
+  @MaxLength(MAX_PROJECT_DURATION_FIELD_LENGTH)
   @IsOptional()
   nfuProjectDuration?: string | null;
 
@@ -585,10 +592,12 @@ export class ApplicationSubmissionUpdateDto {
   soilAlreadyPlacedAverageDepth?: number | null;
 
   @IsString()
+  @MaxLength(MAX_PROJECT_DURATION_FIELD_LENGTH)
   @IsOptional()
   soilProjectDuration?: string | null;
 
   @IsString()
+  @MaxLength(MAX_PROJECT_DURATION_FIELD_LENGTH)
   @IsOptional()
   fillProjectDuration?: string | null;
 
@@ -646,6 +655,7 @@ export class ApplicationSubmissionUpdateDto {
   naruFillOrigin?: string | null;
 
   @IsString()
+  @MaxLength(MAX_PROJECT_DURATION_FIELD_LENGTH)
   @IsOptional()
   naruProjectDuration?: string | null;
 

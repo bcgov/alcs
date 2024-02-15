@@ -14,6 +14,8 @@ import { NoticeOfIntentOwnerDto } from './notice-of-intent-owner/notice-of-inten
 import { ProposedStructure } from './notice-of-intent-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
+export const MAX_LANDUSE_FIELD_LENGTH = 500;
+export const MAX_PROJECT_DURATION_FIELD_LENGTH = 500;
 
 export class NoticeOfIntentSubmissionDto {
   @AutoMap()
@@ -222,6 +224,7 @@ export class NoticeOfIntentSubmissionUpdateDto {
   northLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   northLandUseTypeDescription?: string;
 
@@ -230,6 +233,7 @@ export class NoticeOfIntentSubmissionUpdateDto {
   eastLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   eastLandUseTypeDescription?: string;
 
@@ -238,6 +242,7 @@ export class NoticeOfIntentSubmissionUpdateDto {
   southLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   southLandUseTypeDescription?: string;
 
@@ -246,6 +251,7 @@ export class NoticeOfIntentSubmissionUpdateDto {
   westLandUseType?: string;
 
   @IsString()
+  @MaxLength(MAX_LANDUSE_FIELD_LENGTH)
   @IsOptional()
   westLandUseTypeDescription?: string;
 
@@ -329,10 +335,12 @@ export class NoticeOfIntentSubmissionUpdateDto {
   soilAlreadyPlacedAverageDepth?: number | null;
 
   @IsString()
+  @MaxLength(MAX_PROJECT_DURATION_FIELD_LENGTH)
   @IsOptional()
   soilProjectDuration?: string | null;
 
   @IsString()
+  @MaxLength(MAX_PROJECT_DURATION_FIELD_LENGTH)
   @IsOptional()
   fillProjectDuration?: string | null;
 
