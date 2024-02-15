@@ -17,6 +17,7 @@ import {
 import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
+import { BoundaryAmendmentComponent } from './boundary-amendment/boundary-amendment.component';
 import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
 import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -149,6 +150,14 @@ export const appChildRoutes = [
     portalOnly: false,
   },
   {
+    path: 'boundary-amendments',
+    menuTitle: 'Boundary Amendments',
+    icon: 'border_style',
+    component: BoundaryAmendmentComponent,
+    portalOnly: false,
+    appTypes: ['INCL', 'EXCL'],
+  },
+  {
     path: 'documents',
     menuTitle: 'Documents',
     icon: 'description',
@@ -164,7 +173,7 @@ export const appChildRoutes = [
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
-  childRoutes = appChildRoutes;
+  childRoutes: any = appChildRoutes;
   unsubmittedRoutes = unsubmittedRoutes;
   submittedLfngRoutes = submittedLfngRoutes;
 
@@ -224,7 +233,6 @@ export class ApplicationComponent implements OnInit, OnDestroy {
           (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate,
         );
         this.showSubmittedToLfngMenuItems = wasSubmittedToLfng && !submittedToAlcsStatus;
-
         this.showSubmittedToAlcMenuItems = this.isApplicantSubmission ? !!submittedToAlcsStatus : true;
       }
     });
