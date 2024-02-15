@@ -27,15 +27,14 @@ def _update_application(conn=None):
             record_ids = cursor.fetchall()
 
             for r_id in record_ids:
-                sql_query = """
+                sql_query = f"""
                             UPDATE alcs.application 
-                            SET summary = CASE WHEN summary IS NOT NULL THEN %s ELSE summary END, 
-                                ag_cap_consultant = CASE WHEN ag_cap_consultant IS NOT NULL THEN %s ELSE ag_cap_consultant END, 
-                                staff_observations = CASE WHEN staff_observations IS NOT NULL THEN %s ELSE staff_observations END,
-                                ag_cap = CASE WHEN ag_cap IS NOT NULL THEN %s ELSE ag_cap END,
-                                ag_cap_source = CASE WHEN ag_cap_source IS NOT NULL THEN %s ELSE ag_cap_source END,
-                                ag_cap_map = CASE WHEN ag_cap_map IS NOT NULL THEN %s ELSE ag_cap_map END,
-                                applicant = CASE WHEN applicant IS NOT NULL THEN %s ELSE applicant END
+                            SET 
+                            {get_update_column_query("summary")},
+                            {get_update_column_query("ag_cap_consultant")},
+                            {get_update_column_query("staff_observations")},
+                            {get_update_column_query("ag_cap_map")},
+                            {get_update_column_query("applicant")}
                             WHERE uuid = %s;
                 """
                 cursor.execute(
@@ -44,8 +43,6 @@ def _update_application(conn=None):
                         fake_latin.sentence(nb_words=10),
                         fake.name(),
                         fake_latin.sentence(nb_words=5),
-                        fake_latin.sentence(nb_words=3),
-                        fake_latin.sentence(nb_words=3),
                         fake_latin.sentence(nb_words=3),
                         fake.name(),
                         r_id[0],
@@ -62,6 +59,7 @@ def _update_application(conn=None):
 @inject_conn_pool
 def _update_application_decision_component(conn=None):
     fake = Faker()
+    fake_latin = Faker("la")
 
     try:
         with conn.cursor() as cursor:
@@ -69,15 +67,20 @@ def _update_application_decision_component(conn=None):
             record_ids = cursor.fetchall()
 
             for r_id in record_ids:
-                sql_query = """
+                sql_query = f"""
                             UPDATE alcs.application_decision_component 
-                            SET ag_cap_consultant = CASE WHEN ag_cap_consultant IS NOT NULL THEN %s ELSE ag_cap_consultant END
+                            SET 
+                             {get_update_column_query("soil_fill_type_to_place")},
+                             {get_update_column_query("ag_cap_consultant")},
+                             {get_update_column_query("soil_type_removed")}
                             WHERE uuid = %s;
                 """
                 cursor.execute(
                     sql_query,
                     (
+                        fake_latin.sentence(nb_words=2),
                         fake.name(),
+                        fake_latin.sentence(nb_words=2),
                         r_id[0],
                     ),
                 )
@@ -99,13 +102,14 @@ def _update_application_owner(conn=None):
             record_ids = cursor.fetchall()
 
             for r_id in record_ids:
-                sql_query = """
+                sql_query = f"""
                             UPDATE alcs.application_owner 
-                            SET first_name = CASE WHEN first_name IS NOT NULL THEN %s ELSE first_name END,
-                            last_name = CASE WHEN last_name IS NOT NULL THEN %s ELSE last_name END,
-                            organization_name = CASE WHEN organization_name IS NOT NULL THEN %s ELSE organization_name END,
-                            phone_number = CASE WHEN organization_name IS NOT NULL THEN %s ELSE organization_name END,
-                            email = '11@11'
+                            SET 
+                            {get_update_column_query("first_name")},
+                            {get_update_column_query("last_name")},
+                            {get_update_column_query("organization_name")},
+                            {get_update_column_query("phone_number")},
+                            {get_update_column_query("email")}
                             WHERE uuid = %s;
                 """
                 cursor.execute(
@@ -115,6 +119,7 @@ def _update_application_owner(conn=None):
                         fake.last_name(),
                         fake.company(),
                         fake.phone_number(),
+                        "11@11",
                         r_id[0],
                     ),
                 )
@@ -136,9 +141,9 @@ def _update_application_parcel(conn=None):
             record_ids = cursor.fetchall()
 
             for r_id in record_ids:
-                sql_query = """
+                sql_query = f"""
                             UPDATE alcs.application_parcel 
-                            SET civic_address = CASE WHEN civic_address IS NOT NULL THEN %s ELSE civic_address END
+                            SET {get_update_column_query("civic_address")}
                             WHERE uuid = %s;
                 """
                 cursor.execute(

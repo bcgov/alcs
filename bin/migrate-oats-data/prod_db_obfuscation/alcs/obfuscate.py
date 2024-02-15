@@ -6,33 +6,33 @@ from ..utils import log_process, lorem_ipsum_function_query, get_update_column_q
 
 from .application import obfuscate_application_related_data
 from .covenant import obfuscate_covenant_related_data
+from .notice_of_intent import obfuscate_notice_of_intent_related_data
+from .notification import obfuscate_notification_related_data
 
 logger = setup_and_get_logger("prod_data_obfuscation")
 
 
 def process_alcs_data():
     logger.info("Start alcs obfuscation.")
-    # general
-    # _update_description_columns()
-    # _delete_data_from_tables()
-    # _update_body_columns()
-    # _update_comment_columns()
+    # common
+    _update_description_columns()
+    _delete_data_from_tables()
+    _update_body_columns()
+    _update_comment_columns()
 
-    # users
-    # _update_with_random_alcs_users()
+    _update_with_random_alcs_users()
+    _update_with_random_alcs_documents()
+    _update_with_random_alcs_message()
 
-    # documents
-    # _update_with_random_alcs_documents()
+    _update_with_random_alcs_local_government()
 
-    # application
-    # obfuscate_application_related_data()
+    obfuscate_application_related_data()
 
-    # covenants
     obfuscate_covenant_related_data()
 
-    # notice of intent
-    # _update_with_random_alcs_notice_of_intent()
-    # _update_with_random_alcs_notice_of_intent_decision()
+    obfuscate_notice_of_intent_related_data()
+
+    obfuscate_notification_related_data()
 
 
 @log_process(logger, "update_description_columns")
@@ -243,18 +243,12 @@ def _update_with_random_alcs_local_government(conn=None):
             record_ids = cursor.fetchall()
 
             for r_id in record_ids:
-                sql_query = f"""
+                sql_query = """
                             UPDATE alcs.local_government 
-                            SET {get_update_column_query("emails")},
+                            SET emails = '{}'::text[]
                             WHERE uuid = %s;
                 """
-                cursor.execute(
-                    sql_query,
-                    (
-                        "[]",
-                        r_id[0],
-                    ),
-                )
+                cursor.execute(sql_query, (r_id[0],))
 
             conn.commit()
     except Exception as err:
@@ -275,89 +269,13 @@ def _update_with_random_alcs_message(conn=None):
             for r_id in record_ids:
                 sql_query = f"""
                             UPDATE alcs.message 
-                            SET {get_update_column_query("title")},
+                            SET {get_update_column_query("title")}
                             WHERE uuid = %s;
                 """
                 cursor.execute(
                     sql_query,
                     (
-                        "[]",
-                        r_id[0],
-                    ),
-                )
-
-            conn.commit()
-    except Exception as err:
-        conn.rollback()
-        logger.exception(err)
-
-
-# TODO move to notice_of_intent
-@log_process(logger, "update_with_random_alcs_notice_of_intent")
-@inject_conn_pool
-def _update_with_random_alcs_notice_of_intent(conn=None):
-    # Set Faker for generating random names
-    fake = Faker()
-    fake_latin = Faker("la")
-
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT uuid FROM alcs.notice_of_intent")
-            record_ids = cursor.fetchall()
-
-            for r_id in record_ids:
-                sql_query = """
-                            UPDATE alcs.notice_of_intent 
-                            SET applicant = CASE WHEN applicant IS NOT NULL THEN %s ELSE applicant END,
-                                summary = CASE WHEN summary IS NOT NULL THEN %s ELSE summary END,
-                                ag_cap = CASE WHEN ag_cap IS NOT NULL THEN %s ELSE ag_cap END,
-                                ag_cap_source = CASE WHEN ag_cap_source IS NOT NULL THEN %s ELSE ag_cap_source END,
-                                ag_cap_map = CASE WHEN ag_cap_map IS NOT NULL THEN %s ELSE ag_cap_map END,
-                                ag_cap_consultant = CASE WHEN ag_cap_consultant IS NOT NULL THEN %s ELSE ag_cap_consultant END,
-                                staff_observations = CASE WHEN staff_observations IS NOT NULL THEN %s ELSE staff_observations END
-                            WHERE uuid = %s;
-                """
-                cursor.execute(
-                    sql_query,
-                    (
-                        fake.name(),
-                        fake_latin.sentence(nb_words=10),
-                        fake_latin.sentence(nb_words=5),
-                        fake_latin.sentence(nb_words=3),
-                        fake_latin.sentence(nb_words=3),
-                        fake.name(),
-                        fake_latin.sentence(nb_words=5),
-                        r_id[0],
-                    ),
-                )
-
-            conn.commit()
-    except Exception as err:
-        conn.rollback()
-        logger.exception(err)
-
-
-@log_process(logger, "update_with_random_alcs_notice_of_intent_decision")
-@inject_conn_pool
-def _update_with_random_alcs_notice_of_intent_decision(conn=None):
-    # Set Faker for generating random names
-    fake = Faker()
-
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT uuid FROM alcs.notice_of_intent_decision")
-            record_ids = cursor.fetchall()
-
-            for r_id in record_ids:
-                sql_query = """
-                            UPDATE alcs.notice_of_intent_decision 
-                            SET decision_maker_name = CASE WHEN decision_maker_name IS NOT NULL THEN %s ELSE decision_maker_name END
-                            WHERE uuid = %s;
-                """
-                cursor.execute(
-                    sql_query,
-                    (
-                        fake.name(),
+                        fake.catch_phrase(),
                         r_id[0],
                     ),
                 )
