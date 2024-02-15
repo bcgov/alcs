@@ -140,7 +140,6 @@ def _update_notification_transferee(conn=None):
                             SET 
                             {get_update_column_query("first_name")},
                             {get_update_column_query("last_name")},
-                            {get_update_column_query("organization_name")},
                             {get_update_column_query("phone_number")},
                             {get_update_column_query("email")}
                             WHERE uuid = %s;
@@ -150,7 +149,6 @@ def _update_notification_transferee(conn=None):
                     (
                         fake.first_name(),
                         fake.last_name(),
-                        fake.company(),
                         fake.phone_number(),
                         "11@11",
                         r_id[0],
