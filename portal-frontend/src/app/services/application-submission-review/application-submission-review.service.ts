@@ -71,9 +71,10 @@ export class ApplicationSubmissionReviewService {
   }
 
   async complete(fileId: string) {
+    let res;
     try {
       this.overlayService.showSpinner();
-      await firstValueFrom(this.httpClient.post<{}>(`${this.serviceUrl}/${fileId}/finish`, {}));
+      res = await firstValueFrom(this.httpClient.post<{}>(`${this.serviceUrl}/${fileId}/finish`, {}));
       this.toastService.showSuccessToast('Application Review Submitted');
     } catch (e) {
       console.error(e);
@@ -81,6 +82,7 @@ export class ApplicationSubmissionReviewService {
     } finally {
       this.overlayService.hideSpinner();
     }
+    return res;
   }
 
   async returnApplication(fileId: string, returnDto: ReturnApplicationSubmissionDto) {
