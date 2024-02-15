@@ -89,6 +89,7 @@
     padding: 16px;
     margin: 24px 0 40px 0;
     grid-template-columns: minmax(60px, 1fr) minmax(60px, 1fr) minmax(60px, 1fr) minmax(60px, 1fr);
+    white-space: pre-line;
 
     .full-width {
       grid-column: 1/5;

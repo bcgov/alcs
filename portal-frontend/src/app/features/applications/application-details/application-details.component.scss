@@ -115,6 +115,7 @@
     grid-template-columns: 1fr;
     word-wrap: break-word;
     hyphens: auto;
+    white-space: pre-line;
 
     .edit-button {
       display: flex;

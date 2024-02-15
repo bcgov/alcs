@@ -45,6 +45,7 @@ section {
   display: grid;
   grid-row-gap: rem(32);
   grid-template-columns: 1fr;
+  white-space: pre-line;
 
   .edit-button {
     display: flex;
