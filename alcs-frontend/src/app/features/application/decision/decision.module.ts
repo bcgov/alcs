@@ -105,20 +105,6 @@ export const decisionChildRoutes = [
     ConditionComponent,
     BasicComponent,
   ],
-  imports: [
-    SharedModule.forRoot(),
-    RouterModule.forChild(decisionChildRoutes),
-    MatTabsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatTableModule,
-    NgIf,
-    NgxMaskDirective,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-  ],
+  imports: [SharedModule, RouterModule.forChild(decisionChildRoutes), MatTabsModule, MatOptionModule],
 })
 export class DecisionModule {}
