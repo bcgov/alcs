@@ -26,12 +26,24 @@ export class ApplicationBoundaryAmendmentService {
     private applicationDecisionComponentService: ApplicationDecisionComponentService,
   ) {}
 
+  private get(uuid: string) {
+    return this.applicationBoundaryAmendmentRepository.findOneOrFail({
+      where: {
+        uuid,
+      },
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
   async list(fileNumber: string) {
     return this.applicationBoundaryAmendmentRepository.find({
       where: {
         fileNumber,
       },
       relations: this.DEFAULT_RELATIONS,
+      order: {
+        auditCreatedAt: 'DESC',
+      },
     });
   }
 
@@ -43,22 +55,19 @@ export class ApplicationBoundaryAmendmentService {
       components.push(component);
     }
 
-    return this.applicationBoundaryAmendmentRepository.save(
-      new ApplicationBoundaryAmendment({
-        ...dto,
-        decisionComponents: components,
-        fileNumber,
-      }),
-    );
+    const savedAmendment =
+      await this.applicationBoundaryAmendmentRepository.save(
+        new ApplicationBoundaryAmendment({
+          ...dto,
+          decisionComponents: components,
+          fileNumber,
+        }),
+      );
+    return this.get(savedAmendment.uuid);
   }
 
   async update(uuid: string, dto: UpdateApplicationBoundaryAmendmentDto) {
-    const amendment =
-      await this.applicationBoundaryAmendmentRepository.findOneOrFail({
-        where: {
-          uuid,
-        },
-      });
+    const amendment = await this.get(uuid);
 
     amendment.type = filterUndefined(dto.type, amendment.type);
     amendment.area = filterUndefined(dto.area, amendment.area);
@@ -75,16 +84,14 @@ export class ApplicationBoundaryAmendmentService {
       amendment.decisionComponents = components;
     }
 
-    return this.applicationBoundaryAmendmentRepository.save(amendment);
+    await this.applicationBoundaryAmendmentRepository.save(amendment);
+
+    return this.get(amendment.uuid);
   }
 
   async delete(uuid: string) {
-    const amendment =
-      await this.applicationBoundaryAmendmentRepository.findOneOrFail({
-        where: {
-          uuid,
-        },
-      });
-    return this.applicationBoundaryAmendmentRepository.remove(amendment);
+    const amendment = await this.get(uuid);
+    await this.applicationBoundaryAmendmentRepository.remove(amendment);
+    return amendment;
   }
 }

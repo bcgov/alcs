@@ -52,6 +52,9 @@ describe('ApplicationBoundaryAmendmentService', () => {
   });
 
   it('should call save on the repo for create', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(
+      new ApplicationBoundaryAmendment(),
+    );
     mockRepository.save.mockResolvedValue(new ApplicationBoundaryAmendment());
     const mockFileNumber = 'fileNumber';
     const createDto: CreateApplicationBoundaryAmendmentDto = {
