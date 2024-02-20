@@ -5,17 +5,17 @@ import { Public, RoleGuard } from 'nest-keycloak-connect';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
 import { MainService } from './main.service';
 
+// /portal/ routes are used by Portal to check maintenance mode
 @Controller()
 export class MainController {
   constructor(private appService: MainService) {}
 
-  @Get(['', 'health'])
+  @Get(['', 'health', '/portal/health'])
   @Public()
   async getHealthStatus(): Promise<HealthCheckDto> {
     return await this.appService.getHealthStatus();
   }
 
-  // Portal/token is used by Portal and triggers maintenance mode, /token does not
   @Get(['token', '/portal/token'])
   @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
   // The one place RoleGuard is used to handle users without roles
