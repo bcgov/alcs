@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { MaintenanceService } from '../../services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-login',
@@ -10,9 +11,14 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 })
 export class LoginComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  constructor(private authenticationService: AuthenticationService, private router: Router) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private maintenanceService: MaintenanceService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    this.maintenanceService.check();
     this.authenticationService.getToken(false);
     this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
       if (user) {
