@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
@@ -42,7 +43,9 @@ export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
     private planningReviewService: PlanningReviewService,
     private cardService: CardService,
     private applicationService: ApplicationService,
-    private localGovernmentService: ApplicationLocalGovernmentService
+    private localGovernmentService: ApplicationLocalGovernmentService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +74,12 @@ export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
 
       const res = await this.planningReviewService.create(planningReview);
       this.dialogRef.close(true);
+      if (res) {
+        await this.router.navigate(this.activatedRoute.snapshot.url, {
+          queryParams: res.card.uuid && res.card.type ? { card: res.card.uuid, type: res.card.type } : {},
+          relativeTo: this.activatedRoute,
+        });
+      }
     } finally {
       this.isLoading = false;
     }
