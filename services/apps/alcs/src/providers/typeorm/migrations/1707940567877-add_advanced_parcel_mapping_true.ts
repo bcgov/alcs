@@ -26,7 +26,7 @@ export class AddAdvancedParcelMappingTrue1707940567877
               FROM 
                   grouped_parcels
               WHERE
-                  "uuid" = grouped_parcels.submission_uuid 
+                  "uuid" = grouped_parcels.submission_uuid;
             END IF;
       END $$;
     `);

@@ -17,12 +17,11 @@ export class AddAdvancedParcelMappingFalse1707940574533
         FROM 
             parcels_that_are_false
         WHERE 
-            alcs.application_submission."uuid" = parcels_that_are_false."uuid"
-
+            alcs.application_submission."uuid" = parcels_that_are_false."uuid";
         `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(): Promise<void> {
     // Do Nothing
   }
 }
