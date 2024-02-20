@@ -28,13 +28,17 @@
       <div class="subheading">* = Pending</div>
     </th>
     <td mat-cell *matCellDef="let element">
-      <span *ngIf="element.visibilityFlags.includes('A')" matTooltip="Applicant">A, </span>
+      <span *ngIf="element.visibilityFlags.includes('A')" matTooltip="Applicant"
+        >A<span *ngIf="hiddenFromPortal">*</span>,
+      </span>
       <span *ngIf="element.visibilityFlags.includes('C')" matTooltip="Commissioner"
         >C<span *ngIf="!hasBeenSetForDiscussion">*</span>,
       </span>
-      <span *ngIf="element.visibilityFlags.includes('G')" matTooltip="L/FNG">G, </span>
+      <span *ngIf="element.visibilityFlags.includes('G')" matTooltip="L/FNG"
+        >G<span *ngIf="hiddenFromPortal">*</span>,
+      </span>
       <span *ngIf="element.visibilityFlags.includes('P')" matTooltip="Public"
-        >P<span *ngIf="!hasBeenReceived">*</span></span
+        >P<span *ngIf="hiddenFromPortal || !hasBeenReceived">*</span></span
       >
     </td>
   </ng-container>
