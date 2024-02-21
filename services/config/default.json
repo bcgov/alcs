@@ -18,12 +18,21 @@
     "PORT": 3310
   },
   "DATABASE": {
-    "HOST": "db",
-    "PORT": 5432,
-    "NAME": "postgres",
-    "USER": "postgres",
-    "PASSWORD": "postgres",
-    "MIGRATION_TABLE": "migrations"
+    "MIGRATION_TABLE": "migrations",
+    "MASTER": {
+      "HOST": "db",
+      "PORT": 5432,
+      "NAME": "postgres",
+      "USER": "postgres",
+      "PASSWORD": "postgres"
+    },
+    "SLAVE": {
+      "HOST": "db",
+      "PORT": 5432,
+      "NAME": "postgres",
+      "USER": "postgres",
+      "PASSWORD": "postgres"
+    }
   },
   "KEYCLOAK": {
     "CLIENT_ID": "",

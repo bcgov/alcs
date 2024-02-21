@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 
 import {
   Brackets,
-  QueryBuilder,
+  DataSource,
+  QueryRunner,
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
@@ -31,9 +32,18 @@ export class ApplicationAdvancedSearchService {
 
   async searchApplications(
     searchDto: SearchRequestDto,
+    queryRunner: QueryRunner,
   ): Promise<AdvancedSearchResultDto<ApplicationSubmissionSearchView[]>> {
-    let query = await this.compileApplicationSearchQuery(searchDto);
+    let query = this.applicationSearchRepository
+      .createQueryBuilder('appSearch', queryRunner)
+      .leftJoin(
+        LocalGovernment,
+        'localGovernment',
+        '"appSearch"."local_government_uuid" = "localGovernment"."uuid"',
+      )
+      .where('appSearch.is_draft = false');
 
+    query = await this.compileApplicationSearchQuery(searchDto, query);
     query = this.compileApplicationGroupBySearchQuery(query);
 
     const sortQuery = this.compileSortQuery(searchDto);
@@ -121,11 +131,10 @@ export class ApplicationAdvancedSearchService {
     return query;
   }
 
-  private async compileApplicationSearchQuery(searchDto: SearchRequestDto) {
-    let query = this.applicationSearchRepository
-      .createQueryBuilder('appSearch')
-      .where('appSearch.is_draft = false');
-
+  private async compileApplicationSearchQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
+  ) {
     if (searchDto.fileNumber) {
       query = query
         .andWhere('appSearch.file_number = :fileNumber')
