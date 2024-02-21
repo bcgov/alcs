@@ -5,7 +5,7 @@ from rich.console import Console
 from logging.handlers import RotatingFileHandler
 
 from menu import setup_menu_args_parser
-from menu.post_launch_commands import (
+from menu.commands import (
     import_all,
     clean_all,
     document_import,
@@ -29,7 +29,7 @@ import_batch_size = BATCH_UPLOAD_SIZE
 if __name__ == "__main__":
     args = setup_menu_args_parser(import_batch_size)
 
-    logger = setup_and_get_logger("migrate")
+    logger = setup_and_get_logger("migrate_initial")
     console = Console()
 
     try:
