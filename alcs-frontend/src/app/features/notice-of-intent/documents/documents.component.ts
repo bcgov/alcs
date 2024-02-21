@@ -31,6 +31,7 @@ export class NoiDocumentsComponent implements OnInit {
   DOCUMENT_SYSTEM = DOCUMENT_SYSTEM;
 
   hasBeenReceived = false;
+  hiddenFromPortal = false;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<NoticeOfIntentDocumentDto> = new MatTableDataSource<NoticeOfIntentDocumentDto>();
@@ -41,13 +42,14 @@ export class NoiDocumentsComponent implements OnInit {
     private confirmationDialogService: ConfirmationDialogService,
     private noiSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private toastService: ToastService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.noticeOfIntentDetailService.$noticeOfIntent.subscribe((noticeOfIntent) => {
       if (noticeOfIntent) {
         this.fileId = noticeOfIntent.fileNumber;
+        this.hiddenFromPortal = noticeOfIntent.hideFromPortal;
         this.loadDocuments(noticeOfIntent.fileNumber);
         this.loadStatusHistory(noticeOfIntent.fileNumber);
       }
@@ -137,7 +139,7 @@ export class NoiDocumentsComponent implements OnInit {
 
     this.hasBeenReceived =
       statusHistory.filter(
-        (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.RECEIVED_BY_ALC
+        (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.RECEIVED_BY_ALC,
       ).length > 0;
   }
 }

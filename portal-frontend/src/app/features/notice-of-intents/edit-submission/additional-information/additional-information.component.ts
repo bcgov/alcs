@@ -13,6 +13,7 @@ import {
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
@@ -92,6 +93,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
+    private confirmationDialogService: ConfirmationDialogService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog,
     toastService: ToastService
@@ -295,10 +297,52 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     }
   }
 
-  onChangeStructureType(index: number, value: STRUCTURE_TYPES) {
+  private checkStructureTypeInput(type: STRUCTURE_TYPES | null) {
+    switch (type) {
+      case STRUCTURE_TYPES.FARM_STRUCTURE:
+        return !!(this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value);
+      case STRUCTURE_TYPES.ACCESSORY_STRUCTURE:
+        return !!(
+          this.soilStructureResidentialUseReason.value || this.soilStructureResidentialAccessoryUseReason.value
+        );
+      case STRUCTURE_TYPES.OTHER_STRUCTURE:
+        return !!this.soilStructureOtherUseReason.value;
+      case STRUCTURE_TYPES.PRINCIPAL_RESIDENCE:
+      case STRUCTURE_TYPES.ADDITIONAL_RESIDENCE:
+        return !!this.soilStructureResidentialUseReason.value;
+      case null:
+        return false;
+    }
+  }
+
+  private setStructureTypeInput(index: number, value: STRUCTURE_TYPES) {
     this.proposedStructures[index].type = value;
     this.prepareStructureSpecificTextInputs();
     this.form.markAsDirty();
+  }
+
+  onChangeStructureType(index: number, value: STRUCTURE_TYPES) {
+    const prevType = this.proposedStructures[index].type;
+    const hasInput = this.checkStructureTypeInput(prevType);
+
+    if (!hasInput) {
+      return this.setStructureTypeInput(index, value);
+    } else {
+      const dialog = this.confirmationDialogService.openDialog({
+        title: 'Change Structure Type',
+        body: 'Changing the structure type will remove inputs relevant to the current structure. Do you want to continue?',
+        confirmAction: 'Confirm',
+        cancelAction: 'Cancel',
+      });
+
+      dialog.subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.setStructureTypeInput(index, value);
+        } else {
+          this.structuresForm.get(index + '-type')?.setValue(prevType);
+        }
+      });
+    }
   }
 
   onStructureRemove(index: number) {

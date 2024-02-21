@@ -22,6 +22,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   @Input() loadData = true;
   @Input() decision: ApplicationDecisionDto | undefined;
   @Input() showError = false;
+  @Input() hiddenFromPortal = false;
   @Output() beforeDocumentUpload = new EventEmitter<boolean>();
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
@@ -37,19 +38,21 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
     private decisionService: ApplicationDecisionV2Service,
     private dialog: MatDialog,
     private toastService: ToastService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
     if (this.decision && !this.loadData) {
       this.dataSource = new MatTableDataSource(this.decision.documents);
-      this.areDocumentsReleased = !this.decision.isDraft && !!this.decision.date && Date.now() >= this.decision.date;
+      this.areDocumentsReleased =
+        !this.hiddenFromPortal && !this.decision.isDraft && !!this.decision.date && Date.now() >= this.decision.date;
     }
     this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
       if (decision) {
         this.dataSource = new MatTableDataSource(decision.documents);
         this.decision = decision;
-        this.areDocumentsReleased = !decision.isDraft && !!decision.date && Date.now() >= decision.date;
+        this.areDocumentsReleased =
+          !this.hiddenFromPortal && !decision.isDraft && !!decision.date && Date.now() >= decision.date;
       }
     });
   }
