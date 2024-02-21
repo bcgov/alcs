@@ -45,14 +45,14 @@
     <div>
       {{ noiSubmission.soilToRemoveVolume }}
       <span *ngIf="noiSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
-      <app-no-data [*ngIf="noiSubmission.soilToRemoveVolume === null"></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilToRemoveVolume === null"></app-no-data>
     </div>
 
     <div class="subheading2">Area</div>
     <div>
       {{ noiSubmission.soilToRemoveArea }}
       <span *ngIf="noiSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
-      <app-no-data [*ngIf="noiSubmission.soilToRemoveArea === null"></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilToRemoveArea === null"></app-no-data>
     </div>
 
     <div class="subheading2">Maximum Depth</div>
@@ -112,7 +112,7 @@
       ></app-no-data>
     </div>
   </div>
-  
+
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
     <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">

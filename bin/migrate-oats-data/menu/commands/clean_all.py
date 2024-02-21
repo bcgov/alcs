@@ -15,13 +15,12 @@ from documents import (
     clean_documents,
     clean_noi_documents,
 )
-
+from staff_journal_users import clean_staff_journal_users
 
 def clean_all(console, args):
     with console.status("[bold green]Cleaning previous ETL...\n") as status:
         console.log("Cleaning data:")
-        # this will be enabled once application import is ready
-
+        clean_staff_journal_users()
         # application parcels need to be cleaned before application documents
         clean_application_parcels()
         clean_application_documents()

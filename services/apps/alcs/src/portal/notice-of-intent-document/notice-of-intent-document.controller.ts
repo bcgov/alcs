@@ -86,6 +86,27 @@ export class NoticeOfIntentDocumentController {
     throw new NotFoundException('Failed to find document');
   }
 
+  @Get('/:uuid/download')
+  async download(@Param('uuid') fileUuid: string, @Req() req) {
+    const document = await this.noticeOfIntentDocumentService.get(fileUuid);
+
+    const user = req.user.entity as User;
+
+    const canAccessDocument =
+      await this.noticeOfIntentSubmissionService.canAccessDocument(
+        document,
+        user,
+      );
+
+    if (canAccessDocument) {
+      const url =
+        await this.noticeOfIntentDocumentService.getDownloadUrl(document);
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
+  }
+
   @Patch('/notice-of-intent/:fileNumber')
   async update(
     @Param('fileNumber') fileNumber: string,

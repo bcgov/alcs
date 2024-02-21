@@ -82,7 +82,7 @@
                 </div>
                 <div class="row">
                   <div class="key"><strong>Phone Number:</strong></div>
-                  <div class="value">{{ phoneNumber.value }}</div>
+                  <div class="value">{{ phoneNumber.value ?? '' | mask : '(000) 000-0000'  }}</div>
                 </div>
                 <div class="row">
                   <div class="key"><strong>Email:</strong></div>
@@ -195,7 +195,7 @@
           <label for="authorization-letter" class="subheading2">Authorization Letters</label>
           <p class="subtext">
             For privately owned Fee Simple parcels, the letter must be signed by all individual landowners and the
-            majority of directors within the organization.For Crown parcels or Fee Simple parcels owned by a government,
+            majority of directors within the organization. For Crown parcels or Fee Simple parcels owned by a government,
             the letter must be signed by senior level staff.
           </p>
           <app-info-banner>

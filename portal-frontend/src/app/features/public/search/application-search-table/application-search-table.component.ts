@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSearchResultDto, displayedColumns } from '../../../../services/search/search.dto';
 import { SearchResult, TableChange } from '../search.interface';
@@ -13,9 +12,7 @@ import { SearchResult, TableChange } from '../search.interface';
   templateUrl: './application-search-table.component.html',
   styleUrls: ['./application-search-table.component.scss'],
 })
-export class ApplicationSearchTableComponent implements OnDestroy {
-  $destroy = new Subject<void>();
-
+export class ApplicationSearchTableComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
@@ -24,38 +21,27 @@ export class ApplicationSearchTableComponent implements OnDestroy {
 
   @Input() set applications(applications: ApplicationSearchResultDto[]) {
     this._applications = applications;
+    this.isLoading = false;
     this.dataSource = new MatTableDataSource<SearchResult>(this.mapApplications(applications));
   }
 
-  _totalCount = 0;
-  @Input() set totalCount(count: number) {
-    this._totalCount = count;
-
-    // this will ensure the reset of subscriber once the table is hidden because of empty
-    this.initSorting();
-  }
-
+  @Input() totalCount: number | undefined;
   @Input() statuses: ApplicationStatusDto[] = [];
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = displayedColumns;
-  
+
   dataSource = new MatTableDataSource<SearchResult>();
   itemsPerPage = 20;
   total = 0;
-  sortDirection = 'DESC';
+  sortDirection: SortDirection = 'desc';
   sortField = 'lastUpdate';
-
-  private subscribedToSort = false;
+  isLoading = false;
 
   constructor(private router: Router) {}
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onTableChange() {
+  onTableChange() {
+    this.isLoading = true;
     this.tableChange.emit({
       pageIndex: this.pageIndex,
       itemsPerPage: this.itemsPerPage,
@@ -65,11 +51,19 @@ export class ApplicationSearchTableComponent implements OnDestroy {
     });
   }
 
-  async onPageChange($event: PageEvent) {
+  onPageChange($event: PageEvent) {
     this.pageIndex = $event.pageIndex;
     this.itemsPerPage = $event.pageSize;
 
-    await this.onTableChange();
+    this.onTableChange();
+  }
+
+  onSortChange(sort: Sort) {
+    this.pageIndex = 0;
+    this.sortDirection = sort.direction;
+    this.sortField = sort.active;
+
+    this.onTableChange();
   }
 
   async onSelectRecord(record: SearchResult) {
@@ -84,27 +78,6 @@ export class ApplicationSearchTableComponent implements OnDestroy {
         ...e,
         status,
       };
-    });
-  }
-
-  private initSorting() {
-    if (this._totalCount <= 0) {
-      this.subscribedToSort = false;
-    }
-
-    // push subscription to next render cycle, after the table is rendered
-    setTimeout(() => {
-      if (this.sort && !this.subscribedToSort) {
-        this.subscribedToSort = true;
-        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-          this.paginator.pageIndex = 0;
-          this.pageIndex = 0;
-          this.sortDirection = sortObj.direction.toUpperCase();
-          this.sortField = sortObj.active;
-
-          await this.onTableChange();
-        });
-      }
     });
   }
 }

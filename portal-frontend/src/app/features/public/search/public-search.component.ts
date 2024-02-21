@@ -31,8 +31,8 @@ const STATUS_MAP = {
 };
 
 const DECISION_MAP = {
-  'Approved': 'APPR',
-  'Refused': 'REFU',
+  Approved: 'APPR',
+  Refused: 'REFU',
   'Ordered not to Proceed (NOI)': 'ONTP',
 };
 
@@ -249,7 +249,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
       page: this.pageIndex + 1,
       // sorting
       sortField: this.sortField,
-      sortDirection: this.sortDirection,
+      sortDirection: this.sortDirection.toUpperCase(),
       // search parameters
       fileNumber: this.formatStringSearchParam(searchControls.fileNumber.value),
       name: this.formatStringSearchParam(searchControls.name.value),
@@ -376,7 +376,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
         notifications: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
-        totalNotifications: 0
+        totalNotifications: 0,
       };
     }
 
@@ -435,7 +435,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
       civicAddress,
       government,
       portalStatus,
-      portalDecisionOutcome
+      portalDecisionOutcome,
     } = this.searchForm.controls;
 
     decisionMaker.setValue(storedSearch.decisionMakerCode);
@@ -446,7 +446,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     civicAddress.setValue(storedSearch.civicAddress);
     government.setValue(storedSearch.governmentName);
     portalStatus.setValue(storedSearch.portalStatusCodes ?? null);
-    portalDecisionOutcome.setValue(storedSearch.decisionOutcome ?? null)
+    portalDecisionOutcome.setValue(storedSearch.decisionOutcome ?? null);
 
     if (storedSearch.dateDecidedTo) {
       dateDecidedTo.setValue(new Date(storedSearch.dateDecidedTo));

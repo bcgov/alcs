@@ -1,8 +1,10 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { PARCEL_OWNERSHIP_TYPE } from '../../shared/dto/parcel-ownership.type.dto';
 import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
+import { NoticeOfIntentDocumentDto } from './noi-document/noi-document.dto';
 import { NoticeOfIntentStatusDto } from './notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
 
 export interface NoticeOfIntentSubtypeDto extends BaseCodeDto {
@@ -306,6 +308,10 @@ export interface OwnerTypeDto extends BaseCodeDto {
   code: OWNER_TYPE;
 }
 
+export interface ParcelTypeDto extends BaseCodeDto {
+  code: PARCEL_OWNERSHIP_TYPE;
+}
+
 export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
   STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
@@ -322,6 +328,7 @@ export interface SubmittedNoticeOfIntentOwnerDto {
   email: string;
   type: BaseCodeDto;
   corporateSummaryUuid?: string;
+  corporateSummary?: NoticeOfIntentDocumentDto;
 }
 
 export interface NoticeOfIntentParcelDto {
@@ -330,11 +337,14 @@ export interface NoticeOfIntentParcelDto {
   pin?: string;
   legalDescription: string;
   mapAreaHectares: string;
+  civicAddress: string;
   purchasedDate?: number;
   isFarm?: boolean;
-  ownershipType?: string;
+  ownershipType?: ParcelTypeDto;
+  ownershipTypeCode?: string;
   crownLandOwnerType?: string;
   certificateOfTitleUuid?: string;
+  certificateOfTitle?: NoticeOfIntentDocumentDto;
   owners: SubmittedNoticeOfIntentOwnerDto[];
   alrArea: number;
 }

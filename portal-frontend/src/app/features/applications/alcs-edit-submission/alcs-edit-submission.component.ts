@@ -19,6 +19,7 @@ import { OtherParcelsComponent } from '../edit-submission/other-parcels/other-pa
 import { ParcelDetailsComponent } from '../edit-submission/parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from '../edit-submission/primary-contact/primary-contact.component';
 import { CoveProposalComponent } from '../edit-submission/proposal/cove-proposal/cove-proposal.component';
+import { NaruProposalComponent } from '../edit-submission/proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from '../edit-submission/proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from '../edit-submission/proposal/pfrs-proposal/pfrs-proposal.component';
 import { PofoProposalComponent } from '../edit-submission/proposal/pofo-proposal/pofo-proposal.component';
@@ -65,6 +66,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   @ViewChild(RosoProposalComponent) rosoProposalComponent?: RosoProposalComponent;
   @ViewChild(PofoProposalComponent) profoProposalComponent?: PofoProposalComponent;
   @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
+  @ViewChild(NaruProposalComponent) naruProposalComponent?: NaruProposalComponent;
   @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
   @ViewChild(InclProposalComponent) inclProposalComponent?: InclProposalComponent;
   @ViewChild(CoveProposalComponent) coveProposalComponent?: CoveProposalComponent;
@@ -213,6 +215,9 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     if (this.pfrsProposalComponent) {
       await this.pfrsProposalComponent.onSave();
     }
+    if (this.naruProposalComponent) {
+      await this.naruProposalComponent.onSave();
+    }
     if (this.exclProposalComponent) {
       await this.exclProposalComponent.onSave();
     }
@@ -240,7 +245,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.pdfGenerationService.generateSubmission(fileNumber);
+      await this.pdfGenerationService.generateAppSubmission(fileNumber);
     }
   }
 

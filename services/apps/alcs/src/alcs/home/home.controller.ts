@@ -180,7 +180,8 @@ export class HomeController {
       await this.noticeOfIntentService.getWithIncompleteSubtaskByType(
         subtaskType,
       );
-    const noticeOfIntentSubtasks = this.mapNoticeOfIntentToDtos(noiSubtasks);
+    const noticeOfIntentSubtasks =
+      await this.mapNoticeOfIntentToDtos(noiSubtasks);
 
     const noiModificationsWithSubtasks =
       await this.noticeOfIntentModificationService.getWithIncompleteSubtaskByType(
@@ -307,12 +308,18 @@ export class HomeController {
     return result;
   }
 
-  private mapNoticeOfIntentToDtos(noticeOfIntents: NoticeOfIntent[]) {
+  private async mapNoticeOfIntentToDtos(noticeOfIntents: NoticeOfIntent[]) {
+    const uuids = noticeOfIntents.map((noi) => noi.uuid);
+    const timeMap = await this.noticeOfIntentService.getTimes(uuids);
+
     const result: HomepageSubtaskDTO[] = [];
     for (const noticeOfIntent of noticeOfIntents) {
+      const activeDays = timeMap.get(noticeOfIntent.uuid)?.activeDays;
+
       if (noticeOfIntent.card) {
         for (const subtask of noticeOfIntent.card.subtasks) {
           result.push({
+            activeDays: activeDays ?? undefined,
             type: subtask.type,
             createdAt: subtask.createdAt.getTime(),
             assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),

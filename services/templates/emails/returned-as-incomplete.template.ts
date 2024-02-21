@@ -38,7 +38,7 @@ const template = `<mjml>
 
    ${portalButton}
 
-   ${footer}
+   ${footer()}
   </mj-body>
 </mjml>
 `;

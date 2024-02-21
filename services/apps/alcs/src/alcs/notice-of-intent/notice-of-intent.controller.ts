@@ -1,5 +1,3 @@
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -10,7 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
+import {
+  generateCANCApplicationHtml,
+  generateCANCNoticeOfIntentHtml,
+} from '../../../../../templates/emails/cancelled';
 import {
   ROLES_ALLOWED_APPLICATIONS,
   ROLES_ALLOWED_BOARDS,
@@ -18,10 +22,13 @@ import {
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { TrackingService } from '../../common/tracking/tracking.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { BoardService } from '../board/board.service';
+import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
   CreateNoticeOfIntentDto,
@@ -36,9 +43,11 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
 export class NoticeOfIntentController {
   constructor(
     private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private boardService: BoardService,
     private trackingService: TrackingService,
+    private statusEmailService: StatusEmailService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -107,10 +116,34 @@ export class NoticeOfIntentController {
   @Post('/:fileNumber/cancel')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async cancel(@Param('fileNumber') fileNumber: string) {
+    const noticeOfIntentSubmission =
+      await this.noticeOfIntentSubmissionService.get(fileNumber);
+
     await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
       fileNumber,
       NOI_SUBMISSION_STATUS.CANCELLED,
     );
+
+    const { primaryContact, submissionGovernment } =
+      await this.statusEmailService.getNoticeOfIntentEmailData(
+        noticeOfIntentSubmission,
+      );
+
+    if (
+      primaryContact &&
+      noticeOfIntentSubmission.status.statusTypeCode !==
+        NOI_SUBMISSION_STATUS.IN_PROGRESS
+    ) {
+      await this.statusEmailService.sendNoticeOfIntentStatusEmail({
+        generateStatusHtml: generateCANCNoticeOfIntentHtml,
+        status: NOI_SUBMISSION_STATUS.CANCELLED,
+        noticeOfIntentSubmission,
+        government: submissionGovernment,
+        parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
+    }
   }
 
   @Post('/:fileNumber/uncancel')

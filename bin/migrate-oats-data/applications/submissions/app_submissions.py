@@ -11,6 +11,10 @@ from .data_insert import (
     get_soil_data,
     get_subdiv_data,
     insert_app_sub_records,
+    update_covenant_farm_impact,
+    update_covenant_area_impacted,
+    update_covenant_draft,
+    update_submission_fill_import,
 )
 
 etl_name = "process_alcs_app_submissions"
@@ -106,3 +110,9 @@ def clean_application_submission(conn=None):
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
     conn.commit()
+
+def update_application_submissions(batch_size):
+    update_covenant_draft()
+    update_covenant_area_impacted()
+    update_covenant_farm_impact()
+    update_submission_fill_import(batch_size)

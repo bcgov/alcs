@@ -35,7 +35,7 @@ WITH
             JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
             JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
         WHERE
-            oo.organization_type_cd IN ('MUNI','FN','RD')
+            oo.organization_type_cd IN ('MUNI','FN','RD','RM')
     ),
     alcs_gov AS (
         SELECT
@@ -57,6 +57,7 @@ WITH
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Saturna Island' THEN 'Islands Trust Saturna Island (Historical)'
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Sidney Island' THEN 'Islands Trust Sidney Island (Historical)'
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust- Comox Strathcona' THEN 'Islands Trust Comox Strathcona (Historical)'
+                    WHEN oats_gov.oats_gov_name LIKE 'Comox-Strathcona (Historical)' THEN 'Comox-Strathcona Regional District (Historical)'
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust- Nanaimo' THEN 'Islands Trust Nanaimo (Historical)'
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust-Capital' THEN 'Islands Trust Capital (Historical)'
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust-Powell River' THEN 'Islands Trust Powell River (Historical)'
@@ -163,7 +164,7 @@ FROM
     LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
-WHERE atl.code <> 'SRW' -- filter out SRW type as it is a "notification" type
+WHERE atl.code <> 'SRW' AND oa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN') -- filter out SRW type as it is a "notification" type
  
 
 

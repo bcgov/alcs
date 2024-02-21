@@ -12,7 +12,7 @@ export class NoticeOfIntentInfoRequestForm {
     public meetingType: NoticeOfIntentMeetingTypeDto,
     public uuid: string | undefined = undefined,
     public reason: string | undefined = undefined,
-    public reasonText: string | undefined = undefined
+    public reasonText: string | undefined = undefined,
   ) {}
 }
 
@@ -35,7 +35,7 @@ export class InfoRequestDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: NoticeOfIntentInfoRequestForm,
     private dialogRef: MatDialogRef<NoticeOfIntentMeetingDialogComponent>,
-    private meetingService: NoticeOfIntentMeetingService
+    private meetingService: NoticeOfIntentMeetingService,
   ) {
     if (data.uuid) {
       this.model = {
@@ -52,7 +52,7 @@ export class InfoRequestDialogComponent {
         null,
         data.meetingType,
         undefined,
-        REASON_TYPE.DEFAULT
+        REASON_TYPE.DEFAULT,
       );
     }
   }
@@ -94,6 +94,7 @@ export class InfoRequestDialogComponent {
 
     if ($event.value === REASON_TYPE.DEFAULT) {
       this.model.reasonText = '';
+      this.customReasonText.nativeElement.blur();
     }
   }
 

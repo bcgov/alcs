@@ -30,6 +30,7 @@ export class CrownOwnerDialogComponent {
   crownLandOwnerType = new FormControl<string | null>('', [Validators.required]);
 
   isEdit = false;
+  isLoading = false;
   existingUuid: string | undefined;
 
   form = new FormGroup({
@@ -68,6 +69,7 @@ export class CrownOwnerDialogComponent {
   async onCreate() {
     this.form.markAllAsTouched();
     if (this.form.valid) {
+      this.isLoading = true;
       const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
         organizationName: this.ministryName.getRawValue() || undefined,
         firstName: this.firstName.getRawValue() || undefined,
@@ -81,6 +83,7 @@ export class CrownOwnerDialogComponent {
       };
 
       const res = await this.data.ownerService.create(createDto);
+      this.isLoading = false;
       this.dialogRef.close({ ...res });
     }
   }
@@ -105,6 +108,7 @@ export class CrownOwnerDialogComponent {
   async onSave() {
     this.form.markAllAsTouched();
     if (this.form.valid) {
+      this.isLoading = true;
       const updateDto: ApplicationOwnerUpdateDto & NoticeOfIntentOwnerUpdateDto = {
         organizationName: this.ministryName.getRawValue(),
         firstName: this.firstName.getRawValue(),
@@ -118,6 +122,7 @@ export class CrownOwnerDialogComponent {
         const res = await this.data.ownerService.update(this.existingUuid, updateDto);
         this.dialogRef.close({ ...res, type: 'update' });
       }
+      this.isLoading = false;
     }
   }
 }

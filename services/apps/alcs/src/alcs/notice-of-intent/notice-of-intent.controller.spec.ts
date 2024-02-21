@@ -1,3 +1,4 @@
+import { Status } from '@grpc/grpc-js/build/src/constants';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -5,11 +6,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { TrackingService } from '../../common/tracking/tracking.service';
+import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
+import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
@@ -17,14 +23,18 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
 describe('NoticeOfIntentController', () => {
   let controller: NoticeOfIntentController;
   let mockService: DeepMocked<NoticeOfIntentService>;
+  let mockSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
   let mockBoardService: DeepMocked<BoardService>;
   let mockSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
   let mockTrackingService: DeepMocked<TrackingService>;
 
   beforeEach(async () => {
     mockService = createMock();
+    mockSubmissionService = createMock();
     mockBoardService = createMock();
     mockSubmissionStatusService = createMock();
+    mockStatusEmailService = createMock();
     mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -40,12 +50,20 @@ describe('NoticeOfIntentController', () => {
           useValue: mockService,
         },
         {
+          provide: NoticeOfIntentSubmissionService,
+          useValue: mockSubmissionService,
+        },
+        {
           provide: BoardService,
           useValue: mockBoardService,
         },
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockSubmissionStatusService,
+        },
+        {
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
         },
         {
           provide: TrackingService,
@@ -144,6 +162,17 @@ describe('NoticeOfIntentController', () => {
     mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
       {} as any,
     );
+    mockSubmissionService.get.mockResolvedValue(
+      new NoticeOfIntentSubmission({
+        status: new NoticeOfIntentSubmissionToSubmissionStatus({
+          statusTypeCode: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        }),
+      }),
+    );
+    mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
+      primaryContact: new NoticeOfIntentOwner(),
+    } as any);
+    mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
     await controller.cancel('file-number');
 
@@ -153,6 +182,44 @@ describe('NoticeOfIntentController', () => {
     expect(
       mockSubmissionStatusService.setStatusDateByFileNumber,
     ).toHaveBeenCalledWith('file-number', NOI_SUBMISSION_STATUS.CANCELLED);
+    expect(
+      mockStatusEmailService.getNoticeOfIntentEmailData,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not send an email when cancelling in progress NOI', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+    mockSubmissionService.get.mockResolvedValue(
+      new NoticeOfIntentSubmission({
+        status: new NoticeOfIntentSubmissionToSubmissionStatus({
+          statusTypeCode: NOI_SUBMISSION_STATUS.IN_PROGRESS,
+        }),
+      }),
+    );
+    mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
+      primaryContact: new NoticeOfIntentOwner(),
+    } as any);
+    mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
+
+    await controller.cancel('file-number');
+
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('file-number', NOI_SUBMISSION_STATUS.CANCELLED);
+    expect(
+      mockStatusEmailService.getNoticeOfIntentEmailData,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
+    ).toHaveBeenCalledTimes(0);
   });
 
   it('should call through to submission service for uncancel', async () => {

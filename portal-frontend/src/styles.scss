@@ -102,6 +102,10 @@ a {
   font-weight: 700 !important;
 }
 
+.mat-calendar-body-cell-content.mat-focus-indicator.mat-calendar-body-selected {
+  color: colors.$white;
+}
+
 .backdrop {
   background-color: rgba(255, 255, 255, 0.7);
 }

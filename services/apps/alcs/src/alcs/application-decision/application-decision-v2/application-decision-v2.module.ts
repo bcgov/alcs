@@ -1,17 +1,20 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApplicationSubmissionStatusModule } from '../../application/application-submission-status/application-submission-status.module';
-import { ApplicationSubmissionStatusType } from '../../application/application-submission-status/submission-status-type.entity';
-import { ApplicationSubmissionToSubmissionStatus } from '../../application/application-submission-status/submission-status.entity';
 import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision-v2.automapper.profile';
 import { ModificationProfile } from '../../../common/automapper/modification.automapper.profile';
 import { ReconsiderationProfile } from '../../../common/automapper/reconsideration.automapper.profile';
 import { DocumentModule } from '../../../document/document.module';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { NaruSubtype } from '../../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { ApplicationSubmissionStatusModule } from '../../application/application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../application/application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application/application-submission-status/submission-status.entity';
 import { ApplicationModule } from '../../application/application.module';
 import { BoardModule } from '../../board/board.module';
 import { CardModule } from '../../card/card.module';
+import { ApplicationBoundaryAmendmentController } from '../application-boundary-amendment/application-boundary-amendment.controller';
+import { ApplicationBoundaryAmendment } from '../application-boundary-amendment/application-boundary-amendment.entity';
+import { ApplicationBoundaryAmendmentService } from '../application-boundary-amendment/application-boundary-amendment.service';
 import { ApplicationCeoCriterionCode } from '../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionComponentLotController } from '../application-component-lot/application-decision-component-lot.controller';
 import { ApplicationDecisionComponentLot } from '../application-component-lot/application-decision-component-lot.entity';
@@ -69,6 +72,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
       ApplicationDecisionComponentLot,
       ApplicationDecisionConditionToComponentLot,
       ApplicationDecisionConditionComponentPlanNumber,
+      ApplicationBoundaryAmendment,
     ]),
     forwardRef(() => BoardModule),
     forwardRef(() => ApplicationModule),
@@ -91,6 +95,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
     ApplicationDecisionConditionService,
     ApplicationDecisionComponentLotService,
     ApplicationConditionToComponentLotService,
+    ApplicationBoundaryAmendmentService,
   ],
   controllers: [
     ApplicationDecisionV2Controller,
@@ -98,6 +103,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
     ApplicationDecisionConditionController,
     ApplicationDecisionComponentLotController,
     ApplicationConditionToComponentLotController,
+    ApplicationBoundaryAmendmentController,
   ],
   exports: [ApplicationDecisionV2Service],
 })

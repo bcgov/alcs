@@ -30,13 +30,11 @@ inp_accomplishments_for_noi_only AS (
         )
 ),
 nois_with_one_or_zero_component_only AS (
-    SELECT oaac.alr_application_id,
-        max(oaac.alr_appl_component_id) AS alr_appl_component_id -- this IS NOT going TO effect the query since count < 2
-    FROM oats.oats_alr_appl_components oaac
-        JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
-        AND oaa.application_class_code = 'NOI'
-    GROUP BY oaac.alr_application_id
-    HAVING count(oaac.alr_application_id) < 2
+    SELECT oaa.alr_application_id,
+        oaa.alr_appl_component_id
+    FROM oats.alcs_etl_applications_nois oaa
+    WHERE oaa.application_class_code = 'NOI'
+        and oaa.alr_change_code <> 'SRW'
 ),
 all_in_progress AS (
     SELECT cancelled.alr_application_id

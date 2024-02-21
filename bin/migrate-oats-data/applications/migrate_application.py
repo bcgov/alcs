@@ -10,6 +10,8 @@ from .submissions import (
     clean_primary_contacts,
     insert_application_submission_review,
     clean_reviews,
+    update_application_submissions,
+    process_application_applicant_on_submissions
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields
@@ -29,6 +31,13 @@ from .decisions import (
     init_application_decision_components,
     update_application_decision_component_soil_details,
     update_application_decision,
+    init_application_conditions,
+    link_application_conditions,
+    update_application_conditions,
+    clean_application_conditions,
+    clean_application_conditions_to_components,
+    init_application_component_lots,
+    clean_application_component_lots,
 )
 from .decisions.app_modifications import (
     update_application_modifications,
@@ -41,20 +50,29 @@ from .decisions.app_reconsiderations import (
     update_application_reconsiderations,
 )
 
-from .set_hide_from_portal_on_application import set_hide_from_portal_on_application
+from .set_application_visibility import set_application_visibility
+
+from .application_updates import update_application_created_date, update_application_incomplete_date
+
+from .application_decision_date import process_alcs_application_decision_date
 
 
 def process_application_etl(batch_size):
     process_alcs_application_prep_fields(batch_size)
     update_application_date_rx_all_items(batch_size)
+    update_application_created_date(batch_size)
     process_alcs_app_submissions(batch_size)
+    update_application_submissions(batch_size)
     insert_application_submission_review(batch_size)
+    process_alcs_application_decision_date(batch_size)
     process_application_statuses(batch_size)
+    update_application_incomplete_date(batch_size)
     process_application_parcels(batch_size)
     process_application_owners(batch_size)
+    # process_application_applicant_on_submissions(batch_size)
     process_app_staff_journal(batch_size)
     process_application_decisions(batch_size)
-    set_hide_from_portal_on_application()
+    set_application_visibility()
     process_application_submission_status_emails()
 
 
@@ -81,10 +99,17 @@ def process_application_decisions(batch_size):
     update_application_reconsiderations(batch_size)
     init_application_decision_components(batch_size)
     update_application_decision_component_soil_details(batch_size)
+    init_application_component_lots(batch_size)
+    init_application_conditions(batch_size)
+    update_application_conditions(batch_size)
+    link_application_conditions(batch_size)
 
 
 def clean_application_decisions_etl():
     # modifications do not have clean since all of them were created in ALCS and ETL is not introducing new records.
+    clean_application_conditions_to_components()
+    clean_application_conditions()
+    clean_application_component_lots()
     clean_application_decision_components()
     unlink_application_reconsiderations()
     clean_application_reconsiderations()

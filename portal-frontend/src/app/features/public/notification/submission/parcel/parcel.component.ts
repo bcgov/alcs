@@ -17,8 +17,6 @@ export class ParcelComponent {
   @Input() parcels: PublicParcelDto[] = [];
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
-  pageTitle: string = 'Identify Parcel(s) Under Application';
-
   fileId = '';
   submissionUuid = '';
 

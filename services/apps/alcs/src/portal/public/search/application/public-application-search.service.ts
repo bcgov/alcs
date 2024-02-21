@@ -68,6 +68,10 @@ export class PublicApplicationSearchService {
 
   private compileApplicationGroupBySearchQuery(query) {
     query = query
+      // FIXME: This is a quick fix for the search performance issues. It temporarily allows
+      //        submissions with deleted application types to be shown. For now, there are no
+      //        deleted application types, so this should be fine, but should be fixed soon.
+      .withDeleted()
       .innerJoinAndMapOne(
         'appSearch.applicationType',
         'appSearch.applicationType',
@@ -194,7 +198,7 @@ export class PublicApplicationSearchService {
     query = query.leftJoin(
       ApplicationDecision,
       'decision',
-      'decision.application_uuid = "appSearch"."application_uuid"',
+      'decision.application_uuid = "appSearch"."application_uuid" AND decision.is_draft = FALSE',
     );
     return query;
   }

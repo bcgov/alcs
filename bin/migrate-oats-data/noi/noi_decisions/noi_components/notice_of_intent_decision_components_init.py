@@ -187,7 +187,15 @@ def _map_component_type_code(row):
 
 def _map_end_date(row):
     alr_change_code = row.get("alr_change_code")
-    date = add_timezone_and_keep_date_part(row.get("nonfarm_use_end_date"))
+    end_date = add_timezone_and_keep_date_part(row.get("nonfarm_use_end_date"))
+    expiry_date = add_timezone_and_keep_date_part(row.get("decision_expiry_date"))
+    date = None
+    if end_date and expiry_date:
+        date = max(end_date, expiry_date)
+    elif end_date:
+        date = end_date
+    elif expiry_date:
+        date = expiry_date
 
     if alr_change_code in [
         ALRChangeCode.SCH.value,

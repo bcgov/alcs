@@ -1,13 +1,13 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 import { ExclProposalComponent } from './excl-proposal.component';
@@ -17,12 +17,12 @@ describe('ExclProposalComponent', () => {
   let fixture: ComponentFixture<ExclProposalComponent>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockRouter: DeepMocked<Router>;
+  let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
     mockAppDocumentService = createMock();
-    mockRouter = createMock();
+    mockPdfGenerationService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -35,8 +35,8 @@ describe('ExclProposalComponent', () => {
           useValue: mockAppDocumentService,
         },
         {
-          provide: Router,
-          useValue: mockRouter,
+          provide: PdfGenerationService,
+          useValue: mockPdfGenerationService,
         },
         {
           provide: MatDialog,

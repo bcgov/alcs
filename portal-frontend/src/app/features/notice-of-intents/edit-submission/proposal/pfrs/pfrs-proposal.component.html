@@ -104,9 +104,9 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <div *ngIf="fillTypeToPlace.invalid && (fillTypeToPlace.dirty || fillTypeToPlace.touched)" class="field-error">
+      <div *ngIf="soilTypeRemoved.invalid && (soilTypeRemoved.dirty || soilTypeRemoved.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
-        <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
+        <div *ngIf="soilTypeRemoved.errors?.['required']">This field is required</div>
       </div>
       <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
       <div class="subtext">Characters left: {{ 4000 - soilTypeRemovedText.textLength }}</div>
@@ -210,6 +210,7 @@
         *ngIf="!isMobile"
         tableHeader="Soil to be Removed"
         tableHeader2="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="removalTableData"
         [(data2)]="fillToPlaceTableData"
         (dataChange)="markDirty()"
@@ -218,12 +219,14 @@
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Soil to be Removed"
+        [touchAll]="showErrors"
         [(data)]="removalTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="fillToPlaceTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -237,6 +240,7 @@
         *ngIf="!isMobile"
         tableHeader="Soil already Removed"
         tableHeader2="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="alreadyRemovedTableData"
         [(data2)]="fillAlreadyPlacedTableData"
         (dataChange)="markDirty()"
@@ -245,12 +249,14 @@
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Soil already Removed"
+        [touchAll]="showErrors"
         [(data)]="alreadyRemovedTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="fillAlreadyPlacedTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -330,6 +336,13 @@
             >No
           </mat-button-toggle>
         </mat-button-toggle-group>
+      </div>
+      <div
+        *ngIf="isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="isExtractionOrMining.errors?.['required']">This field is required</div>
       </div>
     </div>
 
@@ -416,6 +429,13 @@
             >No
           </mat-button-toggle>
         </mat-button-toggle-group>
+      </div>
+      <div
+        *ngIf="hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hasSubmittedNotice.errors?.['required']">This field is required</div>
       </div>
     </div>
 

@@ -75,6 +75,10 @@ export class NoticeOfIntentAdvancedSearchService {
     query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
   ) {
     query = query
+      // FIXME: This is a quick fix for the search performance issues. It temporarily allows
+      //        submissions with deleted submission types to be shown. For now, there are no
+      //        deleted submission types, so this should be fine, but should be fixed soon.
+      .withDeleted()
       .innerJoinAndMapOne(
         'noiSearch.noticeOfIntentType',
         'noiSearch.noticeOfIntentType',
@@ -173,7 +177,6 @@ export class NoticeOfIntentAdvancedSearchService {
     searchDto: SearchRequestDto,
     query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
   ) {
-    // TODO check dates toIsoString
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
         'noiSearch.date_submitted_to_alc >= :date_submitted_from_alc',

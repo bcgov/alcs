@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
 import { CreateNoiModificationDialogComponent } from './create-noi-modification-dialog.component';
 
 describe('CreateNoiModificationDialogComponent', () => {
@@ -32,6 +33,7 @@ describe('CreateNoiModificationDialogComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: ActivatedRoute, useValue: {} },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

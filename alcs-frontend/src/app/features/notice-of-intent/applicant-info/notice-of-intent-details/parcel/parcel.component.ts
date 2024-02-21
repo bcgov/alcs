@@ -4,11 +4,14 @@ import { Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent/noi-document/noi-document.dto';
 import { NoiDocumentService } from '../../../../../services/notice-of-intent/noi-document/noi-document.service';
 import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
-import { NoticeOfIntentSubmissionDto } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
+import {
+  NoticeOfIntentParcelDto,
+  NoticeOfIntentSubmissionDto,
+} from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../../shared/dto/parcel-ownership.type.dto';
 
 @Component({
-  selector: 'app-parcel',
+  selector: 'app-parcel[noticeOfIntent][files]',
   templateUrl: './parcel.component.html',
   styleUrls: ['./parcel.component.scss'],
 })
@@ -16,13 +19,10 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
   $destroy = new Subject<void>();
 
   @Input() noticeOfIntent!: NoticeOfIntentSubmissionDto;
-  @Input() files: NoticeOfIntentDocumentDto[] = [];
-
-  pageTitle: string = 'Notice of Intent Parcels';
-  showCertificateOfTitle: boolean = true;
+  @Input() files!: NoticeOfIntentDocumentDto[];
 
   fileId: string = '';
-  parcels: any[] = [];
+  parcels: NoticeOfIntentParcelDto[] | undefined;
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   private anchorededParcelUuid: string | undefined;
@@ -30,7 +30,7 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
   constructor(
     private noiDocumentService: NoiDocumentService,
     private parcelService: NoticeOfIntentParcelService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -41,11 +41,8 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
     });
   }
 
-  async onOpenFile(uuid: string) {
-    const file = this.files.find((file) => file.uuid === uuid);
-    if (file) {
-      await this.noiDocumentService.download(file.uuid, file.fileName);
-    }
+  async onOpenFile(file: NoticeOfIntentDocumentDto) {
+    await this.noiDocumentService.download(file.uuid, file.fileName);
   }
 
   async loadParcels(fileNumber: string) {

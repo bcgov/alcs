@@ -22,3 +22,20 @@
 a {
   word-break: break-all;
 }
+
+table {
+  position: relative; 
+
+  th mat-header-cell {
+    position: relative; 
+  }
+
+  .subheading {
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 400;
+    position: absolute;
+    top: 100%; /* Position it below the header text */
+    left: 0; /* Align it to the left edge of the header cell */
+  }
+}

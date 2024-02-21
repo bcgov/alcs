@@ -10,7 +10,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBMNoiApplicantHtml,
   generateSUBMNoiGovernmentHtml,
@@ -156,23 +155,6 @@ export class NoticeOfIntentSubmissionController {
       );
     }
 
-    const { primaryContact, submissionGovernment } =
-      await this.statusEmailService.getNoticeOfIntentEmailData(
-        noticeOfIntentSubmission,
-      );
-
-    if (primaryContact) {
-      await this.statusEmailService.sendNoticeOfIntentStatusEmail({
-        generateStatusHtml: generateCANCNoticeOfIntentHtml,
-        status: NOI_SUBMISSION_STATUS.CANCELLED,
-        noticeOfIntentSubmission,
-        government: submissionGovernment,
-        parentType: PARENT_TYPE.APPLICATION,
-        primaryContact,
-        ccGovernment: !!submissionGovernment,
-      });
-    }
-
     await this.noticeOfIntentSubmissionService.cancel(noticeOfIntentSubmission);
 
     return {
@@ -199,6 +181,7 @@ export class NoticeOfIntentSubmissionController {
 
       await this.noticeOfIntentSubmissionService.submitToAlcs(
         validatedApplicationSubmission,
+        req.user.entity,
       );
 
       const { primaryContact, submissionGovernment } =

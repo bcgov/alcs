@@ -45,6 +45,7 @@ export class InboxNoticeOfIntentService {
 
   private compileGroupBySearchQuery(query) {
     query = query
+      .withDeleted()
       .innerJoinAndMapOne(
         'noiSearch.noticeOfIntentType',
         'noiSearch.noticeOfIntentType',
@@ -156,9 +157,12 @@ export class InboxNoticeOfIntentService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
+      query = query.andWhere(
+        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
+        {
+          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+        },
+      );
     }
     return query;
   }

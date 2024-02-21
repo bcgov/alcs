@@ -70,7 +70,6 @@
     padding: rem(12) rem(36) !important;
   }
 
-  // TODO: this is just a placeholder and will be addressed later
   @media screen and (min-width: $desktopBreakpoint) {
     padding: rem(18) rem(80) !important;
   }
@@ -180,4 +179,39 @@ section {
 
 .document {
   margin-bottom: rem(8);
+}
+
+
+.continue-button-container {
+  position: sticky;
+  bottom: 0;
+  margin-top: rem(40);
+  background-color: colors.$white;
+  display: flex;
+  padding: rem(16) 0;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  z-index: 2;
+  box-shadow: -3px 0 colors.$white, 3px 0 colors.$white;
+
+  button:nth-child(1) {
+    margin-top: rem(16) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: row;
+    justify-content: center;
+    button:nth-child(1) {
+      margin-top: 0 !important;
+    }
+  }
+
+  button {
+    margin-right: rem(16) !important;
+  }
+}
+
+.continue-button-content {
+  display: flex;
+  align-items: center;
 }

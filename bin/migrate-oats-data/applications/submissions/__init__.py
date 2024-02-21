@@ -1,4 +1,4 @@
-from .app_submissions import process_alcs_app_submissions, clean_application_submission
+from .app_submissions import process_alcs_app_submissions, clean_application_submission, update_application_submissions
 from .migrate_application_status import (
     process_application_statuses,
     clean_app_submissions,
@@ -14,3 +14,4 @@ from .migrate_application_parcels import (
 )
 from .migrate_application_owners import process_application_owners
 from .review import insert_application_submission_review, clean_reviews
+from .application_applicant_on_submissions import process_application_applicant_on_submissions

@@ -69,6 +69,10 @@ export class PublicNotificationSearchService {
 
   private compileGroupBySearchQuery(query) {
     query = query
+      // FIXME: This is a quick fix for the search performance issues. It temporarily allows
+      //        submissions with deleted notification types to be shown. For now, there are no
+      //        deleted application types, so this should be fine, but should be fixed soon.
+      .withDeleted()
       .innerJoinAndMapOne(
         'notificationSearch.notificationType',
         'notificationSearch.notificationType',
@@ -162,9 +166,12 @@ export class PublicNotificationSearchService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
+      query = query.andWhere(
+        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
+        {
+          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+        },
+      );
     }
     return query;
   }

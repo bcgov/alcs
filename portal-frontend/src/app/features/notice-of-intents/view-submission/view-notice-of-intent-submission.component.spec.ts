@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
@@ -17,11 +18,13 @@ describe('ViewNoticeOfIntentSubmissionComponent', () => {
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockActivatedRoute: DeepMocked<any>;
   let mockDialogService: DeepMocked<ConfirmationDialogService>;
+  let mockPDFGenerationService: DeepMocked<PdfGenerationService>;
 
   beforeEach(async () => {
     mockNoiSubmissionService = createMock();
     mockNoiDocumentService = createMock();
     mockActivatedRoute = createMock();
+    mockPDFGenerationService = createMock();
 
     mockActivatedRoute.paramMap = new BehaviorSubject(new Map());
 
@@ -43,6 +46,10 @@ describe('ViewNoticeOfIntentSubmissionComponent', () => {
         {
           provide: ConfirmationDialogService,
           useValue: mockDialogService,
+        },
+        {
+          provide: PdfGenerationService,
+          useValue: mockPDFGenerationService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

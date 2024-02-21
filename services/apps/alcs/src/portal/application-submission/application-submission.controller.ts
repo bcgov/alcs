@@ -198,16 +198,16 @@ export class ApplicationSubmissionController {
         uuid,
         req.user.entity,
       );
-    let localGovernment: LocalGovernment | null = null;
+    let userGovernment: LocalGovernment | null = null;
 
     if (user.bceidBusinessGuid) {
-      localGovernment = await this.localGovernmentService.getByGuid(
+      userGovernment = await this.localGovernmentService.getByGuid(
         user.bceidBusinessGuid,
       );
     }
 
     if (
-      localGovernment === null &&
+      userGovernment === null &&
       application.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS
     ) {
       throw new BadRequestException('Can only cancel in progress Applications');
@@ -219,7 +219,10 @@ export class ApplicationSubmissionController {
         application,
       );
 
-    if (primaryContact) {
+    if (
+      primaryContact &&
+      application.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS
+    ) {
       await this.statusEmailService.sendApplicationStatusEmail({
         generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,

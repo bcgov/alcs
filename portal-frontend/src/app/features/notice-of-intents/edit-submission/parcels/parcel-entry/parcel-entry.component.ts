@@ -186,13 +186,17 @@ export class ParcelEntryComponent implements OnInit {
 
   async onSearch() {
     let result;
-    if (this.searchBy.getRawValue() === 'pin') {
-      result = await this.parcelService.getByPin(this.pidPin.getRawValue()!);
-    } else {
-      result = await this.parcelService.getByPid(this.pidPin.getRawValue()!);
+    const searchValue = this.pidPin.value;
+    if (!searchValue || searchValue.length === 0) {
+      return;
     }
 
-    this.onReset();
+    if (this.searchBy.getRawValue() === 'pin') {
+      result = await this.parcelService.getByPin(searchValue);
+    } else {
+      result = await this.parcelService.getByPid(searchValue);
+    }
+
     if (result) {
       this.legalDescription.setValue(result.legalDescription);
       this.mapArea.setValue(result.mapArea);
@@ -256,19 +260,20 @@ export class ParcelEntryComponent implements OnInit {
         this.searchBy.setValue(null);
         this.pidPinPlaceholder = '';
         this.isCrownLand = true;
-        this.pid.addValidators([Validators.required]);
+        this.pid.removeValidators([Validators.required]);
         this.purchaseDate.disable();
       } else {
         this.searchBy.setValue('pid');
         this.pidPinPlaceholder = 'Type 9 digit PID';
         this.isCrownLand = false;
-        this.pid.removeValidators([Validators.required]);
+        this.pid.addValidators([Validators.required]);
         this.crownLandOwnerType.setValue(null);
         this.purchaseDate.enable();
       }
 
-      this.updateParcelOwners([]);
       this.filteredOwners = this.mapOwners(this.owners);
+      this.selectedOwner = undefined;
+      this.updateParcelOwners([]);
       this.pid.updateValueAndValidity();
     };
 
@@ -342,11 +347,12 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async beforeFileUploadOpened() {
+  saveParcelProgress() {
     this.onSaveProgress.emit();
   }
 
   onAddNewOwner() {
+    this.saveParcelProgress();
     const dialog = this.dialog.open(OwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -361,11 +367,13 @@ export class ParcelEntryComponent implements OnInit {
         this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
         this.updateParcelOwners(updatedArray);
+        this.onOwnersUpdated.emit();
       }
     });
   }
 
   onAddNewGovernmentContact() {
+    this.saveParcelProgress();
     const dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
@@ -395,6 +403,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onEditCrownOwner(owner: NoticeOfIntentOwnerDto) {
+    this.saveParcelProgress();
     let dialog;
     dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
@@ -407,12 +416,29 @@ export class ParcelEntryComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((result) => {
       if (result) {
+        this.parcelForm.patchValue(
+          {
+            isConfirmedByApplicant: false,
+          },
+          { emitEvent: false }
+        );
+
         if (result.type === 'delete') {
           this.onOwnersDeleted.emit();
         }
         this.onOwnersUpdated.emit();
       }
     });
+  }
+
+  onOwnerEdited() {
+    this.parcelForm.patchValue(
+      {
+        isConfirmedByApplicant: false,
+      },
+      { emitEvent: false }
+    );
+    this.onOwnersUpdated.emit();
   }
 
   private isOwnerInParcel(owner: NoticeOfIntentOwnerDto): boolean {
@@ -565,6 +591,13 @@ export class ParcelEntryComponent implements OnInit {
       this.ownerInput.setValidators([Validators.required]);
       this.ownerInput.setErrors({ required: true });
     }
+
+    this.parcelForm.patchValue(
+      {
+        isConfirmedByApplicant: false,
+      },
+      { emitEvent: false }
+    );
 
     if (this.isCrownLand && updatedArray.length > 0) {
       this.ownerInput.disable();

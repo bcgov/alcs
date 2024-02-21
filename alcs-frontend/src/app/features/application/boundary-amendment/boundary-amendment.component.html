@@ -1,0 +1,49 @@
+<div class="split">
+  <h3>ALR Boundary</h3>
+  <button mat-flat-button color="primary" (click)="onCreateAmendment()">+ Amendment</button>
+</div>
+<section>
+  <div *ngFor="let amendment of amendments; let i = index" class="amendment">
+    <div class="menu">
+      <button (click)="onEditAmendment(amendment)" matTooltip="Edit Amendment" mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button (click)="onDeleteAmendment(amendment.uuid)" matTooltip="Delete Amendment" mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <div class="subheading1">Amendment #{{ amendments.length - i }}</div>
+    <div class="content">
+      <div class="full-grid-line">
+        <div class="subheading2">Amendment Type</div>
+        {{ amendment.type }}
+      </div>
+      <div>
+        <div class="subheading2">Decision Components</div>
+        <div *ngFor="let component of amendment.decisionComponents">
+          {{ component.label }}
+        </div>
+      </div>
+      <div>
+        <div class="subheading2">Area Included or Excluded (ha)</div>
+        {{ amendment.area }}
+      </div>
+      <div>
+        <div class="subheading2">ALR Boundary Amendment Year</div>
+        <app-inline-dropdown
+          [value]="amendment.year?.toString()"
+          [options]="years"
+          (save)="onSaveYear(amendment.uuid, $event)"
+        />
+      </div>
+      <div>
+        <div class="subheading2">ALR Boundary Amendment Period</div>
+        <app-inline-dropdown
+          [value]="amendment.period?.toString()"
+          [options]="periods"
+          (save)="onSavePeriod(amendment.uuid, $event)"
+        />
+      </div>
+    </div>
+  </div>
+</section>

@@ -3,6 +3,10 @@
 </h3>
 
 <div class="review-table">
+  <div *ngIf="!parcels" class="center full-width">
+    <mat-spinner />
+  </div>
+
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
       <h4 [id]="parcel.uuid">Parcel #{{ parcelInd + 1 }}: Parcel and Owner Information</h4>

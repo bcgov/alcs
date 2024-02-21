@@ -24,10 +24,7 @@ export class AlcReviewComponent implements OnInit, OnDestroy {
   showUpdateAfterSubmitLabel = false;
   showALCSection = false;
 
-  constructor(
-    private applicationReviewService: ApplicationSubmissionReviewService,
-    private router: Router,
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -59,15 +56,5 @@ export class AlcReviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  async onReview(fileId: string) {
-    if (this.application?.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
-      const review = await this.applicationReviewService.startReview(fileId);
-      if (!review) {
-        return;
-      }
-    }
-    await this.router.navigateByUrl(`application/${fileId}/review`);
   }
 }

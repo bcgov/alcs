@@ -20,6 +20,7 @@ import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-int
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
+import { GenerateNoiSubmissionDocumentService } from '../pdf-generation/generate-noi-submission-document.service';
 import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import {
   NoticeOfIntentSubmission,
@@ -38,6 +39,7 @@ describe('NoticeOfIntentSubmissionService', () => {
   let mockNoiDocService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockNoiStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockGenerateNoiSubmissionDocumentService: DeepMocked<GenerateNoiSubmissionDocumentService>;
   let mockNoiSubmission;
   let mockQueryBuilder;
 
@@ -49,6 +51,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiDocService = createMock();
     mockFileNumberService = createMock();
     mockNoiStatusService = createMock();
+    mockGenerateNoiSubmissionDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -70,6 +73,10 @@ describe('NoticeOfIntentSubmissionService', () => {
         {
           provide: NoticeOfIntentService,
           useValue: mockNoiService,
+        },
+        {
+          provide: GenerateNoiSubmissionDocumentService,
+          useValue: mockGenerateNoiSubmissionDocumentService,
         },
         {
           provide: LocalGovernmentService,
@@ -252,6 +259,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     await expect(
       service.submitToAlcs(
         noticeOfIntentSubmission as ValidatedNoticeOfIntentSubmission,
+        new User(),
       ),
     ).rejects.toMatchObject(
       new BaseServiceException(
@@ -267,14 +275,19 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiStatusService.setStatusDate.mockResolvedValue(
       new NoticeOfIntentSubmissionToSubmissionStatus(),
     );
+    mockGenerateNoiSubmissionDocumentService.generateAndAttach.mockResolvedValue();
 
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
     await service.submitToAlcs(
       mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
+      new User(),
     );
 
     expect(mockNoiService.submit).toBeCalledTimes(1);
     expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(
+      mockGenerateNoiSubmissionDocumentService.generateAndAttach,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should populate noi subtypes', async () => {
@@ -282,6 +295,8 @@ describe('NoticeOfIntentSubmissionService', () => {
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
+
+    mockGenerateNoiSubmissionDocumentService.generateAndAttach.mockResolvedValue();
 
     const mockDate = new Date('2022-01-01');
     jest.useFakeTimers().setSystemTime(mockDate);
@@ -318,6 +333,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
     await service.submitToAlcs(
       mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
+      new User(),
     );
 
     expect(mockNoiService.submit).toHaveBeenCalledTimes(1);
@@ -337,6 +353,9 @@ describe('NoticeOfIntentSubmissionService', () => {
         'AEPM',
       ],
     });
+    expect(
+      mockGenerateNoiSubmissionDocumentService.generateAndAttach,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should update fields if notice of intent exists', async () => {

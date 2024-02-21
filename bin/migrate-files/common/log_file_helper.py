@@ -7,7 +7,7 @@ def generate_log_file_name(file_name):
 
 
 def get_current_date_with_seconds():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 
 def log_last_imported_file(last_document_id, log_file_name):

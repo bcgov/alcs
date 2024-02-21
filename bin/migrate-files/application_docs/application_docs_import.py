@@ -94,8 +94,7 @@ def import_application_docs(
                     documents_upload_progress_bar.update(1)
                     last_document_id = document_id
                     documents_processed += 1
-
-                log_last_imported_file(last_document_id, log_file_name)
+                    log_last_imported_file(last_document_id, log_file_name)
 
     except Exception as error:
         handle_document_processing_error(
@@ -125,7 +124,7 @@ _document_query = """
                                 
                                     SELECT document_id FROM oats.oats_documents od 
                                     LEFT JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = od.alr_application_id
-                                    WHERE oaac.alr_change_code <> 'SRW'
+                                    WHERE oaac.alr_change_code <> 'SRW' OR oaac.alr_change_code IS NULL -- make sure that applications without application components will be included
                                     GROUP BY od.document_id
                                     
                             ),

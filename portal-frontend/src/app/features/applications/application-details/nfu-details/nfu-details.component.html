@@ -2,6 +2,7 @@
   <div class="subheading2 grid-1">How many hectares are proposed for non-farm use?</div>
   <div class="grid-double">
     {{ applicationSubmission.nfuHectares }} <span *ngIf="applicationSubmission.nfuHectares">ha</span>
+    <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuHectares === null"></app-no-data>
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">

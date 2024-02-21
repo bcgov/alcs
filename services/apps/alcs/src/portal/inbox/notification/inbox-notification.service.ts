@@ -44,6 +44,7 @@ export class InboxNotificationService {
 
   private compileGroupBySearchQuery(query) {
     query = query
+      .withDeleted()
       .innerJoinAndMapOne(
         'notificationSearch.notificationType',
         'notificationSearch.notificationType',
@@ -147,9 +148,12 @@ export class InboxNotificationService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
+      query = query.andWhere(
+        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
+        {
+          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+        },
+      );
     }
     return query;
   }

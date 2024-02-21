@@ -99,7 +99,7 @@ def _get_update_query():
                  UPDATE alcs.application_reconsideration
                     SET submitted_date = %(submitted_date)s
                         , description = COALESCE(alcs.application_reconsideration.description, %(description)s)
-                        , oats_reconsideration_request_id = %(oats_reconsideration_request_id)s,
+                        , oats_reconsideration_request_id = %(oats_reconsideration_request_id)s
                         , is_new_proposal = %(is_new_proposal)s
                         , is_new_evidence = %(is_new_evidence)s
                         , is_incorrect_false_info = %(is_incorrect_false_info)s
@@ -118,11 +118,11 @@ def _prepare_oats_alr_applications_data(row_data_list):
             "reconsideration_uuid": row.get("reconsideration_uuid"),
             "description": row.get("description"),
             "oats_reconsideration_request_id": row.get("reconsideration_request_id"),
-            "is_new_proposal": "new_proposal_ind",
-            "is_new_evidence": "new_information_ind",
-            "is_incorrect_false_info": "error_information_ind",
+            "is_new_proposal": row.get("new_proposal_ind"),
+            "is_new_evidence": row.get("new_information_ind"),
+            "is_incorrect_false_info": row.get("error_information_ind"),
             "review_outcome_code": _map_review_outcome_code(row),
-            "review_date": _map_review_date,
+            "review_date": _map_review_date(row),
         }
         data_list.append(mapped_row)
 

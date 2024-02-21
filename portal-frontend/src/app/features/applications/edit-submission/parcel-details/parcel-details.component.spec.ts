@@ -23,9 +23,9 @@ describe('ParcelDetailsComponent', () => {
   beforeEach(async () => {
     mockHttpClient = createMock();
     mockApplicationParcelService = createMock();
+    mockApplicationOwnerService = createMock();
     mockToastService = createMock();
     mockMatDialog = createMock();
-    mockApplicationOwnerService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelDetailsComponent],

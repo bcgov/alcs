@@ -1,6 +1,9 @@
 <div class="table-wrapper">
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource">
+    <div *ngIf="isLoading" class="center">
+      <mat-spinner />
+    </div>
+    <table *ngIf="!isLoading" mat-table [dataSource]="dataSource">
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr
         mat-row
@@ -57,8 +60,9 @@
       </ng-container>
     </table>
     <mat-paginator
-      [length]="_totalCount"
-      [pageSize]="10"
+      [length]="totalCount"
+      [pageIndex]="pageIndex"
+      [pageSize]="itemsPerPage"
       [pageSizeOptions]="[5, 10, 25, 100]"
       (page)="onPageChange($event)"
       aria-label="Select page"

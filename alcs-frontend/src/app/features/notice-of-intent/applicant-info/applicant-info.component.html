@@ -8,4 +8,8 @@
       [showEdit]="true"
     ></app-noi-details>
   </div>
+
+  <div class="center">
+    <mat-spinner *ngIf="!noticeOfIntent || !submission"></mat-spinner>
+  </div>
 </div>

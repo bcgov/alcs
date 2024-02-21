@@ -53,6 +53,15 @@ describe('NoticeOfIntentDocumentService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
+  it('should make a get request for download file', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    await service.downloadFile('fileId');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.get.mock.calls[0][0]).toContain('notice-of-intent-document');
+  });
+
   it('should make a delete request for delete file', async () => {
     mockHttpClient.delete.mockReturnValue(of({}));
 

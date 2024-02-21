@@ -39,7 +39,10 @@ export class NoticeOfIntentModificationController {
       uuid,
       updateDto,
     );
-    return this.modificationService.mapToDtos([updatedModification]);
+    const mapped = await this.modificationService.mapToDtos([
+      updatedModification,
+    ]);
+    return mapped[0];
   }
 
   @Post()
@@ -52,7 +55,8 @@ export class NoticeOfIntentModificationController {
       createDto,
       board,
     );
-    return this.modificationService.mapToDtos([modification]);
+    const mapped = await this.modificationService.mapToDtos([modification]);
+    return mapped[0];
   }
 
   @Delete('/:uuid')
@@ -73,9 +77,8 @@ export class NoticeOfIntentModificationController {
   @Get('/notice-of-intent/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByFileNumber(@Param('fileNumber') fileNumber: string) {
-    const modification = await this.modificationService.getByFileNumber(
-      fileNumber,
-    );
+    const modification =
+      await this.modificationService.getByFileNumber(fileNumber);
     return this.modificationService.mapToDtos(modification);
   }
 }

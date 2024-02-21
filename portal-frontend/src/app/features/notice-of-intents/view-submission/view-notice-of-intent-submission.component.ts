@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
@@ -26,6 +27,7 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
     private noiSubmissionService: NoticeOfIntentSubmissionService,
     private noiDocumentService: NoticeOfIntentDocumentService,
     private confirmationDialogService: ConfirmationDialogService,
+    private pdfGenerationService: PdfGenerationService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -62,7 +64,7 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
   }
 
   async onNavigateHome() {
-    await this.router.navigateByUrl(`home/nois`);
+    await this.router.navigateByUrl(`home/notices-of-intent`);
   }
 
   async onCancel(uuid: string) {
@@ -80,7 +82,9 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
     });
   }
 
-  onDownloadSubmissionPdf(fileNumber: string) {
-    //TODO: When we add PDFs
+  async onDownloadSubmissionPdf(fileNumber: string) {
+    if (fileNumber) {
+      await this.pdfGenerationService.generateNoiSubmission(fileNumber);
+    }
   }
 }

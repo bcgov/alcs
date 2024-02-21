@@ -94,13 +94,20 @@
       <label for="projectDuration">Placement of Fill Project Duration</label>
       <div class="subtext">Length of time you anticipate it would take to complete the project</div>
       <mat-form-field appearance="outline">
-        <input id="projectDuration" matInput formControlName="projectDuration" placeholder="Type project duration" />
+        <input
+          id="projectDuration"
+          maxlength="500"
+          matInput
+          [formControl]="projectDuration"
+          placeholder="Type project duration"
+        />
       </mat-form-field>
       <div *ngIf="projectDuration.invalid && (projectDuration.dirty || projectDuration.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="projectDuration.errors?.['required']">This field is required</div>
       </div>
       <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
+      <div class="subtext">Characters left: {{ 500 - (projectDuration.value || '').length }}</div>
     </div>
 
     <div class="full-row">
@@ -121,6 +128,7 @@
       </app-info-banner>
       <app-soil-table
         tableHeader="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -132,6 +140,7 @@
       >
       <app-soil-table
         tableHeader="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="alreadyFilledTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -157,7 +166,7 @@
         <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
       </div>
       <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
-      <span class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</span>
+      <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="alternativeMeasures">
@@ -178,11 +187,11 @@
         ></textarea>
       </mat-form-field>
       <div
-        *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
+        *ngIf="alternativeMeasures.invalid && (alternativeMeasures.dirty || alternativeMeasures.touched)"
         class="field-error"
       >
         <mat-icon>warning</mat-icon>
-        <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
+        <div *ngIf="alternativeMeasures.errors?.['required']">This field is required</div>
       </div>
       <mat-hint class="subtext">
         Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,

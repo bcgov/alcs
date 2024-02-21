@@ -111,18 +111,18 @@
     </div>
   </div>
 
+  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.soilFillTypeToPlace }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilFillTypeToPlace"></app-no-data>
+  </div>
+
   <div class="subheading2 grid-1">
     What alternative measures have you considered or attempted before proposing to place fill?
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.soilAlternativeMeasures }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilAlternativeMeasures"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.soilFillTypeToPlace }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
@@ -149,10 +149,10 @@
 
   <div class="subheading2 grid-1">Reclamation Plan</div>
   <div class="grid-double multiple-documents">
-    <a *ngFor="let file of crossSections" (click)="openFile(file.uuid)">
+    <a *ngFor="let file of reclamationPlans" (click)="openFile(file.uuid)">
       {{ file.fileName }}
     </a>
-    <app-no-data [showRequired]="showErrors" *ngIf="crossSections.length === 0"></app-no-data>
+    <app-no-data [showRequired]="showErrors" *ngIf="reclamationPlans.length === 0"></app-no-data>
   </div>
 
   <div *ngIf="showEdit" class="edit-button">

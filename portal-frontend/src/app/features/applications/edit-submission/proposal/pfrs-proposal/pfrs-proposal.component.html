@@ -84,7 +84,7 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
@@ -155,6 +155,7 @@
         *ngIf="!isMobile"
         tableHeader="Soil to be Removed"
         tableHeader2="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="removalTableData"
         [(data2)]="fillTableData"
         (dataChange)="markDirty()"
@@ -163,12 +164,14 @@
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Soil to be Removed"
+        [touchAll]="showErrors"
         [(data)]="removalTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Fill to be Placed"
+        [touchAll]="showErrors"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -182,6 +185,7 @@
         *ngIf="!isMobile"
         tableHeader="Soil already Removed"
         tableHeader2="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="alreadyRemovedTableData"
         [(data2)]="alreadyFilledTableData"
         (dataChange)="markDirty()"
@@ -190,12 +194,14 @@
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Soil already Removed"
+        [touchAll]="showErrors"
         [(data)]="alreadyRemovedTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
       <app-soil-table
         *ngIf="isMobile"
         tableHeader="Fill already Placed"
+        [touchAll]="showErrors"
         [(data)]="alreadyFilledTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
@@ -397,6 +403,13 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
       </div>
+      <div
+        *ngIf="isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="isExtractionOrMining.errors?.['required']">This field is required</div>
+      </div>
     </div>
 
     <div class="full-row">
@@ -428,6 +441,13 @@
             >No
           </mat-button-toggle>
         </mat-button-toggle-group>
+      </div>
+      <div
+        *ngIf="hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hasSubmittedNotice.errors?.['required']">This field is required</div>
       </div>
     </div>
 

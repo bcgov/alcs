@@ -39,7 +39,10 @@ export class ApplicationModificationController {
       uuid,
       updateDto,
     );
-    return this.modificationService.mapToDtos([updatedModification]);
+    const mapped = await this.modificationService.mapToDtos([
+      updatedModification,
+    ]);
+    return mapped[0];
   }
 
   @Post()
@@ -52,7 +55,8 @@ export class ApplicationModificationController {
       createDto,
       board,
     );
-    return this.modificationService.mapToDtos([modification]);
+    const mapped = await this.modificationService.mapToDtos([modification]);
+    return mapped[0];
   }
 
   @Delete('/:uuid')

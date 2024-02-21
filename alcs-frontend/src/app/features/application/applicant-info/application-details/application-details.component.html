@@ -1,5 +1,5 @@
 <section>
-  <app-parcel *ngIf="files && submission" [files]="files" [application]="submission"></app-parcel>
+  <app-parcel *ngIf="submission" [application]="submission"></app-parcel>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(0)" mat-flat-button color="accent">

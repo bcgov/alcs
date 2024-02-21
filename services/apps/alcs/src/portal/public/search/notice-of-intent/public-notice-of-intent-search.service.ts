@@ -70,6 +70,10 @@ export class PublicNoticeOfIntentSearchService {
 
   private compileGroupBySearchQuery(query) {
     query = query
+      // FIXME: This is a quick fix for the search performance issues. It temporarily allows
+      //        submissions with deleted NOI types to be shown. For now, there are no
+      //        deleted application types, so this should be fine, but should be fixed soon.
+      .withDeleted()
       .innerJoinAndMapOne(
         'noiSearch.noticeOfIntentType',
         'noiSearch.noticeOfIntentType',
@@ -187,7 +191,7 @@ export class PublicNoticeOfIntentSearchService {
     query = query.leftJoin(
       NoticeOfIntentDecision,
       'decision',
-      'decision.notice_of_intent_uuid = "noiSearch"."notice_of_intent_uuid"',
+      'decision.notice_of_intent_uuid = "noiSearch"."notice_of_intent_uuid" AND decision.is_draft = FALSE',
     );
     return query;
   }
@@ -206,9 +210,12 @@ export class PublicNoticeOfIntentSearchService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
+      query = query.andWhere(
+        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
+        {
+          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+        },
+      );
     }
     return query;
   }

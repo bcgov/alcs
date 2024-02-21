@@ -19,6 +19,7 @@ export class SoilTableComponent implements OnInit, OnChanges {
   @Input() tableHeader2?: string | undefined;
   @Input() data2?: SoilTableData;
   @Input() disabled = false;
+  @Input() touchAll = false;
 
   @Output() dataChange = new EventEmitter<SoilTableData>();
   @Output() data2Change = new EventEmitter<SoilTableData>();
@@ -77,6 +78,10 @@ export class SoilTableComponent implements OnInit, OnChanges {
         averageDepth: this.averageDepth2.value !== null ? parseFloat(this.averageDepth2.value) : undefined,
       });
     });
+
+    if (this.touchAll) {
+      this.form.markAllAsTouched();
+    }
 
     this.idSuffix = '-' + this.tableHeader.replace(/\s/g, '-').toLowerCase();
     this.idSuffix2 = '-' + this.tableHeader2?.replace(/\s/g, '-').toLowerCase();

@@ -22,7 +22,7 @@ def process_alcs_notice_of_intent_decision_date(
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "noi/sql/notice_of_intent_base/notice_of_intent_base.count.sql",
+            "noi/sql/notice_of_intent_base/notice_of_intent_decision_date/notice_of_intent_decision_date_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:

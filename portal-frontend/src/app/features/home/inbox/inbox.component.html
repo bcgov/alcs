@@ -76,7 +76,7 @@
         <div>
           <mat-label for="status">Status</mat-label>
           <mat-form-field appearance="outline">
-            <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
+            <mat-select [multiple]="true" id="status" [formControl]="portalStatusControl">
               <mat-option *ngFor="let status of allStatuses" [value]="status.code">
                 {{ status.label }}
               </mat-option>
@@ -123,7 +123,7 @@
         ></app-inbox-table>
       </mat-tab>
 
-      <mat-tab label="nois">
+      <mat-tab label="notices-of-intent">
         <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
         <app-inbox-list
           *ngIf="isMobile"

@@ -18,6 +18,7 @@ from .notice_of_intent_submissions import (
     process_alcs_notice_of_intent_decision_released_status,
     process_alcs_notice_of_intent_cancelled_status,
     update_alcs_notice_of_intent_soil_fill_fields,
+    process_notice_of_intent_applicant_on_submissions
 )
 from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date import (
     process_alcs_notice_of_intent_decision_date,
@@ -28,6 +29,9 @@ from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_tabl
 from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_rx_all_items import (
     update_notice_of_intent_date_rx_all_items,
 )
+from .oats_to_alcs_notice_of_intent_table_etl.update_notice_of_intent_created_date import update_noi_created_date
+
+from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_update_ack_incomplete import update_notice_of_intent_incomplete_date
 
 from .notice_of_intent_submissions.parcels import (
     init_notice_of_intent_parcels,
@@ -80,7 +84,7 @@ from .noi_decisions.noi_conditions import (
     clean_notice_of_intent_conditions_to_components,
 )
 
-from .set_hide_from_portal_on_noi import set_hide_from_portal_on_notice_of_intent
+from .set_notice_of_intent_visibility import set_notice_of_intent_visibility
 
 
 def init_notice_of_intent(batch_size):
@@ -131,6 +135,8 @@ def process_notice_of_intent(batch_size):
 
     update_notice_of_intent_date_rx_all_items(batch_size)
 
+    update_noi_created_date(batch_size)
+
     process_alcs_notice_of_intent_decision_date(batch_size)
 
     init_notice_of_intent_submissions(batch_size)
@@ -157,6 +163,8 @@ def process_notice_of_intent(batch_size):
 
     process_alcs_notice_of_intent_decision_released_status()
 
+    update_notice_of_intent_incomplete_date(batch_size)
+
     init_notice_of_intent_parcels(batch_size)
 
     process_notice_of_intent_certificate_of_title(batch_size)
@@ -169,11 +177,13 @@ def process_notice_of_intent(batch_size):
 
     link_notice_of_intent_primary_contacts(batch_size)
 
+    # process_notice_of_intent_applicant_on_submissions(batch_size)
+
     process_noi_staff_journal(batch_size)
 
     process_notice_of_intent_decisions(batch_size)
 
-    set_hide_from_portal_on_notice_of_intent()
+    set_notice_of_intent_visibility()
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()

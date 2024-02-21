@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -62,7 +62,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   isSearchExpanded = false;
   pageIndex = 0;
   itemsPerPage = 20;
-  sortDirection = 'DESC';
+  sortDirection: SortDirection = 'desc';
   sortField = 'dateSubmitted';
 
   localGovernmentControl = new FormControl<string | undefined>(undefined);
@@ -111,7 +111,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     private noiStatusService: NoticeOfIntentSubmissionStatusService,
     private applicationService: ApplicationService,
     private toastService: ToastService,
-    private titleService: Title
+    private titleService: Title,
   ) {
     this.titleService.setTitle('ALCS | Search');
   }
@@ -171,7 +171,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.filteredLocalGovernments = this.localGovernmentControl.valueChanges.pipe(
       startWith(''),
-      map((value) => this.filterLocalGovernment(value || ''))
+      map((value) => this.filterLocalGovernment(value || '')),
     );
   }
 
@@ -183,10 +183,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   async onSubmit() {
     this.pageIndex = 0;
     const searchParams = this.getSearchParams();
+    this.searchResultsHidden = false;
     this.isLoading = true;
     const result = await this.searchService.advancedSearchFetch(searchParams);
 
-    this.searchResultsHidden = false;
     this.isLoading = false;
     this.toastService.showSuccessToast('Results updated');
 
@@ -256,7 +256,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       page: this.pageIndex + 1,
       // sorting
       sortField: this.sortField,
-      sortDirection: this.sortDirection,
+      sortDirection: this.sortDirection.toUpperCase(),
       // search parameters
       fileNumber: this.formatStringSearchParam(this.searchForm.controls.fileNumber.value),
       legacyId: this.formatStringSearchParam(this.searchForm.controls.legacyId.value),
@@ -353,7 +353,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     if (this.localGovernments) {
       const filterValue = value.toLowerCase();
       return this.localGovernments.filter((localGovernment) =>
-        localGovernment.name.toLowerCase().includes(filterValue)
+        localGovernment.name.toLowerCase().includes(filterValue),
       );
     }
     return [];

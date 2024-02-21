@@ -1,17 +1,14 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { create } from 'handlebars';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { User } from '../../user/user.entity';
-import { CovenantTransferee } from '../application-submission/covenant-transferee/covenant-transferee.entity';
-import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
-import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
+import { GenerateNoiSubmissionDocumentService } from '../pdf-generation/generate-noi-submission-document.service';
 import { NoticeOfIntentSubmissionDraftService } from './notice-of-intent-submission-draft.service';
 
 describe('NoticeOfIntentSubmissionDraftService', () => {
@@ -20,7 +17,7 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
   let mockNoiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
   let mockParcelService: DeepMocked<NoticeOfIntentParcelService>;
   let mockAppOwnerService: DeepMocked<NoticeOfIntentOwnerService>;
-  let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
+  let mockGenerateSubmissionDocumentService: DeepMocked<GenerateNoiSubmissionDocumentService>;
   let mockNoiSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
 
   let mockUser;
@@ -57,7 +54,7 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
           useValue: mockAppOwnerService,
         },
         {
-          provide: GenerateSubmissionDocumentService,
+          provide: GenerateNoiSubmissionDocumentService,
           useValue: mockGenerateSubmissionDocumentService,
         },
         {

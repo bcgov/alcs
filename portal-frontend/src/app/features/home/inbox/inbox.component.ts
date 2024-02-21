@@ -17,7 +17,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { FileTypeFilterDropDownComponent } from '../../public/search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from '../../public/search/search.interface';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface InboxResultDto extends BaseInboxResultDto {
   statusType: ApplicationStatusDto;
@@ -28,6 +28,12 @@ const CLASS_TO_URL_MAP: Record<string, string> = {
   APP: 'application',
   NOI: 'notice-of-intent',
   NOTI: 'notification',
+};
+
+const TAB_ORDER: Record<string, number> = {
+  applications: 0,
+  'notices-of-intent': 1,
+  notifications: 2,
 };
 
 @Component({
@@ -112,7 +118,7 @@ export class InboxComponent implements OnInit, OnDestroy {
         this.pageIndex = 0;
       }
       this.populateTable();
-      this.tabIndex = this.tabIndexFromName(this.currentTabName);
+      this.tabIndex = TAB_ORDER[this.currentTabName];
     }
 
     this.isMobile = isMobile;
@@ -123,7 +129,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private titleService: Title,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.titleService.setTitle('ALC Portal | Inbox');
   }
@@ -133,6 +140,14 @@ export class InboxComponent implements OnInit, OnDestroy {
     if (this.isMobile) {
       this.itemsPerPage = 5;
     }
+
+    this.route.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
+      const selectedTab = paramMap.get('submissionType');
+      if (selectedTab) {
+        this.currentTabName = selectedTab;
+        this.tabIndex = TAB_ORDER[this.currentTabName];
+      }
+    });
 
     this.setup();
 
@@ -150,34 +165,9 @@ export class InboxComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['currentTabName']) {
-      this.currentTabName = changes['currentTabName'].currentValue;
-      this.tabIndex = this.tabIndexFromName(this.currentTabName);
-    }
-  }
-
-  tabIndexFromName(tabName: string) {
-    // Default to 'application' tab
-    if (!this.tabGroup) {
-      return 0;
-    }
-
-    return this.tabGroup._tabs
-      .map((a) => a.textLabel)
-      .reduce((iPrev, b, i) => {
-        if (b == tabName) {
-          return i;
-        }
-        return iPrev;
-      }, 0);
-  }
-
   private async setup() {
     await this.loadStatuses();
     await this.populateTable();
-
-    this.tabIndex = this.tabIndexFromName(this.currentTabName);
   }
 
   ngOnDestroy(): void {
@@ -215,8 +205,10 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   async onClear() {
     this.searchForm.reset();
+    this.pageIndex = 0;
+    this.itemsPerPage = 10;
     await this.populateTable();
-    this.tabIndex = this.tabIndexFromName(this.currentTabName);
+    this.tabIndex = TAB_ORDER[this.currentTabName];
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();
     }

@@ -11,7 +11,7 @@ import { ApplicationSubmissionDto } from '../../../../services/application-submi
 import { CodeService } from '../../../../services/code/code.service';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { CustomStepperComponent } from '../../../../shared/custom-stepper/custom-stepper.component';
-import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationFngSteps } from '../review-submission.component';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -71,7 +71,9 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
       this.resolutionDocument = documents.filter(
         (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
       );
-      this.otherAttachments = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
+      this.otherAttachments = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+      );
     });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {

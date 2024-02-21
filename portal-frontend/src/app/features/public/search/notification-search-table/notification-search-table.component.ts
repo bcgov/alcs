@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
+import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
 import { NotificationSearchResultDto } from '../../../../services/search/search.dto';
 import { SearchResult, TableChange } from '../search.interface';
@@ -13,12 +13,7 @@ import { SearchResult, TableChange } from '../search.interface';
   templateUrl: './notification-search-table.component.html',
   styleUrls: ['./notification-search-table.component.scss'],
 })
-export class NotificationSearchTableComponent implements OnDestroy {
-  $destroy = new Subject<void>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort?: MatSort;
-
+export class NotificationSearchTableComponent {
   _notifications: NotificationSearchResultDto[] = [];
 
   @Input() statuses: ApplicationStatusDto[] = [];
@@ -28,11 +23,7 @@ export class NotificationSearchTableComponent implements OnDestroy {
     this.dataSource = new MatTableDataSource<SearchResult>(this.mapNotifications(notifications));
   }
 
-  _totalCount = 0;
-  @Input() set totalCount(count: number) {
-    this._totalCount = count;
-    this.initSorting();
-  }
+  @Input() totalCount: number | undefined;
   @Input() pageIndex: number = 0;
   @Output() tableChange = new EventEmitter<TableChange>();
 
@@ -40,19 +31,14 @@ export class NotificationSearchTableComponent implements OnDestroy {
   dataSource = new MatTableDataSource<SearchResult>();
   itemsPerPage = 20;
   total = 0;
-  sortDirection = 'DESC';
+  sortDirection: SortDirection = 'desc';
   sortField = 'lastUpdate';
-
-  private subscribedToSort = false;
+  isLoading = false;
 
   constructor(private router: Router) {}
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
-  }
-
-  async onTableChange() {
+  onTableChange() {
+    this.isLoading = true;
     this.tableChange.emit({
       pageIndex: this.pageIndex,
       itemsPerPage: this.itemsPerPage,
@@ -62,11 +48,17 @@ export class NotificationSearchTableComponent implements OnDestroy {
     });
   }
 
-  async onPageChange($event: PageEvent) {
+  onPageChange($event: PageEvent) {
     this.pageIndex = $event.pageIndex;
     this.itemsPerPage = $event.pageSize;
 
-    await this.onTableChange();
+    this.onTableChange();
+  }
+
+  onSortChange(sortChange: Sort) {
+    this.pageIndex = 0;
+    this.sortDirection = sortChange.direction;
+    this.sortField = sortChange.active;
   }
 
   async onSelectRecord(record: SearchResult) {
@@ -81,27 +73,6 @@ export class NotificationSearchTableComponent implements OnDestroy {
         ...e,
         status,
       };
-    });
-  }
-
-  private initSorting() {
-    if (this._totalCount <= 0) {
-      this.subscribedToSort = false;
-    }
-
-    // push subscription to next render cycle, after the table is rendered
-    setTimeout(() => {
-      if (this.sort && !this.subscribedToSort) {
-        this.subscribedToSort = true;
-        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-          this.paginator.pageIndex = 0;
-          this.pageIndex = 0;
-          this.sortDirection = sortObj.direction.toUpperCase();
-          this.sortField = sortObj.active;
-
-          await this.onTableChange();
-        });
-      }
     });
   }
 }

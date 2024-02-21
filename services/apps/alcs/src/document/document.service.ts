@@ -148,6 +148,7 @@ export class DocumentService {
       ResponseContentDisposition: `${
         openInline ? 'inline' : 'attachment'
       }; filename="${document.fileName}"`,
+      ResponseContentType: document.mimeType,
     });
     return getSignedUrl(this.dataStore, command, {
       expiresIn: this.documentTimeout,

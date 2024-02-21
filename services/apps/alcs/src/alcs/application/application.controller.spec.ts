@@ -24,6 +24,7 @@ import { CardService } from '../card/card.service';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { MessageService } from '../message/message.service';
 import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from './application-submission-status/submission-status.entity';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
@@ -395,7 +396,7 @@ describe('ApplicationController', () => {
     expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through for cancel', async () => {
+  it('should call through and send an email for cancel', async () => {
     const primaryContactOwnerUuid = 'primary-contact';
     const localGovernmentUuid = 'local-government';
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
@@ -404,6 +405,9 @@ describe('ApplicationController', () => {
       owners: [mockOwner],
       primaryContactOwnerUuid,
       localGovernmentUuid,
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.RECEIVED_BY_ALC,
+      }),
     });
 
     statusEmailService.getApplicationEmailData.mockResolvedValue({
@@ -427,6 +431,34 @@ describe('ApplicationController', () => {
       primaryContact: mockOwner,
       ccGovernment: true,
     });
+  });
+
+  it('should call through and not send an email for cancel when app is in progress', async () => {
+    const primaryContactOwnerUuid = 'primary-contact';
+    const localGovernmentUuid = 'local-government';
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+      }),
+    });
+
+    statusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+    statusEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    applicationService.cancel.mockResolvedValue();
+
+    await controller.cancel(mockApplicationEntity.uuid);
+
+    expect(applicationService.cancel).toBeCalledTimes(1);
+    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
   });
 
   it('should call through for uncancel', async () => {

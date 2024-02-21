@@ -45,32 +45,31 @@ export class PlanningReviewService {
   };
 
   async create(data: CreatePlanningReviewDto, board: Board) {
-    const existingMeeting = await this.repository.findOne({
+    const existingReview = await this.repository.findOne({
       where: {
         fileNumber: data.fileNumber,
       },
     });
-    if (existingMeeting) {
+    if (existingReview) {
       throw new ServiceValidationException(
         `Planning meeting already exists with File ID ${data.fileNumber}`,
       );
     }
 
-    const planingMeeting = new PlanningReview({
+    const planningReview = new PlanningReview({
       type: data.type,
       localGovernmentUuid: data.localGovernmentUuid,
       fileNumber: data.fileNumber,
       regionCode: data.regionCode,
     });
 
-    planingMeeting.card = await this.cardService.create(
+    planningReview.card = await this.cardService.create(
       CARD_TYPE.PLAN,
       board,
       false,
     );
-    const savedMeeting = await this.repository.save(planingMeeting);
-
-    return this.getOrFail(savedMeeting.uuid);
+    const savedReview = await this.repository.save(planningReview);
+    return this.getOrFail(savedReview.uuid);
   }
 
   async getOrFail(uuid: string) {

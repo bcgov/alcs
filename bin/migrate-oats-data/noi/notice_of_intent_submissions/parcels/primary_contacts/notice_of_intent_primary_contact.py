@@ -111,7 +111,7 @@ def _map_data(row):
     return {
         "first_name": _get_name(row),
         "last_name": row["last_name"],
-        "organization_name": row["organization_name"],
+        "organization_name": _get_organization_name(row),
         "notice_of_intent_submission_uuid": row["notice_of_intent_submission_uuid"],
         "email": row["email_address"],
         "phone_number": row.get("phone_number", "cell_phone_number"),
@@ -121,10 +121,23 @@ def _map_data(row):
     }
 
 
+def _get_organization_name(row):
+    organization_name = (row.get("organization_name") or "").strip()
+    alias_name = (row.get("alias_name") or "").strip()
+
+    if not organization_name and not alias_name:
+        return None
+
+    return f"{organization_name} {alias_name}".strip()
+
+
 def _get_name(row):
     first_name = row.get("first_name", "")
     middle_name = row.get("middle_name", "")
-    return f"{first_name} {middle_name}".strip()
+    name = f"{first_name} {middle_name}".strip()
+    if name == "None":
+        return None
+    return name
 
 
 @inject_conn_pool
