@@ -43,6 +43,23 @@ Where [action] is one of the following:
 
 If you want to see a detailed description of the available arguments and options, run the script with the -h or --help flag.
 
+### Post launch ETL
+
+Pre-launch ETL command has been changed to:
+
+`python migrate_initial.py [action]`
+
+Post-launch ETL command now takes over migrate.py and is used as before
+
+Commands for post-launch are stored in:
+
+`menu/post_launch_commands`
+
+ETLs created post launch are to be located in the post-launch folder of their directory i.e.
+
+`applications/post_launch` or `noi/post-launch`
+
+
 ## Prod data obfuscation
 
 Prerequisites:
