@@ -1,2 +1,2 @@
-from migrate_application import *
-from clean import *
+from .migrate_application import *
+from .clean import *
