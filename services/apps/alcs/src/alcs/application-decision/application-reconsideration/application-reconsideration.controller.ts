@@ -41,7 +41,8 @@ export class ApplicationReconsiderationController {
       board,
     );
 
-    return this.reconsiderationService.mapToDtos([createdRecon]);
+    const mapped = await this.reconsiderationService.mapToDtos([createdRecon]);
+    return mapped[0];
   }
 
   @Patch('/:uuid')
@@ -55,7 +56,8 @@ export class ApplicationReconsiderationController {
       reconsideration,
     );
 
-    return this.reconsiderationService.mapToDtos([updatedRecon]);
+    const mapped = await this.reconsiderationService.mapToDtos([updatedRecon]);
+    return mapped[0];
   }
 
   @Delete('/:uuid')

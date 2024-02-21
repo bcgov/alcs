@@ -11,12 +11,16 @@ import { CreatePlanningReviewDto, PlanningReviewDto } from './planning-review.dt
 export class PlanningReviewService {
   private url = `${environment.apiUrl}/planning-review`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async create(meeting: CreatePlanningReviewDto) {
     try {
-      await firstValueFrom(this.http.post<PlanningReviewDto>(`${this.url}`, meeting));
+      const res = await firstValueFrom(this.http.post<PlanningReviewDto>(`${this.url}`, meeting));
       this.toastService.showSuccessToast('Planning meeting card created');
+      return res;
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to create planning review');
