@@ -22,8 +22,6 @@ export interface AssignedToMeFile {
 export class AssignedTableComponent {
   @Input() assignedFiles: AssignedToMeFile[] = [];
 
-  // displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage'];
-
   constructor(private router: Router) {}
 
   async onSelectCard(card: CardDto) {
