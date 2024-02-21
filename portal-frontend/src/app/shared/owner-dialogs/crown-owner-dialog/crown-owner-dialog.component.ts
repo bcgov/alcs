@@ -95,6 +95,7 @@ export class CrownOwnerDialogComponent {
   async onDelete() {
     this.confDialogService
       .openDialog({
+        title: 'Delete Owner',
         body: `This action will remove ${this.firstName.value} ${this.lastName.value} and its usage from the entire application. Are you sure you want to remove this owner? `,
       })
       .subscribe(async (didConfirm) => {

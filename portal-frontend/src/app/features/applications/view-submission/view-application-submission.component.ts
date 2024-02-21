@@ -63,6 +63,7 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
 
   onCancel(fileId: string) {
     const dialog = this.confirmationDialogService.openDialog({
+      title: 'Cancel Application',
       body: 'Are you sure you want to cancel the application? A cancelled application cannot be edited or submitted to the ALC. This cannot be undone.',
       confirmAction: 'Confirm',
       cancelAction: 'Return',
