@@ -154,6 +154,7 @@
         <mat-form-field appearance="outline">
           <input
             id="fillProjectDuration"
+            maxlength="500"
             matInput
             [formControl]="fillProjectDuration"
             placeholder="Type project duration"
@@ -165,6 +166,7 @@
         >
           <mat-icon>warning</mat-icon>
           <div *ngIf="fillProjectDuration.errors?.['required']">This field is required</div>
+          <div class="subtext">Characters left: {{ 500 - (fillProjectDuration.value || '').length }}</div>
         </div>
         <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
       </div>
@@ -174,6 +176,7 @@
         <mat-form-field appearance="outline">
           <input
             id="soilProjectDuration"
+            maxlength="500"
             matInput
             [formControl]="soilProjectDuration"
             placeholder="Type project duration"
@@ -185,6 +188,7 @@
         >
           <mat-icon>warning</mat-icon>
           <div *ngIf="soilProjectDuration.errors?.['required']">This field is required</div>
+          <div class="subtext">Characters left: {{ 500 - (soilProjectDuration.value || '').length }}</div>
         </div>
         <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
       </div>
