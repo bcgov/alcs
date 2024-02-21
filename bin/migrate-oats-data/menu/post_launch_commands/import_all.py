@@ -8,8 +8,6 @@ def import_all(console, args):
     console.log("Beginning OATS -> ALCS import process")
 
     with console.status("[bold green]Import OATS into ALCS...\n") as status:
-        console.log("Init applications:")
-        # this will be enabled once application import is ready
 
         if args and args.batch_size:
             import_batch_size = args.batch_size
