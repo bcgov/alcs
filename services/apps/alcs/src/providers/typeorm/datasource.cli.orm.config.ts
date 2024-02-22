@@ -8,7 +8,7 @@ import { ALCS_DATABASE_SCHEMA } from './orm.config';
 export const connectionSource = new DataSource({
   migrationsTableName: config.get<string>('DATABASE.MIGRATION_TABLE'),
   type: 'postgres',
-  host: config.get<string>('DATABASE.HOST'),
+  host: config.get<string>('DATABASE.MASTER_HOST'),
   port: config.get<number>('DATABASE.PORT'),
   username: config.get<string>('DATABASE.USER'),
   password: config.get<string>('DATABASE.PASSWORD'),

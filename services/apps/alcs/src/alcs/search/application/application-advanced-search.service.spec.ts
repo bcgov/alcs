@@ -1,7 +1,7 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { SearchRequestDto } from '../search.dto';
 import { ApplicationAdvancedSearchService } from './application-advanced-search.service';
@@ -88,7 +88,12 @@ describe('ApplicationAdvancedSearchService', () => {
       mockQuery as any,
     );
 
-    const result = await service.searchApplications(mockSearchRequestDto);
+    const mockQueryRunner = createMock<QueryRunner>();
+
+    const result = await service.searchApplications(
+      mockSearchRequestDto,
+      mockQueryRunner,
+    );
 
     expect(result).toEqual({ data: [], total: 0 });
     expect(
@@ -103,11 +108,17 @@ describe('ApplicationAdvancedSearchService', () => {
       .spyOn(service as any, 'compileApplicationSearchQuery')
       .mockResolvedValue(mockQuery);
 
-    const result = await service.searchApplications(mockSearchRequestDto);
+    const mockQueryRunner = createMock<QueryRunner>();
+
+    const result = await service.searchApplications(
+      mockSearchRequestDto,
+      mockQueryRunner,
+    );
 
     expect(result).toEqual({ data: [], total: 0 });
     expect(compileApplicationSearchQuerySpy).toBeCalledWith(
       mockSearchRequestDto,
+      {},
     );
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);

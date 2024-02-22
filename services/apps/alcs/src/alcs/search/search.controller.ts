@@ -1,8 +1,10 @@
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
+import { DataSource } from 'typeorm';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
@@ -47,6 +49,8 @@ export class SearchController {
     private applicationSearchService: ApplicationAdvancedSearchService,
     private nonApplicationsSearchService: NonApplicationsAdvancedSearchService,
     private notificationSearchService: NotificationAdvancedSearchService,
+    @InjectDataSource()
+    private dataSource: DataSource,
   ) {}
 
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
@@ -112,45 +116,56 @@ export class SearchController {
       searchNotifications,
     } = this.getEntitiesTypeToSearch(searchDto);
 
-    let applicationSearchResult: AdvancedSearchResultDto<
-      ApplicationSubmissionSearchView[]
-    > | null = null;
-    if (searchApplications) {
-      applicationSearchResult =
-        await this.applicationSearchService.searchApplications(searchDto);
-    }
+    const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    let noticeOfIntentSearchService: AdvancedSearchResultDto<
-      NoticeOfIntentSubmissionSearchView[]
-    > | null = null;
-    if (searchNoi) {
-      noticeOfIntentSearchService =
-        await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
-    }
+    try {
+      let applicationSearchResult: AdvancedSearchResultDto<
+        ApplicationSubmissionSearchView[]
+      > | null = null;
+      if (searchApplications) {
+        applicationSearchResult =
+          await this.applicationSearchService.searchApplications(
+            searchDto,
+            queryRunner,
+          );
+      }
 
-    let nonApplications: AdvancedSearchResultDto<
-      NonApplicationSearchView[]
-    > | null = null;
-    if (searchNonApplications) {
-      nonApplications =
-        await this.nonApplicationsSearchService.searchNonApplications(
-          searchDto,
-        );
-    }
+      let noticeOfIntentSearchService: AdvancedSearchResultDto<
+        NoticeOfIntentSubmissionSearchView[]
+      > | null = null;
+      if (searchNoi) {
+        noticeOfIntentSearchService =
+          await this.noticeOfIntentSearchService.searchNoticeOfIntents(
+            searchDto,
+          );
+      }
 
-    let notifications: AdvancedSearchResultDto<
-      NotificationSubmissionSearchView[]
-    > | null = null;
-    if (searchNotifications) {
-      notifications = await this.notificationSearchService.search(searchDto);
-    }
+      let nonApplications: AdvancedSearchResultDto<
+        NonApplicationSearchView[]
+      > | null = null;
+      if (searchNonApplications) {
+        nonApplications =
+          await this.nonApplicationsSearchService.searchNonApplications(
+            searchDto,
+          );
+      }
 
-    return this.mapAdvancedSearchResults(
-      applicationSearchResult,
-      noticeOfIntentSearchService,
-      nonApplications,
-      notifications,
-    );
+      let notifications: AdvancedSearchResultDto<
+        NotificationSubmissionSearchView[]
+      > | null = null;
+      if (searchNotifications) {
+        notifications = await this.notificationSearchService.search(searchDto);
+      }
+
+      return await this.mapAdvancedSearchResults(
+        applicationSearchResult,
+        noticeOfIntentSearchService,
+        nonApplications,
+        notifications,
+      );
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   @Post('/advanced/application')
@@ -158,20 +173,29 @@ export class SearchController {
   async advancedSearchApplications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<ApplicationSearchResultDto[]>> {
-    const applications =
-      await this.applicationSearchService.searchApplications(searchDto);
+    const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
-      applications,
-      null,
-      null,
-      null,
-    );
+    try {
+      const applications =
+        await this.applicationSearchService.searchApplications(
+          searchDto,
+          queryRunner,
+        );
 
-    return {
-      total: mappedSearchResult.totalApplications,
-      data: mappedSearchResult.applications,
-    };
+      const mappedSearchResult = await this.mapAdvancedSearchResults(
+        applications,
+        null,
+        null,
+        null,
+      );
+
+      return {
+        total: mappedSearchResult.totalApplications,
+        data: mappedSearchResult.applications,
+      };
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   @Post('/advanced/notice-of-intent')
