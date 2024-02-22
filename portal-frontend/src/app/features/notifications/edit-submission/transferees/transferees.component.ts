@@ -8,7 +8,7 @@ import { NotificationTransfereeService } from '../../../../services/notification
 import { EditNotificationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 import { TransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
-import { ConfirmationDialogService } from 'src/app/shared/confirmation-dialog/confirmation-dialog.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-transferees',
