@@ -1,7 +1,7 @@
 from common import (
     setup_and_get_logger,
     BATCH_UPLOAD_SIZE,
-    OATS_ETL_POST_LAUNCH_USER,
+    OATS_ETL_USER,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
@@ -114,7 +114,7 @@ def _map_data(row):
         "year": row["amendment_year"],
         "period": row["amendment_period"],
         "oats_component_id": row["alr_appl_component_id"],
-        "audit_created_by": OATS_ETL_POST_LAUNCH_USER,
+        "audit_created_by": OATS_ETL_USER,
     }
 
 
@@ -123,7 +123,7 @@ def clean_boundary_amendments(conn=None):
     logger.info("Start application boundary amendment cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.application_boundary_amendment aba WHERE aba.audit_created_by = '{OATS_ETL_POST_LAUNCH_USER}'"
+            f"DELETE FROM alcs.application_boundary_amendment aba WHERE aba.audit_created_by = '{OATS_ETL_USER}' AND aba.audit_updated_by IS NULL"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
     conn.commit()

@@ -1,7 +1,7 @@
 from common import (
     setup_and_get_logger,
     BATCH_UPLOAD_SIZE,
-    OATS_ETL_POST_LAUNCH_USER,
+    OATS_ETL_USER,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
