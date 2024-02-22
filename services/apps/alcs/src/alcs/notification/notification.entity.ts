@@ -74,6 +74,14 @@ export class Notification extends Base {
   })
   staffObservations?: string | null;
 
+  @AutoMap()
+  @Column({
+    default: 'ALCS',
+    type: 'text',
+    comment: 'Determines where the application came from',
+  })
+  source: 'ALCS' | 'APPLICANT';
+
   @ManyToOne(() => NotificationType, {
     nullable: false,
   })

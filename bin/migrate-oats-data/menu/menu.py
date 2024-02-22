@@ -18,6 +18,10 @@ from .command_parser.user_command_parser import (
     user_clean_command_parser,
 )
 from common import BATCH_UPLOAD_SIZE
+from .command_parser.srw_command_parser import (
+    srw_import_command_parser,
+    srw_clean_command_parser,
+)
 
 import_batch_size = BATCH_UPLOAD_SIZE
 
@@ -52,6 +56,8 @@ def setup_menu_args_parser(import_batch_size):
     _import_command_parser(subparsers)
     user_import_command_parser(import_batch_size, subparsers)
     user_clean_command_parser(subparsers)
+    srw_import_command_parser(import_batch_size, subparsers)
+    srw_clean_command_parser(subparsers)
     subparsers.add_parser("clean", help="Clean all imported data")
 
     subparsers.add_parser("obfuscate", help="Obfuscate PROD data")
