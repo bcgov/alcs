@@ -137,4 +137,13 @@ export class BoundaryAmendmentComponent implements OnInit, OnDestroy {
       await this.loadAmendments();
     }
   }
+
+  async onSaveAlrArea(uuid: string, $event: string | null) {
+    if ($event) {
+      await this.boundaryAmendmentService.update(uuid, {
+        area: parseFloat($event),
+      });
+      await this.loadAmendments();
+    }
+  }
 }

@@ -26,7 +26,11 @@
       </div>
       <div>
         <div class="subheading2">Area Included or Excluded (ha)</div>
-        {{ amendment.area }}
+        <app-inline-number
+          [value]="amendment.area.toString()"
+          (save)="onSaveAlrArea(amendment.uuid, $event)"
+          [decimals]="5"
+        ></app-inline-number>
       </div>
       <div>
         <div class="subheading2">ALR Boundary Amendment Year</div>
