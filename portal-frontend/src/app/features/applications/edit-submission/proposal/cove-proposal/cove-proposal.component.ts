@@ -17,7 +17,7 @@ import { parseStringToBoolean } from '../../../../../shared/utils/string-helper'
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { CovenantTransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
-import { ConfirmationDialogService } from 'src/app/shared/confirmation-dialog/confirmation-dialog.service';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-cove-proposal',
