@@ -10,11 +10,6 @@ export const getTypeOrmModuleOptions = (
 ): TypeOrmModuleOptions => {
   return {
     type: 'postgres',
-    host: config.get<string>('DATABASE.HOST'),
-    port: config.get<number>('DATABASE.PORT'),
-    username: config.get<string>('DATABASE.USER'),
-    password: config.get<string>('DATABASE.PASSWORD'),
-    database: config.get<string>('DATABASE.NAME'),
     schema: ALCS_DATABASE_SCHEMA,
     entities: [join(__dirname, '**', '*.{ts,js}')],
     synchronize: false,
@@ -22,6 +17,25 @@ export const getTypeOrmModuleOptions = (
     namingStrategy: new SnakeNamingStrategy(),
     uuidExtension: 'pgcrypto',
     applicationName: 'alcs',
+    replication: {
+      defaultMode: 'master',
+      master: {
+        host: config.get<string>('DATABASE.MASTER_HOST'),
+        port: config.get<number>('DATABASE.PORT'),
+        username: config.get<string>('DATABASE.USER'),
+        password: config.get<string>('DATABASE.PASSWORD'),
+        database: config.get<string>('DATABASE.NAME'),
+      },
+      slaves: [
+        {
+          host: config.get<string>('DATABASE.SLAVE_HOST'),
+          port: config.get<number>('DATABASE.PORT'),
+          username: config.get<string>('DATABASE.USER'),
+          password: config.get<string>('DATABASE.PASSWORD'),
+          database: config.get<string>('DATABASE.NAME'),
+        },
+      ],
+    },
   };
 };
 

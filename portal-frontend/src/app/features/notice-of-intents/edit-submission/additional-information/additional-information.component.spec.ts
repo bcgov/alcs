@@ -7,15 +7,17 @@ import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { AdditionalInformationComponent } from './additional-information.component';
 
-describe('RosoAdditionalInformationComponent', () => {
+describe('AdditionalInformationComponent', () => {
   let component: AdditionalInformationComponent;
   let fixture: ComponentFixture<AdditionalInformationComponent>;
   let mockNoticeOfIntentSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
   let mockNoticeOfIntentDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
+  let mockDialogService: DeepMocked<ConfirmationDialogService>;
 
   beforeEach(async () => {
     mockNoticeOfIntentSubmissionService = createMock();
@@ -29,6 +31,10 @@ describe('RosoAdditionalInformationComponent', () => {
           useValue: mockNoticeOfIntentSubmissionService,
         },
         { provide: NoticeOfIntentDocumentService, useValue: mockNoticeOfIntentDocumentService },
+        {
+          provide: ConfirmationDialogService,
+          useValue: mockDialogService,
+        },
         {
           provide: ToastService,
           useValue: {},

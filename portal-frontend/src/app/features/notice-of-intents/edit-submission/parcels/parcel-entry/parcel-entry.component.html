@@ -377,8 +377,15 @@
         isConfirmedByApplicant.invalid &&
         (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched)
     }"
-    >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
-    information can cause significant delays to processing time.
+  >
+    <ng-container *ngIf="!isCrownLand">
+      I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
+      information can cause significant delays to processing time.
+    </ng-container>
+    <ng-container *ngIf="isCrownLand">
+      I confirm that I have provided the ministry or department responsible for this Crown land parcel to the best of my
+      ability in order to avoid processing delays.
+    </ng-container>
   </mat-checkbox>
   <div
     *ngIf="

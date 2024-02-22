@@ -132,19 +132,16 @@ def _map_duration_field(data, field_key):
 
 def _map_proposal_background(data):
     background_data = data.get("proposal_background_desc")
-    background_summary = None
+    background_summary = data.get("proposal_summary_desc", "")
     if background_data and len(background_data) > 10:
-        background_summary = (
-            f' {data["proposal_summary_desc"]} . Background: {background_data}'
-        )
+        background_summary = f" {background_summary} . Background: {background_data}"
 
     if data["alr_change_code"] == ALRChangeCode.INC.value:
-        data[
-            "proposal_summary_desc"
-        ] = f"{data.get('proposal_summary_desc','')} {background_summary}"
-        data[
-            "proposal_background_desc"
-        ] = None  # clean excl_why_land field since it is not applicable to Inclusion component
+        data["proposal_summary_desc"] = background_summary
+        # clean excl_why_land field since it is not applicable to Inclusion component
+        data["excl_why_land"] = None
+    if data["alr_change_code"] == ALRChangeCode.EXC.value:
+        data["excl_why_land"] = background_data
     if data["alr_change_code"] in [
         ALRChangeCode.EXT.value,
         ALRChangeCode.FILL.value,

@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { UserDto } from '../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { MaintenanceService } from '../../services/maintenance/maintenance.service';
 
 import { LoginComponent } from './login.component';
 
@@ -11,8 +12,10 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let mockAuthService: DeepMocked<AuthenticationService>;
+  let mockMaintenanceService: DeepMocked<MaintenanceService>;
 
   beforeEach(async () => {
+    mockMaintenanceService = createMock();
     mockAuthService = createMock();
     mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
@@ -22,6 +25,10 @@ describe('LoginComponent', () => {
         {
           provide: AuthenticationService,
           useValue: mockAuthService,
+        },
+        {
+          provide: MaintenanceService,
+          useValue: mockMaintenanceService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

@@ -1,5 +1,11 @@
 @use '../../../../styles/colors';
 
+
+:host {
+  display: block;
+  padding-bottom: 48px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;

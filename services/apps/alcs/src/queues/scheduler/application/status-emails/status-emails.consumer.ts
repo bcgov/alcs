@@ -86,10 +86,8 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
   ) {
     if (
       primaryContact &&
-      [
-        SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
-        SUBMISSION_STATUS.ALC_DECISION,
-      ].includes(<SUBMISSION_STATUS>submissionStatus.statusTypeCode)
+      applicationSubmission.status.statusTypeCode ===
+        submissionStatus.statusTypeCode
     ) {
       const generateStatusHtml =
         submissionStatus.statusTypeCode === SUBMISSION_STATUS.ALC_DECISION

@@ -6,7 +6,12 @@
 
 .button-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 0;
+
+  button {
+    width: 48%;
+  }
 
   @media screen and (min-width: $tabletBreakpoint) {
     & {
@@ -16,9 +21,9 @@
         margin-right: rem(24) !important;
       }
     }
-  }
 
-  button:not(:last-child) {
-    margin-right: rem(9) !important;
+    button {
+      width: unset;
+    }
   }
 }

@@ -137,7 +137,8 @@
                 id="northLandUseTypeDescription"
                 placeholder="Specific Activity"
                 matInput
-                formControlName="northLandUseTypeDescription"
+                maxlength="500"
+                [formControl]="northLandUseTypeDescription"
                 aria-label="North land use type description"
               />
             </mat-form-field>
@@ -151,6 +152,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="northLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - (northLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
       </div>
@@ -179,8 +181,9 @@
               <input
                 id="eastLandUseTypeDescription"
                 placeholder="Specific Activity"
+                [formControl]="eastLandUseTypeDescription"
                 matInput
-                formControlName="eastLandUseTypeDescription"
+                maxlength="500"
                 aria-label="East land use type description"
               />
             </mat-form-field>
@@ -194,6 +197,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="eastLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - (eastLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
       </div>
@@ -222,8 +226,9 @@
               <input
                 id="southLandUseTypeDescription"
                 placeholder="Specific Activity"
+                maxlength="500"
                 matInput
-                formControlName="southLandUseTypeDescription"
+                [formControl]="southLandUseTypeDescription"
                 aria-label="South land use type description"
               />
             </mat-form-field>
@@ -237,6 +242,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="southLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - (southLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
       </div>
@@ -265,8 +271,9 @@
               <input
                 id="westLandUseTypeDescription"
                 placeholder="Specific Activity"
+                maxlength="500"
                 matInput
-                formControlName="westLandUseTypeDescription"
+                [formControl]="westLandUseTypeDescription"
                 aria-label="West land use type description"
               />
             </mat-form-field>
@@ -280,6 +287,7 @@
               <mat-icon>warning</mat-icon>
               <div *ngIf="westLandUseTypeDescription.errors?.['required']">This field is required</div>
             </div>
+            <div class="subtext">Characters left: {{ 500 - (westLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
       </div>

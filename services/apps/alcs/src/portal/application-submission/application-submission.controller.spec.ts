@@ -185,7 +185,7 @@ describe('ApplicationSubmissionController', () => {
     expect(mockAppSubmissionService.getForGovernment).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service when cancelling an application', async () => {
+  it('should call out to service and not send an email when cancelling an in progress application', async () => {
     const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
     const mockApplication = new ApplicationSubmission({
       status: new ApplicationSubmissionToSubmissionStatus({
@@ -229,6 +229,59 @@ describe('ApplicationSubmissionController', () => {
     expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledWith(
       'file-id',
       new User(),
+    );
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(0);
+  });
+
+  it('should call out to service and send an email when cancelling an under review application', async () => {
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockApplication = new ApplicationSubmission({
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.RECEIVED_BY_ALC,
+        submissionUuid: 'fake',
+        effectiveDate: new Date(),
+      }),
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+    });
+    const mockUser = new User({
+      bceidBusinessGuid: 'fake-guid',
+    });
+
+    mockAppSubmissionService.mapToDTOs.mockResolvedValue([
+      {} as ApplicationSubmissionDto,
+    ]);
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      mockApplication,
+    );
+    mockAppSubmissionService.cancel.mockResolvedValue();
+
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplication,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockLgService.getByGuid.mockResolvedValue(new LocalGovernment());
+
+    const application = await controller.cancel('file-id', {
+      user: {
+        entity: mockUser,
+      },
+    });
+
+    expect(application).toBeDefined();
+    expect(mockAppSubmissionService.cancel).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledWith(
+      'file-id',
+      mockUser,
     );
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,

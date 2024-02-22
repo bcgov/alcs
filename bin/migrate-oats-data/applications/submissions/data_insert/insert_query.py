@@ -223,7 +223,7 @@ def get_insert_query_for_inc_exc():
                         """
     unique_values = """, 
                         %(component_area)s,
-                        %(proposal_background_desc)s,
+                        %(excl_why_land)s,
                         %(support_desc)s,
                         %(improvements_desc)s,
                         %(applicationshare_ind)s

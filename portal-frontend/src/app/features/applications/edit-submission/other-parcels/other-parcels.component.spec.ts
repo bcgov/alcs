@@ -6,6 +6,7 @@ import { ApplicationSubmissionDetailedDto } from '../../../../services/applicati
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 
 import { OtherParcelsComponent } from './other-parcels.component';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('OtherParcelsComponent', () => {
   let component: OtherParcelsComponent;
@@ -22,6 +23,10 @@ describe('OtherParcelsComponent', () => {
         {
           provide: ApplicationSubmissionService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: MatDialog,
+          useValue: {},
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

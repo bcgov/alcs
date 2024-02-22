@@ -97,7 +97,6 @@ export class AuthorizationService {
     //Make sure token is legit, the Authguard will only do this on the next request
     const decodedToken = await this.decodeToken(token.id_token);
     if (decodedToken) {
-      this.logger.debug(decodedToken);
       await this.registerOrUpdateUser(decodedToken, isPortal);
 
       return res.data;
@@ -192,7 +191,6 @@ export class AuthorizationService {
         this.mapUserFromTokenToCreateDto(payload),
       );
     } else {
-      this.logger.debug(payload);
       const user = await this.userService.create(
         this.mapUserFromTokenToCreateDto(payload),
       );

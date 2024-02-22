@@ -1,7 +1,7 @@
 <table mat-table [dataSource]="subtasks" class="mat-elevation-z2 assigned-table">
   <ng-container matColumnDef="highPriority">
-    <th class='high-priority-cell' mat-header-cell *matHeaderCellDef></th>
-    <td class='high-priority-cell' mat-cell *matCellDef="let element">
+    <th class="high-priority-cell" mat-header-cell *matHeaderCellDef></th>
+    <td class="high-priority-cell" mat-cell *matCellDef="let element">
       <span class="high-priority" *ngIf="element.card.highPriority">!</span>
     </td>
   </ng-container>
@@ -14,7 +14,7 @@
   </ng-container>
 
   <ng-container matColumnDef="type">
-    <th class='type-cell' mat-header-cell *matHeaderCellDef>Type</th>
+    <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell class="type-cell" *matCellDef="let element">
       <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType">
       </app-application-type-pill>
@@ -43,19 +43,23 @@
       >
       </app-application-type-pill>
       <app-application-type-pill
-      [useShortLabel]="true"
-      *ngIf="element.parentType === 'notification'"
-      [type]="NOTIFICATION_LABEL"
-    >
-    </app-application-type-pill>
-      
+        [useShortLabel]="true"
+        *ngIf="element.parentType === 'notification'"
+        [type]="NOTIFICATION_LABEL"
+      >
+      </app-application-type-pill>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="activeDays">
     <th mat-header-cell *matHeaderCellDef>Active Days</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.activeDays ?? '-' }}
+      <ng-container *ngIf="element.card.type !== CardType.NOI || element.activeDays < maxActiveDays" class="center">
+        {{ element.activeDays ?? '-' }}
+      </ng-container>
+      <ng-container *ngIf="element.card.type === CardType.NOI && element.activeDays >= maxActiveDays" class="center">
+        {{ maxActiveDays }}+
+      </ng-container>
     </td>
   </ng-container>
 
@@ -68,6 +72,7 @@
     <th mat-header-cell *matHeaderCellDef>Assignee</th>
     <td class="assignee-column" mat-cell *matCellDef="let element">
       <ng-select
+        #assigneeSelect
         class="subtask-assignee"
         [items]="users"
         bindLabel="prettyName"
@@ -75,6 +80,8 @@
         [ngModel]="element.assignee?.prettyName"
         [searchFn]="filterAssigneeList"
         (change)="onAssigneeSelected($event, element.uuid)"
+        (clear)="onAssigneeClearOrClose(assigneeSelect)"
+        (close)="onAssigneeClearOrClose(assigneeSelect)"
         appendTo="body"
       >
         <ng-template ng-option-tmp let-item="item" let-search="searchTerm">

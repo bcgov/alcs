@@ -468,12 +468,12 @@
           formControlName="willImportFill"
         >
           <mat-button-toggle
-            value="true"
+            [value]="true"
             [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
             >Yes</mat-button-toggle
           >
           <mat-button-toggle
-            value="false"
+            [value]="false"
             [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
             >No</mat-button-toggle
           >
@@ -538,8 +538,9 @@
           <mat-form-field appearance="outline">
             <input
               id="projectDuration"
+              maxlength="500"
               matInput
-              formControlName="projectDuration"
+              [formControl]="projectDuration"
               placeholder="Type project duration"
             />
           </mat-form-field>
@@ -551,12 +552,13 @@
             <div *ngIf="projectDuration.errors?.['required']">This field is required</div>
           </div>
           <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
+          <div class="subtext">Characters left: {{ 500 - (projectDuration.value || '').length }}</div>
         </div>
       </div>
 
       <app-soil-table
         tableHeader="Fill to be Placed"
-        [disabled]="willImportFill.value !== 'true'"
+        [disabled]="fillTableDisabled"
         [touchAll]="showErrors"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"

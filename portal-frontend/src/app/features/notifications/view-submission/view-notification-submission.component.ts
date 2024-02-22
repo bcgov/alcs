@@ -67,6 +67,7 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
 
   async onCancel(uuid: string) {
     const dialog = this.confirmationDialogService.openDialog({
+      title: 'Cancel Notification',
       body: 'Are you sure you want to cancel the notification? A cancelled notification cannot be edited or submitted to the ALC. This cannot be undone.',
       confirmAction: 'Confirm',
       cancelAction: 'Return',

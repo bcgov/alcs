@@ -61,7 +61,7 @@ export class ParcelOwnersComponent {
   _disabled = false;
   displayedColumns = ['displayName', 'organizationName', 'phone', 'email', 'corporateSummary', 'actions'];
 
-  constructor(private dialog: MatDialog, private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(private dialog: MatDialog) {}
 
   onEdit(owner: ApplicationOwnerDto) {
     let dialog;
@@ -105,7 +105,7 @@ export class ParcelOwnersComponent {
   }
 
   async onOpenFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
+    const res = await this.documentService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }

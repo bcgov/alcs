@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
@@ -59,7 +60,9 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
     private modificationService: ApplicationModificationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private decisionService: ApplicationDecisionService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -89,7 +92,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
           return this.applicationService.searchApplicationsByNumber(val);
         }
         return [];
-      })
+      }),
     );
   }
 
@@ -148,8 +151,14 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
         return;
       }
 
-      await this.modificationService.create(modificationCreateDto);
+      const res = await this.modificationService.create(modificationCreateDto);
       this.dialogRef.close(true);
+      if (res) {
+        await this.router.navigate(this.activatedRoute.snapshot.url, {
+          queryParams: res.card.uuid && res.card.type ? { card: res.card.uuid, type: res.card.type } : {},
+          relativeTo: this.activatedRoute,
+        });
+      }
       this.toastService.showSuccessToast('Modification card created');
     } finally {
       this.isLoading = false;

@@ -124,17 +124,21 @@
   <ng-container *ngIf="_noiSubmission.soilIsAreaWideFilling">
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double">
-      <a *ngFor="let file of crossSections" (click)="openFile(file.uuid)">
-        {{ file.fileName }}
-      </a>
+      <div *ngFor="let file of crossSections">
+        <a (click)="openFile(file.uuid)">
+          {{ file.fileName }}
+        </a>
+      </div>
       <app-no-data [showRequired]="showErrors" *ngIf="crossSections.length === 0"></app-no-data>
     </div>
 
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double">
-      <a *ngFor="let file of reclamationPlans" (click)="openFile(file.uuid)">
-        {{ file.fileName }}
-      </a>
+      <div *ngFor="let file of reclamationPlans">
+        <a (click)="openFile(file.uuid)">
+          {{ file.fileName }}
+        </a>
+      </div>
       <app-no-data [showRequired]="showErrors" *ngIf="reclamationPlans.length === 0"></app-no-data>
     </div>
   </ng-container>

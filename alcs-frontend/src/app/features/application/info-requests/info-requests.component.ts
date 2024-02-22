@@ -9,7 +9,7 @@ import {
 import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { InfoRequestDialogComponent, REASON_TYPE } from './info-rquest-dialog/info-request-dialog.component';
+import { InfoRequestDialogComponent, REASON_TYPE } from './info-request-dialog/info-request-dialog.component';
 
 @Component({
   selector: 'app-app-info-requests',
@@ -27,7 +27,7 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
     private meetingService: ApplicationMeetingService,
     private confirmationDialogService: ConfirmationDialogService,
     private toastService: ToastService,
-    private applicationDetailService: ApplicationDetailService
+    private applicationDetailService: ApplicationDetailService,
   ) {}
 
   ngOnInit(): void {

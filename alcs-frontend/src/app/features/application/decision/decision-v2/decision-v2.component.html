@@ -155,7 +155,12 @@
 
       <h4>Documents</h4>
       <section class="decision-section">
-        <app-decision-documents [editable]="false" [loadData]="false" [decision]="decision"></app-decision-documents>
+        <app-decision-documents
+          [hiddenFromPortal]="application?.hideFromPortal ?? false"
+          [editable]="false"
+          [loadData]="false"
+          [decision]="decision"
+        ></app-decision-documents>
       </section>
 
       <!-- Components -->

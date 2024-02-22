@@ -1,4 +1,4 @@
-<h3 class="flex-item">1. Identify Parcel(s) Under Application</h3>
+<h3 class="flex-item">1. Notice of Intent Parcels</h3>
 <div class="review-table">
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width parcel-header">
@@ -126,7 +126,7 @@
           </div>
           <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Phone</div>
           <div class="grid-double">
-            {{ parcel.owners[0].phoneNumber ?? '' | mask : '(000) 000-0000'  }}
+            {{ parcel.owners[0].phoneNumber ?? '' | mask : '(000) 000-0000' }}
             <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].phoneNumber"></app-no-data>
           </div>
           <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Email</div>
@@ -170,7 +170,7 @@
             <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
             <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
           </div>
-          <div>{{ owner.phoneNumber ?? '' | mask : '(000) 000-0000'  }}</div>
+          <div>{{ owner.phoneNumber ?? '' | mask : '(000) 000-0000' }}</div>
           <div>{{ owner.email }}</div>
           <div *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
             <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
@@ -183,7 +183,11 @@
           <app-no-data [showRequired]="showErrors" *ngIf="parcel.owners.length === 0"></app-no-data>
         </div>
       </div>
-      <div class="subheading2 grid-1">
+      <div *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN" class="subheading2 grid-1">
+        I confirm that I have provided the ministry or department responsible for this Crown land parcel to the best of
+        my ability in order to avoid processing delays
+      </div>
+      <div *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN" class="subheading2 grid-1">
         I confirm that the owner information provided above matches the current Certificate of Title
       </div>
       <div class="grid-double">

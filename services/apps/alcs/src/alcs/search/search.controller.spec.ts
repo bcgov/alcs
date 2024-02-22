@@ -3,6 +3,7 @@ import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { DataSource, QueryRunner } from 'typeorm';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Application } from '../application/application.entity';
 import { Board } from '../board/board.entity';
@@ -26,6 +27,8 @@ describe('SearchController', () => {
   let mockApplicationAdvancedSearchService: DeepMocked<ApplicationAdvancedSearchService>;
   let mockNonApplicationsAdvancedSearchService: DeepMocked<NonApplicationsAdvancedSearchService>;
   let mockNotificationAdvancedSearchService: DeepMocked<NotificationAdvancedSearchService>;
+  let mockDataSource: DeepMocked<DataSource>;
+  let mockQueryRunner: DeepMocked<QueryRunner>;
 
   beforeEach(async () => {
     mockSearchService = createMock();
@@ -33,6 +36,7 @@ describe('SearchController', () => {
     mockApplicationAdvancedSearchService = createMock();
     mockNonApplicationsAdvancedSearchService = createMock();
     mockNotificationAdvancedSearchService = createMock();
+    mockDataSource = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -62,6 +66,10 @@ describe('SearchController', () => {
           useValue: mockNotificationAdvancedSearchService,
         },
         {
+          provide: DataSource,
+          useValue: mockDataSource,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -71,6 +79,10 @@ describe('SearchController', () => {
     }).compile();
 
     controller = module.get<SearchController>(SearchController);
+
+    mockQueryRunner = createMock<QueryRunner>();
+    mockQueryRunner.release.mockResolvedValue();
+    mockDataSource.createQueryRunner.mockReturnValue(mockQueryRunner);
 
     mockSearchService.getApplication.mockResolvedValue(new Application());
     mockSearchService.getNoi.mockResolvedValue(new NoticeOfIntent());
@@ -160,7 +172,7 @@ describe('SearchController', () => {
     ).toBeCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto);
+    ).toBeCalledWith(mockSearchRequestDto, {});
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
@@ -196,14 +208,16 @@ describe('SearchController', () => {
       mockSearchRequestDto as SearchRequestDto,
     );
 
+    expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
     ).toBeCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto);
+    ).toBeCalledWith(mockSearchRequestDto, {});
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
+    expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
   });
 
   it('should call NOI advanced search to retrieve NOIs', async () => {
@@ -264,14 +278,16 @@ describe('SearchController', () => {
       mockSearchRequestDto as SearchRequestDto,
     );
 
+    expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
     ).toBeCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto);
+    ).toBeCalledWith(mockSearchRequestDto, {});
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
+    expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
   });
 
   it('should call advanced search to retrieve NOIs only when NOI file type selected', async () => {
@@ -339,7 +355,7 @@ describe('SearchController', () => {
     ).toBeCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith({ ...baseMockSearchRequestDto, legacyId: 'test' });
+    ).toBeCalledWith({ ...baseMockSearchRequestDto, legacyId: 'test' }, {});
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 

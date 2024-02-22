@@ -120,6 +120,7 @@ export class ApplicationSubmissionDraftService {
           lastName: owner.lastName ?? undefined,
           typeCode: owner.type.code ?? undefined,
           corporateSummaryUuid: owner.corporateSummaryUuid ?? undefined,
+          crownLandOwnerType: owner.crownLandOwnerType ?? undefined,
           email: owner.email ?? undefined,
           phoneNumber: owner.phoneNumber ?? undefined,
           organizationName: owner.organizationName ?? undefined,

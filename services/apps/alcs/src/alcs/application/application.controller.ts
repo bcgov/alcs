@@ -138,7 +138,11 @@ export class ApplicationController {
     const { applicationSubmission, primaryContact, submissionGovernment } =
       await this.statusEmailService.getApplicationEmailData(fileNumber);
 
-    if (primaryContact) {
+    if (
+      primaryContact &&
+      applicationSubmission.status.statusTypeCode !==
+        SUBMISSION_STATUS.IN_PROGRESS
+    ) {
       await this.statusEmailService.sendApplicationStatusEmail({
         generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,

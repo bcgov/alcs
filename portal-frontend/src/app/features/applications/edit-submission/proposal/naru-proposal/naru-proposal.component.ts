@@ -15,11 +15,11 @@ import { CodeService } from '../../../../../services/code/code.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
-import { formatBooleanToYesNoString } from '../../../../../shared/utils/boolean-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-naru-proposal',
@@ -41,7 +41,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   existingStructures = new FormControl<string | null>(null, [Validators.required]);
   sleepingUnits = new FormControl<string | null>(null, [Validators.required]);
   agriTourism = new FormControl<string | null>(null, [Validators.required]);
-  willImportFill = new FormControl<string | null>(null, [Validators.required]);
+  willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   fillType = new FormControl<string | null>(
     {
       disabled: true,
@@ -66,6 +66,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   proposalMap: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
+  fillTableDisabled = true;
 
   form = new FormGroup({
     subtype: this.subtype,
@@ -92,6 +93,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     private codeService: CodeService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
+    private confirmationDialogService: ConfirmationDialogService,
     toastService: ToastService
   ) {
     super(applicationDocumentService, dialog, toastService);
@@ -107,7 +109,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         this.form.patchValue({
           subtype: applicationSubmission.naruSubtype?.code,
           existingStructures: applicationSubmission.naruExistingStructures,
-          willImportFill: formatBooleanToYesNoString(applicationSubmission.naruWillImportFill),
+          willImportFill: applicationSubmission.naruWillImportFill,
           fillType: applicationSubmission.naruFillType,
           fillOrigin: applicationSubmission.naruFillOrigin,
           floorArea: applicationSubmission.naruFloorArea ? applicationSubmission.naruFloorArea.toString() : null,
@@ -124,10 +126,9 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         this.previousSubtype = applicationSubmission.naruSubtype?.code ?? null;
 
         if (applicationSubmission.naruWillImportFill !== null) {
-          const willImportFill = applicationSubmission.naruWillImportFill ? 'true' : 'false';
-          this.onChangeFill(willImportFill);
+          this.onChangeFill(applicationSubmission.naruWillImportFill);
           this.form.patchValue({
-            willImportFill,
+            willImportFill: applicationSubmission.naruWillImportFill,
           });
         }
 
@@ -175,8 +176,35 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  onChangeFill(value: string) {
-    if (value === 'true') {
+  onChangeFill(willImportFill: boolean) {
+    const hasValues =
+      this.projectDuration.value ||
+      this.fillOrigin.value ||
+      this.fillType.value ||
+      this.fillTableData.area ||
+      this.fillTableData.averageDepth ||
+      this.fillTableData.maximumDepth ||
+      this.fillTableData.volume;
+
+    if (!willImportFill && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Do you need to import any fill to construct or conduct the proposed Non-farm use?',
+          body: 'Changing the answer to this question will remove content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.updateFillFields(!confirmed);
+          this.willImportFill.setValue(!confirmed);
+        });
+    } else {
+      this.updateFillFields(willImportFill);
+    }
+  }
+
+  updateFillFields(willImportFill: boolean) {
+    this.fillTableDisabled = !willImportFill;
+
+    if (willImportFill) {
       this.projectDuration.enable();
       this.fillOrigin.enable();
       this.fillType.enable();
@@ -211,7 +239,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         naruExistingStructures: existingStructures,
-        naruWillImportFill: willImportFill !== undefined ? willImportFill === 'true' : null,
+        naruWillImportFill: willImportFill,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,

@@ -192,28 +192,30 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         if (this.existingDecision) {
           this.patchFormWithExistingData(this.existingDecision);
 
-          if (decisions.length > 0) {
+          if (decisions.length > 1) {
             let minDate = null;
             this.isFirstDecision = true;
 
             for (const decision of decisions) {
+              //Skip ourselves!
+              if (decision.uuid === this.existingDecision.uuid) {
+                continue;
+              }
+
               if (!minDate && decision.date) {
                 minDate = decision.date;
               }
 
-              if (minDate && decision.date && minDate > decision.date) {
+              if (minDate && decision.date && decision.date > minDate) {
                 minDate = decision.date;
               }
 
-              if (
-                this.existingDecision.createdAt > decision.createdAt &&
-                this.existingDecision.uuid !== decision.uuid
-              ) {
+              if (this.existingDecision.createdAt > decision.createdAt) {
                 this.isFirstDecision = false;
               }
             }
 
-            if (minDate) {
+            if (minDate && !this.isFirstDecision) {
               this.minDate = new Date(minDate);
             }
 

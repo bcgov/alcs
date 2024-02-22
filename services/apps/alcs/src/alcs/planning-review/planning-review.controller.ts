@@ -33,16 +33,15 @@ export class PlanningReviewController {
       board,
     );
 
-    const mapped = this.planningReviewService.mapToDtos([createdReview]);
+    const mapped = await this.planningReviewService.mapToDtos([createdReview]);
     return mapped[0];
   }
 
   @Get('/card/:uuid')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getByCard(@Param('uuid') cardUuid: string) {
-    const planningReview = await this.planningReviewService.getByCardUuid(
-      cardUuid,
-    );
+    const planningReview =
+      await this.planningReviewService.getByCardUuid(cardUuid);
     const mapped = await this.planningReviewService.mapToDtos([planningReview]);
     return mapped[0];
   }

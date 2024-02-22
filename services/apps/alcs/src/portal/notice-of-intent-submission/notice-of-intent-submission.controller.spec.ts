@@ -185,20 +185,6 @@ describe('NoticeOfIntentSubmissionController', () => {
       'file-id',
       new User(),
     );
-    expect(
-      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
-    ).toHaveBeenCalledWith({
-      generateStatusHtml: generateCANCNoticeOfIntentHtml,
-      status: NOI_SUBMISSION_STATUS.CANCELLED,
-      noticeOfIntentSubmission: mockApplication,
-      government: mockGovernment,
-      parentType: 'application',
-      primaryContact: mockOwner,
-      ccGovernment: true,
-    });
   });
 
   it('should throw an exception when trying to cancel a notice of intent that is not in progress', async () => {

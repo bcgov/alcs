@@ -76,7 +76,7 @@ const template = `<mjml>
       </mj-column>
     </mj-section>
 
-   ${footer}
+   ${footer()}
   </mj-body>
 </mjml>
 `;

@@ -1,20 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, takeUntil } from 'rxjs';
-import {
-  ApplicationOwnerDetailedDto,
-  ApplicationOwnerDto,
-} from '../../../../services/application-owner/application-owner.dto';
-import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
+import { takeUntil } from 'rxjs';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { ToastService } from '../../../../services/toast/toast.service';
-import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
-import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-other-parcels',
@@ -25,7 +16,7 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
   currentStep = EditApplicationSteps.OtherParcel;
   submissionUuid = '';
 
-  hasOtherParcelsInCommunity = new FormControl<string | null>(null, [Validators.required]);
+  hasOtherParcelsInCommunity = new FormControl<boolean | null>(null, [Validators.required]);
   otherParcelsDescription = new FormControl<string | null>(
     {
       value: null,
@@ -41,7 +32,10 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
 
   application?: ApplicationSubmissionDetailedDto;
 
-  constructor(private applicationService: ApplicationSubmissionService) {
+  constructor(
+    private applicationService: ApplicationSubmissionService,
+    private confirmationDialogService: ConfirmationDialogService
+  ) {
     super();
   }
 
@@ -52,7 +46,7 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
         this.submissionUuid = application.uuid;
 
         this.otherParcelsForm.patchValue({
-          hasOtherParcelsInCommunity: formatBooleanToString(application.hasOtherParcelsInCommunity),
+          hasOtherParcelsInCommunity: application.hasOtherParcelsInCommunity,
           otherParcelsDescription: application.otherParcelsDescription ?? null,
         });
 
@@ -72,7 +66,7 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
     if (this.otherParcelsForm.dirty) {
       const formValues = this.otherParcelsForm.getRawValue();
       const updatedSubmission = await this.applicationService.updatePending(this.submissionUuid, {
-        hasOtherParcelsInCommunity: parseStringToBoolean(formValues.hasOtherParcelsInCommunity),
+        hasOtherParcelsInCommunity: formValues.hasOtherParcelsInCommunity,
         otherParcelsDescription: formValues.otherParcelsDescription,
       });
       if (updatedSubmission) {
@@ -85,8 +79,25 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
     await this.saveProgress();
   }
 
-  onChangeOtherParcels($event: MatButtonToggleChange) {
-    if ($event.value === 'true') {
+  onChangeOtherParcels(hasOtherParcels: boolean) {
+    if (!hasOtherParcels && this.otherParcelsDescription.value) {
+      this.confirmationDialogService
+        .openDialog({
+          title:
+            'Do any of the land owners added previously own or lease other parcels that might inform this application process?',
+          body: 'Changing the answer to this question will remove content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.updateParcelDescription(!confirmed);
+          this.hasOtherParcelsInCommunity.setValue(!confirmed);
+        });
+    } else {
+      this.updateParcelDescription(hasOtherParcels);
+    }
+  }
+
+  updateParcelDescription(hasOtherParcels: boolean) {
+    if (hasOtherParcels) {
       this.otherParcelsDescription.enable();
       this.otherParcelsDescription.setValidators([Validators.required]);
     } else {

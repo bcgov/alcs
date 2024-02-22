@@ -14,14 +14,17 @@
     <span>{{ _noiSubmission.purpose }}</span>
   </div>
 
+  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
+  <div class="grid-double">
+    <span>{{ _noiSubmission.soilFillTypeToPlace }}</span>
+  </div>
+
   <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
   <div class="grid-double">
     <div *ngIf="_noiSubmission.soilProjectDuration">
       {{ _noiSubmission.soilProjectDuration }}
     </div>
-    <app-no-data
-      *ngIf="!_noiSubmission.soilProjectDuration"
-    ></app-no-data>
+    <app-no-data *ngIf="!_noiSubmission.soilProjectDuration"></app-no-data>
   </div>
 
   <div class="grid-1"></div>
@@ -69,11 +72,6 @@
   <div class="grid-double">
     {{ _noiSubmission.soilAlreadyPlacedAverageDepth }}
     <span *ngIf="_noiSubmission.soilAlreadyPlacedAverageDepth">m</span>
-  </div>
-
-  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
-  <div class="grid-double">
-    <span>{{ _noiSubmission.soilFillTypeToPlace }}</span>
   </div>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>

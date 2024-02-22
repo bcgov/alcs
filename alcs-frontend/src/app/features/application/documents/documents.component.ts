@@ -27,6 +27,7 @@ export class DocumentsComponent implements OnInit {
 
   hasBeenReceived = false;
   hasBeenSetForDiscussion = false;
+  hiddenFromPortal = false;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<ApplicationDocumentDto> = new MatTableDataSource<ApplicationDocumentDto>();
@@ -37,7 +38,7 @@ export class DocumentsComponent implements OnInit {
     private confirmationDialogService: ConfirmationDialogService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private toastService: ToastService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +47,7 @@ export class DocumentsComponent implements OnInit {
         this.fileId = application.fileNumber;
         this.loadDocuments(application.fileNumber);
         this.loadStatusHistory(application.fileNumber);
+        this.hiddenFromPortal = application.hideFromPortal;
       }
     });
   }
@@ -128,7 +130,7 @@ export class DocumentsComponent implements OnInit {
     try {
       statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
         fileNumber,
-        false
+        false,
       );
     } catch (e) {
       console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
@@ -136,12 +138,12 @@ export class DocumentsComponent implements OnInit {
 
     this.hasBeenReceived =
       statusHistory.filter(
-        (status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.RECEIVED_BY_ALC
+        (status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.RECEIVED_BY_ALC,
       ).length > 0;
 
     this.hasBeenSetForDiscussion =
       statusHistory.filter(
-        (status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_ALC
+        (status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       ).length > 0;
   }
 }
