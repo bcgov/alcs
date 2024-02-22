@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-
-import {
-  Brackets,
-  DataSource,
-  QueryRunner,
-  Repository,
-  SelectQueryBuilder,
-} from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Brackets, QueryRunner, Repository, SelectQueryBuilder } from 'typeorm';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import {
@@ -36,11 +29,6 @@ export class ApplicationAdvancedSearchService {
   ): Promise<AdvancedSearchResultDto<ApplicationSubmissionSearchView[]>> {
     let query = this.applicationSearchRepository
       .createQueryBuilder('appSearch', queryRunner)
-      .leftJoin(
-        LocalGovernment,
-        'localGovernment',
-        '"appSearch"."local_government_uuid" = "localGovernment"."uuid"',
-      )
       .where('appSearch.is_draft = false');
 
     query = await this.compileApplicationSearchQuery(searchDto, query);
