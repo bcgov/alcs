@@ -44,7 +44,7 @@
     "@nestjs/microservices": "^10.2.8",
     "@nestjs/platform-fastify": "^10.2.8",
     "@nestjs/swagger": "^7.1.14",
-    "@nestjs/typeorm": "^10.0.0",
+    "@nestjs/typeorm": "^10.0.2",
     "@types/clamscan": "^2.0.6",
     "automapper-classes": "^8.7.11",
     "automapper-core": "^8.7.11",
@@ -72,7 +72,7 @@
     "source-map-support": "^0.5.21",
     "ts-proto": "^1.163.0",
     "ts-protoc-gen": "^0.15.0",
-    "typeorm": "^0.3.17",
+    "typeorm": "^0.3.20",
     "typeorm-naming-strategies": "^4.1.0",
     "uuid": "^9.0.1"
   },

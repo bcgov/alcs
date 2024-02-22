@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
-import {
-  Brackets,
-  QueryBuilder,
-  Repository,
-  SelectQueryBuilder,
-} from 'typeorm';
+import { Brackets, QueryRunner, Repository, SelectQueryBuilder } from 'typeorm';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import {
@@ -31,9 +25,13 @@ export class ApplicationAdvancedSearchService {
 
   async searchApplications(
     searchDto: SearchRequestDto,
+    queryRunner: QueryRunner,
   ): Promise<AdvancedSearchResultDto<ApplicationSubmissionSearchView[]>> {
-    let query = await this.compileApplicationSearchQuery(searchDto);
+    let query = this.applicationSearchRepository
+      .createQueryBuilder('appSearch', queryRunner)
+      .where('appSearch.is_draft = false');
 
+    query = await this.compileApplicationSearchQuery(searchDto, query);
     query = this.compileApplicationGroupBySearchQuery(query);
 
     const sortQuery = this.compileSortQuery(searchDto);
@@ -121,11 +119,10 @@ export class ApplicationAdvancedSearchService {
     return query;
   }
 
-  private async compileApplicationSearchQuery(searchDto: SearchRequestDto) {
-    let query = this.applicationSearchRepository
-      .createQueryBuilder('appSearch')
-      .where('appSearch.is_draft = false');
-
+  private async compileApplicationSearchQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
+  ) {
     if (searchDto.fileNumber) {
       query = query
         .andWhere('appSearch.file_number = :fileNumber')

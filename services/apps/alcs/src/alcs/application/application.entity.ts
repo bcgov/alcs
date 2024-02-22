@@ -33,7 +33,6 @@ export class Application extends Base {
     }
   }
 
-  @Index()
   @AutoMap()
   @Column({
     unique: true,
