@@ -98,7 +98,6 @@ SELECT oa.alr_application_id::text AS file_number,
     ar.code AS region_code,
     alcs_gov.gov_uuid AS local_government_uuid,
     'oats_etl',
-    'APPLICANT' as source,
     CASE
         WHEN oa.proposal_background_desc IS NOT NULL
         AND length(oa.proposal_background_desc) > 10 THEN oa.proposal_summary_desc || '. Background: ' || oa.proposal_background_desc
