@@ -80,7 +80,7 @@ def init_srw_base(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
 @inject_conn_pool
 def clean_initial_srw(conn=None):
-    logger.info("Start SRWs cleaning")
+    logger.info("Start SRW cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
             "DELETE FROM alcs.notification a WHERE a.audit_created_by = 'oats_etl' and a.audit_updated_by is NULL"
