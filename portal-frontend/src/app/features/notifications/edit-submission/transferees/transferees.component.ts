@@ -8,6 +8,7 @@ import { NotificationTransfereeService } from '../../../../services/notification
 import { EditNotificationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 import { TransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-transferees',
@@ -27,6 +28,7 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
     private router: Router,
     private notificationTransfereeService: NotificationTransfereeService,
     private notificationSubmissionService: NotificationSubmissionService,
+    private confDialogService: ConfirmationDialogService,
     private dialog: MatDialog
   ) {
     super();
@@ -86,7 +88,15 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
   }
 
   async onDelete(uuid: string) {
-    await this.notificationTransfereeService.delete(uuid);
-    await this.loadTransferees(this.submissionUuid);
+    const selectedTransferee = this.transferees.find((transferee) => transferee.uuid === uuid);
+    this.confDialogService
+      .openDialog({
+        title: 'Remove Transferee',
+        body: `This action will remove ${selectedTransferee?.firstName} ${selectedTransferee?.lastName} and its usage from the entire notification of SRW. Are you sure you want to remove this transferee? `,
+      })
+      .subscribe(async (confirmed) => {
+        await this.notificationTransfereeService.delete(uuid);
+        await this.loadTransferees(this.submissionUuid);
+      });
   }
 }
