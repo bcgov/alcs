@@ -38,7 +38,8 @@ describe('PublicApplicationSearchService', () => {
     mockLocalGovernmentRepository = createMock();
 
     mockQuery = {
-      getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
+      getMany: jest.fn().mockResolvedValue([]),
+      getCount: jest.fn().mockResolvedValue(0),
       orderBy: jest.fn().mockReturnThis(),
       offset: jest.fn().mockReturnThis(),
       limit: jest.fn().mockReturnThis(),

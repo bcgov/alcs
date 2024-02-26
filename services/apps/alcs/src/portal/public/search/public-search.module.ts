@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Application } from '../../../alcs/application/application.entity';
+import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
 import { LocalGovernment } from '../../../alcs/local-government/local-government.entity';
 import { NoticeOfIntent } from '../../../alcs/notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../../../alcs/notification/notification.entity';
@@ -17,6 +18,7 @@ import { PublicSearchController } from './public-search.controller';
   imports: [
     TypeOrmModule.forFeature([
       Application,
+      ApplicationType,
       NoticeOfIntent,
       Notification,
       LocalGovernment,

@@ -1,14 +1,6 @@
-import {
-  DataSource,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
+import { DataSource, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { Application } from '../../application/application.entity';
-import { ApplicationType } from '../../code/application-code/application-type/application-type.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 
 // typeorm does not transform property names for the status
@@ -45,11 +37,6 @@ export class SearchApplicationSubmissionStatusType {
       .from(ApplicationSubmission, 'as2')
       .innerJoin(Application, 'a', 'a.file_number = as2.file_number')
       .withDeleted()
-      .innerJoinAndSelect(
-        ApplicationType,
-        'applicationType',
-        'as2.type_code = applicationType.code',
-      )
       .leftJoin(
         LocalGovernment,
         'localGovernment',
@@ -96,10 +83,4 @@ export class ApplicationSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
-
-  @ManyToOne(() => ApplicationType, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'application_type_code' })
-  applicationType: ApplicationType;
 }

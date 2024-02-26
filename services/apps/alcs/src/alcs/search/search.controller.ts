@@ -1,16 +1,17 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
-import { InjectDataSource } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { APPLICATION_SUBMISSION_TYPES } from '../../portal/pdf-generation/generate-submission-document.service';
 import { isStringSetAndNotEmpty } from '../../utils/string-helper';
 import { Application } from '../application/application.entity';
+import { ApplicationService } from '../application/application.service';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -49,6 +50,8 @@ export class SearchController {
     private applicationSearchService: ApplicationAdvancedSearchService,
     private nonApplicationsSearchService: NonApplicationsAdvancedSearchService,
     private notificationSearchService: NotificationAdvancedSearchService,
+    @InjectRepository(ApplicationType)
+    private appTypeRepo: Repository<ApplicationType>,
     @InjectDataSource()
     private dataSource: DataSource,
   ) {}
@@ -206,7 +209,7 @@ export class SearchController {
     const noticeOfIntents =
       await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
+    const mappedSearchResult = await this.mapAdvancedSearchResults(
       null,
       noticeOfIntents,
       null,
@@ -227,7 +230,7 @@ export class SearchController {
     const nonApplications =
       await this.nonApplicationsSearchService.searchNonApplications(searchDto);
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
+    const mappedSearchResult = await this.mapAdvancedSearchResults(
       null,
       null,
       nonApplications,
@@ -248,7 +251,7 @@ export class SearchController {
     const notifications =
       await this.notificationSearchService.search(searchDto);
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
+    const mappedSearchResult = await this.mapAdvancedSearchResults(
       null,
       null,
       null,
@@ -317,7 +320,7 @@ export class SearchController {
     };
   }
 
-  private mapAdvancedSearchResults(
+  private async mapAdvancedSearchResults(
     applications: AdvancedSearchResultDto<
       ApplicationSubmissionSearchView[]
     > | null,
@@ -333,9 +336,15 @@ export class SearchController {
 
     const mappedApplications: ApplicationSearchResultDto[] = [];
     if (applications && applications.data.length > 0) {
+      const appTypes = await this.appTypeRepo.find();
+      const appTypeMap = new Map<string, ApplicationType>();
+      for (const type of appTypes) {
+        appTypeMap.set(type.code, type);
+      }
+
       mappedApplications.push(
         ...applications.data.map((app) =>
-          this.mapApplicationToAdvancedSearchResult(app),
+          this.mapApplicationToAdvancedSearchResult(app, appTypeMap),
         ),
       );
     }
@@ -445,13 +454,14 @@ export class SearchController {
 
   private mapApplicationToAdvancedSearchResult(
     application: ApplicationSubmissionSearchView,
+    appTypeMap: Map<string, ApplicationType>,
   ): ApplicationSearchResultDto {
     return {
       referenceId: application.fileNumber,
       fileNumber: application.fileNumber,
       dateSubmitted: application.dateSubmittedToAlc?.getTime(),
       type: this.mapper.map(
-        application.applicationType,
+        appTypeMap.get(application.applicationTypeCode),
         ApplicationType,
         ApplicationTypeDto,
       ),
