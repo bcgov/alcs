@@ -28,7 +28,7 @@
     </div>
     <app-no-data *ngIf="!applicationSubmission.soilProjectDuration"></app-no-data>
   </div>
-  
+
   <div class="full-width soil-table">
     <div></div>
     <div class="subheading2">Soil to be Removed</div>
@@ -37,32 +37,28 @@
     <div>
       {{ applicationSubmission.soilToRemoveVolume }}
       <span *ngIf="applicationSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
-      <app-no-data [*ngIf="applicationSubmission.soilToRemoveVolume === null"></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilToRemoveVolume === null"></app-no-data>
     </div>
 
     <div class="subheading2">Area</div>
     <div>
       {{ applicationSubmission.soilToRemoveArea }}
       <span *ngIf="applicationSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
-      <app-no-data [*ngIf="applicationSubmission.soilToRemoveArea === null"></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilToRemoveArea === null"></app-no-data>
     </div>
 
     <div class="subheading2">Maximum Depth</div>
     <div>
       {{ applicationSubmission.soilToRemoveMaximumDepth }}
       <span *ngIf="applicationSubmission.soilToRemoveMaximumDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilToRemoveMaximumDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilToRemoveMaximumDepth === null"></app-no-data>
     </div>
 
     <div class="subheading2">Average Depth</div>
     <div>
       {{ applicationSubmission.soilToRemoveAverageDepth }}
       <span *ngIf="applicationSubmission.soilToRemoveAverageDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilToRemoveAverageDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilToRemoveAverageDepth === null"></app-no-data>
     </div>
 
     <div></div>
@@ -72,36 +68,28 @@
     <div>
       {{ applicationSubmission.soilAlreadyRemovedVolume }}
       <span *ngIf="applicationSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyRemovedVolume === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedVolume === null"></app-no-data>
     </div>
 
     <div class="subheading2">Area</div>
     <div>
       {{ applicationSubmission.soilAlreadyRemovedArea }}
       <span *ngIf="applicationSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyRemovedArea === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedArea === null"></app-no-data>
     </div>
 
     <div class="subheading2">Maximum Depth</div>
     <div>
       {{ applicationSubmission.soilAlreadyRemovedMaximumDepth }}
       <span *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth === null"></app-no-data>
     </div>
 
     <div class="subheading2">Average Depth</div>
     <div>
       {{ applicationSubmission.soilAlreadyRemovedAverageDepth }}
       <span *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth === null"></app-no-data>
     </div>
   </div>
 
