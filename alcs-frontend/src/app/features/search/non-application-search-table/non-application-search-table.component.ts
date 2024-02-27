@@ -72,6 +72,7 @@ export class NonApplicationSearchTableComponent {
     this.pageIndex = 0;
     this.sortDirection = sort.direction;
     this.sortField = sort.active;
+    this.onTableChange();
   }
 
   onSelectRecord(record: SearchResult) {
