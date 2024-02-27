@@ -1,11 +1,4 @@
-import {
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
-import { ApplicationType } from '../../../../alcs/code/application-code/application-type/application-type.entity';
+import { PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { LinkedStatusType } from '../public-search.dto';
 
 @ViewEntity({
@@ -14,23 +7,6 @@ import { LinkedStatusType } from '../public-search.dto';
       app_sub.uuid,
       app_sub.applicant,
       app.uuid AS application_uuid,
-      "applicationType".audit_deleted_date_at AS "applicationType_audit_deleted_date_at",
-      "applicationType".audit_created_at AS "applicationType_audit_created_at",
-      "applicationType".audit_updated_at AS "applicationType_audit_updated_at",
-      "applicationType".audit_created_by AS "applicationType_audit_created_by",
-      "applicationType".audit_updated_by AS "applicationType_audit_updated_by",
-      "applicationType".label AS "applicationType_label",
-      "applicationType".code AS "applicationType_code",
-      "applicationType".description AS "applicationType_description",
-      "applicationType".short_label AS "applicationType_short_label",
-      "applicationType".background_color AS "applicationType_background_color",
-      "applicationType".text_color AS "applicationType_text_color",
-      "applicationType".html_description AS "applicationType_html_description",
-      "applicationType".portal_label AS "applicationType_portal_label",
-      "applicationType".portal_order AS "applicationType_portal_order",
-      "applicationType".requires_government_review AS "applicationType_requires_government_review",
-      "applicationType".alc_fee_amount AS "applicationType_alc_fee_amount",
-      "applicationType".government_fee_amount AS "applicationType_government_fee_amount",
       "localGovernment".name AS local_government_name,
       app_sub.file_number,
       app_sub.local_government_uuid,
@@ -47,7 +23,6 @@ import { LinkedStatusType } from '../public-search.dto';
       JOIN alcs.application app ON app.file_number :: text = app_sub.file_number :: text
       AND app.hide_from_portal = false
       AND app.audit_deleted_date_at IS NULL
-      JOIN alcs.application_type "applicationType" ON app_sub.type_code :: text = "applicationType".code
       LEFT JOIN alcs.local_government "localGovernment" ON app_sub.local_government_uuid = "localGovernment".uuid
       AND "localGovernment".audit_deleted_date_at IS NULL
       LEFT JOIN (
@@ -139,10 +114,4 @@ export class PublicApplicationSubmissionSearchView {
 
   @ViewColumn()
   outcome: string | null;
-
-  @ManyToOne(() => ApplicationType, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'application_type_code' })
-  applicationType: ApplicationType;
 }

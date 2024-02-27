@@ -1,13 +1,15 @@
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { DataSource, QueryRunner } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Application } from '../application/application.entity';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
@@ -29,6 +31,7 @@ describe('SearchController', () => {
   let mockNotificationAdvancedSearchService: DeepMocked<NotificationAdvancedSearchService>;
   let mockDataSource: DeepMocked<DataSource>;
   let mockQueryRunner: DeepMocked<QueryRunner>;
+  let mockAppTypeRepo: DeepMocked<Repository<ApplicationType>>;
 
   beforeEach(async () => {
     mockSearchService = createMock();
@@ -37,6 +40,7 @@ describe('SearchController', () => {
     mockNonApplicationsAdvancedSearchService = createMock();
     mockNotificationAdvancedSearchService = createMock();
     mockDataSource = createMock();
+    mockAppTypeRepo = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -68,6 +72,10 @@ describe('SearchController', () => {
         {
           provide: DataSource,
           useValue: mockDataSource,
+        },
+        {
+          provide: getRepositoryToken(ApplicationType),
+          useValue: mockAppTypeRepo,
         },
         {
           provide: ClsService,
