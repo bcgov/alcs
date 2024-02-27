@@ -36,7 +36,6 @@ export class SearchApplicationSubmissionStatusType {
       )
       .from(ApplicationSubmission, 'as2')
       .innerJoin(Application, 'a', 'a.file_number = as2.file_number')
-      .withDeleted()
       .leftJoin(
         LocalGovernment,
         'localGovernment',

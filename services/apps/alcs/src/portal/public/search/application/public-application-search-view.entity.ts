@@ -1,10 +1,4 @@
-import {
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
+import { PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { LinkedStatusType } from '../public-search.dto';
 
 @ViewEntity({
