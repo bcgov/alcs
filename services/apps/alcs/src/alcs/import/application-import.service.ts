@@ -5,13 +5,12 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import * as fs from 'fs';
 import * as path from 'path';
-import { LocalGovernmentService } from '../local-government/local-government.service';
 import { ApplicationMeetingService } from '../application/application-meeting/application-meeting.service';
 import { ApplicationPausedService } from '../application/application-paused/application-paused.service';
+import { ApplicationSubmissionStatusService } from '../application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
-import { BOARD_CODES } from '../board/board.dto';
-import { BoardService } from '../board/board.service';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -47,44 +46,6 @@ export type ApplicationRow = {
   region: string;
 };
 
-const REGION_CODE_MAP = {
-  Interior: 'INTR',
-  North: 'NORR',
-  Island: 'ISLR',
-  Kootenay: 'KOOR',
-  Okanagan: 'OKAR',
-  'South Coast': 'SOUR',
-};
-
-const DECISION_MAKER_BOARD_MAP = {
-  'Soil/Fill Panel': BOARD_CODES.SOIL,
-  'CEO Delegated': BOARD_CODES.CEO,
-  Executive: BOARD_CODES.EXECUTIVE_COMMITTEE,
-};
-
-const REGION_BOARD_MAP = {
-  Interior: 'inte',
-  North: 'north',
-  Island: 'island',
-  Kootenay: 'koot',
-  Okanagan: 'okan',
-  'South Coast': 'south',
-};
-
-const TYPE_MAPPING = {
-  INC: 'INCL',
-  SDV: 'SUBD',
-  EXC: 'EXCL',
-  NFU: 'NFUP',
-  TUR: 'TURP',
-  NAR: 'NARU',
-  FILL: 'POFO',
-  EXT: 'ROSO',
-  SCH: 'PFRS',
-  CSC: '',
-  SRW: '',
-};
-
 @Injectable()
 export class ApplicationImportService {
   private logger: Logger = new Logger(ApplicationImportService.name);
@@ -93,29 +54,20 @@ export class ApplicationImportService {
     private applicationService: ApplicationService,
     private meetingService: ApplicationMeetingService,
     private pausedService: ApplicationPausedService,
-    private boardService: BoardService,
-    private localGovernmentService: LocalGovernmentService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   importCsv() {
     this.logger.log('Import Setup Started');
     return new Promise(async (resolve) => {
-      const mapping = await this.loadMappingSheet();
-
       const filePath = path.resolve(__dirname, '..', 'Tracking_Sheet.csv');
       const stream = fs.createReadStream(filePath);
       const processing: Promise<any>[] = [];
-      let i = 0;
       stream
         .pipe(csv())
         .on('data', (data) => {
-          if (data['Decision Released (Active)']) {
-            return;
-          }
-
-          const promise = this.parseRow(data, mapping);
+          const promise = this.parseRow(data);
           processing.push(promise);
-          i++;
         })
         .on('end', () => {
           Promise.all(processing).then(() => {
@@ -126,81 +78,29 @@ export class ApplicationImportService {
     });
   }
 
-  async parseRow(
-    data: ApplicationRow,
-    mapping: Map<string, { localGovernment: string; type: string }>,
-  ): Promise<void> {
+  async parseRow(data: ApplicationRow): Promise<void> {
     const mappedRow = this.mapRow(data);
     const existingApplication = await this.applicationService.get(
       mappedRow.fileNumber,
     );
     if (existingApplication) {
-      this.logger.debug(`${mappedRow.fileNumber}: Application already exists`);
-    } else {
-      try {
-        const sheetType = mapping.get(mappedRow.fileNumber);
-        if (!sheetType) {
-          this.logger.warn(`${mappedRow.fileNumber}: Not in mapping sheet`);
-          return;
-        }
-
-        const mappedType = TYPE_MAPPING[sheetType.type];
-        if (!mappedType) {
-          this.logger.warn(
-            `${mappedRow.fileNumber}: Non-importable type ${sheetType.type}`,
-          );
-          return;
-        }
-
-        let localGovernment = await this.localGovernmentService.getByName(
-          sheetType.localGovernment,
-        );
-        if (!localGovernment) {
-          localGovernment = await this.localGovernmentService.getByName(
-            `${sheetType.localGovernment} Regional District`,
-          );
-          if (!localGovernment) {
-            this.logger.error(
-              `${mappedRow.fileNumber}: Failed to load government ${sheetType.localGovernment}`,
-            );
-            return;
-          }
-        }
-
-        const application = await this.applicationService.create({
-          fileNumber: mappedRow.fileNumber,
-          applicant: mappedRow.applicant || 'Imported',
-          dateSubmittedToAlc: mappedRow.submittedToAlc,
-          localGovernmentUuid: localGovernment.uuid,
-          regionCode: REGION_CODE_MAP[mappedRow.region] || undefined,
-          typeCode: mappedType,
-        });
-
-        //Set Payment / ACK Dates
-        const updatedApp = await this.applicationService.update(application, {
-          feePaidDate: mappedRow.feeReceived,
-          dateAcknowledgedIncomplete: mappedRow.ackDeficient,
+      const updatedApp = await this.applicationService.update(
+        existingApplication,
+        {
           dateReceivedAllItems: mappedRow.ackAllComplete,
           dateAcknowledgedComplete: mappedRow.ackComplete,
-        });
+        },
+      );
 
-        await this.createMeetings(mappedRow, updatedApp);
+      await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+        existingApplication.fileNumber,
+        SUBMISSION_STATUS.RECEIVED_BY_ALC,
+        mappedRow.ackAllComplete,
+      );
 
-        if (mappedRow.ackComplete) {
-          if (
-            mappedRow.decisionMaker === 'Regional Panel' ||
-            mappedRow.decisionMaker === ''
-          ) {
-            const boardCode = REGION_BOARD_MAP[mappedRow.region];
-            await this.boardService.changeBoard(updatedApp.cardUuid, boardCode);
-          } else if (mappedRow.decisionMaker) {
-            const boardCode = DECISION_MAKER_BOARD_MAP[mappedRow.decisionMaker];
-            await this.boardService.changeBoard(updatedApp.cardUuid, boardCode);
-          }
-        }
-      } catch (e) {
-        this.logger.error(`${mappedRow.fileNumber}: ${e.message}`);
-      }
+      await this.createMeetings(mappedRow, updatedApp);
+    } else {
+      this.logger.error(`${mappedRow.fileNumber}: Application does not exist`);
     }
   }
 
@@ -293,47 +193,6 @@ export class ApplicationImportService {
         `Failed to create meeting for ${application.fileNumber} ${e.message}`,
       );
     }
-  }
-
-  private loadMappingSheet(): Promise<
-    Map<
-      string,
-      {
-        localGovernment: string;
-        type: string;
-      }
-    >
-  > {
-    const mapping = new Map<
-      string,
-      {
-        localGovernment: string;
-        type: string;
-      }
-    >();
-    const filePath = path.resolve(__dirname, '..', 'App_Listing.csv');
-    const stream = fs.createReadStream(filePath);
-    let i = 0;
-    return new Promise((resolve) => {
-      stream
-        .pipe(csv())
-        .on('data', (data) => {
-          i++;
-          // const appId = data['App ID'];
-          // this is the fix to get the 'App ID' from csv, for some reason specifying 'App ID' did not work even though it is the same in Object.keys(data)[0]
-          const appId = data[Object.keys(data)[0]];
-          const type = data['Type'];
-          const localGovernment = data['Local Gov'];
-          mapping.set(appId, {
-            localGovernment,
-            type,
-          });
-        })
-        .on('end', () => {
-          this.logger.log(`Processed ${i} Mapping Records`);
-          resolve(mapping);
-        });
-    });
   }
 
   private async createMeetings(
