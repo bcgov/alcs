@@ -12,7 +12,7 @@ import * as config from 'config';
 import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
 import { generateModuleGraph } from './commands/graph';
-import { importNOIs } from './commands/import';
+import { importApplications, importNOIs } from './commands/import';
 import { MainModule } from './main.module';
 
 const registerSwagger = (app: NestFastifyApplication) => {
@@ -108,7 +108,7 @@ async function bootstrap() {
     await generateModuleGraph(app);
   }
   if (extraArg == 'import') {
-    await importNOIs();
+    await importApplications();
   }
 
   // config variables
