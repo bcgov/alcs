@@ -12,6 +12,7 @@ export class ConfirmationDialogService {
     const result = new EventEmitter<boolean>();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data,
+      autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((response) => {
