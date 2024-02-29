@@ -68,7 +68,6 @@ import { LinkedStatusType } from '../public-search.dto';
       .leftJoin(
         (qb) =>
           qb
-            .from(NoticeOfIntentDecision, 'decision_date')
             .select('decisiondate', 'date')
             .addSelect('outcome', 'outcome')
             .addSelect('dest_rank', 'dest_rank')
