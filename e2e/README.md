@@ -1,5 +1,10 @@
 # End-to-End Testing
 
+- [Usage](#usage)
+- [Local Setup](#local-setup)
+  - [Installation](#installation)
+  - [Configure secrets](#configure-secrets)
+
 E2E test automation is implemented using the [Playwright](https://playwright.dev/).
 
 > [!WARNING]
