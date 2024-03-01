@@ -31,7 +31,9 @@ To show a report:
 $ npx playwright show-report REPORT_DIR
 ```
 
-## Installation
+## Local Setup
+
+### Installation
 
 Install package:
 
@@ -44,3 +46,8 @@ Install browsers:
 ```bash
 $ npx playwright install
 ```
+
+### Configure secrets
+
+1. Copy `template.env` --> `.env`
+2. Fill in details
