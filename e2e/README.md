@@ -1,13 +1,46 @@
-!THIS IS NOT A FULL AUTOMATION. IT IS JUST TO REDUCE AMOUNT OF MANUAL CLICKS FOR DEVELOPERS WHEN THEY ARE WORKING ON LOCAL ENVIRONMENTS!
+# End-to-End Testing
 
-The Automation is implemented using the playwright. https://playwright.dev/
+E2E test automation is implemented using the [Playwright](https://playwright.dev/).
 
-Note: make sure you do not commit any credentials to the repo
+> [!WARNING]
+> When writing tests, make sure they do not contain any credentials _before_ committing to the repo.
 
-How to run:
-Navigate to portal/test folder and from there perform following commands
+## Usage
+
+To run tests:
+
+```bash
+$ npx playwright test
+```
+
+To run headed:
+
+```bash
+$ npx playwright test --headed
+```
+
+To run in UI mode:
+
+```bash
+$ npx playwright ui
+```
+
+To show a report:
+
+```bash
+$ npx playwright show-report REPORT_DIR
+```
+
+## Installation
+
+Install package:
 
 ```bash
 $ npm i
-$ npx playwright test  --headed --project=chromium
+```
+
+Install browsers:
+
+```bash
+$ npx playwright install
 ```

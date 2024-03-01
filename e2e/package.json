@@ -1,6 +1,6 @@
 {
-  "name": "alcs",
-  "version": "1.0.0",
+  "name": "alcs-e2e-test",
+  "version": "0.1.0",
   "description": "[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) ![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999) [![codecov](https://img.shields.io/codeclimate/coverage/bcgov/alcs)](https://codeclimate.com/github/bcgov/alcs)",
   "main": "index.js",
   "directories": {
