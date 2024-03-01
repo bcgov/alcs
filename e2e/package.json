@@ -18,7 +18,8 @@
     "url": "https://github.com/bcgov/alcs/issues"
   },
   "homepage": "https://github.com/bcgov/alcs#readme",
-  "devDependencies": {
-    "@playwright/test": "^1.32.0"
+  "dependencies": {
+    "@playwright/test": "^1.32.0",
+    "@types/node": "^20.11.24"
   }
 }
