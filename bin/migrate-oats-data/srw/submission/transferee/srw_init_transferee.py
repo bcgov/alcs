@@ -1,0 +1,173 @@
+from common import (
+    setup_and_get_logger,
+    BATCH_UPLOAD_SIZE,
+    OATS_ETL_USER,
+    to_alcs_format,
+    get_now_with_offset,
+    ALCSOwnershipType,
+    ALCSOwnerType,
+)
+from db import inject_conn_pool
+from psycopg2.extras import RealDictCursor
+
+etl_name = "process_notification_parcel_transferee"
+logger = setup_and_get_logger(etl_name)
+
+
+@inject_conn_pool
+def init_notification_parcel_transferee(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+    logger.info(f"Start {etl_name}")
+    with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+        with open(
+            "srw/sql/notification_submission/transferee/notification_transferee_count.sql",
+            "r",
+            encoding="utf-8",
+        ) as sql_file:
+            count_query = sql_file.read()
+            cursor.execute(count_query)
+            count_total = dict(cursor.fetchone())["count"]
+        logger.info(f"Total Notice of Intents data to insert: {count_total}")
+
+        failed_inserts = 0
+        successful_insert_count = 0
+        last_subject_property = 0
+        last_person_organization_id = 0
+
+        with open(
+            "srw/sql/notification_submission/transferee/notification_transferee.sql",
+            "r",
+            encoding="utf-8",
+        ) as sql_file:
+            application_sql = sql_file.read()
+            while True:
+                cursor.execute(
+                    f"{application_sql} WHERE (osp.subject_property_id = {last_subject_property} AND opo.person_organization_id > {last_person_organization_id}) OR osp.subject_property_id > {last_subject_property}  ORDER BY osp.subject_property_id, opo.person_organization_id;"
+                )
+
+                rows = cursor.fetchmany(batch_size)
+
+                if not rows:
+                    break
+                try:
+                    records_to_be_inserted_count = len(rows)
+
+                    _insert_records(conn, cursor, rows, successful_insert_count)
+
+                    successful_insert_count = (
+                        successful_insert_count + records_to_be_inserted_count
+                    )
+
+                    last_record = dict(rows[-1])
+                    last_subject_property = last_record["subject_property_id"]
+                    last_person_organization_id = last_record["person_organization_id"]
+
+                    logger.debug(
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert notice of intents owners so far {successful_insert_count}; last updated {last_subject_property} {last_person_organization_id}"
+                    )
+                except Exception as err:
+                    logger.exception(err)
+                    conn.rollback()
+                    failed_inserts = count_total - successful_insert_count
+                    last_person_organization_id = last_person_organization_id + 1
+
+    logger.info(
+        f"Finished {etl_name}: total amount of successful inserts {successful_insert_count}, total failed inserts {failed_inserts}"
+    )
+
+
+def _insert_records(conn, cursor, rows, insert_index):
+    number_of_rows_to_insert = len(rows)
+
+    if number_of_rows_to_insert > 0:
+        insert_query = _compile_insert_query(number_of_rows_to_insert)
+        rows_to_insert = _prepare_data_to_insert(rows, insert_index)
+        cursor.execute(insert_query, rows_to_insert)
+        conn.commit()
+
+
+def _compile_insert_query(number_of_rows_to_insert):
+    records_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
+    return f"""
+                        INSERT INTO alcs.notification_transferee(
+                            first_name, 
+                            last_name,
+                            organization_name, 
+                            notification_submission_uuid, 
+                            email, 
+                            phone_number, 
+                            type_code, 
+                            oats_person_organization_id,
+                            oats_property_interest_id,
+                            audit_created_by,
+                            audit_created_at
+                        )
+                        VALUES{records_to_insert}
+                        ON CONFLICT DO NOTHING;
+    """
+
+
+def _prepare_data_to_insert(rows, insert_index):
+    row_without_last_element = []
+    for row in rows:
+        mapped_row = _map_data(row, insert_index)
+        row_without_last_element.append(tuple(mapped_row.values()))
+        insert_index += 1
+
+    return row_without_last_element
+
+
+def _map_data(row, insert_index):
+    return {
+        "first_name": _get_name(row),
+        "last_name": row["last_name"],
+        "organization_name": _get_organization_name(row),
+        "notification_submission_uuid": row["notification_submission_uuid"],
+        "email": row["email_address"],
+        "phone_number": row.get("phone_number", "cell_phone_number"),
+        "type_code": _map_owner_type(row),
+        "oats_person_organization_id": row["person_organization_id"],
+        "oats_property_interest_id": row["property_interest_id"],
+        "audit_created_by": OATS_ETL_USER,
+        "audit_created_at": to_alcs_format(get_now_with_offset(insert_index)),
+    }
+
+
+def _get_organization_name(row):
+    organization_name = (row.get("organization_name") or "").strip()
+    alias_name = (row.get("alias_name") or "").strip()
+
+    if not organization_name and not alias_name:
+        return None
+
+    return f"{organization_name} {alias_name}".strip()
+
+
+def _get_name(row):
+    first_name = row.get("first_name", None)
+    middle_name = row.get("middle_name", None)
+
+    return " ".join(
+        [name for name in (first_name, middle_name) if name is not None]
+    ).strip()
+
+
+def _map_owner_type(owner_record):
+    if owner_record["ownership_type_code"] == ALCSOwnershipType.FeeSimple.value:
+        if owner_record["person_id"] and not owner_record["organization_id"]:
+            return ALCSOwnerType.INDV.value
+        elif owner_record["organization_id"]:
+            return ALCSOwnerType.ORGZ.value
+    elif owner_record["ownership_type_code"] == ALCSOwnershipType.Crown.value:
+        return ALCSOwnerType.CRWN.value
+
+
+@inject_conn_pool
+def clean_transferees(conn=None):
+    logger.info("Start notification transferee cleaning")
+    with conn.cursor() as cursor:
+        cursor.execute(
+            f"DELETE FROM alcs.notification_transferee not WHERE not.audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by IS NULL"
+        )
+        logger.info(f"Deleted items count = {cursor.rowcount}")
+    conn.commit()
+    logger.info("Done notification transferee cleaning")
