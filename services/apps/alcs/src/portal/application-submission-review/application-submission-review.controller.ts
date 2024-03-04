@@ -28,7 +28,10 @@ import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
-import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
+import {
+  ApplicationSubmissionValidatorService,
+  ValidatedApplicationSubmission,
+} from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { APPLICATION_SUBMISSION_TYPES } from '../pdf-generation/generate-submission-document.service';
@@ -235,7 +238,7 @@ export class ApplicationSubmissionReviewController {
       req.user.entity,
     );
 
-    const application =
+    const submission =
       await this.applicationSubmissionService.getForGovernmentByFileId(
         fileNumber,
         userLocalGovernment,
@@ -243,7 +246,7 @@ export class ApplicationSubmissionReviewController {
 
     const applicationReview =
       await this.applicationSubmissionReviewService.getByFileNumber(
-        application.fileNumber,
+        submission.fileNumber,
       );
 
     if (!applicationReview) {
@@ -261,34 +264,39 @@ export class ApplicationSubmissionReviewController {
         userLocalGovernment.isFirstNation,
       );
 
-    const validationResult =
-      await this.applicationValidatorService.validateSubmission(application);
+    //If Submission was ETLd and never updated, we do not want to validate it
+    const requiresValidation = !(
+      submission.auditCreatedBy === 'oats_etl' && !submission.auditUpdatedBy
+    );
 
-    if (!validationResult.submission) {
+    const validationResult =
+      await this.applicationValidatorService.validateSubmission(submission);
+
+    if (requiresValidation && !validationResult.submission) {
       throw new BaseServiceException(
         `Invalid application found during LG Submission ${
-          application.fileNumber
+          submission.fileNumber
         } ${validationResult.errors.toString()}`,
       );
     }
 
     if (
-      application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-      application.status.statusTypeCode === SUBMISSION_STATUS.RETURNED_TO_LG
+      submission.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+      submission.status.statusTypeCode === SUBMISSION_STATUS.RETURNED_TO_LG
     ) {
       await this.applicationSubmissionService.submitToAlcs(
-        validationResult.submission,
+        submission as ValidatedApplicationSubmission,
         req.user.entity,
         completedReview,
       );
 
-      const primaryContact = application.owners?.find(
-        (owner) => owner.uuid === application.primaryContactOwnerUuid,
+      const primaryContact = submission.owners?.find(
+        (owner) => owner.uuid === submission.primaryContactOwnerUuid,
       );
 
       if (completedReview.isAuthorized !== false) {
         await this.applicationSubmissionService.updateStatus(
-          application,
+          submission,
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
 
@@ -296,7 +304,7 @@ export class ApplicationSubmissionReviewController {
           await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBMApplicationHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-            applicationSubmission: application,
+            applicationSubmission: submission,
             government: userLocalGovernment,
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
@@ -305,7 +313,7 @@ export class ApplicationSubmissionReviewController {
         }
       } else {
         await this.applicationSubmissionService.updateStatus(
-          application,
+          submission,
           SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
         );
 
@@ -313,7 +321,7 @@ export class ApplicationSubmissionReviewController {
           await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateRFFGHtml,
             status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
-            applicationSubmission: application,
+            applicationSubmission: submission,
             government: userLocalGovernment,
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
@@ -321,6 +329,9 @@ export class ApplicationSubmissionReviewController {
           });
         }
       }
+      return {
+        success: 'true',
+      };
     } else {
       throw new BaseServiceException('Application not in correct status');
     }
