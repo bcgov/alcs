@@ -34,14 +34,14 @@
             [innerHtml]="selectedSubmissionType.portalHtmlDescription"
           ></div>
         </div>
+        <span
+          class="read-more-btn"
+          [ngClass]="{ 'display-none': !isReadMoreVisible }"
+          *ngIf="selectedSubmissionType"
+          (click)="onReadMoreClicked()"
+          ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+        >
       </div>
-      <span
-        class="read-more-btn"
-        [ngClass]="{ 'display-none': !isReadMoreVisible }"
-        *ngIf="selectedSubmissionType"
-        (click)="onReadMoreClicked()"
-        ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
-      >
     </ng-container>
     <ng-container *ngIf="currentStep === steps.applicationType">
       <div class="subheading2 step-description">Select an option to learn more about the application type.</div>

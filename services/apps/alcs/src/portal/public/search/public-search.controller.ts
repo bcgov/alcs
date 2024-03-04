@@ -1,7 +1,10 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Post } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
+import { Repository } from 'typeorm';
+import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
 import { isStringSetAndNotEmpty } from '../../../utils/string-helper';
 import { APPLICATION_SUBMISSION_TYPES } from '../../pdf-generation/generate-submission-document.service';
 import { PublicApplicationSubmissionSearchView } from './application/public-application-search-view.entity';
@@ -27,6 +30,8 @@ export class PublicSearchController {
     private noticeOfIntentSearchService: PublicNoticeOfIntentSearchService,
     private applicationSearchService: PublicApplicationSearchService,
     private notificationSearchService: PublicNotificationSearchService,
+    @InjectRepository(ApplicationType)
+    private appTypeRepo: Repository<ApplicationType>,
   ) {}
 
   @Post('/')
@@ -57,7 +62,7 @@ export class PublicSearchController {
       notifications = await this.notificationSearchService.search(searchDto);
     }
 
-    return this.mapSearchResults(
+    return await this.mapSearchResults(
       applicationSearchResult,
       noticeOfIntentResults,
       notifications,
@@ -71,7 +76,11 @@ export class PublicSearchController {
     const applications =
       await this.applicationSearchService.searchApplications(searchDto);
 
-    const mappedSearchResult = this.mapSearchResults(applications, null, null);
+    const mappedSearchResult = await this.mapSearchResults(
+      applications,
+      null,
+      null,
+    );
 
     return {
       total: mappedSearchResult.totalApplications,
@@ -86,7 +95,7 @@ export class PublicSearchController {
     const noticeOfIntents =
       await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
 
-    const mappedSearchResult = this.mapSearchResults(
+    const mappedSearchResult = await this.mapSearchResults(
       null,
       noticeOfIntents,
       null,
@@ -105,7 +114,11 @@ export class PublicSearchController {
     const notifications =
       await this.notificationSearchService.search(searchDto);
 
-    const mappedSearchResult = this.mapSearchResults(null, null, notifications);
+    const mappedSearchResult = await this.mapSearchResults(
+      null,
+      null,
+      notifications,
+    );
 
     return {
       total: mappedSearchResult.totalNotifications,
@@ -153,7 +166,7 @@ export class PublicSearchController {
     };
   }
 
-  private mapSearchResults(
+  private async mapSearchResults(
     applications: AdvancedSearchResultDto<
       PublicApplicationSubmissionSearchView[]
     > | null,
@@ -168,9 +181,19 @@ export class PublicSearchController {
 
     const mappedApplications: ApplicationSearchResultDto[] = [];
     if (applications && applications.data.length > 0) {
+      const appTypes = await this.appTypeRepo.find({
+        select: {
+          code: true,
+          label: true,
+        },
+      });
+      const appTypeMap = new Map<string, ApplicationType>();
+      for (const type of appTypes) {
+        appTypeMap.set(type.code, type);
+      }
       mappedApplications.push(
         ...applications.data.map((app) =>
-          this.mapApplicationToSearchResult(app),
+          this.mapApplicationToSearchResult(app, appTypeMap),
         ),
       );
     }
@@ -205,12 +228,13 @@ export class PublicSearchController {
 
   private mapApplicationToSearchResult(
     application: PublicApplicationSubmissionSearchView,
+    appTypeMap: Map<string, ApplicationType>,
   ): ApplicationSearchResultDto {
     return {
       referenceId: application.fileNumber,
       fileNumber: application.fileNumber,
       dateSubmitted: application.dateSubmittedToAlc?.getTime(),
-      type: application.applicationType.label,
+      type: appTypeMap.get(application.applicationTypeCode)!.label,
       lastUpdate: application.lastUpdate?.getTime(),
       localGovernmentName: application.localGovernmentName,
       ownerName: application.applicant,
