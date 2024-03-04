@@ -6,12 +6,16 @@ from ..submission.srw_proposal_fields import process_alcs_srw_proposal_fields
 
 def process_srw(batch_size):
     init_srw(batch_size)
-    init_srw_submissions(batch_size)
 
 
 def init_srw(batch_size):
     init_srw_base(batch_size)
     update_srw_base_fields(batch_size)
+    _process_srw_submission(batch_size)
+
+
+def _process_srw_submission(batch_size):
+    init_srw_submissions(batch_size)
     process_alcs_srw_proposal_fields(batch_size)
 
 

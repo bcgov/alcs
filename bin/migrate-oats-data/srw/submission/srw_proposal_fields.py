@@ -40,7 +40,10 @@ def process_alcs_srw_proposal_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE oaa.alr_application_id > {last_application_id} ORDER BY oaa.alr_application_id;"
+                    f"""
+                        {application_sql} 
+                        WHERE oaa.alr_application_id > {last_application_id} ORDER BY oaa.alr_application_id;
+                    """
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -62,7 +65,7 @@ def process_alcs_srw_proposal_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
-                    logger.exception()
+                    logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
@@ -96,7 +99,7 @@ _update_query = """
                         submitters_file_number = %(submitters_file_number)s,
                         total_area = %(total_area)s
                     WHERE
-                        alcs.notification_submission.file_number = %(alr_application_id)s::TEXT
+                        alcs.notification_submission.file_number = %(file_number)s::TEXT
 """
 
 
