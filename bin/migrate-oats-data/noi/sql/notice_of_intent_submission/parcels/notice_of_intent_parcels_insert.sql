@@ -3,7 +3,7 @@ WITH parcels_to_insert AS (
         osp.subject_property_id
     FROM alcs.notification_submission nos
         JOIN oats.oats_subject_properties osp ON osp.alr_application_id = nos.file_number::bigint
-    WHERE osp.alr_application_land_ind = 'Y' -- ensure that only parcels related to application are selected
+    WHERE osp.alr_application_land_ind = 'Y'
         AND nos.type_code = 'SRW'
 ),
 grouped_oats_property_interests_ids AS (
