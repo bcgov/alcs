@@ -1,5 +1,5 @@
 from srw.post_launch import (
-    init_srw,
+    process_srw,
     clean_srw,
 )
 from common import setup_and_get_logger
@@ -17,7 +17,7 @@ def srw_import(console, args):
 
         logger.debug(f"Processing SRW import in batch size = {import_batch_size}")
 
-        init_srw(batch_size=import_batch_size)
+        process_srw(batch_size=import_batch_size)
 
 
 def srw_clean(console):
