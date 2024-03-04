@@ -2,7 +2,6 @@ DROP TABLE IF EXISTS oats.alcs_etl_srw_duplicate;
 CREATE TABLE oats.alcs_etl_srw_duplicate (
     id SERIAL PRIMARY KEY,
     application_id BIGINT,
-    card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
     duplicated bool DEFAULT false
 );
 -- function creates table to contain duplicate type code srw ids

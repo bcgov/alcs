@@ -10,38 +10,40 @@ from common import (
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
 
-etl_name = "process_notification_parcel_transferee"
+etl_name = "process_srw_parcel_transferee"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_notification_parcel_transferee(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def init_srw_parcel_transferee(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "srw/sql/notification_submission/transferee/notification_transferee_count.sql",
+            "srw/sql/submission/transferee/srw_transferee_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(f"Total Notice of Intents data to insert: {count_total}")
+        logger.info(f"Total Notification Transferee data to insert: {count_total}")
 
         failed_inserts = 0
         successful_insert_count = 0
-        last_subject_property = 0
-        last_person_organization_id = 0
+        last_application_id = 0
 
         with open(
-            "srw/sql/notification_submission/transferee/notification_transferee.sql",
+            "srw/sql/submission/transferee/srw_transferee.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE (osp.subject_property_id = {last_subject_property} AND opo.person_organization_id > {last_person_organization_id}) OR osp.subject_property_id > {last_subject_property}  ORDER BY osp.subject_property_id, opo.person_organization_id;"
+                    f"""
+                        {application_sql} 
+                        AND oaap.alr_application_id = {last_application_id} ORDER BY oaap.alr_application_id;
+                    """
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -57,18 +59,16 @@ def init_notification_parcel_transferee(conn=None, batch_size=BATCH_UPLOAD_SIZE)
                         successful_insert_count + records_to_be_inserted_count
                     )
 
-                    last_record = dict(rows[-1])
-                    last_subject_property = last_record["subject_property_id"]
-                    last_person_organization_id = last_record["person_organization_id"]
+                    last_application_id = dict(rows[-1])["alr_application_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert notice of intents owners so far {successful_insert_count}; last updated {last_subject_property} {last_person_organization_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully inserted Notification Transferees so far {successful_insert_count}; last updated {last_application_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_insert_count
-                    last_person_organization_id = last_person_organization_id + 1
+                    last_application_id = last_application_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful inserts {successful_insert_count}, total failed inserts {failed_inserts}"
@@ -89,17 +89,16 @@ def _compile_insert_query(number_of_rows_to_insert):
     records_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
                         INSERT INTO alcs.notification_transferee(
+                            audit_created_by,
+                            audit_created_at,
+                            email,
                             first_name, 
                             last_name,
-                            organization_name, 
                             notification_submission_uuid, 
-                            email, 
+                            organization_name, 
                             phone_number, 
-                            type_code, 
-                            oats_person_organization_id,
-                            oats_property_interest_id,
-                            audit_created_by,
-                            audit_created_at
+                            type_code,
+                            oats_alr_application_party_id
                         )
                         VALUES{records_to_insert}
                         ON CONFLICT DO NOTHING;
@@ -118,17 +117,16 @@ def _prepare_data_to_insert(rows, insert_index):
 
 def _map_data(row, insert_index):
     return {
-        "first_name": _get_name(row),
-        "last_name": row["last_name"],
-        "organization_name": _get_organization_name(row),
-        "notification_submission_uuid": row["notification_submission_uuid"],
-        "email": row["email_address"],
-        "phone_number": row.get("phone_number", "cell_phone_number"),
-        "type_code": _map_owner_type(row),
-        "oats_person_organization_id": row["person_organization_id"],
-        "oats_property_interest_id": row["property_interest_id"],
         "audit_created_by": OATS_ETL_USER,
         "audit_created_at": to_alcs_format(get_now_with_offset(insert_index)),
+        "email": row["email_address"],
+        "first_name": _get_name(row),
+        "last_name": row["last_name"],
+        "notification_submission_uuid": row["notification_submission_uuid"],
+        "organization_name": _get_organization_name(row),
+        "phone_number": row.get("phone_number", "cell_phone_number"),
+        "type_code": _map_owner_type(row),
+        "oats_alr_application_party_id": row["oats_alr_application_party_id"],
     }
 
 
@@ -151,14 +149,11 @@ def _get_name(row):
     ).strip()
 
 
-def _map_owner_type(owner_record):
-    if owner_record["ownership_type_code"] == ALCSOwnershipType.FeeSimple.value:
-        if owner_record["person_id"] and not owner_record["organization_id"]:
-            return ALCSOwnerType.INDV.value
-        elif owner_record["organization_id"]:
-            return ALCSOwnerType.ORGZ.value
-    elif owner_record["ownership_type_code"] == ALCSOwnershipType.Crown.value:
-        return ALCSOwnerType.CRWN.value
+def _map_owner_type(data):
+    if data["organization_id"]:
+        return ALCSOwnerType.ORGZ.value
+    if data["person_id"]:
+        return ALCSOwnerType.INDV.value
 
 
 @inject_conn_pool
@@ -166,7 +161,7 @@ def clean_transferees(conn=None):
     logger.info("Start notification transferee cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.notification_transferee not WHERE not.audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by IS NULL"
+            f"DELETE FROM alcs.notification_transferee WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by IS NULL"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
     conn.commit()
