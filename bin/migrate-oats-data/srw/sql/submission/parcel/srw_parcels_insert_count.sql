@@ -11,14 +11,7 @@ grouped_oats_property_interests_ids AS (
     FROM oats.oats_property_interests opi
     GROUP BY opi.subject_property_id
 )
-SELECT uuid AS notification_submission_uuid,
-    op.civic_address,
-    op.legal_description,
-    op.area_size,
-    op.pid,
-    op.pin,
-    osp.subject_property_id,
-    op.property_id
+SELECT count(*)
 FROM parcels_to_insert pti
     JOIN oats.oats_subject_properties osp ON osp.subject_property_id = pti.subject_property_id
     JOIN oats.oats_properties op ON op.property_id = osp.property_id

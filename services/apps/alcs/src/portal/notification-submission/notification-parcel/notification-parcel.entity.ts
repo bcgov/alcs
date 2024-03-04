@@ -72,4 +72,22 @@ export class NotificationParcel extends Base {
   @AutoMap()
   @Column()
   notificationSubmissionUuid: string;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_subject_properties to alcs.notification_parcel.',
+  })
+  oatsSubjectPropertyId: number;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_properties to alcs.notification_parcel.',
+  })
+  oatsPropertyId: number;
 }
