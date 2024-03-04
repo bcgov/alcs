@@ -31,7 +31,6 @@
     <textarea
       class="soil-text-area"
       formControlName="fillTypeToPlace"
-      #fillTypeToPlaceText
       maxlength="4000"
       matInput
       placeholder="Type, origin and quality of fill approved to be placed*"
@@ -62,7 +61,7 @@
         formControlName="areaToPlace"
         placeholder="Area*"
       />
-      <span matTextSuffix>ha</span>
+      <span matTextSuffix>m<sup>2</sup></span>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -86,7 +85,7 @@
         thousandSeparator=","
         separatorLimit="9999999999"
         formControlName="averageDepthToPlace"
-        placeholder="Volume*"
+        placeholder="Average Depth*"
       />
       <span matTextSuffix>m</span>
     </mat-form-field>

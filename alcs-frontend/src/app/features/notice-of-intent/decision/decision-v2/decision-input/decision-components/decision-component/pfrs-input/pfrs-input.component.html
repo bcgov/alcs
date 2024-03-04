@@ -43,7 +43,6 @@
     <textarea
       class="soil-text-area"
       formControlName="soilTypeRemoved"
-      #fillTypeToPlaceText
       maxlength="4000"
       matInput
       placeholder="Type of soil approved to be removed*"
@@ -54,7 +53,6 @@
     <textarea
       class="soil-text-area"
       formControlName="fillTypeToPlace"
-      #fillTypeToPlaceText
       maxlength="4000"
       matInput
       placeholder="Type, origin and quality of fill approved to be placed*"
@@ -64,13 +62,13 @@
   <div class="soil-table">
     <div></div>
     <div>
-      <label for="volume">Soil to be Removed</label>
+      <label>Soil to be Removed</label>
     </div>
     <div>
-      <label for="volume">Fill to be placed</label>
+      <label>Fill to be placed</label>
     </div>
     <div class="label">
-      <label for="volumeToRemove">Volume*</label>
+      <label>Volume*</label>
     </div>
     <div>
       <mat-form-field appearance="outline" class="full-width">
@@ -99,7 +97,7 @@
       </mat-form-field>
     </div>
     <div class="label">
-      <label for="areaToRemove">Area*</label>
+      <label>Area*</label>
     </div>
     <div>
       <mat-form-field appearance="outline" class="full-width">
@@ -124,11 +122,11 @@
           matInput
           formControlName="areaToPlace"
         />
-        <span matTextSuffix>ha</span>
+        <span matTextSuffix>m<sup>2</sup></span>
       </mat-form-field>
     </div>
     <div class="label">
-      <label for="maximumDepthToRemove">Maximum Depth*</label>
+      <label>Maximum Depth*</label>
     </div>
     <div>
       <mat-form-field appearance="outline" class="full-width">
@@ -157,7 +155,7 @@
       </mat-form-field>
     </div>
     <div class="label">
-      <label for="averageDepthToRemove">Average Depth*</label>
+      <label>Average Depth*</label>
     </div>
     <div>
       <mat-form-field appearance="outline" class="full-width">
