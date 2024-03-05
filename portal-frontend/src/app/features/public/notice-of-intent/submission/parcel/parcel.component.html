@@ -93,7 +93,7 @@
     </ng-container>
     <div class="full-width owner-information" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
       <div class="subheading2">Land Owner(s)</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
+      <div class="subheading2">Organization</div>
       <ng-container *ngFor="let owner of parcel.owners">
         <div>{{ owner.displayName }}</div>
         <div>
