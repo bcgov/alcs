@@ -59,28 +59,28 @@
       </div>
     </ng-container>
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <h5 *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Government Parcel Contact</h5>
+      <h5>Government Parcel Contact</h5>
       <ng-container *ngIf="parcel.owners[0]">
         <div class="subheading2 grid-1">First Name</div>
         <div class="grid-double">
           {{ parcel.owners[0].firstName }}
           <app-no-data *ngIf="!parcel.owners[0].firstName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+        <div class="subheading2 grid-1">
           Last Name
         </div>
         <div class="grid-double">
           {{ parcel.owners[0].lastName }}
           <app-no-data *ngIf="!parcel.owners[0].lastName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+        <div class="subheading2 grid-1">
           Ministry or Department
         </div>
         <div class="grid-double">
           {{ parcel.owners[0].organizationName }}
           <app-no-data *ngIf="!parcel.owners[0].organizationName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+        <div class="subheading2 grid-1">
           Crown Type
         </div>
         <div class="grid-double">
@@ -93,10 +93,7 @@
     </ng-container>
     <div class="full-width owner-information" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
       <div class="subheading2">Land Owner(s)</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-        Ministry or Department
-      </div>
+      <div class="subheading2">Organization</div>
       <ng-container *ngFor="let owner of parcel.owners">
         <div>{{ owner.displayName }}</div>
         <div>
