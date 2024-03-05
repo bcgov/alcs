@@ -36,16 +36,27 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: '**',
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      testIgnore: '**',
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      testIgnore: '**',
+    },
+    {
+      name: 'portal',
+      use: {
+        baseURL: 'http://localhost:4201',
+      },
+      dependencies: ['chromium'],
+      testMatch: 'portal/**/*.spec.ts',
     },
 
     /* Test against mobile viewports. */
