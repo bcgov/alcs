@@ -18,6 +18,14 @@ To run tests:
 $ npx playwright test
 ```
 
+To run tests just for a specific project:
+
+```bash
+$ npx playwright test --project=[portal]
+```
+
+For now, `portal` is the only project.
+
 To run headed:
 
 ```bash
