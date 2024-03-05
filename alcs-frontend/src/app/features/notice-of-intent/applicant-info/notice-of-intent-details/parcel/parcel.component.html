@@ -119,9 +119,9 @@
       class="full-width owner-information"
       [ngClass]="{ 'crown-owner-information': parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN }" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN"
     >
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Land Owner(s)</div>
+      <div class="subheading2">Land Owner(s)</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Crown Contact</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
+      <div class="subheading2">Organization</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
         Ministry/Department
       </div>
