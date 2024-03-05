@@ -1,4 +1,5 @@
-SELECT op.person_id,
+SELECT oaap.alr_application_party_id,
+    op.person_id,
     op.first_name,
     op.last_name,
     op.middle_name,

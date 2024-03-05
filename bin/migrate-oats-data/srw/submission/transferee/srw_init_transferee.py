@@ -37,12 +37,12 @@ def init_srw_parcel_transferee(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             "r",
             encoding="utf-8",
         ) as sql_file:
-            application_sql = sql_file.read()
+            query = sql_file.read()
             while True:
                 cursor.execute(
                     f"""
-                        {application_sql} 
-                        AND oaap.alr_application_id = {last_application_id} ORDER BY oaap.alr_application_id;
+                        {query} 
+                        AND oaap.alr_application_id > {last_application_id} ORDER BY oaap.alr_application_id;
                     """
                 )
 
@@ -82,6 +82,7 @@ def _insert_records(conn, cursor, rows, insert_index):
         insert_query = _compile_insert_query(number_of_rows_to_insert)
         rows_to_insert = _prepare_data_to_insert(rows, insert_index)
         cursor.execute(insert_query, rows_to_insert)
+        print("commit records")
         conn.commit()
 
 
@@ -126,7 +127,7 @@ def _map_data(row, insert_index):
         "organization_name": _get_organization_name(row),
         "phone_number": row.get("phone_number", "cell_phone_number"),
         "type_code": _map_owner_type(row),
-        "oats_alr_application_party_id": row["oats_alr_application_party_id"],
+        "oats_alr_application_party_id": row["alr_application_party_id"],
     }
 
 

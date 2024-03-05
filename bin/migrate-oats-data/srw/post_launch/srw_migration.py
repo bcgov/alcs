@@ -27,7 +27,7 @@ def _process_srw_submission(batch_size):
 
 
 def clean_srw():
+    clean_transferees()
     clean_parcels()
     clean_srw_submissions()
     clean_initial_srw()
-    clean_transferees()
