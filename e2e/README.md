@@ -27,7 +27,7 @@ $ npx playwright test --headed
 To run in UI mode:
 
 ```bash
-$ npx playwright ui
+$ npx playwright test --ui
 ```
 
 To show a report:
