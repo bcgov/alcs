@@ -16,8 +16,8 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         env:
-          FAKE_USERNAME: ${{ secrets.BCEID_BASIC_USERNAME }}
-          FAKE_PASSWORD: ${{ secrets.BCEID_BASIC_PASSWORD }}
+          BCEID_BASIC_USERNAME: ${{ secrets.BCEID_BASIC_USERNAME }}
+          BCEID_BASIC_PASSWORD: ${{ secrets.BCEID_BASIC_PASSWORD }}
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
