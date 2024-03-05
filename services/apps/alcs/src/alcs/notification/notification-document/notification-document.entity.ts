@@ -56,6 +56,12 @@ export class NotificationDocument extends BaseEntity {
   @Column({ nullable: true, type: 'uuid' })
   documentUuid?: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  oatsApplicationId?: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  oatsDocumentId?: string | null;
+
   @AutoMap(() => [String])
   @Column({ default: [], array: true, type: 'text' })
   visibilityFlags: VISIBILITY_FLAG[];
