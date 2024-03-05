@@ -7,8 +7,8 @@ test('test', async ({ page }) => {
   await page
     .getByLabel('Password')
     .fill(process.env.BCEID_BASIC_PASSWORD ?? '');
-  await page.getByLabel('Password').press('Enter');
+  await page.getByRole('button', { name: /continue/i }).click();
   await expect(
-    page.getByRole('heading', { name: 'Portal Inbox' }).textContent()
-  ).toBe('Portal Inbox');
+    page.getByRole('heading', { name: 'Portal Inbox' })
+  ).toBeVisible();
 });
