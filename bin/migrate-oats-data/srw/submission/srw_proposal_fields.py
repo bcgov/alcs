@@ -1,4 +1,4 @@
-from common import BATCH_UPLOAD_SIZE, NO_DATA_IN_OATS, setup_and_get_logger
+from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
