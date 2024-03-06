@@ -20,5 +20,5 @@ SELECT *,
     ) AS applicant_suffix,
     ns.file_number
 FROM ranked_transferees
-    JOIN alcs.notification_submission ns ON ns."uuid" = notification_submission_uuid
+    JOIN alcs.notification_submission ns ON ns."uuid" = notification_submission_uuid AND ns.type_code='SRW'
 WHERE rn = 1

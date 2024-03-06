@@ -10,4 +10,5 @@ WITH ranked_transferees AS (
 SELECT count(*)
 FROM ranked_transferees
     JOIN alcs.notification_submission ns ON ns."uuid" = notification_submission_uuid
+    AND ns.type_code = 'SRW'
 WHERE rn = 1
