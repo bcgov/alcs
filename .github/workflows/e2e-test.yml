@@ -1,7 +1,7 @@
 name: E2E Testing w/ Playwright
 on:
   schedule:
-    # 4:23 am daily
+    # 5:23 am daily
     - cron: "23 5 * * *"
 jobs:
   test:
