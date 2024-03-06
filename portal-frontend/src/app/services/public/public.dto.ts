@@ -8,6 +8,7 @@ export interface PublicOwnerDto {
   firstName?: string | null;
   lastName?: string | null;
   organizationName?: string | null;
+  crownLandOwnerType?: string | null;
   type: OwnerTypeDto;
 }
 

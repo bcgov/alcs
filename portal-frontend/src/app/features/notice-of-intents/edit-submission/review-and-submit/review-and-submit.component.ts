@@ -57,7 +57,7 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
-      await this.pdfGenerationService.generateAppSubmission(fileNumber);
+      await this.pdfGenerationService.generateNoiSubmission(fileNumber);
     }
   }
 }

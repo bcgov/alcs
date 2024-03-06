@@ -22,7 +22,6 @@ export class SubtaskTableComponent {
   @Input() subtasks: HomepageSubtaskDto[] = [];
   @Input() users: AssigneeDto[] = [];
 
-  displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
 
   MODIFICATION_TYPE_LABEL = MODIFICATION_TYPE_LABEL;
   PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL;
@@ -38,6 +37,23 @@ export class SubtaskTableComponent {
     private router: Router,
     private cardSubtaskService: CardSubtaskService,
   ) {}
+
+  get displayedColumns(): string[] {
+    // Include all default columns
+    const columns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
+
+    // Check if any file has type 'NOTI'
+    const hasNoti = this.subtasks.some(task => task.parentType === 'notification');
+    // If 'NOTI' type exists, remove 'activeDays' column
+    if (hasNoti) {
+      const index = columns.indexOf('activeDays');
+      if (index !== -1) {
+        columns.splice(index, 1);
+      }
+    }
+
+    return columns;
+  }
 
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();

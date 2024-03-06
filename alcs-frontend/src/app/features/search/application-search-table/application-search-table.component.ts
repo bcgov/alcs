@@ -79,6 +79,7 @@ export class ApplicationSearchTableComponent {
     this.pageIndex = 0;
     this.sortDirection = sort.direction;
     this.sortField = sort.active;
+    this.onTableChange();
   }
 
   private mapApplications(applications: ApplicationSearchResultDto[]): SearchResult[] {

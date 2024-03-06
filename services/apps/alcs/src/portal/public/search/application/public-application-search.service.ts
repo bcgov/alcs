@@ -35,11 +35,11 @@ export class PublicApplicationSearchService {
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
-    const result = await query.getManyAndCount();
+    const results = await Promise.all([query.getMany(), query.getCount()]);
 
     return {
-      data: result[0],
-      total: result[1],
+      data: results[0],
+      total: results[1],
     };
   }
 
@@ -72,11 +72,6 @@ export class PublicApplicationSearchService {
       //        submissions with deleted application types to be shown. For now, there are no
       //        deleted application types, so this should be fine, but should be fixed soon.
       .withDeleted()
-      .innerJoinAndMapOne(
-        'appSearch.applicationType',
-        'appSearch.applicationType',
-        'applicationType',
-      )
       .groupBy(
         `
               "appSearch"."uuid"
@@ -93,18 +88,6 @@ export class PublicApplicationSearchService {
             , "appSearch"."date_submitted_to_alc"
             , "appSearch"."decision_date"
             , "appSearch"."last_update"
-            , "applicationType"."audit_deleted_date_at"
-            , "applicationType"."audit_created_at"
-            , "applicationType"."audit_updated_by"
-            , "applicationType"."audit_updated_at"
-            , "applicationType"."audit_created_by"
-            , "applicationType"."short_label"
-            , "applicationType"."label"
-            , "applicationType"."code"
-            , "applicationType"."background_color"
-            , "applicationType"."text_color"
-            , "applicationType"."html_description"
-            , "applicationType"."portal_label"
             `,
       );
     return query;

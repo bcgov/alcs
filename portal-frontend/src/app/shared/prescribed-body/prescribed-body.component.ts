@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { scrollToElement } from '../utils/scroll-helper';
 
 const FIRST_NATION = 'First Nation Government';
 const LOCAL = 'Local Government';
@@ -65,6 +66,17 @@ export class PrescribedBodyComponent implements OnInit {
   }
 
   onSelect(chosenValue: string) {
+    setTimeout(() => {
+      const element = document.getElementsByClassName('warning-banner');
+      if (element.length > 0) {
+        element[0].scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center',
+          block: 'center',
+        });
+      }
+    }, 300);
+
     this.selectedValue = chosenValue;
     if (
       (chosenValue === LOCAL && !this.isLocalGovernmentUser) ||

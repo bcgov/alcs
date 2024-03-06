@@ -17,6 +17,7 @@ import { parseStringToBoolean } from '../../../../../shared/utils/string-helper'
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { CovenantTransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-cove-proposal',
@@ -52,6 +53,7 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
 
   constructor(
     private covenantTransfereeService: CovenantTransfereeService,
+    private confDialogService: ConfirmationDialogService,
     private applicationSubmissionService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
@@ -161,8 +163,16 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   async onDelete(uuid: string) {
-    await this.covenantTransfereeService.delete(uuid);
-    await this.loadTransferees(this.submissionUuid);
+    const selectedTransferee = this.transferees.find((transferee) => transferee.uuid === uuid);
+    this.confDialogService
+      .openDialog({
+        title: 'Remove Transferee',
+        body: `This action will remove ${selectedTransferee?.firstName} ${selectedTransferee?.lastName} and its usage from the entire Application. Are you sure you want to remove this transferee? `,
+      })
+      .subscribe(async (confirmed) => {
+        await this.covenantTransfereeService.delete(uuid);
+        await this.loadTransferees(this.submissionUuid);
+      });
   }
 
   onChangeHasDraftCopy(value: string) {

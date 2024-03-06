@@ -2,6 +2,7 @@ from applications.post_launch import process_application_etl
 from noi.post_launch import (
     process_notice_of_intent,
 )
+from srw.post_launch.srw_migration import process_srw
 
 
 def import_all(console, args):
@@ -17,5 +18,8 @@ def import_all(console, args):
 
         console.log("Processing notice of intents")
         process_notice_of_intent(batch_size=import_batch_size)
+
+        console.log("Processing SRW")
+        process_srw(batch_size=import_batch_size)
 
         console.log("Done")

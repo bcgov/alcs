@@ -3,19 +3,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { Volume, fs } from 'memfs';
+import { Volume } from 'memfs';
 import * as path from 'path';
-import { LocalGovernment } from '../local-government/local-government.entity';
-import { LocalGovernmentService } from '../local-government/local-government.service';
+import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { ApplicationMeeting } from '../application/application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from '../application/application-meeting/application-meeting.service';
 import { ApplicationPaused } from '../application/application-paused.entity';
 import { ApplicationPausedService } from '../application/application-paused/application-paused.service';
-import { Application } from '../application/application.entity';
+import { ApplicationSubmissionStatusService } from '../application/application-submission-status/application-submission-status.service';
 import { ApplicationService } from '../application/application.service';
 import { BoardService } from '../board/board.service';
 import { Card } from '../card/card.entity';
-import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
+import { LocalGovernment } from '../local-government/local-government.entity';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { ApplicationImportService } from './application-import.service';
 
 dayjs.extend(utc);
@@ -35,6 +35,7 @@ describe('ImportService', () => {
   let mockPausedService: DeepMocked<ApplicationPausedService>;
   let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockBoardService: DeepMocked<BoardService>;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   let mockDataRow;
   let mockApplication;
@@ -42,11 +43,12 @@ describe('ImportService', () => {
   beforeEach(async () => {
     jest.resetAllMocks();
 
-    mockApplicationservice = createMock<ApplicationService>();
-    mockApplicationMeetingService = createMock<ApplicationMeetingService>();
-    mockPausedService = createMock<ApplicationPausedService>();
-    mockLocalGovernmentService = createMock<LocalGovernmentService>();
-    mockBoardService = createMock<BoardService>();
+    mockApplicationservice = createMock();
+    mockApplicationMeetingService = createMock();
+    mockPausedService = createMock();
+    mockLocalGovernmentService = createMock();
+    mockBoardService = createMock();
+    mockApplicationSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -71,6 +73,10 @@ describe('ImportService', () => {
           provide: BoardService,
           useValue: mockBoardService,
         },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
+        },
       ],
     }).compile();
 
@@ -84,10 +90,13 @@ describe('ImportService', () => {
       Region: 'fake-region',
     };
 
-    mockApplicationservice.get.mockResolvedValue(null);
     mockApplication = initApplicationMockEntity(mockDataRow['App ID']);
+    mockApplicationservice.get.mockResolvedValue(mockApplication);
     mockApplicationservice.create.mockResolvedValue(mockApplication);
     mockApplicationservice.update.mockResolvedValue(mockApplication);
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
 
     mockLocalGovernmentService.getByName.mockResolvedValue({
       uuid: 'government-uuid',
@@ -116,108 +125,7 @@ describe('ImportService', () => {
 
     await service.importCsv();
 
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledWith({
-      applicant: 'Imported',
-      dateSubmittedToAlc: dayjs('2022-05-08')
-        .tz('Canada/Pacific')
-        .startOf('day')
-        .toDate(),
-      fileNumber: '51231',
-      localGovernmentUuid: 'government-uuid',
-      regionCode: undefined,
-      typeCode: 'PFRS',
-    });
-  });
-
-  it('should do nothing if the file already exists', async () => {
-    mockApplicationservice.get.mockResolvedValue({} as Application);
-
-    await service.parseRow(mockDataRow, new Map());
-
-    expect(mockApplicationservice.get).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(0);
-  });
-
-  it('should do nothing if there is no mapping data', async () => {
-    await service.parseRow(mockDataRow, new Map());
-
-    expect(mockApplicationservice.get).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(0);
-  });
-
-  it('should create a new application if the file does not exist', async () => {
-    await service.parseRow(
-      mockDataRow,
-      new Map([
-        [
-          mockApplication.fileNumber,
-          {
-            type: 'SDV',
-            localGovernment: 'lg',
-          },
-        ],
-      ]),
-    );
-
-    expect(mockApplicationservice.get).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
-  });
-
-  it('should should do a fallback search for local government', async () => {
-    mockLocalGovernmentService.getByName.mockResolvedValueOnce(null);
-    mockLocalGovernmentService.getByName.mockResolvedValueOnce(
-      {} as LocalGovernment,
-    );
-    await service.parseRow(
-      mockDataRow,
-      new Map([
-        [
-          mockApplication.fileNumber,
-          {
-            type: 'SDV',
-            localGovernment: 'lg',
-          },
-        ],
-      ]),
-    );
-
-    expect(mockApplicationservice.get).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
-    expect(mockLocalGovernmentService.getByName).toHaveBeenCalledTimes(2);
-    expect(mockLocalGovernmentService.getByName).toHaveBeenCalledWith('lg');
-    expect(mockLocalGovernmentService.getByName).toHaveBeenCalledWith(
-      'lg Regional District',
-    );
-  });
-
-  it('should change the board if the row is ackComplete', async () => {
-    const dataRowWithAckComplete = {
-      ...mockDataRow,
-      'Ack by ALC': new Date(),
-    };
-    mockBoardService.changeBoard.mockResolvedValue({} as Card);
-
-    await service.parseRow(
-      dataRowWithAckComplete,
-      new Map([
-        [
-          mockApplication.fileNumber,
-          {
-            type: 'SDV',
-            localGovernment: 'lg',
-          },
-        ],
-      ]),
-    );
-
-    expect(mockApplicationservice.get).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
-    expect(mockBoardService.changeBoard).toHaveBeenCalledTimes(1);
-    expect(mockBoardService.changeBoard).toHaveBeenCalledWith(
-      mockApplication.cardUuid,
-      'exec',
-    );
+    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
   });
 
   it('should create a meeting and a pause for row with request date', async () => {
@@ -231,21 +139,9 @@ describe('ImportService', () => {
       {} as ApplicationMeeting,
     );
 
-    await service.parseRow(
-      dataRowWithRequests,
-      new Map([
-        [
-          mockApplication.fileNumber,
-          {
-            type: 'SDV',
-            localGovernment: 'lg',
-          },
-        ],
-      ]),
-    );
+    await service.parseRow(dataRowWithRequests);
 
     expect(mockApplicationservice.get).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
     expect(mockPausedService.createOrUpdate).toHaveBeenCalledTimes(1);
     expect(mockApplicationMeetingService.create).toHaveBeenCalledTimes(1);
   });
@@ -263,21 +159,9 @@ describe('ImportService', () => {
       {} as ApplicationMeeting,
     );
 
-    await service.parseRow(
-      dataRowWithRequests,
-      new Map([
-        [
-          mockApplication.fileNumber,
-          {
-            type: 'SDV',
-            localGovernment: 'lg',
-          },
-        ],
-      ]),
-    );
+    await service.parseRow(dataRowWithRequests);
 
     expect(mockApplicationservice.get).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.create).toHaveBeenCalledTimes(1);
     expect(mockPausedService.createOrUpdate).toHaveBeenCalledTimes(2);
     expect(mockApplicationMeetingService.create).toHaveBeenCalledTimes(1);
   });

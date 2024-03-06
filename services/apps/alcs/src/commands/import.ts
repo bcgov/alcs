@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
 import { ApplicationImportService } from '../alcs/import/application-import.service';
 import { NoticeOfIntentImportService } from '../alcs/import/noi-import.service';

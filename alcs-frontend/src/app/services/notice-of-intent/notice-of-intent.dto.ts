@@ -324,6 +324,7 @@ export interface SubmittedNoticeOfIntentOwnerDto {
   firstName: string;
   lastName: string;
   organizationName?: string;
+  crownLandOwnerType?: string;
   phoneNumber: string;
   email: string;
   type: BaseCodeDto;

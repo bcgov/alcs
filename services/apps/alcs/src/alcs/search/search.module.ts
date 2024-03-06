@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { Application } from '../application/application.entity';
+import { ApplicationModule } from '../application/application.module';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -22,6 +24,7 @@ import { SearchService } from './search.service';
   imports: [
     TypeOrmModule.forFeature([
       Application,
+      ApplicationType,
       NoticeOfIntent,
       PlanningReview,
       Covenant,
