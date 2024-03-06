@@ -94,7 +94,9 @@ def _compile_insert_query(number_of_rows_to_insert):
                             visibility_flags,
                             oats_document_id,
                             oats_application_id,
-                            audit_created_by           
+                            audit_created_by,
+                            survey_plan_number,
+                            control_number           
                         )
                         VALUES{documents_to_insert}
                         ON CONFLICT (oats_document_id, oats_application_id) DO UPDATE SET 
@@ -102,7 +104,9 @@ def _compile_insert_query(number_of_rows_to_insert):
                             document_uuid = EXCLUDED.document_uuid, 
                             type_code = EXCLUDED.type_code,
                             visibility_flags = EXCLUDED.visibility_flags,
-                            audit_created_by = EXCLUDED.audit_created_by;
+                            audit_created_by = EXCLUDED.audit_created_by,
+                            survey_plan_number = EXCLUDED.survey_plan_number,
+                            control_number = EXCLUDED.control_number;
     """
 
 
@@ -124,6 +128,8 @@ def _map_data(row):
         "oats_document_id": row["oats_document_id"],
         "oats_application_id": row["oats_application_id"],
         "audit_created_by": OATS_ETL_USER,
+        "plan_number": row["plan_no"],
+        "control_number": row["control_no"],
     }
 
 

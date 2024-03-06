@@ -5,11 +5,14 @@ with oats_documents_to_map as (
 		publicly_viewable_ind as is_public,
 		app_lg_viewable_ind as is_app_lg,
 		od.document_id as oats_document_id,
-		od.alr_application_id as oats_application_id
+		od.alr_application_id as oats_application_id,
+        oaa.plan_no,
+        oaa.control_no
 	from oats.oats_documents od
 		join alcs."document" d on d.oats_document_id = od.document_id::text
 		join alcs.document_code adc on adc.oats_code = od.document_code
 		join alcs.notification n on n.file_number = od.alr_application_id::text
+        JOIN oats.oats_alr_applications oaa ON od.alr_application_id = oaa.alr_application_id
 )
 select otm.notification_uuid,
 	otm.document_uuid,
@@ -25,5 +28,6 @@ select otm.notification_uuid,
 	) as visibility_flags,
 	oats_document_id,
 	oats_application_id,
-	'oats_etl' as audit_created_by
+	plan_no,
+    control_no
 from oats_documents_to_map otm

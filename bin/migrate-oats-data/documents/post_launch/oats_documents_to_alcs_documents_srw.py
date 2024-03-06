@@ -7,6 +7,7 @@ from common import (
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
+import os
 
 etl_name = "import_srw_documents_from_oats"
 logger = setup_and_get_logger(etl_name)
@@ -132,7 +133,7 @@ def _map_data(row):
         "oats_application_id": row["oats_application_id"],
         "audit_created_by": OATS_ETL_USER,
         "file_key": row["file_key"],
-        "mime_type": row["mime_type"],
+        "mime_type": _get_mime_type(row),
         "tags": row["tags"],
         "system": _map_system(row),
         "file_upload_date": _get_upload_date(row),
@@ -164,6 +165,15 @@ def _get_document_source(data):
         source = str(OatsToAlcsDocumentSourceCode[source].value)
 
     return source
+
+
+def _get_mime_type(data):
+    file_name = data.get("file_name", "")
+    extension = os.path.splitext(file_name)[-1].lower().strip()
+    if extension == ".pdf":
+        return "application/pdf"
+    else:
+        return "application/octet-stream"
 
 
 @inject_conn_pool
