@@ -5,7 +5,9 @@ import { ApplicationRegion } from '../code/application-code/application-region/a
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { PlanningReviewType } from './planning-review-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'A review of a local government or municipalities plan',
+})
 export class PlanningReview extends Base {
   constructor(data?: Partial<PlanningReview>) {
     super();

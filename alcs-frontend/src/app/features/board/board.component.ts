@@ -384,7 +384,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapPlanningReferralToCard(referral: PlanningReferralDto): CardData {
     return {
       status: referral.card.status.code,
-      typeLabel: 'Non-Application',
+      typeLabel: 'Planning Review',
       title: `${referral.planningReview.fileNumber} (${referral.planningReview.documentName})`,
       titleTooltip: referral.planningReview.type.label,
       assignee: referral.card.assignee,
@@ -395,6 +395,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       highPriority: referral.card.highPriority,
       cardUuid: referral.card.uuid,
       dateReceived: referral.card.createdAt,
+      dueDate: referral.dueDate ? new Date(referral.dueDate) : undefined,
     };
   }
 

@@ -13,9 +13,7 @@ export enum CARD_TYPE {
   NOTIFICATION = 'NOTI',
 }
 
-@Entity({
-  comment: '',
-})
+@Entity()
 export class CardType extends BaseCodeEntity {
   constructor(data?: Partial<CardType>) {
     super();

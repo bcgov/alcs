@@ -5,7 +5,10 @@ import { Base } from '../../../common/entities/base.entity';
 import { Card } from '../../card/card.entity';
 import { PlanningReview } from '../planning-review.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Planning Referrals represent each pass of a Planning Review with their own cards',
+})
 export class PlanningReferral extends Base {
   constructor(data?: Partial<PlanningReferral>) {
     super();
