@@ -121,7 +121,7 @@ python migrate-files.py issue
 ```
 
 ```sh
-# to start issue document import
+# to start srw document import
 python migrate-files.py srw
 ```
 
@@ -143,7 +143,7 @@ python3-intel64 migrate-files.py issue
 ```
 
 ```sh
-# to start issue document import
+# to start srw document import
 python3-intel64 migrate-files.py srw
 ```
 
