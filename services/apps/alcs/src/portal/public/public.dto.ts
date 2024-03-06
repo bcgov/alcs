@@ -78,6 +78,9 @@ export class PublicOwnerDto {
   @AutoMap(() => String)
   organizationName?: string | null;
 
+  @AutoMap(() => String)
+  crownLandOwnerType?: string | null;
+
   @AutoMap()
   type: OwnerTypeDto;
 }

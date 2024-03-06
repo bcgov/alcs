@@ -357,7 +357,10 @@
             </div>
             <div class="row">
               <div class="key"><strong>Crown Type:</strong></div>
-              <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
+              <div class="value">
+                {{ selectedOwner.crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
+                {{ selectedOwner.crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
+              </div>
             </div>
             <div class="row">
               <button type="button" [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>
