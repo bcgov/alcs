@@ -4,6 +4,7 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application":"local_government_uuid":w -> "local_government":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"region_code":w -> "application_region":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application":"type_code":w -> "application_type":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_boundary_amendments_to_components":"elipses":w -> "application_decision_component":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"ceo_criterion_code":w -> "application_ceo_criterion_code":"code":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"chair_review_outcome_code":w -> "application_decision_chair_review_outcome_type":"code":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -59,6 +60,17 @@ digraph "twoDegreesRelationshipsDiagram" {
     URL="application.html"
     target="_top"
     tooltip="application"
+  ];
+  "application_boundary_amendments_to_components" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="377" HEIGHT="16"><B>application_boundary_amendments_to_components</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="application_boundary_amendments_f236d527.html"
+    target="_top"
+    tooltip="application_boundary_amendments_to_components"
   ];
   "application_ceo_criterion_code" [
    label=<
@@ -136,7 +148,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="application_decision_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="317" HEIGHT="16">application_decision_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="naru_subtype_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="317" HEIGHT="16">naru_subtype_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_decision_component.html"
     target="_top"

@@ -8,6 +8,7 @@ parcel_ownership_type
 application_reconsideration_outcome_type
 card_status
 naru_subtype
+application_boundary_amendment
 application_ceo_criterion_code
 application_decision_chair_review_outcome_type
 application_decision_component_type
@@ -40,10 +41,10 @@ application_modification
 application_reconsideration
 application_decision
 notice_of_intent_modification
+application_decision_component
 application_submission
 notice_of_intent_decision
 notice_of_intent_submission
-application_decision_component
 notification
 application_document
 notice_of_intent_document
@@ -63,6 +64,7 @@ card_history
 holiday_entity
 migrations
 typeorm_metadata
+application_boundary_amendments_to_components
 application_decision_condition_component
 application_decision_condition_component_plan_number
 application_decision_condition_to_component_lot

@@ -535,12 +535,12 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>oats_org_chk</td>
-                                    <td>(((((org_type)::text &#61; &#39;BGO&#39;::text) AND (ministry_cd IS NOT NULL) AND (organization_unit_cd IS NOT NULL) AND (alias_name IS NULL)) OR (((org_type)::text &#61; &#39;NBC&#39;::text) AND (ministry_cd IS NULL) AND (organization_unit_cd IS NULL))))</td>
-                                </tr>
-                                <tr>
                                     <td>oats_org_ot_chk</td>
                                     <td>(((org_type)::text &#61; ANY ((ARRAY[&#39;BGO&#39;::character varying, &#39;NBC&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_org_chk</td>
+                                    <td>(((((org_type)::text &#61; &#39;BGO&#39;::text) AND (ministry_cd IS NOT NULL) AND (organization_unit_cd IS NOT NULL) AND (alias_name IS NULL)) OR (((org_type)::text &#61; &#39;NBC&#39;::text) AND (ministry_cd IS NULL) AND (organization_unit_cd IS NULL))))</td>
                                 </tr>
                                 </tbody>
                             </table>
