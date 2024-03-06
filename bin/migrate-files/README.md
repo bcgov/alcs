@@ -10,6 +10,8 @@ The files are uploaded in the format `/migrate/application||issue||planning_revi
 - `document_id` is the primary key from the documents table
 - `filename` is the filename metadata from the documents table
 
+Note: SRWs are stored in the application folder but imported separately
+
 ## Libraries Used
 
 os: used to interact with the file system  
@@ -72,6 +74,7 @@ To run the script, run the following command:
 python migrate-files.py application
 python migrate-files.py application --start_document_id=500240 --end_document_id=505260 --last_imported_document_id=500475
 ```
+Note: SRWs are stored in the application folder but imported separately
 
 Application document import supports running multiple terminals at the same time with specifying baches of data to import.
 
@@ -117,6 +120,11 @@ python migrate-files.py planning
 python migrate-files.py issue
 ```
 
+```sh
+# to start issue document import
+python migrate-files.py srw
+```
+
 M1:
 
 ```sh
@@ -132,6 +140,11 @@ python3-intel64 migrate-files.py planning
 ```sh
 # to start issue document import
 python3-intel64 migrate-files.py issue
+```
+
+```sh
+# to start issue document import
+python3-intel64 migrate-files.py srw
 ```
 
 The script will start uploading files from the Oracle database to DELL ECS. The upload progress will be displayed in a progress bar. For Planning and Issues documents the script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption. For Application documents import it is responsibility of whoever is running the process to specify "last_imported_document_id"
