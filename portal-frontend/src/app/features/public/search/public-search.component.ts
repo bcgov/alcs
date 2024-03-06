@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
@@ -128,7 +128,8 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     private codeService: CodeService,
     private statusService: StatusService,
     private toastService: ToastService,
-    private titleService: Title
+    private titleService: Title,
+    private elementRef: ElementRef,
   ) {
     this.titleService.setTitle('ALC Portal | Public Search');
   }
@@ -193,6 +194,14 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     sessionStorage.setItem(SEARCH_SESSION_STORAGE_KEY, searchDto);
 
     this.isLoading = true;
+    const element = this.elementRef.nativeElement.querySelector(`#${CSS.escape('searchResults')}`);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'start',
+      });
+    }
     const result = await this.searchService.search(searchParams);
     this.searchResultsHidden = false;
     this.isLoading = false;
