@@ -33,8 +33,6 @@ def import_oats_srw_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
-            # count_total = dict(cursor.fetchone())["count"]
-            # cursor.fetchone()[0]
             total_count = dict(cursor.fetchone())["count"]
         logger.info(f"Total count of documents to transfer: {total_count}")
 
@@ -144,9 +142,7 @@ def _map_data(row):
 
 def _map_system(row):
     who_created = row["who_created"]
-    if who_created == "PROXY_OATS_LOCGOV":
-        sys = "OATS_P"
-    elif who_created == "PROXY_OATS_APPLICANT":
+    if who_created in ("PROXY_OATS_LOCGOV", "PROXY_OATS_APPLICANT"):
         sys = "OATS_P"
     else:
         sys = "OATS"
