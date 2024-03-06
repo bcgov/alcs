@@ -14,6 +14,8 @@ from menu.post_launch_commands import (
     notice_of_intent_clean,
     srw_import,
     srw_clean,
+    document_import,
+    document_clean,
 )
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
@@ -47,6 +49,10 @@ if __name__ == "__main__":
                 srw_import(console, args)
             case "srw-clean":
                 srw_clean(console)
+            case "document-import":
+                document_import(console, args)
+            case "document-clean":
+                document_clean(console)
 
     finally:
         if connection_pool:
