@@ -165,7 +165,7 @@
           </div>
           <div>{{ owner.phoneNumber ?? '' | mask : '(000) 000-0000' }}</div>
           <div>{{ owner.email }}</div>
-          <div *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
+          <div>
             <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
               owner.corporateSummary.fileName
             }}</a>
