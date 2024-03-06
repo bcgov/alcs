@@ -7,34 +7,17 @@
       </h2>
     </div>
     <div>
-      <ng-container
-        *ngIf="
-          boardHasCreateApplication ||
-          boardHasCreateNOI ||
-          boardHasCreateReconsideration ||
-          boardHasCreatePlanningReview ||
-          boardHasCreateAppModification ||
-          boardHasCreateNOIModification ||
-          boardHasCreateCovenant
-        "
-      >
+      <ng-container *ngIf="creatableCards.length === 1">
+        <button mat-flat-button color="primary" (click)="onOpenCreateDialog(creatableCards[0].dialog)">
+          + {{ creatableCards[0].label }}
+        </button>
+      </ng-container>
+      <ng-container *ngIf="creatableCards.length > 1">
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
-          <button *ngIf="boardHasCreateApplication" mat-menu-item (click)="onApplicationCreate()">Application</button>
-          <button *ngIf="boardHasCreateNOI" mat-menu-item (click)="onCreateNoticeOfIntent()">Notice of Intent</button>
-          <button *ngIf="boardHasCreateReconsideration" mat-menu-item (click)="onReconsiderationCreate()">
-            Reconsideration
+          <button *ngFor="let creator of creatableCards" mat-menu-item (click)="onOpenCreateDialog(creator.dialog)">
+            {{ creator.label }}
           </button>
-          <button *ngIf="boardHasCreatePlanningReview" mat-menu-item (click)="onCreatePlanningReview()">
-            Planning Review
-          </button>
-          <button *ngIf="boardHasCreateAppModification" mat-menu-item (click)="onCreateAppModification()">
-            Application Modification
-          </button>
-          <button *ngIf="boardHasCreateNOIModification" mat-menu-item (click)="onCreateNoiModifications()">
-            Modification
-          </button>
-          <button *ngIf="boardHasCreateCovenant" mat-menu-item (click)="onCreateCovenant()">Covenant</button>
         </mat-menu>
       </ng-container>
     </div>

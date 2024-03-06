@@ -5,6 +5,7 @@ import { Application } from '../application/application.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
+import { PlanningReferral } from '../planning-review/planning-referral/planning-referral.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 
 const CARD_RELATIONSHIP = {
@@ -21,8 +22,6 @@ export class SearchService {
     private applicationRepository: Repository<Application>,
     @InjectRepository(NoticeOfIntent)
     private noiRepository: Repository<NoticeOfIntent>,
-    @InjectRepository(PlanningReview)
-    private planningReviewRepository: Repository<PlanningReview>,
     @InjectRepository(Covenant)
     private covenantRepository: Repository<Covenant>,
     @InjectRepository(Notification)
@@ -51,16 +50,6 @@ export class SearchService {
         card: true,
         localGovernment: true,
       },
-    });
-  }
-
-  async getPlanningReview(fileNumber: string) {
-    return await this.planningReviewRepository.findOne({
-      where: {
-        fileNumber,
-        card: { archived: false },
-      },
-      relations: CARD_RELATIONSHIP,
     });
   }
 

@@ -39,7 +39,7 @@ describe('AssignedComponent', () => {
       covenants: [],
       modifications: [],
       noticeOfIntentModifications: [],
-      planningReviews: [],
+      planningReferrals: [],
       reconsiderations: [],
       noticeOfIntents: [],
       notifications: [],

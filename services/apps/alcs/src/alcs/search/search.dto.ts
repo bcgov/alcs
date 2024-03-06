@@ -69,7 +69,6 @@ export class NotificationSearchResultDto {
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
-  nonApplications: NonApplicationSearchResultDto[];
   notifications: NotificationSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;

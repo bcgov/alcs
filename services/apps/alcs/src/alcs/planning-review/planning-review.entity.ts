@@ -1,16 +1,9 @@
-import { Type } from 'class-transformer';
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
-import { Card } from '../card/card.entity';
+import { User } from '../../user/user.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
+import { PlanningReviewType } from './planning-review-type.entity';
 
 @Entity()
 export class PlanningReview extends Base {
@@ -21,20 +14,11 @@ export class PlanningReview extends Base {
     }
   }
 
-  @Index()
   @Column({ unique: true })
   fileNumber: string;
 
-  @Column()
-  type: string;
-
-  @Column({ type: 'uuid' })
-  cardUuid: string;
-
-  @OneToOne(() => Card, { cascade: true })
-  @JoinColumn()
-  @Type(() => Card)
-  card: Card;
+  @Column({ nullable: false })
+  documentName: string;
 
   @ManyToOne(() => LocalGovernment)
   localGovernment: LocalGovernment;
@@ -50,4 +34,19 @@ export class PlanningReview extends Base {
 
   @Column()
   regionCode: string;
+
+  @ManyToOne(() => PlanningReviewType, { nullable: false })
+  type: PlanningReviewType;
+
+  @Column()
+  typeCode: string;
+
+  @Column({ default: true })
+  open: boolean;
+
+  @ManyToOne(() => User)
+  closedBy: User;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  closedDate: Date | null;
 }
