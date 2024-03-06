@@ -1,5 +1,6 @@
 name: E2E Testing w/ Playwright
 on:
+  workflow_dispatch:
   schedule:
     # 5:23 am daily
     - cron: "23 5 * * *"
