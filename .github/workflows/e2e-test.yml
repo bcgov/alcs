@@ -10,12 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: develop
       - uses: actions/setup-node@v4
+        working-directory: ./e2e
       - name: Install dependencies
+        working-directory: ./e2e
         run: npm ci
       - name: Install Playwright Browsers
+        working-directory: ./e2e
         run: npx playwright install --with-deps
       - name: Run Playwright tests
+        working-directory: ./e2e
         env:
           BCEID_BASIC_USERNAME: ${{ secrets.BCEID_BASIC_USERNAME }}
           BCEID_BASIC_PASSWORD: ${{ secrets.BCEID_BASIC_PASSWORD }}
