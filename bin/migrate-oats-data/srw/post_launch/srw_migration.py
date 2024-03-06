@@ -7,6 +7,7 @@ from ..submission.transferee.srw_init_transferee import (
     init_srw_parcel_transferee,
     clean_transferees,
 )
+from ..applicant.srw_process_applicant import update_srw_base_applicant
 
 
 def process_srw(batch_size):
@@ -17,6 +18,7 @@ def init_srw(batch_size):
     init_srw_base(batch_size)
     update_srw_base_fields(batch_size)
     _process_srw_submission(batch_size)
+    update_srw_base_applicant(batch_size)
 
 
 def _process_srw_submission(batch_size):
