@@ -8,6 +8,7 @@ from ..submission.transferee.srw_init_transferee import (
     clean_transferees,
 )
 from ..applicant.srw_process_applicant import update_srw_base_applicant
+from ..srw_staff_journal import process_srw_staff_journal, clean_srw_staff_journal
 
 
 def process_srw(batch_size):
@@ -19,6 +20,7 @@ def init_srw(batch_size):
     update_srw_base_fields(batch_size)
     _process_srw_submission(batch_size)
     update_srw_base_applicant(batch_size)
+    process_srw_staff_journal(batch_size)
 
 
 def _process_srw_submission(batch_size):
@@ -29,6 +31,7 @@ def _process_srw_submission(batch_size):
 
 
 def clean_srw():
+    clean_srw_staff_journal()
     clean_transferees()
     clean_parcels()
     clean_srw_submissions()
