@@ -129,7 +129,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     private codeService: CodeService,
     private statusService: StatusService,
     private toastService: ToastService,
-    private titleService: Title,
+    private titleService: Title
   ) {
     this.titleService.setTitle('ALC Portal | Public Search');
   }
