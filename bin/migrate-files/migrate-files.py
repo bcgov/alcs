@@ -10,7 +10,7 @@ from config import (
     ecs_access_key,
     ecs_secret_key,
 )
-from application_docs import import_application_docs
+from application_docs import import_application_docs, import_srw_docs
 from planning_docs import import_planning_review_docs
 from issue_docs import import_issue_docs
 import argparse
@@ -61,6 +61,16 @@ def main(args):
         import_planning_review_docs(batch_size, cursor, conn, s3)
     elif args.document_type == "issue":
         import_issue_docs(batch_size, cursor, conn, s3)
+    elif args.document_type == "srw":
+        import_srw_docs(
+            batch_size,
+            cursor,
+            conn,
+            s3,
+            start_document_id,
+            end_document_id,
+            last_imported_document_id,
+        )
 
     print("File upload complete, closing connection")
 
@@ -73,7 +83,7 @@ def _parse_command_line_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "document_type",
-        choices=["application", "planning", "issue"],
+        choices=["application", "planning", "issue", "srw"],
         help="Document type to be processed",
     )
     parser.add_argument(
