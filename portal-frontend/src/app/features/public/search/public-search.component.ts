@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,6 +22,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
+import { scrollToElement } from 'src/app/shared/utils/scroll-helper';
 
 const STATUS_MAP = {
   'Received by ALC': 'RECA',
@@ -129,7 +130,6 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     private statusService: StatusService,
     private toastService: ToastService,
     private titleService: Title,
-    private elementRef: ElementRef,
   ) {
     this.titleService.setTitle('ALC Portal | Public Search');
   }
@@ -194,14 +194,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     sessionStorage.setItem(SEARCH_SESSION_STORAGE_KEY, searchDto);
 
     this.isLoading = true;
-    const element = this.elementRef.nativeElement.querySelector(`#${CSS.escape('searchResults')}`);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'start',
-      });
-    }
+    scrollToElement({ id: `searchResults`, center: false });
     const result = await this.searchService.search(searchParams);
     this.searchResultsHidden = false;
     this.isLoading = false;
