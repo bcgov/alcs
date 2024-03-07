@@ -10,7 +10,7 @@ import { CovenantDto } from '../covenant/covenant.dto';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../notification/notification.dto';
-import { PlanningReviewDto } from '../planning-review/planning-review.dto';
+import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -23,19 +23,19 @@ export class HomeService {
       this.http.get<{
         applications: ApplicationDto[];
         reconsiderations: ApplicationReconsiderationDto[];
-        planningReviews: PlanningReviewDto[];
+        planningReferrals: PlanningReferralDto[];
         modifications: ApplicationModificationDto[];
         covenants: CovenantDto[];
         noticeOfIntents: NoticeOfIntentDto[];
         noticeOfIntentModifications: NoticeOfIntentModificationDto[];
         notifications: NotificationDto[];
-      }>(`${environment.apiUrl}/home/assigned`)
+      }>(`${environment.apiUrl}/home/assigned`),
     );
   }
 
   async fetchSubtasks(subtaskType: CARD_SUBTASK_TYPE) {
     return await firstValueFrom(
-      this.http.get<HomepageSubtaskDto[]>(`${environment.apiUrl}/home/subtask/${subtaskType}`)
+      this.http.get<HomepageSubtaskDto[]>(`${environment.apiUrl}/home/subtask/${subtaskType}`),
     );
   }
 }

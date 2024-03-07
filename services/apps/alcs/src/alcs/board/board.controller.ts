@@ -20,6 +20,7 @@ import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../notification/notification.service';
+import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardDto, MinimalBoardDto } from './board.dto';
 import { Board } from './board.entity';
@@ -34,7 +35,7 @@ export class BoardController {
     private applicationService: ApplicationService,
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private planningReviewService: PlanningReviewService,
+    private planningReferralService: PlanningReferralService,
     private appModificationService: ApplicationModificationService,
     private noiModificationService: NoticeOfIntentModificationService,
     private covenantService: CovenantService,
@@ -89,8 +90,8 @@ export class BoardController {
       ? await this.noticeOfIntentService.getByBoard(board.uuid)
       : [];
 
-    const planningReviews = allowedCodes.includes(CARD_TYPE.PLAN)
-      ? await this.planningReviewService.getByBoard(board.uuid)
+    const planningReferrals = allowedCodes.includes(CARD_TYPE.PLAN)
+      ? await this.planningReferralService.getByBoard(board.uuid)
       : [];
 
     const noiModifications = allowedCodes.includes(CARD_TYPE.NOI_MODI)
@@ -105,8 +106,8 @@ export class BoardController {
       board: await this.autoMapper.mapAsync(board, Board, BoardDto),
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),
-      planningReviews:
-        await this.planningReviewService.mapToDtos(planningReviews),
+      planningReferrals:
+        await this.planningReferralService.mapToDtos(planningReferrals),
       modifications: await this.appModificationService.mapToDtos(modifications),
       covenants: await this.covenantService.mapToDtos(covenants),
       noticeOfIntents:

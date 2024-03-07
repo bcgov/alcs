@@ -4,61 +4,17 @@
 <form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     <div class="two-item-row">
-      <mat-form-field appearance="outline">
-        <mat-label>File ID</mat-label>
-        <input
-          id="fileNumber"
-          matInput
-          placeholder="791262"
-          formControlName="fileNumber"
-          [class.valid]="
-            createForm.get('fileNumber')!.valid &&
-            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
-          "
-          [class.invalid]="
-            createForm.get('fileNumber')!.invalid &&
-            (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
-          "
-        />
-        <mat-error
-          class="text-danger"
-          *ngIf="createForm.get('fileNumber')!.touched && createForm.get('fileNumber')!.hasError('required')"
-        >
-          This field is required.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Type</mat-label>
-        <input
-          id="type"
-          matInput
-          maxlength="40"
-          formControlName="type"
-          [class.valid]="
-            createForm.get('type')!.valid && (createForm.get('type')!.dirty || createForm.get('type')!.touched)
-          "
-          [class.invalid]="
-            createForm.get('type')!.invalid && (createForm.get('type')!.dirty || createForm.get('type')!.touched)
-          "
-        />
-        <mat-error
-          class="text-danger"
-          *ngIf="createForm.get('type')!.touched && createForm.get('type')!.hasError('required')"
-        >
-          This field is required.
-        </mat-error>
-      </mat-form-field>
       <div>
         <ng-select
           appearance="outline"
           class="card-local-government"
           [items]="localGovernments"
           appendTo="body"
-          placeholder="Local Government *"
+          placeholder="Local Government*"
           bindLabel="name"
           bindValue="uuid"
           [clearable]="false"
-          formControlName="localGovernment"
+          [formControl]="localGovernmentControl"
           (change)="onSelectGovernment($event)"
         >
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
@@ -69,24 +25,71 @@
       <div>
         <ng-select
           appearance="outline"
-          class="card-region"
           [items]="regions"
           appendTo="body"
-          placeholder="Region *"
+          placeholder="Region*"
           bindLabel="label"
           bindValue="code"
           [clearable]="false"
-          formControlName="region"
+          [formControl]="regionControl"
         >
         </ng-select>
       </div>
     </div>
+    <div class="two-item-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Submitted to ALC</mat-label>
+        <input
+          matInput
+          (click)="submissionDate.open()"
+          [matDatepicker]="submissionDate"
+          [formControl]="submissionDateControl"
+          name="date"
+          id="date"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="submissionDate"></mat-datepicker-toggle>
+        <mat-datepicker #submissionDate type="date"> </mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Document Name</mat-label>
+        <input matInput placeholder="Document Name*" [formControl]="documentNameControl" required />
+      </mat-form-field>
+    </div>
+    <div class="two-item-row">
+      <div>
+        <ng-select
+          id="type"
+          appearance="outline"
+          [items]="types"
+          appendTo="body"
+          placeholder="Planning Review Type*"
+          bindLabel="label"
+          bindValue="code"
+          [clearable]="false"
+          [formControl]="typeControl"
+        >
+        </ng-select>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Due Date</mat-label>
+        <input matInput (click)="dueDate.open()" [matDatepicker]="dueDate" [formControl]="dueDateControl" />
+        <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+        <mat-datepicker #dueDate type="date"> </mat-datepicker>
+      </mat-form-field>
+    </div>
+    <mat-form-field class="description" appearance="outline">
+      <mat-label>Description</mat-label>
+      <input matInput placeholder="Document Name*" [formControl]="descriptionControl" required />
+    </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <div class="button-container">
       <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
       <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">
-        Save
+        Create
       </button>
     </div>
   </mat-dialog-actions>

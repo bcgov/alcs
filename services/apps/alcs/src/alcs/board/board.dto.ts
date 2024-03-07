@@ -5,6 +5,7 @@ export enum BOARD_CODES {
   CEO = 'ceo',
   SOIL = 'soil',
   EXECUTIVE_COMMITTEE = 'exec',
+  REGIONAL_PLANNING = 'rppp',
 }
 
 export class MinimalBoardDto {

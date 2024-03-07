@@ -1,20 +1,21 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { BoardAutomapperProfile } from '../../common/automapper/board.automapper.profile';
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
-import { CardType, CARD_TYPE } from '../card/card-type/card-type.entity';
+import { CARD_TYPE, CardType } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../notification/notification.service';
+import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { BOARD_CODES } from './board.dto';
@@ -29,7 +30,7 @@ describe('BoardController', () => {
   let appReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let modificationService: DeepMocked<ApplicationModificationService>;
   let cardService: DeepMocked<CardService>;
-  let planningReviewService: DeepMocked<PlanningReviewService>;
+  let planningReferralService: DeepMocked<PlanningReferralService>;
   let covenantService: DeepMocked<CovenantService>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noiModificationService: DeepMocked<NoticeOfIntentModificationService>;
@@ -41,7 +42,7 @@ describe('BoardController', () => {
     appService = createMock();
     appReconsiderationService = createMock();
     modificationService = createMock();
-    planningReviewService = createMock();
+    planningReferralService = createMock();
     cardService = createMock();
     covenantService = createMock();
     noticeOfIntentService = createMock();
@@ -60,8 +61,8 @@ describe('BoardController', () => {
     appService.mapToDtos.mockResolvedValue([]);
     appReconsiderationService.getByBoard.mockResolvedValue([]);
     appReconsiderationService.mapToDtos.mockResolvedValue([]);
-    planningReviewService.getByBoard.mockResolvedValue([]);
-    planningReviewService.mapToDtos.mockResolvedValue([]);
+    planningReferralService.getByBoard.mockResolvedValue([]);
+    planningReferralService.mapToDtos.mockResolvedValue([]);
     modificationService.getByBoard.mockResolvedValue([]);
     modificationService.mapToDtos.mockResolvedValue([]);
     covenantService.getByBoard.mockResolvedValue([]);
@@ -92,8 +93,8 @@ describe('BoardController', () => {
         },
         { provide: CardService, useValue: cardService },
         {
-          provide: PlanningReviewService,
-          useValue: planningReviewService,
+          provide: PlanningReferralService,
+          useValue: planningReferralService,
         },
         { provide: CovenantService, useValue: covenantService },
         {
@@ -148,8 +149,8 @@ describe('BoardController', () => {
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(modificationService.getByBoard).toHaveBeenCalledTimes(0);
     expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);
-    expect(planningReviewService.getByBoard).toHaveBeenCalledTimes(0);
-    expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(planningReferralService.getByBoard).toHaveBeenCalledTimes(0);
+    expect(planningReferralService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to planning review service if board supports planning reviews', async () => {
@@ -162,8 +163,8 @@ describe('BoardController', () => {
 
     await controller.getBoardWithCards(boardCode);
 
-    expect(planningReviewService.getByBoard).toHaveBeenCalledTimes(1);
-    expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(planningReferralService.getByBoard).toHaveBeenCalledTimes(1);
+    expect(planningReferralService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to modification service for boards that support it board', async () => {

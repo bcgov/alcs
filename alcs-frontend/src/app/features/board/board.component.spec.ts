@@ -23,7 +23,8 @@ import { NoticeOfIntentModificationService } from '../../services/notice-of-inte
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { NotificationService } from '../../services/notification/notification.service';
-import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
+import { PlanningReferralService } from '../../services/planning-review/planning-referral.service';
+import { PlanningReferralDto, PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardType } from '../../shared/card/card.component';
@@ -40,7 +41,7 @@ describe('BoardComponent', () => {
   let router: DeepMocked<Router>;
   let cardService: DeepMocked<CardService>;
   let reconsiderationService: DeepMocked<ApplicationReconsiderationService>;
-  let planningReviewService: DeepMocked<PlanningReviewService>;
+  let planningReferralService: DeepMocked<PlanningReferralService>;
   let modificationService: DeepMocked<ApplicationModificationService>;
   let covenantService: DeepMocked<CovenantService>;
   let titleService: DeepMocked<Title>;
@@ -96,7 +97,7 @@ describe('BoardComponent', () => {
       applications: [],
       covenants: [],
       modifications: [],
-      planningReviews: [],
+      planningReferrals: [],
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
@@ -109,7 +110,7 @@ describe('BoardComponent', () => {
     router = createMock();
     cardService = createMock();
     reconsiderationService = createMock();
-    planningReviewService = createMock();
+    planningReferralService = createMock();
     modificationService = createMock();
     covenantService = createMock();
     titleService = createMock();
@@ -162,8 +163,8 @@ describe('BoardComponent', () => {
           useValue: reconsiderationService,
         },
         {
-          provide: PlanningReviewService,
-          useValue: planningReviewService,
+          provide: PlanningReferralService,
+          useValue: planningReferralService,
         },
         {
           provide: ApplicationModificationService,
@@ -223,7 +224,7 @@ describe('BoardComponent', () => {
       applications: [mockApplication],
       covenants: [],
       modifications: [],
-      planningReviews: [],
+      planningReferrals: [],
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
@@ -244,7 +245,7 @@ describe('BoardComponent', () => {
       applications: [],
       covenants: [],
       modifications: [],
-      planningReviews: [],
+      planningReferrals: [],
       reconsiderations: [mockRecon],
       noticeOfIntents: [],
       noiModifications: [],
@@ -287,7 +288,7 @@ describe('BoardComponent', () => {
       applications: [mockApplication, highPriorityApplication, highActiveDays],
       covenants: [],
       modifications: [],
-      planningReviews: [],
+      planningReferrals: [],
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
@@ -311,7 +312,7 @@ describe('BoardComponent', () => {
       new Map([
         ['card', 'app-id'],
         ['type', CardType.APP],
-      ])
+      ]),
     );
 
     await sleep(1);
@@ -327,7 +328,7 @@ describe('BoardComponent', () => {
       new Map([
         ['card', 'app-id'],
         ['type', CardType.RECON],
-      ])
+      ]),
     );
 
     await sleep(1);
@@ -337,18 +338,18 @@ describe('BoardComponent', () => {
   });
 
   it('should load planning review and open dialog when url is set', async () => {
-    planningReviewService.fetchByCardUuid.mockResolvedValue({} as PlanningReviewDto);
+    planningReferralService.fetchByCardUuid.mockResolvedValue({} as PlanningReferralDto);
 
     queryParamMapEmitter.next(
       new Map([
         ['card', 'app-id'],
         ['type', CardType.PLAN],
-      ])
+      ]),
     );
 
     await sleep(1);
 
-    expect(planningReviewService.fetchByCardUuid).toHaveBeenCalledTimes(1);
+    expect(planningReferralService.fetchByCardUuid).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledTimes(1);
   });
 
@@ -359,7 +360,7 @@ describe('BoardComponent', () => {
       new Map([
         ['card', 'app-id'],
         ['type', CardType.COV],
-      ])
+      ]),
     );
 
     await sleep(1);
@@ -375,7 +376,7 @@ describe('BoardComponent', () => {
       new Map([
         ['card', 'app-id'],
         ['type', CardType.NOTIFICATION],
-      ])
+      ]),
     );
 
     await sleep(1);
@@ -391,7 +392,7 @@ describe('BoardComponent', () => {
       new Map([
         ['card', 'app-id'],
         ['type', CardType.COV],
-      ])
+      ]),
     );
 
     await sleep(1);

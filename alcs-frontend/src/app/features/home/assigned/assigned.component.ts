@@ -8,7 +8,7 @@ import { HomeService } from '../../../services/home/home.service';
 import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../../../services/notification/notification.dto';
-import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
+import { PlanningReferralDto, PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
@@ -31,7 +31,10 @@ export class AssignedComponent implements OnInit {
   notifications: AssignedToMeFile[] = [];
   totalFiles = 0;
 
-  constructor(private homeService: HomeService, private applicationService: ApplicationService) {}
+  constructor(
+    private homeService: HomeService,
+    private applicationService: ApplicationService,
+  ) {}
 
   ngOnInit(): void {
     this.applicationService.setup();
@@ -42,7 +45,7 @@ export class AssignedComponent implements OnInit {
     const {
       applications,
       reconsiderations,
-      planningReviews,
+      planningReferrals,
       modifications,
       covenants,
       noticeOfIntents,
@@ -96,7 +99,7 @@ export class AssignedComponent implements OnInit {
     ];
 
     this.nonApplications = [
-      ...planningReviews
+      ...planningReferrals
         .filter((r) => r.card.highPriority)
         .map((r) => this.mapPlanning(r))
         .sort((a, b) => a.date! - b.date!),
@@ -104,7 +107,7 @@ export class AssignedComponent implements OnInit {
         .filter((r) => r.card.highPriority)
         .map((r) => this.mapCovenant(r))
         .sort((a, b) => a.date! - b.date!),
-      ...planningReviews
+      ...planningReferrals
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapPlanning(r))
         .sort((a, b) => a.date! - b.date!),
@@ -140,9 +143,9 @@ export class AssignedComponent implements OnInit {
     };
   }
 
-  private mapPlanning(p: PlanningReviewDto): AssignedToMeFile {
+  private mapPlanning(p: PlanningReferralDto): AssignedToMeFile {
     return {
-      title: `${p.fileNumber} (${p.type})`,
+      title: `${p.planningReview.fileNumber} (${p.planningReview.documentName})`,
       type: p.card.type,
       date: p.card.createdAt,
       card: p.card,
