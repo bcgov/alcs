@@ -114,7 +114,7 @@ def _prepare_journal_data(row_data_list):
         data = dict(row)
         data = _map_revision(data)
         data = _map_timezone(data)
-        data = _add_user(data)
+        data["user"] = "ca8e91dc-cfb0-45c3-a443-8e47e44591df"
         data_list.append(dict(data))
     return data_list
 
@@ -133,12 +133,6 @@ def _map_timezone(data):
     date = data.get("journal_date", "")
     journal_date = add_timezone_and_keep_date_part(date)
     data["journal_date"] = journal_date
-    return data
-
-
-def _add_user(data):
-    user_uuid = "ca8e91dc-cfb0-45c3-a443-8e47e44591df"
-    data["user"] = user_uuid
     return data
 
 
