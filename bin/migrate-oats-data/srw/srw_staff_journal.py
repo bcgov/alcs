@@ -44,7 +44,7 @@ def process_srw_staff_journal(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             submission_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{submission_sql} WHERE osj.staff_journal_entry_id > '{last_entry_id}' ORDER BY osj.staff_journal_entry_id;"
+                    f"{submission_sql} AND osj.staff_journal_entry_id > '{last_entry_id}' ORDER BY osj.staff_journal_entry_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
