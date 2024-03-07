@@ -36,10 +36,6 @@ export class CreateNoticeOfIntentStaffJournalDto extends BaseCreateStaffJournalD
   @IsString()
   @IsNotEmpty()
   noticeOfIntentUuid: string;
-
-  @IsString()
-  @IsNotEmpty()
-  body: string;
 }
 
 export class CreateNotificationStaffJournalDto extends BaseCreateStaffJournalDto {
@@ -54,12 +50,8 @@ export class CreatePlanningReviewStaffJournalDto extends BaseCreateStaffJournalD
   planningReviewUuid: string;
 }
 
-export class UpdateStaffJournalDto {
+export class UpdateStaffJournalDto extends BaseCreateStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   uuid: string;
-
-  @IsString()
-  @IsNotEmpty()
-  body: string;
 }

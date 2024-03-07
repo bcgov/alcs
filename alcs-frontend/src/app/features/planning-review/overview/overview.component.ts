@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { PlanningReviewDetailService } from '../../../services/planning-review/planning-review-detail.service';
-import { PlanningReviewDto, PlanningReviewTypeDto } from '../../../services/planning-review/planning-review.dto';
+import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../../services/planning-review/planning-review.service';
 
 @Component({
