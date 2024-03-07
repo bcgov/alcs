@@ -8,6 +8,9 @@ from ..submission.transferee.srw_init_transferee import (
     clean_transferees,
 )
 from ..applicant.srw_process_applicant import update_srw_base_applicant
+from ..submission.primary_contact.srw_process_primary_contact import (
+    process_alcs_srw_primary_contact,
+)
 
 
 def process_srw(batch_size):
@@ -26,6 +29,7 @@ def _process_srw_submission(batch_size):
     process_alcs_srw_proposal_fields(batch_size)
     init_srw_parcels(batch_size)
     init_srw_parcel_transferee(batch_size)
+    process_alcs_srw_primary_contact(batch_size)
 
 
 def clean_srw():
