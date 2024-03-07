@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
@@ -12,8 +12,11 @@ import { PlanningReferralService } from './planning-referral/planning-referral.s
 import { PlanningReviewType } from './planning-review-type.entity';
 import {
   CreatePlanningReviewDto,
+  PlanningReviewDetailedDto,
   PlanningReviewTypeDto,
+  UpdatePlanningReviewDto,
 } from './planning-review.dto';
+import { PlanningReview } from './planning-review.entity';
 import { PlanningReviewService } from './planning-review.service';
 
 @Controller('planning-review')
@@ -58,5 +61,28 @@ export class PlanningReviewController {
 
     const mapped = await this.planningReferralService.mapToDtos([referral]);
     return mapped[0];
+  }
+
+  @Get('/:fileNumber')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async fetchByFileNumber(@Param('fileNumber') fileNumber: string) {
+    const review =
+      await this.planningReviewService.getDetailedReview(fileNumber);
+
+    return this.mapper.map(review, PlanningReview, PlanningReviewDetailedDto);
+  }
+
+  @Post('/:fileNumber')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async updateByFileNumber(
+    @Param('fileNumber') fileNumber: string,
+    @Body() updateDto: UpdatePlanningReviewDto,
+  ) {
+    const review = await this.planningReviewService.update(
+      fileNumber,
+      updateDto,
+    );
+
+    return this.mapper.map(review, PlanningReview, PlanningReviewDetailedDto);
   }
 }

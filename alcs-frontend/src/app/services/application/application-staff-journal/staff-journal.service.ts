@@ -9,6 +9,7 @@ import {
   UpdateStaffJournalDto,
   CreateNoticeOfIntentStaffJournalDto,
   CreateNotificationStaffJournalDto,
+  CreatePlanningReviewStaffJournalDto,
 } from './staff-journal.dto';
 
 @Injectable({
@@ -16,7 +17,10 @@ import {
 })
 export class StaffJournalService {
   baseUrl = `${environment.apiUrl}/application-staff-journal`;
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetchNotes(applicationUuid: string) {
     return firstValueFrom(this.http.get<StaffJournalDto[]>(`${this.baseUrl}/${applicationUuid}`));
@@ -36,6 +40,12 @@ export class StaffJournalService {
 
   async createNoteForNotification(note: CreateNotificationStaffJournalDto) {
     const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/notification`, note));
+    this.toastService.showSuccessToast('Journal note created');
+    return createdNote;
+  }
+
+  async createNoteForPlanningReview(note: CreatePlanningReviewStaffJournalDto) {
+    const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/planning-review`, note));
     this.toastService.showSuccessToast('Journal note created');
     return createdNote;
   }

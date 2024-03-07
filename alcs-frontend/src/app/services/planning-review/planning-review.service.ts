@@ -6,8 +6,10 @@ import { ToastService } from '../toast/toast.service';
 import {
   CreatePlanningReviewDto,
   PlanningReferralDto,
+  PlanningReviewDetailedDto,
   PlanningReviewDto,
   PlanningReviewTypeDto,
+  UpdatePlanningReviewDto,
 } from './planning-review.dto';
 
 @Injectable({
@@ -49,6 +51,26 @@ export class PlanningReviewService {
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch planning review types');
+    }
+    return;
+  }
+
+  async fetchDetailedByFileNumber(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.get<PlanningReviewDetailedDto>(`${this.url}/${fileNumber}`));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to fetch planning review');
+    }
+    return;
+  }
+
+  async update(fileNumber: string, updateDto: UpdatePlanningReviewDto) {
+    try {
+      return await firstValueFrom(this.http.post<PlanningReviewDetailedDto>(`${this.url}/${fileNumber}`, updateDto));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to update planning review');
     }
     return;
   }

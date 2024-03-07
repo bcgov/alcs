@@ -17,6 +17,15 @@ export class PlanningReferral extends Base {
     }
   }
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Application Id that is applicable only to paper version applications from 70s - 80s',
+    nullable: true,
+  })
+  legacyId?: string | null;
+
   @AutoMap()
   @Column({ type: 'timestamptz' })
   submissionDate: Date;

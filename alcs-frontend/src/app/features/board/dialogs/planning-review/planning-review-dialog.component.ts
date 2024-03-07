@@ -9,28 +9,12 @@ import { PlanningReferralDto, PlanningReviewDto } from '../../../../services/pla
 import { ToastService } from '../../../../services/toast/toast.service';
 import { UserService } from '../../../../services/user/user.service';
 import { ApplicationPill } from '../../../../shared/application-type-pill/application-type-pill.component';
+import {
+  CLOSED_PR_LABEL,
+  OPEN_PR_LABEL,
+} from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
-
-export const OPEN_TYPE = {
-  label: 'Open',
-  code: 'Open',
-  shortLabel: 'Open',
-  backgroundColor: '#94c6ac',
-  borderColor: '#94c6ac',
-  description: 'Open',
-  textColor: '#313132',
-};
-
-export const CLOSED_TYPE = {
-  label: 'Closed',
-  code: 'Closed',
-  shortLabel: 'Closed',
-  backgroundColor: '#C6242A',
-  borderColor: '#C6242A',
-  description: 'Closed',
-  textColor: '#313132',
-};
 
 @Component({
   selector: 'app-detail-dialog',
@@ -42,8 +26,8 @@ export class PlanningReviewDialogComponent extends CardDialogComponent implement
   title?: string;
   planningType?: ApplicationPill;
   cardTitle = '';
-  OPEN_TYPE = OPEN_TYPE;
-  CLOSED_TYPE = CLOSED_TYPE;
+  OPEN_TYPE = OPEN_PR_LABEL;
+  CLOSED_TYPE = CLOSED_PR_LABEL;
 
   planningReview: PlanningReviewDto = this.data.planningReview;
   planningReferral: PlanningReferralDto = this.data;
