@@ -32,6 +32,9 @@ export class StaffJournalService {
         {
           notificationUuid: parentUuid,
         },
+        {
+          planningReviewUuid: parentUuid,
+        },
       ],
       relations: this.DEFAULT_STAFF_JOURNAL_RELATIONS,
       order: {
@@ -85,6 +88,20 @@ export class StaffJournalService {
     const record = new StaffJournal({
       body: noteBody,
       notificationUuid,
+      author,
+    });
+
+    return await this.staffJournalRepository.save(record);
+  }
+
+  async createForPlanningReview(
+    planningReviewUuid: string,
+    noteBody: string,
+    author: User,
+  ) {
+    const record = new StaffJournal({
+      body: noteBody,
+      planningReviewUuid,
       author,
     });
 

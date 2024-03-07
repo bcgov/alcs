@@ -6,6 +6,7 @@ import { InjectMapper } from 'automapper-nestjs';
 import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
@@ -14,6 +15,7 @@ import { PlanningReviewType } from './planning-review-type.entity';
 import {
   CreatePlanningReviewDto,
   PlanningReviewDto,
+  UpdatePlanningReviewDto,
 } from './planning-review.dto';
 import { PlanningReview } from './planning-review.entity';
 
@@ -34,6 +36,7 @@ export class PlanningReviewService {
   private DEFAULT_RELATIONS: FindOptionsRelations<PlanningReview> = {
     localGovernment: true,
     region: true,
+    type: true,
   };
 
   async create(data: CreatePlanningReviewDto, board: Board) {
@@ -89,6 +92,18 @@ export class PlanningReviewService {
     });
   }
 
+  getDetailedReview(fileNumber: string) {
+    return this.reviewRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        referrals: true,
+      },
+    });
+  }
+
   private get(uuid: string) {
     return this.reviewRepository.findOne({
       where: {
@@ -104,5 +119,22 @@ export class PlanningReviewService {
         label: 'ASC',
       },
     });
+  }
+
+  async update(fileNumber: string, updateDto: UpdatePlanningReviewDto) {
+    const existingApp = await this.reviewRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+    });
+
+    existingApp.open = filterUndefined(updateDto.open, existingApp.open);
+    existingApp.typeCode = filterUndefined(
+      updateDto.typeCode,
+      existingApp.typeCode,
+    );
+
+    await this.reviewRepository.save(existingApp);
+    return this.getDetailedReview(fileNumber);
   }
 }

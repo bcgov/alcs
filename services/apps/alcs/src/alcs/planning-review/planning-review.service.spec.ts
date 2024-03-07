@@ -104,9 +104,18 @@ describe('PlanningReviewService', () => {
       uuid: '5',
     };
     mockRepository.find.mockResolvedValue([]);
+
     await service.getBy(mockFilter);
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
+  });
+
+  it('should call through to the repo for getDetailedReview', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(new PlanningReview());
+
+    await service.getDetailedReview('file-number');
+
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
   });
 });

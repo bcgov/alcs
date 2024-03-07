@@ -14,12 +14,17 @@ export interface CreatePlanningReviewDto {
 }
 
 export interface PlanningReviewDto {
+  uuid: string;
   fileNumber: string;
   open: boolean;
   localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
   type: PlanningReviewTypeDto;
   documentName: string;
+}
+
+export interface PlanningReviewDetailedDto extends PlanningReviewDto {
+  referrals: PlanningReferralDto[];
 }
 
 export interface PlanningReviewTypeDto extends BaseCodeDto {
@@ -34,4 +39,9 @@ export interface PlanningReferralDto {
   submissionDate: number;
   planningReview: PlanningReviewDto;
   card: CardDto;
+}
+
+export interface UpdatePlanningReviewDto {
+  open?: boolean;
+  typeCode?: string;
 }

@@ -1,10 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
-import { Injectable } from '@nestjs/common';
 import { PlanningReferral } from '../../alcs/planning-review/planning-referral/planning-referral.entity';
 import { PlanningReviewType } from '../../alcs/planning-review/planning-review-type.entity';
 import {
   PlanningReferralDto,
+  PlanningReviewDetailedDto,
   PlanningReviewDto,
   PlanningReviewTypeDto,
 } from '../../alcs/planning-review/planning-review.dto';
@@ -33,6 +34,7 @@ export class PlanningReviewProfile extends AutomapperProfile {
           mapFrom((entity) => entity.submissionDate?.getTime()),
         ),
       );
+      createMap(mapper, PlanningReview, PlanningReviewDetailedDto);
     };
   }
 }

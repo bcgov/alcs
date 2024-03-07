@@ -2,7 +2,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -27,6 +26,7 @@ describe('PlanningReviewDialogComponent', () => {
   let mockBoardService: DeepMocked<BoardService>;
 
   const mockPlanningReviewDto: PlanningReviewDto = {
+    uuid: '',
     documentName: '',
     type: {} as any,
     open: true,

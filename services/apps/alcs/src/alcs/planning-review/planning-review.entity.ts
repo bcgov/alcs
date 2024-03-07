@@ -1,8 +1,10 @@
-import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { AutoMap } from 'automapper-classes';
+import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
+import { PlanningReferral } from './planning-referral/planning-referral.entity';
 import { PlanningReviewType } from './planning-review-type.entity';
 
 @Entity({
@@ -37,8 +39,13 @@ export class PlanningReview extends Base {
   @Column()
   regionCode: string;
 
+  @AutoMap(() => PlanningReviewType)
   @ManyToOne(() => PlanningReviewType, { nullable: false })
   type: PlanningReviewType;
+
+  @AutoMap(() => [PlanningReferral])
+  @OneToMany(() => PlanningReferral, (referral) => referral.planningReview)
+  referrals: PlanningReferral[];
 
   @Column()
   typeCode: string;

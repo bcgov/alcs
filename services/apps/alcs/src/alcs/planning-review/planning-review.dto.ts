@@ -48,7 +48,13 @@ export class CreatePlanningReviewDto {
 
 export class PlanningReviewDto {
   @AutoMap()
+  uuid: string;
+
+  @AutoMap()
   fileNumber: string;
+
+  @AutoMap(() => String)
+  legacyId: string | null;
 
   @AutoMap()
   open: boolean;
@@ -87,4 +93,19 @@ export class PlanningReferralDto {
 
   @AutoMap(() => CardDto)
   card: CardDto;
+}
+
+export class PlanningReviewDetailedDto extends PlanningReviewDto {
+  @AutoMap(() => [PlanningReferralDto])
+  referrals: PlanningReferralDto[];
+}
+
+export class UpdatePlanningReviewDto {
+  @IsString()
+  @IsOptional()
+  open?: boolean;
+
+  @IsString()
+  @IsOptional()
+  typeCode?: string;
 }

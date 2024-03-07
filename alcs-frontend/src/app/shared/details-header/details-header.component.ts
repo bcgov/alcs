@@ -13,6 +13,7 @@ import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/n
 import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
+import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { ApplicationSubmissionStatusPill } from '../application-submission-status-type-pill/application-submission-status-type-pill.component';
 import {
   MODIFICATION_TYPE_LABEL,
@@ -40,15 +41,36 @@ export class DetailsHeaderComponent {
 
   legacyId?: string;
 
-  _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
+  _application:
+    | ApplicationDto
+    | CommissionerApplicationDto
+    | NoticeOfIntentDto
+    | NotificationDto
+    | PlanningReviewDto
+    | undefined;
   types: ApplicationTypeDto[] | NoticeOfIntentTypeDto[] = [];
   timeTrackable?: TimeTrackable;
+  applicant?: string;
 
   @Input() set application(
-    application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined
+    application:
+      | ApplicationDto
+      | CommissionerApplicationDto
+      | NoticeOfIntentDto
+      | NotificationDto
+      | PlanningReviewDto
+      | undefined,
   ) {
     if (application) {
       this._application = application;
+
+      if ('applicant' in application) {
+        this.applicant = application.applicant;
+      }
+
+      if ('documentName' in application) {
+        this.applicant = application.documentName;
+      }
 
       if ('retroactive' in application) {
         this.isNOI = true;

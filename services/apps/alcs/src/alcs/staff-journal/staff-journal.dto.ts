@@ -20,42 +20,38 @@ export class StaffJournalDto {
   isEditable = false;
 }
 
-export class CreateApplicationStaffJournalDto {
+class BaseCreateStaffJournalDto {
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
+export class CreateApplicationStaffJournalDto extends BaseCreateStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   applicationUuid: string;
-
-  @IsString()
-  @IsNotEmpty()
-  body: string;
 }
 
-export class CreateNoticeOfIntentStaffJournalDto {
+export class CreateNoticeOfIntentStaffJournalDto extends BaseCreateStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   noticeOfIntentUuid: string;
-
-  @IsString()
-  @IsNotEmpty()
-  body: string;
 }
 
-export class CreateNotificationStaffJournalDto {
+export class CreateNotificationStaffJournalDto extends BaseCreateStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   notificationUuid: string;
-
-  @IsString()
-  @IsNotEmpty()
-  body: string;
 }
 
-export class UpdateStaffJournalDto {
+export class CreatePlanningReviewStaffJournalDto extends BaseCreateStaffJournalDto {
+  @IsString()
+  @IsNotEmpty()
+  planningReviewUuid: string;
+}
+
+export class UpdateStaffJournalDto extends BaseCreateStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   uuid: string;
-
-  @IsString()
-  @IsNotEmpty()
-  body: string;
 }
