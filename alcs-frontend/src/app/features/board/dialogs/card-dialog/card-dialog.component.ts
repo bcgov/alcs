@@ -39,7 +39,7 @@ export class CardDialogComponent implements OnInit, OnDestroy {
     protected confirmationDialogService: ConfirmationDialogService,
     protected toastService: ToastService,
     protected userService: UserService,
-    protected boardService: BoardService
+    protected boardService: BoardService,
   ) {}
 
   ngOnInit(): void {

@@ -11,7 +11,6 @@ import { UserRoles } from '../../common/authorization/roles.decorator';
 import { APPLICATION_SUBMISSION_TYPES } from '../../portal/pdf-generation/generate-submission-document.service';
 import { isStringSetAndNotEmpty } from '../../utils/string-helper';
 import { Application } from '../application/application.entity';
-import { ApplicationService } from '../application/application.service';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -21,8 +20,6 @@ import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
-import { NonApplicationSearchView } from './non-applications/non-applications-view.entity';
-import { NonApplicationsAdvancedSearchService } from './non-applications/non-applications.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
@@ -31,7 +28,6 @@ import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
   ApplicationSearchResultDto,
-  NonApplicationSearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
   SearchRequestDto,
@@ -48,7 +44,6 @@ export class SearchController {
     @InjectMapper() private mapper: Mapper,
     private noticeOfIntentSearchService: NoticeOfIntentAdvancedSearchService,
     private applicationSearchService: ApplicationAdvancedSearchService,
-    private nonApplicationsSearchService: NonApplicationsAdvancedSearchService,
     private notificationSearchService: NotificationAdvancedSearchService,
     @InjectRepository(ApplicationType)
     private appTypeRepo: Repository<ApplicationType>,
@@ -61,8 +56,6 @@ export class SearchController {
   async search(@Param('searchTerm') searchTerm) {
     const application = await this.searchService.getApplication(searchTerm);
     const noi = await this.searchService.getNoi(searchTerm);
-    const planningReview =
-      await this.searchService.getPlanningReview(searchTerm);
     const covenant = await this.searchService.getCovenant(searchTerm);
     const notification = await this.searchService.getNotification(searchTerm);
 
@@ -72,7 +65,7 @@ export class SearchController {
       result,
       application,
       noi,
-      planningReview,
+      null, //TODO
       covenant,
       notification,
     );
@@ -142,17 +135,6 @@ export class SearchController {
             searchDto,
           );
       }
-
-      let nonApplications: AdvancedSearchResultDto<
-        NonApplicationSearchView[]
-      > | null = null;
-      if (searchNonApplications) {
-        nonApplications =
-          await this.nonApplicationsSearchService.searchNonApplications(
-            searchDto,
-          );
-      }
-
       let notifications: AdvancedSearchResultDto<
         NotificationSubmissionSearchView[]
       > | null = null;
@@ -163,7 +145,7 @@ export class SearchController {
       return await this.mapAdvancedSearchResults(
         applicationSearchResult,
         noticeOfIntentSearchService,
-        nonApplications,
+        null,
         notifications,
       );
     } finally {
@@ -219,27 +201,6 @@ export class SearchController {
     return {
       total: mappedSearchResult.totalNoticeOfIntents,
       data: mappedSearchResult.noticeOfIntents,
-    };
-  }
-
-  @Post('/advanced/non-applications')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async advancedSearchNonApplications(
-    @Body() searchDto: SearchRequestDto,
-  ): Promise<AdvancedSearchResultDto<NonApplicationSearchResultDto[]>> {
-    const nonApplications =
-      await this.nonApplicationsSearchService.searchNonApplications(searchDto);
-
-    const mappedSearchResult = await this.mapAdvancedSearchResults(
-      null,
-      null,
-      nonApplications,
-      null,
-    );
-
-    return {
-      total: mappedSearchResult.totalNonApplications,
-      data: mappedSearchResult.nonApplications,
     };
   }
 
@@ -327,7 +288,7 @@ export class SearchController {
     noticeOfIntents: AdvancedSearchResultDto<
       NoticeOfIntentSubmissionSearchView[]
     > | null,
-    nonApplications: AdvancedSearchResultDto<NonApplicationSearchView[]> | null,
+    nonApplications: null,
     notifications: AdvancedSearchResultDto<
       NotificationSubmissionSearchView[]
     > | null,
@@ -358,15 +319,6 @@ export class SearchController {
       );
     }
 
-    const mappedNonApplications: NonApplicationSearchResultDto[] = [];
-    if (nonApplications?.data && nonApplications?.data.length > 0) {
-      mappedNonApplications.push(
-        ...nonApplications.data.map((nonApplication) =>
-          this.mapNonApplicationToAdvancedSearchResult(nonApplication),
-        ),
-      );
-    }
-
     const mappedNotifications: NotificationSearchResultDto[] = [];
     if (notifications && notifications.data && notifications.data.length > 0) {
       mappedNotifications.push(
@@ -380,8 +332,6 @@ export class SearchController {
     response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
     response.totalNoticeOfIntents = noticeOfIntents?.total ?? 0;
-    response.nonApplications = mappedNonApplications;
-    response.totalNonApplications = nonApplications?.total ?? 0;
     response.notifications = mappedNotifications;
     response.totalNotifications = notifications?.total ?? 0;
 
@@ -420,12 +370,12 @@ export class SearchController {
   private mapPlanningReviewToSearchResult(
     planning: PlanningReview,
   ): SearchResultDto {
+    //TODO
     return {
-      type: CARD_TYPE.PLAN,
-      referenceId: planning.cardUuid,
-      localGovernmentName: planning.localGovernment?.name,
-      fileNumber: planning.fileNumber,
-      boardCode: planning.card.board.code,
+      fileNumber: '',
+      localGovernmentName: undefined,
+      referenceId: '',
+      type: '',
     };
   }
 
@@ -488,20 +438,6 @@ export class SearchController {
       ownerName: noi.applicant,
       class: 'NOI',
       status: noi.status.status_type_code,
-    };
-  }
-
-  private mapNonApplicationToAdvancedSearchResult(
-    nonApplication: NonApplicationSearchView,
-  ): NonApplicationSearchResultDto {
-    return {
-      referenceId: nonApplication.cardUuid,
-      fileNumber: nonApplication.fileNumber,
-      applicant: nonApplication.applicant,
-      boardCode: nonApplication.boardCode,
-      type: nonApplication.type,
-      localGovernmentName: nonApplication.localGovernment?.name ?? null,
-      class: nonApplication.class,
     };
   }
 

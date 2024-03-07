@@ -3,7 +3,12 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { CreatePlanningReviewDto, PlanningReviewDto } from './planning-review.dto';
+import {
+  CreatePlanningReviewDto,
+  PlanningReferralDto,
+  PlanningReviewDto,
+  PlanningReviewTypeDto,
+} from './planning-review.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +23,7 @@ export class PlanningReviewService {
 
   async create(meeting: CreatePlanningReviewDto) {
     try {
-      const res = await firstValueFrom(this.http.post<PlanningReviewDto>(`${this.url}`, meeting));
+      const res = await firstValueFrom(this.http.post<PlanningReferralDto>(`${this.url}`, meeting));
       this.toastService.showSuccessToast('Planning meeting card created');
       return res;
     } catch (err) {
@@ -34,6 +39,16 @@ export class PlanningReviewService {
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch planning review');
+    }
+    return;
+  }
+
+  async fetchTypes() {
+    try {
+      return await firstValueFrom(this.http.get<PlanningReviewTypeDto[]>(`${this.url}/types`));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to fetch planning review types');
     }
     return;
   }

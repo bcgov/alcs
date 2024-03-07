@@ -1,15 +1,15 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ApplicationService } from '../../application/application.service';
-import { CovenantService } from '../../covenant/covenant.service';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ApplicationModificationService } from '../../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationService } from '../../application/application.service';
+import { CovenantService } from '../../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../../notification/notification.service';
-import { PlanningReviewService } from '../../planning-review/planning-review.service';
+import { PlanningReferralService } from '../../planning-review/planning-referral/planning-referral.service';
 import { UnarchiveCardService } from './unarchive-card.service';
 
 describe('UnarchiveCardService', () => {
@@ -17,7 +17,7 @@ describe('UnarchiveCardService', () => {
 
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
-  let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
+  let mockPlanningReferralService: DeepMocked<PlanningReferralService>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockCovenantService: DeepMocked<CovenantService>;
   let mockNOIService: DeepMocked<NoticeOfIntentService>;
@@ -27,7 +27,7 @@ describe('UnarchiveCardService', () => {
   beforeEach(async () => {
     mockApplicationService = createMock();
     mockReconsiderationService = createMock();
-    mockPlanningReviewService = createMock();
+    mockPlanningReferralService = createMock();
     mockModificationService = createMock();
     mockCovenantService = createMock();
     mockNOIService = createMock();
@@ -51,8 +51,8 @@ describe('UnarchiveCardService', () => {
           useValue: mockReconsiderationService,
         },
         {
-          provide: PlanningReviewService,
-          useValue: mockPlanningReviewService,
+          provide: PlanningReferralService,
+          useValue: mockPlanningReferralService,
         },
         {
           provide: ApplicationModificationService,
@@ -87,18 +87,20 @@ describe('UnarchiveCardService', () => {
   it('should load from each service for fetch', async () => {
     mockApplicationService.getDeletedCard.mockResolvedValue(null);
     mockReconsiderationService.getDeletedCards.mockResolvedValue([]);
-    mockPlanningReviewService.getDeletedCards.mockResolvedValue([]);
+    mockPlanningReferralService.getDeletedCards.mockResolvedValue([]);
     mockModificationService.getDeletedCards.mockResolvedValue([]);
     mockCovenantService.getDeletedCards.mockResolvedValue([]);
     mockNOIService.getDeletedCards.mockResolvedValue([]);
     mockNOIModificationService.getDeletedCards.mockResolvedValue([]);
     mockNotificationService.getDeletedCards.mockResolvedValue([]);
 
-    const res = await service.fetchByFileId('uuid');
+    await service.fetchByFileId('uuid');
 
     expect(mockApplicationService.getDeletedCard).toHaveBeenCalledTimes(1);
     expect(mockReconsiderationService.getDeletedCards).toHaveBeenCalledTimes(1);
-    expect(mockPlanningReviewService.getDeletedCards).toHaveBeenCalledTimes(1);
+    expect(mockPlanningReferralService.getDeletedCards).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockModificationService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockCovenantService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockNOIService.getDeletedCards).toHaveBeenCalledTimes(1);
