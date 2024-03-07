@@ -136,7 +136,7 @@ def _get_organization_name(row):
     alias_name = (row.get("alias_name") or "").strip()
 
     if not organization_name and not alias_name:
-        return None
+        return row["title"]
 
     return f"{organization_name} {alias_name}".strip()
 
