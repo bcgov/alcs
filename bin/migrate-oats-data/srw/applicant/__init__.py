@@ -1,0 +1,1 @@
+from .srw_process_applicant import update_srw_base_applicant

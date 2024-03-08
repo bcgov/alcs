@@ -37,15 +37,16 @@ describe('PlanningReviewService', () => {
     httpClient.post.mockReturnValue(
       of({
         fileNumber: '1',
-      })
+      }),
     );
 
     await service.create({
-      fileNumber: '1',
+      description: '',
+      documentName: '',
+      submissionDate: 0,
+      typeCode: '',
       localGovernmentUuid: '',
       regionCode: '',
-      type: '',
-      boardCode: '',
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
@@ -55,15 +56,16 @@ describe('PlanningReviewService', () => {
     httpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.create({
-      fileNumber: '',
+      description: '',
+      documentName: '',
+      submissionDate: 0,
+      typeCode: '',
       localGovernmentUuid: '',
       regionCode: '',
-      type: '',
-      boardCode: '',
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
@@ -75,7 +77,7 @@ describe('PlanningReviewService', () => {
     httpClient.get.mockReturnValue(
       of({
         fileNumber: '1',
-      })
+      }),
     );
 
     const res = await service.fetchByCardUuid('1');
@@ -89,7 +91,7 @@ describe('PlanningReviewService', () => {
     httpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.fetchByCardUuid('1');

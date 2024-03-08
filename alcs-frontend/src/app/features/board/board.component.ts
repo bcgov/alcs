@@ -23,13 +23,12 @@ import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-int
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { NotificationService } from '../../services/notification/notification.service';
-import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
-import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
+import { PlanningReferralService } from '../../services/planning-review/planning-referral.service';
+import { PlanningReferralDto } from '../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
-  PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
@@ -38,12 +37,9 @@ import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.in
 import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
-import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
-import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
-import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
 import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
 import { NotificationDialogComponent } from './dialogs/notification/notification-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
@@ -67,19 +63,52 @@ export class BoardComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
+  boards: BoardWithFavourite[] = [];
   boardTitle = '';
   boardIsFavourite = false;
-  boardHasCreateApplication = false;
-  boardHasCreatePlanningReview = false;
-  boardHasCreateReconsideration = false;
-  boardHasCreateAppModification = false;
-  boardHasCreateCovenant = false;
-  boardHasCreateNOI = false;
-  boardHasCreateNOIModification = false;
   currentBoardCode = '';
-
   selectedBoardCode?: string;
-  boards: BoardWithFavourite[] = [];
+  creatableCards: {
+    label: string;
+    dialog: ComponentType<any>;
+  }[] = [];
+
+  private createCardMap = new Map<
+    CardType,
+    {
+      label: string;
+      dialog: ComponentType<any>;
+    }
+  >([
+    [
+      CardType.RECON,
+      {
+        label: 'Reconsideration',
+        dialog: CreateReconsiderationDialogComponent,
+      },
+    ],
+    [
+      CardType.MODI,
+      {
+        label: 'Application Modification',
+        dialog: CreateAppModificationDialogComponent,
+      },
+    ],
+    [
+      CardType.NOI_MODI,
+      {
+        label: 'NOI Modification',
+        dialog: CreateNoiModificationDialogComponent,
+      },
+    ],
+    [
+      CardType.PLAN,
+      {
+        label: 'Planning Review',
+        dialog: CreatePlanningReviewDialogComponent,
+      },
+    ],
+  ]);
 
   constructor(
     private applicationService: ApplicationService,
@@ -90,13 +119,13 @@ export class BoardComponent implements OnInit, OnDestroy {
     private router: Router,
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private planningReviewService: PlanningReviewService,
+    private planningReferralService: PlanningReferralService,
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noiModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
-    private titleService: Title
+    private titleService: Title,
   ) {}
 
   ngOnInit() {
@@ -140,44 +169,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.setUrl(card.uuid, card.cardType);
   }
 
-  onApplicationCreate() {
-    this.openDialog(CreateApplicationDialogComponent, {
-      currentBoardCode: this.selectedBoardCode,
-    });
-  }
-
-  onReconsiderationCreate() {
-    this.openDialog(CreateReconsiderationDialogComponent, {
-      currentBoardCode: this.selectedBoardCode,
-    });
-  }
-
-  onCreatePlanningReview() {
-    this.openDialog(CreatePlanningReviewDialogComponent, {
-      currentBoardCode: this.selectedBoardCode,
-    });
-  }
-
-  onCreateAppModification() {
-    this.openDialog(CreateAppModificationDialogComponent, {
-      currentBoardCode: this.selectedBoardCode,
-    });
-  }
-
-  onCreateCovenant() {
-    this.openDialog(CreateCovenantDialogComponent, {
-      currentBoardCode: this.selectedBoardCode,
-    });
-  }
-
-  onCreateNoticeOfIntent() {
-    this.openDialog(CreateNoticeOfIntentDialogComponent, {
-      currentBoardCode: this.selectedBoardCode,
-    });
-  }
-
-  onCreateNoiModifications() {
-    this.openDialog(CreateNoiModificationDialogComponent, {
+  onOpenCreateDialog(component: ComponentType<any>) {
+    this.openDialog(component, {
       currentBoardCode: this.selectedBoardCode,
     });
   }
@@ -228,13 +221,18 @@ export class BoardComponent implements OnInit, OnDestroy {
     const board = response.board;
 
     this.boardTitle = board.title;
-    this.boardHasCreateApplication = board.createCardTypes.includes(CardType.APP);
-    this.boardHasCreatePlanningReview = board.createCardTypes.includes(CardType.PLAN);
-    this.boardHasCreateReconsideration = board.createCardTypes.includes(CardType.RECON);
-    this.boardHasCreateAppModification = board.createCardTypes.includes(CardType.MODI);
-    this.boardHasCreateCovenant = board.createCardTypes.includes(CardType.COV);
-    this.boardHasCreateNOI = board.createCardTypes.includes(CardType.NOI);
-    this.boardHasCreateNOIModification = board.createCardTypes.includes(CardType.NOI_MODI);
+
+    const creatableCards: {
+      label: string;
+      dialog: ComponentType<any>;
+    }[] = [];
+    for (const cardType of board.createCardTypes) {
+      const creator = this.createCardMap.get(cardType);
+      if (creator) {
+        creatableCards.push(creator);
+      }
+    }
+    this.creatableCards = creatableCards;
 
     const allStatuses = board.statuses.map((status) => status.statusCode);
 
@@ -249,12 +247,12 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapAndSortCards(response: CardsDto, boardCode: string) {
     const mappedApps = response.applications.map(this.mapApplicationDtoToCard.bind(this));
     const mappedRecons = response.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
-    const mappedReviewMeetings = response.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
+    const mappedPlanningReferrals = response.planningReferrals.map(this.mapPlanningReferralToCard.bind(this));
     const mappedModifications = response.modifications.map(this.mapModificationToCard.bind(this));
     const mappedCovenants = response.covenants.map(this.mapCovenantToCard.bind(this));
     const mappedNoticeOfIntents = response.noticeOfIntents.map(this.mapNoticeOfIntentToCard.bind(this));
     const mappedNoticeOfIntentModifications = response.noiModifications.map(
-      this.mapNoticeOfIntentModificationToCard.bind(this)
+      this.mapNoticeOfIntentModificationToCard.bind(this),
     );
     const mappedNotifications = response.notifications.map(this.mapNotificationToCard.bind(this));
     if (boardCode === BOARD_TYPE_CODES.VETT) {
@@ -267,7 +265,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.cards = [
         ...[...mappedNoticeOfIntents, ...mappedNoticeOfIntentModifications].sort(vettingSort),
         ...[...mappedApps, ...mappedRecons, ...mappedModifications].sort(vettingSort),
-        ...[...mappedReviewMeetings, ...mappedCovenants].sort(vettingSort),
+        ...[...mappedPlanningReferrals, ...mappedCovenants].sort(vettingSort),
         ...mappedNotifications,
       ];
     } else if (boardCode === BOARD_TYPE_CODES.NOI) {
@@ -291,7 +289,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedApps,
         ...mappedRecons,
         ...mappedModifications,
-        ...mappedReviewMeetings,
+        ...mappedPlanningReferrals,
         ...mappedCovenants,
         ...mappedNotifications,
       ].sort(noiSort);
@@ -306,7 +304,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedApps.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
-        ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedPlanningReferrals.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
@@ -319,9 +317,9 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
-        ...mappedReviewMeetings.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedPlanningReferrals.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedCovenants.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
-        ...mappedNotifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived)
+        ...mappedNotifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
       );
       this.cards = sorted;
     }
@@ -383,20 +381,21 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
-  private mapPlanningReviewToCard(meeting: PlanningReviewDto): CardData {
+  private mapPlanningReferralToCard(referral: PlanningReferralDto): CardData {
     return {
-      status: meeting.card.status.code,
-      typeLabel: 'Non-Application',
-      title: `${meeting.fileNumber} (${meeting.type})`,
-      titleTooltip: meeting.type,
-      assignee: meeting.card.assignee,
-      id: meeting.card.uuid,
-      labels: [PLANNING_TYPE_LABEL],
+      status: referral.card.status.code,
+      typeLabel: 'Planning Review',
+      title: `${referral.planningReview.fileNumber} (${referral.planningReview.documentName})`,
+      titleTooltip: referral.planningReview.type.label,
+      assignee: referral.card.assignee,
+      id: referral.card.uuid,
+      labels: [referral.planningReview.type],
       cardType: CardType.PLAN,
       paused: false,
-      highPriority: meeting.card.highPriority,
-      cardUuid: meeting.card.uuid,
-      dateReceived: meeting.card.createdAt,
+      highPriority: referral.card.highPriority,
+      cardUuid: referral.card.uuid,
+      dateReceived: referral.card.createdAt,
+      dueDate: referral.dueDate ? new Date(referral.dueDate) : undefined,
     };
   }
 
@@ -517,7 +516,7 @@ export class BoardComponent implements OnInit, OnDestroy {
           this.openDialog(ReconsiderationDialogComponent, recon);
           break;
         case CardType.PLAN:
-          const planningReview = await this.planningReviewService.fetchByCardUuid(card.uuid);
+          const planningReview = await this.planningReferralService.fetchByCardUuid(card.uuid);
           this.openDialog(PlanningReviewDialogComponent, planningReview);
           break;
         case CardType.MODI:

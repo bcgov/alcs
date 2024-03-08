@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ApplicationSubmissionStatusModule } from '../application/application-submission-status/application-submission-status.module';
 import { ApplicationModule } from '../application/application.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
@@ -11,6 +12,7 @@ import { NoticeOfIntentImportService } from './noi-import.service';
   providers: [ApplicationImportService, NoticeOfIntentImportService],
   imports: [
     ApplicationModule,
+    ApplicationSubmissionStatusModule,
     BoardModule,
     NoticeOfIntentModule,
     NoticeOfIntentDecisionModule,

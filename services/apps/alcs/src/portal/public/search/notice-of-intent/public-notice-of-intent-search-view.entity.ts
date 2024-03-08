@@ -68,7 +68,6 @@ import { LinkedStatusType } from '../public-search.dto';
       .leftJoin(
         (qb) =>
           qb
-            .from(NoticeOfIntentDecision, 'decision_date')
             .select('decisiondate', 'date')
             .addSelect('outcome', 'outcome')
             .addSelect('dest_rank', 'dest_rank')
@@ -84,6 +83,7 @@ import { LinkedStatusType } from '../public-search.dto';
                   'RANK() OVER (PARTITION BY notice_of_intent_uuid ORDER BY date DESC, audit_created_at DESC)',
                   'dest_rank',
                 )
+                .where('is_draft = FALSE')
                 .from(NoticeOfIntentDecision, 'decision')
                 .getQuery(),
               'decisions',

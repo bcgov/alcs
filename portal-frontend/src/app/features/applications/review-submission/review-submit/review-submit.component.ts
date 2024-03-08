@@ -119,8 +119,10 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
         .beforeClosed()
         .subscribe(async (didConfirm) => {
           if (didConfirm) {
-            await this.applicationReviewService.complete(this.fileId!);
-            await this.router.navigateByUrl(`/application/${this.fileId}/review/success`);
+            const didComplete = await this.applicationReviewService.complete(this.fileId!);
+            if (didComplete) {
+              await this.router.navigateByUrl(`/application/${this.fileId}/review/success`);
+            }
           }
         });
     }

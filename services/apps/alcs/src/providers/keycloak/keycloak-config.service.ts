@@ -20,6 +20,7 @@ export class KeycloakConfigService implements KeycloakConnectOptionsFactory {
       'confidential-port': 0,
       tokenValidation: TokenValidation.OFFLINE,
       verifyTokenAudience: true,
+      logLevels: [], //Disable Expired Token Messages
     };
   }
 }

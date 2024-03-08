@@ -46,6 +46,9 @@ import { UserModule } from './user/user.module';
     RedisModule,
     LoggerModule.forRoot({
       pinoHttp: {
+        redact: {
+          paths: ['req.headers'],
+        },
         level: config.get('LOG_LEVEL'),
         autoLogging: false, //Disable auto-logging every request/response for now
         transport:

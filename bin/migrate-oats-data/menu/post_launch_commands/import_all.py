@@ -3,6 +3,7 @@ from noi.post_launch import (
     process_notice_of_intent,
 )
 from srw.post_launch.srw_migration import process_srw
+from documents.post_launch.migrate_documents import import_documents
 
 
 def import_all(console, args):
@@ -21,5 +22,8 @@ def import_all(console, args):
 
         console.log("Processing SRW")
         process_srw(batch_size=import_batch_size)
+
+        console.log("Processing Documents")
+        import_documents(batch_size=import_batch_size)
 
         console.log("Done")
