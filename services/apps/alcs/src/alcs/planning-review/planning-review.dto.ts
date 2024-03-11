@@ -1,5 +1,11 @@
 import { AutoMap } from 'automapper-classes';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
@@ -101,7 +107,7 @@ export class PlanningReviewDetailedDto extends PlanningReviewDto {
 }
 
 export class UpdatePlanningReviewDto {
-  @IsString()
+  @IsBoolean()
   @IsOptional()
   open?: boolean;
 

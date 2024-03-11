@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CardDto } from '../../../services/card/card.dto';
-import { PlanningReviewDetailedDto, PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
+import { PlanningReviewDetailedDto } from '../../../services/planning-review/planning-review.dto';
 import { CLOSED_PR_LABEL, OPEN_PR_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
 
 @Component({
@@ -10,7 +10,7 @@ import { CLOSED_PR_LABEL, OPEN_PR_LABEL } from '../../../shared/application-type
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnChanges {
   destroy = new Subject<void>();
 
   @Input() planningReview!: PlanningReviewDetailedDto;
@@ -21,13 +21,6 @@ export class HeaderComponent implements OnInit {
   statusPill = OPEN_PR_LABEL;
 
   constructor(private router: Router) {}
-
-  ngOnInit(): void {
-    this.setupLinkedCards();
-    if (!this.planningReview.open) {
-      this.statusPill = CLOSED_PR_LABEL;
-    }
-  }
 
   async onGoToCard(card: CardDto) {
     const boardCode = card.boardCode;
@@ -43,5 +36,10 @@ export class HeaderComponent implements OnInit {
         displayName: `Referral ${index}`,
       });
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.setupLinkedCards();
+    this.statusPill = this.planningReview.open ? OPEN_PR_LABEL : CLOSED_PR_LABEL;
   }
 }
