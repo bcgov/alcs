@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApplicationPortalDecisionDto } from '../../../../../services/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../../services/application-decision/application-decision.service';
 

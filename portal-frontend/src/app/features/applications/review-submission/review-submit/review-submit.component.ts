@@ -15,6 +15,7 @@ import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-submission.component';
 import { SubmitConfirmationDialogComponent } from '../submit-confirmation-dialog/submit-confirmation-dialog.component';
+import { openFileIframe } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -131,7 +132,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileIframe(res);
     }
   }
 

@@ -108,8 +108,7 @@ export class ParcelOwnersComponent {
   async onOpenFile(uuid: string) {
     const res = await this.documentService.openFile(uuid);
     if (res) {
-      const { fileName, url } = res;
-      openFileIframe(fileName || 'browser title', url);
+      openFileIframe(res);
     }
   }
 }

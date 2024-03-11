@@ -5,7 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { VISIBILITY_FLAG } from '../../alcs/application/application-document/application-document.entity';
-import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NotificationDocument } from '../../alcs/notification/notification-document/notification-document.entity';
 import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
 import { NotificationService } from '../../alcs/notification/notification.service';
@@ -137,7 +136,11 @@ describe('NotificationDocumentController', () => {
       },
     });
 
+    expect(mockNotificationDocumentService.getInlineUrl).toHaveBeenCalledTimes(
+      1,
+    );
     expect(res.url).toEqual(fakeUrl);
+    expect(res.fileName).toEqual(mockDocument.document.fileName);
   });
 
   it('should call through for download', async () => {

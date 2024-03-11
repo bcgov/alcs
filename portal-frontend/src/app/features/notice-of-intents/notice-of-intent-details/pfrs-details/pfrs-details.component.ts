@@ -4,6 +4,7 @@ import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { openFileIframe } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-pfrs-details[noiSubmission]',
@@ -49,6 +50,8 @@ export class PfrsDetailsComponent {
 
   async openFile(uuid: string) {
     const res = await this.noticeOfIntentDocumentService.openFile(uuid);
-    window.open(res?.url, '_blank');
+    if (res) {
+      openFileIframe(res);
+    }
   }
 }

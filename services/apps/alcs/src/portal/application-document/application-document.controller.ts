@@ -75,7 +75,6 @@ export class ApplicationDocumentController {
 
     if (canAccessDocument) {
       const url = await this.applicationDocumentService.getInlineUrl(document);
-      // TODO: Same thing for other document controllers
       const { fileName } = document.document;
       return { url, fileName };
     }

@@ -52,8 +52,7 @@ export class NoticeOfIntentDocumentService {
   async openFile(fileUuid: string) {
     try {
       return await firstValueFrom(
-        // TODO: Make fileName mandatory when ready to update all other usage
-        this.httpClient.get<{ url: string; fileName?: string }>(`${this.serviceUrl}/${fileUuid}/open`)
+        this.httpClient.get<{ url: string; fileName: string }>(`${this.serviceUrl}/${fileUuid}/open`)
       );
     } catch (e) {
       console.error(e);

@@ -8,6 +8,7 @@ import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
 } from '../../edit-submission/additional-information/additional-information.component';
+import { openFileIframe } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-additional-information',
@@ -101,6 +102,8 @@ export class AdditionalInformationComponent {
 
   async openFile(uuid: string) {
     const res = await this.noticeOfIntentDocumentService.openFile(uuid);
-    window.open(res?.url, '_blank');
+    if (res) {
+      openFileIframe(res);
+    }
   }
 }

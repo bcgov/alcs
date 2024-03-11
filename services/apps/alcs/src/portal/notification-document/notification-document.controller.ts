@@ -78,7 +78,8 @@ export class NotificationDocumentController {
 
     if (canAccessDocument) {
       const url = await this.notificationDocumentService.getInlineUrl(document);
-      return { url };
+      const { fileName } = document.document;
+      return { url, fileName };
     }
 
     throw new NotFoundException('Failed to find document');
