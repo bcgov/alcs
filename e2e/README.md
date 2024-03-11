@@ -1,6 +1,7 @@
 # End-to-End Testing
 
-- [Usage](#usage)
+- [Writing Tests](#writing-tests)
+- [Running Tests](#running-tests)
 - [Local Setup](#local-setup)
   - [Installation](#installation)
   - [Configure secrets](#configure-secrets)
@@ -10,7 +11,11 @@ E2E test automation is implemented using the [Playwright](https://playwright.dev
 > [!WARNING]
 > When writing tests, make sure they do not contain any credentials _before_ committing to the repo.
 
-## Usage
+## Writing Tests
+
+- Write tests for a given project, i.e., tests for the portal go in `/e2e/tests/portal`.
+
+## Running Tests
 
 To run tests:
 
