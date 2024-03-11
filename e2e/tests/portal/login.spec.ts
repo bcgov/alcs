@@ -1,14 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, UserPrefix } from '../fixtures';
 
-test('test', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Portal Login' }).click();
-  await page.locator('#user').fill(process.env.BCEID_BASIC_USERNAME ?? '');
-  await page
-    .getByLabel('Password')
-    .fill(process.env.BCEID_BASIC_PASSWORD ?? '');
-  await page.getByRole('button', { name: /continue/i }).click();
+test.use({ userPrefix: UserPrefix.BceidBasic });
+
+test('test', async ({ inboxLoggedIn }) => {
   await expect(
-    page.getByRole('heading', { name: 'Portal Inbox' })
+    inboxLoggedIn.getByRole('heading', { name: 'Portal Inbox' })
   ).toBeVisible();
 });
