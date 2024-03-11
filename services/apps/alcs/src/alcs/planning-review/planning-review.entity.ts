@@ -21,6 +21,15 @@ export class PlanningReview extends Base {
   @Column({ unique: true })
   fileNumber: string;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Application Id that is applicable only to paper version applications from 70s - 80s',
+    nullable: true,
+  })
+  legacyId?: string | null;
+
   @Column({ nullable: false })
   documentName: string;
 

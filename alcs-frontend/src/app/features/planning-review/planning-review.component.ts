@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, take, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { PlanningReviewDetailService } from '../../services/planning-review/planning-review-detail.service';
-import { PlanningReviewDetailedDto, PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
-import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
+import { PlanningReviewDetailedDto } from '../../services/planning-review/planning-review.dto';
+import { DocumentsComponent } from './documents/documents.component';
 import { OverviewComponent } from './overview/overview.component';
 
 export const childRoutes = [
@@ -12,6 +12,13 @@ export const childRoutes = [
     menuTitle: 'Overview',
     icon: 'summarize',
     component: OverviewComponent,
+  },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: DocumentsComponent,
+    portalOnly: false,
   },
 ];
 

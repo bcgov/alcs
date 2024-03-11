@@ -137,4 +137,13 @@ export class PlanningReviewService {
     await this.reviewRepository.save(existingApp);
     return this.getDetailedReview(fileNumber);
   }
+
+  async getFileNumber(planningReviewUuid: string) {
+    return this.reviewRepository.findOneOrFail({
+      where: {
+        uuid: planningReviewUuid,
+      },
+      select: ['fileNumber'],
+    });
+  }
 }

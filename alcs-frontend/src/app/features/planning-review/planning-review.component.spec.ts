@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -34,6 +35,7 @@ describe('PlanningReviewComponent', () => {
           useValue: mockActivateRoute,
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     });
     fixture = TestBed.createComponent(PlanningReviewComponent);
     component = fixture.componentInstance;
