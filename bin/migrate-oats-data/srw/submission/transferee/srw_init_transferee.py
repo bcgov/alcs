@@ -145,9 +145,11 @@ def _get_name(row):
     first_name = row.get("first_name", None)
     middle_name = row.get("middle_name", None)
 
-    return " ".join(
+    result = " ".join(
         [name for name in (first_name, middle_name) if name is not None]
     ).strip()
+
+    return None if result == "" else result
 
 
 def _map_owner_type(data):
