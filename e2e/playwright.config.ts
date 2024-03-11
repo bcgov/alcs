@@ -53,7 +53,7 @@ export default defineConfig({
     {
       name: 'portal',
       use: {
-        baseURL: 'http://localhost:4201',
+        baseURL: 'https://alcs-dev-portal.apps.silver.devops.gov.bc.ca',
       },
       dependencies: ['chromium'],
       testMatch: 'portal/**/*.spec.ts',
