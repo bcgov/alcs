@@ -75,7 +75,9 @@ export class ApplicationDocumentController {
 
     if (canAccessDocument) {
       const url = await this.applicationDocumentService.getInlineUrl(document);
-      return { url };
+      // TODO: Same thing for other document controllers
+      const { fileName } = document.document;
+      return { url, fileName };
     }
 
     throw new NotFoundException('Failed to find document');

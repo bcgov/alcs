@@ -51,7 +51,10 @@ export class NoticeOfIntentDocumentService {
 
   async openFile(fileUuid: string) {
     try {
-      return await firstValueFrom(this.httpClient.get<{ url: string }>(`${this.serviceUrl}/${fileUuid}/open`));
+      return await firstValueFrom(
+        // TODO: Make fileName mandatory when ready to update all other usage
+        this.httpClient.get<{ url: string; fileName?: string }>(`${this.serviceUrl}/${fileUuid}/open`)
+      );
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to open the document, please try again');
