@@ -5,7 +5,6 @@ INSERT INTO alcs.notification_submission_to_submission_status(submission_uuid, s
         WHERE aes.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
             and aes.alr_change_code = 'SRW'
     ),
-    -- alcs_submissions_with_statuses is required for development environment only. Production environment does not have submissions.
     alcs_submissions_with_statuses AS (
         SELECT not_sub.file_number
         FROM alcs.notification_submission not_sub

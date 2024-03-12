@@ -8,4 +8,4 @@ SELECT count (*)
 FROM oats.oats_alr_applications oaa2
     JOIN components_grouped cg ON cg.alr_application_id = oaa2.alr_application_id
     JOIN alcs.notification_submission nots ON nots.file_number = oaa2.alr_application_id::TEXT
-    LEFT JOIN oats.oats_email_notifications oen ON oaa2.alr_application_id = oen.alr_application_id 
+    LEFT JOIN oats.oats_email_notifications oen ON oaa2.alr_application_id = oen.alr_application_id; 

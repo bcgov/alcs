@@ -22,4 +22,4 @@ alcs_submission_uuids_to_populate AS (
 )
 SELECT count(*)
 FROM alcs_submission_uuids_to_populate
-    CROSS JOIN alcs.notification_submission_status_type notsst
+    CROSS JOIN alcs.notification_submission_status_type notsst;
