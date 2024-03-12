@@ -1,0 +1,43 @@
+name: E2E Testing w/ Playwright
+on:
+  workflow_dispatch:
+    inputs:
+      portalBaseUrl:
+        type: choice
+        description: Portal Base URL
+        options:
+          - https://alcs-dev-portal.apps.silver.devops.gov.bc.ca
+          - https://alcs-test-portal.apps.silver.devops.gov.bc.ca
+  schedule:
+    # 5:23 am daily
+    - cron: "23 5 * * *"
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # This does not need to align with URL
+          ref: develop
+      - uses: actions/setup-node@v4
+      - name: Install dependencies
+        working-directory: ./e2e
+        run: npm ci
+      - name: Install Playwright Browsers
+        working-directory: ./e2e
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        working-directory: ./e2e
+        env:
+          # Default to dev
+          PORTAL_BASE_URL: ${{ inputs.portalBaseUrl || https://alcs-dev-portal.apps.silver.devops.gov.bc.ca }}
+          BCEID_BASIC_USERNAME: ${{ secrets.BCEID_BASIC_USERNAME }}
+          BCEID_BASIC_PASSWORD: ${{ secrets.BCEID_BASIC_PASSWORD }}
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
