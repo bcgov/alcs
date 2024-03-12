@@ -31,7 +31,7 @@ jobs:
         working-directory: ./e2e
         env:
           # Default to dev
-          PORTAL_BASE_URL: ${{ inputs.portalBaseUrl || https://alcs-dev-portal.apps.silver.devops.gov.bc.ca }}
+          PORTAL_BASE_URL: ${{ inputs.portalBaseUrl || 'https://alcs-dev-portal.apps.silver.devops.gov.bc.ca' }}
           BCEID_BASIC_USERNAME: ${{ secrets.BCEID_BASIC_USERNAME }}
           BCEID_BASIC_PASSWORD: ${{ secrets.BCEID_BASIC_PASSWORD }}
         run: npx playwright test
