@@ -48,4 +48,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  async onSaveStatus($event: string) {
+    if (this.planningReview) {
+      await this.planningReviewDetailService.update(this.planningReview.fileNumber, {
+        open: $event === 'Open',
+      });
+    }
+  }
 }

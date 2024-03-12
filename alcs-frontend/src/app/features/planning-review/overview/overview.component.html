@@ -12,5 +12,20 @@
 </section>
 <section *ngIf="planningReview">
   <h5>Status</h5>
-  <div>{{ planningReview.open ? 'Open' : 'Closed' }}</div>
+  <div>
+    <app-inline-button-toggle
+      (save)="onSaveStatus($event)"
+      [selectedValue]="planningReview.open ? 'Open' : 'Closed'"
+      [options]="[
+        {
+          label: 'Open',
+          value: 'Open'
+        },
+        {
+          label: 'Closed',
+          value: 'Closed'
+        }
+      ]"
+    />
+  </div>
 </section>
