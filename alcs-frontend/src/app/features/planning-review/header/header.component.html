@@ -5,7 +5,7 @@
   <div class="first-row">
     <div class="title">
       <h5>{{ planningReview.fileNumber }} ({{ planningReview.documentName }})</h5>
-      <app-application-legacy-id [legacyId]="legacyId"></app-application-legacy-id>
+      <app-application-legacy-id *ngIf="planningReview.legacyId" [legacyId]="planningReview.legacyId"></app-application-legacy-id>
       <div class="labels">
         <app-application-type-pill [type]="planningReview.type"></app-application-type-pill>
       </div>

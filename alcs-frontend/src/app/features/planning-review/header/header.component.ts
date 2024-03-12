@@ -15,8 +15,6 @@ export class HeaderComponent implements OnChanges {
 
   @Input() planningReview!: PlanningReviewDetailedDto;
 
-  legacyId?: string;
-  applicant?: string;
   linkedCards: (CardDto & { displayName: string })[] = [];
   statusPill = OPEN_PR_LABEL;
 

@@ -17,23 +17,20 @@ export class PlanningReferral extends Base {
     }
   }
 
-  @AutoMap()
   @Column({ type: 'timestamptz' })
   submissionDate: Date;
 
-  @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
   dueDate?: Date | null;
 
-  @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
   responseDate?: Date | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({ nullable: true, type: 'text' })
   referralDescription?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({ nullable: true, type: 'text' })
   responseDescription?: string;
 

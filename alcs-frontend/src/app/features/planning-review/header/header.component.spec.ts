@@ -18,6 +18,7 @@ describe('HeaderComponent', () => {
     component = fixture.componentInstance;
 
     component.planningReview = {
+      legacyId: '',
       documentName: '',
       fileNumber: '',
       localGovernment: {

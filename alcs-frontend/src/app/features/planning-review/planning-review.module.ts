@@ -8,6 +8,8 @@ import { DocumentsComponent } from './documents/documents.component';
 import { HeaderComponent } from './header/header.component';
 import { OverviewComponent } from './overview/overview.component';
 import { childRoutes, PlanningReviewComponent } from './planning-review.component';
+import { CreatePlanningReferralDialogComponent } from './referrals/create/create-planning-referral-dialog.component';
+import { ReferralComponent } from './referrals/referral.component';
 
 const routes: Routes = [
   {
@@ -25,6 +27,8 @@ const routes: Routes = [
     HeaderComponent,
     DocumentsComponent,
     DocumentUploadDialogComponent,
+    ReferralComponent,
+    CreatePlanningReferralDialogComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })

@@ -1,0 +1,43 @@
+<div mat-dialog-title>
+  <h2 class="card-title">Create Planning Referral</h2>
+</div>
+<form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="two-item-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Referral Submission Date</mat-label>
+        <input
+          matInput
+          (click)="submissionDate.open()"
+          [matDatepicker]="submissionDate"
+          [formControl]="submissionDateControl"
+          [min]="minimumDate"
+          name="date"
+          id="date"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="submissionDate"></mat-datepicker-toggle>
+        <mat-datepicker #submissionDate type="date"> </mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Due Date</mat-label>
+        <input matInput (click)="dueDate.open()" [matDatepicker]="dueDate" [formControl]="dueDateControl" />
+        <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+        <mat-datepicker #dueDate type="date"> </mat-datepicker>
+      </mat-form-field>
+    </div>
+    <mat-form-field class="description" appearance="outline">
+      <mat-label>Description</mat-label>
+      <input matInput [formControl]="descriptionControl" required />
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">
+        Create
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,36 @@
+@use '../../../../styles/colors';
+
+h5 {
+  margin: 16px 0 !important;
+}
+
+section {
+  margin: 32px 0;
+}
+
+.referral {
+  border-radius: 4px;
+  padding: 24px 16px 12px 16px;
+  margin-bottom: 48px;
+
+  .two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 24px;
+    grid-row-gap: 24px;
+
+    & > div {
+      margin-top: 24px;
+      padding: 24px 16px 0;
+      background-color: colors.$grey-light;
+
+      div {
+        margin-bottom: 36px;
+      }
+
+      div.subheading2 {
+        margin-bottom: 2px !important;
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { PlanningReviewDetailService } from '../../services/planning-review/plan
 import { PlanningReviewDetailedDto } from '../../services/planning-review/planning-review.dto';
 import { DocumentsComponent } from './documents/documents.component';
 import { OverviewComponent } from './overview/overview.component';
+import { ReferralComponent } from './referrals/referral.component';
 
 export const childRoutes = [
   {
@@ -14,11 +15,16 @@ export const childRoutes = [
     component: OverviewComponent,
   },
   {
+    path: 'referrals',
+    menuTitle: 'Referrals',
+    icon: 'edit_note',
+    component: ReferralComponent,
+  },
+  {
     path: 'documents',
     menuTitle: 'Documents',
     icon: 'description',
     component: DocumentsComponent,
-    portalOnly: false,
   },
 ];
 

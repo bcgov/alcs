@@ -10,17 +10,16 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
-import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { ApplicationSubmissionStatusPill } from '../application-submission-status-type-pill/application-submission-status-type-pill.component';
 import {
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
-import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { TimeTrackable } from '../time-tracker/time-tracker.component';
 
 @Component({
@@ -41,35 +40,19 @@ export class DetailsHeaderComponent {
 
   legacyId?: string;
 
-  _application:
-    | ApplicationDto
-    | CommissionerApplicationDto
-    | NoticeOfIntentDto
-    | NotificationDto
-    | PlanningReviewDto
-    | undefined;
+  _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
   types: ApplicationTypeDto[] | NoticeOfIntentTypeDto[] = [];
   timeTrackable?: TimeTrackable;
   applicant?: string;
 
   @Input() set application(
-    application:
-      | ApplicationDto
-      | CommissionerApplicationDto
-      | NoticeOfIntentDto
-      | NotificationDto
-      | PlanningReviewDto
-      | undefined,
+    application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined,
   ) {
     if (application) {
       this._application = application;
 
       if ('applicant' in application) {
         this.applicant = application.applicant;
-      }
-
-      if ('documentName' in application) {
-        this.applicant = application.documentName;
       }
 
       if ('retroactive' in application) {

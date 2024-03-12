@@ -37,6 +37,10 @@ export class PlanningReviewProfile extends AutomapperProfile {
           (dto) => dto.submissionDate,
           mapFrom((entity) => entity.submissionDate?.getTime()),
         ),
+        forMember(
+          (dto) => dto.responseDate,
+          mapFrom((entity) => entity.responseDate?.getTime()),
+        ),
       );
       createMap(mapper, PlanningReview, PlanningReviewDetailedDto);
 
