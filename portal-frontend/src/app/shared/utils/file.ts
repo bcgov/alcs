@@ -17,13 +17,13 @@ export const openFileIframe = (data: { url: string; fileName: string }) => {
   if (newWindow) {
     newWindow.document.title = data.fileName;
 
-    const iframe = newWindow.document.createElement('iframe');
-    iframe.src = data.url;
-    iframe.style.borderWidth = '0';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
+    const embed = newWindow.document.createElement('embed');
+    embed.src = data.url;
+    embed.style.borderWidth = '0';
+    embed.style.width = '100%';
+    embed.style.height = '100%';
 
-    newWindow.document.body.appendChild(iframe);
+    newWindow.document.body.appendChild(embed);
     newWindow.document.body.style.backgroundColor = 'rgb(82, 86, 89)';
     newWindow.document.body.style.height = '100%';
     newWindow.document.body.style.width = '100%';
