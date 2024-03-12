@@ -136,7 +136,9 @@ describe('ApplicationDocumentController', () => {
       },
     });
 
+    expect(appDocumentService.getInlineUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
+    expect(res.fileName).toEqual(mockDocument.document.fileName);
   });
 
   it('should call through for download', async () => {

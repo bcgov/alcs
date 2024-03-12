@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { openFileIframe } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-submission-documents',
@@ -32,7 +33,7 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   async openFile(uuid: string) {
     const res = await this.noticeOfIntentDocumentService.openFile(uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileIframe(res);
     }
   }
 
