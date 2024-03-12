@@ -20,10 +20,10 @@
   "homepage": "https://github.com/bcgov/alcs#readme",
   "dependencies": {
     "@playwright/test": "^1.32.0",
-    "@types/node": "^20.11.24",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
+    "@types/node": "^20.11.24",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
