@@ -34,7 +34,7 @@ export class PlanningReviewDialogComponent extends CardDialogComponent implement
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: PlanningReferralDto,
-    private dialogRef: MatDialogRef<PlanningReviewDialogComponent>,
+    dialogRef: MatDialogRef<PlanningReviewDialogComponent>,
     boardService: BoardService,
     userService: UserService,
     authService: AuthenticationService,

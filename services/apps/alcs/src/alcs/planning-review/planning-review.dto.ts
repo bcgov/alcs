@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { CardDto } from '../card/card.dto';
@@ -87,15 +88,62 @@ export class PlanningReviewDto {
   type: PlanningReviewTypeDto;
 }
 
-export class PlanningReferralDto {
-  dueDate: number;
+export class CreatePlanningReferralDto {
+  @IsUUID()
+  @IsNotEmpty()
+  planningReviewUuid: string;
+
+  @IsString()
+  @IsNotEmpty()
+  referralDescription: string;
+
+  @IsNumber()
+  @IsNotEmpty()
   submissionDate: number;
 
+  @IsNumber()
+  @IsOptional()
+  dueDate?: number;
+}
+
+export class UpdatePlanningReferralDto {
+  @IsString()
+  @IsOptional()
+  referralDescription?: string;
+
+  @IsNumber()
+  @IsOptional()
+  submissionDate?: number;
+
+  @IsNumber()
+  @IsOptional()
+  dueDate?: number;
+
+  @IsNumber()
+  @IsOptional()
+  responseDate?: number;
+
+  @IsString()
+  @IsOptional()
+  responseDescription?: string;
+}
+
+export class PlanningReferralDto {
   @AutoMap()
-  referralDescription: string;
+  uuid: string;
+
+  dueDate: number;
+  submissionDate: number;
+  responseDate?: number;
+
+  @AutoMap(() => String)
+  referralDescription?: string;
 
   @AutoMap(() => PlanningReviewDto)
   planningReview: PlanningReviewDto;
+
+  @AutoMap(() => String)
+  responseDescription?: string;
 
   @AutoMap(() => CardDto)
   card: CardDto;

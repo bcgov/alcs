@@ -5,6 +5,8 @@ import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { PlanningReviewProfile } from '../../../common/automapper/planning-review.automapper.profile';
+import { Board } from '../../board/board.entity';
+import { BoardService } from '../../board/board.service';
 import { PlanningReviewType } from '../planning-review-type.entity';
 import { PlanningReferralController } from './planning-referral.controller';
 import { PlanningReferral } from './planning-referral.entity';
@@ -13,9 +15,11 @@ import { PlanningReferralService } from './planning-referral.service';
 describe('PlanningReviewController', () => {
   let controller: PlanningReferralController;
   let mockService: DeepMocked<PlanningReferralService>;
+  let mockBoardService: DeepMocked<BoardService>;
 
   beforeEach(async () => {
     mockService = createMock();
+    mockBoardService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -29,6 +33,10 @@ describe('PlanningReviewController', () => {
         {
           provide: PlanningReferralService,
           useValue: mockService,
+        },
+        {
+          provide: BoardService,
+          useValue: mockBoardService,
         },
         {
           provide: ClsService,
@@ -54,5 +62,41 @@ describe('PlanningReviewController', () => {
 
     expect(res).toBeDefined();
     expect(mockService.getByCardUuid).toHaveBeenCalledTimes(1);
+  });
+
+  it('should load the board then call through for create', async () => {
+    mockService.create.mockResolvedValue(new PlanningReferral());
+    mockBoardService.getOneOrFail.mockResolvedValue(new Board());
+
+    const res = await controller.create({
+      planningReviewUuid: '',
+      referralDescription: '',
+      submissionDate: 0,
+    });
+
+    expect(res).toBeDefined();
+    expect(mockBoardService.getOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockService.create).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for update', async () => {
+    mockService.update.mockResolvedValue();
+
+    const res = await controller.update('', {
+      referralDescription: '',
+      submissionDate: 0,
+    });
+
+    expect(res).toBeDefined();
+    expect(mockService.update).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for delete', async () => {
+    mockService.delete.mockResolvedValue();
+
+    const res = await controller.delete('');
+
+    expect(res).toBeDefined();
+    expect(mockService.delete).toHaveBeenCalledTimes(1);
   });
 });

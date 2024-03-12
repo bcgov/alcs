@@ -16,6 +16,7 @@ export interface CreatePlanningReviewDto {
 export interface PlanningReviewDto {
   uuid: string;
   fileNumber: string;
+  legacyId: string | null;
   open: boolean;
   localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
@@ -33,9 +34,27 @@ export interface PlanningReviewTypeDto extends BaseCodeDto {
   textColor: string;
 }
 
+export interface CreatePlanningReferralDto {
+  planningReviewUuid: string;
+  referralDescription: string;
+  submissionDate: number;
+  dueDate?: number;
+}
+
+export interface UpdatePlanningReferralDto {
+  referralDescription?: string;
+  submissionDate?: number;
+  dueDate?: number;
+  responseDate?: number;
+  responseDescription?: string;
+}
+
 export interface PlanningReferralDto {
+  uuid: string;
   referralDescription: string;
   dueDate?: number;
+  responseDate?: number;
+  responseDescription?: string;
   submissionDate: number;
   planningReview: PlanningReviewDto;
   card: CardDto;

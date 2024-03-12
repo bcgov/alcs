@@ -101,6 +101,11 @@ export class PlanningReviewService {
         ...this.DEFAULT_RELATIONS,
         referrals: true,
       },
+      order: {
+        referrals: {
+          auditCreatedAt: 'DESC',
+        },
+      },
     });
   }
 

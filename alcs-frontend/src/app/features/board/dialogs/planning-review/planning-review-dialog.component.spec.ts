@@ -27,6 +27,7 @@ describe('PlanningReviewDialogComponent', () => {
 
   const mockPlanningReviewDto: PlanningReviewDto = {
     uuid: '',
+    legacyId: '',
     documentName: '',
     type: {} as any,
     open: true,
@@ -54,6 +55,7 @@ describe('PlanningReviewDialogComponent', () => {
     planningReview: mockPlanningReviewDto,
     referralDescription: '',
     submissionDate: 0,
+    uuid: '',
   };
 
   beforeEach(async () => {
