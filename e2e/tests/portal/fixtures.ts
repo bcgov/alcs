@@ -16,7 +16,7 @@ interface Fixtures {
 export const test = base.extend<FixtureOptions & Fixtures>({
   userPrefix: UserPrefix.BceidBasic,
   inboxLoggedIn: async ({ page, userPrefix }, use) => {
-    await page.goto('/');
+    await page.goto(process.env.PORTAL_BASE_URL);
     await page.getByRole('button', { name: 'Portal Login' }).click();
     await page
       .locator('#user')

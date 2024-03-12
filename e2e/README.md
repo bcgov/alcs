@@ -23,24 +23,40 @@ To run tests:
 $ npx playwright test
 ```
 
-To run tests just for a specific project:
+To run tests just for a specific browser:
 
 ```bash
-$ npx playwright test --project=[portal]
+$ npx playwright test --project=[chromium]
 ```
 
-For now, `portal` is the only project.
+To run tests just for a specific frontend, specify by directory:
+
+```bash
+$ npx playwright test portal/
+```
+
+These can be combined:
+
+````bash
+$ npx playwright test --project=chromium portal/
+```
 
 To run headed:
 
 ```bash
 $ npx playwright test --headed
-```
+````
 
 To run in UI mode:
 
 ```bash
 $ npx playwright test --ui
+```
+
+To run in debug mode:
+
+```bash
+$ npx playwright test --debug
 ```
 
 To show a report:

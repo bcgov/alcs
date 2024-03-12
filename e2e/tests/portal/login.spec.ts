@@ -1,4 +1,4 @@
-import { test, expect, UserPrefix } from '../fixtures';
+import { test, expect, UserPrefix } from './fixtures';
 
 test.use({ userPrefix: UserPrefix.BceidBasic });
 
