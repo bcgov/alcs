@@ -39,7 +39,6 @@ export class CreatePlanningReferralDialogComponent {
     private planningReferralService: PlanningReferralService,
   ) {
     this.minimumDate = new Date(this.data.minReceivedDate);
-    debugger;
   }
 
   async onSubmit() {
