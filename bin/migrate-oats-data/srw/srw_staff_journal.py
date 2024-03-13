@@ -3,6 +3,7 @@ from common import (
     OATS_ETL_USER,
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
+    DEFAULT_ETL_USER_UUID
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -114,7 +115,7 @@ def _prepare_journal_data(row_data_list):
         data = dict(row)
         data = _map_revision(data)
         data = _map_timezone(data)
-        data["user"] = "ca8e91dc-cfb0-45c3-a443-8e47e44591df"
+        data["user"] = DEFAULT_ETL_USER_UUID
         data_list.append(dict(data))
     return data_list
 

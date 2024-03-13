@@ -1,3 +1,4 @@
 OATS_ETL_USER = "oats_etl"
 BATCH_UPLOAD_SIZE = 1000
 NO_DATA_IN_OATS = "No data found in OATS"
+DEFAULT_ETL_USER_UUID = "ca8e91dc-cfb0-45c3-a443-8e47e44591df"

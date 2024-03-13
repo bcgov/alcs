@@ -1,4 +1,4 @@
-from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
+from common import BATCH_UPLOAD_SIZE, setup_and_get_logger, DEFAULT_ETL_USER_UUID
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
@@ -112,7 +112,7 @@ def _prepare_oats_data(row_data_list):
 
 def _map_fields(data):
     return {
-        "created_by_uuid": data["uuid"],
+        "created_by_uuid": data["uuid"] if data["uuid"] else DEFAULT_ETL_USER_UUID,
         "has_survey_plan": data["has_survey_plan"],
         "purpose": data["summary"],
         "submitters_file_number": data["applicant_file_no"],
