@@ -34,7 +34,7 @@ const template = `<mjml>
         </mj-text>
         <mj-table>
           <tr style="text-align: left; font-size: 16px; border: 1px solid black;">
-            <th style="padding-left: 8px; border-right: 1px solid black;">Application Type</th>
+            <th style="padding-left: 8px; border-right: 1px solid black;">NOI Type</th>
             <th style="padding-left: 8px">ALC Portion of Fee</th>
           </tr>
           ${noiFees
