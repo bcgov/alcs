@@ -1213,7 +1213,7 @@
             <column ascending="true" name="board_uuid"/>
          </index>
       </table>
-      <table name="board_status" numRows="125" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
+      <table name="board_status" numRows="126" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1253,7 +1253,7 @@
             <child column="card_uuid" foreignKey="FK_2f863dc7ab4f76a87b160f32881" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent"/>
             <child column="card_uuid" foreignKey="FK_bf0ebc2212d34996113c9de2284" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_modification"/>
             <child column="card_uuid" foreignKey="FK_ea8f1884038f559b573689d8de2" implied="false" onDeleteCascade="false" schema="alcs" table="notification"/>
-            <child column="card_uuid" foreignKey="FK_735dcdd4fa909a60d0fa1828f24" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review"/>
+            <child column="card_uuid" foreignKey="FK_57f6fea41fefa2ca864a33b7950" implied="false" onDeleteCascade="false" schema="alcs" table="planning_referral"/>
          </column>
          <column autoUpdated="false" defaultValue="false" digits="0" id="6" name="high_priority" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
          <column autoUpdated="false" defaultValue="'SUBM'::text" digits="0" id="7" name="status_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
@@ -1457,6 +1457,7 @@
             <child column="first_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="notification_transferee"/>
             <child column="last_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="notification_transferee"/>
             <child column="organization_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="notification_transferee"/>
+            <child column="document_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="planning_review"/>
             <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="public_application_submission_search_view"/>
             <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="public_notice_of_intent_submission_search_view"/>
             <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="public_notification_submission_search_view"/>
@@ -1551,6 +1552,7 @@
             <child column="document_uuid" foreignKey="FK_5cd9c5f049e6350d1335a31e6b9" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_document"/>
             <child column="document_uuid" foreignKey="FK_be3bff8cd4ff2275f9a5a8e880b" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_document"/>
             <child column="document_uuid" foreignKey="FK_754c65b2ab78e39c64c31f2f9f9" implied="false" onDeleteCascade="false" schema="alcs" table="notification_document"/>
+            <child column="document_uuid" foreignKey="FK_80d9441726c3d26ccd426cd4699" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review_document"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_key" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="file_name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -1586,6 +1588,7 @@
             <child column="type_code" foreignKey="FK_9c02077523dffbebc9727ecf823" implied="false" onDeleteCascade="false" schema="alcs" table="application_document"/>
             <child column="type_code" foreignKey="FK_1bb9a71eab11ae830030ca24233" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_document"/>
             <child column="type_code" foreignKey="FK_dc6a7789a73ec2e0eac2b2307d3" implied="false" onDeleteCascade="false" schema="alcs" table="notification_document"/>
+            <child column="type_code" foreignKey="FK_6ed3e4681afbbcd3444d7600a84" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review_document"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="oats_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
@@ -1788,7 +1791,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="migrations" numRows="325" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
+      <table name="migrations" numRows="334" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('alcs.migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -1818,17 +1821,6 @@
          <index name="UQ_629710d76c4058afacd2e44b3f4" unique="true">
             <column ascending="true" name="description"/>
          </index>
-      </table>
-      <table name="non_application_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT uuid,&#10;    file_number,&#10;    applicant,&#10;    type,&#10;    class,&#10;    local_government_uuid,&#10;    card_uuid,&#10;    board_code,&#10;    region_code&#10;   FROM ( SELECT cov.uuid,&#10;            cov.file_number,&#10;            cov.applicant,&#10;            NULL::character varying AS type,&#10;            'COV'::text AS class,&#10;            cov.local_government_uuid,&#10;            card.uuid AS card_uuid,&#10;            board.code AS board_code,&#10;            cov.region_code&#10;           FROM ((alcs.covenant cov&#10;             LEFT JOIN alcs.card card ON (((cov.card_uuid = card.uuid) AND (card.audit_deleted_date_at IS NULL))))&#10;             LEFT JOIN alcs.board board ON (((board.uuid = card.board_uuid) AND (board.audit_deleted_date_at IS NULL))))&#10;          WHERE (cov.audit_deleted_date_at IS NULL)&#10;        UNION&#10;         SELECT planning_review.uuid,&#10;            planning_review.file_number,&#10;            NULL::character varying AS applicant,&#10;            planning_review.type,&#10;            'PLAN'::text AS class,&#10;            planning_review.local_government_uuid,&#10;            card.uuid AS card_uuid,&#10;            board.code AS board_code,&#10;            planning_review.region_code&#10;           FROM ((alcs.planning_review planning_review&#10;             LEFT JOIN alcs.card card ON (((planning_review.card_uuid = card.uuid) AND (card.audit_deleted_date_at IS NULL))))&#10;             LEFT JOIN alcs.board board ON (((board.uuid = card.board_uuid) AND (board.audit_deleted_date_at IS NULL))))&#10;          WHERE (planning_review.audit_deleted_date_at IS NULL)) non_applications;">
-         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="file_number" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="applicant" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="type" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="class" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="local_government_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="card_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="board_code" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="region_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
       </table>
       <table name="notice_of_intent" remarks="Base data for Notice of Intents incl. the ID, key dates, and the date of the first decision" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2638,12 +2630,18 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="audit_created_by" nullable="true" remarks="used only for oats etl process" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="survey_plan_number" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="control_number" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="oats_document_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.notification_document." size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="oats_application_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.notification_document." size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_cb4155e1f9d5b5ebd27c8de6381" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
          <index name="REL_754c65b2ab78e39c64c31f2f9f" unique="true">
             <column ascending="true" name="document_uuid"/>
+         </index>
+         <index name="unique_doc_app_id" unique="true">
+            <column ascending="true" name="oats_document_id"/>
+            <column ascending="true" name="oats_application_id"/>
          </index>
       </table>
       <table name="notification_parcel" remarks="Parcels Related to Notification Applications" schema="alcs" type="TABLE">
@@ -2899,24 +2897,62 @@
             <column ascending="true" name="description"/>
          </index>
       </table>
-      <table name="planning_review" remarks="Base data for planning reviews" schema="alcs" type="TABLE">
+      <table name="planning_referral" remarks="Planning Referrals represent each pass of a Planning Review with their own cards" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
-            <parent column="uuid" foreignKey="FK_735dcdd4fa909a60d0fa1828f24" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="submission_date" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="due_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="response_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="referral_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="response_description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_57f6fea41fefa2ca864a33b7950" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="planning_review_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_095877a396b8c604d81d674f6f8" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_1cd8a7e0399adfcc4cbd1ca7cb9" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="REL_57f6fea41fefa2ca864a33b795" unique="true">
+            <column ascending="true" name="card_uuid"/>
+         </index>
+      </table>
+      <table name="planning_review" remarks="A review of a local government or municipalities plan" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="planning_review_uuid" foreignKey="FK_095877a396b8c604d81d674f6f8" implied="false" onDeleteCascade="false" schema="alcs" table="planning_referral"/>
+            <child column="planning_review_uuid" foreignKey="FK_e95903f18d734736a1ba8555698" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review_document"/>
+            <child column="planning_review_uuid" foreignKey="FK_dd6d16cefeda057f9f7d1f909bc" implied="false" onDeleteCascade="false" schema="alcs" table="staff_journal"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="local_government_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_5a57c8d407eb6132ed39cb8fe6f" implied="false" onDeleteCascade="false" schema="alcs" table="local_government"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_409473aef1f92b6675e3f7c00ad" implied="false" onDeleteCascade="false" schema="alcs" table="application_region"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="document_name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
+            <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_d06659689a2bb22ccdc6a1a033b" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review_type"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="11" name="open" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="12" name="closed_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="closed_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_84caebfef3502f3fb80e168ba44" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="legacy_id" nullable="true" remarks="Application Id that is applicable only to paper version applications from 70s - 80s" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_ca2ff05fa38d67415362b6a3912" unique="true">
             <column ascending="true" name="uuid"/>
@@ -2924,14 +2960,56 @@
          <index name="IDX_5a57c8d407eb6132ed39cb8fe6" unique="false">
             <column ascending="true" name="local_government_uuid"/>
          </index>
-         <index name="IDX_a62913da5fae4a128c8e8f264f" unique="false">
-            <column ascending="true" name="file_number"/>
-         </index>
-         <index name="REL_735dcdd4fa909a60d0fa1828f2" unique="true">
-            <column ascending="true" name="card_uuid"/>
-         </index>
          <index name="UQ_a62913da5fae4a128c8e8f264fc" unique="true">
             <column ascending="true" name="file_number"/>
+         </index>
+      </table>
+      <table name="planning_review_document" remarks="Stores planning review documents" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_6ed3e4681afbbcd3444d7600a84" implied="false" onDeleteCascade="false" schema="alcs" table="document_code"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="planning_review_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_e95903f18d734736a1ba8555698" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="document_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_80d9441726c3d26ccd426cd4699" implied="false" onDeleteCascade="false" schema="alcs" table="document"/>
+         </column>
+         <column autoUpdated="false" defaultValue="'{}'::text[]" digits="0" id="5" name="visibility_flags" nullable="false" remarks="" size="2147483647" type="_text" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="evidentiary_record_sorting" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_b8b1ceeaebfc4a6b5a746f0a85b" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="IDX_e95903f18d734736a1ba855569" unique="false">
+            <column ascending="true" name="planning_review_uuid"/>
+         </index>
+         <index name="REL_80d9441726c3d26ccd426cd469" unique="true">
+            <column ascending="true" name="document_uuid"/>
+         </index>
+      </table>
+      <table name="planning_review_type" remarks="" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="type_code" foreignKey="FK_d06659689a2bb22ccdc6a1a033b" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="short_label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="background_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="text_color" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="11" name="html_description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_d06659689a2bb22ccdc6a1a033b" unique="true">
+            <column ascending="true" name="code"/>
+         </index>
+         <index name="UQ_ab764743ecbd39b1fc823d2445d" unique="true">
+            <column ascending="true" name="description"/>
          </index>
       </table>
       <table name="public_application_submission_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT app_sub.uuid,&#10;    app_sub.applicant,&#10;    app.uuid AS application_uuid,&#10;    &quot;applicationType&quot;.audit_deleted_date_at AS &quot;applicationType_audit_deleted_date_at&quot;,&#10;    &quot;applicationType&quot;.audit_created_at AS &quot;applicationType_audit_created_at&quot;,&#10;    &quot;applicationType&quot;.audit_updated_at AS &quot;applicationType_audit_updated_at&quot;,&#10;    &quot;applicationType&quot;.audit_created_by AS &quot;applicationType_audit_created_by&quot;,&#10;    &quot;applicationType&quot;.audit_updated_by AS &quot;applicationType_audit_updated_by&quot;,&#10;    &quot;applicationType&quot;.label AS &quot;applicationType_label&quot;,&#10;    &quot;applicationType&quot;.code AS &quot;applicationType_code&quot;,&#10;    &quot;applicationType&quot;.description AS &quot;applicationType_description&quot;,&#10;    &quot;applicationType&quot;.short_label AS &quot;applicationType_short_label&quot;,&#10;    &quot;applicationType&quot;.background_color AS &quot;applicationType_background_color&quot;,&#10;    &quot;applicationType&quot;.text_color AS &quot;applicationType_text_color&quot;,&#10;    &quot;applicationType&quot;.html_description AS &quot;applicationType_html_description&quot;,&#10;    &quot;applicationType&quot;.portal_label AS &quot;applicationType_portal_label&quot;,&#10;    &quot;applicationType&quot;.portal_order AS &quot;applicationType_portal_order&quot;,&#10;    &quot;applicationType&quot;.requires_government_review AS &quot;applicationType_requires_government_review&quot;,&#10;    &quot;applicationType&quot;.alc_fee_amount AS &quot;applicationType_alc_fee_amount&quot;,&#10;    &quot;applicationType&quot;.government_fee_amount AS &quot;applicationType_government_fee_amount&quot;,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    app_sub.file_number,&#10;    app_sub.local_government_uuid,&#10;    app_sub.type_code AS application_type_code,&#10;    app.date_submitted_to_alc,&#10;    app.decision_date,&#10;    decision_date.outcome,&#10;    decision_date.dest_rank,&#10;    app.region_code AS application_region_code,&#10;    GREATEST(status_link.effective_date, decision_date.date) AS last_update,&#10;    alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid) AS status&#10;   FROM (((((alcs.application_submission app_sub&#10;     JOIN alcs.application app ON ((((app.file_number)::text = (app_sub.file_number)::text) AND (app.hide_from_portal = false) AND (app.audit_deleted_date_at IS NULL))))&#10;     JOIN alcs.application_type &quot;applicationType&quot; ON ((((app_sub.type_code)::text = &quot;applicationType&quot;.code) AND (&quot;applicationType&quot;.audit_deleted_date_at IS NULL))))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON (((app_sub.local_government_uuid = &quot;localGovernment&quot;.uuid) AND (&quot;localGovernment&quot;.audit_deleted_date_at IS NULL))))&#10;     LEFT JOIN ( SELECT max(status_link_1.effective_date) AS effective_date,&#10;            status_link_1.submission_uuid&#10;           FROM alcs.application_submission_to_submission_status status_link_1&#10;          GROUP BY status_link_1.submission_uuid) status_link ON ((status_link.submission_uuid = app_sub.uuid)))&#10;     LEFT JOIN ( SELECT DISTINCT ON (decisions.applicationuuid) decisions.decisiondate AS date,&#10;            decisions.outcome,&#10;            decisions.dest_rank,&#10;            decisions.applicationuuid AS application_uuid&#10;           FROM ( SELECT decision.outcome_code AS outcome,&#10;                    decision.date AS decisiondate,&#10;                    decision.application_uuid AS applicationuuid,&#10;                    rank() OVER (PARTITION BY decision.application_uuid ORDER BY decision.date DESC, decision.audit_created_at DESC) AS dest_rank&#10;                   FROM alcs.application_decision decision&#10;                  WHERE ((decision.is_draft = false) AND (decision.audit_deleted_date_at IS NULL))) decisions&#10;          WHERE (decisions.dest_rank = 1)) decision_date ON ((decision_date.application_uuid = app.uuid)))&#10;  WHERE ((app_sub.is_draft = false) AND ((app.date_received_all_items IS NOT NULL) AND (app.date_received_all_items &lt;= now())) AND ((alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid) -&gt;&gt; 'status_type_code'::text) &lt;&gt; 'CANC'::text) AND (app_sub.audit_deleted_date_at IS NULL));">
@@ -3051,6 +3129,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="notification_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_48498a0c9b847d726d2b582f50a" implied="false" onDeleteCascade="false" schema="alcs" table="notification"/>
          </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="planning_review_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_dd6d16cefeda057f9f7d1f909bc" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_f1511c9011c54e00e5b18b60324" unique="true">
             <column ascending="true" name="uuid"/>
@@ -3063,6 +3144,9 @@
          </index>
          <index name="IDX_48498a0c9b847d726d2b582f50" unique="false">
             <column ascending="true" name="notification_uuid"/>
+         </index>
+         <index name="IDX_dd6d16cefeda057f9f7d1f909b" unique="false">
+            <column ascending="true" name="planning_review_uuid"/>
          </index>
       </table>
       <table name="typeorm_metadata" numRows="10" remarks="" schema="alcs" type="TABLE">
@@ -3093,6 +3177,7 @@
             <child column="receiver_uuid" foreignKey="FK_23212dcb31290e8972bd4e8aa4d" implied="false" onDeleteCascade="false" schema="alcs" table="message"/>
             <child column="created_by_uuid" foreignKey="FK_ad65e20b0787e13906e0f36f1cf" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_submission"/>
             <child column="created_by_uuid" foreignKey="FK_99aed25adf97bc0591103e246c2" implied="false" onDeleteCascade="false" schema="alcs" table="notification_submission"/>
+            <child column="closed_by_uuid" foreignKey="FK_84caebfef3502f3fb80e168ba44" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review"/>
             <child column="author_uuid" foreignKey="FK_e21493108139ef325ef10bcf7c1" implied="false" onDeleteCascade="false" schema="alcs" table="staff_journal"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="email" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>

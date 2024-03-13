@@ -1,9 +1,9 @@
 configuration
 application_region
 board
+document_code
 owner_type
 card_type
-document_code
 parcel_ownership_type
 application_reconsideration_outcome_type
 card_status
@@ -31,6 +31,7 @@ notice_of_intent_subtype
 notice_of_intent_type
 notification_submission_status_type
 notification_type
+planning_review_type
 user
 local_government
 card
@@ -50,6 +51,7 @@ application_document
 notice_of_intent_document
 application_decision_condition
 notification_submission
+planning_review
 application_paused
 application_decision_component_lot
 comment
@@ -87,14 +89,15 @@ notice_of_intent_submission_to_submission_status
 notice_of_intent_subtype_notice_of_intent_subtype
 notification_parcel
 notification_submission_to_submission_status
+planning_referral
 card_subtask
 covenant
 notification_document
-planning_review
+planning_review_document
 application_meeting
-staff_journal
 covenant_transferee
 notification_transferee
+staff_journal
 application_submission_review
 email_status
 file_viewed

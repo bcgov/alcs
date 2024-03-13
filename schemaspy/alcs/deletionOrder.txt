@@ -4,14 +4,15 @@ health_check
 file_viewed
 email_status
 application_submission_review
+staff_journal
 notification_transferee
 covenant_transferee
-staff_journal
 application_meeting
-planning_review
+planning_review_document
 notification_document
 covenant
 card_subtask
+planning_referral
 notification_submission_to_submission_status
 notification_parcel
 notice_of_intent_subtype_notice_of_intent_subtype
@@ -49,6 +50,7 @@ notice_of_intent_decision_component
 comment
 application_decision_component_lot
 application_paused
+planning_review
 notification_submission
 application_decision_condition
 notice_of_intent_document
@@ -68,6 +70,7 @@ document
 card
 local_government
 user
+planning_review_type
 notification_type
 notification_submission_status_type
 notice_of_intent_type
@@ -95,9 +98,9 @@ naru_subtype
 card_status
 application_reconsideration_outcome_type
 parcel_ownership_type
-document_code
 card_type
 owner_type
+document_code
 board
 application_region
 configuration
