@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { PublicApplicationSubmissionDto } from '../../../../../services/public/public-application.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
+import { openFileWindow } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-submission-documents[applicationSubmission]',
@@ -30,9 +31,9 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async openFile(uuid: string) {
-    const res = await this.publicService.getApplicationDownloadFileUrl(this.applicationSubmission.fileNumber, uuid);
+    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileWindow(res);
     }
   }
 

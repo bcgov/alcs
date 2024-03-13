@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ApplicationPortalDecisionDto } from '../../../../../services/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../../services/application-decision/application-decision.service';
+import { openFileWindow } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-public-decisions',
@@ -15,7 +16,7 @@ export class PublicDecisionsComponent {
   async openFile(uuid: string) {
     const res = await this.decisionService.openFile(uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileWindow(res);
     }
   }
 }

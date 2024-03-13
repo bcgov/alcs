@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NoticeOfIntentPortalDecisionDto } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionService } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.service';
+import { openFileWindow } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-decisions[fileNumber]',
@@ -24,7 +25,7 @@ export class DecisionsComponent implements OnInit, OnChanges {
   async openFile(uuid: string) {
     const res = await this.decisionService.openFile(uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileWindow(res);
     }
   }
 

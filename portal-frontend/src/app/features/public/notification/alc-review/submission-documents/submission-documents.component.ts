@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { PublicNotificationSubmissionDto } from '../../../../../services/public/public-notification.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
+import { openFileWindow } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-submission-documents',
@@ -30,7 +31,7 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   async openFile(uuid: string) {
     const res = await this.publicService.getNotificationOpenFileUrl(this.submission.fileNumber, uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileWindow(res);
     }
   }
 

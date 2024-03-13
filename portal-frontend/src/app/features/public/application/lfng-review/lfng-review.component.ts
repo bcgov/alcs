@@ -7,6 +7,7 @@ import {
 import { PublicDocumentDto } from '../../../../services/public/public.dto';
 import { PublicService } from '../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { openFileWindow } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-public-lfng-review',
@@ -32,7 +33,7 @@ export class PublicLfngReviewComponent implements OnInit {
   async openFile(uuid: string) {
     const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileWindow(res);
     }
   }
 }

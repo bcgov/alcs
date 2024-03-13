@@ -32,7 +32,11 @@ export class ApplicationDecisionController {
   async openFile(@Param('uuid') fileUuid: string) {
     const url = await this.decisionService.getDownloadForPortal(fileUuid);
 
-    return { url };
+    const document =
+      await this.decisionService.getDecisionDocumentOrFail(fileUuid);
+    const { fileName } = document.document;
+
+    return { url, fileName };
   }
 
   @Get('/:uuid/email')

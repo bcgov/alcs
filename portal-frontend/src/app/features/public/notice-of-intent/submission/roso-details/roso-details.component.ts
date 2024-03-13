@@ -4,6 +4,7 @@ import { PublicNoticeOfIntentSubmissionDto } from '../../../../../services/publi
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { openFileWindow } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-roso-details[noiSubmission]',
@@ -25,6 +26,8 @@ export class RosoDetailsComponent {
 
   async openFile(uuid: string) {
     const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.noiSubmission.fileNumber, uuid);
-    window.open(res?.url, '_blank');
+    if (res) {
+      openFileWindow(res);
+    }
   }
 }
