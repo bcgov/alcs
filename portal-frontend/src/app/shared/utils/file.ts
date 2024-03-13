@@ -12,7 +12,7 @@ export const openPdfFile = (fileName: string, data: any) => {
   downloadLink.click();
 };
 
-export const openFileIframe = (data: { url: string; fileName: string }) => {
+export const openFileWindow = (data: { url: string; fileName: string }) => {
   const newWindow = window.open('', '_blank');
   if (newWindow) {
     newWindow.document.title = data.fileName;
@@ -24,7 +24,7 @@ export const openFileIframe = (data: { url: string; fileName: string }) => {
     object.style.height = '100%';
 
     newWindow.document.body.appendChild(object);
-    newWindow.document.body.style.backgroundColor = 'rgb(82, 86, 89)';
+    newWindow.document.body.style.backgroundColor = 'rgb(14, 14, 14)';
     newWindow.document.body.style.height = '100%';
     newWindow.document.body.style.width = '100%';
     newWindow.document.body.style.margin = '0';

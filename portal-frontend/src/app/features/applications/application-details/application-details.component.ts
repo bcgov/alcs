@@ -13,7 +13,7 @@ import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
-import { openFileIframe } from '../../../shared/utils/file';
+import { openFileWindow } from '../../../shared/utils/file';
 
 @Component({
   selector: 'app-application-details',
@@ -86,7 +86,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
-      openFileIframe(res);
+      openFileWindow(res);
     }
   }
 

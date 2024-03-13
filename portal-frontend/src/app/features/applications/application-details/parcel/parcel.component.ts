@@ -13,7 +13,7 @@ import { ApplicationParcelService } from '../../../../services/application-parce
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
-import { openFileIframe } from '../../../../shared/utils/file';
+import { openFileWindow } from '../../../../shared/utils/file';
 
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -101,7 +101,7 @@ export class ParcelComponent {
   async onOpenFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
-      openFileIframe(res);
+      openFileWindow(res);
     }
   }
 

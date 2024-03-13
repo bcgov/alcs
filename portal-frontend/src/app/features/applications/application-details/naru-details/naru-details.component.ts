@@ -4,7 +4,7 @@ import { ApplicationDocumentDto } from '../../../../services/application-documen
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileIframe } from '../../../../shared/utils/file';
+import { openFileWindow } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-naru-details[applicationSubmission]',
@@ -45,7 +45,7 @@ export class NaruDetailsComponent {
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
-      openFileIframe(res);
+      openFileWindow(res);
     }
   }
 }

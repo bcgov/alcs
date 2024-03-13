@@ -6,7 +6,7 @@ import { ApplicationSubmissionDetailedDto } from '../../../../services/applicati
 import { CovenantTransfereeDto } from '../../../../services/covenant-transferee/covenant-transferee.dto';
 import { CovenantTransfereeService } from '../../../../services/covenant-transferee/covenant-transferee.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileIframe } from '../../../../shared/utils/file';
+import { openFileWindow } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-cove-details',
@@ -55,7 +55,7 @@ export class CoveDetailsComponent {
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
     if (res) {
-      openFileIframe(res);
+      openFileWindow(res);
     }
   }
 

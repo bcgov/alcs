@@ -9,7 +9,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { StepComponent } from './step.partial';
-import { openFileIframe } from '../../../shared/utils/file';
+import { openFileWindow } from '../../../shared/utils/file';
 
 @Component({
   selector: 'app-file-step',
@@ -72,7 +72,7 @@ export abstract class FilesStepComponent extends StepComponent {
   async openFile(uuid: string) {
     const res = await this.notificationDocumentService.openFile(uuid);
     if (res) {
-      openFileIframe(res);
+      openFileWindow(res);
     }
   }
 }
