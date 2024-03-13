@@ -25,7 +25,7 @@ export class PlanningReviewsV21709662671997 implements MigrationInterface {
       `ALTER TABLE "alcs"."planning_review" DROP COLUMN "type"`,
     );
     await queryRunner.query(
-      `ALTER TABLE "alcs"."planning_review" DROP CONSTRAINT "REL_03a05aa8fefbc2fc1cdf138d80"`,
+      `ALTER TABLE "alcs"."planning_review" DROP CONSTRAINT IF EXISTS "REL_03a05aa8fefbc2fc1cdf138d80"`,
     );
     await queryRunner.query(
       `ALTER TABLE "alcs"."planning_review" DROP COLUMN "card_uuid"`,
