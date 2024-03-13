@@ -1,10 +1,8 @@
-from common import OATS_ETL_USER, setup_and_get_logger
+from common import OATS_ETL_USER, setup_and_get_logger, DEFAULT_ETL_USER_UUID
 from db import inject_conn_pool
 
 etl_name = "populate_default_staff_journal_user"
 logger = setup_and_get_logger(etl_name)
-
-_new_oats_user_uuid = "ca8e91dc-cfb0-45c3-a443-8e47e44591df"
 
 
 @inject_conn_pool
@@ -13,12 +11,12 @@ def populate_default_staff_journal_user(conn=None):
 
     insert_user_query = f"""
                         INSERT INTO alcs."user" (uuid, audit_created_by,email,display_name,preferred_username,"name",given_name,family_name, identity_provider) 
-                        VALUES ('{_new_oats_user_uuid}', '{OATS_ETL_USER}','11@11','Oats ETL','Oats ETL','Oats ETL','Oats','ETL', 'etl')
+                        VALUES ('{DEFAULT_ETL_USER_UUID}', '{OATS_ETL_USER}','11@11','Oats ETL','Oats ETL','Oats ETL','Oats','ETL', 'etl')
                         ON CONFLICT DO NOTHING;
                     """
     set_user_to_journal_records_query = f"""
                         UPDATE alcs.staff_journal 
-                        SET author_uuid = '{_new_oats_user_uuid}'
+                        SET author_uuid = '{DEFAULT_ETL_USER_UUID}'
                         WHERE author_uuid IS NULL AND staff_journal.audit_created_by = '{OATS_ETL_USER}';
                     """
     try:
@@ -44,7 +42,7 @@ def clean_staff_journal_users(conn=None):
                     """
     delete_query = f"""
                     DELETE FROM alcs.staff_journal 
-                    WHERE uuid='{_new_oats_user_uuid}'
+                    WHERE uuid='{DEFAULT_ETL_USER_UUID}'
                     """
     try:
         with conn.cursor() as cursor:
