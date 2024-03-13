@@ -1,0 +1,16 @@
+.content {
+  padding: 0 16px;
+  min-width: 800px;
+}
+
+.two-item-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+  margin-bottom: 24px;
+}
+
+.description {
+  width: 100%;
+}

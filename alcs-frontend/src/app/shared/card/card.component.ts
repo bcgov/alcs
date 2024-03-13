@@ -25,6 +25,7 @@ export interface CardData {
   dueDate?: Date;
   maxActiveDays?: number;
   legacyId?: string;
+  showDueDate?: boolean;
 }
 
 export interface CardSelectedEvent {
@@ -67,8 +68,8 @@ export class CardComponent implements OnInit {
       Math.max(
         ...meetings.map((element) => {
           return new Date(element.date).valueOf();
-        })
-      )
+        }),
+      ),
     );
   }
 

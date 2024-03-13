@@ -6,19 +6,19 @@ import { CovenantService } from '../../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../../notification/notification.service';
-import { PlanningReviewService } from '../../planning-review/planning-review.service';
+import { PlanningReferralService } from '../../planning-review/planning-referral/planning-referral.service';
 
 @Injectable()
 export class UnarchiveCardService {
   constructor(
     private applicationService: ApplicationService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private planningReviewService: PlanningReviewService,
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
+    private planningReferralService: PlanningReferralService,
   ) {}
 
   async fetchByFileId(fileId: string) {
@@ -39,7 +39,7 @@ export class UnarchiveCardService {
     }
 
     await this.fetchAndMapRecons(fileId, result);
-    await this.fetchAndMapPlanningReviews(fileId, result);
+    await this.fetchAndMapPlanningReferrals(fileId, result);
     await this.fetchAndMapModifications(fileId, result);
     await this.fetchAndMapCovenants(fileId, result);
     await this.fetchAndMapNOIs(fileId, result);
@@ -85,27 +85,6 @@ export class UnarchiveCardService {
         createdAt: modification.auditCreatedAt.getTime(),
         type: 'Modification',
         status: modification.card!.status.label,
-      });
-    }
-  }
-
-  private async fetchAndMapPlanningReviews(
-    fileId: string,
-    result: {
-      cardUuid: string;
-      type: string;
-      status: string;
-      createdAt: number;
-    }[],
-  ) {
-    const planningReviews =
-      await this.planningReviewService.getDeletedCards(fileId);
-    for (const planningReview of planningReviews) {
-      result.push({
-        cardUuid: planningReview.cardUuid,
-        createdAt: planningReview.auditCreatedAt.getTime(),
-        type: 'Planning Review',
-        status: planningReview.card!.status.label,
       });
     }
   }
@@ -181,6 +160,27 @@ export class UnarchiveCardService {
         createdAt: notification.auditCreatedAt.getTime(),
         type: 'NOTI',
         status: notification.card!.status.label,
+      });
+    }
+  }
+
+  private async fetchAndMapPlanningReferrals(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const notifications =
+      await this.planningReferralService.getDeletedCards(fileId);
+    for (const referral of notifications) {
+      result.push({
+        cardUuid: referral.cardUuid,
+        createdAt: referral.auditCreatedAt.getTime(),
+        type: 'PLAN',
+        status: referral.card!.status.label,
       });
     }
   }

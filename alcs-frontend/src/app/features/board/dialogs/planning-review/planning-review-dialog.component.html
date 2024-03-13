@@ -1,6 +1,6 @@
 <div mat-dialog-title>
   <div class="close">
-    <h6 class="card-type-label">Non-Application</h6>
+    <h6 class="card-type-label">Planning Review</h6>
     <button mat-icon-button [mat-dialog-close]="isDirty">
       <mat-icon>close</mat-icon>
     </button>
@@ -9,12 +9,30 @@
     <div class="left">
       <h3 class="card-title center">
         <span class="margin-right">{{ cardTitle }}</span>
-        <app-application-type-pill [type]="planningType"></app-application-type-pill>
+        <app-application-legacy-id *ngIf="planningReview.legacyId" [legacyId]="planningReview.legacyId"></app-application-legacy-id>
+        <app-application-type-pill *ngIf="planningType" [type]="planningType"></app-application-type-pill>
       </h3>
     </div>
+    <div class="center">
+      <button
+        color="accent"
+        mat-flat-button
+        [mat-dialog-close]="isDirty"
+        [routerLink]="['planning-review', planningReview.fileNumber]"
+      >
+        View Detail
+      </button>
+    </div>
+  </div>
+  <div>
+    <span class="region">{{ planningReview.localGovernment.name }} - {{ planningReview.region.label }} Region</span>
   </div>
   <div class="split">
-    <span class="region">{{ planningReview.localGovernment.name }} - {{ planningReview.region.label }} Region</span>
+    <div class="body-text">
+      <app-application-type-pill *ngIf="planningReview.open" [type]="OPEN_TYPE"></app-application-type-pill>
+      <app-application-type-pill *ngIf="!planningReview.open" [type]="CLOSED_TYPE"></app-application-type-pill>
+      <span>Due Date: {{ planningReferral.dueDate | momentFormat }}</span>
+    </div>
     <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
         <mat-icon>move_down</mat-icon>

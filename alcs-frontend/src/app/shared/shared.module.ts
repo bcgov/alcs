@@ -44,6 +44,7 @@ import { ErrorMessageComponent } from './error-message/error-message.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { InlineApplicantTypeComponent } from './inline-applicant-type/inline-applicant-type.component';
 import { InlineBooleanComponent } from './inline-editors/inline-boolean/inline-boolean.component';
+import { InlineButtonToggleComponent } from './inline-editors/inline-button-toggle/inline-button-toggle.component';
 import { InlineChairReviewOutcomeComponent } from './inline-editors/inline-chair-review-outcome/inline-chair-review-outcome.component';
 import { InlineDatepickerComponent } from './inline-editors/inline-datepicker/inline-datepicker.component';
 import { InlineDropdownComponent } from './inline-editors/inline-dropdown/inline-dropdown.component';
@@ -109,6 +110,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     ApplicationLegacyIdComponent,
     TableColumnNoDataPipe,
     InlineChairReviewOutcomeComponent,
+    InlineButtonToggleComponent,
   ],
   imports: [
     CommonModule,
@@ -205,6 +207,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     TableColumnNoDataPipe,
     InlineChairReviewOutcomeComponent,
     MatSlideToggleModule,
+    InlineButtonToggleComponent,
   ],
 })
 export class SharedModule {

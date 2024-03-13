@@ -54,6 +54,14 @@ const routes: Routes = [
     loadChildren: () => import('./features/notification/notification.module').then((m) => m.NotificationModule),
   },
   {
+    path: 'planning-review',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: ROLES_ALLOWED_APPLICATIONS,
+    },
+    loadChildren: () => import('./features/planning-review/planning-review.module').then((m) => m.PlanningReviewModule),
+  },
+  {
     path: 'schedule',
     canActivate: [HasRolesGuard],
     data: {

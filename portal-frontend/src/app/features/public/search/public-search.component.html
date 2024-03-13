@@ -127,7 +127,7 @@
 
     <div class="button-controls">
       <button type="button" mat-stroked-button color="accent" (click)="onClear()">Clear</button>
-      <button type="submit" mat-flat-button color="primary" [disabled]="formEmpty || !searchForm.valid">Search</button>
+      <button type="submit" mat-flat-button color="primary" [disabled]="formEmpty || !searchForm.valid || isLoading">Search</button>
     </div>
   </form>
 
@@ -135,7 +135,7 @@
     <mat-spinner></mat-spinner>
   </div>
   <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
-    <h3 class="search-title">Search Results</h3>
+    <h3 class="search-title" id="searchResults">Search Results</h3>
     <div *ngIf="isLoading && !searchResultsHidden" class="center">
       <mat-spinner></mat-spinner>
     </div>

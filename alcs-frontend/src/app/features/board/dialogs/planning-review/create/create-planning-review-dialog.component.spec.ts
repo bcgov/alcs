@@ -52,7 +52,6 @@ describe('CreatePlanningReviewDialogComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#fileNumber')).toBeTruthy();
     expect(compiled.querySelector('#type')).toBeTruthy();
   });
 });

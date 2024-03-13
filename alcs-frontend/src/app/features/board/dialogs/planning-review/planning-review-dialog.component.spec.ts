@@ -11,12 +11,12 @@ import { BehaviorSubject } from 'rxjs';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
-import { PlanningReviewDto } from '../../../../services/planning-review/planning-review.dto';
+import { PlanningReferralDto, PlanningReviewDto } from '../../../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
+import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { SharedModule } from '../../../../shared/shared.module';
+import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 import { PlanningReviewDialogComponent } from './planning-review-dialog.component';
 
 describe('PlanningReviewDialogComponent', () => {
@@ -25,8 +25,12 @@ describe('PlanningReviewDialogComponent', () => {
   let mockUserService: DeepMocked<UserService>;
   let mockBoardService: DeepMocked<BoardService>;
 
-  const mockReconDto: PlanningReviewDto = {
-    type: 'fake-type',
+  const mockPlanningReviewDto: PlanningReviewDto = {
+    uuid: '',
+    legacyId: '',
+    documentName: '',
+    type: {} as any,
+    open: true,
     region: {
       code: 'region-code',
       label: 'region',
@@ -39,12 +43,19 @@ describe('PlanningReviewDialogComponent', () => {
       isFirstNation: false,
     },
     fileNumber: 'file-number',
+  };
+
+  const mockReferralDto: PlanningReferralDto = {
     card: {
       status: {
         code: 'FAKE_STATUS',
       },
       boardCode: 'FAKE_BOARD',
     } as CardDto,
+    planningReview: mockPlanningReviewDto,
+    referralDescription: '',
+    submissionDate: 0,
+    uuid: '',
   };
 
   beforeEach(async () => {
@@ -62,7 +73,7 @@ describe('PlanningReviewDialogComponent', () => {
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [PlanningReviewDialogComponent],
+      declarations: [PlanningReviewDialogComponent, MomentPipe],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
@@ -108,7 +119,7 @@ describe('PlanningReviewDialogComponent', () => {
 
     fixture = TestBed.createComponent(PlanningReviewDialogComponent);
     component = fixture.componentInstance;
-    component.data = mockReconDto;
+    component.data = mockReferralDto;
     fixture.detectChanges();
   });
 

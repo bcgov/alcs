@@ -10,6 +10,7 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
@@ -19,7 +20,6 @@ import {
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
-import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { TimeTrackable } from '../time-tracker/time-tracker.component';
 
 @Component({
@@ -43,12 +43,17 @@ export class DetailsHeaderComponent {
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
   types: ApplicationTypeDto[] | NoticeOfIntentTypeDto[] = [];
   timeTrackable?: TimeTrackable;
+  applicant?: string;
 
   @Input() set application(
-    application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined
+    application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined,
   ) {
     if (application) {
       this._application = application;
+
+      if ('applicant' in application) {
+        this.applicant = application.applicant;
+      }
 
       if ('retroactive' in application) {
         this.isNOI = true;

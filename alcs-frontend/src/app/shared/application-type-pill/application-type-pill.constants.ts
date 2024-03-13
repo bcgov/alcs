@@ -97,3 +97,19 @@ export const NOTIFICATION_LABEL = {
   borderColor: '#59ADFA',
   textColor: '#313132',
 };
+
+export const OPEN_PR_LABEL = {
+  label: 'Open',
+  shortLabel: 'Open',
+  backgroundColor: '#94c6ac',
+  borderColor: '#94c6ac',
+  textColor: '#313132',
+};
+
+export const CLOSED_PR_LABEL = {
+  label: 'Closed',
+  shortLabel: 'Closed',
+  backgroundColor: '#C6242A',
+  borderColor: '#C6242A',
+  textColor: '#313132',
+};

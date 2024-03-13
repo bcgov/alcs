@@ -7,13 +7,13 @@ import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
 } from '../../../services/application-owner/application-owner.dto';
-import { PARCEL_OWNERSHIP_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
+import { openFileIframe } from '../../../shared/utils/file';
 
 @Component({
   selector: 'app-application-details',
@@ -85,7 +85,9 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
-    window.open(res?.url, '_blank');
+    if (res) {
+      openFileIframe(res);
+    }
   }
 
   async onNavigateToStep(step: number) {

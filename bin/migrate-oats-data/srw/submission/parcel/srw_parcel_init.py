@@ -104,7 +104,7 @@ def _map_data(row, insert_index):
         "legal_description": row["legal_description"],
         "map_area_hectares": row["area_size"],
         "ownership_type_code": _map_ownership_type_code(row),
-        "pid": row["pid"],
+        "pid": str(row["pid"]).zfill(9) if row["pid"] is not None else None,
         "pin": row["pin"],
         "oats_subject_property_id": row["subject_property_id"],
         "oats_property_id": row["property_id"],

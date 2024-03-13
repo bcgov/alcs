@@ -4,6 +4,7 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { openFileIframe } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-excl-details',
@@ -53,6 +54,8 @@ export class ExclDetailsComponent {
 
   async openFile(uuid: string) {
     const res = await this.applicationDocumentService.openFile(uuid);
-    window.open(res?.url, '_blank');
+    if (res) {
+      openFileIframe(res);
+    }
   }
 }

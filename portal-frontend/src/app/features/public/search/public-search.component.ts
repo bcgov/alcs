@@ -22,6 +22,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
+import { scrollToElement } from '../../../shared/utils/scroll-helper';
 
 const STATUS_MAP = {
   'Received by ALC': 'RECA',
@@ -193,6 +194,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     sessionStorage.setItem(SEARCH_SESSION_STORAGE_KEY, searchDto);
 
     this.isLoading = true;
+    scrollToElement({ id: `searchResults`, center: false });
     const result = await this.searchService.search(searchParams);
     this.searchResultsHidden = false;
     this.isLoading = false;

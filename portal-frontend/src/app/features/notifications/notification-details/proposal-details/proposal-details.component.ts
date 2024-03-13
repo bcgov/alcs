@@ -4,6 +4,7 @@ import { NotificationDocumentDto } from '../../../../services/notification-docum
 import { NotificationDocumentService } from '../../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionDetailedDto } from '../../../../services/notification-submission/notification-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { openFileIframe } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-proposal-details[notificationSubmission]',
@@ -38,6 +39,8 @@ export class ProposalDetailsComponent {
 
   async openFile(uuid: string) {
     const res = await this.notificationDocumentService.openFile(uuid);
-    window.open(res?.url, '_blank');
+    if (res) {
+      openFileIframe(res);
+    }
   }
 }

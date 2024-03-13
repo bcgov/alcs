@@ -9,10 +9,10 @@
   </div>
 
   <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.ROSO" class="row-no-flex">
-    <app-roso-input [form]="form"></app-roso-input>
+    <app-noi-roso-input [form]="form"></app-noi-roso-input>
   </div>
   <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.PFRS" class="row-no-flex">
-    <app-pfrs-input [form]="form"></app-pfrs-input>
+    <app-noi-pfrs-input [form]="form"></app-noi-pfrs-input>
   </div>
 
   <div class="grid-2">

@@ -11,6 +11,7 @@ import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-o
 import { OWNER_TYPE } from '../../dto/owner.dto';
 import { CrownOwnerDialogComponent } from '../crown-owner-dialog/crown-owner-dialog.component';
 import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
+import { openFileIframe } from '../../utils/file';
 
 @Component({
   selector: 'app-parcel-owners[owners][fileId][submissionUuid][ownerService]',
@@ -107,7 +108,7 @@ export class ParcelOwnersComponent {
   async onOpenFile(uuid: string) {
     const res = await this.documentService.openFile(uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileIframe(res);
     }
   }
 }

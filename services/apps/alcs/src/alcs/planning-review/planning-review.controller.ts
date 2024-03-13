@@ -1,11 +1,22 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
-import { BoardService } from '../board/board.service';
 import { ROLES_ALLOWED_BOARDS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { CreatePlanningReviewDto } from './planning-review.dto';
+import { BOARD_CODES } from '../board/board.dto';
+import { BoardService } from '../board/board.service';
+import { PlanningReferralService } from './planning-referral/planning-referral.service';
+import { PlanningReviewType } from './planning-review-type.entity';
+import {
+  CreatePlanningReviewDto,
+  PlanningReviewDetailedDto,
+  PlanningReviewTypeDto,
+  UpdatePlanningReviewDto,
+} from './planning-review.dto';
+import { PlanningReview } from './planning-review.entity';
 import { PlanningReviewService } from './planning-review.service';
 
 @Controller('planning-review')
@@ -14,35 +25,64 @@ import { PlanningReviewService } from './planning-review.service';
 export class PlanningReviewController {
   constructor(
     private planningReviewService: PlanningReviewService,
+    private planningReferralService: PlanningReferralService,
     private boardService: BoardService,
+    @InjectMapper()
+    private mapper: Mapper,
   ) {}
+
+  @Get('/types')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async fetchTypes() {
+    const types = await this.planningReviewService.listTypes();
+
+    return this.mapper.mapArray(
+      types,
+      PlanningReviewType,
+      PlanningReviewTypeDto,
+    );
+  }
 
   @Post()
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async create(@Body() createDto: CreatePlanningReviewDto) {
     const board = await this.boardService.getOneOrFail({
-      code: createDto.boardCode,
+      code: BOARD_CODES.REGIONAL_PLANNING,
     });
 
-    if (!board) {
-      throw new Error('Failed to load executive board');
-    }
-
-    const createdReview = await this.planningReviewService.create(
+    const createdReferral = await this.planningReviewService.create(
       createDto,
       board,
     );
 
-    const mapped = await this.planningReviewService.mapToDtos([createdReview]);
+    const referral = await this.planningReferralService.get(
+      createdReferral.uuid,
+    );
+
+    const mapped = await this.planningReferralService.mapToDtos([referral]);
     return mapped[0];
   }
 
-  @Get('/card/:uuid')
+  @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async getByCard(@Param('uuid') cardUuid: string) {
-    const planningReview =
-      await this.planningReviewService.getByCardUuid(cardUuid);
-    const mapped = await this.planningReviewService.mapToDtos([planningReview]);
-    return mapped[0];
+  async fetchByFileNumber(@Param('fileNumber') fileNumber: string) {
+    const review =
+      await this.planningReviewService.getDetailedReview(fileNumber);
+
+    return this.mapper.map(review, PlanningReview, PlanningReviewDetailedDto);
+  }
+
+  @Post('/:fileNumber')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async updateByFileNumber(
+    @Param('fileNumber') fileNumber: string,
+    @Body() updateDto: UpdatePlanningReviewDto,
+  ) {
+    const review = await this.planningReviewService.update(
+      fileNumber,
+      updateDto,
+    );
+
+    return this.mapper.map(review, PlanningReview, PlanningReviewDetailedDto);
   }
 }

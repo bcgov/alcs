@@ -14,7 +14,7 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
 })
 export class StaffJournalComponent implements OnChanges {
   @Input() parentUuid: string = '';
-  @Input() parentType: 'Application' | 'NOI' | 'Notification' = 'Application';
+  @Input() parentType: 'Application' | 'NOI' | 'Notification' | 'Planning Review' = 'Application';
 
   labelText = 'Add a journal note';
 
@@ -35,7 +35,7 @@ export class StaffJournalComponent implements OnChanges {
   constructor(
     private staffJournalService: StaffJournalService,
     private confirmationDialogService: ConfirmationDialogService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,6 +66,11 @@ export class StaffJournalComponent implements OnChanges {
     } else if (this.parentType === 'Notification') {
       await this.staffJournalService.createNoteForNotification({
         notificationUuid: this.parentUuid,
+        body: note,
+      });
+    } else if (this.parentType === 'Planning Review') {
+      await this.staffJournalService.createNoteForPlanningReview({
+        planningReviewUuid: this.parentUuid,
         body: note,
       });
     } else {

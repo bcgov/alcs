@@ -1,7 +1,7 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { In, Not } from 'typeorm';
 import {
@@ -33,8 +33,6 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { Notification } from '../notification/notification.entity';
 import { NotificationService } from '../notification/notification.service';
-import { PlanningReview } from '../planning-review/planning-review.entity';
-import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { HomeController } from './home.controller';
 
 describe('HomeController', () => {
@@ -43,7 +41,6 @@ describe('HomeController', () => {
   let mockApplicationSubtaskService: DeepMocked<CardSubtaskService>;
   let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockApplicationModificationService: DeepMocked<ApplicationModificationService>;
-  let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
   let mockCovenantService: DeepMocked<CovenantService>;
   let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
   let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
@@ -54,7 +51,6 @@ describe('HomeController', () => {
     mockApplicationService = createMock();
     mockApplicationSubtaskService = createMock();
     mockApplicationReconsiderationService = createMock();
-    mockPlanningReviewService = createMock();
     mockApplicationTimeTrackingService = createMock();
     mockApplicationModificationService = createMock();
     mockCovenantService = createMock();
@@ -99,10 +95,6 @@ describe('HomeController', () => {
           useValue: mockApplicationTimeTrackingService,
         },
         {
-          provide: PlanningReviewService,
-          useValue: mockPlanningReviewService,
-        },
-        {
           provide: CovenantService,
           useValue: mockCovenantService,
         },
@@ -136,8 +128,6 @@ describe('HomeController', () => {
     mockApplicationReconsiderationService.mapToDtos.mockResolvedValue([]);
     mockApplicationModificationService.getBy.mockResolvedValue([]);
     mockApplicationModificationService.mapToDtos.mockResolvedValue([]);
-    mockPlanningReviewService.getBy.mockResolvedValue([]);
-    mockPlanningReviewService.mapToDtos.mockResolvedValue([]);
     mockCovenantService.getBy.mockResolvedValue([]);
     mockCovenantService.mapToDtos.mockResolvedValue([]);
     mockNoticeOfIntentService.getBy.mockResolvedValue([]);
@@ -156,9 +146,6 @@ describe('HomeController', () => {
     );
 
     mockApplicationReconsiderationService.getWithIncompleteSubtaskByType.mockResolvedValue(
-      [],
-    );
-    mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
     mockApplicationModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
@@ -212,11 +199,6 @@ describe('HomeController', () => {
       expect(
         mockApplicationReconsiderationService.getBy.mock.calls[0][0],
       ).toEqual(filterCondition);
-
-      expect(mockPlanningReviewService.getBy).toHaveBeenCalledTimes(1);
-      expect(mockPlanningReviewService.getBy.mock.calls[0][0]).toEqual(
-        filterCondition,
-      );
 
       expect(mockNoticeOfIntentService.getBy).toHaveBeenCalledTimes(1);
       expect(mockNoticeOfIntentService.getBy.mock.calls[0][0]).toEqual(
@@ -295,30 +277,31 @@ describe('HomeController', () => {
       expect(res[0].paused).toBeFalsy();
     });
 
-    it('should call Reconsideration Service and map it', async () => {
-      const mockPlanningReview = {
-        type: 'fake-type',
-        fileNumber: 'fileNumber',
-        card: initCardMockEntity('222'),
-      } as PlanningReview;
-      mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
-        [mockPlanningReview],
-      );
-
-      const res = await controller.getIncompleteSubtasksByType(
-        CARD_SUBTASK_TYPE.GIS,
-      );
-
-      expect(res.length).toEqual(1);
-      expect(
-        mockPlanningReviewService.getWithIncompleteSubtaskByType,
-      ).toHaveBeenCalledTimes(1);
-
-      expect(res[0].title).toContain(mockPlanningReview.fileNumber);
-      expect(res[0].title).toContain(mockPlanningReview.type);
-      expect(res[0].activeDays).toBeUndefined();
-      expect(res[0].paused).toBeFalsy();
-    });
+    // TODO: Fix when finishing planning reviews
+    // it('should call Planning Referral Service and map it', async () => {
+    //   const mockPlanningReview = {
+    //     type: 'fake-type',
+    //     fileNumber: 'fileNumber',
+    //     card: initCardMockEntity('222'),
+    //   } as PlanningReview;
+    //   mockPlanningReviewService.getWithIncompleteSubtaskByType.mockResolvedValue(
+    //     [mockPlanningReview],
+    //   );
+    //
+    //   const res = await controller.getIncompleteSubtasksByType(
+    //     CARD_SUBTASK_TYPE.GIS,
+    //   );
+    //
+    //   expect(res.length).toEqual(1);
+    //   expect(
+    //     mockPlanningReviewService.getWithIncompleteSubtaskByType,
+    //   ).toHaveBeenCalledTimes(1);
+    //
+    //   expect(res[0].title).toContain(mockPlanningReview.fileNumber);
+    //   expect(res[0].title).toContain(mockPlanningReview.type);
+    //   expect(res[0].activeDays).toBeUndefined();
+    //   expect(res[0].paused).toBeFalsy();
+    // });
 
     it('should call Modification Service and map it', async () => {
       const mockModification = initApplicationModificationMockEntity();
@@ -332,7 +315,7 @@ describe('HomeController', () => {
 
       expect(res.length).toEqual(1);
       expect(
-        mockPlanningReviewService.getWithIncompleteSubtaskByType,
+        mockApplicationModificationService.getWithIncompleteSubtaskByType,
       ).toHaveBeenCalledTimes(1);
 
       expect(res[0].title).toContain(mockModification.application.fileNumber);
@@ -357,7 +340,7 @@ describe('HomeController', () => {
 
       expect(res.length).toEqual(1);
       expect(
-        mockPlanningReviewService.getWithIncompleteSubtaskByType,
+        mockCovenantService.getWithIncompleteSubtaskByType,
       ).toHaveBeenCalledTimes(1);
 
       expect(res[0].title).toContain(mockCovenant.fileNumber);

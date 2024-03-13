@@ -1,24 +1,21 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  FindOptionsRelations,
-  FindOptionsWhere,
-  IsNull,
-  Not,
-  Repository,
-} from 'typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
+import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
+import { FileNumberService } from '../../file-number/file-number.service';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
+import { PlanningReferral } from './planning-referral/planning-referral.entity';
+import { PlanningReviewType } from './planning-review-type.entity';
 import {
   CreatePlanningReviewDto,
   PlanningReviewDto,
+  UpdatePlanningReviewDto,
 } from './planning-review.dto';
 import { PlanningReview } from './planning-review.entity';
 
@@ -27,49 +24,46 @@ export class PlanningReviewService {
   constructor(
     private cardService: CardService,
     @InjectRepository(PlanningReview)
-    private repository: Repository<PlanningReview>,
+    private reviewRepository: Repository<PlanningReview>,
+    @InjectRepository(PlanningReviewType)
+    private typeRepository: Repository<PlanningReviewType>,
+    @InjectRepository(PlanningReferral)
+    private referralRepository: Repository<PlanningReferral>,
     @InjectMapper() private mapper: Mapper,
+    private fileNumberService: FileNumberService,
   ) {}
 
-  private CARD_RELATION = {
-    board: true,
-    type: true,
-    status: true,
-    assignee: true,
-  };
-
   private DEFAULT_RELATIONS: FindOptionsRelations<PlanningReview> = {
-    card: this.CARD_RELATION,
     localGovernment: true,
     region: true,
+    type: true,
   };
 
   async create(data: CreatePlanningReviewDto, board: Board) {
-    const existingReview = await this.repository.findOne({
+    const fileNumber = await this.fileNumberService.generateNextFileNumber();
+    const type = await this.typeRepository.findOneOrFail({
       where: {
-        fileNumber: data.fileNumber,
+        code: data.typeCode,
       },
     });
-    if (existingReview) {
-      throw new ServiceValidationException(
-        `Planning meeting already exists with File ID ${data.fileNumber}`,
-      );
-    }
-
     const planningReview = new PlanningReview({
-      type: data.type,
+      type,
       localGovernmentUuid: data.localGovernmentUuid,
-      fileNumber: data.fileNumber,
+      fileNumber: fileNumber,
       regionCode: data.regionCode,
+      documentName: data.documentName,
     });
 
-    planningReview.card = await this.cardService.create(
-      CARD_TYPE.PLAN,
-      board,
-      false,
-    );
-    const savedReview = await this.repository.save(planningReview);
-    return this.getOrFail(savedReview.uuid);
+    const savedReview = await this.reviewRepository.save(planningReview);
+
+    const referral = new PlanningReferral({
+      planningReview: savedReview,
+      dueDate: formatIncomingDate(data.dueDate),
+      submissionDate: formatIncomingDate(data.submissionDate)!,
+      referralDescription: data.description,
+      card: await this.cardService.create(CARD_TYPE.PLAN, board, false),
+    });
+    return await this.referralRepository.save(referral);
   }
 
   async getOrFail(uuid: string) {
@@ -91,43 +85,32 @@ export class PlanningReviewService {
     );
   }
 
-  async getByCardUuid(cardUuid: string) {
-    const planningReview = await this.repository.findOne({
-      where: { cardUuid },
-      relations: this.DEFAULT_RELATIONS,
-    });
-
-    if (!planningReview) {
-      throw new ServiceNotFoundException(
-        `Failed to find planning meeting with card uuid ${cardUuid}`,
-      );
-    }
-
-    return planningReview;
-  }
-
   getBy(findOptions: FindOptionsWhere<PlanningReview>) {
-    return this.repository.find({
+    return this.reviewRepository.find({
       where: findOptions,
       relations: this.DEFAULT_RELATIONS,
     });
   }
 
-  getDeletedCards(fileNumber: string) {
-    return this.repository.find({
+  getDetailedReview(fileNumber: string) {
+    return this.reviewRepository.findOneOrFail({
       where: {
         fileNumber,
-        card: {
-          auditDeletedDateAt: Not(IsNull()),
+      },
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        referrals: true,
+      },
+      order: {
+        referrals: {
+          auditCreatedAt: 'DESC',
         },
       },
-      withDeleted: true,
-      relations: this.DEFAULT_RELATIONS,
     });
   }
 
   private get(uuid: string) {
-    return this.repository.findOne({
+    return this.reviewRepository.findOne({
       where: {
         uuid,
       },
@@ -135,43 +118,37 @@ export class PlanningReviewService {
     });
   }
 
-  async getByBoard(boardUuid: string) {
-    const res = await this.repository.find({
-      relations: {
-        ...this.DEFAULT_RELATIONS,
-        card: { ...this.CARD_RELATION, board: false },
-      },
-      where: {
-        card: {
-          boardUuid,
-          auditDeletedDateAt: IsNull(),
-        },
+  async listTypes() {
+    return this.typeRepository.find({
+      order: {
+        label: 'ASC',
       },
     });
-    //Typeorm bug its returning deleted cards
-    return res.filter((review) => !!review.card);
   }
 
-  async getWithIncompleteSubtaskByType(subtaskType: string) {
-    return this.repository.find({
+  async update(fileNumber: string, updateDto: UpdatePlanningReviewDto) {
+    const existingApp = await this.reviewRepository.findOneOrFail({
       where: {
-        card: {
-          subtasks: {
-            completedAt: IsNull(),
-            type: {
-              code: subtaskType,
-            },
-          },
-        },
+        fileNumber,
       },
-      relations: {
-        card: {
-          status: true,
-          board: true,
-          type: true,
-          subtasks: { type: true, assignee: true },
-        },
+    });
+
+    existingApp.open = filterUndefined(updateDto.open, existingApp.open);
+    existingApp.typeCode = filterUndefined(
+      updateDto.typeCode,
+      existingApp.typeCode,
+    );
+
+    await this.reviewRepository.save(existingApp);
+    return this.getDetailedReview(fileNumber);
+  }
+
+  async getFileNumber(planningReviewUuid: string) {
+    return this.reviewRepository.findOneOrFail({
+      where: {
+        uuid: planningReviewUuid,
       },
+      select: ['fileNumber'],
     });
   }
 }

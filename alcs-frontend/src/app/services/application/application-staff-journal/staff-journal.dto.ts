@@ -22,6 +22,11 @@ export interface CreateNotificationStaffJournalDto {
   body: string;
 }
 
+export interface CreatePlanningReviewStaffJournalDto {
+  planningReviewUuid: string;
+  body: string;
+}
+
 export interface UpdateStaffJournalDto {
   uuid: string;
   body: string;

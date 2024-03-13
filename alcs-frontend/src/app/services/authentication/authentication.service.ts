@@ -83,11 +83,10 @@ export class AuthenticationService {
 
   async refreshTokens() {
     if (this.refreshToken) {
-      if (this.expires && this.expires < Date.now()) {
+      if (this.refreshExpires && this.refreshExpires < Date.now()) {
         await this.router.navigateByUrl('/login');
         return;
       }
-
       const newTokens = await this.getNewTokens(this.refreshToken);
       await this.setTokens(newTokens.token, newTokens.refresh_token);
     }
