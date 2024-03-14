@@ -4,7 +4,7 @@ import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileWindow } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-roso-details[noiSubmission]',
@@ -51,7 +51,7 @@ export class RosoDetailsComponent {
   async openFile(file: NoticeOfIntentDocumentDto) {
     const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 }

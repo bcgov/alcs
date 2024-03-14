@@ -11,7 +11,7 @@ import {
 } from '../../../../services/application-submission/application-submission.dto';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileWindow } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-lfng-review',
@@ -110,7 +110,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   async openFile(file: ApplicationDocumentDto) {
     const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 

@@ -7,7 +7,7 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-submission.component';
-import { openFileWindow } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-review-attachments',
@@ -128,7 +128,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   async openFile(file: ApplicationDocumentDto) {
     const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 

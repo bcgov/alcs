@@ -12,7 +12,7 @@ import {
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { openFileWindow } from '../../../shared/utils/file';
+import { openFileInline } from '../../../shared/utils/file';
 
 @Component({
   selector: 'app-view-application-submission',
@@ -97,7 +97,7 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   async openFile(file: ApplicationDocumentDto) {
     const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 

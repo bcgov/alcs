@@ -8,7 +8,7 @@ import { NotificationDocumentService } from '../../../services/notification-docu
 import { NotificationSubmissionDetailedDto } from '../../../services/notification-submission/notification-submission.dto';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
-import { openFileWindow } from '../../../shared/utils/file';
+import { openFileInline } from '../../../shared/utils/file';
 
 @Component({
   selector: 'app-notification-details',
@@ -67,7 +67,7 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
   async openFile(file: NotificationDocumentDto) {
     const res = await this.notificationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 

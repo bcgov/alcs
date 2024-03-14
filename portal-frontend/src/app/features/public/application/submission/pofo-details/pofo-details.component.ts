@@ -4,7 +4,7 @@ import { PublicApplicationSubmissionDto } from '../../../../../services/public/p
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
-import { openFileWindow } from '../../../../../shared/utils/file';
+import { openFileInline } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-pofo-details[applicationSubmission]',
@@ -27,7 +27,7 @@ export class PofoDetailsComponent {
   async openFile(file: PublicDocumentDto) {
     const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 }

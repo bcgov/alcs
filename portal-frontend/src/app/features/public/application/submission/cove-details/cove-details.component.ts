@@ -3,7 +3,7 @@ import { PublicApplicationSubmissionDto } from '../../../../../services/public/p
 import { PublicDocumentDto, PublicOwnerDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
-import { openFileWindow } from '../../../../../shared/utils/file';
+import { openFileInline } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-cove-details',
@@ -25,7 +25,7 @@ export class CoveDetailsComponent {
   async openFile(file: PublicDocumentDto) {
     const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 }

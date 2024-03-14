@@ -10,7 +10,7 @@ import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent-
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
-import { openFileWindow } from '../../../shared/utils/file';
+import { openFileInline } from '../../../shared/utils/file';
 
 @Component({
   selector: 'app-noi-details',
@@ -85,7 +85,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
   async openFile(file: NoticeOfIntentDocumentDto) {
     const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 

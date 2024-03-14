@@ -12,7 +12,7 @@ export const openPdfFile = (fileName: string, data: any) => {
   downloadLink.click();
 };
 
-export const openFileWindow = (url: string, fileName: string) => {
+export const openFileInline = (url: string, fileName: string) => {
   const newWindow = window.open('', '_blank');
   if (newWindow) {
     newWindow.document.title = fileName;

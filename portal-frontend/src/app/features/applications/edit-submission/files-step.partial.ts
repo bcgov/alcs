@@ -9,7 +9,7 @@ import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { RemoveFileConfirmationDialogComponent } from '../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { StepComponent } from './step.partial';
-import { openFileWindow } from '../../../shared/utils/file';
+import { openFileInline } from '../../../shared/utils/file';
 
 @Component({
   selector: 'app-file-step',
@@ -86,7 +86,7 @@ export abstract class FilesStepComponent extends StepComponent {
   async openFile(file: ApplicationDocumentDto) {
     const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 }

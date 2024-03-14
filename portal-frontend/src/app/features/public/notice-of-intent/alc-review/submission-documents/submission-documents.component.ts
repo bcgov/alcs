@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { PublicNoticeOfIntentSubmissionDto } from '../../../../../services/public/public-notice-of-intent.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
-import { openFileWindow } from '../../../../../shared/utils/file';
+import { openFileInline } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-submission-documents',
@@ -31,7 +31,7 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   async openFile(file: PublicDocumentDto) {
     const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.submission.fileNumber, file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 

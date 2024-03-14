@@ -6,7 +6,7 @@ import { ApplicationSubmissionDetailedDto } from '../../../../services/applicati
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileWindow } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-incl-details',
@@ -75,7 +75,7 @@ export class InclDetailsComponent implements OnInit, OnDestroy {
   async openFile(file: ApplicationDocumentDto) {
     const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 

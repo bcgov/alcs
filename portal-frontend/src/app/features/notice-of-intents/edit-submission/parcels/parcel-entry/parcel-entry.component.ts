@@ -20,7 +20,7 @@ import { formatBooleanToString } from '../../../../../shared/utils/boolean-helpe
 import { RemoveFileConfirmationDialogComponent } from '../../../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { scrollToElement } from '../../../../../shared/utils/scroll-helper';
-import { openFileWindow } from '../../../../../shared/utils/file';
+import { openFileInline } from '../../../../../shared/utils/file';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -344,7 +344,7 @@ export class ParcelEntryComponent implements OnInit {
   async openFile(file: NoticeOfIntentDocumentDto) {
     const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res.url, file.fileName);
+      openFileInline(res.url, file.fileName);
     }
   }
 
