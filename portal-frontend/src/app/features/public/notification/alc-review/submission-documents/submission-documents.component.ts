@@ -28,10 +28,10 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource(this.documents);
   }
 
-  async openFile(uuid: string) {
-    const res = await this.publicService.getNotificationOpenFileUrl(this.submission.fileNumber, uuid);
+  async openFile(file: PublicDocumentDto) {
+    const res = await this.publicService.getNotificationOpenFileUrl(this.submission.fileNumber, file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 

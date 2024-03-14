@@ -97,10 +97,10 @@ export class ParcelComponent {
     }
   }
 
-  async onOpenFile(uuid: string) {
-    const res = await this.noticeOfIntentDocumentService.openFile(uuid);
+  async onOpenFile(file: NoticeOfIntentDocumentDto) {
+    const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 

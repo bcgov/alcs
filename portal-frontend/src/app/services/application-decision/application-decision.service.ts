@@ -27,9 +27,7 @@ export class ApplicationDecisionService {
 
   async openFile(documentUuid: string) {
     try {
-      return await firstValueFrom(
-        this.httpClient.get<{ url: string; fileName: string }>(`${this.serviceUrl}/${documentUuid}/open`)
-      );
+      return await firstValueFrom(this.httpClient.get<{ url: string }>(`${this.serviceUrl}/${documentUuid}/open`));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to open the document, please try again');

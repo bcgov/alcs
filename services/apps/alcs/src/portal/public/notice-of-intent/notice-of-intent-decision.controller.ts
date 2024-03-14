@@ -32,11 +32,7 @@ export class NoticeOfIntentDecisionController {
   async openFile(@Param('uuid') fileUuid: string) {
     const url = await this.decisionService.getDownloadForPortal(fileUuid);
 
-    const document =
-      await this.decisionService.getDecisionDocumentOrFail(fileUuid);
-    const { fileName } = document.document;
-
-    return { url, fileName };
+    return { url };
   }
 
   @Get('/:uuid/email')

@@ -113,8 +113,7 @@ export class PublicNoticeOfIntentService {
     }
 
     const url = await this.noticeOfIntentDocumentService.getInlineUrl(document);
-    const { fileName } = document.document;
 
-    return { url, fileName };
+    return { url };
   }
 }

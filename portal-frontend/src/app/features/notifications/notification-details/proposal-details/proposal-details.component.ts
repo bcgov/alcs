@@ -37,10 +37,10 @@ export class ProposalDetailsComponent {
     await this.router.navigateByUrl(`notification/${this._notificationSubmission?.fileNumber}/edit/${step}?errors=t`);
   }
 
-  async openFile(uuid: string) {
-    const res = await this.notificationDocumentService.openFile(uuid);
+  async openFile(file: NotificationDocumentDto) {
+    const res = await this.notificationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 }

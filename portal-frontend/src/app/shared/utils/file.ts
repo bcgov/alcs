@@ -12,13 +12,13 @@ export const openPdfFile = (fileName: string, data: any) => {
   downloadLink.click();
 };
 
-export const openFileWindow = (data: { url: string; fileName: string }) => {
+export const openFileWindow = (url: string, fileName: string) => {
   const newWindow = window.open('', '_blank');
   if (newWindow) {
-    newWindow.document.title = data.fileName;
+    newWindow.document.title = fileName;
 
     const object = newWindow.document.createElement('object');
-    object.data = data.url;
+    object.data = url;
     object.style.borderWidth = '0';
     object.style.width = '100%';
     object.style.height = '100%';

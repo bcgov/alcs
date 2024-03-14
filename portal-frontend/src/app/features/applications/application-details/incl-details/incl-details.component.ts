@@ -72,10 +72,10 @@ export class InclDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
+  async openFile(file: ApplicationDocumentDto) {
+    const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 

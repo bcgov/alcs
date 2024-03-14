@@ -30,10 +30,10 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  async openFile(uuid: string) {
-    const res = await this.notificationDocumentService.openFile(uuid);
+  async openFile(file: NotificationDocumentDto) {
+    const res = await this.notificationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 

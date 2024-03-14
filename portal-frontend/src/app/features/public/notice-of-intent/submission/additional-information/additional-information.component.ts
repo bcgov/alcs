@@ -71,10 +71,10 @@ export class AdditionalInformationComponent implements OnInit {
     );
   }
 
-  async openFile(uuid: string) {
-    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.noiSubmission.fileNumber, uuid);
+  async openFile(file: PublicDocumentDto) {
+    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.noiSubmission.fileNumber, file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 }

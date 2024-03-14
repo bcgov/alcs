@@ -48,10 +48,10 @@ export class RosoDetailsComponent {
     }
   }
 
-  async openFile(uuid: string) {
-    const res = await this.noticeOfIntentDocumentService.openFile(uuid);
+  async openFile(file: NoticeOfIntentDocumentDto) {
+    const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 }

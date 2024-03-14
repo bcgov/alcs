@@ -668,7 +668,7 @@ export class NoticeOfIntentDecisionV2Service {
     );
   }
 
-  async getDecisionDocumentOrFail(decisionDocumentUuid: string) {
+  private async getDecisionDocumentOrFail(decisionDocumentUuid: string) {
     const decisionDocument = await this.decisionDocumentRepository.findOne({
       where: {
         uuid: decisionDocumentUuid,

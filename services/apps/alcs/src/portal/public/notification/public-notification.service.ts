@@ -98,8 +98,7 @@ export class PublicNotificationService {
     }
 
     const url = await this.notificationDocumentService.getInlineUrl(document);
-    const { fileName } = document.document;
 
-    return { url, fileName };
+    return { url };
   }
 }

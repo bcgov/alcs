@@ -241,11 +241,11 @@ export class OwnerDialogComponent {
   async openCorporateSummary() {
     if (this.pendingFile) {
       const fileURL = URL.createObjectURL(this.pendingFile);
-      openFileWindow({ url: fileURL, fileName: this.pendingFile.name });
+      openFileWindow(fileURL, this.pendingFile.name);
     } else if (this.existingUuid && this.data.existingOwner?.corporateSummary?.uuid) {
       const res = await this.data.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
       if (res) {
-        openFileWindow(res);
+        openFileWindow(res.url, this.data.existingOwner?.corporateSummary?.fileName);
       }
     }
   }

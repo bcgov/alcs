@@ -51,18 +51,14 @@
     <div>
       {{ applicationSubmission.soilToPlaceMaximumDepth }}
       <span *ngIf="applicationSubmission.soilToPlaceMaximumDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilToPlaceMaximumDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilToPlaceMaximumDepth === null"></app-no-data>
     </div>
 
     <div class="subheading2">Average Depth</div>
     <div>
       {{ applicationSubmission.soilToPlaceAverageDepth }}
       <span *ngIf="applicationSubmission.soilToPlaceAverageDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilToPlaceAverageDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilToPlaceAverageDepth === null"></app-no-data>
     </div>
 
     <div></div>
@@ -72,36 +68,28 @@
     <div>
       {{ applicationSubmission.soilAlreadyPlacedVolume }}
       <span *ngIf="applicationSubmission.soilAlreadyPlacedVolume !== null">m<sup>3</sup></span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyPlacedVolume === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedVolume === null"></app-no-data>
     </div>
 
     <div class="subheading2">Area</div>
     <div>
       {{ applicationSubmission.soilAlreadyPlacedArea }}
       <span *ngIf="applicationSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyPlacedArea === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedArea === null"></app-no-data>
     </div>
 
     <div class="subheading2">Maximum Depth</div>
     <div>
       {{ applicationSubmission.soilAlreadyPlacedMaximumDepth }}
       <span *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth === null"></app-no-data>
     </div>
 
     <div class="subheading2">Average Depth</div>
     <div>
       {{ applicationSubmission.soilAlreadyPlacedAverageDepth }}
       <span *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth === null"></app-no-data>
     </div>
   </div>
 
@@ -127,7 +115,7 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
       {{ map.fileName }}
     </a>
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
@@ -135,7 +123,7 @@
 
   <div class="subheading2 grid-1">Cross Sections</div>
   <div class="grid-double">
-    <a *ngFor="let file of crossSections" (click)="openFile(file.uuid)">
+    <a *ngFor="let file of crossSections" (click)="openFile(file)">
       {{ file.fileName }}
     </a>
     <app-no-data *ngIf="crossSections.length === 0"></app-no-data>

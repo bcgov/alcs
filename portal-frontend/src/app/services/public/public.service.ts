@@ -30,7 +30,7 @@ export class PublicService {
   async getApplicationOpenFileUrl(fileId: string, uuid: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<{ url: string; fileName: string }>(`${this.serviceUrl}/application/${fileId}/${uuid}/open`)
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/application/${fileId}/${uuid}/open`)
       );
     } catch (e) {
       console.error(e);
@@ -66,9 +66,7 @@ export class PublicService {
   async getNoticeOfIntentOpenFileUrl(fileId: string, uuid: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<{ url: string; fileName: string }>(
-          `${this.serviceUrl}/notice-of-intent/${fileId}/${uuid}/open`
-        )
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/notice-of-intent/${fileId}/${uuid}/open`)
       );
     } catch (e) {
       console.error(e);
@@ -104,7 +102,7 @@ export class PublicService {
   async getNotificationOpenFileUrl(fileId: string, uuid: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<{ url: string; fileName: string }>(`${this.serviceUrl}/notification/${fileId}/${uuid}/open`)
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/notification/${fileId}/${uuid}/open`)
       );
     } catch (e) {
       console.error(e);

@@ -69,10 +69,10 @@ export abstract class FilesStepComponent extends StepComponent {
     }
   }
 
-  async openFile(uuid: string) {
-    const res = await this.notificationDocumentService.openFile(uuid);
+  async openFile(file: ApplicationDocumentDto) {
+    const res = await this.notificationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 }

@@ -152,8 +152,7 @@ export class PublicApplicationService {
     }
 
     const url = await this.applicationDocumentService.getInlineUrl(document);
-    const { fileName } = document.document;
 
-    return { url, fileName };
+    return { url };
   }
 }

@@ -64,10 +64,10 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async openFile(uuid: string) {
-    const res = await this.notificationDocumentService.openFile(uuid);
+  async openFile(file: NotificationDocumentDto) {
+    const res = await this.notificationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileWindow(res);
+      openFileWindow(res.url, file.fileName);
     }
   }
 
