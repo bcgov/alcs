@@ -14,6 +14,7 @@ import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { InquiryType } from './inquiry-type.entity';
+import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
 
 @Entity({
   comment: '',
@@ -25,6 +26,12 @@ export class Inquiry extends Base {
       Object.assign(this, data);
     }
   }
+
+  @Column({
+    unique: true,
+    default: () => `NEXTVAL('${FILE_NUMBER_SEQUENCE}')`,
+  })
+  fileNumber: string;
 
   @Column({ type: 'text' })
   summary: string;
