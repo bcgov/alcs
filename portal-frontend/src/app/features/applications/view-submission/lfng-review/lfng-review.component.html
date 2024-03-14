@@ -13,20 +13,29 @@
       >
         Download PDF
       </button>
-      <button mat-flat-button color="primary" *ngIf="application && application.canEdit"
-        [routerLink]="'/application/' + application.fileNumber + '/edit'">
+      <button
+        mat-flat-button
+        color="primary"
+        *ngIf="application && application.canEdit"
+        [routerLink]="'/application/' + application.fileNumber + '/edit'"
+      >
         <div class="continue-button-content">
           <span>Continue Application</span>
           <mat-icon>keyboard_double_arrow_right</mat-icon>
         </div>
       </button>
-      <button (click)="onReview(application.fileNumber)"  mat-flat-button color="primary"
+      <button
+        (click)="onReview(application.fileNumber)"
+        mat-flat-button
+        color="primary"
         *ngIf="
-          application && application.canReview && (
-          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
-          application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
-        ">
+          application &&
+          application.canReview &&
+          (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+            application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
+            application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
+        "
+      >
         <div class="continue-button-content">
           <span
             *ngIf="
@@ -51,8 +60,8 @@
   <div
     *ngIf="
       (application.status.code === SUBMISSION_STATUS.IN_PROGRESS ||
-      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
-      application.status.code === SUBMISSION_STATUS.INCOMPLETE) &&
+        application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+        application.status.code === SUBMISSION_STATUS.INCOMPLETE) &&
       !isTurOrCov
     "
     class="warning"
@@ -62,8 +71,8 @@
   <div
     *ngIf="
       (application.status.code === SUBMISSION_STATUS.IN_PROGRESS ||
-      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
-      application.status.code === SUBMISSION_STATUS.INCOMPLETE ) &&
+        application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+        application.status.code === SUBMISSION_STATUS.INCOMPLETE) &&
       isTurOrCov
     "
     class="warning"
@@ -128,7 +137,7 @@
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
-            {{ applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000'  }}
+            {{ applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000' }}
             <app-no-data *ngIf="!applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>
@@ -275,7 +284,7 @@
         >
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
+            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
               document.fileName
             }}</a>
           </div>
@@ -286,7 +295,7 @@
             Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
           </div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
+            <a class="link" (click)="openFile(document)" *ngFor="let document of staffReport">{{
               document.fileName
             }}</a>
           </div>
@@ -296,7 +305,7 @@
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
             <div class="document" *ngFor="let document of governmentOtherAttachments">
-              <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
             </div>
             <app-no-data *ngIf="governmentOtherAttachments.length === 0"></app-no-data>
           </div>
