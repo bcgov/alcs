@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { openFileInline } from '../../../shared/utils/file';
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationSubmissionDto, CovenantTransfereeDto, UpdateApplicationSubmissionDto } from '../application.dto';
 
