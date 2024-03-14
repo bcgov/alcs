@@ -51,7 +51,7 @@
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
       </div>
     </ng-container>
@@ -68,21 +68,15 @@
     <div class="full-width">
       <h4>Land Use of Parcel(s) under Notice of Intent</h4>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agriculture that currently takes place on the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
     <div class="grid-double">
       {{ submission.parcelsAgricultureDescription }}
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agricultural improvements made to the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
     <div class="grid-double">
       {{ submission.parcelsAgricultureImprovementDescription }}
     </div>
-    <div class="subheading2 grid-1">
-      Describe all other uses that currently take place on the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
     <div class="grid-double">
       {{ submission.parcelsNonAgricultureUseDescription }}
     </div>
@@ -184,7 +178,7 @@
           {{ file.description }}
         </div>
         <div class="grid-3">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
       </ng-container>
       <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
