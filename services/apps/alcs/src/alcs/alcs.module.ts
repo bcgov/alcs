@@ -22,6 +22,7 @@ import { MessageModule } from './message/message.module';
 import { NotificationSubmissionStatusModule } from './notification/notification-submission-status/notification-submission-status.module';
 import { NotificationTimelineModule } from './notification/notification-timeline/notification-timeline.module';
 import { NotificationModule } from './notification/notification.module';
+import { PlanningReviewDecisionModule } from './planning-review/planning-review-decision/planning-review-decision.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
@@ -35,6 +36,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     BoardModule,
     CodeModule,
     PlanningReviewModule,
+    PlanningReviewDecisionModule,
     CovenantModule,
     CommissionerModule,
     ApplicationDecisionModule,
@@ -57,6 +59,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: BoardModule },
       { path: 'alcs', module: CodeModule },
       { path: 'alcs', module: PlanningReviewModule },
+      { path: 'alcs', module: PlanningReviewDecisionModule },
       { path: 'alcs', module: CovenantModule },
       { path: 'alcs', module: CommissionerModule },
       { path: 'alcs', module: ApplicationDecisionModule },

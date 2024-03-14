@@ -9,7 +9,10 @@
     <div class="left">
       <h3 class="card-title center">
         <span class="margin-right">{{ cardTitle }}</span>
-        <app-application-legacy-id *ngIf="planningReview.legacyId" [legacyId]="planningReview.legacyId"></app-application-legacy-id>
+        <app-application-legacy-id
+          *ngIf="planningReview.legacyId"
+          [legacyId]="planningReview.legacyId"
+        ></app-application-legacy-id>
         <app-application-type-pill *ngIf="planningType" [type]="planningType"></app-application-type-pill>
       </h3>
     </div>
@@ -31,7 +34,7 @@
     <div class="body-text">
       <app-application-type-pill *ngIf="planningReview.open" [type]="OPEN_TYPE"></app-application-type-pill>
       <app-application-type-pill *ngIf="!planningReview.open" [type]="CLOSED_TYPE"></app-application-type-pill>
-      <span>Due Date: {{ planningReferral.dueDate | momentFormat }}</span>
+      <span *ngIf="planningReferral.dueDate">Due: {{ planningReferral.dueDate | momentFormat }}</span>
     </div>
     <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
