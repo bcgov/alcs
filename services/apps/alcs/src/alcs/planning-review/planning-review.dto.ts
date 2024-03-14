@@ -162,4 +162,8 @@ export class UpdatePlanningReviewDto {
   @IsString()
   @IsOptional()
   typeCode?: string;
+
+  @IsNumber()
+  @IsOptional()
+  decisionDate?: number | null;
 }
