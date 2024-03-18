@@ -14,6 +14,16 @@
     <span>{{ _noiSubmission.purpose }}</span>
   </div>
 
+  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
+  <div class="grid-double">
+    <span>{{ _noiSubmission.soilTypeRemoved }}</span>
+  </div>
+
+  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
+  <div class="grid-double">
+    <span>{{ _noiSubmission.soilFillTypeToPlace }}</span>
+  </div>
+
   <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
   <div class="grid-double">
     <div *ngIf="_noiSubmission.fillProjectDuration">
@@ -122,16 +132,6 @@
     </div>
   </div>
 
-  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
-  <div class="grid-double">
-    <span>{{ _noiSubmission.soilFillTypeToPlace }}</span>
-  </div>
-
-  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
-  <div class="grid-double">
-    <span>{{ _noiSubmission.soilTypeRemoved }}</span>
-  </div>
-
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double multiple-documents">
     <a *ngFor="let file of proposalMap" (click)="openFile(file)">
@@ -147,6 +147,13 @@
     <app-no-data *ngIf="_noiSubmission.soilIsAreaWideFilling === null"></app-no-data>
   </div>
 
+  <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
+  <div class="grid-double">
+    <span *ngIf="_noiSubmission.soilIsExtractionOrMining !== null">
+      {{ _noiSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
+    </span>
+  </div>
+
   <div class="subheading2 grid-1">Cross Sections</div>
   <div class="grid-double multiple-documents">
     <div>
@@ -160,13 +167,6 @@
     <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
       {{ file.fileName }}
     </a>
-  </div>
-
-  <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
-  <div class="grid-double">
-    <span *ngIf="_noiSubmission.soilIsExtractionOrMining !== null">
-      {{ _noiSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
-    </span>
   </div>
 
   <div *ngIf="_noiSubmission.soilIsExtractionOrMining" class="subheading2 grid-1">
