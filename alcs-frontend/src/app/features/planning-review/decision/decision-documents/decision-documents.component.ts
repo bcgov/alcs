@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -28,7 +28,6 @@ export class DecisionDocumentsComponent implements OnDestroy, OnChanges {
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
   private fileId = '';
-  areDocumentsReleased = false;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<PlanningReviewDecisionDocumentDto> =
@@ -103,8 +102,7 @@ export class DecisionDocumentsComponent implements OnDestroy, OnChanges {
     this.$destroy.complete();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.areDocumentsReleased = true;
+  ngOnChanges(): void {
     if (this.decision) {
       this.dataSource = new MatTableDataSource(this.decision.documents);
     }

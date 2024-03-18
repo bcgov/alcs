@@ -22,18 +22,18 @@ export const childRoutes = [
     component: ReferralComponent,
   },
   {
-    path: 'documents',
-    menuTitle: 'Documents',
-    icon: 'description',
-    component: DocumentsComponent,
-  },
-  {
     path: 'decision',
     menuTitle: 'Decisions',
     icon: 'gavel',
     module: DecisionModule,
     portalOnly: false,
     children: decisionChildRoutes,
+  },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: DocumentsComponent,
   },
 ];
 
