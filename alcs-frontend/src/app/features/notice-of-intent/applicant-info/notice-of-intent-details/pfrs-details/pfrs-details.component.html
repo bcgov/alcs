@@ -19,9 +19,7 @@
     <div *ngIf="_noiSubmission.fillProjectDuration">
       {{ _noiSubmission.fillProjectDuration }}
     </div>
-    <app-no-data
-      *ngIf="!_noiSubmission.fillProjectDuration"
-    ></app-no-data>
+    <app-no-data *ngIf="!_noiSubmission.fillProjectDuration"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Removal of Soil Project Duration</div>
@@ -29,9 +27,7 @@
     <div *ngIf="_noiSubmission.soilProjectDuration">
       {{ _noiSubmission.soilProjectDuration }}
     </div>
-    <app-no-data
-      *ngIf="!_noiSubmission.soilProjectDuration"
-    ></app-no-data>
+    <app-no-data *ngIf="!_noiSubmission.soilProjectDuration"></app-no-data>
   </div>
 
   <div class="full-width soil-table">
@@ -142,6 +138,15 @@
       {{ file.fileName }}
     </a>
   </div>
+
+  <div class="subheading2 grid-1">Is your proposal for area-wide filling?</div>
+  <div class="grid-double">
+    <span *ngIf="_noiSubmission.soilIsAreaWideFilling !== null">
+      {{ _noiSubmission.soilIsAreaWideFilling ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="_noiSubmission.soilIsAreaWideFilling === null"></app-no-data>
+  </div>
+
   <div class="subheading2 grid-1">Cross Sections</div>
   <div class="grid-double multiple-documents">
     <div>
