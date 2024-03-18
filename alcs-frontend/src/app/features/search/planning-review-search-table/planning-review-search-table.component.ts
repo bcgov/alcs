@@ -1,12 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { NonApplicationSearchResultDto } from '../../../services/search/search.dto';
-import {
-  COVENANT_TYPE_LABEL,
-  PLANNING_TYPE_LABEL,
-} from '../../../shared/application-type-pill/application-type-pill.constants';
+import { PlanningReviewSearchResultDto } from '../../../services/search/search.dto';
+import { CLOSED_PR_LABEL, OPEN_PR_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
 import { TableChange } from '../search.interface';
 
 interface SearchResult {
@@ -19,34 +16,34 @@ interface SearchResult {
 }
 
 @Component({
-  selector: 'app-non-application-search-table',
-  templateUrl: './non-application-search-table.component.html',
-  styleUrls: ['./non-application-search-table.component.scss'],
+  selector: 'app-planning-review-search-table',
+  templateUrl: './planning-review-search-table.component.html',
+  styleUrls: ['./planning-review-search-table.component.scss'],
 })
-export class NonApplicationSearchTableComponent {
-  _nonApplications: NonApplicationSearchResultDto[] = [];
-  @Input() set nonApplications(nonApplications: NonApplicationSearchResultDto[]) {
-    this._nonApplications = nonApplications;
+export class PlanningReviewSearchTableComponent {
+  _planningReviews: PlanningReviewSearchResultDto[] = [];
+  @Input() set planningReviews(planningReviews: PlanningReviewSearchResultDto[]) {
+    this._planningReviews = planningReviews;
     this.isLoading = false;
-    this.dataSource = this.mapNonApplications(nonApplications);
+    this.dataSource = planningReviews;
   }
+
+  OPEN_TYPE = OPEN_PR_LABEL;
+  CLOSED_TYPE = CLOSED_PR_LABEL;
 
   @Input() totalCount: number | undefined;
   @Input() pageIndex: number = 0;
 
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'type', 'applicant', 'government'];
-  dataSource: NonApplicationSearchResultDto[] = [];
+  displayedColumns = ['fileId', 'type', 'applicant', 'government', 'status'];
+  dataSource: PlanningReviewSearchResultDto[] = [];
 
   itemsPerPage = 20;
   total = 0;
   sortDirection: SortDirection = 'desc';
   sortField = 'fileId';
   isLoading = false;
-
-  COVENANT_TYPE_LABEL = COVENANT_TYPE_LABEL;
-  PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL;
 
   constructor(private router: Router) {}
 
@@ -83,20 +80,5 @@ export class NonApplicationSearchTableComponent {
     );
 
     window.open(url, '_blank');
-  }
-
-  private mapNonApplications(nonApplications: NonApplicationSearchResultDto[]): NonApplicationSearchResultDto[] {
-    return nonApplications.map((e) => {
-      return {
-        fileNumber: e.fileNumber,
-        type: e.type,
-        applicant: e.applicant,
-        boardCode: e.boardCode,
-        localGovernmentName: e.localGovernmentName,
-        referenceId: e.referenceId,
-        board: e.boardCode,
-        class: e.class,
-      };
-    });
   }
 }

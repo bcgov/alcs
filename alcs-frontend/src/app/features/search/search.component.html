@@ -280,15 +280,15 @@
     </mat-tab>
 
     <mat-tab>
-      <ng-template mat-tab-label> Non-Applications: {{ nonApplicationsTotal }} </ng-template>
-      <app-non-application-search-table
+      <ng-template mat-tab-label> Planning Reviews: {{ planningReviewsTotal }} </ng-template>
+      <app-planning-review-search-table
         *ngIf="!isLoading"
-        [nonApplications]="nonApplications"
-        [totalCount]="nonApplicationsTotal"
+        [planningReviews]="planningReviews"
+        [totalCount]="planningReviewsTotal"
         [pageIndex]="pageIndex"
         (tableChange)="onTableChange($event)"
       >
-      </app-non-application-search-table>
+      </app-planning-review-search-table>
       <div class="center">
         <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
       </div>

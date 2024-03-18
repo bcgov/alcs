@@ -11,12 +11,10 @@ import { ApplicationService } from '../application/application.service';
 import { CARD_TYPE, CardType } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../notification/notification.service';
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
-import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { BOARD_CODES } from './board.dto';
 import { Board } from './board.entity';
@@ -31,7 +29,6 @@ describe('BoardController', () => {
   let modificationService: DeepMocked<ApplicationModificationService>;
   let cardService: DeepMocked<CardService>;
   let planningReferralService: DeepMocked<PlanningReferralService>;
-  let covenantService: DeepMocked<CovenantService>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noiModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let notificationService: DeepMocked<NotificationService>;
@@ -44,7 +41,6 @@ describe('BoardController', () => {
     modificationService = createMock();
     planningReferralService = createMock();
     cardService = createMock();
-    covenantService = createMock();
     noticeOfIntentService = createMock();
     noiModificationService = createMock();
     notificationService = createMock();
@@ -65,8 +61,6 @@ describe('BoardController', () => {
     planningReferralService.mapToDtos.mockResolvedValue([]);
     modificationService.getByBoard.mockResolvedValue([]);
     modificationService.mapToDtos.mockResolvedValue([]);
-    covenantService.getByBoard.mockResolvedValue([]);
-    covenantService.mapToDtos.mockResolvedValue([]);
     noticeOfIntentService.getByBoard.mockResolvedValue([]);
     noticeOfIntentService.mapToDtos.mockResolvedValue([]);
     noiModificationService.getByBoard.mockResolvedValue([]);
@@ -96,7 +90,6 @@ describe('BoardController', () => {
           provide: PlanningReferralService,
           useValue: planningReferralService,
         },
-        { provide: CovenantService, useValue: covenantService },
         {
           provide: NoticeOfIntentService,
           useValue: noticeOfIntentService,

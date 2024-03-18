@@ -26,16 +26,6 @@ export const PLANNING_TYPE_LABEL = {
   textColor: '#000',
 };
 
-export const COVENANT_TYPE_LABEL = {
-  label: 'Covenant',
-  code: 'COV',
-  shortLabel: 'COV',
-  backgroundColor: '#fff',
-  borderColor: '#228820',
-  description: 'Covenant',
-  textColor: '#000',
-};
-
 export const RETROACTIVE_TYPE_LABEL = {
   label: 'Retroactive',
   code: 'RETRO',

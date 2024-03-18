@@ -10,7 +10,6 @@ import { CardModule } from './card/card.module';
 import { CodeModule } from './code/code.module';
 import { CommentModule } from './comment/comment.module';
 import { CommissionerModule } from './commissioner/commissioner.module';
-import { CovenantModule } from './covenant/covenant.module';
 import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
 import { LocalGovernmentModule } from './local-government/local-government.module';
@@ -37,7 +36,6 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     CodeModule,
     PlanningReviewModule,
     PlanningReviewDecisionModule,
-    CovenantModule,
     CommissionerModule,
     ApplicationDecisionModule,
     AdminModule,
@@ -60,7 +58,6 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: CodeModule },
       { path: 'alcs', module: PlanningReviewModule },
       { path: 'alcs', module: PlanningReviewDecisionModule },
-      { path: 'alcs', module: CovenantModule },
       { path: 'alcs', module: CommissionerModule },
       { path: 'alcs', module: ApplicationDecisionModule },
       { path: 'alcs', module: AdminModule },

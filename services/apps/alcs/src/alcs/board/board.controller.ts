@@ -1,8 +1,8 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
 import {
   ANY_AUTH_ROLE,
@@ -16,12 +16,10 @@ import { ApplicationService } from '../application/application.service';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
-import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../notification/notification.service';
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
-import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardDto, MinimalBoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
@@ -38,7 +36,6 @@ export class BoardController {
     private planningReferralService: PlanningReferralService,
     private appModificationService: ApplicationModificationService,
     private noiModificationService: NoticeOfIntentModificationService,
-    private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private notificationService: NotificationService,
     @InjectMapper() private autoMapper: Mapper,
@@ -82,10 +79,6 @@ export class BoardController {
       ? await this.appModificationService.getByBoard(board.uuid)
       : [];
 
-    const covenants = allowedCodes.includes(CARD_TYPE.COV)
-      ? await this.covenantService.getByBoard(board.uuid)
-      : [];
-
     const noticeOfIntents = allowedCodes.includes(CARD_TYPE.NOI)
       ? await this.noticeOfIntentService.getByBoard(board.uuid)
       : [];
@@ -109,7 +102,6 @@ export class BoardController {
       planningReferrals:
         await this.planningReferralService.mapToDtos(planningReferrals),
       modifications: await this.appModificationService.mapToDtos(modifications),
-      covenants: await this.covenantService.mapToDtos(covenants),
       noticeOfIntents:
         await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
       noiModifications:

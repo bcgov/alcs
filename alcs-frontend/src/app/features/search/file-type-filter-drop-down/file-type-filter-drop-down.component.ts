@@ -162,7 +162,7 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     this.fileTypeChange.emit(
       this.checklistSelection.selected
         .filter((selectedItem) => selectedItem.item.value)
-        .map((selectedItem) => selectedItem.item.value!)
+        .map((selectedItem) => selectedItem.item.value!),
     );
   }
 
@@ -173,7 +173,7 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.treeControl.expandAll();
+    //this.treeControl.expandAll();
   }
 
   clear() {

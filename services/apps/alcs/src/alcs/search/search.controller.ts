@@ -14,7 +14,6 @@ import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -24,12 +23,15 @@ import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-o
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
 import { NotificationSubmissionSearchView } from './notification/notification-search-view.entity';
+import { PlanningReviewAdvancedSearchService } from './planning-review/planning-review-advanced-search.service';
+import { PlanningReviewSearchView } from './planning-review/planning-review-search-view.entity';
 import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
   ApplicationSearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
+  PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
@@ -45,6 +47,7 @@ export class SearchController {
     private noticeOfIntentSearchService: NoticeOfIntentAdvancedSearchService,
     private applicationSearchService: ApplicationAdvancedSearchService,
     private notificationSearchService: NotificationAdvancedSearchService,
+    private planningReviewSearchService: PlanningReviewAdvancedSearchService,
     @InjectRepository(ApplicationType)
     private appTypeRepo: Repository<ApplicationType>,
     @InjectDataSource()
@@ -56,8 +59,9 @@ export class SearchController {
   async search(@Param('searchTerm') searchTerm) {
     const application = await this.searchService.getApplication(searchTerm);
     const noi = await this.searchService.getNoi(searchTerm);
-    const covenant = await this.searchService.getCovenant(searchTerm);
     const notification = await this.searchService.getNotification(searchTerm);
+    const planningReview =
+      await this.searchService.getPlanningReview(searchTerm);
 
     const result: SearchResultDto[] = [];
 
@@ -65,8 +69,7 @@ export class SearchController {
       result,
       application,
       noi,
-      null, //TODO
-      covenant,
+      planningReview,
       notification,
     );
 
@@ -78,7 +81,6 @@ export class SearchController {
     application: Application | null,
     noi: NoticeOfIntent | null,
     planningReview: PlanningReview | null,
-    covenant: Covenant | null,
     notification: Notification | null,
   ) {
     if (application) {
@@ -93,10 +95,6 @@ export class SearchController {
       result.push(this.mapPlanningReviewToSearchResult(planningReview));
     }
 
-    if (covenant) {
-      result.push(this.mapCovenantToSearchResult(covenant));
-    }
-
     if (notification) {
       result.push(this.mapNotificationToSearchResult(notification));
     }
@@ -108,7 +106,7 @@ export class SearchController {
     const {
       searchApplications,
       searchNoi,
-      searchNonApplications,
+      searchPlanningReviews,
       searchNotifications,
     } = this.getEntitiesTypeToSearch(searchDto);
 
@@ -142,10 +140,18 @@ export class SearchController {
         notifications = await this.notificationSearchService.search(searchDto);
       }
 
+      let planningReviews: AdvancedSearchResultDto<
+        PlanningReviewSearchView[]
+      > | null = null;
+      if (searchPlanningReviews) {
+        planningReviews =
+          await this.planningReviewSearchService.search(searchDto);
+      }
+
       return await this.mapAdvancedSearchResults(
         applicationSearchResult,
         noticeOfIntentSearchService,
-        null,
+        planningReviews,
         notifications,
       );
     } finally {
@@ -228,7 +234,7 @@ export class SearchController {
   private getEntitiesTypeToSearch(searchDto: SearchRequestDto) {
     let searchApplications = true;
 
-    let nonApplicationTypeSpecified = false;
+    let planningReviewTypeSpecified = false;
     let noiTypeSpecified = false;
     let notificationTypeSpecified = false;
     if (searchDto.fileTypes.length > 0) {
@@ -245,24 +251,17 @@ export class SearchController {
 
       notificationTypeSpecified = searchDto.fileTypes.includes('SRW');
 
-      nonApplicationTypeSpecified = searchDto.fileTypes.some((searchType) =>
-        ['COV', 'PLAN'].includes(searchType),
+      planningReviewTypeSpecified = searchDto.fileTypes.some((searchType) =>
+        ['PLAN'].includes(searchType),
       );
     }
 
     const searchNoi = searchDto.fileTypes.length > 0 ? noiTypeSpecified : true;
 
-    const searchNonApplications =
-      (searchDto.fileTypes.length > 0 ? nonApplicationTypeSpecified : true) &&
-      !searchDto.dateDecidedFrom &&
-      !searchDto.dateDecidedTo &&
-      !searchDto.dateSubmittedFrom &&
-      !searchDto.dateDecidedTo &&
-      !searchDto.resolutionNumber &&
-      !searchDto.resolutionYear &&
+    const searchPlanningReviews =
+      (searchDto.fileTypes.length > 0 ? planningReviewTypeSpecified : true) &&
       !searchDto.portalStatusCode &&
       !searchDto.pid &&
-      !isStringSetAndNotEmpty(searchDto.legacyId) &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
 
     const searchNotifications =
@@ -276,7 +275,7 @@ export class SearchController {
     return {
       searchApplications,
       searchNoi,
-      searchNonApplications,
+      searchPlanningReviews,
       searchNotifications,
     };
   }
@@ -288,7 +287,7 @@ export class SearchController {
     noticeOfIntents: AdvancedSearchResultDto<
       NoticeOfIntentSubmissionSearchView[]
     > | null,
-    nonApplications: null,
+    planningReviews: AdvancedSearchResultDto<PlanningReviewSearchView[]> | null,
     notifications: AdvancedSearchResultDto<
       NotificationSubmissionSearchView[]
     > | null,
@@ -328,12 +327,27 @@ export class SearchController {
       );
     }
 
+    const mappedPlanningReviews: PlanningReviewSearchResultDto[] = [];
+    if (
+      planningReviews &&
+      planningReviews.data &&
+      planningReviews.data.length > 0
+    ) {
+      mappedPlanningReviews.push(
+        ...planningReviews.data.map((planningReview) =>
+          this.mapPlanningReviewToAdvancedSearchResult(planningReview),
+        ),
+      );
+    }
+
     response.applications = mappedApplications;
     response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
     response.totalNoticeOfIntents = noticeOfIntents?.total ?? 0;
     response.notifications = mappedNotifications;
     response.totalNotifications = notifications?.total ?? 0;
+    response.planningReviews = mappedPlanningReviews;
+    response.totalPlanningReviews = planningReviews?.total ?? 0;
 
     return response;
   }
@@ -370,23 +384,12 @@ export class SearchController {
   private mapPlanningReviewToSearchResult(
     planning: PlanningReview,
   ): SearchResultDto {
-    //TODO
     return {
-      fileNumber: '',
-      localGovernmentName: undefined,
-      referenceId: '',
-      type: '',
-    };
-  }
-
-  private mapCovenantToSearchResult(covenant: Covenant): SearchResultDto {
-    return {
-      type: CARD_TYPE.COV,
-      referenceId: covenant.cardUuid,
-      localGovernmentName: covenant.localGovernment?.name,
-      applicant: covenant.applicant,
-      fileNumber: covenant.fileNumber,
-      boardCode: covenant.card.board.code,
+      type: CARD_TYPE.PLAN,
+      referenceId: planning.fileNumber,
+      localGovernmentName: planning.localGovernment?.name,
+      applicant: planning.documentName,
+      fileNumber: planning.fileNumber,
     };
   }
 
@@ -457,6 +460,27 @@ export class SearchController {
       ownerName: notification.applicant,
       class: 'NOTI',
       status: notification.status.status_type_code,
+    };
+  }
+
+  private mapPlanningReviewToAdvancedSearchResult(
+    planningReview: PlanningReviewSearchView,
+  ): PlanningReviewSearchResultDto {
+    return {
+      documentName: planningReview.documentName,
+      referenceId: planningReview.fileNumber,
+      fileNumber: planningReview.fileNumber,
+      open: planningReview.open,
+      type: {
+        code: planningReview.planningReviewType_code,
+        label: planningReview.planningReviewType_label,
+        backgroundColor: planningReview.planningReviewType_background_color,
+        textColor: planningReview.planningReviewType_text_color,
+        description: '',
+        shortLabel: planningReview.planningReviewType_short_label,
+      },
+      localGovernmentName: planningReview.localGovernmentName ?? null,
+      class: 'PLAN',
     };
   }
 }

@@ -3,7 +3,6 @@ import { ApplicationSubtaskProfile } from '../../common/automapper/application-s
 import { UserModule } from '../../user/user.module';
 import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
 import { ApplicationModule } from '../application/application.module';
-import { CovenantModule } from '../covenant/covenant.module';
 import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentModule } from '../notice-of-intent/notice-of-intent.module';
 import { NotificationModule } from '../notification/notification.module';
@@ -15,7 +14,6 @@ import { HomeController } from './home.controller';
     ApplicationModule,
     UserModule,
     PlanningReviewModule,
-    CovenantModule,
     ApplicationDecisionModule,
     NoticeOfIntentModule,
     NoticeOfIntentDecisionModule,

@@ -11,9 +11,9 @@
     <app-assigned-table [assignedFiles]="applications"></app-assigned-table>
   </section>
 
-  <section *ngIf="nonApplications.length">
+  <section *ngIf="planningReferrals.length">
     <div class="subheading2">Non-Applications</div>
-    <app-assigned-table [assignedFiles]="nonApplications"></app-assigned-table>
+    <app-assigned-table [assignedFiles]="planningReferrals"></app-assigned-table>
   </section>
 
   <section *ngIf="notifications.length">

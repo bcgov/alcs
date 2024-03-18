@@ -27,9 +27,6 @@ import {
 } from '../card/card-subtask/card-subtask.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
-import { CovenantDto } from '../covenant/covenant.dto';
-import { Covenant } from '../covenant/covenant.entity';
-import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModification } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
@@ -57,7 +54,6 @@ export class HomeController {
     private timeService: ApplicationTimeTrackingService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
@@ -72,7 +68,6 @@ export class HomeController {
     reconsiderations: ApplicationReconsiderationDto[];
     planningReferrals: PlanningReviewDto[];
     modifications: ApplicationModificationDto[];
-    covenants: CovenantDto[];
     notifications: NotificationDto[];
   }> {
     const userId = req.user.entity.uuid;
@@ -97,8 +92,6 @@ export class HomeController {
       const modifications =
         await this.modificationService.getBy(assignedFindOptions);
 
-      const covenants = await this.covenantService.getBy(assignedFindOptions);
-
       const noticeOfIntents =
         await this.noticeOfIntentService.getBy(assignedFindOptions);
 
@@ -120,7 +113,6 @@ export class HomeController {
           await this.reconsiderationService.mapToDtos(reconsiderations),
         planningReferrals: [],
         modifications: await this.modificationService.mapToDtos(modifications),
-        covenants: await this.covenantService.mapToDtos(covenants),
         notifications: await this.notificationService.mapToDtos(notifications),
       };
     } else {
@@ -131,7 +123,6 @@ export class HomeController {
         reconsiderations: [],
         planningReferrals: [],
         modifications: [],
-        covenants: [],
         notifications: [],
       };
     }
@@ -170,10 +161,6 @@ export class HomeController {
       modificationsWithSubtasks,
     );
 
-    const covenantWithSubtasks =
-      await this.covenantService.getWithIncompleteSubtaskByType(subtaskType);
-    const covenantReviewSubtasks = this.mapCovenantToDtos(covenantWithSubtasks);
-
     const noiSubtasks =
       await this.noticeOfIntentService.getWithIncompleteSubtaskByType(
         subtaskType,
@@ -203,7 +190,6 @@ export class HomeController {
       ...applicationSubtasks,
       ...reconSubtasks,
       ...modificationSubtasks,
-      ...covenantReviewSubtasks,
       ...noiModificationsSubtasks,
       ...notificationSubtasks,
     ];
@@ -283,26 +269,6 @@ export class HomeController {
     //     });
     //   }
     // }
-    return result;
-  }
-
-  private mapCovenantToDtos(covenants: Covenant[]) {
-    const result: HomepageSubtaskDTO[] = [];
-    for (const covenant of covenants) {
-      for (const subtask of covenant.card.subtasks) {
-        result.push({
-          type: subtask.type,
-          createdAt: subtask.createdAt.getTime(),
-          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
-          uuid: subtask.uuid,
-          card: this.mapper.map(covenant.card, Card, CardDto),
-          completedAt: subtask.completedAt?.getTime(),
-          paused: false,
-          title: `${covenant.fileNumber} (${covenant.applicant})`,
-          parentType: PARENT_TYPE.COVENANT,
-        });
-      }
-    }
     return result;
   }
 
