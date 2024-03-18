@@ -7,6 +7,7 @@ import { NotificationSubmissionService } from '../../../services/notification/no
 import {
   NOTIFICATION_STATUS,
   NotificationDto,
+  NotificationSubmissionDetailedDto,
   UpdateNotificationDto,
 } from '../../../services/notification/notification.dto';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -24,13 +25,14 @@ export class IntakeComponent implements OnInit {
   contactEmail: string | null = null;
   responseSent = false;
   responseDate: number | null = null;
+  private submission: NotificationSubmissionDetailedDto | undefined;
 
   constructor(
     private notificationDetailService: NotificationDetailService,
     private notificationSubmissionService: NotificationSubmissionService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private confirmationDialogService: ConfirmationDialogService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +79,8 @@ export class IntakeComponent implements OnInit {
               this.toastService.showSuccessToast('Notification updated');
             }
           }
+        } else if (this.submission) {
+          this.contactEmail = this.submission.contactEmail;
         }
       });
   }
@@ -111,11 +115,11 @@ export class IntakeComponent implements OnInit {
   }
 
   private async loadSubmission(fileNumber: string) {
-    const submission = await this.notificationSubmissionService.fetchSubmission(fileNumber);
-    this.contactEmail = submission.contactEmail;
+    this.submission = await this.notificationSubmissionService.fetchSubmission(fileNumber);
+    this.contactEmail = this.submission.contactEmail;
 
-    this.responseSent = submission.status.code === NOTIFICATION_STATUS.ALC_RESPONSE;
-    this.responseDate = submission.lastStatusUpdate;
+    this.responseSent = this.submission.status.code === NOTIFICATION_STATUS.ALC_RESPONSE;
+    this.responseDate = this.submission.lastStatusUpdate;
   }
 
   async resendResponse() {
