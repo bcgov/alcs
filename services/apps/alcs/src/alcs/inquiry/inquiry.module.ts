@@ -23,7 +23,7 @@ import { DocumentCode } from '../../document/document-code.entity';
       InquiryType,
       InquiryDocument,
       InquiryParcel,
-      DocumentCode
+      DocumentCode,
     ]),
     CardModule,
     FileNumberModule,

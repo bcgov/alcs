@@ -88,7 +88,7 @@ export class InquiryDocumentController {
     return this.mapper.map(savedDocument, InquiryDocument, InquiryDocumentDto);
   }
 
-  @Get('/inquiry/:fileNumber')
+  @Get('/inquiry/:fileNumber/inquiryDocuments')
   @UserRoles(...ANY_AUTH_ROLE)
   async listDocuments(
     @Param('fileNumber') fileNumber: string,
