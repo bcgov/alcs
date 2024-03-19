@@ -3,14 +3,12 @@ import { ApplicationModificationDto } from '../../../services/application/applic
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../../../services/notification/notification.dto';
-import { PlanningReferralDto, PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
+import { PlanningReferralDto } from '../../../services/planning-review/planning-review.dto';
 import {
-  COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
   NOTIFICATION_LABEL,
   PLANNING_TYPE_LABEL,
@@ -27,7 +25,7 @@ import { AssignedToMeFile } from './assigned-table/assigned-table.component';
 export class AssignedComponent implements OnInit {
   noticeOfIntents: AssignedToMeFile[] = [];
   applications: AssignedToMeFile[] = [];
-  nonApplications: AssignedToMeFile[] = [];
+  planningReferrals: AssignedToMeFile[] = [];
   notifications: AssignedToMeFile[] = [];
   totalFiles = 0;
 
@@ -47,7 +45,6 @@ export class AssignedComponent implements OnInit {
       reconsiderations,
       planningReferrals,
       modifications,
-      covenants,
       noticeOfIntents,
       noticeOfIntentModifications,
       notifications,
@@ -98,22 +95,14 @@ export class AssignedComponent implements OnInit {
         .sort((a, b) => a.date! - b.date!),
     ];
 
-    this.nonApplications = [
+    this.planningReferrals = [
       ...planningReferrals
         .filter((r) => r.card.highPriority)
         .map((r) => this.mapPlanning(r))
         .sort((a, b) => a.date! - b.date!),
-      ...covenants
-        .filter((r) => r.card.highPriority)
-        .map((r) => this.mapCovenant(r))
-        .sort((a, b) => a.date! - b.date!),
       ...planningReferrals
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapPlanning(r))
-        .sort((a, b) => a.date! - b.date!),
-      ...covenants
-        .filter((r) => !r.card.highPriority)
-        .map((r) => this.mapCovenant(r))
         .sort((a, b) => a.date! - b.date!),
     ];
 
@@ -129,18 +118,10 @@ export class AssignedComponent implements OnInit {
     ];
 
     this.totalFiles =
-      this.applications.length + this.nonApplications.length + this.noticeOfIntents.length + this.notifications.length;
-  }
-
-  private mapCovenant(c: CovenantDto): AssignedToMeFile {
-    return {
-      title: `${c.fileNumber} (${c.applicant})`,
-      type: c.card.type,
-      date: c.card.createdAt,
-      card: c.card,
-      highPriority: c.card.highPriority,
-      labels: [COVENANT_TYPE_LABEL],
-    };
+      this.applications.length +
+      this.planningReferrals.length +
+      this.noticeOfIntents.length +
+      this.notifications.length;
   }
 
   private mapPlanning(p: PlanningReferralDto): AssignedToMeFile {

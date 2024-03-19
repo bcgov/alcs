@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../alcs/application/application.entity';
-import { Covenant } from '../alcs/covenant/covenant.entity';
 import { NoticeOfIntent } from '../alcs/notice-of-intent/notice-of-intent.entity';
+import { PlanningReview } from '../alcs/planning-review/planning-review.entity';
 import { FILE_NUMBER_SEQUENCE } from './file-number.constants';
 
 @Injectable()
@@ -12,33 +12,33 @@ export class FileNumberService {
   constructor(
     @InjectRepository(Application)
     private applicationRepo: Repository<Application>,
-    @InjectRepository(Covenant)
-    private covenantRepo: Repository<Covenant>,
     @InjectRepository(NoticeOfIntent)
     private noticeOfIntentRepo: Repository<NoticeOfIntent>,
+    @InjectRepository(PlanningReview)
+    private planningReviewRepo: Repository<PlanningReview>,
   ) {}
 
   async checkValidFileNumber(fileNumber: string) {
-    const applicationExists = await this.applicationRepo.exist({
+    const applicationExists = await this.applicationRepo.exists({
       where: {
         fileNumber,
       },
     });
 
-    const covenantExists = await this.covenantRepo.exist({
+    const noticeOfIntentExists = await this.noticeOfIntentRepo.exists({
       where: {
         fileNumber,
       },
     });
 
-    const noticeOfIntentExists = await this.noticeOfIntentRepo.exist({
+    const planningReviewExists = await this.planningReviewRepo.exists({
       where: {
         fileNumber,
       },
     });
-    if (applicationExists || covenantExists || noticeOfIntentExists) {
+    if (applicationExists || planningReviewExists || noticeOfIntentExists) {
       throw new ServiceValidationException(
-        `Application/Covenant/NOI already exists with File ID ${fileNumber}`,
+        `Application/Planning Review/NOI already exists with File ID ${fileNumber}`,
       );
     }
     return true;

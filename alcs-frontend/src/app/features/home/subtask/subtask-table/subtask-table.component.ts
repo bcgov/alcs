@@ -5,7 +5,6 @@ import { CardSubtaskService } from '../../../../services/card/card-subtask/card-
 import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import {
-  COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
   NOTIFICATION_LABEL,
   PLANNING_TYPE_LABEL,
@@ -22,10 +21,8 @@ export class SubtaskTableComponent {
   @Input() subtasks: HomepageSubtaskDto[] = [];
   @Input() users: AssigneeDto[] = [];
 
-
   MODIFICATION_TYPE_LABEL = MODIFICATION_TYPE_LABEL;
   PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL;
-  COVENANT_TYPE_LABEL = COVENANT_TYPE_LABEL;
   RECON_TYPE_LABEL = RECON_TYPE_LABEL;
   NOTIFICATION_LABEL = NOTIFICATION_LABEL;
 
@@ -43,7 +40,7 @@ export class SubtaskTableComponent {
     const columns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
 
     // Check if any file has type 'NOTI'
-    const hasNoti = this.subtasks.some(task => task.parentType === 'notification');
+    const hasNoti = this.subtasks.some((task) => task.parentType === 'notification');
     // If 'NOTI' type exists, remove 'activeDays' column
     if (hasNoti) {
       const index = columns.indexOf('activeDays');

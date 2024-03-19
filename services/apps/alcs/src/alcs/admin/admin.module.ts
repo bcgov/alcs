@@ -6,7 +6,6 @@ import { ApplicationDecisionMakerCode } from '../application-decision/applicatio
 import { ApplicationModule } from '../application/application.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
-import { CovenantModule } from '../covenant/covenant.module';
 import { ApplicationCeoCriterionCode } from '../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
 import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
@@ -48,7 +47,6 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     NoticeOfIntentDecisionModule,
     forwardRef(() => ApplicationDecisionModule),
     forwardRef(() => PlanningReviewModule),
-    forwardRef(() => CovenantModule),
     NoticeOfIntentModule,
     NoticeOfIntentDecisionModule,
     CardModule,

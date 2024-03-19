@@ -17,8 +17,6 @@ import { AppModificationDialogComponent } from './dialogs/app-modification/app-m
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
-import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
-import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
@@ -56,8 +54,6 @@ const routes: Routes = [
     PlanningReviewDialogComponent,
     CreateAppModificationDialogComponent,
     AppModificationDialogComponent,
-    CovenantDialogComponent,
-    CreateCovenantDialogComponent,
     NoticeOfIntentDialogComponent,
     CreateNoticeOfIntentDialogComponent,
     CreateNoiModificationDialogComponent,

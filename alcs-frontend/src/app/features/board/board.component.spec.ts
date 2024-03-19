@@ -17,15 +17,12 @@ import { BoardDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
-import { CovenantDto } from '../../services/covenant/covenant.dto';
-import { CovenantService } from '../../services/covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { NotificationService } from '../../services/notification/notification.service';
 import { PlanningReferralService } from '../../services/planning-review/planning-referral.service';
-import { PlanningReferralDto, PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
-import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
+import { PlanningReferralDto } from '../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import { CardType } from '../../shared/card/card.component';
 import { BoardComponent } from './board.component';
@@ -43,7 +40,6 @@ describe('BoardComponent', () => {
   let reconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let planningReferralService: DeepMocked<PlanningReferralService>;
   let modificationService: DeepMocked<ApplicationModificationService>;
-  let covenantService: DeepMocked<CovenantService>;
   let titleService: DeepMocked<Title>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
@@ -95,7 +91,6 @@ describe('BoardComponent', () => {
     boardService.fetchBoardWithCards.mockResolvedValue({
       board: mockDetailBoard,
       applications: [],
-      covenants: [],
       modifications: [],
       planningReferrals: [],
       reconsiderations: [],
@@ -112,7 +107,6 @@ describe('BoardComponent', () => {
     reconsiderationService = createMock();
     planningReferralService = createMock();
     modificationService = createMock();
-    covenantService = createMock();
     titleService = createMock();
     noticeOfIntentService = createMock();
     noticeOfIntentModificationService = createMock();
@@ -171,10 +165,6 @@ describe('BoardComponent', () => {
           useValue: modificationService,
         },
         {
-          provide: CovenantService,
-          useValue: covenantService,
-        },
-        {
           provide: NoticeOfIntentService,
           useValue: noticeOfIntentService,
         },
@@ -222,7 +212,6 @@ describe('BoardComponent', () => {
     boardService.fetchBoardWithCards.mockResolvedValue({
       board: mockDetailBoard,
       applications: [mockApplication],
-      covenants: [],
       modifications: [],
       planningReferrals: [],
       reconsiderations: [],
@@ -243,7 +232,6 @@ describe('BoardComponent', () => {
     boardService.fetchBoardWithCards.mockResolvedValue({
       board: mockDetailBoard,
       applications: [],
-      covenants: [],
       modifications: [],
       planningReferrals: [],
       reconsiderations: [mockRecon],
@@ -286,7 +274,6 @@ describe('BoardComponent', () => {
     boardService.fetchBoardWithCards.mockResolvedValue({
       board: mockDetailBoard,
       applications: [mockApplication, highPriorityApplication, highActiveDays],
-      covenants: [],
       modifications: [],
       planningReferrals: [],
       reconsiderations: [],
@@ -353,22 +340,6 @@ describe('BoardComponent', () => {
     expect(dialog.open).toHaveBeenCalledTimes(1);
   });
 
-  it('should load covenant and open dialog when url is set', async () => {
-    covenantService.fetchByCardUuid.mockResolvedValue({} as CovenantDto);
-
-    queryParamMapEmitter.next(
-      new Map([
-        ['card', 'app-id'],
-        ['type', CardType.COV],
-      ]),
-    );
-
-    await sleep(1);
-
-    expect(covenantService.fetchByCardUuid).toHaveBeenCalledTimes(1);
-    expect(dialog.open).toHaveBeenCalledTimes(1);
-  });
-
   it('should load notification and open dialog when url is set', async () => {
     notificationService.fetchByCardUuid.mockResolvedValue({} as NotificationDto);
 
@@ -386,18 +357,18 @@ describe('BoardComponent', () => {
   });
 
   it('should show an error toast if fetching data fails', async () => {
-    covenantService.fetchByCardUuid.mockRejectedValue({});
+    notificationService.fetchByCardUuid.mockRejectedValue({});
 
     queryParamMapEmitter.next(
       new Map([
         ['card', 'app-id'],
-        ['type', CardType.COV],
+        ['type', CardType.NOTIFICATION],
       ]),
     );
 
     await sleep(1);
 
-    expect(covenantService.fetchByCardUuid).toHaveBeenCalledTimes(1);
+    expect(notificationService.fetchByCardUuid).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledTimes(0);
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });

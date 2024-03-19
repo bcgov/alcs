@@ -84,8 +84,8 @@ export class NoticeOfIntentSearchTableComponent {
     window.open(url, '_blank');
   }
 
-  private mapNoticeOfIntent(applications: NoticeOfIntentSearchResultDto[]): SearchResult[] {
-    return applications.map((e) => {
+  private mapNoticeOfIntent(noticesOfIntent: NoticeOfIntentSearchResultDto[]): SearchResult[] {
+    return noticesOfIntent.map((e) => {
       const status = this.statuses.find((st) => st.code === e.status);
 
       return {

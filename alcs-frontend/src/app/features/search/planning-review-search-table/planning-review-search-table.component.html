@@ -20,23 +20,14 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
 
       <td mat-cell *matCellDef="let element">
-        <app-application-type-pill
-          [useShortLabel]="true"
-          *ngIf="element.class === 'PLAN'"
-          [type]="PLANNING_TYPE_LABEL"
-        />
-        <app-application-type-pill
-          [useShortLabel]="true"
-          *ngIf="element.class === 'COV'"
-          [type]="COVENANT_TYPE_LABEL"
-        />
+        <app-application-type-pill [useShortLabel]="true" [type]="element.type" />
       </td>
     </ng-container>
 
     <ng-container matColumnDef="applicant">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Document Name</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.applicant | emptyColumn }}
+        {{ element.documentName | emptyColumn }}
       </td>
     </ng-container>
 
@@ -44,6 +35,14 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Local/First Nation Government</th>
       <td mat-cell *matCellDef="let element">
         {{ element.localGovernmentName | emptyColumn }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let element">
+        <app-application-type-pill *ngIf="element.open" [type]="OPEN_TYPE" />
+        <app-application-type-pill *ngIf="!element.open" [type]="CLOSED_TYPE" />
       </td>
     </ng-container>
 

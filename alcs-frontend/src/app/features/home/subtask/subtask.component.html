@@ -9,9 +9,9 @@
     <div class="subheading2">Applications</div>
     <app-subtask-table [subtasks]="applicationSubtasks" [users]="users"></app-subtask-table>
   </section>
-  <section *ngIf="nonApplicationSubtasks.length && showAppAndNonApp">
+  <section *ngIf="planningReviewSubtasks.length && showAppAndNonApp">
     <div class="subheading2">Non-Applications</div>
-    <app-subtask-table [subtasks]="nonApplicationSubtasks" [users]="users"></app-subtask-table>
+    <app-subtask-table [subtasks]="planningReviewSubtasks" [users]="users"></app-subtask-table>
   </section>
   <section *ngIf="notificationSubtasks.length">
     <div class="subheading2">Notifications</div>

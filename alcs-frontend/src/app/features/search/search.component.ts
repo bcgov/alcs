@@ -20,9 +20,9 @@ import { NotificationSubmissionStatusDto } from '../../services/notification/not
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
-  NonApplicationSearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
+  PlanningReviewSearchResultDto,
   SearchRequestDto,
 } from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
@@ -53,8 +53,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
   noticeOfIntentTotal = 0;
 
-  nonApplications: NonApplicationSearchResultDto[] = [];
-  nonApplicationsTotal = 0;
+  planningReviews: PlanningReviewSearchResultDto[] = [];
+  planningReviewsTotal = 0;
 
   notifications: NotificationSearchResultDto[] = [];
   notificationTotal = 0;
@@ -300,12 +300,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.noticeOfIntentTotal = result?.total ?? 0;
   }
 
-  async onNonApplicationSearch() {
+  async onPlanningReviewSearch() {
     const searchParams = this.getSearchParams();
-    const result = await this.searchService.advancedSearchNonApplicationsFetch(searchParams);
+    const result = await this.searchService.advancedSearchPlanningReviewsFetch(searchParams);
 
-    this.nonApplications = result?.data ?? [];
-    this.nonApplicationsTotal = result?.total ?? 0;
+    this.planningReviews = result?.data ?? [];
+    this.planningReviewsTotal = result?.total ?? 0;
   }
 
   async onNotificationSearch() {
@@ -330,7 +330,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         await this.onNoticeOfIntentSearch();
         break;
       case 'NONAPP':
-        await this.onNonApplicationSearch();
+        await this.onPlanningReviewSearch();
         break;
       case 'NOTI':
         await this.onNotificationSearch();
@@ -364,12 +364,12 @@ export class SearchComponent implements OnInit, OnDestroy {
       searchResult = {
         applications: [],
         noticeOfIntents: [],
-        nonApplications: [],
+        planningReviews: [],
         notifications: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
-        totalNonApplications: 0,
         totalNotifications: 0,
+        totalPlanningReviews: 0,
       };
     }
 
@@ -379,8 +379,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
     this.noticeOfIntents = searchResult.noticeOfIntents;
 
-    this.nonApplicationsTotal = searchResult.totalNonApplications;
-    this.nonApplications = searchResult.nonApplications;
+    this.planningReviewsTotal = searchResult.totalPlanningReviews;
+    this.planningReviews = searchResult.planningReviews;
 
     this.notifications = searchResult.notifications;
     this.notificationTotal = searchResult.totalNotifications;
@@ -391,7 +391,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     const searchCounts = [
       this.applicationTotal,
       this.noticeOfIntentTotal,
-      this.nonApplicationsTotal,
+      this.planningReviewsTotal,
       this.notificationTotal,
     ];
 

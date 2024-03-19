@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { Application } from '../application/application.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { Covenant } from '../covenant/covenant.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
@@ -14,6 +13,8 @@ import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-o
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
 import { NotificationSubmissionSearchView } from './notification/notification-search-view.entity';
+import { PlanningReviewAdvancedSearchService } from './planning-review/planning-review-advanced-search.service';
+import { PlanningReviewSearchView } from './planning-review/planning-review-search-view.entity';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
@@ -24,12 +25,12 @@ import { SearchService } from './search.service';
       ApplicationType,
       NoticeOfIntent,
       PlanningReview,
-      Covenant,
       Notification,
       LocalGovernment,
       ApplicationSubmissionSearchView,
       NoticeOfIntentSubmissionSearchView,
       NotificationSubmissionSearchView,
+      PlanningReviewSearchView,
     ]),
   ],
   providers: [
@@ -38,6 +39,7 @@ import { SearchService } from './search.service';
     ApplicationAdvancedSearchService,
     NoticeOfIntentAdvancedSearchService,
     NotificationAdvancedSearchService,
+    PlanningReviewAdvancedSearchService,
   ],
   controllers: [SearchController],
 })

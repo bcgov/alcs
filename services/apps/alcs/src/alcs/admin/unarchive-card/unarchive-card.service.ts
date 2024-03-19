@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ApplicationModificationService } from '../../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../../application/application.service';
-import { CovenantService } from '../../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../../notification/notification.service';
@@ -14,7 +13,6 @@ export class UnarchiveCardService {
     private applicationService: ApplicationService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
@@ -41,31 +39,10 @@ export class UnarchiveCardService {
     await this.fetchAndMapRecons(fileId, result);
     await this.fetchAndMapPlanningReferrals(fileId, result);
     await this.fetchAndMapModifications(fileId, result);
-    await this.fetchAndMapCovenants(fileId, result);
     await this.fetchAndMapNOIs(fileId, result);
     await this.fetchAndMapNotifications(fileId, result);
 
     return result;
-  }
-
-  private async fetchAndMapCovenants(
-    fileId: string,
-    result: {
-      cardUuid: string;
-      type: string;
-      status: string;
-      createdAt: number;
-    }[],
-  ) {
-    const covenants = await this.covenantService.getDeletedCards(fileId);
-    for (const covenant of covenants) {
-      result.push({
-        cardUuid: covenant.cardUuid,
-        createdAt: covenant.auditCreatedAt.getTime(),
-        type: 'Covenant',
-        status: covenant.card!.status.label,
-      });
-    }
   }
 
   private async fetchAndMapModifications(

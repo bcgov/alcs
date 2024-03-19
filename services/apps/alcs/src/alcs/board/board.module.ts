@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardAutomapperProfile } from '../../common/automapper/board.automapper.profile';
 import { ApplicationModule } from '../application/application.module';
 import { CardModule } from '../card/card.module';
-import { CovenantModule } from '../covenant/covenant.module';
 import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
 import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentModule } from '../notice-of-intent/notice-of-intent.module';
@@ -21,7 +20,6 @@ import { BoardService } from './board.service';
     CardModule,
     forwardRef(() => ApplicationDecisionModule),
     PlanningReviewModule,
-    forwardRef(() => CovenantModule),
     forwardRef(() => NoticeOfIntentModule),
     NoticeOfIntentDecisionModule,
     NotificationModule,
