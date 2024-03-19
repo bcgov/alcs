@@ -36,10 +36,11 @@
   <ng-container matColumnDef="visibilityFlags">
     <th mat-header-cell *matHeaderCellDef>
       Visibility
-      <div class="subheading">* = Pending</div>
     </th>
     <td mat-cell *matCellDef="let element">
-      <span matTooltip="Commissioner">C<span *ngIf="!areDocumentsReleased">*</span></span>
+      <span matTooltip="Not Visible to A, G, C, or P">
+        <mat-icon>visibility_off</mat-icon>
+      </span>
     </td>
   </ng-container>
 
