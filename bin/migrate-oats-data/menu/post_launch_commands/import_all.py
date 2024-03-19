@@ -27,6 +27,7 @@ def import_all(console, args):
         import_documents(batch_size=import_batch_size)
 
         console.log("Process SRW Updates")
+        # These are updates that need to happen after the SRW document import
         srw_survey_plan_update(batch_size=import_batch_size)
 
         console.log("Done")
