@@ -19,13 +19,13 @@ export class AddedCommentsAndTypesToInquiries1710791560891
     await queryRunner.query(
       `
         INSERT INTO alcs.inquiry_type (audit_created_by,"label",code,description,short_label,background_color,text_color,html_description) VALUES
-        ('migration_seed','General Correspondence','GENC','TBD GENC','GEN','#0B5656','#FFFFFF',''),
-        ('migration_seed','Inquiry for Investigation','INVN','TBD INVN','INV','#8E7F04','#FFFFFF',''),
-        ('migration_seed','Subdivision by Approving Officer','SAOF','TBD SAOF','SAO','#B07213','#FFFFFF',''),
-        ('migration_seed','Referral','REFR','TBD REFR','REF','#1D3251','#FFFFFF',''),
+        ('migration_seed','General Correspondence','GENC','Inquiries or correspondence that aren’t property specific or don’t fit other inquiry types','GEN','#0B5656','#FFFFFF','Inquiries or correspondence that aren’t property specific or don’t fit other inquiry types'),
+        ('migration_seed','Inquiry for Investigation','INVN','Requests to confirm if a use is permitted or not, generally property specific','INV','#8E7F04','#FFFFFF','Requests to confirm if a use is permitted or not, generally property specific'),
+        ('migration_seed','Subdivision by Approving Officer','SAOF','Submission of Subdivision Plans approved by an Approving Officer under Section 3 of the ALR General Regulation.','SAO','#B07213','#FFFFFF','Submission of Subdivision Plans approved by an Approving Officer under Section 3 of the ALR General Regulation.'),
+        ('migration_seed','Referral','REFR','A request for ALC comment on a Ministry referral or L/FNG property specific bylaw or other planning document request that is not a Planning Review – often based on an ALC Application approval.','REF','#1D3251','#FFFFFF','A request for ALC comment on a Ministry referral or L/FNG property specific bylaw or other planning document request that is not a Planning Review – often based on an ALC Application approval.'),
         ('migration_seed','Area of Interest','AOIN','TBD AOIN','AOI','#6A080B','#FFFFFF',''),
-        ('migration_seed','Parcel Under 2 Acres','P2AC','TBD P2AC','P2A','#752053','#FFFFFF',''),
-        ('migration_seed','ALR Boundary Definition','ABDF','TBD ABDF','ABD','#49701E','#FFFFFF','');
+        ('migration_seed','Parcel Under 2 Acres','P2AC','Requests to confirm if a parcel meets ALCA Section 23(1) exception requirements.','P2A','#752053','#FFFFFF','Requests to confirm if a parcel meets ALCA Section 23(1) exception requirements.'),
+        ('migration_seed','ALR Boundary Definition','ABDF','Requests to confirm the legal ALR boundary. E.g. Is the ALR mapping correct or letters confirming ALC interests are unaffected for uses/subdivisions on the non-ALR portion of partial ALR properties.','ABD','#49701E','#FFFFFF','Requests to confirm the legal ALR boundary. E.g. Is the ALR mapping correct or letters confirming ALC interests are unaffected for uses/subdivisions on the non-ALR portion of partial ALR properties.');
       `,
     );
 
