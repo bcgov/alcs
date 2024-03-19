@@ -30,6 +30,8 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { Notification } from '../notification/notification.entity';
 import { NotificationService } from '../notification/notification.service';
+import { PlanningReferral } from '../planning-review/planning-referral/planning-referral.entity';
+import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { HomeController } from './home.controller';
 
 describe('HomeController', () => {
@@ -42,6 +44,7 @@ describe('HomeController', () => {
   let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let mockNoticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let mockNotificationService: DeepMocked<NotificationService>;
+  let mockPlanningReferralService: DeepMocked<PlanningReferralService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -52,6 +55,7 @@ describe('HomeController', () => {
     mockNoticeOfIntentService = createMock();
     mockNoticeOfIntentModificationService = createMock();
     mockNotificationService = createMock();
+    mockPlanningReferralService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -101,6 +105,10 @@ describe('HomeController', () => {
           provide: NotificationService,
           useValue: mockNotificationService,
         },
+        {
+          provide: PlanningReferralService,
+          useValue: mockPlanningReferralService,
+        },
         ApplicationProfile,
         ApplicationSubtaskProfile,
         UserProfile,
@@ -124,6 +132,8 @@ describe('HomeController', () => {
     mockNoticeOfIntentModificationService.mapToDtos.mockResolvedValue([]);
     mockNotificationService.getBy.mockResolvedValue([]);
     mockNotificationService.mapToDtos.mockResolvedValue([]);
+    mockPlanningReferralService.getBy.mockResolvedValue([]);
+    mockPlanningReferralService.mapToDtos.mockResolvedValue([]);
 
     mockNoticeOfIntentService.getTimes.mockResolvedValue(new Map());
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
@@ -147,6 +157,9 @@ describe('HomeController', () => {
       [],
     );
     mockNotificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+      [],
+    );
+    mockPlanningReferralService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
   });

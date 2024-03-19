@@ -101,7 +101,12 @@ export class PlanningReviewService {
       },
       relations: {
         ...this.DEFAULT_RELATIONS,
-        referrals: true,
+        referrals: {
+          card: {
+            board: true,
+            type: true,
+          },
+        },
       },
       order: {
         referrals: {
