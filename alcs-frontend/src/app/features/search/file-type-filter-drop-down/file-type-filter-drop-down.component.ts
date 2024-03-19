@@ -14,7 +14,7 @@ import {
   templateUrl: './file-type-filter-drop-down.component.html',
   styleUrls: ['./file-type-filter-drop-down.component.scss'],
 })
-export class FileTypeFilterDropDownComponent implements AfterViewInit {
+export class FileTypeFilterDropDownComponent {
   hasItemsSelected = false;
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<FlatTreeNode, TreeNode>();
@@ -170,10 +170,6 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     this.componentTypeControl.reset();
     this.checklistSelection.selected.forEach((selectedItem) => this.checklistSelection.deselect(selectedItem));
     this.hasItemsSelected = false;
-  }
-
-  ngAfterViewInit(): void {
-    //this.treeControl.expandAll();
   }
 
   clear() {
