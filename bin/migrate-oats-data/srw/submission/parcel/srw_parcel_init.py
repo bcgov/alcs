@@ -112,6 +112,12 @@ def _map_data(row, insert_index):
 
 
 def _map_ownership_type_code(data):
+    if data.get("property_owner_type_code"):
+        ownership_type_code = data["property_owner_type_code"]
+        if ownership_type_code == OatsToAlcsOwnershipType.FEE.name:
+            return OatsToAlcsOwnershipType.FEE.value
+        if ownership_type_code == OatsToAlcsOwnershipType.CROWN.name:
+            return OatsToAlcsOwnershipType.CROWN.value
     return (
         OatsToAlcsOwnershipType.CROWN.value
         if data.get("pin") or not data.get("pid")
