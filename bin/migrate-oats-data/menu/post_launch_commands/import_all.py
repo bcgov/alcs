@@ -2,7 +2,7 @@ from applications.post_launch import process_application_etl
 from noi.post_launch import (
     process_notice_of_intent,
 )
-from srw.post_launch.srw_migration import process_srw
+from srw.post_launch.srw_migration import process_srw, srw_survey_plan_update
 from documents.post_launch.migrate_documents import import_documents
 
 
@@ -25,5 +25,8 @@ def import_all(console, args):
 
         console.log("Processing Documents")
         import_documents(batch_size=import_batch_size)
+
+        console.log("Process SRW Updates")
+        srw_survey_plan_update(batch_size=import_batch_size)
 
         console.log("Done")

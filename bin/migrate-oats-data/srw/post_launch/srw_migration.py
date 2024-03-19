@@ -1,7 +1,10 @@
 from ..srw_base import init_srw_base, clean_initial_srw
 from ..srw_base_update import update_srw_base_fields
 from ..submission.srw_submission_init import init_srw_submissions, clean_srw_submissions
-from ..submission.srw_proposal_fields import process_alcs_srw_proposal_fields
+from ..submission.srw_proposal_fields import (
+    process_alcs_srw_proposal_fields,
+)
+from ..submission.srw_survey_update import srw_survey_plan_update
 from ..submission.parcel.srw_parcel_init import init_srw_parcels, clean_parcels
 from ..submission.transferee.srw_init_transferee import (
     init_srw_parcel_transferee,
@@ -49,6 +52,10 @@ def _process_srw_submission_statuses(batch_size):
     process_alcs_srw_in_progress_status(batch_size)
     process_alcs_srw_response_sent_status(batch_size)
     process_alcs_srw_submitted_to_alc_status(batch_size)
+
+
+def update_srw_survey_plan(batch_size):
+    srw_survey_plan_update(batch_size)
 
 
 def clean_srw():
