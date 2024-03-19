@@ -386,6 +386,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       cardUuid: referral.card.uuid,
       dateReceived: referral.card.createdAt,
       dueDate: referral.dueDate ? new Date(referral.dueDate) : undefined,
+      decisionMeetings: referral.planningReview.meetings,
       showDueDate: true,
     };
   }
