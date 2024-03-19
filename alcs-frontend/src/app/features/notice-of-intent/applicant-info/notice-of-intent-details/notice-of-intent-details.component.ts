@@ -47,8 +47,8 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnChanges, OnDest
     window.location.href = `${environment.portalUrl}/alcs/notice-of-intent/${this.fileNumber}/edit/${step}`;
   }
 
-  async openFile(uuid: string) {
-    await this.noiDocumentService.download(uuid, '');
+  async openFile(file: NoticeOfIntentDocumentDto) {
+    await this.noiDocumentService.download(file.uuid, file.fileName);
   }
 
   private async loadDocuments() {

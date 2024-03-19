@@ -67,4 +67,7 @@ export class PlanningReview extends Base {
 
   @Column({ type: 'timestamptz', nullable: true })
   closedDate: Date | null;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  decisionDate: Date | null;
 }

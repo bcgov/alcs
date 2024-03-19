@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PlanningReviewDetailService } from '../../services/planning-review/planning-review-detail.service';
 import { PlanningReviewDetailedDto } from '../../services/planning-review/planning-review.dto';
+import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
 import { DocumentsComponent } from './documents/documents.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ReferralComponent } from './referrals/referral.component';
@@ -19,6 +20,14 @@ export const childRoutes = [
     menuTitle: 'Referrals',
     icon: 'edit_note',
     component: ReferralComponent,
+  },
+  {
+    path: 'decision',
+    menuTitle: 'Decisions',
+    icon: 'gavel',
+    module: DecisionModule,
+    portalOnly: false,
+    children: decisionChildRoutes,
   },
   {
     path: 'documents',

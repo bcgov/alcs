@@ -16,6 +16,7 @@ export interface CreatePlanningReviewDto {
 export interface PlanningReviewDto {
   uuid: string;
   fileNumber: string;
+  decisionDate?: number;
   legacyId: string | null;
   open: boolean;
   localGovernment: ApplicationLocalGovernmentDto;
