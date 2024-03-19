@@ -3,7 +3,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { Inquiry } from '../inquiry.entity';
 
-@Entity({ comment: '' })
+@Entity({ comment: 'Parcels associated with the inquiries' })
 export class InquiryParcel extends Base {
   constructor(data?: Partial<InquiryParcel>) {
     super();

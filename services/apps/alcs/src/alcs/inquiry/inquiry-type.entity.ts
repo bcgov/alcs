@@ -2,7 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import { Column, Entity } from 'typeorm';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
 
-@Entity({ comment: '' })
+@Entity({ comment: 'Code table for possible inquiry types' })
 export class InquiryType extends BaseCodeEntity {
   constructor(data?: Partial<InquiryType>) {
     super();

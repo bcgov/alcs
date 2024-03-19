@@ -6,18 +6,21 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
+import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
 import { User } from '../../user/user.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
+import { InquiryParcel } from './inquiry-parcel/inquiry-parcel.entity';
 import { InquiryType } from './inquiry-type.entity';
-import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
 
 @Entity({
-  comment: '',
+  comment:
+    'Inquiries from the public or other agencies that require a response from the ALC.',
 })
 export class Inquiry extends Base {
   constructor(data?: Partial<Inquiry>) {
@@ -37,7 +40,7 @@ export class Inquiry extends Base {
   summary: string;
 
   @Column({ type: 'timestamptz' })
-  submittedToAlcDate: Date;
+  dateSubmittedToAlc: Date;
 
   @Column({ type: 'varchar', nullable: true })
   inquirerFirstName?: string | null;
@@ -92,4 +95,8 @@ export class Inquiry extends Base {
   @JoinColumn()
   @Type(() => Card)
   card: Card;
+
+  @AutoMap(() => InquiryParcel)
+  @OneToMany(() => InquiryParcel, (incParcel) => incParcel.inquiry)
+  parcels: InquiryParcel[];
 }

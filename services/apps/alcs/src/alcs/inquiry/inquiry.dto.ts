@@ -1,0 +1,176 @@
+import { AutoMap } from 'automapper-classes';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+import { LocalGovernmentDto } from '../local-government/local-government.dto';
+import { InquiryParcelCreateDto } from './inquiry-parcel/inquiry-parcel.dto';
+
+export class InquiryTypeDto extends BaseCodeDto {
+  @AutoMap()
+  shortLabel: string;
+
+  @AutoMap()
+  backgroundColor: string;
+
+  @AutoMap()
+  textColor: string;
+}
+
+export class CreateInquiryDto {
+  @IsString()
+  @IsNotEmpty()
+  summary: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  submittedToAlcDate: number;
+
+  @IsString()
+  @IsNotEmpty()
+  localGovernmentUuid: string;
+
+  @IsString()
+  @IsNotEmpty()
+  typeCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  regionCode: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerFirstName?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerLastName?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerOrganization?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerPhone?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerEmail?: string;
+
+  @IsOptional()
+  @Type(() => InquiryParcelCreateDto)
+  parcels?: InquiryParcelCreateDto[];
+}
+
+export class InquiryDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  summary: string;
+
+  @AutoMap()
+  dateSubmittedToAlc: number;
+
+  @AutoMap()
+  localGovernmentUuid: string;
+
+  @AutoMap()
+  typeCode: string;
+
+  @AutoMap()
+  regionCode: string;
+
+  @AutoMap()
+  inquirerFirstName?: string;
+
+  @AutoMap()
+  inquirerLastName?: string;
+
+  @AutoMap()
+  inquirerOrganization?: string;
+
+  @AutoMap()
+  inquirerPhone?: string;
+
+  @AutoMap()
+  inquirerEmail?: string;
+
+  @Type(() => InquiryParcelCreateDto)
+  parcels?: InquiryParcelCreateDto[];
+
+  @AutoMap(() => LocalGovernmentDto)
+  localGovernment: LocalGovernmentDto;
+
+  @AutoMap(() => ApplicationRegionDto)
+  region: ApplicationRegionDto;
+}
+
+export class UpdateInquiryDto {
+  @IsString()
+  @IsNotEmpty()
+  uuid: string;
+
+  @IsString()
+  @IsNotEmpty()
+  summary: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  dateSubmittedToAlc: number;
+
+  @IsString()
+  @IsNotEmpty()
+  typeCode: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerFirstName?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerLastName?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerOrganization?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerPhone?: string;
+
+  @IsString()
+  @IsOptional()
+  inquirerEmail?: string;
+
+  @IsOptional()
+  @Type(() => InquiryParcelCreateDto)
+  parcels?: InquiryParcelCreateDto[];
+}
+
+export class CreateInquiryServiceDto {
+  fileNumber: string;
+
+  summary: string;
+
+  dateSubmittedToAlc: Date;
+
+  localGovernmentUuid: string;
+
+  typeCode: string;
+
+  regionCode: string;
+
+  inquirerFirstName?: string;
+
+  inquirerLastName?: string;
+
+  inquirerOrganization?: string;
+
+  inquirerPhone?: string;
+
+  inquirerEmail?: string;
+
+  parcels?: InquiryParcelCreateDto[];
+}
