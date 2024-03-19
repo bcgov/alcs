@@ -13,10 +13,6 @@ import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
 import { Inquiry } from '../inquiry.entity';
 
-export enum PR_VISIBILITY_FLAG {
-  COMMISSIONER = 'C',
-}
-
 @Entity({
   comment: 'Stores inquiry documents',
 })

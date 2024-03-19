@@ -15,7 +15,7 @@ import { InquiryDocumentController } from './inquiry-document.controller';
 import { InquiryDocument } from './inquiry-document.entity';
 import { InquiryDocumentService } from './inquiry-document.service';
 
-describe('NotificationDocumentController', () => {
+describe('InquiryDocumentController', () => {
   let controller: InquiryDocumentController;
   let inquiryDocumentService: DeepMocked<InquiryDocumentService>;
 

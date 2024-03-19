@@ -150,8 +150,6 @@ export class UpdateInquiryDto {
 }
 
 export class CreateInquiryServiceDto {
-  fileNumber: string;
-
   summary: string;
 
   dateSubmittedToAlc: Date;

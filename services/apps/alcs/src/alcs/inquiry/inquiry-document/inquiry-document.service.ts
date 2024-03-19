@@ -89,7 +89,7 @@ export class InquiryDocumentService {
   }) {
     const inquiry = await this.inquiryService.getByFileNumber(fileNumber);
     const document = await this.documentService.createFromBuffer(
-      `notification/${fileNumber}`,
+      `inquiry/${fileNumber}`,
       fileName,
       file,
       mimeType,
@@ -206,29 +206,29 @@ export class InquiryDocumentService {
     source: DOCUMENT_SOURCE;
     user: User;
   }) {
-    const notificationDocument = await this.get(uuid);
+    const inquiryDocument = await this.get(uuid);
 
     if (file) {
       const fileNumber = await this.inquiryService.getFileNumber(
-        notificationDocument.inquiryUuid,
+        inquiryDocument.inquiryUuid,
       );
-      await this.documentService.softRemove(notificationDocument.document);
-      notificationDocument.document = await this.documentService.create(
+      await this.documentService.softRemove(inquiryDocument.document);
+      inquiryDocument.document = await this.documentService.create(
         `inquiry/${fileNumber}`,
         fileName,
         file,
         user,
         source,
-        notificationDocument.document.system as DOCUMENT_SYSTEM,
+        inquiryDocument.document.system as DOCUMENT_SYSTEM,
       );
     } else {
-      await this.documentService.update(notificationDocument.document, {
+      await this.documentService.update(inquiryDocument.document, {
         fileName,
         source,
       });
     }
-    notificationDocument.type = undefined;
-    notificationDocument.typeCode = documentType;
-    return await this.inquiryDocumentRepository.save(notificationDocument);
+    inquiryDocument.type = undefined;
+    inquiryDocument.typeCode = documentType;
+    return await this.inquiryDocumentRepository.save(inquiryDocument);
   }
 }

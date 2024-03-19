@@ -65,8 +65,8 @@ describe('InquiryService', () => {
   });
 
   it('should load the type code and call the repo to save when creating', async () => {
-    const mockCard = {} as Card;
-    const fakeBoard = {} as Board;
+    const mockCard = new Card();
+    const fakeBoard = new Board();
 
     const payload = {
       dateSubmittedToAlc: new Date(0),
@@ -97,18 +97,20 @@ describe('InquiryService', () => {
     );
     mockRepository.save.mockResolvedValue(new Inquiry());
     mockCardService.create.mockResolvedValue(mockCard);
-    mockFileNumberService.checkValidFileNumber.mockResolvedValue(true);
+    mockFileNumberService.generateNextFileNumber.mockResolvedValue('fake_num');
     mockTypeRepository.findOneOrFail.mockResolvedValue(new InquiryType());
 
     const res = await service.create(payload, fakeBoard);
 
-    expect(mockFileNumberService.checkValidFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockFileNumberService.generateNextFileNumber).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockCardService.create).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].card).toBe(mockCard);
     expect(mockTypeRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(res).toEqual(payload);
+    expect(res).toEqual({ ...payload, fileNumber: 'fake_num' });
   });
 
   it('should call through to the repo for get by card', async () => {
@@ -192,7 +194,7 @@ describe('InquiryService', () => {
   });
 
   it('should set values and call save for update', async () => {
-    const mockCard = {} as Card;
+    const mockCard = new Card();
     const fakeFileNumber = 'fake_num';
 
     const payload: UpdateInquiryDto = {

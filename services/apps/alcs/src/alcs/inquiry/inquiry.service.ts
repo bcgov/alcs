@@ -55,7 +55,7 @@ export class InquiryService {
   ) {}
 
   async create(createDto: CreateInquiryServiceDto, board?: Board) {
-    await this.fileNumberService.checkValidFileNumber(createDto.fileNumber);
+    const fileNumber = await this.fileNumberService.generateNextFileNumber();
 
     const type = await this.typeRepository.findOneOrFail({
       where: {
@@ -64,7 +64,7 @@ export class InquiryService {
     });
 
     const inquiry = new Inquiry({
-      fileNumber: createDto.fileNumber,
+      fileNumber: fileNumber,
       summary: createDto.summary,
       dateSubmittedToAlc: createDto.dateSubmittedToAlc,
       inquirerFirstName: createDto.inquirerFirstName,
