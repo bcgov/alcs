@@ -132,13 +132,13 @@ $alcs-warn: mat.define-palette($mat-custom-warn);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $alcs-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $alcs-primary,
-      accent: $alcs-accent,
-      warn: $alcs-warn,
-    ),
-  )
+    (
+      color: (
+        primary: $alcs-primary,
+        accent: $alcs-accent,
+        warn: $alcs-warn,
+      ),
+    )
 );
 
 // Include theme styles for core and each component used in your app.
@@ -176,7 +176,7 @@ body {
     mat-dialog-content,
     div[mat-dialog-content] {
       flex-grow: 1;
-      max-height: 80vh;
+      max-height: unset;
     }
   }
 }

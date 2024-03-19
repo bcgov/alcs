@@ -36,8 +36,9 @@ import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.serv
 import { NotificationDto } from '../notification/notification.dto';
 import { Notification } from '../notification/notification.entity';
 import { NotificationService } from '../notification/notification.service';
-import { PlanningReviewDto } from '../planning-review/planning-review.dto';
-import { PlanningReview } from '../planning-review/planning-review.entity';
+import { PlanningReferral } from '../planning-review/planning-referral/planning-referral.entity';
+import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
+import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 
 const HIDDEN_CARD_STATUSES = [
   CARD_STATUS.CANCELLED,
@@ -57,6 +58,7 @@ export class HomeController {
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
+    private planningReferralService: PlanningReferralService,
   ) {}
 
   @Get('/assigned')
@@ -66,7 +68,7 @@ export class HomeController {
     noticeOfIntentModifications: NoticeOfIntentModificationDto[];
     applications: ApplicationDto[];
     reconsiderations: ApplicationReconsiderationDto[];
-    planningReferrals: PlanningReviewDto[];
+    planningReferrals: PlanningReferralDto[];
     modifications: ApplicationModificationDto[];
     notifications: NotificationDto[];
   }> {
@@ -86,8 +88,8 @@ export class HomeController {
       const reconsiderations =
         await this.reconsiderationService.getBy(assignedFindOptions);
 
-      // const planningReviews =
-      //   await this.planningReviewService.getBy(assignedFindOptions);
+      const planningReviews =
+        await this.planningReferralService.getBy(assignedFindOptions);
 
       const modifications =
         await this.modificationService.getBy(assignedFindOptions);
@@ -111,7 +113,8 @@ export class HomeController {
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations:
           await this.reconsiderationService.mapToDtos(reconsiderations),
-        planningReferrals: [],
+        planningReferrals:
+          await this.planningReferralService.mapToDtos(planningReviews),
         modifications: await this.modificationService.mapToDtos(modifications),
         notifications: await this.notificationService.mapToDtos(notifications),
       };
@@ -145,13 +148,13 @@ export class HomeController {
       );
     const reconSubtasks = this.mapReconToDto(reconsiderationWithSubtasks);
 
-    // const planningReviewsWithSubtasks =
-    //   await this.planningReviewService.getWithIncompleteSubtaskByType(
-    //     subtaskType,
-    //   );
-    // const planningReviewSubtasks = this.mapPlanningReviewsToDtos(
-    //   planningReviewsWithSubtasks,
-    // );
+    const planningReferralsWithSubtasks =
+      await this.planningReferralService.getWithIncompleteSubtaskByType(
+        subtaskType,
+      );
+    const planningReferralSubtasks = this.mapPlanningReferralsToDtos(
+      planningReferralsWithSubtasks,
+    );
 
     const modificationsWithSubtasks =
       await this.modificationService.getWithIncompleteSubtaskByType(
@@ -191,6 +194,7 @@ export class HomeController {
       ...reconSubtasks,
       ...modificationSubtasks,
       ...noiModificationsSubtasks,
+      ...planningReferralSubtasks,
       ...notificationSubtasks,
     ];
   }
@@ -251,24 +255,24 @@ export class HomeController {
     return result;
   }
 
-  private mapPlanningReviewsToDtos(planingReviews: PlanningReview[]) {
+  private mapPlanningReferralsToDtos(planningReferrals: PlanningReferral[]) {
     const result: HomepageSubtaskDTO[] = [];
-    // TODO
-    // for (const planningReview of planingReviews) {
-    //   for (const subtask of planningReview.card.subtasks) {
-    //     result.push({
-    //       type: subtask.type,
-    //       createdAt: subtask.createdAt.getTime(),
-    //       assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
-    //       uuid: subtask.uuid,
-    //       card: this.mapper.map(planningReview.card, Card, CardDto),
-    //       completedAt: subtask.completedAt?.getTime(),
-    //       paused: false,
-    //       title: `${planningReview.fileNumber} (${planningReview.type})`,
-    //       parentType: PARENT_TYPE.PLANNING_REVIEW,
-    //     });
-    //   }
-    // }
+    for (const planningReferral of planningReferrals) {
+      for (const subtask of planningReferral.card.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(planningReferral.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${planningReferral.planningReview.fileNumber} (${planningReferral.planningReview.documentName})`,
+          parentType: PARENT_TYPE.PLANNING_REVIEW,
+          appType: planningReferral.planningReview.type,
+        });
+      }
+    }
     return result;
   }
 
