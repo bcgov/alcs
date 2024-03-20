@@ -62,6 +62,7 @@ export class PlanningReferralService {
           type: true,
           status: true,
           board: true,
+          assignee: true,
         },
         planningReview: {
           localGovernment: true,

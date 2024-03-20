@@ -7,7 +7,6 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import {
   MODIFICATION_TYPE_LABEL,
   NOTIFICATION_LABEL,
-  PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { CardType } from '../../../../shared/card/card.component';
