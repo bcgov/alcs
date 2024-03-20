@@ -21,6 +21,6 @@ import { PlanningReviewDecisionService } from './planning-review-decision.servic
   ],
   providers: [PlanningReviewDecisionService, PlanningReviewDecisionProfile],
   controllers: [PlanningReviewDecisionController],
-  exports: [],
+  exports: [PlanningReviewDecisionService],
 })
 export class PlanningReviewDecisionModule {}

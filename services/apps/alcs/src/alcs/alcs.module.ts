@@ -24,6 +24,7 @@ import { NotificationSubmissionStatusModule } from './notification/notification-
 import { NotificationTimelineModule } from './notification/notification-timeline/notification-timeline.module';
 import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewDecisionModule } from './planning-review/planning-review-decision/planning-review-decision.module';
+import { PlanningReviewTimelineModule } from './planning-review/planning-review-timeline/planning-review-timeline.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
@@ -54,6 +55,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     NotificationTimelineModule,
     InquiryModule,
     MeetingModule,
+    PlanningReviewTimelineModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -81,6 +83,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: NotificationTimelineModule },
       { path: 'alcs', module: InquiryModule },
       { path: 'alcs', module: MeetingModule },
+      { path: 'alcs', module: PlanningReviewTimelineModule },
     ]),
   ],
   controllers: [],

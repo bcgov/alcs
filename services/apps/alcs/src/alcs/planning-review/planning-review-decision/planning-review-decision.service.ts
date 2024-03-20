@@ -230,28 +230,6 @@ export class PlanningReviewDecisionService {
     );
   }
 
-  async getDownloadForPortal(decisionDocumentUuid: string) {
-    const decisionDocument = await this.decisionDocumentRepository.findOne({
-      where: {
-        decision: {
-          isDraft: false,
-        },
-        uuid: decisionDocumentUuid,
-      },
-      relations: {
-        document: true,
-      },
-    });
-
-    if (decisionDocument) {
-      return this.documentService.getDownloadUrl(
-        decisionDocument.document,
-        true, // FIXME: Document does not open inline despite flag being true
-      );
-    }
-    throw new ServiceNotFoundException('Failed to find document');
-  }
-
   getOutcomeByCode(code: string) {
     return this.decisionOutcomeRepository.findOneOrFail({
       where: {
@@ -266,14 +244,6 @@ export class PlanningReviewDecisionService {
     return {
       outcomes: values[0],
     };
-  }
-
-  getMany(modifiesDecisionUuids: string[]) {
-    return this.planningReviewDecisionRepository.find({
-      where: {
-        uuid: In(modifiesDecisionUuids),
-      },
-    });
   }
 
   async generateResolutionNumber(resolutionYear: number) {
