@@ -11,7 +11,6 @@ import { PlanningReferralDto } from '../../../services/planning-review/planning-
 import {
   MODIFICATION_TYPE_LABEL,
   NOTIFICATION_LABEL,
-  PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../../../shared/application-type-pill/application-type-pill.constants';
@@ -98,11 +97,11 @@ export class AssignedComponent implements OnInit {
     this.planningReferrals = [
       ...planningReferrals
         .filter((r) => r.card.highPriority)
-        .map((r) => this.mapPlanning(r))
+        .map((r) => this.mapPlanningReferral(r))
         .sort((a, b) => a.date! - b.date!),
       ...planningReferrals
         .filter((r) => !r.card.highPriority)
-        .map((r) => this.mapPlanning(r))
+        .map((r) => this.mapPlanningReferral(r))
         .sort((a, b) => a.date! - b.date!),
     ];
 
@@ -124,14 +123,14 @@ export class AssignedComponent implements OnInit {
       this.notifications.length;
   }
 
-  private mapPlanning(p: PlanningReferralDto): AssignedToMeFile {
+  private mapPlanningReferral(p: PlanningReferralDto): AssignedToMeFile {
     return {
       title: `${p.planningReview.fileNumber} (${p.planningReview.documentName})`,
       type: p.card.type,
       date: p.card.createdAt,
       card: p.card,
       highPriority: p.card.highPriority,
-      labels: [PLANNING_TYPE_LABEL],
+      labels: [p.planningReview.type],
     };
   }
 

@@ -16,16 +16,6 @@ export const MODIFICATION_TYPE_LABEL: ApplicationPill = {
   textColor: '#000',
 };
 
-export const PLANNING_TYPE_LABEL = {
-  label: 'Planning Review',
-  code: 'PLAN',
-  shortLabel: 'PLAN',
-  backgroundColor: '#fff',
-  borderColor: '#b2ff59',
-  description: 'Planning Review',
-  textColor: '#000',
-};
-
 export const RETROACTIVE_TYPE_LABEL = {
   label: 'Retroactive',
   code: 'RETRO',
