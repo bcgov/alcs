@@ -89,7 +89,7 @@ export const OPEN_PR_LABEL = {
 export const CLOSED_PR_LABEL = {
   label: 'Closed',
   shortLabel: 'Closed',
-  backgroundColor: '#C6242A',
-  borderColor: '#C6242A',
+  backgroundColor: '#DD8C8F',
+  borderColor: '#DD8C8F',
   textColor: '#313132',
 };

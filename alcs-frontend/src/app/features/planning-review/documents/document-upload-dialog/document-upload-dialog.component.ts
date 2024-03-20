@@ -95,6 +95,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags.push('C');
     }
 
+    const file = this.pendingFile;
     const dto: UpdateDocumentDto = {
       fileName: this.name.value!,
       source: this.source.value as DOCUMENT_SOURCE,
@@ -102,9 +103,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags,
       parcelUuid: this.parcelId.value ?? undefined,
       ownerUuid: this.ownerId.value ?? undefined,
+      file,
     };
 
-    const file = this.pendingFile;
     this.isSaving = true;
     if (this.data.existingDocument) {
       await this.planningReviewDocumentService.update(this.data.existingDocument.uuid, dto);
