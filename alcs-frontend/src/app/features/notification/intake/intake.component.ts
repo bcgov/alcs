@@ -77,6 +77,7 @@ export class IntakeComponent implements OnInit {
             const update = await this.notificationSubmissionService.setContactEmail(email, notification.fileNumber);
             if (update) {
               this.toastService.showSuccessToast('Notification updated');
+              this.contactEmail = email;
             }
           }
         }
