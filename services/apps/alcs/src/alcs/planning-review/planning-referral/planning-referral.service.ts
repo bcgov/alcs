@@ -57,7 +57,19 @@ export class PlanningReferralService {
           boardUuid,
         },
       },
-      relations: this.DEFAULT_RELATIONS,
+      relations: {
+        card: {
+          type: true,
+          status: true,
+          board: true,
+        },
+        planningReview: {
+          localGovernment: true,
+          region: true,
+          type: true,
+          meetings: true,
+        },
+      },
     });
   }
 

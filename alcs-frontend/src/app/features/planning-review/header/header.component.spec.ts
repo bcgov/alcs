@@ -45,6 +45,7 @@ describe('HeaderComponent', () => {
         textColor: '',
       },
       uuid: '',
+      meetings: [],
     };
 
     fixture.detectChanges();

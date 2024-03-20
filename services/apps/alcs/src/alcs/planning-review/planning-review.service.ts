@@ -107,6 +107,7 @@ export class PlanningReviewService {
             type: true,
           },
         },
+        meetings: true,
       },
       order: {
         referrals: {
