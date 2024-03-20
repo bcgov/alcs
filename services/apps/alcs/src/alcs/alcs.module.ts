@@ -15,6 +15,7 @@ import { ImportModule } from './import/import.module';
 import { InquiryModule } from './inquiry/inquiry.module';
 import { LocalGovernmentModule } from './local-government/local-government.module';
 import { MessageModule } from './message/message.module';
+import { MeetingModule } from './meetings/meeting.module';
 import { NoticeOfIntentDecisionModule } from './notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentTimelineModule } from './notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.module';
@@ -52,6 +53,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     NotificationModule,
     NotificationTimelineModule,
     InquiryModule,
+    MeetingModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -78,6 +80,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: NotificationSubmissionStatusModule },
       { path: 'alcs', module: NotificationTimelineModule },
       { path: 'alcs', module: InquiryModule },
+      { path: 'alcs', module: MeetingModule },
     ]),
   ],
   controllers: [],

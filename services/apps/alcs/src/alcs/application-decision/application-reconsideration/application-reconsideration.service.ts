@@ -15,7 +15,7 @@ import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
-import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
+import { ApplicationDecisionV2Service } from '../application-decision-v2/application-decision/application-decision-v2.service';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationDto,
@@ -40,7 +40,7 @@ export class ApplicationReconsiderationService {
     private reconsiderationTypeRepository: Repository<ApplicationReconsiderationType>,
     private applicationService: ApplicationService,
     private cardService: CardService,
-    private applicationDecisionService: ApplicationDecisionV1Service,
+    private applicationDecisionService: ApplicationDecisionV2Service,
   ) {}
 
   private DEFAULT_CARD_RELATIONS = {

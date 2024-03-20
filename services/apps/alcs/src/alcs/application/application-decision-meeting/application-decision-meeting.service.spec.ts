@@ -6,11 +6,11 @@ import { Repository } from 'typeorm';
 import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
-} from '../../../../../test/mocks/mockEntities';
-import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from '../../../application/application-submission-status/submission-status.entity';
-import { ApplicationService } from '../../../application/application.service';
+} from '../../../../test/mocks/mockEntities';
+import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../application-submission-status/submission-status.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 

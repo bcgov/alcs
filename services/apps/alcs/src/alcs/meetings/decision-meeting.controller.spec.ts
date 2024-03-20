@@ -1,33 +1,38 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import {
   initApplicationDecisionMeetingMock,
   initApplicationMockEntity,
   initApplicationReconsiderationMockEntity,
-} from '../../../../../test/mocks/mockEntities';
-import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
-import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v1.automapper.profile';
-import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
-import { EmailService } from '../../../../providers/email/email.service';
-import { ApplicationService } from '../../../application/application.service';
-import { Board } from '../../../board/board.entity';
-import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
-import { ApplicationDecisionMeetingController } from './application-decision-meeting.controller';
+} from '../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ApplicationDecisionProfile } from '../../common/automapper/application-decision-v2.automapper.profile';
+import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { UserProfile } from '../../common/automapper/user.automapper.profile';
+import { EmailService } from '../../providers/email/email.service';
+import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationDecisionMeetingService } from '../application/application-decision-meeting/application-decision-meeting.service';
+import { ApplicationService } from '../application/application.service';
+import { Board } from '../board/board.entity';
+import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
+import { PlanningReviewMeetingService } from '../planning-review/planning-review-meeting/planning-review-meeting.service';
+import { DecisionMeetingController } from './decision-meeting.controller';
 import {
-  ApplicationDecisionMeetingDto,
   CreateApplicationDecisionMeetingDto,
-} from './application-decision-meeting.dto';
-import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
+  DecisionMeetingDto,
+} from './decision-meeting.dto';
 
-describe('ApplicationDecisionMeetingController', () => {
-  let controller: ApplicationDecisionMeetingController;
+describe('DecisionMeetingController', () => {
+  let controller: DecisionMeetingController;
   let mockMeetingService: DeepMocked<ApplicationDecisionMeetingService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockEmailService: DeepMocked<EmailService>;
+  let mockPlanningReferralService: DeepMocked<PlanningReferralService>;
+  let mockPlanningReviewMeetingService: DeepMocked<PlanningReviewMeetingService>;
   let mockApplication;
   let mockMeeting;
 
@@ -35,7 +40,9 @@ describe('ApplicationDecisionMeetingController', () => {
     mockMeetingService = createMock();
     mockApplicationService = createMock();
     mockReconsiderationService = createMock();
-    mockEmailService = createMock<EmailService>();
+    mockPlanningReferralService = createMock();
+    mockEmailService = createMock();
+    mockPlanningReviewMeetingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -43,9 +50,9 @@ describe('ApplicationDecisionMeetingController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationDecisionMeetingController],
+      controllers: [DecisionMeetingController],
       providers: [
-        ApplicationDecisionProfile,
+        ApplicationProfile,
         UserProfile,
         {
           provide: ApplicationDecisionMeetingService,
@@ -64,6 +71,14 @@ describe('ApplicationDecisionMeetingController', () => {
           useValue: mockEmailService,
         },
         {
+          provide: PlanningReferralService,
+          useValue: mockPlanningReferralService,
+        },
+        {
+          provide: PlanningReviewMeetingService,
+          useValue: mockPlanningReviewMeetingService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -71,8 +86,8 @@ describe('ApplicationDecisionMeetingController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationDecisionMeetingController>(
-      ApplicationDecisionMeetingController,
+    controller = module.get<DecisionMeetingController>(
+      DecisionMeetingController,
     );
 
     mockApplication = initApplicationMockEntity();
@@ -82,6 +97,8 @@ describe('ApplicationDecisionMeetingController', () => {
     mockMeetingService.get.mockResolvedValue(mockMeeting);
     mockMeetingService.getUpcomingReconsiderationMeetings.mockResolvedValue([]);
     mockMeetingService.getUpcomingApplicationMeetings.mockResolvedValue([]);
+    mockPlanningReviewMeetingService.getUpcomingMeetings.mockResolvedValue([]);
+    mockPlanningReferralService.getManyByPlanningReview.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
@@ -133,7 +150,7 @@ describe('ApplicationDecisionMeetingController', () => {
     const meetingToUpdate = {
       uuid: mockMeeting.uuid,
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-    } as ApplicationDecisionMeetingDto;
+    } as DecisionMeetingDto;
 
     await controller.update(meetingToUpdate);
 

@@ -16,16 +16,19 @@ import {
 export class ApplicationModificationService {
   $modifications = new BehaviorSubject<ApplicationModificationDto[]>([]);
 
-  private url = `${environment.apiUrl}/application-modification`;
+  private url = `${environment.apiUrl}/v2/application-modification`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetchByApplication(applicationFileNumber: string) {
     try {
       this.clearModifications();
 
       const modifications = await firstValueFrom(
-        this.http.get<ApplicationModificationDto[]>(`${this.url}/application/${applicationFileNumber}`)
+        this.http.get<ApplicationModificationDto[]>(`${this.url}/application/${applicationFileNumber}`),
       );
       modifications.sort((a, b) => b.submittedDate - a.submittedDate);
       this.$modifications.next(modifications);
@@ -62,7 +65,7 @@ export class ApplicationModificationService {
         this.http.post<ApplicationModificationDto>(this.url, {
           ...createDto,
           submittedDate: formatDateForApi(createDto.submittedDate),
-        })
+        }),
       );
     } catch (err) {
       console.error(err);

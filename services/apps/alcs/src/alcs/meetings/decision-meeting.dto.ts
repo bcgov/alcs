@@ -1,6 +1,6 @@
 import { AutoMap } from 'automapper-classes';
 import { IsNumber, IsString } from 'class-validator';
-import { UserDto } from '../../../../user/user.dto';
+import { UserDto } from '../../user/user.dto';
 
 export class CreateApplicationDecisionMeetingDto {
   @AutoMap()
@@ -12,7 +12,7 @@ export class CreateApplicationDecisionMeetingDto {
   applicationFileNumber;
 }
 
-export class ApplicationDecisionMeetingDto extends CreateApplicationDecisionMeetingDto {
+export class DecisionMeetingDto extends CreateApplicationDecisionMeetingDto {
   @AutoMap()
   @IsString()
   uuid: string;
@@ -23,6 +23,7 @@ export type UpcomingMeetingDto = {
   fileNumber: string;
   applicant: string;
   boardCode: string;
+  type: string;
   assignee: UserDto;
 };
 

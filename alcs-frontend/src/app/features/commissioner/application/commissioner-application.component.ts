@@ -2,17 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { DOCUMENT_TYPE } from '../../shared/document/document.dto';
-import { environment } from '../../../environments/environment';
-import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
-import { CommissionerService } from '../../services/commissioner/commissioner.service';
+import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
+import { environment } from '../../../../environments/environment';
+import { CommissionerApplicationDto } from '../../../services/commissioner/commissioner.dto';
+import { CommissionerService } from '../../../services/commissioner/commissioner.service';
 
 @Component({
-  selector: 'app-commissioner',
-  templateUrl: './commissioner.component.html',
-  styleUrls: ['./commissioner.component.scss'],
+  selector: 'app-commissioner-application',
+  templateUrl: './commissioner-application.component.html',
+  styleUrls: ['./commissioner-application.component.scss'],
 })
-export class CommissionerComponent implements OnInit, OnDestroy {
+export class CommissionerApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
   application: CommissionerApplicationDto | undefined;
@@ -21,7 +21,7 @@ export class CommissionerComponent implements OnInit, OnDestroy {
   constructor(
     private commissionerService: CommissionerService,
     private route: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +30,7 @@ export class CommissionerComponent implements OnInit, OnDestroy {
       this.fileNumber = fileNumber;
       this.application = await this.commissionerService.fetchApplication(fileNumber);
       this.titleService.setTitle(
-        `${environment.siteName} | ${this.application.fileNumber} (${this.application.applicant})`
+        `${environment.siteName} | ${this.application.fileNumber} (${this.application.applicant})`,
       );
     });
   }

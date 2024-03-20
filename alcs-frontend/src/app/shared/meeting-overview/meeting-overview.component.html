@@ -62,8 +62,8 @@
               <h5>{{ pastMeeting.meetingDate | momentFormat : customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <ng-container *ngFor="let application of pastMeeting.applications">
-            <ng-template *ngTemplateOutlet="applicationPanel; context: { $implicit: application }"></ng-template>
+          <ng-container *ngFor="let meeting of pastMeeting.meetings">
+            <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
           </ng-container>
         </mat-expansion-panel>
       </div>
@@ -85,8 +85,8 @@
               <h5>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat : customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <ng-container *ngFor="let application of boardMeeting.nextMeeting!.applications">
-            <ng-template *ngTemplateOutlet="applicationPanel; context: { $implicit: application }"></ng-template>
+          <ng-container *ngFor="let meeting of boardMeeting.nextMeeting!.meetings">
+            <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
           </ng-container>
         </mat-expansion-panel>
       </div>
@@ -108,8 +108,8 @@
               <h5>{{ upcomingMeeting.meetingDate | momentFormat : customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <ng-container *ngFor="let application of upcomingMeeting.applications">
-            <ng-template *ngTemplateOutlet="applicationPanel; context: { $implicit: application }"></ng-template>
+          <ng-container *ngFor="let meeting of upcomingMeeting.meetings">
+            <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
           </ng-container>
         </mat-expansion-panel>
       </div>
@@ -117,29 +117,29 @@
   </mat-expansion-panel>
 </div>
 
-<ng-template #applicationPanel let-application>
+<ng-template #meetingPanel let-meeting>
   <mat-card
-    (click)="openApplication(application.fileNumber)"
-    class="application-card"
+    (click)="openMeetings(meeting.fileNumber, meeting.type)"
+    class="meeting-card"
     [ngClass]="{
-      'application-highlighted': application.isHighlighted
+      'meeting-highlighted': meeting.isHighlighted
     }"
   >
     <div class="split">
       <div
         class="ellipsis"
-        [id]="application.fileNumber"
+        [id]="meeting.fileNumber"
         matTooltipClass="no-wrap-tooltip"
-        [matTooltip]="application.fileNumber + ' (' + application.applicant + ')'"
-        [matTooltipDisabled]="!isEllipsisActive(application.fileNumber)"
+        [matTooltip]="meeting.fileNumber + ' (' + meeting.applicant + ')'"
+        [matTooltipDisabled]="!isEllipsisActive(meeting.fileNumber)"
       >
-        {{ application.fileNumber }} ({{ application.applicant }})
+        {{ meeting.fileNumber }} ({{ meeting.applicant }})
       </div>
       <div>
         <app-avatar-circle
-          *ngIf="application.assignee"
-          [initials]="application.assignee.initials"
-          [name]="application.assignee.prettyName"
+          *ngIf="meeting.assignee"
+          [initials]="meeting.assignee.initials"
+          [name]="meeting.assignee.prettyName"
         ></app-avatar-circle>
       </div>
     </div>

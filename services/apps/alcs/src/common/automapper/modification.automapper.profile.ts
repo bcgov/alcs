@@ -1,9 +1,8 @@
+import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
-import { Injectable } from '@nestjs/common';
-import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/application/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import { ApplicationModificationOutcomeType } from '../../alcs/application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
 import {
@@ -12,11 +11,12 @@ import {
   ApplicationModificationOutcomeCodeDto,
 } from '../../alcs/application-decision/application-modification/application-modification.dto';
 import { ApplicationModification } from '../../alcs/application-decision/application-modification/application-modification.entity';
-import { LocalGovernmentDto } from '../../alcs/local-government/local-government.dto';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
+import { LocalGovernmentDto } from '../../alcs/local-government/local-government.dto';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { DecisionMeetingDto } from '../../alcs/meetings/decision-meeting.dto';
 
 @Injectable()
 export class ModificationProfile extends AutomapperProfile {
@@ -52,7 +52,7 @@ export class ModificationProfile extends AutomapperProfile {
             this.mapper.mapArray(
               a.decisionMeetings,
               ApplicationDecisionMeeting,
-              ApplicationDecisionMeetingDto,
+              DecisionMeetingDto,
             ),
           ),
         ),

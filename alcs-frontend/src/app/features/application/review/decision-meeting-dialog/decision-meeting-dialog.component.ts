@@ -5,7 +5,11 @@ import { ApplicationDetailService } from '../../../../services/application/appli
 import { ToastService } from '../../../../services/toast/toast.service';
 
 export class ApplicationDecisionMeetingForm {
-  constructor(public fileNumber: string, public date: Date, public uuid: string | undefined = undefined) {}
+  constructor(
+    public fileNumber: string,
+    public date: Date,
+    public uuid: string | undefined = undefined,
+  ) {}
 }
 
 @Component({
@@ -22,7 +26,7 @@ export class DecisionMeetingDialogComponent {
     private dialogRef: MatDialogRef<DecisionMeetingDialogComponent>,
     private decisionMeetingService: ApplicationDecisionMeetingService,
     private applicationDetailService: ApplicationDetailService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {
     if (data.uuid) {
       this.model = {
