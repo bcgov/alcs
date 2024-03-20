@@ -88,8 +88,8 @@ export class Inquiry extends Base {
   @ManyToOne(() => InquiryType, { nullable: false })
   type: InquiryType;
 
-  @Column({ type: 'uuid' })
-  cardUuid: string;
+  @Column({ type: 'uuid', nullable: true })
+  cardUuid: string | null;
 
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
