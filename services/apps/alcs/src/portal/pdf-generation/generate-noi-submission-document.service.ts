@@ -313,21 +313,30 @@ export class GenerateNoiSubmissionDocumentService {
       (document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN,
     );
     const hasFarmStructure = submission?.soilProposedStructures.some(
-      (structure) => structure.type === 'Farm Structure'
+      (structure) => structure.type === 'Farm Structure',
     );
     pdfData = {
       ...pdfData,
       isSoilAgriParcelActivityVisible: hasFarmStructure,
       isSoilStructureFarmUseReasonVisible: hasFarmStructure,
-      isSoilStructureResidentialUseReasonVisible: !!submission?.soilProposedStructures.some(
-        (structure) => structure.type === "Residential - Principal Residence" || structure.type === "Residential - Additional Residence"
-      ),
-      isSoilStructureResidentialAccessoryUseReasonVisible: !!submission?.soilProposedStructures.some(
-        (structure) => structure.type === "Residential - Accessory Structure"
-      ),
-      isSoilOtherStructureUseReasonVisible: !!submission?.soilProposedStructures.some(
-        (structure) => structure.type === "Other Structure"
-      ),
+      isSoilStructureResidentialUseReasonVisible:
+        !!submission?.soilProposedStructures.some(
+          (structure) =>
+            structure.type &&
+            [
+              'Residential - Accessory Structure',
+              'Residential - Additional Residence',
+              'Residential - Principal Residence',
+            ].includes(structure.type),
+        ),
+      isSoilStructureResidentialAccessoryUseReasonVisible:
+        !!submission?.soilProposedStructures.some(
+          (structure) => structure.type === 'Residential - Accessory Structure',
+        ),
+      isSoilOtherStructureUseReasonVisible:
+        !!submission?.soilProposedStructures.some(
+          (structure) => structure.type === 'Other Structure',
+        ),
       fillProjectDuration: submission.fillProjectDuration,
       soilIsFollowUp: formatBooleanToYesNoString(submission.soilIsFollowUp),
       soilFollowUpIDs: submission.soilFollowUpIDs,
