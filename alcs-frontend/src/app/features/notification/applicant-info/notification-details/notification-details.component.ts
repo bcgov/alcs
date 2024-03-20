@@ -42,8 +42,8 @@ export class NotificationDetailsComponent implements OnInit, OnChanges, OnDestro
     this.$destroy.complete();
   }
 
-  async openFile(uuid: string) {
-    await this.notificationDocumentService.download(uuid, '');
+  async openFile(file: NotificationDocumentDto) {
+    await this.notificationDocumentService.download(file.uuid, file.fileName);
   }
 
   private async loadDocuments() {
@@ -53,7 +53,7 @@ export class NotificationDetailsComponent implements OnInit, OnChanges, OnDestro
     this.otherFiles = documents.filter(
       (document) =>
         document.type &&
-        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code)
+        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code),
     );
     this.files = documents;
   }

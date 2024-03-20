@@ -32,9 +32,7 @@
     <div *ngIf="noiSubmission.soilProjectDuration">
       {{ noiSubmission.soilProjectDuration }}
     </div>
-    <app-no-data
-      *ngIf="!noiSubmission.soilProjectDuration"
-    ></app-no-data>
+    <app-no-data *ngIf="!noiSubmission.soilProjectDuration"></app-no-data>
   </div>
 
   <div class="full-width soil-table">
@@ -59,18 +57,14 @@
     <div>
       {{ noiSubmission.soilToRemoveMaximumDepth }}
       <span *ngIf="noiSubmission.soilToRemoveMaximumDepth !== null">m</span>
-      <app-no-data
-        *ngIf="noiSubmission.soilToRemoveMaximumDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilToRemoveMaximumDepth === null"></app-no-data>
     </div>
 
     <div class="subheading2">Average Depth</div>
     <div>
       {{ noiSubmission.soilToRemoveAverageDepth }}
       <span *ngIf="noiSubmission.soilToRemoveAverageDepth !== null">m</span>
-      <app-no-data
-        *ngIf="noiSubmission.soilToRemoveAverageDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilToRemoveAverageDepth === null"></app-no-data>
     </div>
 
     <div></div>
@@ -80,42 +74,34 @@
     <div>
       {{ noiSubmission.soilAlreadyRemovedVolume }}
       <span *ngIf="noiSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
-      <app-no-data
-        *ngIf="noiSubmission.soilAlreadyRemovedVolume === null"
-      ></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedVolume === null"></app-no-data>
     </div>
 
     <div class="subheading2">Area</div>
     <div>
       {{ noiSubmission.soilAlreadyRemovedArea }}
       <span *ngIf="noiSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
-      <app-no-data
-        *ngIf="noiSubmission.soilAlreadyRemovedArea === null"
-      ></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedArea === null"></app-no-data>
     </div>
 
     <div class="subheading2">Maximum Depth</div>
     <div>
       {{ noiSubmission.soilAlreadyRemovedMaximumDepth }}
       <span *ngIf="noiSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
-      <app-no-data
-        *ngIf="noiSubmission.soilAlreadyRemovedMaximumDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedMaximumDepth === null"></app-no-data>
     </div>
 
     <div class="subheading2">Average Depth</div>
     <div>
       {{ noiSubmission.soilAlreadyRemovedAverageDepth }}
       <span *ngIf="noiSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
-      <app-no-data
-        *ngIf="noiSubmission.soilAlreadyRemovedAverageDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedAverageDepth === null"></app-no-data>
     </div>
   </div>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
       {{ map.fileName }}
     </a>
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
@@ -132,7 +118,7 @@
   <ng-container *ngIf="noiSubmission?.soilIsExtractionOrMining">
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double">
-      <a *ngFor="let file of crossSections" (click)="openFile(file.uuid)">
+      <a *ngFor="let file of crossSections" (click)="openFile(file)">
         {{ file.fileName }}
       </a>
       <app-no-data *ngIf="crossSections.length === 0"></app-no-data>

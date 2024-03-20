@@ -13,11 +13,13 @@ import { NotificationTimelineService } from './notification-timeline.service';
 @Controller('notification-timeline')
 @UseGuards(RolesGuard)
 export class NotificationTimelineController {
-  constructor(private noiTimelineService: NotificationTimelineService) {}
+  constructor(
+    private notificationTimelineService: NotificationTimelineService,
+  ) {}
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async fetchTimelineEvents(@Param('fileNumber') fileNumber: string) {
-    return await this.noiTimelineService.getTimelineEvents(fileNumber);
+    return await this.notificationTimelineService.getTimelineEvents(fileNumber);
   }
 }

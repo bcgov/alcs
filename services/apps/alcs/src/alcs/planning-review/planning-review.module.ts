@@ -13,6 +13,10 @@ import { PlanningReferralService } from './planning-referral/planning-referral.s
 import { PlanningReviewDocumentController } from './planning-review-document/planning-review-document.controller';
 import { PlanningReviewDocument } from './planning-review-document/planning-review-document.entity';
 import { PlanningReviewDocumentService } from './planning-review-document/planning-review-document.service';
+import { PlanningReviewMeetingType } from './planning-review-meeting/planning-review-meeting-type.entity';
+import { PlanningReviewMeetingController } from './planning-review-meeting/planning-review-meeting.controller';
+import { PlanningReviewMeeting } from './planning-review-meeting/planning-review-meeting.entity';
+import { PlanningReviewMeetingService } from './planning-review-meeting/planning-review-meeting.service';
 import { PlanningReviewType } from './planning-review-type.entity';
 import { PlanningReviewController } from './planning-review.controller';
 import { PlanningReview } from './planning-review.entity';
@@ -25,6 +29,8 @@ import { PlanningReviewService } from './planning-review.service';
       PlanningReferral,
       PlanningReviewType,
       PlanningReviewDocument,
+      PlanningReviewMeeting,
+      PlanningReviewMeetingType,
       DocumentCode,
     ]),
     forwardRef(() => BoardModule),
@@ -37,12 +43,14 @@ import { PlanningReviewService } from './planning-review.service';
     PlanningReviewController,
     PlanningReferralController,
     PlanningReviewDocumentController,
+    PlanningReviewMeetingController,
   ],
   providers: [
     PlanningReviewService,
     PlanningReviewProfile,
     PlanningReferralService,
     PlanningReviewDocumentService,
+    PlanningReviewMeetingService,
   ],
   exports: [PlanningReviewService, PlanningReferralService],
 })

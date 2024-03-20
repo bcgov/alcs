@@ -7,7 +7,7 @@
         error: !!file.errorMessage && !disabled
       }"
     >
-      <a class="file-name" (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
+      <a class="file-name" (click)="fileOpened(file)">{{ file.fileName }}</a>
       <div class="file-size-cta-container">
         <div class="file-size">
           <span class="file-size-parentheses">(</span>

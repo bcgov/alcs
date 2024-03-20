@@ -5,6 +5,7 @@ import { User } from '../../user/user.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { PlanningReferral } from './planning-referral/planning-referral.entity';
+import { PlanningReviewMeeting } from './planning-review-meeting/planning-review-meeting.entity';
 import { PlanningReviewType } from './planning-review-type.entity';
 
 @Entity({
@@ -56,6 +57,13 @@ export class PlanningReview extends Base {
   @OneToMany(() => PlanningReferral, (referral) => referral.planningReview)
   referrals: PlanningReferral[];
 
+  @AutoMap(() => [PlanningReviewMeeting])
+  @OneToMany(
+    () => PlanningReviewMeeting,
+    (reviewMeeting) => reviewMeeting.planningReview,
+  )
+  meetings: PlanningReviewMeeting[];
+
   @Column()
   typeCode: string;
 
@@ -67,4 +75,7 @@ export class PlanningReview extends Base {
 
   @Column({ type: 'timestamptz', nullable: true })
   closedDate: Date | null;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  decisionDate: Date | null;
 }

@@ -85,9 +85,11 @@ export class PlanningReviewService {
     );
   }
 
-  getBy(findOptions: FindOptionsWhere<PlanningReview>) {
-    return this.reviewRepository.find({
-      where: findOptions,
+  getByFileNumber(fileNumber: string) {
+    return this.reviewRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
       relations: this.DEFAULT_RELATIONS,
     });
   }
@@ -99,7 +101,13 @@ export class PlanningReviewService {
       },
       relations: {
         ...this.DEFAULT_RELATIONS,
-        referrals: true,
+        referrals: {
+          card: {
+            board: true,
+            type: true,
+          },
+        },
+        meetings: true,
       },
       order: {
         referrals: {

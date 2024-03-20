@@ -1,0 +1,6 @@
+.form {
+  width: 100%;
+  display: grid;
+  grid-template-columns: calc(50% - 12px) calc(50% - 12px);
+  grid-column-gap: 24px;
+}

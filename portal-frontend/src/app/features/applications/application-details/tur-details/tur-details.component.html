@@ -40,14 +40,14 @@
   </div>
   <div class="subheading2 grid-1">Proof of Serving Notice</div>
   <div class="grid-double">
-    <a *ngFor="let notice of servingNotice" (click)="openFile(notice.uuid)">
+    <a *ngFor="let notice of servingNotice" (click)="openFile(notice)">
       {{ notice.fileName }}
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="servingNotice.length === 0"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let file of proposalMap" (click)="openFile(file.uuid)">
+    <a *ngFor="let file of proposalMap" (click)="openFile(file)">
       {{ file.fileName }}
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>

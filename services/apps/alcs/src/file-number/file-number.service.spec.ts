@@ -4,19 +4,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../alcs/application/application.entity';
-import { Covenant } from '../alcs/covenant/covenant.entity';
 import { NoticeOfIntent } from '../alcs/notice-of-intent/notice-of-intent.entity';
+import { PlanningReview } from '../alcs/planning-review/planning-review.entity';
 import { FileNumberService } from './file-number.service';
 
 describe('FileNumberService', () => {
   let service: FileNumberService;
   let mockAppRepo: DeepMocked<Repository<Application>>;
-  let mockCovenantRepo: DeepMocked<Repository<Covenant>>;
+  let mockPlanningReviewRepo: DeepMocked<Repository<PlanningReview>>;
   let mockNOIRepo: DeepMocked<Repository<NoticeOfIntent>>;
 
   beforeEach(async () => {
     mockAppRepo = createMock();
-    mockCovenantRepo = createMock();
+    mockPlanningReviewRepo = createMock();
     mockNOIRepo = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -27,8 +27,8 @@ describe('FileNumberService', () => {
           useValue: mockAppRepo,
         },
         {
-          provide: getRepositoryToken(Covenant),
-          useValue: mockCovenantRepo,
+          provide: getRepositoryToken(PlanningReview),
+          useValue: mockPlanningReviewRepo,
         },
         {
           provide: getRepositoryToken(NoticeOfIntent),
@@ -45,9 +45,9 @@ describe('FileNumberService', () => {
   });
 
   it('should check all three repos for existence', async () => {
-    mockAppRepo.exist.mockResolvedValue(false);
-    mockCovenantRepo.exist.mockResolvedValue(false);
-    mockNOIRepo.exist.mockResolvedValue(false);
+    mockAppRepo.exists.mockResolvedValue(false);
+    mockPlanningReviewRepo.exists.mockResolvedValue(false);
+    mockNOIRepo.exists.mockResolvedValue(false);
 
     const res = await service.checkValidFileNumber('');
 
@@ -55,20 +55,20 @@ describe('FileNumberService', () => {
   });
 
   it('should throw an exception if application exists', async () => {
-    mockAppRepo.exist.mockResolvedValue(true);
-    mockCovenantRepo.exist.mockResolvedValue(false);
-    mockNOIRepo.exist.mockResolvedValue(false);
+    mockAppRepo.exists.mockResolvedValue(true);
+    mockPlanningReviewRepo.exists.mockResolvedValue(false);
+    mockNOIRepo.exists.mockResolvedValue(false);
 
     const promise = service.checkValidFileNumber('5');
     await expect(promise).rejects.toMatchObject(
       new ServiceValidationException(
-        `Application/Covenant/NOI already exists with File ID 5`,
+        `Application/Planning Review/NOI already exists with File ID 5`,
       ),
     );
 
-    expect(mockAppRepo.exist).toHaveBeenCalledTimes(1);
-    expect(mockCovenantRepo.exist).toHaveBeenCalledTimes(1);
-    expect(mockNOIRepo.exist).toHaveBeenCalledTimes(1);
+    expect(mockAppRepo.exists).toHaveBeenCalledTimes(1);
+    expect(mockPlanningReviewRepo.exists).toHaveBeenCalledTimes(1);
+    expect(mockNOIRepo.exists).toHaveBeenCalledTimes(1);
   });
 
   it('should generate and return new fileNumber', async () => {

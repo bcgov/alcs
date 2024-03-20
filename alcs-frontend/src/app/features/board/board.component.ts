@@ -15,8 +15,6 @@ import { ApplicationService } from '../../services/application/application.servi
 import { CardsDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardService } from '../../services/card/card.service';
-import { CovenantDto } from '../../services/covenant/covenant.dto';
-import { CovenantService } from '../../services/covenant/covenant.service';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
@@ -27,7 +25,6 @@ import { PlanningReferralService } from '../../services/planning-review/planning
 import { PlanningReferralDto } from '../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../services/toast/toast.service';
 import {
-  COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
@@ -37,7 +34,6 @@ import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.in
 import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
-import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
@@ -121,7 +117,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReferralService: PlanningReferralService,
     private modificationService: ApplicationModificationService,
-    private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noiModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
@@ -189,7 +184,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.RECON:
       case CardType.PLAN:
       case CardType.MODI:
-      case CardType.COV:
       case CardType.NOI:
       case CardType.NOI_MODI:
       case CardType.NOTIFICATION:
@@ -249,7 +243,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     const mappedRecons = response.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
     const mappedPlanningReferrals = response.planningReferrals.map(this.mapPlanningReferralToCard.bind(this));
     const mappedModifications = response.modifications.map(this.mapModificationToCard.bind(this));
-    const mappedCovenants = response.covenants.map(this.mapCovenantToCard.bind(this));
     const mappedNoticeOfIntents = response.noticeOfIntents.map(this.mapNoticeOfIntentToCard.bind(this));
     const mappedNoticeOfIntentModifications = response.noiModifications.map(
       this.mapNoticeOfIntentModificationToCard.bind(this),
@@ -265,7 +258,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.cards = [
         ...[...mappedNoticeOfIntents, ...mappedNoticeOfIntentModifications].sort(vettingSort),
         ...[...mappedApps, ...mappedRecons, ...mappedModifications].sort(vettingSort),
-        ...[...mappedPlanningReferrals, ...mappedCovenants].sort(vettingSort),
+        ...[...mappedPlanningReferrals].sort(vettingSort),
         ...mappedNotifications,
       ];
     } else if (boardCode === BOARD_TYPE_CODES.NOI) {
@@ -290,7 +283,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedRecons,
         ...mappedModifications,
         ...mappedPlanningReferrals,
-        ...mappedCovenants,
         ...mappedNotifications,
       ].sort(noiSort);
     } else {
@@ -305,7 +297,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedModifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedPlanningReferrals.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
-        ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
         ...mappedNoticeOfIntents
@@ -318,7 +309,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedPlanningReferrals.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
-        ...mappedCovenants.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
       );
       this.cards = sorted;
@@ -396,24 +386,8 @@ export class BoardComponent implements OnInit, OnDestroy {
       cardUuid: referral.card.uuid,
       dateReceived: referral.card.createdAt,
       dueDate: referral.dueDate ? new Date(referral.dueDate) : undefined,
+      decisionMeetings: referral.planningReview.meetings,
       showDueDate: true,
-    };
-  }
-
-  private mapCovenantToCard(covenant: CovenantDto): CardData {
-    return {
-      status: covenant.card.status.code,
-      typeLabel: 'Non-Application',
-      title: `${covenant.fileNumber} (${covenant.applicant})`,
-      titleTooltip: covenant.applicant,
-      assignee: covenant.card.assignee,
-      id: covenant.card.uuid,
-      labels: [COVENANT_TYPE_LABEL],
-      cardType: CardType.COV,
-      paused: false,
-      highPriority: covenant.card.highPriority,
-      cardUuid: covenant.card.uuid,
-      dateReceived: covenant.card.createdAt,
     };
   }
 
@@ -523,10 +497,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.MODI:
           const modification = await this.modificationService.fetchByCardUuid(card.uuid);
           this.openDialog(AppModificationDialogComponent, modification);
-          break;
-        case CardType.COV:
-          const covenant = await this.covenantService.fetchByCardUuid(card.uuid);
-          this.openDialog(CovenantDialogComponent, covenant);
           break;
         case CardType.NOI:
           const notceOfIntent = await this.noticeOfIntentService.fetchByCardUuid(card.uuid);

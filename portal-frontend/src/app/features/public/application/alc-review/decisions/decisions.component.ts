@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ApplicationPortalDecisionDto } from '../../../../../services/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../../services/application-decision/application-decision.service';
+import { openFileInline } from '../../../../../shared/utils/file';
+import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 
 @Component({
   selector: 'app-public-decisions',
@@ -12,10 +14,10 @@ export class PublicDecisionsComponent {
 
   constructor(private decisionService: ApplicationDecisionService) {}
 
-  async openFile(uuid: string) {
-    const res = await this.decisionService.openFile(uuid);
+  async openFile(file: ApplicationDocumentDto) {
+    const res = await this.decisionService.openFile(file.uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileInline(res.url, file.fileName);
     }
   }
 }

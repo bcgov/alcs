@@ -194,7 +194,10 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     sessionStorage.setItem(SEARCH_SESSION_STORAGE_KEY, searchDto);
 
     this.isLoading = true;
-    scrollToElement({ id: `searchResults`, center: false });
+    // Make sure spinner is rendered before scrolling
+    setTimeout(() => {
+      scrollToElement({ id: `searchResultsWrapper`, center: false });
+    });
     const result = await this.searchService.search(searchParams);
     this.searchResultsHidden = false;
     this.isLoading = false;
