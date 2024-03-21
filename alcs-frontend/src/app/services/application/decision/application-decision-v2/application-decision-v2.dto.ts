@@ -165,6 +165,7 @@ export interface RosoDecisionComponentDto {
 export interface SubdDecisionComponentDto {
   // subdApprovedLots?: ProposedDecisionLotDto[];
   lots?: ProposedDecisionLotDto[];
+  expiryDate?: number | null;
 }
 
 export interface InclExclDecisionComponentDto {
