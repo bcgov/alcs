@@ -108,6 +108,13 @@ export class PlanningReviewTimelineService {
         isFulfilled: !!referral.responseDate,
         link: './referrals',
       });
+
+      if (referral.card) {
+        for (const subtask of referral.card.subtasks) {
+          const mappedEvent = this.mapSubtaskToEvent(subtask);
+          events.push(mappedEvent);
+        }
+      }
     }
   }
 }

@@ -110,6 +110,9 @@ export class PlanningReviewService {
           card: {
             board: true,
             type: true,
+            subtasks: {
+              type: true,
+            },
           },
         },
         meetings: true,
