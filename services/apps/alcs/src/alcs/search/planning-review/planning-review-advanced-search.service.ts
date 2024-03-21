@@ -178,9 +178,12 @@ export class PlanningReviewAdvancedSearchService {
       const formattedSearchString =
         formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
 
-      query = query.andWhere('planningReviewSearch.document_name LIKE :name', {
-        name: formattedSearchString,
-      });
+      query = query.andWhere(
+        'LOWER(planningReviewSearch.document_name) LIKE ANY (:names)',
+        {
+          names: formattedSearchString,
+        },
+      );
     }
     return query;
   }

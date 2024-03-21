@@ -73,11 +73,7 @@ export class PlanningReviewSearchTableComponent {
   }
 
   onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree([`/board/${record.board}`], {
-        queryParams: { card: record.referenceId, type: record.class },
-      }),
-    );
+    const url = this.router.serializeUrl(this.router.createUrlTree([`/planning-review/${record.referenceId}`]));
 
     window.open(url, '_blank');
   }
