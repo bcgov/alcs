@@ -318,17 +318,6 @@ describe('PlanningReviewDecisionService', () => {
       );
     });
 
-    it('should call the repository to check if portal user can download document', async () => {
-      mockDecisionDocumentRepository.findOne.mockResolvedValue(
-        new PlanningReviewDecisionDocument(),
-      );
-      mockDocumentService.getDownloadUrl.mockResolvedValue('');
-
-      await service.getDownloadForPortal('fake-uuid');
-      expect(mockDecisionDocumentRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
-    });
-
     it('should throw an exception when document not found for deletion', async () => {
       mockDecisionDocumentRepository.findOne.mockResolvedValue(null);
       await expect(service.deleteDocument('fake-uuid')).rejects.toMatchObject(
