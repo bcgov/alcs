@@ -275,7 +275,11 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
+    this.form.addControl('expiryDate', this.expiryDate);
+
     const lots = this.data.lots?.sort((a, b) => a.index - b.index) ?? null;
+
+    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
     this.subdApprovedLots.setValue(lots);
   }
 
@@ -352,6 +356,7 @@ export class DecisionComponentComponent implements OnInit {
     const update = this.subdApprovedLots.value?.map((e) => ({ ...e }) as ProposedDecisionLotDto);
     return {
       lots: update ?? undefined,
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 
