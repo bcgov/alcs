@@ -4,18 +4,15 @@ import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
-import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubmissionDraftController } from './notice-of-intent-submission-draft.controller';
 import { NoticeOfIntentSubmissionDraftService } from './notice-of-intent-submission-draft.service';
 
 describe('NoticeOfIntentSubmissionDraftController', () => {
   let controller: NoticeOfIntentSubmissionDraftController;
-  let mockNoiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
   let mockNoiDraftService: DeepMocked<NoticeOfIntentSubmissionDraftService>;
   let mockUser;
 
   beforeEach(async () => {
-    mockNoiSubmissionService = createMock();
     mockNoiDraftService = createMock();
 
     mockUser = new User({
@@ -25,10 +22,6 @@ describe('NoticeOfIntentSubmissionDraftController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NoticeOfIntentSubmissionDraftController],
       providers: [
-        {
-          provide: NoticeOfIntentSubmissionService,
-          useValue: mockNoiSubmissionService,
-        },
         {
           provide: NoticeOfIntentSubmissionDraftService,
           useValue: mockNoiDraftService,
