@@ -2,18 +2,19 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CardDto } from '../../../services/card/card.dto';
+import { CommissionerPlanningReviewDto } from '../../../services/commissioner/commissioner.dto';
 import { PlanningReviewDetailedDto } from '../../../services/planning-review/planning-review.dto';
 import { CLOSED_PR_LABEL, OPEN_PR_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
 
 @Component({
-  selector: 'app-header[planningReview]',
+  selector: 'app-planning-review-header[planningReview]',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnChanges {
   destroy = new Subject<void>();
 
-  @Input() planningReview!: PlanningReviewDetailedDto;
+  @Input() planningReview!: PlanningReviewDetailedDto | CommissionerPlanningReviewDto;
 
   linkedCards: (CardDto & { displayName: string })[] = [];
   statusPill = OPEN_PR_LABEL;
@@ -28,11 +29,13 @@ export class HeaderComponent implements OnChanges {
   }
 
   async setupLinkedCards() {
-    for (const [index, referral] of this.planningReview.referrals.entries()) {
-      this.linkedCards.push({
-        ...referral.card,
-        displayName: `Referral ${index}`,
-      });
+    if ('referrals' in this.planningReview) {
+      for (const [index, referral] of this.planningReview.referrals.entries()) {
+        this.linkedCards.push({
+          ...referral.card,
+          displayName: `Referral ${index}`,
+        });
+      }
     }
   }
 

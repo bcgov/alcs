@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationCeoCriterionCode } from '../../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
-import { CeoCriterionCodeDto } from '../../application-decision/application-decision-v1/application-decision/ceo-criterion/ceo-criterion.dto';
+import { CeoCriterionCodeDto } from '../../application-decision/application-decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
 
 @Injectable()
 export class ApplicationCeoCriterionService {

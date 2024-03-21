@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { filterUndefined } from '../../../utils/undefined';
+import { CARD_STATUS } from '../../card/card-status/card-status.entity';
 import { PlanningReviewService } from '../planning-review.service';
 import { PlanningReviewMeetingType } from './planning-review-meeting-type.entity';
 import {
@@ -94,5 +95,19 @@ export class PlanningReviewMeetingService {
     );
 
     await this.meetingRepository.save(existingMeeting);
+  }
+
+  async getUpcomingMeetings(): Promise<
+    { uuid: string; next_meeting: string }[]
+  > {
+    return await this.meetingRepository
+      .createQueryBuilder('meeting')
+      .select('planningReview.uuid, MAX(meeting.date) as next_meeting')
+      .innerJoin('meeting.planningReview', 'planningReview')
+      .innerJoin('planningReview.referrals', 'referrals')
+      .innerJoin('referrals.card', 'card')
+      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
+      .groupBy('planningReview.uuid')
+      .getRawMany();
   }
 }

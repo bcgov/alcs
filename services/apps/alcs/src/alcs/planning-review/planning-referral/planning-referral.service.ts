@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import {
-  FindOptions,
   FindOptionsRelations,
   FindOptionsWhere,
+  In,
   IsNull,
   Not,
   Repository,
@@ -204,6 +204,17 @@ export class PlanningReferralService {
           subtasks: { type: true, assignee: true },
         },
       },
+    });
+  }
+
+  async getManyByPlanningReview(planningReviewIds: string[]) {
+    return this.referralRepository.find({
+      where: {
+        planningReview: {
+          uuid: In(planningReviewIds),
+        },
+      },
+      relations: this.DEFAULT_RELATIONS,
     });
   }
 }

@@ -6,7 +6,7 @@ import { ToastService } from '../../toast/toast.service';
 
 import { ApplicationModificationService } from './application-modification.service';
 
-describe('ApplicationReconsiderationService', () => {
+describe('ApplicationModificationService', () => {
   let service: ApplicationModificationService;
   let httpClient: DeepMocked<HttpClient>;
   let toastService: DeepMocked<ToastService>;
@@ -49,7 +49,7 @@ describe('ApplicationReconsiderationService', () => {
           uuid: '2',
           submittedDate: new Date(4000),
         },
-      ])
+      ]),
     );
 
     await service.fetchByApplication('1');
@@ -66,7 +66,7 @@ describe('ApplicationReconsiderationService', () => {
     httpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.fetchByApplication('1');
@@ -82,7 +82,7 @@ describe('ApplicationReconsiderationService', () => {
       of({
         uuid: '1',
         submittedDate: new Date(3000),
-      })
+      }),
     );
 
     const res = await service.fetchByCardUuid('1');
@@ -96,7 +96,7 @@ describe('ApplicationReconsiderationService', () => {
     httpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.fetchByCardUuid('1');
@@ -111,7 +111,7 @@ describe('ApplicationReconsiderationService', () => {
       of({
         uuid: '1',
         submittedDate: new Date(3000),
-      })
+      }),
     );
 
     const res = await service.update('1', {});
@@ -125,7 +125,7 @@ describe('ApplicationReconsiderationService', () => {
     httpClient.patch.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.update('1', {});
@@ -140,7 +140,7 @@ describe('ApplicationReconsiderationService', () => {
       of({
         uuid: '1',
         submittedDate: new Date(3000),
-      })
+      }),
     );
 
     const res = await service.create({
@@ -165,7 +165,7 @@ describe('ApplicationReconsiderationService', () => {
     httpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.create({
@@ -191,7 +191,7 @@ describe('ApplicationReconsiderationService', () => {
       of({
         uuid: '1',
         submittedDate: new Date(3000),
-      })
+      }),
     );
 
     await service.delete('');
@@ -203,7 +203,7 @@ describe('ApplicationReconsiderationService', () => {
     httpClient.delete.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.delete('');

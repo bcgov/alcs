@@ -1,5 +1,5 @@
 import { ApplicationDecisionOutcomeCode } from '../../src/alcs/application-decision/application-decision-outcome.entity';
-import { ApplicationDecisionMeeting } from '../../src/alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeeting } from '../../src/alcs/application/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDecision } from '../../src/alcs/application-decision/application-decision.entity';
 import { ApplicationModificationOutcomeType } from '../../src/alcs/application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
 import { ApplicationModification } from '../../src/alcs/application-decision/application-modification/application-modification.entity';

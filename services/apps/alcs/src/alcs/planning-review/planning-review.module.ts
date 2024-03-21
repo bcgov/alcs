@@ -52,6 +52,10 @@ import { PlanningReviewService } from './planning-review.service';
     PlanningReviewDocumentService,
     PlanningReviewMeetingService,
   ],
-  exports: [PlanningReviewService, PlanningReferralService],
+  exports: [
+    PlanningReviewService,
+    PlanningReferralService,
+    PlanningReviewMeetingService,
+  ],
 })
 export class PlanningReviewModule {}

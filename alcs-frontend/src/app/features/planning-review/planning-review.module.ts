@@ -40,5 +40,6 @@ const routes: Routes = [
     EditMeetingDialogComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), CdkDropList, CdkDrag],
+  exports: [HeaderComponent, EvidentiaryRecordComponent],
 })
 export class PlanningReviewModule {}

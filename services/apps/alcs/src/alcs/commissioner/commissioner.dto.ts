@@ -1,7 +1,9 @@
 import { AutoMap } from 'automapper-classes';
+import { ApplicationReconsiderationDto } from '../application-decision/application-reconsideration/application-reconsideration.dto';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { PlanningReviewTypeDto } from '../planning-review/planning-review.dto';
 
 export class CommissionerApplicationDto {
   @AutoMap()
@@ -33,4 +35,27 @@ export class CommissionerApplicationDto {
 
   hasRecons: boolean;
   hasModifications: boolean;
+}
+
+export class CommissionerPlanningReviewDto {
+  @AutoMap()
+  fileNumber: string;
+
+  @AutoMap()
+  documentName: string;
+
+  @AutoMap()
+  open: boolean;
+
+  @AutoMap(() => PlanningReviewTypeDto)
+  type: PlanningReviewTypeDto;
+
+  @AutoMap(() => ApplicationRegionDto)
+  region: ApplicationRegionDto;
+
+  @AutoMap(() => LocalGovernmentDto)
+  localGovernment: LocalGovernmentDto;
+
+  @AutoMap()
+  legacyId?: string;
 }
