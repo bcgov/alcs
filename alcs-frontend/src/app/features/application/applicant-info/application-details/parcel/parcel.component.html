@@ -37,6 +37,7 @@
       <div class="subheading2 grid-1">PIN (optional)</div>
       <div class="grid-double">
         {{ parcel.pin }}
+        <app-no-data *ngIf="!parcel.pin"></app-no-data>
       </div>
     </ng-container>
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE">
@@ -68,6 +69,7 @@
       <div *ngIf="parcel.certificateOfTitle">
         <a (click)="openFile(parcel.certificateOfTitle)">{{ parcel.certificateOfTitle.fileName }}</a>
       </div>
+      <app-no-data *ngIf="!parcel.certificateOfTitle"></app-no-data>
     </div>
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
       <h5>Government Parcel Contact</h5>
@@ -77,37 +79,27 @@
           {{ parcel.owners[0].firstName }}
           <app-no-data *ngIf="!parcel.owners[0].firstName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Last Name
-        </div>
+        <div class="subheading2 grid-1">Last Name</div>
         <div class="grid-double">
           {{ parcel.owners[0].lastName }}
           <app-no-data *ngIf="!parcel.owners[0].lastName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Ministry or Department
-        </div>
+        <div class="subheading2 grid-1">Ministry or Department</div>
         <div class="grid-double">
           {{ parcel.owners[0].organizationName }}
           <app-no-data *ngIf="!parcel.owners[0].organizationName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Phone
-        </div>
+        <div class="subheading2 grid-1">Phone</div>
         <div class="grid-double">
           {{ parcel.owners[0].phoneNumber }}
           <app-no-data *ngIf="!parcel.owners[0].phoneNumber"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Email
-        </div>
+        <div class="subheading2 grid-1">Email</div>
         <div class="grid-double">
           {{ parcel.owners[0].email }}
           <app-no-data *ngIf="!parcel.owners[0].email"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Crown Type
-        </div>
+        <div class="subheading2 grid-1">Crown Type</div>
         <div class="grid-double">
           {{ parcel.owners[0].crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
           {{ parcel.owners[0].crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
@@ -137,6 +129,7 @@
           <app-no-data *ngIf="!owner.corporateSummary"></app-no-data>
         </div>
       </ng-container>
+      <app-no-data *ngIf="parcel.owners.length === 0"></app-no-data>
     </div>
   </ng-container>
 </div>
