@@ -47,6 +47,8 @@ export enum DOCUMENT_SOURCE {
 export enum DOCUMENT_SYSTEM {
   ALCS = 'ALCS',
   PORTAL = 'Portal',
+  OATS = 'OATS',
+  OATS_P = 'OATS_P',
 }
 
 export interface DocumentTypeDto extends BaseCodeDto {
