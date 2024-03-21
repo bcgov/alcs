@@ -3,13 +3,13 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from '../application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { CovenantTransferee } from '../application-submission/covenant-transferee/covenant-transferee.entity';
 import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
 import {
   APPLICATION_SUBMISSION_TYPES,
@@ -29,6 +29,7 @@ export class ApplicationSubmissionDraftService {
     private generateSubmissionDocumentService: GenerateSubmissionDocumentService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private covenantTransfereeService: CovenantTransfereeService,
+    private applicationService: ApplicationService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string) {
@@ -235,6 +236,8 @@ export class ApplicationSubmissionDraftService {
       fileNumber,
       user,
     );
+
+    await this.applicationService.updateApplicant(fileNumber, draft.applicant!);
     this.logger.debug(`Published Draft for file number ${fileNumber}`);
   }
 
