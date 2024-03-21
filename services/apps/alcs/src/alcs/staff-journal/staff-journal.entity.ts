@@ -3,6 +3,7 @@ import { Column, CreateDateColumn, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { Application } from '../application/application.entity';
+import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -56,4 +57,11 @@ export class StaffJournal extends Base {
   @Column({ nullable: true })
   @Index()
   planningReviewUuid: string;
+
+  @ManyToOne(() => Inquiry)
+  inquiry: Inquiry | null;
+
+  @Column({ nullable: true })
+  @Index()
+  inquiryUuid: string;
 }
