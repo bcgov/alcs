@@ -1,14 +1,14 @@
 -- Step 1: get local gov application name & match to uuid
 WITH oats_gov AS (
-    SELECT oaap.alr_application_id AS application_id,
+    SELECT oaap.planning_review_id AS review_id,
         oo.organization_name AS oats_gov_name
-    FROM oats.oats_alr_application_parties oaap
+    FROM oats.oats_planning_reviews oaap
         JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
         JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
     WHERE oo.organization_type_cd IN ('MUNI', 'FN', 'RD', 'RM')
 ),
 alcs_gov AS (
-    SELECT oats_gov.application_id AS application_id,
+    SELECT oats_gov.review_id AS review_id,
         alg.uuid AS gov_uuid
     FROM oats_gov
         JOIN alcs.local_government alg on (
@@ -62,55 +62,36 @@ alcs_gov AS (
                 WHEN oats_gov.oats_gov_name LIKE 'North Coast%' THEN 'North Coast Regional District'
                 WHEN oats_gov.oats_gov_name LIKE 'Strathcona%' THEN 'Strathcona Regional District'
                 WHEN oats_gov.oats_gov_name LIKE 'Mount Waddington%' THEN 'Mount Waddington Regional District'
+                WHEN oats_gov.oats_gov_name LIKE 'VILLAGE OF CHASE' THEN 'Village of Chase'
+                WHEN oats_gov.oats_gov_name LIKE 'Stikine Region' THEN'Kitimat Stikine Regional District'
                 ELSE oats_gov.oats_gov_name
             END
-        ) = alg."name"
+        ) = TRIM(alg."name")
 ),
 -- Step 2: Perform a lookup to retrieve the region code for each application ID
 panel_lookup AS (
-    SELECT DISTINCT oaap.alr_application_id AS application_id,
+    SELECT DISTINCT oaap.planning_review_id AS review_id,
         CASE
             WHEN oo2.parent_organization_id IS NULL THEN oo2.organization_name
             WHEN oo3.parent_organization_id IS NULL THEN oo3.organization_name
             ELSE 'NONE'
         END AS panel_region
-    FROM oats.oats_alr_application_parties oaap
+    FROM oats.oats_planning_reviews oaap
         JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
         JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
         LEFT JOIN oats.oats_organizations oo2 ON oo.parent_organization_id = oo2.organization_id
         LEFT JOIN oats.oats_organizations oo3 ON oo2.parent_organization_id = oo3.organization_id
     WHERE oo2.organization_type_cd = 'PANEL'
         OR oo3.organization_type_cd = 'PANEL'
-),
--- Step 3: Perform lookup to retrieve type code
-application_type_lookup AS (
-    SELECT oaac.alr_application_id AS application_id,
-        oacc."description" AS "description",
-        oaac.alr_change_code AS code
-    FROM oats.oats_alr_appl_components AS oaac
-        JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
-        LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
-    WHERE aee.component_id IS NULL
-) -- Step 5: Insert new records into the alcs_applications table
-SELECT oa.alr_application_id::text AS file_number,
-    atl.code AS type_code,
-    'Unknown' as applicant,
+)--,
+-- Step 3: Insert new records into the alcs_applications table
+SELECT oa.planning_review_id::text AS file_number,
     ar.code AS region_code,
+    'AAPP' AS type_code,
     alcs_gov.gov_uuid AS local_government_uuid,
-    'oats_etl',
-    CASE
-        WHEN oa.proposal_background_desc IS NOT NULL
-        AND length(oa.proposal_background_desc) > 10 THEN oa.proposal_summary_desc || '. Background: ' || oa.proposal_background_desc
-        ELSE oa.proposal_summary_desc
-    END AS "summary",
-    oa.staff_comment_observations,
-    oa.submitted_to_alc_date
-FROM oats.oats_alr_applications AS oa
-    JOIN oats.alcs_etl_srw_duplicate AS ae ON oa.alr_application_id = ae.application_id
-    AND ae.duplicated IS false
-    LEFT JOIN panel_lookup ON oa.alr_application_id = panel_lookup.application_id
-    LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
+    oa.local_gov_document_name,
+    'oats_etl' AS audit_created_by
+FROM oats.oats_planning_reviews AS oa
+    LEFT JOIN panel_lookup ON oa.planning_review_id = panel_lookup.review_id
     LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
-    LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
-WHERE atl.code = 'SRW'
-    AND oa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN') -- filter SRW only
+    LEFT JOIN alcs_gov ON oa.planning_review_id = alcs_gov.review_id
