@@ -35,10 +35,10 @@ def init_planning_review_base(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         with open(
             "planning_review/sql/planning_review_base_insert.sql", "r", encoding="utf-8"
         ) as sql_file:
-            application_sql = sql_file.read()
+            query = sql_file.read()
             while True:
                 cursor.execute(
-                    f"""{application_sql} 
+                    f"""{query} 
                         WHERE oa.planning_review_id > {last_row_id} ORDER by oa.planning_review_id;
                     """
                 )

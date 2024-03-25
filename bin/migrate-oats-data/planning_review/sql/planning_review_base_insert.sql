@@ -68,7 +68,7 @@ alcs_gov AS (
             END
         ) = TRIM(alg."name")
 ),
--- Step 2: Perform a lookup to retrieve the region code for each application ID
+-- Step 2: Perform a lookup to retrieve the region code for each planning_review_id
 panel_lookup AS (
     SELECT DISTINCT oaap.planning_review_id AS review_id,
         CASE
@@ -84,7 +84,7 @@ panel_lookup AS (
     WHERE oo2.organization_type_cd = 'PANEL'
         OR oo3.organization_type_cd = 'PANEL'
 )--,
--- Step 3: Insert new records into the alcs_applications table
+-- Step 3: Insert new records into the alcs_planning_review table
 SELECT oa.planning_review_id::text AS file_number,
     ar.code AS region_code,
     'AAPP' AS type_code,
