@@ -27,7 +27,7 @@ def init_inquiries(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
         failed_inserts_count = 0
         successful_inserts_count = 0
-        last_component_id = 0
+        last_imported_id = 0
 
         with open(
             "inquiry/sql/inquiry_base_insert.sql",
@@ -38,7 +38,7 @@ def init_inquiries(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             while True:
                 cursor.execute(
                     f"""{query} 
-                      AND oi.issue_id > {last_component_id} ORDER BY oi.issue_id;"""
+                      AND oi.issue_id > {last_imported_id} ORDER BY oi.issue_id;"""
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -55,16 +55,16 @@ def init_inquiries(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     )
 
                     last_record = dict(rows[-1])
-                    last_component_id = last_record["alr_appl_component_id"]
+                    last_imported_id = last_record["issue_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert applications boundary amendments so far {successful_inserts_count}; last updated {last_component_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully imported inquiry so far {successful_inserts_count}; last updated {last_imported_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts_count = count_total - successful_inserts_count
-                    last_component_id = last_component_id + 1
+                    last_imported_id = last_imported_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts_count}"
@@ -82,22 +82,22 @@ def _insert_records(conn, cursor, rows):
 
 
 def _compile_insert_query(number_of_rows_to_insert):
-    amendments_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
+    records_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
                 INSERT INTO alcs.inquiry(
                     file_number, 
                     summary,
-                    dateSubmittedToAlc,
+                    date_submitted_to_alc,
                     open,
                     local_government_uuid,
                     region_code,
                     type_code,
                     audit_created_by
                 )
-                VALUES{amendments_to_insert}
+                VALUES{records_to_insert}
                 ON CONFLICT (file_number) DO UPDATE SET
                 summary = COALESCE(EXCLUDED.summary, alcs.inquiry.summary),
-                dateSubmittedToAlc = COALESCE(EXCLUDED.dateSubmittedToAlc, alcs.inquiry.dateSubmittedToAlc),
+                date_submitted_to_alc = COALESCE(EXCLUDED.date_submitted_to_alc, alcs.inquiry.date_submitted_to_alc),
                 open = COALESCE(EXCLUDED.open, alcs.inquiry.open),
                 region_code = COALESCE(EXCLUDED.region_code, alcs.inquiry.region_code),
                 type_code = EXCLUDED.type_code,
@@ -117,19 +117,19 @@ def _prepare_data_to_insert(rows):
 
 def _map_data(row):
     return {
-        "file_number": row["file_number"],
+        "file_number": row["issue_id"],
         "summary": row["description"],
         "dateSubmittedToAlc": add_timezone_and_keep_date_part(row["received_date"]),
         "open": False,
         "local_government_uuid": row["gov_uuid"],
-        "region_code": row["panel_region"],
+        "region_code": row["region_code"],
         "type_code": row["issue_type_code"],
         "audit_created_by": OATS_ETL_USER,
     }
 
 
 @inject_conn_pool
-def clean_inquiry(conn=None):
+def clean_inquiries(conn=None):
     logger.info("Start inquiry cleaning")
     with conn.cursor() as cursor:
         cursor.execute(

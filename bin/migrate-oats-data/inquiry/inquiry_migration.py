@@ -1,4 +1,4 @@
-from .inquiry_base import init_inquiries, clean_inquiry
+from .inquiry_base import init_inquiries, clean_inquiries
 
 
 def process_inquiry(batch_size):
@@ -6,4 +6,4 @@ def process_inquiry(batch_size):
 
 
 def clean_inquiry():
-    clean_inquiry
+    clean_inquiries()

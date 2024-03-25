@@ -1,1 +1,1 @@
-from .inquiry_base import init_inquiries, clean_inquiry
+from .inquiry_migration import process_inquiry, clean_inquiry

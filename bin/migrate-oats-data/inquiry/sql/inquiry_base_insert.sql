@@ -96,8 +96,8 @@ SELECT oi.issue_id,
         WHEN oi.inquiry_code in ('GENERAL', 'AREAOI') THEN 'GENC'
         WHEN oi.inquiry_code = 'COMPLAN' THEN 'REFR'
     END AS issue_type_code,
-    oi.inquiry_code,
     panel_lookup.panel_region,
+    ar.code AS region_code,
     alcs_gov.gov_uuid,
     alcs_gov.gov_name,
     oi.received_date,
@@ -105,4 +105,5 @@ SELECT oi.issue_id,
 FROM oats.oats_issues oi
     JOIN panel_lookup ON panel_lookup.issue_id = oi.issue_id
     JOIN alcs_gov ON alcs_gov.issue_id = oi.issue_id
+    LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
 WHERE oi.issu_type = 'INQ'
