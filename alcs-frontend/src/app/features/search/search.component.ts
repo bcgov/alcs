@@ -216,30 +216,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.isSearchExpanded = !this.isSearchExpanded;
   }
 
-  onGovernmentChange($event: MatAutocompleteSelectedEvent) {
-    const localGovernmentName = $event.option.value;
-    if (localGovernmentName) {
-      const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
-      if (localGovernment) {
-        this.localGovernmentControl.setValue(localGovernment.name);
-      }
-    }
-  }
-
-  onBlur() {
-    //Blur will fire before onGovernmentChange above, so use setTimeout to delay it
-    setTimeout(() => {
-      const localGovernmentName = this.localGovernmentControl.getRawValue();
-      if (localGovernmentName) {
-        const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
-        if (!localGovernment) {
-          this.localGovernmentControl.setValue(null);
-          console.log('Clearing Local Government field');
-        }
-      }
-    }, 500);
-  }
-
   onReset() {
     this.searchForm.reset();
 
