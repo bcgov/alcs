@@ -2,9 +2,11 @@ from common import (
     setup_and_get_logger,
     BATCH_UPLOAD_SIZE,
     OATS_ETL_USER,
+    DEFAULT_ETL_USER_UUID,
     add_timezone_and_keep_date_part,
 )
 from db import inject_conn_pool
+from datetime import datetime
 from psycopg2.extras import RealDictCursor
 
 etl_name = "init_inquiries"
@@ -92,7 +94,9 @@ def _compile_insert_query(number_of_rows_to_insert):
                     local_government_uuid,
                     region_code,
                     type_code,
-                    audit_created_by
+                    audit_created_by,
+                    closed_by_uuid,
+                    closed_date
                 )
                 VALUES{records_to_insert}
                 ON CONFLICT (file_number) DO UPDATE SET
@@ -102,7 +106,9 @@ def _compile_insert_query(number_of_rows_to_insert):
                 region_code = COALESCE(EXCLUDED.region_code, alcs.inquiry.region_code),
                 type_code = EXCLUDED.type_code,
                 local_government_uuid = COALESCE(EXCLUDED.local_government_uuid, alcs.inquiry.local_government_uuid),
-                audit_created_by = EXCLUDED.audit_created_by;
+                audit_created_by = EXCLUDED.audit_created_by,
+                closed_by_uuid = COALESCE(EXCLUDED.closed_by_uuid, alcs.inquiry.closed_by_uuid),
+                closed_date = COALESCE(EXCLUDED.closed_date, alcs.inquiry.closed_date);
     """
 
 
@@ -116,6 +122,8 @@ def _prepare_data_to_insert(rows):
 
 
 def _map_data(row):
+    date_str = "0001-01-01 00:00:00.000 -0800"
+
     return {
         "file_number": row["issue_id"],
         "summary": row["description"],
@@ -125,6 +133,8 @@ def _map_data(row):
         "region_code": row["region_code"],
         "type_code": row["issue_type_code"],
         "audit_created_by": OATS_ETL_USER,
+        "closed_by_uuid": DEFAULT_ETL_USER_UUID,
+        "closed_date": date_str,
     }
 
 

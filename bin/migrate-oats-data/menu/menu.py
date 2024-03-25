@@ -26,6 +26,10 @@ from .command_parser.planning_review_command_parser import (
     planning_review_clean_command_parser,
     planning_review_import_command_parser,
 )
+from .command_parser.inquiry_command_parser import (
+    inquiry_import_command_parser,
+    inquiry_clean_command_parser,
+)
 
 import_batch_size = BATCH_UPLOAD_SIZE
 
@@ -64,6 +68,8 @@ def setup_menu_args_parser(import_batch_size):
     srw_clean_command_parser(subparsers)
     planning_review_import_command_parser(import_batch_size, subparsers)
     planning_review_clean_command_parser(subparsers)
+    inquiry_import_command_parser(import_batch_size, subparsers)
+    inquiry_clean_command_parser(subparsers)
     subparsers.add_parser("clean", help="Clean all imported data")
 
     subparsers.add_parser("obfuscate", help="Obfuscate PROD data")
