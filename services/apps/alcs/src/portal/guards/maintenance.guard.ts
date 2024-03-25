@@ -30,7 +30,9 @@ export class MaintenanceGuard implements CanActivate {
 
     if (
       req.routeOptions.url.startsWith('/portal') ||
-      req.routeOptions.url.startsWith('/public')
+      req.routeOptions.url.startsWith('/public') ||
+      req.routeOptions.url.startsWith('/api/portal') ||
+      req.routeOptions.url.startsWith('/api/public')
     ) {
       const maintenanceMode = await this.configurationRepository.findOne({
         where: {
