@@ -4,6 +4,7 @@ import { ApplicationReconsiderationDto } from '../../../services/application/app
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { HomeService } from '../../../services/home/home.service';
+import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../../../services/notification/notification.dto';
@@ -26,6 +27,7 @@ export class AssignedComponent implements OnInit {
   applications: AssignedToMeFile[] = [];
   planningReferrals: AssignedToMeFile[] = [];
   notifications: AssignedToMeFile[] = [];
+  inquiries: AssignedToMeFile[] = [];
   totalFiles = 0;
 
   constructor(
@@ -47,6 +49,7 @@ export class AssignedComponent implements OnInit {
       noticeOfIntents,
       noticeOfIntentModifications,
       notifications,
+      inquiries,
     } = await this.homeService.fetchAssignedToMe();
 
     this.noticeOfIntents = [
@@ -102,6 +105,17 @@ export class AssignedComponent implements OnInit {
       ...planningReferrals
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapPlanningReferral(r))
+        .sort((a, b) => a.date! - b.date!),
+    ];
+
+    this.inquiries = [
+      ...inquiries
+        .filter((r) => r.card!.highPriority)
+        .map((r) => this.mapInquiry(r))
+        .sort((a, b) => a.date! - b.date!),
+      ...inquiries
+        .filter((r) => !r.card!.highPriority)
+        .map((r) => this.mapInquiry(r))
         .sort((a, b) => a.date! - b.date!),
     ];
 
@@ -201,6 +215,17 @@ export class AssignedComponent implements OnInit {
       date: a.dateSubmittedToAlc,
       highPriority: a.card!.highPriority,
       labels: [NOTIFICATION_LABEL],
+    };
+  }
+
+  private mapInquiry(inquiry: InquiryDto) {
+    return {
+      title: `${inquiry.fileNumber} (${inquiry.inquirerLastName ?? 'Unknown'})`,
+      type: inquiry.card!.type,
+      card: inquiry.card!,
+      date: inquiry.dateSubmittedToAlc,
+      highPriority: inquiry.card!.highPriority,
+      labels: [inquiry.type],
     };
   }
 }

@@ -13,7 +13,9 @@ export enum PARENT_TYPE {
   PLANNING_REVIEW = 'planning-review',
   NOTICE_OF_INTENT = 'notice-of-intent',
   NOTIFICATION = 'notification',
+  INQUIRY = 'inquiry',
 }
+
 export class UpdateCardSubtaskDto {
   @AutoMap()
   @IsUUID()

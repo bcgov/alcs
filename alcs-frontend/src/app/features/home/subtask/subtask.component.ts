@@ -25,6 +25,7 @@ export class SubtaskComponent implements OnInit, OnDestroy {
   noticeOfIntentSubtasks: HomepageSubtaskDto[] = [];
   planningReviewSubtasks: HomepageSubtaskDto[] = [];
   notificationSubtasks: HomepageSubtaskDto[] = [];
+  inquirySubtasks: HomepageSubtaskDto[] = [];
 
   showNoi = true;
   showAppAndNonApp = true;
@@ -60,6 +61,7 @@ export class SubtaskComponent implements OnInit, OnDestroy {
     const nois = allSubtasks.filter((s) => s.card.type === CardType.NOI);
     const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI);
     const notifications = allSubtasks.filter((s) => s.card.type === CardType.NOTIFICATION);
+    const inquiries = allSubtasks.filter((s) => s.card.type === CardType.INQUIRY);
 
     this.applicationSubtasks = [
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
@@ -87,6 +89,11 @@ export class SubtaskComponent implements OnInit, OnDestroy {
       ...notifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
+    this.inquirySubtasks = [
+      ...inquiries.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+      ...inquiries.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+    ];
+
     if (this.showNoi) {
       this.totalSubtaskCount = this.noticeOfIntentSubtasks.length + this.notificationSubtasks.length;
     }
@@ -101,7 +108,8 @@ export class SubtaskComponent implements OnInit, OnDestroy {
         this.applicationSubtasks.length +
         this.noticeOfIntentSubtasks.length +
         this.planningReviewSubtasks.length +
-        this.notificationSubtasks.length;
+        this.notificationSubtasks.length +
+        this.inquirySubtasks.length;
     }
   }
 
