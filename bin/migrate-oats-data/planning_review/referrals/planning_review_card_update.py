@@ -106,7 +106,7 @@ def _prepare_oats_planning_review_data(row_data_list):
         mapped_data_list.append(
             {
                 "uuid": row["uuid"],
-                "board_uuid": "d8c18278-cb41-474e-a180-534a101243ab",
+                "board_uuid": "e7b18852-4f8f-419e-83e3-60e706b4a494",
                 "audit_updated_by": None,
                 "status_code": _map_card_status(row),
             }
