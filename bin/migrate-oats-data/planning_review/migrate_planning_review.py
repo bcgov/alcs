@@ -12,6 +12,7 @@ from .referrals import (
     clean_planning_referrals,
     init_planning_review_cards,
     clean_planning_review_cards,
+    update_planning_review_cards,
 )
 
 
@@ -21,6 +22,7 @@ def process_planning_review(batch_size):
     update_planning_review_base_fields(batch_size)
     init_planning_review_cards(batch_size)
     process_planning_review_referral(batch_size)
+    update_planning_review_cards(batch_size)
 
 
 def clean_planning_review():
