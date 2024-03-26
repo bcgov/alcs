@@ -70,7 +70,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     private noiDocumentService: NoiDocumentService,
     private noiSubmissionService: NoticeOfIntentSubmissionService,
     private noiParcelService: NoticeOfIntentParcelService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +117,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags.push('P');
     }
 
+    const file = this.pendingFile;
     const dto: UpdateNoticeOfIntentDocumentDto = {
       fileName: this.name.value!,
       source: this.source.value as DOCUMENT_SOURCE,
@@ -124,9 +125,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags,
       parcelUuid: this.parcelId.value ?? undefined,
       ownerUuid: this.ownerId.value ?? undefined,
+      file,
     };
 
-    const file = this.pendingFile;
     this.isSaving = true;
     if (this.data.existingDocument) {
       await this.noiDocumentService.update(this.data.existingDocument.uuid, dto);

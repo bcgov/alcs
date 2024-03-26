@@ -56,7 +56,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     public data: { fileId: string; existingDocument?: NotificationDocumentDto },
     protected dialog: MatDialogRef<any>,
     private notificationDocumentService: NotificationDocumentService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -94,14 +94,15 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags.push('P');
     }
 
+    const file = this.pendingFile;
     const dto: UpdateNoticeOfIntentDocumentDto = {
       fileName: this.name.value!,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
+      file,
     };
 
-    const file = this.pendingFile;
     this.isSaving = true;
     if (this.data.existingDocument) {
       await this.notificationDocumentService.update(this.data.existingDocument.uuid, dto);
@@ -171,7 +172,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       await this.notificationDocumentService.download(
         this.data.existingDocument.uuid,
-        this.data.existingDocument.fileName
+        this.data.existingDocument.fileName,
       );
     }
   }
