@@ -30,6 +30,7 @@ export class Inquiry extends Base {
     }
   }
 
+  @AutoMap()
   @Column({
     unique: true,
     default: () => `NEXTVAL('${FILE_NUMBER_SEQUENCE}')`,
@@ -97,6 +98,8 @@ export class Inquiry extends Base {
   card: Card;
 
   @AutoMap(() => InquiryParcel)
-  @OneToMany(() => InquiryParcel, (incParcel) => incParcel.inquiry)
+  @OneToMany(() => InquiryParcel, (incParcel) => incParcel.inquiry, {
+    cascade: true,
+  })
   parcels: InquiryParcel[];
 }

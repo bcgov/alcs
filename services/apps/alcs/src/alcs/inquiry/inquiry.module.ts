@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InquiryProfile } from '../../common/automapper/inquiry.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
+import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
 import { InquiryDocumentController } from './inquiry-document/inquiry-document.controller';
 import { InquiryDocument } from './inquiry-document/inquiry-document.entity';
@@ -26,6 +27,7 @@ import { DocumentCode } from '../../document/document-code.entity';
       DocumentCode,
     ]),
     CardModule,
+    forwardRef(() => BoardModule),
     FileNumberModule,
     DocumentModule,
   ],

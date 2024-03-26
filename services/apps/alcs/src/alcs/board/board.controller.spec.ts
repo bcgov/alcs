@@ -11,6 +11,7 @@ import { ApplicationService } from '../application/application.service';
 import { CARD_TYPE, CardType } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
+import { InquiryService } from '../inquiry/inquiry.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../notification/notification.service';
@@ -32,6 +33,7 @@ describe('BoardController', () => {
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noiModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let notificationService: DeepMocked<NotificationService>;
+  let inquiryService: DeepMocked<InquiryService>;
   let mockBoard;
 
   beforeEach(async () => {
@@ -44,6 +46,7 @@ describe('BoardController', () => {
     noticeOfIntentService = createMock();
     noiModificationService = createMock();
     notificationService = createMock();
+    inquiryService = createMock();
 
     mockBoard = new Board({
       allowedCardTypes: [],
@@ -67,6 +70,8 @@ describe('BoardController', () => {
     noiModificationService.mapToDtos.mockResolvedValue([]);
     notificationService.getByBoard.mockResolvedValue([]);
     notificationService.mapToDtos.mockResolvedValue([]);
+    inquiryService.getByBoard.mockResolvedValue([]);
+    inquiryService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -101,6 +106,10 @@ describe('BoardController', () => {
         {
           provide: NotificationService,
           useValue: notificationService,
+        },
+        {
+          provide: InquiryService,
+          useValue: inquiryService,
         },
         {
           provide: ClsService,
