@@ -13,6 +13,10 @@
     <div class="subheading2">Planning Reviews</div>
     <app-subtask-table [subtasks]="planningReviewSubtasks" [users]="users"></app-subtask-table>
   </section>
+  <section *ngIf="inquirySubtasks.length">
+    <div class="subheading2">Inquiries</div>
+    <app-subtask-table [subtasks]="inquirySubtasks" [users]="users"></app-subtask-table>
+  </section>
   <section *ngIf="notificationSubtasks.length">
     <div class="subheading2">Notifications</div>
     <app-subtask-table [subtasks]="notificationSubtasks" [users]="users"></app-subtask-table>

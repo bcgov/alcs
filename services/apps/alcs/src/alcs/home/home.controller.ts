@@ -27,6 +27,9 @@ import {
 } from '../card/card-subtask/card-subtask.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
+import { InquiryDto } from '../inquiry/inquiry.dto';
+import { Inquiry } from '../inquiry/inquiry.entity';
+import { InquiryService } from '../inquiry/inquiry.service';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModification } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
@@ -59,6 +62,7 @@ export class HomeController {
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
     private planningReferralService: PlanningReferralService,
+    private inquiryService: InquiryService,
   ) {}
 
   @Get('/assigned')
@@ -71,6 +75,7 @@ export class HomeController {
     planningReferrals: PlanningReferralDto[];
     modifications: ApplicationModificationDto[];
     notifications: NotificationDto[];
+    inquiries: InquiryDto[];
   }> {
     const userId = req.user.entity.uuid;
     const assignedFindOptions = {
@@ -103,6 +108,8 @@ export class HomeController {
       const notifications =
         await this.notificationService.getBy(assignedFindOptions);
 
+      const inquiries = await this.inquiryService.getBy(assignedFindOptions);
+
       return {
         noticeOfIntents:
           await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
@@ -117,6 +124,7 @@ export class HomeController {
           await this.planningReferralService.mapToDtos(planningReviews),
         modifications: await this.modificationService.mapToDtos(modifications),
         notifications: await this.notificationService.mapToDtos(notifications),
+        inquiries: await this.inquiryService.mapToDtos(inquiries),
       };
     } else {
       return {
@@ -127,6 +135,7 @@ export class HomeController {
         planningReferrals: [],
         modifications: [],
         notifications: [],
+        inquiries: [],
       };
     }
   }
@@ -188,6 +197,11 @@ export class HomeController {
       notificationsWithSubtasks,
     );
 
+    const inquiriesWIthSubtasks =
+      await this.inquiryService.getWithIncompleteSubtaskByType(subtaskType);
+
+    const inquirySubtasks = this.mapInquiriesToDtos(inquiriesWIthSubtasks);
+
     return [
       ...noticeOfIntentSubtasks,
       ...applicationSubtasks,
@@ -196,6 +210,7 @@ export class HomeController {
       ...noiModificationsSubtasks,
       ...planningReferralSubtasks,
       ...notificationSubtasks,
+      ...inquirySubtasks,
     ];
   }
 
@@ -368,6 +383,30 @@ export class HomeController {
             paused: false,
             title: `${notification.fileNumber} (${notification.applicant})`,
             parentType: PARENT_TYPE.NOTIFICATION,
+          });
+        }
+      }
+    }
+    return result;
+  }
+
+  private mapInquiriesToDtos(inquiries: Inquiry[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const inquiry of inquiries) {
+      if (inquiry.card) {
+        for (const subtask of inquiry.card.subtasks) {
+          result.push({
+            type: subtask.type,
+            createdAt: subtask.createdAt.getTime(),
+            assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+            uuid: subtask.uuid,
+            card: this.mapper.map(inquiry.card, Card, CardDto),
+            completedAt: subtask.completedAt?.getTime(),
+            paused: false,
+            title: `${inquiry.fileNumber} (${
+              inquiry.inquirerLastName ?? 'Unknown'
+            })`,
+            parentType: PARENT_TYPE.INQUIRY,
           });
         }
       }

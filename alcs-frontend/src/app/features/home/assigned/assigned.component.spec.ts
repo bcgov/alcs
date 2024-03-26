@@ -42,6 +42,7 @@ describe('AssignedComponent', () => {
       reconsiderations: [],
       noticeOfIntents: [],
       notifications: [],
+      inquiries: [],
     });
 
     fixture.detectChanges();
