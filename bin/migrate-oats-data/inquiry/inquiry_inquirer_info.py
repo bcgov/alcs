@@ -64,7 +64,7 @@ def process_inquiry_inquirer_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     last_issue_id = dict(updated_data[-1])["issue_id"]
 
                     logger.debug(
-                        f"Retrieved/updated items count: {len(updated_data)}; total successfully updated SRW so far {successful_updates_count}; last updated application_id: {last_issue_id}"
+                        f"Retrieved/updated items count: {len(updated_data)}; total successfully updated Inquiry so far {successful_updates_count}; last updated issue_id: {last_issue_id}"
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
