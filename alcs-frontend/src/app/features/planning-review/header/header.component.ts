@@ -15,6 +15,7 @@ export class HeaderComponent implements OnChanges {
   destroy = new Subject<void>();
 
   @Input() planningReview!: PlanningReviewDetailedDto | CommissionerPlanningReviewDto;
+  @Input() showStatus = true;
 
   linkedCards: (CardDto & { displayName: string })[] = [];
   statusPill = OPEN_PR_LABEL;

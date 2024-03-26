@@ -1,5 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { User } from '../../../user/user.entity';
 import { PlanningReferral } from '../planning-referral/planning-referral.entity';
 import { PlanningReviewDecision } from '../planning-review-decision/planning-review-decision.entity';
 import { PlanningReviewDecisionService } from '../planning-review-decision/planning-review-decision.service';
@@ -42,6 +43,7 @@ describe('PlanningReviewTimelineService', () => {
 
     mockPlanningReviewService.getDetailedReview.mockResolvedValue(
       new PlanningReview({
+        open: true,
         referrals: [],
       }),
     );
@@ -68,6 +70,7 @@ describe('PlanningReviewTimelineService', () => {
 
     mockPlanningReviewService.getDetailedReview.mockResolvedValue(
       new PlanningReview({
+        open: true,
         referrals: [
           new PlanningReferral({
             auditCreatedAt: sameDate,
@@ -87,7 +90,7 @@ describe('PlanningReviewTimelineService', () => {
 
     expect(res).toBeDefined();
     expect(res.length).toEqual(2);
-    expect(res[0].htmlText).toEqual('Referral #1');
+    expect(res[0].htmlText).toEqual('Referral #1 - <strong>Open</strong>');
     expect(res[0].isFulfilled).toBeTruthy();
     expect(res[1].htmlText).toEqual('Referral #2');
     expect(res[1].isFulfilled).toBeFalsy();
@@ -137,5 +140,23 @@ describe('PlanningReviewTimelineService', () => {
     expect(res.length).toEqual(2);
     expect(res[0].htmlText).toEqual('Scheduled Date - Other Meeting');
     expect(res[1].htmlText).toEqual('Scheduled Date - Meeting');
+  });
+
+  it('should add an event for closed', async () => {
+    const sameDate = new Date();
+    mockPlanningReviewService.getDetailedReview.mockResolvedValue(
+      new PlanningReview({
+        open: false,
+        closedBy: new User(),
+        closedDate: sameDate,
+        referrals: [],
+      }),
+    );
+
+    const res = await service.getTimelineEvents('file-number');
+
+    expect(res).toBeDefined();
+    expect(res.length).toEqual(1);
+    expect(res[0].htmlText).toEqual('Closed');
   });
 });

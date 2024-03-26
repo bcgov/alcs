@@ -18,6 +18,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['date', 'type', 'action'];
   meetings: PlanningReviewMeetingDto[] = [];
   planningReviewUuid: string | undefined;
+  fileNumber: string | undefined;
 
   constructor(
     public dialog: MatDialog,
@@ -30,7 +31,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.planningReviewDetailService.$planningReview.pipe(takeUntil(this.$destroy)).subscribe((planningReview) => {
       if (planningReview) {
         this.planningReviewUuid = planningReview.uuid;
-        this.loadMeetings();
+        this.fileNumber = planningReview.fileNumber;
+        this.meetings = planningReview.meetings;
       }
     });
   }
@@ -47,8 +49,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       })
       .beforeClosed()
       .subscribe((didCreate) => {
-        if (didCreate) {
-          this.loadMeetings();
+        if (didCreate && this.fileNumber) {
+          this.planningReviewDetailService.loadReview(this.fileNumber);
         }
       });
   }
@@ -66,8 +68,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       })
       .beforeClosed()
       .subscribe((didEdit) => {
-        if (didEdit) {
-          this.loadMeetings();
+        if (didEdit && this.fileNumber) {
+          this.planningReviewDetailService.loadReview(this.fileNumber);
         }
       });
   }
@@ -80,7 +82,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       .subscribe((didConfirm) => {
         if (didConfirm) {
           this.decisionMeetingService.delete(uuid).then(() => {
-            this.loadMeetings();
+            if (this.fileNumber) {
+              this.planningReviewDetailService.loadReview(this.fileNumber);
+            }
           });
         }
       });
@@ -89,12 +93,5 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  private async loadMeetings() {
-    if (this.planningReviewUuid) {
-      const meetings = await this.decisionMeetingService.listByPlanningReview(this.planningReviewUuid);
-      this.meetings = meetings ?? [];
-    }
   }
 }
