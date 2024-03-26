@@ -9,6 +9,7 @@ import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
+import { InquirySearchService } from './inquiry/inquiry.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
@@ -17,6 +18,7 @@ import { PlanningReviewAdvancedSearchService } from './planning-review/planning-
 import { PlanningReviewSearchView } from './planning-review/planning-review-search-view.entity';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
+import { InquirySearchView } from './inquiry/inquiry-search-view.entity';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { SearchService } from './search.service';
       NoticeOfIntentSubmissionSearchView,
       NotificationSubmissionSearchView,
       PlanningReviewSearchView,
+      InquirySearchView,
     ]),
   ],
   providers: [
@@ -40,6 +43,7 @@ import { SearchService } from './search.service';
     NoticeOfIntentAdvancedSearchService,
     NotificationAdvancedSearchService,
     PlanningReviewAdvancedSearchService,
+    InquirySearchService,
   ],
   controllers: [SearchController],
 })

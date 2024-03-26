@@ -1,12 +1,12 @@
 import {
   IsArray,
-  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
   MinLength,
 } from 'class-validator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { InquiryTypeDto } from '../inquiry/inquiry.dto';
 import { PlanningReviewTypeDto } from '../planning-review/planning-review.dto';
 
 export class SearchResultDto {
@@ -19,7 +19,13 @@ export class SearchResultDto {
   label?: ApplicationTypeDto;
 }
 
-export type SearchEntityClass = 'APP' | 'NOI' | 'PLAN' | 'COV' | 'NOTI';
+export type SearchEntityClass =
+  | 'APP'
+  | 'NOI'
+  | 'PLAN'
+  | 'COV'
+  | 'NOTI'
+  | 'INQR';
 
 export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;
@@ -67,15 +73,30 @@ export class NotificationSearchResultDto {
   class: SearchEntityClass;
 }
 
+export class InquirySearchResultDto {
+  type: InquiryTypeDto;
+  inquirerFirstName?: string;
+  inquirerLastName?: string;
+  inquirerOrganizationName?: string;
+  localGovernmentName: string | null;
+  fileNumber: string;
+  boardCode?: string;
+  dateSubmitted?: number;
+  class: SearchEntityClass;
+  open: boolean;
+}
+
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   notifications: NotificationSearchResultDto[];
   planningReviews: PlanningReviewSearchResultDto[];
+  inquiries: InquirySearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalPlanningReviews: number;
   totalNotifications: number;
+  totalInquiries: number;
 }
 
 export class AdvancedSearchResultDto<T> {
