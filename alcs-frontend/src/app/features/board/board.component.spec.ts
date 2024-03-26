@@ -17,6 +17,7 @@ import { BoardDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
+import { InquiryService } from '../../services/inquiry/inquiry.service';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
@@ -44,6 +45,7 @@ describe('BoardComponent', () => {
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let notificationService: DeepMocked<NotificationService>;
+  let inquiryService: DeepMocked<InquiryService>;
 
   let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
 
@@ -97,6 +99,7 @@ describe('BoardComponent', () => {
       noticeOfIntents: [],
       noiModifications: [],
       notifications: [],
+      inquiries: [],
     });
 
     dialog = createMock();
@@ -111,6 +114,7 @@ describe('BoardComponent', () => {
     noticeOfIntentService = createMock();
     noticeOfIntentModificationService = createMock();
     notificationService = createMock();
+    inquiryService = createMock();
 
     const params = {
       boardCode: 'boardCode',
@@ -177,6 +181,10 @@ describe('BoardComponent', () => {
           useValue: notificationService,
         },
         {
+          provide: InquiryService,
+          useValue: inquiryService,
+        },
+        {
           provide: Title,
           useValue: titleService,
         },
@@ -218,6 +226,7 @@ describe('BoardComponent', () => {
       noticeOfIntents: [],
       noiModifications: [],
       notifications: [],
+      inquiries: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -238,6 +247,7 @@ describe('BoardComponent', () => {
       noticeOfIntents: [],
       noiModifications: [],
       notifications: [],
+      inquiries: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -280,6 +290,7 @@ describe('BoardComponent', () => {
       noticeOfIntents: [],
       noiModifications: [],
       notifications: [],
+      inquiries: [],
     });
 
     boardEmitter.next([mockBoard]);

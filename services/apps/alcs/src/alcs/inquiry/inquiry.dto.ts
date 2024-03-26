@@ -2,6 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { InquiryParcelCreateDto } from './inquiry-parcel/inquiry-parcel.dto';
@@ -18,6 +19,10 @@ export class InquiryTypeDto extends BaseCodeDto {
 }
 
 export class CreateInquiryDto {
+  @IsString()
+  @IsNotEmpty()
+  boardCode: string;
+
   @IsString()
   @IsNotEmpty()
   summary: string;
@@ -68,6 +73,9 @@ export class InquiryDto {
   uuid: string;
 
   @AutoMap()
+  fileNumber: string;
+
+  @AutoMap()
   summary: string;
 
   @AutoMap()
@@ -105,6 +113,12 @@ export class InquiryDto {
 
   @AutoMap(() => ApplicationRegionDto)
   region: ApplicationRegionDto;
+
+  @AutoMap(() => CardDto)
+  card?: CardDto;
+
+  @AutoMap(() => InquiryTypeDto)
+  type: InquiryTypeDto;
 }
 
 export class UpdateInquiryDto {
@@ -151,24 +165,14 @@ export class UpdateInquiryDto {
 
 export class CreateInquiryServiceDto {
   summary: string;
-
   dateSubmittedToAlc: Date;
-
   localGovernmentUuid: string;
-
   typeCode: string;
-
   regionCode: string;
-
   inquirerFirstName?: string;
-
   inquirerLastName?: string;
-
   inquirerOrganization?: string;
-
   inquirerPhone?: string;
-
   inquirerEmail?: string;
-
   parcels?: InquiryParcelCreateDto[];
 }

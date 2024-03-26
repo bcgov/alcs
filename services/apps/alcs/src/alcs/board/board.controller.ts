@@ -16,6 +16,7 @@ import { ApplicationService } from '../application/application.service';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
+import { InquiryService } from '../inquiry/inquiry.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../notification/notification.service';
@@ -38,6 +39,7 @@ export class BoardController {
     private noiModificationService: NoticeOfIntentModificationService,
     private noticeOfIntentService: NoticeOfIntentService,
     private notificationService: NotificationService,
+    private inquiryService: InquiryService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -95,6 +97,10 @@ export class BoardController {
       ? await this.notificationService.getByBoard(board.uuid)
       : [];
 
+    const inquiries = allowedCodes.includes(CARD_TYPE.INQUIRY)
+      ? await this.inquiryService.getByBoard(board.uuid)
+      : [];
+
     return {
       board: await this.autoMapper.mapAsync(board, Board, BoardDto),
       applications: await this.applicationService.mapToDtos(applications),
@@ -107,6 +113,7 @@ export class BoardController {
       noiModifications:
         await this.noiModificationService.mapToDtos(noiModifications),
       notifications: await this.notificationService.mapToDtos(notifications),
+      inquiries: await this.inquiryService.mapToDtos(inquiries),
     };
   }
 

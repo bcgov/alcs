@@ -15,6 +15,8 @@ import { ApplicationService } from '../../services/application/application.servi
 import { CardsDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardService } from '../../services/card/card.service';
+import { InquiryDto } from '../../services/inquiry/inquiry.dto';
+import { InquiryService } from '../../services/inquiry/inquiry.service';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
@@ -34,6 +36,8 @@ import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.in
 import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
+import { CreateInquiryDialogComponent } from './dialogs/inquiry/create/create-inquiry-dialog.component';
+import { InquiryDialogComponent } from './dialogs/inquiry/inquiry-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
@@ -104,6 +108,13 @@ export class BoardComponent implements OnInit, OnDestroy {
         dialog: CreatePlanningReviewDialogComponent,
       },
     ],
+    [
+      CardType.INQUIRY,
+      {
+        label: 'Inquiry',
+        dialog: CreateInquiryDialogComponent,
+      },
+    ],
   ]);
 
   constructor(
@@ -120,6 +131,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private noticeOfIntentService: NoticeOfIntentService,
     private noiModificationService: NoticeOfIntentModificationService,
     private notificationService: NotificationService,
+    private inquiryService: InquiryService,
     private titleService: Title,
   ) {}
 
@@ -187,6 +199,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.NOI:
       case CardType.NOI_MODI:
       case CardType.NOTIFICATION:
+      case CardType.INQUIRY:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -248,6 +261,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.mapNoticeOfIntentModificationToCard.bind(this),
     );
     const mappedNotifications = response.notifications.map(this.mapNotificationToCard.bind(this));
+    const mappedInquiries = response.inquiries.map(this.mapInquiryToCard.bind(this));
     if (boardCode === BOARD_TYPE_CODES.VETT) {
       const vettingSort = (a: CardData, b: CardData) => {
         if (a.highPriority === b.highPriority) {
@@ -259,7 +273,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...[...mappedNoticeOfIntents, ...mappedNoticeOfIntentModifications].sort(vettingSort),
         ...[...mappedApps, ...mappedRecons, ...mappedModifications].sort(vettingSort),
         ...[...mappedPlanningReferrals].sort(vettingSort),
-        ...mappedNotifications,
+        ...[...mappedInquiries].sort(vettingSort),
+        ...[...mappedNotifications].sort(vettingSort),
       ];
     } else if (boardCode === BOARD_TYPE_CODES.NOI) {
       const noiSort = (a: CardData, b: CardData) => {
@@ -297,6 +312,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedModifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedPlanningReferrals.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedInquiries.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
         ...mappedNoticeOfIntents
@@ -309,6 +325,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedPlanningReferrals.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedInquiries.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
       );
       this.cards = sorted;
@@ -454,6 +471,24 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapInquiryToCard(inquiry: InquiryDto): CardData {
+    return {
+      status: inquiry.card!.status.code,
+      typeLabel: 'Inquiry',
+      title: `${inquiry.fileNumber} (${inquiry.inquirerLastName ?? 'Unknown'})`,
+      titleTooltip: inquiry.inquirerLastName ?? 'Unknown',
+      assignee: inquiry.card!.assignee,
+      id: inquiry.card!.uuid,
+      labels: [inquiry.type],
+      cardType: CardType.INQUIRY,
+      paused: false,
+      highPriority: inquiry.card!.highPriority,
+      cardUuid: inquiry.card!.uuid,
+      dateReceived: inquiry.card!.createdAt,
+      cssClasses: ['inquiry'],
+    };
+  }
+
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
@@ -509,6 +544,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.NOTIFICATION:
           const notification = await this.notificationService.fetchByCardUuid(card.uuid);
           this.openDialog(NotificationDialogComponent, notification);
+          break;
+        case CardType.INQUIRY:
+          const inquiry = await this.inquiryService.fetchByCardUuid(card.uuid);
+          this.openDialog(InquiryDialogComponent, inquiry);
           break;
         default:
           console.error('Card type is not configured for a dialog');
