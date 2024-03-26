@@ -15,7 +15,7 @@ logger = setup_and_get_logger(etl_name)
 @inject_conn_pool
 def process_planning_review_referral(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for populating date_submitted_to_alc in alcs.planning_referral in ALCS.
+    This function is responsible for populating alcs.planning_referral in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -67,7 +67,7 @@ def process_planning_review_referral(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     ]
 
                     logger.debug(
-                        f"Retrieved/updated items count: {len(updated_data)}; total successfully updated planning referral so far {successful_updates_count}; last updated planning_review_id: {last_planning_review_id}"
+                        f"Retrieved/updated items count: {len(updated_data)}; total successfully inserted planning referral so far {successful_updates_count}; last updated planning_review_id: {last_planning_review_id}"
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
@@ -77,7 +77,7 @@ def process_planning_review_referral(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     last_planning_review_id = last_planning_review_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful inserts {successful_updates_count}, total failed updates {failed_inserts}"
     )
 
 
