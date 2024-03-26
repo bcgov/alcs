@@ -46,8 +46,7 @@ def update_planning_review_cards(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             while True:
                 cursor.execute(
                     f"""
-                        {query} 
-                        AND uuid > '{last_planning_review_id}' ORDER BY uuid;
+                        {query} WHERE ac."uuid" > '{last_planning_review_id}' ORDER BY ac."uuid";
                     """
                 )
 
@@ -71,7 +70,7 @@ def update_planning_review_cards(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
-                    last_planning_review_id = last_planning_review_id + 1
+                    last_planning_review_id = rows[1]["uuid"]
 
     logger.info(
         f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
@@ -95,6 +94,7 @@ def _update_base_fields(conn, batch_size, cursor, rows):
 _rx_items_query = """
                     UPDATE alcs.card 
                     SET board_uuid = %(board_uuid)s,
+                    status_code = %(status_code)s,
                     audit_updated_by = %(audit_updated_by)s
                     WHERE alcs.card.uuid = %(uuid)s
 """
@@ -108,7 +108,16 @@ def _prepare_oats_planning_review_data(row_data_list):
                 "uuid": row["uuid"],
                 "board_uuid": "d8c18278-cb41-474e-a180-534a101243ab",
                 "audit_updated_by": None,
+                "status_code": _map_card_status(row),
             }
         )
 
     return mapped_data_list
+
+
+def _map_card_status(row):
+    review_status = row.get("open")
+    if review_status is False:
+        return "COMP"
+    else:
+        return row.get("status_code")
