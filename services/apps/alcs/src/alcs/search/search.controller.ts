@@ -40,17 +40,7 @@ import {
   SearchResultDto,
 } from './search.dto';
 import { SearchService } from './search.service';
-
-// TODO replace this for Inquiries
-export enum INQUIRY_TYPES {
-  GENC = 'GENC',
-  INVN = 'INVN',
-  SAOF = 'SAOF',
-  REFR = 'REFR',
-  AOIN = 'AOIN',
-  P2AC = 'P2AC',
-  ABDF = 'ABDF',
-}
+import { INQUIRY_TYPES } from '../inquiry/inquiry.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -478,7 +468,7 @@ export class SearchController {
 
   private mapInquiryToSearchResult(inquiry: Inquiry): SearchResultDto {
     return {
-      type: CARD_TYPE.PLAN,
+      type: CARD_TYPE.INQUIRY,
       referenceId: inquiry.fileNumber,
       localGovernmentName: inquiry.localGovernment?.name,
       applicant: inquiry.inquirerLastName ?? undefined,

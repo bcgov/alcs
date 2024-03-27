@@ -96,7 +96,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
   applicationStatuses: ApplicationStatusDto[] = [];
-  // TODO do I need status?
   allStatuses: (ApplicationStatusDto | NoticeOfIntentStatusDto | NotificationSubmissionStatusDto)[] = [];
 
   formEmpty = true;
