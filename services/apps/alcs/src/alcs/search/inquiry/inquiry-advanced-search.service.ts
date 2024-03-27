@@ -212,25 +212,35 @@ export class InquiryAdvancedSearchService {
       const formattedSearchString =
         formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
 
-      query = query
-        .where(
-          "LOWER(inquirySearch.inquirer_first_name || ' ' || inquirySearch.inquirer_last_name) LIKE ANY (:names)",
-          {
-            names: formattedSearchString,
-          },
-        )
-        .orWhere('LOWER(inquirySearch.inquirer_first_name) LIKE ANY (:names)', {
-          names: formattedSearchString,
-        })
-        .orWhere('LOWER(inquirySearch.inquirer_last_name) LIKE ANY (:names)', {
-          names: formattedSearchString,
-        })
-        .orWhere(
-          'LOWER(inquirySearch.inquirer_organization) LIKE ANY (:names)',
-          {
-            names: formattedSearchString,
-          },
-        );
+      query = query.andWhere(
+        new Brackets((qb) =>
+          qb
+            .where(
+              "LOWER(inquirySearch.inquirer_first_name || ' ' || inquirySearch.inquirer_last_name) LIKE ANY (:names)",
+              {
+                names: formattedSearchString,
+              },
+            )
+            .orWhere(
+              'LOWER(inquirySearch.inquirer_first_name) LIKE ANY (:names)',
+              {
+                names: formattedSearchString,
+              },
+            )
+            .orWhere(
+              'LOWER(inquirySearch.inquirer_last_name) LIKE ANY (:names)',
+              {
+                names: formattedSearchString,
+              },
+            )
+            .orWhere(
+              'LOWER(inquirySearch.inquirer_organization) LIKE ANY (:names)',
+              {
+                names: formattedSearchString,
+              },
+            ),
+        ),
+      );
     }
     return query;
   }
@@ -240,8 +250,6 @@ export class InquiryAdvancedSearchService {
     query: SelectQueryBuilder<InquirySearchView>,
   ) {
     if (searchDto.fileTypes.length > 0) {
-      // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
-
       query = query.andWhere(
         new Brackets((qb) =>
           qb.where('inquirySearch.inquiry_type_code IN (:...typeCodes)', {
