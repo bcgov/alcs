@@ -33,8 +33,9 @@ export class InquiryParcelCreateDto {
 }
 
 export class InquiryParcelUpdateDto {
+  @IsOptional()
   @IsString()
-  uuid: string;
+  uuid?: string;
 
   @IsString()
   @IsOptional()

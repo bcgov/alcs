@@ -3,6 +3,8 @@ import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { InquiryDocumentDto } from '../../alcs/inquiry/inquiry-document/inquiry-document.dto';
 import { InquiryDocument } from '../../alcs/inquiry/inquiry-document/inquiry-document.entity';
+import { InquiryParcelDto } from '../../alcs/inquiry/inquiry-parcel/inquiry-parcel.dto';
+import { InquiryParcel } from '../../alcs/inquiry/inquiry-parcel/inquiry-parcel.entity';
 import { InquiryType } from '../../alcs/inquiry/inquiry-type.entity';
 import { InquiryDto, InquiryTypeDto } from '../../alcs/inquiry/inquiry.dto';
 import { Inquiry } from '../../alcs/inquiry/inquiry.entity';
@@ -18,6 +20,7 @@ export class InquiryProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, InquiryType, InquiryTypeDto);
+      createMap(mapper, InquiryParcel, InquiryParcelDto);
 
       createMap(
         mapper,

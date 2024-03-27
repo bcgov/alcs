@@ -2,7 +2,7 @@ import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
-import { InquiryParcelCreateDto } from './inquiry-parcel/inquiry-parcel.dto';
+import { InquiryParcelCreateDto, InquiryParcelDto } from './inquiry-parcel/inquiry-parcel.dto';
 
 export interface InquiryTypeDto extends BaseCodeDto {
   shortLabel: string;
@@ -39,7 +39,7 @@ export interface InquiryDto {
   inquirerOrganization?: string;
   inquirerPhone?: string;
   inquirerEmail?: string;
-  parcels?: InquiryParcelCreateDto[];
+  parcels?: InquiryParcelDto[];
   localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
   card?: CardDto;

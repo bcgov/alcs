@@ -8,9 +8,7 @@ import { CardModule } from '../card/card.module';
 import { InquiryDocumentController } from './inquiry-document/inquiry-document.controller';
 import { InquiryDocument } from './inquiry-document/inquiry-document.entity';
 import { InquiryDocumentService } from './inquiry-document/inquiry-document.service';
-import { InquiryParcelController } from './inquiry-parcel/inquiry-parcel.controller';
 import { InquiryParcel } from './inquiry-parcel/inquiry-parcel.entity';
-import { InquiryParcelService } from './inquiry-parcel/inquiry-parcel.service';
 import { InquiryType } from './inquiry-type.entity';
 import { InquiryController } from './inquiry.controller';
 import { Inquiry } from './inquiry.entity';
@@ -31,17 +29,8 @@ import { DocumentCode } from '../../document/document-code.entity';
     FileNumberModule,
     DocumentModule,
   ],
-  providers: [
-    InquiryService,
-    InquiryParcelService,
-    InquiryDocumentService,
-    InquiryProfile,
-  ],
-  controllers: [
-    InquiryController,
-    InquiryParcelController,
-    InquiryDocumentController,
-  ],
+  providers: [InquiryService, InquiryDocumentService, InquiryProfile],
+  controllers: [InquiryController, InquiryDocumentController],
   exports: [InquiryProfile, InquiryService],
 })
 export class InquiryModule {}

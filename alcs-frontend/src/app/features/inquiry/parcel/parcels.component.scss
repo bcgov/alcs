@@ -1,0 +1,32 @@
+h5 {
+  margin: 16px 0 !important;
+}
+
+section {
+  margin: 32px 0 48px;
+}
+
+.two-item-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+  margin-bottom: 24px;
+}
+
+.full-width {
+  grid-column: 1 /3;
+  width: 100%;
+}
+
+.mat-mdc-table {
+  border-collapse: separate !important;
+  border-spacing: 0 8px !important;
+
+  .mat-mdc-cell {
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: calc(100vw - 840px);
+  }
+}
