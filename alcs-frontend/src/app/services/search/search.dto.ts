@@ -22,8 +22,19 @@ export interface PlanningReviewSearchResultDto {
   documentName: string | null;
   referenceId: string | null;
   localGovernmentName: string | null;
+  dateSubmitted: number;
   fileNumber: string;
   class: 'PLAN';
+  open: boolean;
+}
+
+export interface InquirySearchResultDto {
+  type: string | null;
+  documentName: string | null;
+  referenceId: string | null;
+  localGovernmentName: string | null;
+  fileNumber: string;
+  class: 'INQR';
   open: boolean;
 }
 
@@ -32,10 +43,12 @@ export interface AdvancedSearchResponseDto {
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   planningReviews: PlanningReviewSearchResultDto[];
   notifications: NotificationSearchResultDto[];
+  inquiries: InquirySearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalPlanningReviews: number;
   totalNotifications: number;
+  totalInquiries: number;
 }
 
 export interface AdvancedSearchEntityResponseDto<T> {

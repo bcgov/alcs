@@ -51,6 +51,8 @@ describe('SearchService', () => {
     totalNonApplications: 0,
     planningReviews: [],
     totalPlanningReviews: 0,
+    inquiries: [],
+    totalInquiries: 0,
   };
 
   const mockSearchRequestDto = {
@@ -121,6 +123,8 @@ describe('SearchService', () => {
     expect(res?.noticeOfIntents).toEqual([]);
     expect(res?.totalPlanningReviews).toEqual(0);
     expect(res?.planningReviews).toEqual([]);
+    expect(res?.totalInquiries).toEqual(0);
+    expect(res?.inquiries).toEqual([]);
   });
 
   it('should show an error toast message if search fails', async () => {
@@ -206,6 +210,31 @@ describe('SearchService', () => {
     );
 
     const res = await service.advancedSearchPlanningReviewsFetch(mockSearchRequestDto);
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeUndefined();
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fetch Inquiry advanced search results by AdvancedSearchRequestDto', async () => {
+    mockHttpClient.post.mockReturnValue(of(mockAdvancedSearchEntityResult));
+
+    const res = await service.advancedSearchInquiryFetch(mockSearchRequestDto);
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res?.total).toEqual(0);
+    expect(res?.data).toEqual([]);
+  });
+
+  it('should show an error toast message if Inquiry advanced search fails', async () => {
+    mockHttpClient.post.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.advancedSearchInquiryFetch(mockSearchRequestDto);
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(res).toBeUndefined();

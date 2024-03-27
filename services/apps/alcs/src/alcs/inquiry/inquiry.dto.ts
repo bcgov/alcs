@@ -13,6 +13,16 @@ import { ApplicationRegionDto } from '../code/application-code/application-regio
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { InquiryParcelCreateDto } from './inquiry-parcel/inquiry-parcel.dto';
 
+export enum INQUIRY_TYPES {
+  GENC = 'GENC',
+  INVN = 'INVN',
+  SAOF = 'SAOF',
+  REFR = 'REFR',
+  AOIN = 'AOIN',
+  P2AC = 'P2AC',
+  ABDF = 'ABDF',
+}
+
 export class InquiryTypeDto extends BaseCodeDto {
   @AutoMap()
   shortLabel: string;

@@ -13,6 +13,13 @@ describe('ApplicationAdvancedSearchService', () => {
     Repository<ApplicationSubmissionSearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  const sortFields = [
+    'fileId',
+    'type',
+    'government',
+    'portalStatus',
+    'dateSubmitted',
+  ];
 
   const mockSearchRequestDto: SearchRequestDto = {
     fileNumber: '123',
@@ -99,9 +106,9 @@ describe('ApplicationAdvancedSearchService', () => {
     expect(result).toEqual({ data: [], total: 0 });
     expect(
       mockApplicationSubmissionSearchViewRepository.createQueryBuilder,
-    ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(15);
-    expect(mockQuery.where).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(15);
+    expect(mockQuery.where).toHaveBeenCalledTimes(1);
   });
 
   it('should call compileApplicationSearchQuery method correctly', async () => {
@@ -117,12 +124,39 @@ describe('ApplicationAdvancedSearchService', () => {
     );
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileApplicationSearchQuerySpy).toBeCalledWith(
+    expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
       mockSearchRequestDto,
       {},
     );
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+  });
+
+  sortFields.forEach((sortField) => {
+    it(`should sort by ${sortField}`, async () => {
+      const mockQueryRunner = createMock<QueryRunner>();
+
+      const compileApplicationSearchQuerySpy = jest
+        .spyOn(service as any, 'compileApplicationSearchQuery')
+        .mockResolvedValue(mockQuery);
+
+      mockSearchRequestDto.sortField = sortField;
+      mockSearchRequestDto.sortDirection = 'DESC';
+
+      const result = await service.searchApplications(
+        mockSearchRequestDto,
+        mockQueryRunner,
+      );
+
+      expect(result).toEqual({ data: [], total: 0 });
+      expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
+        mockSearchRequestDto,
+        {},
+      );
+      expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
+      expect(mockQuery.offset).toHaveBeenCalledTimes(1);
+      expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+    });
   });
 });

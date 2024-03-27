@@ -7,9 +7,10 @@ import {
   AdvancedSearchEntityResponseDto,
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
-  PlanningReviewSearchResultDto,
+  InquirySearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
+  PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
@@ -95,6 +96,21 @@ export class SearchService {
       return await firstValueFrom(
         this.http.post<AdvancedSearchEntityResponseDto<NotificationSearchResultDto>>(
           `${this.baseUrl}/advanced/notifications`,
+          searchDto,
+        ),
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      return undefined;
+    }
+  }
+
+  async advancedSearchInquiryFetch(searchDto: SearchRequestDto) {
+    try {
+      return await firstValueFrom(
+        this.http.post<AdvancedSearchEntityResponseDto<InquirySearchResultDto>>(
+          `${this.baseUrl}/advanced/inquiries`,
           searchDto,
         ),
       );

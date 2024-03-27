@@ -101,6 +101,32 @@ const TREE_DATA: TreeNode[] = [
       },
     ],
   },
+  {
+    item: { label: 'Inquiry', value: null },
+    children: [
+      {
+        item: { label: 'ALR Boundary Definition', value: 'ABDF' },
+      },
+      {
+        item: { label: 'Area of Interest', value: 'AOIN' },
+      },
+      {
+        item: { label: 'General Correspondence', value: 'GENC' },
+      },
+      {
+        item: { label: 'Inquiry for Investigation', value: 'INVN' },
+      },
+      {
+        item: { label: 'Parcel Under 2 Acres', value: 'P2AC' },
+      },
+      {
+        item: { label: 'Referral', value: 'REFR' },
+      },
+      {
+        item: { label: 'Subdivision by Approving Officer', value: 'SAOF' },
+      },
+    ],
+  },
 ];
 
 @Injectable({ providedIn: 'root' })

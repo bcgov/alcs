@@ -21,7 +21,8 @@
           <input id="name" matInput formControlName="name" minlength="3" />
         </mat-form-field>
         <div class="subtext">
-          Search by Primary Contact, Parcel Owner, Organization, Ministry or Department, SRW Transferee, PR Document Name
+          Search by Primary Contact, Parcel Owner, Organization, Ministry or Department, Inquirer, SRW Transferee, PR Document
+          Name
         </div>
         <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
@@ -304,6 +305,21 @@
         (tableChange)="onTableChange($event)"
       >
       </app-notification-search-table>
+      <div class="center">
+        <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label> Inquiries: {{ inquiriesTotal }} </ng-template>
+      <app-inquiry-search-table
+        *ngIf="!isLoading"
+        [inquiries]="inquiries"
+        [totalCount]="inquiriesTotal"
+        [pageIndex]="pageIndex"
+        (tableChange)="onTableChange($event)"
+      >
+      </app-inquiry-search-table>
       <div class="center">
         <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
       </div>

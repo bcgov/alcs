@@ -11,6 +11,7 @@ describe('PlanningReviewAdvancedSearchService', () => {
   let service: PlanningReviewAdvancedSearchService;
   let mockPRSearchView: DeepMocked<Repository<PlanningReviewSearchView>>;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  const sortFields = ['fileId', 'type', 'government', 'dateSubmitted'];
 
   const mockSearchDto: SearchRequestDto = {
     fileNumber: '123',
@@ -86,8 +87,8 @@ describe('PlanningReviewAdvancedSearchService', () => {
     const result = await service.search(mockSearchDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockPRSearchView.createQueryBuilder).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(8);
+    expect(mockPRSearchView.createQueryBuilder).toHaveBeenCalledTimes(1);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(8);
   });
 
   it('should call compileSearchQuery method correctly', async () => {
@@ -98,9 +99,28 @@ describe('PlanningReviewAdvancedSearchService', () => {
     const result = await service.search(mockSearchDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileSearchQuerySpy).toBeCalledWith(mockSearchDto);
+    expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+  });
+
+  sortFields.forEach((sortField) => {
+    it(`should sort by ${sortField}`, async () => {
+      const compileSearchQuerySpy = jest
+        .spyOn(service as any, 'compileSearchQuery')
+        .mockResolvedValue(mockQuery);
+
+      mockSearchDto.sortField = sortField;
+      mockSearchDto.sortDirection = 'DESC';
+
+      const result = await service.search(mockSearchDto);
+
+      expect(result).toEqual({ data: [], total: 0 });
+      expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
+      expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
+      expect(mockQuery.offset).toHaveBeenCalledTimes(1);
+      expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+    });
   });
 });

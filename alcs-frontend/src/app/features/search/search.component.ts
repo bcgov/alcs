@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
-import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, combineLatestWith, map, startWith, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
@@ -20,6 +19,7 @@ import { NotificationSubmissionStatusDto } from '../../services/notification/not
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
+  InquirySearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
   PlanningReviewSearchResultDto,
@@ -58,6 +58,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   notifications: NotificationSearchResultDto[] = [];
   notificationTotal = 0;
+
+  inquiries: InquirySearchResultDto[] = [];
+  inquiriesTotal = 0;
 
   isSearchExpanded = false;
   pageIndex = 0;
@@ -292,6 +295,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.notificationTotal = result?.total ?? 0;
   }
 
+  async onInquirySearch() {
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchInquiryFetch(searchParams);
+
+    this.inquiries = result?.data ?? [];
+    this.inquiriesTotal = result?.total ?? 0;
+  }
+
   async onTableChange(event: TableChange) {
     this.pageIndex = event.pageIndex;
     this.itemsPerPage = event.itemsPerPage;
@@ -310,6 +321,9 @@ export class SearchComponent implements OnInit, OnDestroy {
         break;
       case 'NOTI':
         await this.onNotificationSearch();
+        break;
+      case 'INQR':
+        await this.onInquirySearch();
         break;
       default:
         this.toastService.showErrorToast('Not implemented');
@@ -342,10 +356,12 @@ export class SearchComponent implements OnInit, OnDestroy {
         noticeOfIntents: [],
         planningReviews: [],
         notifications: [],
+        inquiries: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
         totalNotifications: 0,
         totalPlanningReviews: 0,
+        totalInquiries: 0,
       };
     }
 
@@ -360,6 +376,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.notifications = searchResult.notifications;
     this.notificationTotal = searchResult.totalNotifications;
+
+    this.inquiries = searchResult.inquiries;
+    this.inquiriesTotal = searchResult.totalInquiries;
   }
 
   private setActiveTab() {
@@ -369,6 +388,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.noticeOfIntentTotal,
       this.planningReviewsTotal,
       this.notificationTotal,
+      this.inquiriesTotal,
     ];
 
     this.tabGroup.selectedIndex = searchCounts.indexOf(Math.max(...searchCounts));

@@ -13,6 +13,13 @@ describe('NotificationAdvancedSearchService', () => {
     Repository<NotificationSubmissionSearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  const sortFields = [
+    'fileId',
+    'type',
+    'government',
+    'portalStatus',
+    'dateSubmitted',
+  ];
 
   const mockSearchDto: SearchRequestDto = {
     fileNumber: '123',
@@ -108,5 +115,24 @@ describe('NotificationAdvancedSearchService', () => {
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+  });
+
+  sortFields.forEach((sortField) => {
+    it(`should sort by ${sortField}`, async () => {
+      const compileSearchQuerySpy = jest
+        .spyOn(service as any, 'compileNotificationSearchQuery')
+        .mockResolvedValue(mockQuery);
+
+      mockSearchDto.sortField = sortField;
+      mockSearchDto.sortDirection = 'DESC';
+
+      const result = await service.search(mockSearchDto);
+
+      expect(result).toEqual({ data: [], total: 0 });
+      expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
+      expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
+      expect(mockQuery.offset).toHaveBeenCalledTimes(1);
+      expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+    });
   });
 });

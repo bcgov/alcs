@@ -1,16 +1,16 @@
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { SearchRequestDto } from '../search.dto';
-import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent-advanced-search.service';
-import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search-view.entity';
+import { InquiryAdvancedSearchService } from './inquiry-advanced-search.service';
+import { InquirySearchView } from './inquiry-search-view.entity';
 
-describe('NoticeOfIntentService', () => {
-  let service: NoticeOfIntentAdvancedSearchService;
-  let mockNoticeOfIntentSubmissionSearchViewRepository: DeepMocked<
-    Repository<NoticeOfIntentSubmissionSearchView>
+describe('InquiryAdvancedSearchService', () => {
+  let service: InquiryAdvancedSearchService;
+  let mockInquirySearchViewRepository: DeepMocked<
+    Repository<InquirySearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
 
@@ -18,13 +18,12 @@ describe('NoticeOfIntentService', () => {
     'fileId',
     'type',
     'government',
-    'portalStatus',
+    'status',
     'dateSubmitted',
   ];
 
   const mockSearchDto: SearchRequestDto = {
     fileNumber: '123',
-    portalStatusCode: 'A',
     governmentName: 'B',
     regionCode: 'C',
     name: 'D',
@@ -32,21 +31,17 @@ describe('NoticeOfIntentService', () => {
     civicAddress: 'F',
     dateSubmittedFrom: new Date('2020-10-10').getTime(),
     dateSubmittedTo: new Date('2021-10-10').getTime(),
-    dateDecidedFrom: new Date('2020-11-10').getTime(),
-    dateDecidedTo: new Date('2021-11-10').getTime(),
-    resolutionNumber: 123,
-    resolutionYear: 2021,
     fileTypes: ['type1', 'type2'],
     page: 1,
     pageSize: 10,
-    sortField: 'ownerName',
+    sortField: 'applicant',
     sortDirection: 'ASC',
   };
 
   let mockQuery: any = {};
 
   beforeEach(async () => {
-    mockNoticeOfIntentSubmissionSearchViewRepository = createMock();
+    mockInquirySearchViewRepository = createMock();
     mockLocalGovernmentRepository = createMock();
 
     mockQuery = {
@@ -65,10 +60,10 @@ describe('NoticeOfIntentService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        NoticeOfIntentAdvancedSearchService,
+        InquiryAdvancedSearchService,
         {
-          provide: getRepositoryToken(NoticeOfIntentSubmissionSearchView),
-          useValue: mockNoticeOfIntentSubmissionSearchViewRepository,
+          provide: getRepositoryToken(InquirySearchView),
+          useValue: mockInquirySearchViewRepository,
         },
         {
           provide: getRepositoryToken(LocalGovernment),
@@ -77,8 +72,8 @@ describe('NoticeOfIntentService', () => {
       ],
     }).compile();
 
-    service = module.get<NoticeOfIntentAdvancedSearchService>(
-      NoticeOfIntentAdvancedSearchService,
+    service = module.get<InquiryAdvancedSearchService>(
+      InquiryAdvancedSearchService,
     );
 
     mockLocalGovernmentRepository.findOneByOrFail.mockResolvedValue(
@@ -91,31 +86,28 @@ describe('NoticeOfIntentService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
-    mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
+    mockInquirySearchViewRepository.createQueryBuilder.mockReturnValue(
       mockQuery as any,
     );
 
-    const result = await service.searchNoticeOfIntents(mockSearchDto);
+    const result = await service.search(mockSearchDto);
 
     expect(result).toEqual({ data: [], total: 0 });
     expect(
-      mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder,
+      mockInquirySearchViewRepository.createQueryBuilder,
     ).toHaveBeenCalledTimes(1);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(13);
-    expect(mockQuery.where).toHaveBeenCalledTimes(1);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(9);
   });
 
-  it('should call compileNoticeOfIntentSearchQuery method correctly', async () => {
-    const compileApplicationSearchQuerySpy = jest
-      .spyOn(service as any, 'compileNoticeOfIntentSearchQuery')
+  it('should call compileInquirySearchQuery method correctly', async () => {
+    const compileSearchQuerySpy = jest
+      .spyOn(service as any, 'compileInquirySearchQuery')
       .mockResolvedValue(mockQuery);
 
-    const result = await service.searchNoticeOfIntents(mockSearchDto);
+    const result = await service.search(mockSearchDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
-      mockSearchDto,
-    );
+    expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
@@ -124,13 +116,13 @@ describe('NoticeOfIntentService', () => {
   sortFields.forEach((sortField) => {
     it(`should sort by ${sortField}`, async () => {
       const compileSearchQuerySpy = jest
-        .spyOn(service as any, 'compileNoticeOfIntentSearchQuery')
+        .spyOn(service as any, 'compileInquirySearchQuery')
         .mockResolvedValue(mockQuery);
 
       mockSearchDto.sortField = sortField;
       mockSearchDto.sortDirection = 'DESC';
 
-      const result = await service.searchNoticeOfIntents(mockSearchDto);
+      const result = await service.search(mockSearchDto);
 
       expect(result).toEqual({ data: [], total: 0 });
       expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
