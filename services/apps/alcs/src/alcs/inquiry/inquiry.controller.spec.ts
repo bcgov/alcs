@@ -2,6 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
+import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { InquiryProfile } from '../../common/automapper/inquiry.automapper.profile';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
@@ -36,6 +38,11 @@ describe('InquiryController', () => {
           provide: BoardService,
           useValue: mockBoardService,
         },
+        {
+          provide: ClsService,
+          useValue: {},
+        },
+        ...mockKeyCloakProviders,
       ],
     }).compile();
 

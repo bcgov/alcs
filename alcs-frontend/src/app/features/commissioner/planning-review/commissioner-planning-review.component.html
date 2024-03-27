@@ -1,6 +1,10 @@
 <div class="layout">
   <div class="application">
-    <app-planning-review-header *ngIf="planningReview" [planningReview]="planningReview"></app-planning-review-header>
+    <app-planning-review-header
+      *ngIf="planningReview"
+      [planningReview]="planningReview"
+      [showStatus]="false"
+    ></app-planning-review-header>
     <section class="content">
       <app-evidentiary-record
         *ngIf="fileNumber"

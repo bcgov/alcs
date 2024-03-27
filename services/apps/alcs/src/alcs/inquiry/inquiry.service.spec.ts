@@ -1,4 +1,4 @@
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { classes } from 'automapper-classes';
@@ -198,7 +198,6 @@ describe('InquiryService', () => {
     const fakeFileNumber = 'fake_num';
 
     const payload: UpdateInquiryDto = {
-      uuid: 'fake',
       dateSubmittedToAlc: 0,
       summary: 'fake_s',
       typeCode: 'fake_type',

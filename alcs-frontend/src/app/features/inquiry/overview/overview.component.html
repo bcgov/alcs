@@ -1,0 +1,33 @@
+<div class="split">
+  <h3>Overview</h3>
+</div>
+<section *ngIf="inquiry">
+  <h5>Summary</h5>
+  <app-inline-edit
+    [value]="inquiry.summary"
+    placeholder="Add Proposal Summary"
+    (save)="onSaveSummary($event)"
+  ></app-inline-edit>
+</section>
+<section *ngIf="inquiry">
+  <h5>Status</h5>
+  <div style="width: 50%">
+    <app-inline-button-toggle
+      (save)="onSaveStatus($event)"
+      [selectedValue]="inquiry.open ? 'Open' : 'Closed'"
+      [options]="[
+        {
+          label: 'Open',
+          value: 'Open'
+        },
+        {
+          label: 'Closed',
+          value: 'Closed'
+        }
+      ]"
+    />
+  </div>
+</section>
+<section>
+  <app-staff-journal *ngIf="inquiry" parentType="Inquiry" [parentUuid]="inquiry.uuid" />
+</section>

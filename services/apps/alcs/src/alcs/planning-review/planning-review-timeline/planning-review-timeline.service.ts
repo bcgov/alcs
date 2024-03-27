@@ -36,6 +36,16 @@ export class PlanningReviewTimelineService {
     await this.addDecisionEvents(planningReview, events);
     await this.addMeetingEvents(planningReview, events);
 
+    if (!planningReview.open) {
+      events.push({
+        htmlText: `Closed`,
+        startDate:
+          planningReview.closedDate!.getTime() + SORTING_ORDER.REFERRAL,
+        fulfilledDate: null,
+        isFulfilled: true,
+      });
+    }
+
     events.sort((a, b) => b.startDate - a.startDate);
     return events;
   }
@@ -102,7 +112,9 @@ export class PlanningReviewTimelineService {
     );
     for (const [index, referral] of planningReview.referrals.entries()) {
       events.push({
-        htmlText: `Referral #${index + 1}`,
+        htmlText: `Referral #${index + 1}${
+          index === 0 ? ' - <strong>Open</strong>' : ''
+        }`,
         startDate: referral.submissionDate.getTime() + SORTING_ORDER.REFERRAL,
         fulfilledDate: referral.responseDate?.getTime() ?? null,
         isFulfilled: !!referral.responseDate,

@@ -14,7 +14,7 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
 })
 export class StaffJournalComponent implements OnChanges {
   @Input() parentUuid: string = '';
-  @Input() parentType: 'Application' | 'NOI' | 'Notification' | 'Planning Review' = 'Application';
+  @Input() parentType: 'Application' | 'NOI' | 'Notification' | 'Planning Review' | 'Inquiry' = 'Application';
 
   labelText = 'Add a journal note';
 
@@ -58,26 +58,39 @@ export class StaffJournalComponent implements OnChanges {
   async onSave(note: string) {
     this.isSaving = true;
 
-    if (this.parentType === 'Application') {
-      await this.staffJournalService.createNoteForApplication({
-        applicationUuid: this.parentUuid,
-        body: note,
-      });
-    } else if (this.parentType === 'Notification') {
-      await this.staffJournalService.createNoteForNotification({
-        notificationUuid: this.parentUuid,
-        body: note,
-      });
-    } else if (this.parentType === 'Planning Review') {
-      await this.staffJournalService.createNoteForPlanningReview({
-        planningReviewUuid: this.parentUuid,
-        body: note,
-      });
-    } else {
-      await this.staffJournalService.createNoteForNoticeOfIntent({
-        noticeOfIntentUuid: this.parentUuid,
-        body: note,
-      });
+    switch (this.parentType) {
+      case 'Application':
+        await this.staffJournalService.createNoteForApplication({
+          applicationUuid: this.parentUuid,
+          body: note,
+        });
+        break;
+      case 'NOI':
+        await this.staffJournalService.createNoteForNoticeOfIntent({
+          noticeOfIntentUuid: this.parentUuid,
+          body: note,
+        });
+        break;
+      case 'Notification':
+        await this.staffJournalService.createNoteForNotification({
+          notificationUuid: this.parentUuid,
+          body: note,
+        });
+        break;
+      case 'Planning Review':
+        await this.staffJournalService.createNoteForPlanningReview({
+          planningReviewUuid: this.parentUuid,
+          body: note,
+        });
+        break;
+      case 'Inquiry':
+        await this.staffJournalService.createNoteForInquiry({
+          inquiryUuid: this.parentUuid,
+          body: note,
+        });
+        break;
+      default:
+        console.error(`${this.parentType} has not been setup for staff journal`);
     }
 
     this.isSaving = false;

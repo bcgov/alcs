@@ -1,6 +1,12 @@
 import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
@@ -73,6 +79,9 @@ export class InquiryDto {
   uuid: string;
 
   @AutoMap()
+  open: boolean;
+
+  @AutoMap()
   fileNumber: string;
 
   @AutoMap()
@@ -123,20 +132,20 @@ export class InquiryDto {
 
 export class UpdateInquiryDto {
   @IsString()
-  @IsNotEmpty()
-  uuid: string;
+  @IsOptional()
+  summary?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  summary: string;
+  @IsBoolean()
+  @IsOptional()
+  open?: boolean;
 
   @IsNumber()
-  @IsNotEmpty()
-  dateSubmittedToAlc: number;
+  @IsOptional()
+  dateSubmittedToAlc?: number;
 
   @IsString()
-  @IsNotEmpty()
-  typeCode: string;
+  @IsOptional()
+  typeCode?: string;
 
   @IsString()
   @IsOptional()

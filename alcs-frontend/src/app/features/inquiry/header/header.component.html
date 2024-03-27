@@ -1,16 +1,12 @@
 <div class="header">
   <div>
-    <span class="subtext heading">Planning Review</span>
+    <span class="subtext heading">Inquiry</span>
   </div>
   <div class="first-row">
     <div class="title">
-      <h5>{{ planningReview.fileNumber }} ({{ planningReview.documentName }})</h5>
-      <app-application-legacy-id
-        *ngIf="planningReview.legacyId"
-        [legacyId]="planningReview.legacyId"
-      ></app-application-legacy-id>
+      <h5>{{ inquiry.fileNumber }} ({{ inquiry.inquirerLastName ?? 'Unknown' }})</h5>
       <div class="labels">
-        <app-application-type-pill [type]="planningReview.type"></app-application-type-pill>
+        <app-application-type-pill [type]="inquiry.type"></app-application-type-pill>
       </div>
     </div>
     <div class="center">
@@ -42,11 +38,11 @@
     <div>
       <div class="subheading2">Local/First Nation Government:</div>
       <div class="body-text">
-        {{ planningReview.localGovernment.name }}
-        <app-no-data *ngIf="!planningReview.localGovernment"></app-no-data>
+        {{ inquiry.localGovernment.name }}
+        <app-no-data *ngIf="!inquiry.localGovernment"></app-no-data>
       </div>
     </div>
-    <div *ngIf="showStatus" class="status-wrapper">
+    <div class="status-wrapper">
       <app-application-submission-status-type-pill [type]="statusPill"></app-application-submission-status-type-pill>
     </div>
   </div>

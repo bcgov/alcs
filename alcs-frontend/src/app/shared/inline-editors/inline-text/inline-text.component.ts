@@ -20,6 +20,7 @@ export class InlineTextComponent implements AfterContentChecked {
   @Input() placeholder: string = 'Enter a value';
   @Input() required = false;
   @Output() save = new EventEmitter<string | null>();
+  @Input() mask?: string | undefined;
 
   @ViewChild('editInput') textInput!: ElementRef;
 

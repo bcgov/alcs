@@ -12,6 +12,7 @@ import {
   Repository,
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { User } from '../../user/user.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
@@ -199,16 +200,17 @@ export class InquiryService {
     });
   }
 
-  async update(fileNumber: string, updateDto: UpdateInquiryDto) {
+  async update(fileNumber: string, updateDto: UpdateInquiryDto, user?: User) {
     const inquiry = await this.getByFileNumber(fileNumber);
 
     inquiry.summary = filterUndefined(updateDto.summary, inquiry.summary);
 
     if (updateDto.typeCode) {
-      this.typeRepository.findOneByOrFail({
+      const newType = await this.typeRepository.findOneByOrFail({
         code: updateDto.typeCode,
       });
       inquiry.typeCode = filterUndefined(updateDto.typeCode, inquiry.typeCode);
+      inquiry.type = newType;
     }
 
     inquiry.dateSubmittedToAlc = filterUndefined(
@@ -241,16 +243,17 @@ export class InquiryService {
       inquiry.inquirerEmail,
     );
 
-    // TODO complete open and closed
-    // inquiry.open = filterUndefined(updateDto.open, inquiry.open);
+    if (updateDto.open === false && inquiry.open && user) {
+      inquiry.open = false;
+      inquiry.closedDate = new Date();
+      inquiry.closedBy = user;
+    }
 
-    // if (updateDto.closedDate) {
-    //   inquiry.closedDate = filterUndefined(
-    //     formatIncomingDate(updateDto.closedDate),
-    //     inquiry.closedDate,
-    //   );
-    //   inquiry.open = false;
-    // }
+    if (updateDto.open === true && !inquiry.open) {
+      inquiry.open = true;
+      inquiry.closedDate = null;
+      inquiry.closedBy = null;
+    }
 
     await this.repository.save(inquiry);
 

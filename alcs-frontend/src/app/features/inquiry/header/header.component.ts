@@ -3,19 +3,19 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CardDto } from '../../../services/card/card.dto';
 import { CommissionerPlanningReviewDto } from '../../../services/commissioner/commissioner.dto';
+import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 import { PlanningReviewDetailedDto } from '../../../services/planning-review/planning-review.dto';
 import { CLOSED_PR_LABEL, OPEN_PR_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
 
 @Component({
-  selector: 'app-planning-review-header[planningReview]',
+  selector: 'app-inquiry-header[inquiry]',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnChanges {
   destroy = new Subject<void>();
 
-  @Input() planningReview!: PlanningReviewDetailedDto | CommissionerPlanningReviewDto;
-  @Input() showStatus = true;
+  @Input() inquiry!: InquiryDto;
 
   linkedCards: (CardDto & { displayName: string })[] = [];
   statusPill = OPEN_PR_LABEL;
@@ -30,18 +30,16 @@ export class HeaderComponent implements OnChanges {
   }
 
   async setupLinkedCards() {
-    if ('referrals' in this.planningReview) {
-      for (const [index, referral] of this.planningReview.referrals.entries()) {
-        this.linkedCards.push({
-          ...referral.card,
-          displayName: `Referral ${index}`,
-        });
-      }
+    if (this.inquiry.card) {
+      this.linkedCards.push({
+        ...this.inquiry.card,
+        displayName: `Inquiry`,
+      });
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.setupLinkedCards();
-    this.statusPill = this.planningReview.open ? OPEN_PR_LABEL : CLOSED_PR_LABEL;
+    this.statusPill = this.inquiry.open ? OPEN_PR_LABEL : CLOSED_PR_LABEL;
   }
 }
