@@ -51,6 +51,8 @@ describe('SearchService', () => {
     totalNonApplications: 0,
     planningReviews: [],
     totalPlanningReviews: 0,
+    inquiries: [],
+    totalInquiries: 0,
   };
 
   const mockSearchRequestDto = {

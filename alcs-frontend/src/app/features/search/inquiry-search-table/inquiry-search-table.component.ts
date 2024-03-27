@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { InquirySearchResultDto } from '../../../services/search/search.dto';
-// TODO this should be replaced with inquiry types
 import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { Router } from '@angular/router';
@@ -75,7 +74,7 @@ export class InquirySearchTableComponent {
   }
 
   onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/inquiry/${record.inquiryUuid}`]));
+    const url = this.router.serializeUrl(this.router.createUrlTree([`/inquiry/${record.fileNumber}`]));
 
     window.open(url, '_blank');
   }
