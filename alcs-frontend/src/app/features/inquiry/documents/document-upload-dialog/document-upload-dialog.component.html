@@ -25,7 +25,7 @@
           <a (click)="openFile()">{{ pendingFile.name }}</a>
           &nbsp;({{ pendingFile.size | filesize }})
         </div>
-        <button (click)="onRemoveFile()" mat-button>
+        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
           <mat-icon>close</mat-icon>
           Remove
         </button>
@@ -35,7 +35,7 @@
           <a (click)="openExistingFile()">{{ existingFile.name }}</a>
           &nbsp;({{ existingFile.size | filesize }})
         </div>
-        <button (click)="onRemoveFile()" mat-button>
+        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
           <mat-icon>close</mat-icon>
           Remove
         </button>
@@ -75,12 +75,6 @@
           <mat-option *ngFor="let source of documentSources" [value]="source">{{ source }}</mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-    <div class="double">
-      <mat-label>Visible To:</mat-label>
-      <div>
-        <mat-checkbox [formControl]="visibleToCommissioner">Commissioner</mat-checkbox>
-      </div>
     </div>
   </form>
 
