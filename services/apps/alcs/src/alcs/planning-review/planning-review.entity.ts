@@ -71,7 +71,7 @@ export class PlanningReview extends Base {
   open: boolean;
 
   @ManyToOne(() => User)
-  closedBy: User;
+  closedBy: User | null;
 
   @Column({ type: 'timestamptz', nullable: true })
   closedDate: Date | null;

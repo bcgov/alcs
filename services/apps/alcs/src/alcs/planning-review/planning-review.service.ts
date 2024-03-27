@@ -3,13 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import {
-  FindOptionsRelations,
-  FindOptionsWhere,
-  In,
-  Repository,
-} from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { User } from '../../user/user.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
@@ -115,7 +111,9 @@ export class PlanningReviewService {
             },
           },
         },
-        meetings: true,
+        meetings: {
+          type: true,
+        },
       },
       order: {
         referrals: {
@@ -142,20 +140,36 @@ export class PlanningReviewService {
     });
   }
 
-  async update(fileNumber: string, updateDto: UpdatePlanningReviewDto) {
-    const existingApp = await this.reviewRepository.findOneOrFail({
+  async update(
+    fileNumber: string,
+    updateDto: UpdatePlanningReviewDto,
+    user?: User,
+  ) {
+    const existingReview = await this.reviewRepository.findOneOrFail({
       where: {
         fileNumber,
       },
     });
 
-    existingApp.open = filterUndefined(updateDto.open, existingApp.open);
-    existingApp.typeCode = filterUndefined(
+    if (!updateDto.open && existingReview.open) {
+      existingReview.closedDate = new Date();
+      if (user) {
+        existingReview.closedBy = user;
+      }
+    }
+
+    if (updateDto.open && !existingReview.open) {
+      existingReview.closedDate = null;
+      existingReview.closedBy = null;
+    }
+
+    existingReview.open = filterUndefined(updateDto.open, existingReview.open);
+    existingReview.typeCode = filterUndefined(
       updateDto.typeCode,
-      existingApp.typeCode,
+      existingReview.typeCode,
     );
 
-    await this.reviewRepository.save(existingApp);
+    await this.reviewRepository.save(existingReview);
     return this.getDetailedReview(fileNumber);
   }
 
