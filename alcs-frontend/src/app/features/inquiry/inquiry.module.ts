@@ -8,6 +8,7 @@ import { DetailsComponent } from './detail/details.component';
 import { HeaderComponent } from './header/header.component';
 import { childRoutes, InquiryComponent } from './inquiry.component';
 import { OverviewComponent } from './overview/overview.component';
+import { ParcelsComponent } from './parcel/parcels.component';
 
 const routes: Routes = [
   {
@@ -19,7 +20,7 @@ const routes: Routes = [
 
 @NgModule({
   providers: [InquiryDetailService],
-  declarations: [InquiryComponent, OverviewComponent, HeaderComponent, DetailsComponent],
+  declarations: [InquiryComponent, OverviewComponent, HeaderComponent, DetailsComponent, ParcelsComponent],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), CdkDropList, CdkDrag],
   exports: [HeaderComponent],
 })

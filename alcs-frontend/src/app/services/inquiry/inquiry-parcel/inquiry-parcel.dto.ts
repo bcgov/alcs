@@ -13,7 +13,7 @@ export interface InquiryParcelCreateDto {
 }
 
 export interface InquiryParcelUpdateDto {
-  uuid: string;
+  uuid?: string;
   pid?: string | null;
   pin?: string | null;
   civicAddress: string;

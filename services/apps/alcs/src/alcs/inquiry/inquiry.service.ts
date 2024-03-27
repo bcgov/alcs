@@ -43,6 +43,7 @@ export class InquiryService {
     localGovernment: true,
     region: true,
     type: true,
+    parcels: true,
   };
 
   constructor(
@@ -253,6 +254,18 @@ export class InquiryService {
       inquiry.open = true;
       inquiry.closedDate = null;
       inquiry.closedBy = null;
+    }
+
+    if (updateDto.parcels) {
+      inquiry.parcels = updateDto.parcels.map(
+        (parcelDto) =>
+          new InquiryParcel({
+            uuid: parcelDto.uuid,
+            pin: parcelDto.pin,
+            pid: parcelDto.pid,
+            civicAddress: parcelDto.civicAddress,
+          }),
+      );
     }
 
     await this.repository.save(inquiry);

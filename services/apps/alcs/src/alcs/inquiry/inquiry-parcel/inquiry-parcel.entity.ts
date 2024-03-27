@@ -37,7 +37,11 @@ export class InquiryParcel extends Base {
   civicAddress: string;
 
   @AutoMap()
-  @ManyToOne(() => Inquiry)
+  @ManyToOne(() => Inquiry, (inquiry) => inquiry.parcels, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
   inquiry: Inquiry;
 
   @AutoMap()

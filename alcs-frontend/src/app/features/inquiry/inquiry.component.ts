@@ -5,6 +5,7 @@ import { InquiryDetailService } from '../../services/inquiry/inquiry-detail.serv
 import { InquiryDto } from '../../services/inquiry/inquiry.dto';
 import { DetailsComponent } from './detail/details.component';
 import { OverviewComponent } from './overview/overview.component';
+import { ParcelsComponent } from './parcel/parcels.component';
 
 export const childRoutes = [
   {
@@ -18,6 +19,12 @@ export const childRoutes = [
     menuTitle: 'Details',
     icon: 'person',
     component: DetailsComponent,
+  },
+  {
+    path: 'parcels',
+    menuTitle: 'Parcels',
+    icon: 'crop_free',
+    component: ParcelsComponent,
   },
 ];
 

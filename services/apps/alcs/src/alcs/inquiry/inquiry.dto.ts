@@ -11,7 +11,11 @@ import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
-import { InquiryParcelCreateDto } from './inquiry-parcel/inquiry-parcel.dto';
+import {
+  InquiryParcelCreateDto,
+  InquiryParcelDto,
+  InquiryParcelUpdateDto,
+} from './inquiry-parcel/inquiry-parcel.dto';
 
 export class InquiryTypeDto extends BaseCodeDto {
   @AutoMap()
@@ -114,8 +118,8 @@ export class InquiryDto {
   @AutoMap()
   inquirerEmail?: string;
 
-  @Type(() => InquiryParcelCreateDto)
-  parcels?: InquiryParcelCreateDto[];
+  @Type(() => InquiryParcelDto)
+  parcels?: InquiryParcelDto[];
 
   @AutoMap(() => LocalGovernmentDto)
   localGovernment: LocalGovernmentDto;
@@ -168,8 +172,8 @@ export class UpdateInquiryDto {
   inquirerEmail?: string;
 
   @IsOptional()
-  @Type(() => InquiryParcelCreateDto)
-  parcels?: InquiryParcelCreateDto[];
+  @Type(() => InquiryParcelUpdateDto)
+  parcels?: InquiryParcelUpdateDto[];
 }
 
 export class CreateInquiryServiceDto {
