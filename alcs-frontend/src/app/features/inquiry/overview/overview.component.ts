@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { InquiryDetailService } from '../../../services/inquiry/inquiry-detail.service';
 import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
-import { TimelineEventDto } from '../../../services/planning-review/planning-review-timeline/planning-review-timeline.dto';
 
 @Component({
   selector: 'app-overview',

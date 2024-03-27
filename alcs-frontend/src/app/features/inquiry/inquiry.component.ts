@@ -22,7 +22,7 @@ export const childRoutes = [
 ];
 
 @Component({
-  selector: 'app-planning-review',
+  selector: 'app-inquiry',
   templateUrl: './inquiry.component.html',
   styleUrls: ['./inquiry.component.scss'],
 })
@@ -34,7 +34,7 @@ export class InquiryComponent implements OnInit, OnDestroy {
   childRoutes = childRoutes;
 
   constructor(
-    private planningReviewService: InquiryDetailService,
+    private inquiryDetailService: InquiryDetailService,
     private route: ActivatedRoute,
   ) {}
 
@@ -45,14 +45,14 @@ export class InquiryComponent implements OnInit, OnDestroy {
       await this.loadReview();
     });
 
-    this.planningReviewService.$inquiry.pipe(takeUntil(this.$destroy)).subscribe((inquiry) => {
+    this.inquiryDetailService.$inquiry.pipe(takeUntil(this.$destroy)).subscribe((inquiry) => {
       this.inquiry = inquiry;
     });
   }
 
   private async loadReview() {
     if (this.fileNumber) {
-      await this.planningReviewService.loadInquiry(this.fileNumber);
+      await this.inquiryDetailService.loadInquiry(this.fileNumber);
     }
   }
 
