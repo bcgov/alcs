@@ -14,13 +14,14 @@ import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
+import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
+import { InquiryAdvancedSearchService } from './inquiry/inquiry-advanced-search.service';
 import { InquirySearchView } from './inquiry/inquiry-search-view.entity';
-import { InquirySearchService } from './inquiry/inquiry.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
@@ -42,9 +43,13 @@ import { SearchService } from './search.service';
 
 // TODO replace this for Inquiries
 export enum INQUIRY_TYPES {
-  NFUP = 'NFUP',
-  TURP = 'TURP',
-  POFO = 'POFO',
+  GENC = 'GENC',
+  INVN = 'INVN',
+  SAOF = 'SAOF',
+  REFR = 'REFR',
+  AOIN = 'AOIN',
+  P2AC = 'P2AC',
+  ABDF = 'ABDF',
 }
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -58,7 +63,7 @@ export class SearchController {
     private applicationSearchService: ApplicationAdvancedSearchService,
     private notificationSearchService: NotificationAdvancedSearchService,
     private planningReviewSearchService: PlanningReviewAdvancedSearchService,
-    private inquirySearchService: InquirySearchService,
+    private inquirySearchService: InquiryAdvancedSearchService,
     @InjectRepository(ApplicationType)
     private appTypeRepo: Repository<ApplicationType>,
     @InjectDataSource()
@@ -73,6 +78,7 @@ export class SearchController {
     const notification = await this.searchService.getNotification(searchTerm);
     const planningReview =
       await this.searchService.getPlanningReview(searchTerm);
+    const inquiry = await this.searchService.getInquiry(searchTerm);
 
     const result: SearchResultDto[] = [];
 
@@ -82,6 +88,7 @@ export class SearchController {
       noi,
       planningReview,
       notification,
+      inquiry,
     );
 
     return result;
@@ -93,6 +100,7 @@ export class SearchController {
     noi: NoticeOfIntent | null,
     planningReview: PlanningReview | null,
     notification: Notification | null,
+    inquiry: Inquiry | null,
   ) {
     if (application) {
       result.push(this.mapApplicationToSearchResult(application));
@@ -108,6 +116,10 @@ export class SearchController {
 
     if (notification) {
       result.push(this.mapNotificationToSearchResult(notification));
+    }
+
+    if (inquiry) {
+      result.push(this.mapInquiryToSearchResult(inquiry));
     }
   }
 
@@ -461,6 +473,16 @@ export class SearchController {
       localGovernmentName: planning.localGovernment?.name,
       applicant: planning.documentName,
       fileNumber: planning.fileNumber,
+    };
+  }
+
+  private mapInquiryToSearchResult(inquiry: Inquiry): SearchResultDto {
+    return {
+      type: CARD_TYPE.PLAN,
+      referenceId: inquiry.fileNumber,
+      localGovernmentName: inquiry.localGovernment?.name,
+      applicant: inquiry.inquirerLastName ?? undefined,
+      fileNumber: inquiry.fileNumber,
     };
   }
 

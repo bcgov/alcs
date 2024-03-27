@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Brackets, Repository, SelectQueryBuilder } from 'typeorm';
 import {
   getNextDayToPacific,
   getStartOfDayToPacific,
@@ -12,7 +12,7 @@ import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { InquirySearchView } from './inquiry-search-view.entity';
 
 @Injectable()
-export class InquirySearchService {
+export class InquiryAdvancedSearchService {
   constructor(
     @InjectRepository(InquirySearchView)
     private inquirySearchViewRepository: Repository<InquirySearchView>,
@@ -49,7 +49,6 @@ export class InquirySearchService {
   }
 
   private compileSortQuery(searchDto: SearchRequestDto) {
-    // TODO complete with all options
     switch (searchDto.sortField) {
       case 'fileId':
         return '"inquirySearch"."file_number"';
@@ -62,6 +61,9 @@ export class InquirySearchService {
 
       case 'government':
         return '"inquirySearch"."local_government_name"';
+
+      case 'status':
+        return '"inquirySearch"."open"';
 
       default:
       case 'dateSubmitted':
@@ -134,7 +136,7 @@ export class InquirySearchService {
 
     if (searchDto.regionCode) {
       query = query.andWhere(
-        'inquirySearch.notification_region_code = :region_code',
+        'inquirySearch.inquiry_region_code = :region_code',
         {
           region_code: searchDto.regionCode,
         },
@@ -144,6 +146,7 @@ export class InquirySearchService {
     query = this.compileSearchByNameQuery(searchDto, query);
     query = this.compileParcelSearchQuery(searchDto, query);
     query = this.compileDateRangeSearchQuery(searchDto, query);
+    query = this.compileFileTypeSearchQuery(searchDto, query);
 
     return query;
   }
@@ -229,6 +232,25 @@ export class InquirySearchService {
           },
         );
     }
+    return query;
+  }
+
+  private compileFileTypeSearchQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<InquirySearchView>,
+  ) {
+    if (searchDto.fileTypes.length > 0) {
+      // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
+
+      query = query.andWhere(
+        new Brackets((qb) =>
+          qb.where('inquirySearch.inquiry_type_code IN (:...typeCodes)', {
+            typeCodes: searchDto.fileTypes,
+          }),
+        ),
+      );
+    }
+
     return query;
   }
 }
