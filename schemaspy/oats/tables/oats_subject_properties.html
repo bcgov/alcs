@@ -432,16 +432,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
+                                    <td>oats_sp_isfi_000</td>
+                                    <td>(((farm_land_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
                                     <td>oats_sbjp_aali_chk</td>
                                     <td>(((alr_application_land_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
                                     <td>oats_sbjp_chk</td>
                                     <td>((((alr_application_id IS NOT NULL) AND (issue_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL))))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_sp_isfi_000</td>
-                                    <td>(((farm_land_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 </tbody>
                             </table>
