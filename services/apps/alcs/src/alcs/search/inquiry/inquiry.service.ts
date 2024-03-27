@@ -38,9 +38,9 @@ export class InquirySearchService {
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
-    const result = await query.getManyAndCount();
+    // console.log(query.getSql());
 
-    console.log(result);
+    const result = await query.getManyAndCount();
 
     return {
       data: result[0],
@@ -57,8 +57,8 @@ export class InquirySearchService {
       case 'type':
         return '"inquirySearch"."inquiry_type_code"';
 
-    //   case: 'applicant':
-    //   return ''
+      case 'applicant':
+        return '"inquirySearch"."inquirer_last_name"';
 
       case 'government':
         return '"inquirySearch"."local_government_name"';
