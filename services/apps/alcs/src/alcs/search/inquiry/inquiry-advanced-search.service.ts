@@ -38,8 +38,6 @@ export class InquiryAdvancedSearchService {
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
-    // console.log(query.getSql());
-
     const result = await query.getManyAndCount();
 
     return {
