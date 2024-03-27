@@ -47,24 +47,10 @@ export interface InquiryDto {
 }
 
 export interface UpdateInquiryDto {
-  uuid: string;
-  summary: string;
-  dateSubmittedToAlc: number;
-  typeCode: string;
-  inquirerFirstName?: string;
-  inquirerLastName?: string;
-  inquirerOrganization?: string;
-  inquirerPhone?: string;
-  inquirerEmail?: string;
-  parcels?: InquiryParcelCreateDto[];
-}
-
-export interface CreateInquiryServiceDto {
-  summary: string;
-  dateSubmittedToAlc: Date;
-  localGovernmentUuid: string;
-  typeCode: string;
-  regionCode: string;
+  summary?: string;
+  open?: boolean;
+  dateSubmittedToAlc?: number;
+  typeCode?: string;
   inquirerFirstName?: string;
   inquirerLastName?: string;
   inquirerOrganization?: string;

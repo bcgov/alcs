@@ -48,19 +48,19 @@ export class InquiryService {
     return;
   }
 
-  // async fetchDetailedByFileNumber(fileNumber: string) {
-  //   try {
-  //     return await firstValueFrom(this.http.get<PlanningReviewDetailedDto>(`${this.url}/${fileNumber}`));
-  //   } catch (err) {
-  //     console.error(err);
-  //     this.toastService.showErrorToast('Failed to fetch inquiry');
-  //   }
-  //   return;
-  // }
-
   async update(fileNumber: string, updateDto: UpdateInquiryDto) {
     try {
-      return await firstValueFrom(this.http.post<UpdateInquiryDto>(`${this.url}/${fileNumber}`, updateDto));
+      return await firstValueFrom(this.http.patch<InquiryDto>(`${this.url}/${fileNumber}`, updateDto));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to update inquiry');
+    }
+    return;
+  }
+
+  async fetch(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.get<InquiryDto>(`${this.url}/${fileNumber}`));
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to update inquiry');

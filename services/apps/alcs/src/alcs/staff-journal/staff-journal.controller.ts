@@ -25,6 +25,7 @@ import {
   CreateNoticeOfIntentStaffJournalDto,
   CreateNotificationStaffJournalDto,
   CreatePlanningReviewStaffJournalDto,
+  CreateInquiryStaffJournalDto,
 } from './staff-journal.dto';
 import { StaffJournal } from './staff-journal.entity';
 import { StaffJournalService } from './staff-journal.service';
@@ -101,6 +102,21 @@ export class StaffJournalController {
   ): Promise<StaffJournalDto> {
     const newRecord = await this.staffJournalService.createForPlanningReview(
       record.planningReviewUuid,
+      record.body,
+      req.user.entity,
+    );
+
+    return this.autoMapper.map(newRecord, StaffJournal, StaffJournalDto);
+  }
+
+  @Post('/inquiry')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async createForInquiry(
+    @Body() record: CreateInquiryStaffJournalDto,
+    @Req() req,
+  ): Promise<StaffJournalDto> {
+    const newRecord = await this.staffJournalService.createForInquiry(
+      record.inquiryUuid,
       record.body,
       req.user.entity,
     );
