@@ -7,14 +7,14 @@ from common import (
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
-etl_name = "update_planning_review_base_fields"
+etl_name = "update_planning_review_cards"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def update_planning_review_base_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def update_planning_review_cards(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for populating date_submitted_to_alc in alcs.planning_review in ALCS.
+    This function is responsible for updating planning review cards in alcs.cards in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -24,7 +24,7 @@ def update_planning_review_base_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info("Start update planning review base fields")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "planning_review/sql/planning_review_base_update_count.sql",
+            "planning_review/sql/referrals/update_planning_review_cards_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -35,10 +35,10 @@ def update_planning_review_base_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
         failed_inserts = 0
         successful_updates_count = 0
-        last_planning_review_id = 0
+        last_planning_review_id = "00000000-0000-0000-0000-000000000000"
 
         with open(
-            "planning_review/sql/planning_review_base_update.sql",
+            "planning_review/sql/referrals/update_planning_review_cards.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -46,8 +46,7 @@ def update_planning_review_base_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             while True:
                 cursor.execute(
                     f"""
-                        {query} 
-                        WHERE ops.planning_review_id > {last_planning_review_id} ORDER BY ops.planning_review_id;
+                        {query} WHERE ac."uuid" > '{last_planning_review_id}' ORDER BY ac."uuid";
                     """
                 )
 
@@ -61,19 +60,17 @@ def update_planning_review_base_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     successful_updates_count = successful_updates_count + len(
                         updated_data
                     )
-                    last_planning_review_id = dict(updated_data[-1])[
-                        "planning_review_id"
-                    ]
+                    last_planning_review_id = dict(updated_data[-1])["uuid"]
 
                     logger.debug(
-                        f"Retrieved/updated items count: {len(updated_data)}; total successfully updated planning_review so far {successful_updates_count}; last updated planning_review_id: {last_planning_review_id}"
+                        f"Retrieved/updated items count: {len(updated_data)}; total successfully updated planning_review cards so far {successful_updates_count}; last updated planning_review card uuid: {last_planning_review_id}"
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
-                    last_planning_review_id = last_planning_review_id + 1
+                    last_planning_review_id = rows[1]["uuid"]
 
     logger.info(
         f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
@@ -94,13 +91,13 @@ def _update_base_fields(conn, batch_size, cursor, rows):
     return parsed_data_list
 
 
+# audit_updated_by is removed as the uuid is no longer needed to link referrals and cards
 _rx_items_query = """
-                    UPDATE alcs.planning_review 
-                    SET open = %(open_indicator)s,
-                    type_code = %(alcs_planning_review_code)s,
-                    legacy_id = %(legacy_number)s,
-                    closed_by_uuid = %(closed_by_uuid)s
-                    WHERE alcs.planning_review.file_number = %(planning_review_id)s::text
+                    UPDATE alcs.card 
+                    SET board_uuid = %(board_uuid)s,
+                    status_code = %(status_code)s,
+                    audit_updated_by = %(audit_updated_by)s
+                    WHERE alcs.card.uuid = %(uuid)s
 """
 
 
@@ -109,41 +106,19 @@ def _prepare_oats_planning_review_data(row_data_list):
     for row in row_data_list:
         mapped_data_list.append(
             {
-                "planning_review_id": row["planning_review_id"],
-                "open_indicator": _map_is_open(row),
-                "alcs_planning_review_code": _map_planning_code(row),
-                "legacy_number": row["legacy_planning_review_nbr"],
-                "closed_by_uuid": _map_closed_by(row),
+                "uuid": row["uuid"],
+                "board_uuid": "e7b18852-4f8f-419e-83e3-60e706b4a494",
+                "audit_updated_by": None,
+                "status_code": _map_card_status(row),
             }
         )
 
     return mapped_data_list
 
 
-def _map_is_open(data):
-    oats_val = data.get("open_ind")
-    if oats_val == "Y":
-        return True
-    elif oats_val == "N":
-        return False
+def _map_card_status(row):
+    review_status = row.get("open")
+    if review_status is False:
+        return "COMP"
     else:
-        return True
-
-
-def _map_closed_by(data):
-    if data.get("open_ind") == "N":
-        return data.get("author_uuid")
-    else:
-        return None
-
-
-def _map_planning_code(data):
-    oats_code = data.get("planning_review_code")
-    try:
-        return OatsToAlcsPlanningReviewType[oats_code].value
-    except KeyError:
-        file_number = data.get("planning_review_id")
-        logger.info(
-            f"Key Error for{file_number}, no match to {oats_code} in ALCS, Override to MISC"
-        )
-        return "MISC"
+        return row.get("status_code")
