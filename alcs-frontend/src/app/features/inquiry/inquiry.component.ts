@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { InquiryDetailService } from '../../services/inquiry/inquiry-detail.service';
 import { InquiryDto } from '../../services/inquiry/inquiry.dto';
 import { DetailsComponent } from './detail/details.component';
+import { DocumentsComponent } from './documents/documents.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ParcelsComponent } from './parcel/parcels.component';
 
@@ -25,6 +26,12 @@ export const childRoutes = [
     menuTitle: 'Parcels',
     icon: 'crop_free',
     component: ParcelsComponent,
+  },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: DocumentsComponent,
   },
 ];
 

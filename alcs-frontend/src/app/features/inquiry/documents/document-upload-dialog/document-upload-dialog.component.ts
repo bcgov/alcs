@@ -4,10 +4,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import {
-  PlanningReviewDocumentDto,
+  InquiryDocumentDto,
   UpdateDocumentDto,
-} from '../../../../services/planning-review/planning-review-document/planning-review-document.dto';
-import { PlanningReviewDocumentService } from '../../../../services/planning-review/planning-review-document/planning-review-document.service';
+} from '../../../../services/inquiry/inquiry-document/inquiry-document.dto';
+import { InquiryDocumentService } from '../../../../services/inquiry/inquiry-document/inquiry-document.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import {
   DOCUMENT_SOURCE,
@@ -28,12 +28,12 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   title = 'Create';
   isDirty = false;
   isSaving = false;
+  allowsFileEdit = true;
   documentTypeAhead: string | undefined = undefined;
 
   name = new FormControl<string>('', [Validators.required]);
   type = new FormControl<string | undefined>(undefined, [Validators.required]);
   source = new FormControl<string>('', [Validators.required]);
-  visibleToCommissioner = new FormControl<boolean>(false, [Validators.required]);
 
   documentTypes: DocumentTypeDto[] = [];
   documentSources = Object.values(DOCUMENT_SOURCE);
@@ -42,7 +42,6 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     name: this.name,
     type: this.type,
     source: this.source,
-    visibleToCommissioner: this.visibleToCommissioner,
   });
 
   pendingFile: File | undefined;
@@ -51,9 +50,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { fileId: string; existingDocument?: PlanningReviewDocumentDto },
+    public data: { fileId: string; existingDocument?: InquiryDocumentDto },
     protected dialog: MatDialogRef<any>,
-    private planningReviewDocumentService: PlanningReviewDocumentService,
+    private inquiryDocumentService: InquiryDocumentService,
     private toastService: ToastService,
   ) {}
 
@@ -63,11 +62,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
+      this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
       this.form.patchValue({
         name: document.fileName,
         type: document.type?.code,
         source: document.source,
-        visibleToCommissioner: document.visibilityFlags.includes('C'),
       });
       this.documentTypeAhead = document.type!.code;
       this.existingFile = {
@@ -78,27 +77,20 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
-    const visibilityFlags: 'C'[] = [];
-
-    if (this.visibleToCommissioner.getRawValue()) {
-      visibilityFlags.push('C');
-    }
-
     const file = this.pendingFile;
     const dto: UpdateDocumentDto = {
       fileName: this.name.value!,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
-      visibilityFlags,
       file,
     };
 
     this.isSaving = true;
     if (this.data.existingDocument) {
-      await this.planningReviewDocumentService.update(this.data.existingDocument.uuid, dto);
+      await this.inquiryDocumentService.update(this.data.existingDocument.uuid, dto);
     } else if (file !== undefined) {
       try {
-        await this.planningReviewDocumentService.upload(this.data.fileId, {
+        await this.inquiryDocumentService.upload(this.data.fileId, {
           ...dto,
           file,
         });
@@ -163,15 +155,12 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   async openExistingFile() {
     if (this.data.existingDocument) {
-      await this.planningReviewDocumentService.download(
-        this.data.existingDocument.uuid,
-        this.data.existingDocument.fileName,
-      );
+      await this.inquiryDocumentService.download(this.data.existingDocument.uuid, this.data.existingDocument.fileName);
     }
   }
 
   private async loadDocumentTypes() {
-    const docTypes = await this.planningReviewDocumentService.fetchTypes();
+    const docTypes = await this.inquiryDocumentService.fetchTypes();
     docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
     this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
   }

@@ -6,13 +6,13 @@ import { DocumentTypeDto } from '../../../shared/document/document.dto';
 import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 import { verifyFileSize } from '../../../shared/utils/file-size-checker';
 import { ToastService } from '../../toast/toast.service';
-import { PlanningReviewDocumentDto, CreateDocumentDto, UpdateDocumentDto } from './planning-review-document.dto';
+import { CreateDocumentDto, InquiryDocumentDto, UpdateDocumentDto } from './inquiry-document.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PlanningReviewDocumentService {
-  private url = `${environment.apiUrl}/planning-review-document`;
+export class InquiryDocumentService {
+  private url = `${environment.apiUrl}/inquiry-document`;
 
   constructor(
     private http: HttpClient,
@@ -20,13 +20,7 @@ export class PlanningReviewDocumentService {
   ) {}
 
   async listAll(fileNumber: string) {
-    return firstValueFrom(this.http.get<PlanningReviewDocumentDto[]>(`${this.url}/planning-review/${fileNumber}`));
-  }
-
-  async listByVisibility(fileNumber: string, visibilityFlags: string[]) {
-    return firstValueFrom(
-      this.http.get<PlanningReviewDocumentDto[]>(`${this.url}/planning-review/${fileNumber}/${visibilityFlags.join()}`),
-    );
+    return firstValueFrom(this.http.get<InquiryDocumentDto[]>(`${this.url}/inquiry/${fileNumber}`));
   }
 
   async upload(fileNumber: string, createDto: CreateDocumentDto) {
@@ -37,13 +31,13 @@ export class PlanningReviewDocumentService {
     }
     let formData = this.convertDtoToFormData(createDto);
 
-    const res = await firstValueFrom(this.http.post(`${this.url}/planning-review/${fileNumber}`, formData));
+    const res = await firstValueFrom(this.http.post(`${this.url}/inquiry/${fileNumber}`, formData));
     this.toastService.showSuccessToast('Document uploaded');
     return res;
   }
 
   async delete(uuid: string) {
-    return firstValueFrom(this.http.delete<PlanningReviewDocumentDto>(`${this.url}/${uuid}`));
+    return firstValueFrom(this.http.delete<InquiryDocumentDto>(`${this.url}/${uuid}`));
   }
 
   async download(uuid: string, fileName: string, isInline = true) {
@@ -54,12 +48,6 @@ export class PlanningReviewDocumentService {
     } else {
       downloadFileFromUrl(data.url, fileName);
     }
-  }
-
-  async getReviewDocuments(fileNumber: string) {
-    return firstValueFrom(
-      this.http.get<PlanningReviewDocumentDto[]>(`${this.url}/planning-review/${fileNumber}/reviewDocuments`),
-    );
   }
 
   async fetchTypes() {
@@ -88,6 +76,12 @@ export class PlanningReviewDocumentService {
     formData.append('fileName', dto.fileName);
     if (dto.file) {
       formData.append('file', dto.file, dto.file.name);
+    }
+    if (dto.parcelUuid) {
+      formData.append('parcelUuid', dto.parcelUuid);
+    }
+    if (dto.ownerUuid) {
+      formData.append('ownerUuid', dto.ownerUuid);
     }
     return formData;
   }
