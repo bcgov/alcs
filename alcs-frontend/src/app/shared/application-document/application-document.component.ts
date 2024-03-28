@@ -15,7 +15,7 @@ export class ApplicationDocumentComponent implements OnChanges {
   @Input() visibilityFlags: string[] = [];
   @Input() sortable = false;
 
-  displayedColumns: string[] = ['type', 'fileName', 'source', 'uploadedAt', 'action', 'sorting'];
+  displayedColumns: string[] = ['index', 'type', 'fileName', 'source', 'uploadedAt', 'action', 'sorting'];
   documents: ApplicationDocumentDto[] = [];
   dataSource = new MatTableDataSource<ApplicationDocumentDto>([]);
 
@@ -24,7 +24,7 @@ export class ApplicationDocumentComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.loadDocuments();
     if (!this.sortable) {
-      this.displayedColumns = ['type', 'fileName', 'source', 'uploadedAt', 'action'];
+      this.displayedColumns = ['index', 'type', 'fileName', 'source', 'uploadedAt', 'action'];
     }
   }
 
