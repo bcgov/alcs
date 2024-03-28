@@ -23,7 +23,7 @@
           <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
         </div>
         <div>
-          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
+          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
         </div>
         <div>{{ transferee.email }}</div>
       </ng-container>
@@ -60,7 +60,7 @@
     </div>
     <div class="subheading2 grid-1">Phone</div>
     <div class="grid-double">
-      {{ notificationSubmission.contactPhone ?? '' | mask : '(000) 000-0000'  }}
+      {{ notificationSubmission.contactPhone ?? '' | mask : '(000) 000-0000' }}
       <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactPhone"></app-no-data>
       <app-validation-error *ngIf="!(notificationSubmission.contactPhone || '' | phoneValid)"
         >Invalid Format</app-validation-error
@@ -122,7 +122,7 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
         <div class="grid-2">
           {{ file.type?.label }}

@@ -14,8 +14,8 @@ import { LocalGovernmentDto } from '../../local-government/local-government.dto'
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from '../application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionDto } from '../application-decision-v1/application-decision/application-decision.dto';
+import { DecisionMeetingDto } from '../../meetings/decision-meeting.dto';
+import { ApplicationDecisionDto } from '../application-decision-v2/application-decision/application-decision.dto';
 
 export class ApplicationModificationOutcomeCodeDto extends BaseCodeDto {}
 
@@ -89,7 +89,7 @@ export class ApplicationForModificationDto {
   applicant: string;
   region: ApplicationRegionDto;
   localGovernment: LocalGovernmentDto;
-  decisionMeetings: ApplicationDecisionMeetingDto[];
+  decisionMeetings: DecisionMeetingDto[];
 }
 
 export class ApplicationModificationDto {

@@ -4,7 +4,7 @@ import { NotificationDocumentDto } from '../../../../services/notification-docum
 import { NotificationDocumentService } from '../../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionDetailedDto } from '../../../../services/notification-submission/notification-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileIframe } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-proposal-details[notificationSubmission]',
@@ -37,10 +37,10 @@ export class ProposalDetailsComponent {
     await this.router.navigateByUrl(`notification/${this._notificationSubmission?.fileNumber}/edit/${step}?errors=t`);
   }
 
-  async openFile(uuid: string) {
-    const res = await this.notificationDocumentService.openFile(uuid);
+  async openFile(file: NotificationDocumentDto) {
+    const res = await this.notificationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileIframe(res);
+      openFileInline(res.url, file.fileName);
     }
   }
 }

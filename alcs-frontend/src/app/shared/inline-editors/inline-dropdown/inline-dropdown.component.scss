@@ -6,6 +6,11 @@
 
 .editing {
   display: inline-block;
+  width: 100%;
+
+  .mat-mdc-form-field {
+    width: 100%;
+  }
 }
 
 .editing.hidden {

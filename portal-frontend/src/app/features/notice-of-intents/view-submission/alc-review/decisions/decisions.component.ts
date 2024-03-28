@@ -1,6 +1,8 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NoticeOfIntentPortalDecisionDto } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionService } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.service';
+import { openFileInline } from '../../../../../shared/utils/file';
+import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 
 @Component({
   selector: 'app-decisions[fileNumber]',
@@ -21,10 +23,10 @@ export class DecisionsComponent implements OnInit, OnChanges {
     this.loadDecisions();
   }
 
-  async openFile(uuid: string) {
-    const res = await this.decisionService.openFile(uuid);
+  async openFile(file: ApplicationDocumentDto) {
+    const res = await this.decisionService.openFile(file.uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileInline(res.url, file.fileName);
     }
   }
 

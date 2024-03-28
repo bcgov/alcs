@@ -3,6 +3,11 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import {
+  NoticeOfIntentDocumentDto,
+  UpdateNoticeOfIntentDocumentDto,
+} from '../../../../services/notice-of-intent/noi-document/noi-document.dto';
+import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-document/noi-document.service';
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -12,11 +17,7 @@ import {
   DOCUMENT_TYPE,
   DocumentTypeDto,
 } from '../../../../shared/document/document.dto';
-import {
-  NoticeOfIntentDocumentDto,
-  UpdateNoticeOfIntentDocumentDto,
-} from '../../../../services/notice-of-intent/noi-document/noi-document.dto';
-import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-document/noi-document.service';
+import { splitExtension } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -62,6 +63,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   existingFile: { name: string; size: number } | undefined;
   showSupersededWarning = false;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -90,8 +92,10 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
         this.prepareCorporateSummaryUpload(document.uuid);
       }
 
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
         type: document.type?.code,
         source: document.source,
         visibleToInternal: document.visibilityFlags.includes('A'),
@@ -119,7 +123,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
     const file = this.pendingFile;
     const dto: UpdateNoticeOfIntentDocumentDto = {
-      fileName: this.name.value!,
+      fileName: this.name.value! + this.extension,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
@@ -195,13 +199,16 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+      const { fileName, extension } = splitExtension(this.pendingFile.name);
+      this.name.setValue(fileName);
+      this.extension = extension;
     }
   }
 
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
   }
 
   openFile() {

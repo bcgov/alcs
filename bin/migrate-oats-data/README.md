@@ -47,9 +47,11 @@ If you want to see a detailed description of the available arguments and options
 
 Pre-launch ETL command has been changed to:
 
-`python migrate_initial.py [action]`
+`python migrate_1.py [action]`
 
-Post-launch ETL command now takes over migrate.py and is used as before
+Post-launch ETL command is `migrate_2.py` and imports everything post launch inclusive of SRWs
+
+ETLs post SRWs take over migrate.py command and is used as before
 
 Commands for post-launch are stored in:
 

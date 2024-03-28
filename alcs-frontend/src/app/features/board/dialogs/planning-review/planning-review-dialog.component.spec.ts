@@ -43,6 +43,7 @@ describe('PlanningReviewDialogComponent', () => {
       isFirstNation: false,
     },
     fileNumber: 'file-number',
+    meetings: [],
   };
 
   const mockReferralDto: PlanningReferralDto = {

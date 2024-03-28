@@ -7,7 +7,8 @@ with oats_documents_to_map as (
 		od.document_id as oats_document_id,
 		od.alr_application_id as oats_application_id,
         oaa.plan_no,
-        oaa.control_no
+        oaa.control_no,
+        od."description"
 	from oats.oats_documents od
 		join alcs."document" d on d.oats_document_id = od.document_id::text
 		join alcs.document_code adc on adc.oats_code = od.document_code
@@ -29,5 +30,6 @@ select otm.notification_uuid,
 	oats_document_id,
 	oats_application_id,
 	plan_no,
-    control_no
+    control_no,
+    otm."description"
 from oats_documents_to_map otm

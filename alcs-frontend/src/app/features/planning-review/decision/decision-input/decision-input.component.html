@@ -1,0 +1,109 @@
+<div class="row">
+  <h1>Decision #{{ index }} Draft</h1>
+</div>
+
+<h3>Resolution</h3>
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <div class="grid">
+    <div>
+      <ng-select
+        appearance="outline"
+        class="resolution-year"
+        [items]="resolutionYears"
+        formControlName="resolutionYear"
+        appendTo="body"
+        placeholder="Select Year for Resolution Number*"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+
+    <div class="resolution-number-wrapper">
+      <div *ngIf="!resolutionNumberControl.getRawValue()" class="resolution-number-btn-wrapper">
+        <button
+          class="generate-number-btn"
+          [loading]="isLoading"
+          type="button"
+          mat-stroked-button
+          color="primary"
+          (click)="onGenerateResolutionNumber()"
+          [ngClass]="{
+            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
+          }"
+        >
+          Generate Number
+        </button>
+        <app-error-message
+          *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
+        ></app-error-message>
+      </div>
+      <div *ngIf="resolutionNumberControl.getRawValue()">
+        <div class="resolution-number">
+          <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
+          <button
+            matTooltip="Delete resolution number"
+            class="delete-icon"
+            mat-icon-button
+            (click)="onDeleteResolutionNumber()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Decision Date</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        formControlName="date"
+        name="date"
+        [min]="minDate | startOfDay"
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+
+    <ng-select
+      appearance="outline"
+      [items]="outcomes"
+      bindLabel="label"
+      bindValue="code"
+      formControlName="outcome"
+      appendTo="body"
+      placeholder="Decision Outcome*"
+      [clearable]="false"
+      (change)="onChangeDecisionOutcome($event)"
+    ></ng-select>
+
+    <div class="full-width">
+      <mat-form-field style="width: 100%" appearance="outline">
+        <mat-label>Decision Description</mat-label>
+        <input matInput formControlName="decisionDescription" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="documents-container">
+    <app-decision-documents
+      [decision]="existingDecision"
+      (beforeDocumentUpload)="onSubmit(true, true)"
+      [showError]="showErrors && !existingDecision?.documents?.length && requiresDocuments"
+    ></app-decision-documents>
+  </div>
+</form>
+
+<div class="split bottom-scroller">
+  <div>
+    <button class="release-decision-btn" type="button" (click)="onRelease()" mat-flat-button color="accent">
+      Release Decision
+    </button>
+  </div>
+  <div>
+    <div class="center">
+      <button mat-stroked-button color="primary" type="button" (click)="onCancel()">Cancel</button>
+      <button (click)="onSubmit()" mat-flat-button color="primary">Save Changes</button>
+    </div>
+  </div>
+</div>

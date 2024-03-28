@@ -127,19 +127,18 @@
 
     <div class="button-controls">
       <button type="button" mat-stroked-button color="accent" (click)="onClear()">Clear</button>
-      <button type="submit" mat-flat-button color="primary" [disabled]="formEmpty || !searchForm.valid || isLoading">Search</button>
+      <button type="submit" mat-flat-button color="primary" [disabled]="formEmpty || !searchForm.valid || isLoading">
+        Search
+      </button>
     </div>
   </form>
 
-  <div *ngIf="isLoading && searchResultsHidden" class="center">
-    <mat-spinner></mat-spinner>
-  </div>
-  <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
-    <h3 class="search-title" id="searchResults">Search Results</h3>
-    <div *ngIf="isLoading && !searchResultsHidden" class="center">
+  <div id="searchResultsWrapper" class="search-fields-wrapper search-result-wrapper">
+    <h3 *ngIf="!searchResultsHidden || isLoading" class="search-title">Search Results</h3>
+    <div *ngIf="isLoading" class="center">
       <mat-spinner></mat-spinner>
     </div>
-    <mat-tab-group *ngIf="!isLoading" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
+    <mat-tab-group *ngIf="!isLoading && !searchResultsHidden" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
       <mat-tab>
         <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
         <app-search-list

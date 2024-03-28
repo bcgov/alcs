@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
@@ -19,6 +20,7 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
   let mockAppOwnerService: DeepMocked<NoticeOfIntentOwnerService>;
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateNoiSubmissionDocumentService>;
   let mockNoiSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNoiService: DeepMocked<NoticeOfIntentService>;
 
   let mockUser;
 
@@ -29,6 +31,7 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
     mockAppOwnerService = createMock();
     mockGenerateSubmissionDocumentService = createMock();
     mockNoiSubmissionStatusService = createMock();
+    mockNoiService = createMock();
 
     mockUser = new User({
       clientRoles: [],
@@ -60,6 +63,10 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNoiSubmissionStatusService,
+        },
+        {
+          provide: NoticeOfIntentService,
+          useValue: mockNoiService,
         },
       ],
     }).compile();
@@ -147,6 +154,7 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
     mockParcelService.deleteMany.mockResolvedValueOnce([]);
     mockGenerateSubmissionDocumentService.generateUpdate.mockResolvedValue();
     mockNoiSubmissionStatusService.removeStatuses.mockResolvedValue({} as any);
+    mockNoiService.updateApplicant.mockResolvedValue();
 
     await service.publish('fileNumber', new User());
 
@@ -159,9 +167,10 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
       1,
     );
     expect(mockSubmissionRepo.save.mock.calls[0][0].isDraft).toEqual(false);
-    // expect(
-    //   mockGenerateSubmissionDocumentService.generateUpdate,
-    // ).toHaveBeenCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateUpdate,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for mapToDto', async () => {

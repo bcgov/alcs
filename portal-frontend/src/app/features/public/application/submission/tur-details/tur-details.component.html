@@ -33,7 +33,7 @@
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let file of proposalMap" (click)="openFile(file.uuid)">
+    <a *ngFor="let file of proposalMap" (click)="openFile(file)">
       {{ file.fileName }}
     </a>
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>

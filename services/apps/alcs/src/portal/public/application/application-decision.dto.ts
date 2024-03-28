@@ -1,9 +1,9 @@
 import { AutoMap } from 'automapper-classes';
 import {
+  ApplicationDecisionOutcomeCodeDto,
   DecisionDocumentDto,
   LinkedResolutionDto,
-} from '../../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
-import { ApplicationDecisionOutcomeCodeDto } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
+} from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
 
 export class ApplicationPortalDecisionDto {
   @AutoMap()

@@ -1,5 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class StaffJournalDto {
   @AutoMap()
@@ -27,27 +27,33 @@ class BaseCreateStaffJournalDto {
 }
 
 export class CreateApplicationStaffJournalDto extends BaseCreateStaffJournalDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   applicationUuid: string;
 }
 
 export class CreateNoticeOfIntentStaffJournalDto extends BaseCreateStaffJournalDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   noticeOfIntentUuid: string;
 }
 
 export class CreateNotificationStaffJournalDto extends BaseCreateStaffJournalDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   notificationUuid: string;
 }
 
 export class CreatePlanningReviewStaffJournalDto extends BaseCreateStaffJournalDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   planningReviewUuid: string;
+}
+
+export class CreateInquiryStaffJournalDto extends BaseCreateStaffJournalDto {
+  @IsUUID()
+  @IsNotEmpty()
+  inquiryUuid: string;
 }
 
 export class UpdateStaffJournalDto extends BaseCreateStaffJournalDto {

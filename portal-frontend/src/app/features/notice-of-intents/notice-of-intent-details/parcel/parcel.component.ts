@@ -14,7 +14,7 @@ import { NoticeOfIntentParcelService } from '../../../../services/notice-of-inte
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
-import { openFileIframe } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 export class NoticeOfIntentParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -97,10 +97,10 @@ export class ParcelComponent {
     }
   }
 
-  async onOpenFile(uuid: string) {
-    const res = await this.noticeOfIntentDocumentService.openFile(uuid);
+  async onOpenFile(file: NoticeOfIntentDocumentDto) {
+    const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
     if (res) {
-      openFileIframe(res);
+      openFileInline(res.url, file.fileName);
     }
   }
 

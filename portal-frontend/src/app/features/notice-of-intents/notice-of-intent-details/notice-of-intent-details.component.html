@@ -42,7 +42,7 @@
     </div>
     <div class="subheading2 grid-1">Phone</div>
     <div class="grid-double">
-      {{ primaryContact?.phoneNumber ?? '' | mask : '(000) 000-0000'  }}
+      {{ primaryContact?.phoneNumber ?? '' | mask : '(000) 000-0000' }}
       <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.phoneNumber"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
         >Invalid Format</app-validation-error
@@ -62,7 +62,7 @@
           *ngIf="authorizationLetters.length === 0"
         ></app-no-data>
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
         <app-validation-error *ngIf="!needsAuthorizationLetter && authorizationLetters.length > 0">
           Authorization letters are not required, please remove them
@@ -215,7 +215,7 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
         <div class="grid-2">
           {{ file.type?.label }}

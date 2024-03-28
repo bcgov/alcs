@@ -13,8 +13,8 @@ import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from '../application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionDto } from '../application-decision-v1/application-decision/application-decision.dto';
+import { DecisionMeetingDto } from '../../meetings/decision-meeting.dto';
+import { ApplicationDecisionDto } from '../application-decision-v2/application-decision/application-decision.dto';
 
 export class ReconsiderationTypeDto extends BaseCodeDto {}
 
@@ -127,7 +127,7 @@ export class ApplicationForReconsiderationDto {
   source: string;
   region: ApplicationRegionDto;
   localGovernment: string;
-  decisionMeetings: ApplicationDecisionMeetingDto[];
+  decisionMeetings: DecisionMeetingDto[];
 }
 
 export class ApplicationReconsiderationWithoutApplicationDto {

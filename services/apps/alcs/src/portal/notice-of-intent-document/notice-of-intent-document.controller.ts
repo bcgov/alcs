@@ -80,8 +80,7 @@ export class NoticeOfIntentDocumentController {
     if (canAccessDocument) {
       const url =
         await this.noticeOfIntentDocumentService.getInlineUrl(document);
-      const { fileName } = document.document;
-      return { url, fileName };
+      return { url };
     }
 
     throw new NotFoundException('Failed to find document');

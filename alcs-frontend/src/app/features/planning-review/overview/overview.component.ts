@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { PlanningReviewDetailService } from '../../../services/planning-review/planning-review-detail.service';
+import { TimelineEventDto } from '../../../services/planning-review/planning-review-timeline/planning-review-timeline.dto';
+import { PlanningReviewTimelineService } from '../../../services/planning-review/planning-review-timeline/planning-review-timeline.service';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../../services/planning-review/planning-review.service';
 
@@ -13,15 +15,20 @@ export class OverviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   planningReview?: PlanningReviewDto;
   types: { label: string; value: string }[] = [];
+  events: TimelineEventDto[] = [];
 
   constructor(
     private planningReviewDetailService: PlanningReviewDetailService,
     private planningReviewService: PlanningReviewService,
+    private planningReviewTimelineService: PlanningReviewTimelineService,
   ) {}
 
   ngOnInit(): void {
     this.planningReviewDetailService.$planningReview.pipe(takeUntil(this.$destroy)).subscribe((review) => {
       this.planningReview = review;
+      if (review) {
+        this.loadEvents(review.fileNumber);
+      }
     });
     this.loadTypes();
   }
@@ -55,5 +62,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
         open: $event === 'Open',
       });
     }
+  }
+
+  private async loadEvents(fileNumber: string) {
+    this.events = await this.planningReviewTimelineService.fetchByFileNumber(fileNumber);
   }
 }

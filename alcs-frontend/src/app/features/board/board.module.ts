@@ -1,9 +1,11 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
 import { RouterModule, Routes } from '@angular/router';
 import { MentionModule } from 'angular-mentions';
+import { NgxMaskDirective } from 'ngx-mask';
 import { CardComponent } from '../../shared/card/card.component';
 import { CommentComponent } from '../../shared/commenting/comment.component';
 import { CommentsComponent } from '../../shared/commenting/comments.component';
@@ -17,8 +19,8 @@ import { AppModificationDialogComponent } from './dialogs/app-modification/app-m
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
-import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
-import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
+import { CreateInquiryDialogComponent } from './dialogs/inquiry/create/create-inquiry-dialog.component';
+import { InquiryDialogComponent } from './dialogs/inquiry/inquiry-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
@@ -56,13 +58,13 @@ const routes: Routes = [
     PlanningReviewDialogComponent,
     CreateAppModificationDialogComponent,
     AppModificationDialogComponent,
-    CovenantDialogComponent,
-    CreateCovenantDialogComponent,
     NoticeOfIntentDialogComponent,
     CreateNoticeOfIntentDialogComponent,
     CreateNoiModificationDialogComponent,
     NoiModificationDialogComponent,
     NotificationDialogComponent,
+    InquiryDialogComponent,
+    CreateInquiryDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +73,9 @@ const routes: Routes = [
     MatGridListModule,
     RouterModule.forChild(routes),
     MentionModule,
+    NgIf,
+    MatInputModule,
+    NgxMaskDirective,
   ],
 })
 export class BoardModule {}

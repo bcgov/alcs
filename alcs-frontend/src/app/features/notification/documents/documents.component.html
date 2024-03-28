@@ -27,15 +27,24 @@
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.visibilityFlags.includes('A')">
         <span matTooltip="Applicant">A</span>
-        <ng-container *ngIf="element.visibilityFlags.includes('C') || element.visibilityFlags.includes('G') || element.visibilityFlags.includes('P')">, </ng-container>
+        <ng-container
+          *ngIf="
+            element.visibilityFlags.includes('C') ||
+            element.visibilityFlags.includes('G') ||
+            element.visibilityFlags.includes('P')
+          "
+          >,
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="element.visibilityFlags.includes('C')">
         <span matTooltip="Commissioner">C</span>
-        <ng-container *ngIf="element.visibilityFlags.includes('G') || element.visibilityFlags.includes('P')">, </ng-container>
+        <ng-container *ngIf="element.visibilityFlags.includes('G') || element.visibilityFlags.includes('P')"
+          >,
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="element.visibilityFlags.includes('G')">
         <span matTooltip="L/FNG">G</span>
-        <ng-container *ngIf="element.visibilityFlags.includes('P')">, </ng-container>
+        <ng-container *ngIf="element.visibilityFlags.includes('P')">,</ng-container>
       </ng-container>
       <ng-container *ngIf="element.visibilityFlags.includes('P')">
         <span matTooltip="Public">P</span>
@@ -57,7 +66,11 @@
       <button mat-icon-button (click)="onEditFile(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button *ngIf="element.system === DOCUMENT_SYSTEM.ALCS" mat-icon-button (click)="onDeleteFile(element)">
+      <button
+        *ngIf="element.system === DOCUMENT_SYSTEM.ALCS || element.system === DOCUMENT_SYSTEM.OATS"
+        mat-icon-button
+        (click)="onDeleteFile(element)"
+      >
         <mat-icon color="warn">delete</mat-icon>
       </button>
     </td>

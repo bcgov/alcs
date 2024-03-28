@@ -38,7 +38,7 @@
       <th mat-header-cell *matHeaderCellDef>Corporate Summary</th>
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
-          <a *ngIf="element.corporateSummary" (click)="onOpenFile(element.corporateSummary.uuid)">{{
+          <a *ngIf="element.corporateSummary" (click)="onOpenFile(element.corporateSummary)">{{
             element.corporateSummary.fileName
           }}</a>
           <div class="no-data" *ngIf="!element.corporateSummary">

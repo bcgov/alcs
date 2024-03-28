@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
-import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { DecisionMeetingDto } from '../../alcs/meetings/decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/application/application-decision-meeting/application-decision-meeting.entity';
 import {
   ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
@@ -50,7 +50,7 @@ export class ReconsiderationProfile extends AutomapperProfile {
             this.mapper.mapArray(
               a.decisionMeetings,
               ApplicationDecisionMeeting,
-              ApplicationDecisionMeetingDto,
+              DecisionMeetingDto,
             ),
           ),
         ),

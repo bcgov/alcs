@@ -99,16 +99,12 @@ describe('PlanningReviewService', () => {
     expect(mockReferralRepository.save).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through to the repo for getby', async () => {
-    const mockFilter = {
-      uuid: '5',
-    };
-    mockRepository.find.mockResolvedValue([]);
+  it('should call through to the repo for getByFileNumber', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(new PlanningReview());
 
-    await service.getBy(mockFilter);
+    await service.getByFileNumber('fileNumber');
 
-    expect(mockRepository.find).toHaveBeenCalledTimes(1);
-    expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to the repo for getDetailedReview', async () => {

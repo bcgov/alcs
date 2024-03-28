@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationSubmissionDetailedDto } from '../../portal/application-submission/application-submission.dto';
-import { ApplicationDecisionMeetingDto } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { DecisionMeetingDto } from '../meetings/decision-meeting.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -222,8 +222,8 @@ export class ApplicationDto {
   @AutoMap(() => LocalGovernmentDto)
   localGovernment: LocalGovernmentDto;
 
-  @AutoMap(() => ApplicationDecisionMeetingDto)
-  decisionMeetings: ApplicationDecisionMeetingDto[];
+  @AutoMap(() => DecisionMeetingDto)
+  decisionMeetings: DecisionMeetingDto[];
 
   @AutoMap()
   @Type(() => CardDto)

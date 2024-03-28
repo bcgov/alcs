@@ -22,8 +22,6 @@ export interface PlanningReviewDocumentDto {
 
 export interface UpdateDocumentDto {
   file?: File;
-  parcelUuid?: string;
-  ownerUuid?: string;
   fileName: string;
   typeCode: DOCUMENT_TYPE;
   source: DOCUMENT_SOURCE;

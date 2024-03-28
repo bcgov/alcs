@@ -5,7 +5,7 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileIframe } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-subd-details[applicationSubmission]',
@@ -56,10 +56,10 @@ export class SubdDetailsComponent {
     }
   }
 
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
+  async openFile(file: ApplicationDocumentDto) {
+    const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileIframe(res);
+      openFileInline(res.url, file.fileName);
     }
   }
 

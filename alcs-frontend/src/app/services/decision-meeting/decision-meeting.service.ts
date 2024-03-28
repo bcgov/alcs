@@ -9,9 +9,12 @@ import { UpcomingMeetingBoardMapDto } from './decision-meeting.dto';
   providedIn: 'root',
 })
 export class DecisionMeetingService {
-  private url = `${environment.apiUrl}/application-decision-meeting`;
+  private url = `${environment.apiUrl}/decision-meeting`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch() {
     try {

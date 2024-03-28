@@ -10,6 +10,7 @@ import {
   CreateNoticeOfIntentStaffJournalDto,
   CreateNotificationStaffJournalDto,
   CreatePlanningReviewStaffJournalDto,
+  CreateInquiryStaffJournalDto,
 } from './staff-journal.dto';
 
 @Injectable({
@@ -17,6 +18,7 @@ import {
 })
 export class StaffJournalService {
   baseUrl = `${environment.apiUrl}/application-staff-journal`;
+
   constructor(
     private http: HttpClient,
     private toastService: ToastService,
@@ -46,6 +48,12 @@ export class StaffJournalService {
 
   async createNoteForPlanningReview(note: CreatePlanningReviewStaffJournalDto) {
     const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/planning-review`, note));
+    this.toastService.showSuccessToast('Journal note created');
+    return createdNote;
+  }
+
+  async createNoteForInquiry(note: CreateInquiryStaffJournalDto) {
+    const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/inquiry`, note));
     this.toastService.showSuccessToast('Journal note created');
     return createdNote;
   }

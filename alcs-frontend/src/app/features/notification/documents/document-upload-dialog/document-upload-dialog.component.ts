@@ -13,6 +13,7 @@ import {
   DOCUMENT_TYPE,
   DocumentTypeDto,
 } from '../../../../shared/document/document.dto';
+import { splitExtension } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -50,6 +51,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -67,8 +69,10 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.title = 'Edit';
       this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
 
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
         type: document.type?.code,
         source: document.source,
         visibleToInternal: document.visibilityFlags.includes('A'),
@@ -96,7 +100,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
     const file = this.pendingFile;
     const dto: UpdateNoticeOfIntentDocumentDto = {
-      fileName: this.name.value!,
+      fileName: this.name.value! + this.extension,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
@@ -151,14 +155,17 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const element = event.target as HTMLInputElement;
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
+      const { fileName, extension } = splitExtension(selectedFiles[0].name);
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+      this.name.setValue(fileName);
+      this.extension = extension;
     }
   }
 
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
   }
 
   openFile() {

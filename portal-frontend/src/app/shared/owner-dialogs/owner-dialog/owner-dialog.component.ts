@@ -19,6 +19,7 @@ import { ConfirmationDialogService } from '../../confirmation-dialog/confirmatio
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../dto/document.dto';
 import { OWNER_TYPE } from '../../dto/owner.dto';
 import { FileHandle } from '../../file-drag-drop/drag-drop.directive';
+import { openFileInline } from '../../utils/file';
 
 @Component({
   selector: 'app-owner-dialog',
@@ -240,11 +241,11 @@ export class OwnerDialogComponent {
   async openCorporateSummary() {
     if (this.pendingFile) {
       const fileURL = URL.createObjectURL(this.pendingFile);
-      window.open(fileURL, '_blank');
+      openFileInline(fileURL, this.pendingFile.name);
     } else if (this.existingUuid && this.data.existingOwner?.corporateSummary?.uuid) {
       const res = await this.data.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
       if (res) {
-        window.open(res.url, '_blank');
+        openFileInline(res.url, this.data.existingOwner?.corporateSummary?.fileName);
       }
     }
   }

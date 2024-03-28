@@ -4,6 +4,12 @@ import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { PlanningReferral } from '../../alcs/planning-review/planning-referral/planning-referral.entity';
 import { PlanningReviewDocumentDto } from '../../alcs/planning-review/planning-review-document/planning-review-document.dto';
 import { PlanningReviewDocument } from '../../alcs/planning-review/planning-review-document/planning-review-document.entity';
+import { PlanningReviewMeetingType } from '../../alcs/planning-review/planning-review-meeting/planning-review-meeting-type.entity';
+import {
+  PlanningReviewMeetingDto,
+  PlanningReviewMeetingTypeDto,
+} from '../../alcs/planning-review/planning-review-meeting/planning-review-meeting.dto';
+import { PlanningReviewMeeting } from '../../alcs/planning-review/planning-review-meeting/planning-review-meeting.entity';
 import { PlanningReviewType } from '../../alcs/planning-review/planning-review-type.entity';
 import {
   PlanningReferralDto,
@@ -82,6 +88,22 @@ export class PlanningReviewProfile extends AutomapperProfile {
         ),
       );
       createMap(mapper, DocumentCode, DocumentTypeDto);
+
+      createMap(
+        mapper,
+        PlanningReviewMeetingType,
+        PlanningReviewMeetingTypeDto,
+      );
+
+      createMap(
+        mapper,
+        PlanningReviewMeeting,
+        PlanningReviewMeetingDto,
+        forMember(
+          (dto) => dto.date,
+          mapFrom((entity) => entity.date.getTime()),
+        ),
+      );
     };
   }
 }

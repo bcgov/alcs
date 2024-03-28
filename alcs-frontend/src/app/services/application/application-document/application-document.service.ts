@@ -14,7 +14,10 @@ import { ApplicationDocumentDto, CreateDocumentDto, UpdateDocumentDto } from './
 export class ApplicationDocumentService {
   private url = `${environment.apiUrl}/application-document`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async listAll(fileNumber: string) {
     return firstValueFrom(this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}`));
@@ -22,7 +25,7 @@ export class ApplicationDocumentService {
 
   async listByVisibility(fileNumber: string, visibilityFlags: string[]) {
     return firstValueFrom(
-      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/${visibilityFlags.join()}`)
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/${visibilityFlags.join()}`),
     );
   }
 
@@ -55,13 +58,13 @@ export class ApplicationDocumentService {
 
   async getReviewDocuments(fileNumber: string) {
     return firstValueFrom(
-      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/reviewDocuments`)
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/reviewDocuments`),
     );
   }
 
   async getApplicantDocuments(fileNumber: string) {
     return firstValueFrom(
-      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/applicantDocuments`)
+      this.http.get<ApplicationDocumentDto[]>(`${this.url}/application/${fileNumber}/applicantDocuments`),
     );
   }
 

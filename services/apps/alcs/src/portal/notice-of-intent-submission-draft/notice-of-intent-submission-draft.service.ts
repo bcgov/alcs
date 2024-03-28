@@ -3,6 +3,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcelUpdateDto } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.dto';
@@ -23,6 +24,7 @@ export class NoticeOfIntentSubmissionDraftService {
     private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private generateNoiSubmissionDocumentService: GenerateNoiSubmissionDocumentService,
+    private noticeOfIntentService: NoticeOfIntentService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string, user: User) {
@@ -222,6 +224,11 @@ export class NoticeOfIntentSubmissionDraftService {
     await this.generateNoiSubmissionDocumentService.generateUpdate(
       fileNumber,
       user,
+    );
+
+    await this.noticeOfIntentService.updateApplicant(
+      fileNumber,
+      draft.applicant!,
     );
 
     this.logger.debug(`Published Draft for file number ${fileNumber}`);

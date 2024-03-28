@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { create } from 'handlebars';
 import { Repository } from 'typeorm';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
@@ -23,6 +24,7 @@ describe('ApplicationSubmissionDraftService', () => {
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
   let mockTransfereeService: DeepMocked<CovenantTransfereeService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockSubmissionRepo = createMock();
@@ -32,6 +34,7 @@ describe('ApplicationSubmissionDraftService', () => {
     mockGenerateSubmissionDocumentService = createMock();
     mockApplicationSubmissionStatusService = createMock();
     mockTransfereeService = createMock();
+    mockApplicationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -63,6 +66,10 @@ describe('ApplicationSubmissionDraftService', () => {
         {
           provide: CovenantTransfereeService,
           useValue: mockTransfereeService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
       ],
     }).compile();
@@ -166,6 +173,7 @@ describe('ApplicationSubmissionDraftService', () => {
       new CovenantTransferee(),
     ]);
     mockTransfereeService.delete.mockResolvedValue({} as any);
+    mockApplicationService.updateApplicant.mockResolvedValue();
 
     await service.publish('fileNumber', new User());
 
@@ -185,6 +193,7 @@ describe('ApplicationSubmissionDraftService', () => {
     expect(
       mockGenerateSubmissionDocumentService.generateUpdate,
     ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for mapToDto', async () => {

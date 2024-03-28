@@ -42,7 +42,7 @@
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
       {{ map.fileName }}
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
@@ -61,7 +61,7 @@
     <div class="subheading2 grid-1">Proof of Homesite Severance Qualification</div>
     <div class="grid-double">
       <div *ngFor="let file of homesiteDocuments">
-        <a (click)="openFile(file.uuid)">
+        <a (click)="openFile(file)">
           {{ file.fileName }}
         </a>
       </div>

@@ -2,10 +2,10 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -90,7 +90,7 @@ export class NotificationService {
 
     if (board) {
       notification.card = await this.cardService.create(
-        CARD_TYPE.NOI,
+        CARD_TYPE.NOTIFICATION,
         board,
         false,
       );
@@ -108,7 +108,7 @@ export class NotificationService {
     const notification = await this.get(uuid);
     if (!notification) {
       throw new ServiceNotFoundException(
-        `Failed to find notice of intent with uuid ${uuid}`,
+        `Failed to find notification with uuid ${uuid}`,
       );
     }
 
@@ -127,7 +127,7 @@ export class NotificationService {
 
     if (!notification) {
       throw new ServiceNotFoundException(
-        `Failed to find notice of intent with card uuid ${cardUuid}`,
+        `Failed to find notification with card uuid ${cardUuid}`,
       );
     }
 

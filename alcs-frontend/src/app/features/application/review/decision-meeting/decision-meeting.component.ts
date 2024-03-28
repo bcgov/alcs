@@ -29,12 +29,12 @@ export class DecisionMeetingComponent implements OnInit {
     private decisionMeetingService: ApplicationDecisionMeetingService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDetailService: ApplicationDetailService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
     this.decisionMeetingService.$decisionMeetings.subscribe(
-      (meetings) => (this.decisionMeetings = meetings.sort((a, b) => (a.date >= b.date ? -1 : 1)))
+      (meetings) => (this.decisionMeetings = meetings.sort((a, b) => (a.date >= b.date ? -1 : 1))),
     );
   }
 

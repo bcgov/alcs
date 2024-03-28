@@ -47,7 +47,7 @@
       </ng-container>
       <ng-container *ngIf="element.visibilityFlags.includes('G')">
         <span matTooltip="L/FNG">G<span *ngIf="hiddenFromPortal">*</span></span>
-        <ng-container *ngIf="element.visibilityFlags.includes('P')">, </ng-container>
+        <ng-container *ngIf="element.visibilityFlags.includes('P')">,</ng-container>
       </ng-container>
       <ng-container *ngIf="element.visibilityFlags.includes('P')">
         <span matTooltip="Public">P<span *ngIf="hiddenFromPortal || !hasBeenReceived">*</span></span>
@@ -69,7 +69,11 @@
       <button mat-icon-button (click)="onEditFile(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button *ngIf="element.system === DOCUMENT_SYSTEM.ALCS" mat-icon-button (click)="onDeleteFile(element)">
+      <button
+        *ngIf="element.system === DOCUMENT_SYSTEM.ALCS || element.system === DOCUMENT_SYSTEM.OATS"
+        mat-icon-button
+        (click)="onDeleteFile(element)"
+      >
         <mat-icon color="warn">delete</mat-icon>
       </button>
     </td>

@@ -1,6 +1,6 @@
 <div class="layout">
   <div class="application">
-    <app-header *ngIf="planningReview" [planningReview]="planningReview"></app-header>
+    <app-planning-review-header *ngIf="planningReview" [planningReview]="planningReview"></app-planning-review-header>
     <div class="content">
       <div class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">

@@ -62,6 +62,14 @@ const routes: Routes = [
     loadChildren: () => import('./features/planning-review/planning-review.module').then((m) => m.PlanningReviewModule),
   },
   {
+    path: 'inquiry',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: ROLES_ALLOWED_APPLICATIONS,
+    },
+    loadChildren: () => import('./features/inquiry/inquiry.module').then((m) => m.InquiryModule),
+  },
+  {
     path: 'schedule',
     canActivate: [HasRolesGuard],
     data: {

@@ -21,10 +21,7 @@ export class DocumentsComponent implements OnInit {
   private fileId = '';
 
   DOCUMENT_SYSTEM = DOCUMENT_SYSTEM;
-
-  hasBeenReceived = false;
   hasBeenSetForDiscussion = false;
-  hiddenFromPortal = false;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<PlanningReviewDocumentDto> = new MatTableDataSource<PlanningReviewDocumentDto>();
@@ -42,6 +39,7 @@ export class DocumentsComponent implements OnInit {
       if (planningReview) {
         this.fileId = planningReview.fileNumber;
         this.loadDocuments(planningReview.fileNumber);
+        this.hasBeenSetForDiscussion = planningReview.meetings.length > 0;
       }
     });
   }

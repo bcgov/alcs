@@ -36,13 +36,13 @@ describe('AssignedComponent', () => {
 
     mockHomeService.fetchAssignedToMe.mockResolvedValue({
       applications: [],
-      covenants: [],
       modifications: [],
       noticeOfIntentModifications: [],
       planningReferrals: [],
       reconsiderations: [],
       noticeOfIntents: [],
       notifications: [],
+      inquiries: [],
     });
 
     fixture.detectChanges();

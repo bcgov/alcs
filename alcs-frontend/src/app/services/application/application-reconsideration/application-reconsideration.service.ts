@@ -18,16 +18,19 @@ export class ApplicationReconsiderationService {
   $reconsiderations = new BehaviorSubject<ApplicationReconsiderationDto[]>([]);
   $codes = new BehaviorSubject<BaseCodeDto[]>([]);
 
-  private url = `${environment.apiUrl}/application-reconsideration`;
+  private url = `${environment.apiUrl}/v2/application-reconsideration`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetchByApplication(applicationFileNumber: string) {
     try {
       this.clearReconsiderations();
 
       const reconsiderations = await firstValueFrom(
-        this.http.get<ApplicationReconsiderationDto[]>(`${this.url}/application/${applicationFileNumber}`)
+        this.http.get<ApplicationReconsiderationDto[]>(`${this.url}/application/${applicationFileNumber}`),
       );
       reconsiderations.sort((a, b) => b.submittedDate - a.submittedDate);
       this.$reconsiderations.next(reconsiderations);
@@ -50,7 +53,7 @@ export class ApplicationReconsiderationService {
   async update(reconsiderationUuid: string, reconsideration: UpdateApplicationReconsiderationDto) {
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationReconsiderationDto>(`${this.url}/${reconsiderationUuid}`, reconsideration)
+        this.http.patch<ApplicationReconsiderationDto>(`${this.url}/${reconsiderationUuid}`, reconsideration),
       );
     } catch (err) {
       console.error(err);
@@ -65,7 +68,7 @@ export class ApplicationReconsiderationService {
         this.http.post<ApplicationReconsiderationDto>(this.url, {
           ...reconsideration,
           submittedDate: formatDateForApi(reconsideration.submittedDate),
-        })
+        }),
       );
     } catch (err) {
       console.error(err);

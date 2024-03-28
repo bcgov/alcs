@@ -1,18 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
-import { BOARD_TYPE_CODES } from '../../features/board/board.component';
-import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 import { ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { UpcomingMeetingBoardMapDto, UpcomingMeetingDto } from '../../services/decision-meeting/decision-meeting.dto';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
+import { CardType } from '../card/card.component';
 
-type MeetingWithApplications = {
+type MeetingCollection = {
   meetingDate: number;
-  applications: (UpcomingMeetingDto & { isHighlighted: boolean })[];
+  meetings: (UpcomingMeetingDto & { isHighlighted: boolean })[];
   isExpanded: boolean;
 };
 
@@ -20,9 +19,9 @@ type BoardWithDecisionMeetings = {
   boardTitle: string;
   boardCode: string;
   isFavourite: boolean;
-  pastMeetings: MeetingWithApplications[];
-  upcomingMeetings: MeetingWithApplications[];
-  nextMeeting: MeetingWithApplications | undefined;
+  pastMeetings: MeetingCollection[];
+  upcomingMeetings: MeetingCollection[];
+  nextMeeting: MeetingCollection | undefined;
   isExpanded: boolean;
 };
 
@@ -44,9 +43,8 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   constructor(
     private meetingService: DecisionMeetingService,
     private boardService: BoardService,
-    private applicationDocumentService: ApplicationDocumentService,
     private toastService: ToastService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -83,11 +81,11 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
       this.viewData = this.boards
         .filter((board) => board.showOnSchedule)
         .map((board): BoardWithDecisionMeetings => {
-          let upcomingMeetings: MeetingWithApplications[] = [];
-          let pastMeetings: MeetingWithApplications[] = [];
-          const applications = this.meetings![board.code];
-          if (applications) {
-            this.sortApplications(applications, pastMeetings, upcomingMeetings);
+          let upcomingMeetings: MeetingCollection[] = [];
+          let pastMeetings: MeetingCollection[] = [];
+          const meetings = this.meetings![board.code];
+          if (meetings) {
+            this.sortMeetings(meetings, pastMeetings, upcomingMeetings);
           }
 
           upcomingMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
@@ -110,35 +108,35 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private sortApplications(
-    applications: UpcomingMeetingDto[],
-    pastMeetings: MeetingWithApplications[],
-    upcomingMeetings: MeetingWithApplications[]
+  private sortMeetings(
+    meetings: UpcomingMeetingDto[],
+    pastMeetings: MeetingCollection[],
+    upcomingMeetings: MeetingCollection[],
   ) {
-    applications.forEach((app) => {
+    meetings.forEach((app) => {
       const yesterday = moment.utc().startOf('day').add(-1, 'day');
 
       if (yesterday.isAfter(app.meetingDate)) {
-        this.mapApplicationsIntoMeetings(pastMeetings, app);
+        this.sortMeetingsIntoCollections(pastMeetings, app);
       } else {
-        this.mapApplicationsIntoMeetings(upcomingMeetings, app);
+        this.sortMeetingsIntoCollections(upcomingMeetings, app);
       }
     });
   }
 
-  private mapApplicationsIntoMeetings(pastMeetings: MeetingWithApplications[], app: UpcomingMeetingDto) {
-    const meeting = pastMeetings.find((meeting) => meeting.meetingDate === app.meetingDate);
+  private sortMeetingsIntoCollections(pastMeetings: MeetingCollection[], meetings: UpcomingMeetingDto) {
+    const meeting = pastMeetings.find((meeting) => meeting.meetingDate === meetings.meetingDate);
     if (meeting) {
-      meeting.applications.push({
-        ...app,
+      meeting.meetings.push({
+        ...meetings,
         isHighlighted: false,
       });
     } else {
       pastMeetings.push({
-        meetingDate: app.meetingDate,
-        applications: [
+        meetingDate: meetings.meetingDate,
+        meetings: [
           {
-            ...app,
+            ...meetings,
             isHighlighted: false,
           },
         ],
@@ -184,9 +182,9 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private findAndExpand(meeting: MeetingWithApplications, board: BoardWithDecisionMeetings) {
+  private findAndExpand(meeting: MeetingCollection, board: BoardWithDecisionMeetings) {
     meeting.isExpanded = false;
-    meeting.applications = meeting.applications.map((application) => {
+    meeting.meetings = meeting.meetings.map((application) => {
       application.isHighlighted = false;
       if (application.fileNumber === this.searchText) {
         meeting.isExpanded = true;
@@ -214,7 +212,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   clearHighlight() {
     this.viewData = this.viewData.map((board) => {
       board.pastMeetings = board.pastMeetings.map((meeting) => {
-        meeting.applications = meeting.applications.map((application) => {
+        meeting.meetings = meeting.meetings.map((application) => {
           application.isHighlighted = false;
           return application;
         });
@@ -222,14 +220,14 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
       });
 
       if (board.nextMeeting) {
-        board.nextMeeting.applications.map((application) => {
+        board.nextMeeting.meetings.map((application) => {
           application.isHighlighted = false;
           return application;
         });
       }
 
       board.upcomingMeetings = board.upcomingMeetings.map((meeting) => {
-        meeting.applications = meeting.applications.map((application) => {
+        meeting.meetings = meeting.meetings.map((application) => {
           application.isHighlighted = false;
           return application;
         });
@@ -245,9 +243,10 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     return el ? el.offsetWidth < el.scrollWidth : false;
   }
 
-  openApplication(fileNumber: string) {
+  openMeetings(fileNumber: string, type: CardType) {
     this.clearHighlight();
-    const url = this.isCommissioner ? `/commissioner/${fileNumber}` : `/application/${fileNumber}/review`;
+    const target = type === CardType.PLAN ? 'planning-review' : 'application';
+    const url = this.isCommissioner ? `/commissioner/${target}/${fileNumber}` : `/${target}/${fileNumber}/review`;
     window.open(url, '_blank');
   }
 }

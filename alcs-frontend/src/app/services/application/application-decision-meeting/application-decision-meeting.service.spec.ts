@@ -6,7 +6,7 @@ import { ToastService } from '../../toast/toast.service';
 
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 
-describe('ApplicationDecisionMeetingService', () => {
+describe('DecisionMeetingService', () => {
   let service: ApplicationDecisionMeetingService;
   let httpClient: DeepMocked<HttpClient>;
   let toastService: DeepMocked<ToastService>;
@@ -53,7 +53,7 @@ describe('ApplicationDecisionMeetingService', () => {
     httpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.fetch('1');
@@ -78,7 +78,7 @@ describe('ApplicationDecisionMeetingService', () => {
     httpClient.patch.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.update({ applicationFileNumber: '', date: new Date(), uuid: '1' });
@@ -103,7 +103,7 @@ describe('ApplicationDecisionMeetingService', () => {
     httpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.create({ applicationFileNumber: '', date: new Date() });
@@ -128,7 +128,7 @@ describe('ApplicationDecisionMeetingService', () => {
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     await service.delete('1');
@@ -141,7 +141,7 @@ describe('ApplicationDecisionMeetingService', () => {
     httpClient.delete.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.delete('1');

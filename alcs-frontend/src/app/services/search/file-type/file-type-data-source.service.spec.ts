@@ -19,11 +19,11 @@ describe('FileTypeDataSourceService', () => {
   });
 
   it('should filter data', () => {
-    service.filter('Covenants');
+    service.filter('Utility/Energy Planning');
     expect(service.data.length).toBe(1);
 
     const node: TreeNode = service.data[0];
-    expect(node.item.label).toEqual('Non-Application');
+    expect(node.item.label).toEqual('Planning Reviews');
   });
 
   it('should reset data when filtering with empty text', () => {

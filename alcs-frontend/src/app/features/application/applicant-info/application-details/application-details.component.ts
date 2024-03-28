@@ -47,8 +47,8 @@ export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy
     window.location.href = `${environment.portalUrl}/alcs/application/${this.fileNumber}/edit/${step}`;
   }
 
-  async openFile(uuid: string) {
-    await this.applicationDocumentService.download(uuid, '');
+  async openFile(file: ApplicationDocumentDto) {
+    await this.applicationDocumentService.download(file.uuid, file.fileName);
   }
 
   private async loadDocuments() {
@@ -56,10 +56,10 @@ export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy
     this.otherFiles = documents.filter(
       (document) =>
         document.type &&
-        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code)
+        [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.OTHER, DOCUMENT_TYPE.PROFESSIONAL_REPORT].includes(document.type.code),
     );
     this.authorizationLetters = documents.filter(
-      (document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER
+      (document) => document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
     );
     this.files = documents;
   }

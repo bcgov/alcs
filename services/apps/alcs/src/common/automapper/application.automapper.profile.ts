@@ -2,8 +2,8 @@ import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 
-import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { DecisionMeetingDto } from '../../alcs/meetings/decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/application/application-decision-meeting/application-decision-meeting.entity';
 import { LocalGovernmentDto } from '../../alcs/local-government/local-government.dto';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
@@ -99,7 +99,7 @@ export class ApplicationProfile extends AutomapperProfile {
             this.mapper.mapArray(
               a.decisionMeetings,
               ApplicationDecisionMeeting,
-              ApplicationDecisionMeetingDto,
+              DecisionMeetingDto,
             ),
           ),
         ),
@@ -195,6 +195,16 @@ export class ApplicationProfile extends AutomapperProfile {
       );
 
       createMap(mapper, ApplicationDto, Card);
+
+      createMap(
+        mapper,
+        ApplicationDecisionMeeting,
+        DecisionMeetingDto,
+        forMember(
+          (a) => a.date,
+          mapFrom((ad) => ad.date.getTime()),
+        ),
+      );
 
       createMap(
         mapper,

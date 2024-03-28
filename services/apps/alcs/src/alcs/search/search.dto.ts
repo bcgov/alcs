@@ -7,6 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { PlanningReviewTypeDto } from '../planning-review/planning-review.dto';
 
 export class SearchResultDto {
   type: string;
@@ -44,14 +45,14 @@ export class NoticeOfIntentSearchResultDto {
   class: SearchEntityClass;
 }
 
-export class NonApplicationSearchResultDto {
-  type: string | null;
-  applicant: string | null;
+export class PlanningReviewSearchResultDto {
+  type: PlanningReviewTypeDto | null;
+  documentName: string | null;
   referenceId: string | null;
   localGovernmentName: string | null;
   fileNumber: string;
-  boardCode: string | null;
   class: SearchEntityClass;
+  open: boolean;
 }
 
 export class NotificationSearchResultDto {
@@ -70,9 +71,10 @@ export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   notifications: NotificationSearchResultDto[];
+  planningReviews: PlanningReviewSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
-  totalNonApplications: number;
+  totalPlanningReviews: number;
   totalNotifications: number;
 }
 

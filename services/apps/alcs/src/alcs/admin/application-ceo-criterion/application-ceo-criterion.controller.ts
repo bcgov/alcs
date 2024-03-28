@@ -13,7 +13,7 @@ import * as config from 'config';
 import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { CeoCriterionCodeDto } from '../../application-decision/application-decision-v1/application-decision/ceo-criterion/ceo-criterion.dto';
+import { CeoCriterionCodeDto } from '../../application-decision/application-decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
 import { ApplicationCeoCriterionService } from './application-ceo-criterion.service';
 
 @Controller('ceo-criterion')

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { PublicNoticeOfIntentSubmissionDto } from '../../../../../services/public/public-notice-of-intent.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
+import { openFileInline } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-submission-documents',
@@ -27,10 +28,10 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource(this.documents);
   }
 
-  async openFile(uuid: string) {
-    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.submission.fileNumber, uuid);
+  async openFile(file: PublicDocumentDto) {
+    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.submission.fileNumber, file.uuid);
     if (res) {
-      window.open(res.url, '_blank');
+      openFileInline(res.url, file.fileName);
     }
   }
 

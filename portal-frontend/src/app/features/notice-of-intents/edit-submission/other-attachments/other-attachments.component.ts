@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { CodeService } from '../../../../services/code/code.service';
 import {
@@ -9,7 +8,6 @@ import {
   NoticeOfIntentDocumentUpdateDto,
 } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
@@ -37,8 +35,6 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   showVirusError = false;
 
   constructor(
-    private router: Router,
-    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private codeService: CodeService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog,

@@ -81,7 +81,7 @@
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
       </div>
     </ng-container>
@@ -226,7 +226,7 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
         <div class="grid-2">
           {{ file.type?.label }}

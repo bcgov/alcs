@@ -80,6 +80,15 @@
       {{ file.fileName }}
     </a>
   </div>
+
+  <div class="subheading2 grid-1">Is your proposal for area-wide filling?</div>
+  <div class="grid-double">
+    <span *ngIf="_noiSubmission.soilIsAreaWideFilling !== null">
+      {{ _noiSubmission.soilIsAreaWideFilling ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="_noiSubmission.soilIsAreaWideFilling === null"></app-no-data>
+  </div>
+
   <div class="subheading2 grid-1">Cross Sections</div>
   <div class="grid-double multiple-documents">
     <a *ngFor="let file of crossSections" (click)="openFile(file)">

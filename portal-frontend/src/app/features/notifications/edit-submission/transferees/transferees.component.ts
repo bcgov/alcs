@@ -1,14 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
 import { NotificationTransfereeDto } from '../../../../services/notification-transferee/notification-transferee.dto';
 import { NotificationTransfereeService } from '../../../../services/notification-transferee/notification-transferee.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 import { TransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
-import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-transferees',
@@ -25,7 +24,6 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
   private submissionUuid = '';
 
   constructor(
-    private router: Router,
     private notificationTransfereeService: NotificationTransfereeService,
     private notificationSubmissionService: NotificationSubmissionService,
     private confDialogService: ConfirmationDialogService,
@@ -95,8 +93,10 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
         body: `This action will remove ${selectedTransferee?.firstName} ${selectedTransferee?.lastName} and its usage from the entire notification of SRW. Are you sure you want to remove this transferee? `,
       })
       .subscribe(async (confirmed) => {
-        await this.notificationTransfereeService.delete(uuid);
-        await this.loadTransferees(this.submissionUuid);
+        if (confirmed) {
+          await this.notificationTransfereeService.delete(uuid);
+          await this.loadTransferees(this.submissionUuid);
+        }
       });
   }
 }

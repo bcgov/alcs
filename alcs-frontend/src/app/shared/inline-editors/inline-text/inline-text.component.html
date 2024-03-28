@@ -1,8 +1,11 @@
 <div class="inline-number-wrapper">
   <span class="left" *ngIf="!isEditing">
     <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
-    <span *ngIf="value">
+    <span *ngIf="value && !mask">
       {{ value }}
+    </span>
+        <span *ngIf="value && mask">
+      {{ value | mask: mask }}
     </span>
     <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
       <mat-icon class="edit-icon">edit</mat-icon>
@@ -26,6 +29,7 @@
           [(ngModel)]="pendingValue"
           (keydown.enter)="confirmEdit()"
           (keydown.escape)="cancelEdit()"
+          [mask]="mask"
         />
       </mat-form-field>
     </form>

@@ -145,7 +145,7 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
+            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
               document.fileName
             }}</a>
           </div>

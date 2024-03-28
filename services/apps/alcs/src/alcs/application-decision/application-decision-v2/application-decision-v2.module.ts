@@ -31,11 +31,12 @@ import { ApplicationDecisionDocument } from '../application-decision-document/ap
 import { ApplicationDecisionMakerCode } from '../application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../application-decision-outcome-type/application-decision-outcome-type.entity';
 import { ApplicationDecisionOutcomeCode } from '../application-decision-outcome.entity';
-import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationModificationOutcomeType } from '../application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
+import { ApplicationModificationController } from '../application-modification/application-modification.controller';
 import { ApplicationModification } from '../application-modification/application-modification.entity';
 import { ApplicationModificationService } from '../application-modification/application-modification.service';
+import { ApplicationReconsiderationController } from '../application-reconsideration/application-reconsideration.controller';
 import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../application-reconsideration/application-reconsideration.service';
 import { ApplicationReconsiderationOutcomeType } from '../application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
@@ -78,15 +79,11 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
     forwardRef(() => ApplicationModule),
     CardModule,
     DocumentModule,
-    ApplicationDecisionV2Module,
     ApplicationSubmissionStatusModule,
   ],
   providers: [
     ApplicationModificationService,
     ApplicationReconsiderationService,
-    // This is required because it is referenced in ApplicationModificationService and ApplicationReconsiderationService.
-    // However it must not be used anywhere in the reconsideration v2 controller directly.
-    ApplicationDecisionV1Service,
     ModificationProfile,
     ReconsiderationProfile,
     ApplicationDecisionV2Service,
@@ -104,7 +101,13 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
     ApplicationDecisionComponentLotController,
     ApplicationConditionToComponentLotController,
     ApplicationBoundaryAmendmentController,
+    ApplicationReconsiderationController,
+    ApplicationModificationController,
   ],
-  exports: [ApplicationDecisionV2Service],
+  exports: [
+    ApplicationDecisionV2Service,
+    ApplicationModificationService,
+    ApplicationReconsiderationService,
+  ],
 })
 export class ApplicationDecisionV2Module {}

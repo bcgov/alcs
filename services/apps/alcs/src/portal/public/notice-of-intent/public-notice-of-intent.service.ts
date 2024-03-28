@@ -114,8 +114,6 @@ export class PublicNoticeOfIntentService {
 
     const url = await this.noticeOfIntentDocumentService.getInlineUrl(document);
 
-    return {
-      url,
-    };
+    return { url };
   }
 }

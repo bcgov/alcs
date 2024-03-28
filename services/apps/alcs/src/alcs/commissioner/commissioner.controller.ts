@@ -11,7 +11,12 @@ import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
-import { CommissionerApplicationDto } from './commissioner.dto';
+import { PlanningReviewDto } from '../planning-review/planning-review.dto';
+import { PlanningReviewService } from '../planning-review/planning-review.service';
+import {
+  CommissionerApplicationDto,
+  CommissionerPlanningReviewDto,
+} from './commissioner.dto';
 
 @Controller('commissioner')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -19,6 +24,7 @@ import { CommissionerApplicationDto } from './commissioner.dto';
 export class CommissionerController {
   constructor(
     private applicationService: ApplicationService,
+    private planningReviewService: PlanningReviewService,
     private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
     private trackingService: TrackingService,
@@ -57,5 +63,25 @@ export class CommissionerController {
       hasModifications: hasApprovedOrPendingModification,
       hasRecons: recons.length > 0,
     };
+  }
+
+  @Get('/planning-review/:fileNumber')
+  @UserRoles(AUTH_ROLE.COMMISSIONER)
+  async getPlanningReview(
+    @Param('fileNumber') fileNumber,
+    @Req() req,
+  ): Promise<CommissionerPlanningReviewDto> {
+    const application =
+      await this.planningReviewService.getByFileNumber(fileNumber);
+    const firstMap = await this.planningReviewService.mapToDtos([application]);
+    const finalMap = await this.mapper.mapArrayAsync(
+      firstMap,
+      PlanningReviewDto,
+      CommissionerPlanningReviewDto,
+    );
+
+    const mappedRecords = finalMap[0];
+    await this.trackingService.trackView(req.user.entity, fileNumber);
+    return mappedRecords;
   }
 }

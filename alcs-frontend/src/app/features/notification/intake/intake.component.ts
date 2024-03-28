@@ -11,6 +11,7 @@ import {
 } from '../../../services/notification/notification.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
 
 @Component({
   selector: 'app-intake',
@@ -28,9 +29,10 @@ export class IntakeComponent implements OnInit {
   constructor(
     private notificationDetailService: NotificationDetailService,
     private notificationSubmissionService: NotificationSubmissionService,
+    private notificationTimelineService: NotificationTimelineService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private confirmationDialogService: ConfirmationDialogService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +77,7 @@ export class IntakeComponent implements OnInit {
             const update = await this.notificationSubmissionService.setContactEmail(email, notification.fileNumber);
             if (update) {
               this.toastService.showSuccessToast('Notification updated');
+              this.contactEmail = email;
             }
           }
         }
@@ -114,8 +117,11 @@ export class IntakeComponent implements OnInit {
     const submission = await this.notificationSubmissionService.fetchSubmission(fileNumber);
     this.contactEmail = submission.contactEmail;
 
-    this.responseSent = submission.status.code === NOTIFICATION_STATUS.ALC_RESPONSE;
-    this.responseDate = submission.lastStatusUpdate;
+    const events = await this.notificationTimelineService.fetchByFileNumber(fileNumber);
+    const alcResponseEvent = events.find((event) => /alc response sent/i.test(event.htmlText));
+
+    this.responseSent = alcResponseEvent !== undefined;
+    this.responseDate = alcResponseEvent?.startDate ?? null;
   }
 
   async resendResponse() {

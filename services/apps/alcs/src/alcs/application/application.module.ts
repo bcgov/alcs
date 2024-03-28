@@ -1,6 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CovenantTransferee } from '../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
+import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
 import { ApplicationSubmissionStatusModule } from './application-submission-status/application-submission-status.module';
 import { ApplicationSubmissionStatusType } from './application-submission-status/submission-status-type.entity';
 import { ApplicationSubmissionToSubmissionStatus } from './application-submission-status/submission-status.entity';
@@ -50,6 +52,7 @@ import { ApplicationService } from './application.service';
       ApplicationType,
       ApplicationPaused,
       ApplicationMeeting,
+      ApplicationDecisionMeeting,
       ApplicationDocument,
       DocumentCode,
       ApplicationParcel,
@@ -83,6 +86,7 @@ import { ApplicationService } from './application.service';
     LocalGovernmentService,
     ApplicationSubmissionService,
     ApplicationSubmissionReviewService,
+    ApplicationDecisionMeetingService,
     ApplicationSubmissionProfile,
   ],
   controllers: [
@@ -103,6 +107,7 @@ import { ApplicationService } from './application.service';
     ApplicationPausedService,
     LocalGovernmentService,
     ApplicationDocumentService,
+    ApplicationDecisionMeetingService,
   ],
 })
 export class ApplicationModule {}

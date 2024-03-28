@@ -9,6 +9,7 @@ import { DecisionMeetingService } from '../../services/decision-meeting/decision
 import { ToastService } from '../../services/toast/toast.service';
 import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
+import { CardType } from '../card/card.component';
 
 import { MeetingOverviewComponent } from './meeting-overview.component';
 
@@ -77,6 +78,7 @@ describe('MeetingOverviewComponent', () => {
           assignee: {} as AssigneeDto,
           fileNumber: '',
           meetingDate: 0,
+          type: CardType.APP,
         },
       ],
     });

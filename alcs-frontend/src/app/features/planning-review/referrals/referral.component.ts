@@ -1,4 +1,3 @@
-import { Dialog } from '@angular/cdk/dialog';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
@@ -9,7 +8,7 @@ import {
   PlanningReviewDto,
   UpdatePlanningReferralDto,
 } from '../../../services/planning-review/planning-review.dto';
-import { PlanningReviewService } from '../../../services/planning-review/planning-review.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CreatePlanningReferralDialogComponent } from './create/create-planning-referral-dialog.component';
 
 @Component({
@@ -28,6 +27,7 @@ export class ReferralComponent implements OnInit, OnDestroy {
   constructor(
     private planningReviewDetailService: PlanningReviewDetailService,
     private planningReferralService: PlanningReferralService,
+    private confirmationDialogService: ConfirmationDialogService,
     private dialog: MatDialog,
   ) {}
 
@@ -76,9 +76,15 @@ export class ReferralComponent implements OnInit, OnDestroy {
   }
 
   async onDelete(uuid: string) {
-    if (this.planningReview) {
-      await this.planningReferralService.delete(uuid);
-      this.planningReviewDetailService.loadReview(this.planningReview.fileNumber);
-    }
+    this.confirmationDialogService
+      .openDialog({
+        body: 'This action will delete the referral, the kanban card, and the ALC Response. Do you want to continue?',
+      })
+      .subscribe(async (onConfirm) => {
+        if (onConfirm && this.planningReview) {
+          await this.planningReferralService.delete(uuid);
+          await this.planningReviewDetailService.loadReview(this.planningReview.fileNumber);
+        }
+      });
   }
 }

@@ -35,6 +35,9 @@ export class StaffJournalService {
         {
           planningReviewUuid: parentUuid,
         },
+        {
+          inquiryUuid: parentUuid,
+        },
       ],
       relations: this.DEFAULT_STAFF_JOURNAL_RELATIONS,
       order: {
@@ -102,6 +105,16 @@ export class StaffJournalService {
     const record = new StaffJournal({
       body: noteBody,
       planningReviewUuid,
+      author,
+    });
+
+    return await this.staffJournalRepository.save(record);
+  }
+
+  async createForInquiry(inquiryUuid: string, noteBody: string, author: User) {
+    const record = new StaffJournal({
+      body: noteBody,
+      inquiryUuid,
       author,
     });
 

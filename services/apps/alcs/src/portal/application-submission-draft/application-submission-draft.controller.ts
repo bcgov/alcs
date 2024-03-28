@@ -12,7 +12,6 @@ import * as config from 'config';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { ApplicationSubmissionDraftService } from './application-submission-draft.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -20,7 +19,6 @@ import { ApplicationSubmissionDraftService } from './application-submission-draf
 @UseGuards(RolesGuard)
 export class ApplicationSubmissionDraftController {
   constructor(
-    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationEditService: ApplicationSubmissionDraftService,
   ) {}
 

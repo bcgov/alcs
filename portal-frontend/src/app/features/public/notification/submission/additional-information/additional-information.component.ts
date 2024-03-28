@@ -8,6 +8,7 @@ import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
 } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { openFileInline } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-additional-information',
@@ -70,8 +71,10 @@ export class AdditionalInformationComponent implements OnInit {
     );
   }
 
-  async openFile(uuid: string) {
-    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.noiSubmission.fileNumber, uuid);
-    window.open(res?.url, '_blank');
+  async openFile(file: PublicDocumentDto) {
+    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.noiSubmission.fileNumber, file.uuid);
+    if (res) {
+      openFileInline(res.url, file.fileName);
+    }
   }
 }

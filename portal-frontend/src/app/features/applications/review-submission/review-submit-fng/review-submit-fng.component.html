@@ -46,7 +46,7 @@
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
-            {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000'  }}
+            {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000' }}
             <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>
@@ -85,7 +85,7 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
+            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
               document.fileName
             }}</a>
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
@@ -95,7 +95,7 @@
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
             <div class="document" *ngFor="let document of otherAttachments">
-              <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
             </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>
@@ -153,7 +153,7 @@
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
-            {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000'  }}
+            {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000' }}
             <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>
@@ -196,7 +196,7 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
+            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
               document.fileName
             }}</a>
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
@@ -206,7 +206,7 @@
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
             <div *ngFor="let document of otherAttachments">
-              <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
             </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>

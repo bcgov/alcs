@@ -9,6 +9,7 @@ import { NotificationSubmissionService } from '../../../services/notification/no
 import { NotificationDto } from '../../../services/notification/notification.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { IntakeComponent } from './intake.component';
+import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
 
 describe('IntakeComponent', () => {
   let component: IntakeComponent;
@@ -16,11 +17,13 @@ describe('IntakeComponent', () => {
   let mockDetailService: DeepMocked<NotificationDetailService>;
   let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockSubmissionService: DeepMocked<NotificationSubmissionService>;
+  let mockTimelineService: DeepMocked<NotificationTimelineService>;
 
   beforeEach(async () => {
     mockDetailService = createMock();
     mockLgService = createMock();
     mockSubmissionService = createMock();
+    mockTimelineService = createMock();
 
     mockDetailService.$notification = new BehaviorSubject<NotificationDto | undefined>(undefined);
 
@@ -38,6 +41,10 @@ describe('IntakeComponent', () => {
         {
           provide: NotificationSubmissionService,
           useValue: mockSubmissionService,
+        },
+        {
+          provide: NotificationTimelineService,
+          useValue: mockTimelineService,
         },
         {
           provide: ConfirmationDialogService,

@@ -3,10 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
-import { Covenant } from '../covenant/covenant.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
+import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
 import { SearchService } from './search.service';
 
@@ -14,7 +14,7 @@ describe('SearchService', () => {
   let service: SearchService;
   let mockApplicationRepository: DeepMocked<Repository<Application>>;
   let mockNoiRepository: DeepMocked<Repository<NoticeOfIntent>>;
-  let mockCovenantRepository: DeepMocked<Repository<Covenant>>;
+  let mockPlanningReviewRepository: DeepMocked<Repository<PlanningReview>>;
   let mockApplicationSubmissionSearchView: DeepMocked<
     Repository<ApplicationSubmissionSearchView>
   >;
@@ -26,7 +26,7 @@ describe('SearchService', () => {
   beforeEach(async () => {
     mockApplicationRepository = createMock();
     mockNoiRepository = createMock();
-    mockCovenantRepository = createMock();
+    mockPlanningReviewRepository = createMock();
     mockApplicationSubmissionSearchView = createMock();
     mockLocalGovernment = createMock();
     mockNotificationRepository = createMock();
@@ -43,8 +43,8 @@ describe('SearchService', () => {
           useValue: mockNoiRepository,
         },
         {
-          provide: getRepositoryToken(Covenant),
-          useValue: mockCovenantRepository,
+          provide: getRepositoryToken(PlanningReview),
+          useValue: mockPlanningReviewRepository,
         },
         {
           provide: getRepositoryToken(Notification),
@@ -105,21 +105,19 @@ describe('SearchService', () => {
     expect(result).toBeDefined();
   });
 
-  it('should call repository to get covenant', async () => {
-    mockCovenantRepository.findOne.mockResolvedValue(new Covenant());
+  it('should call repository to get planning review', async () => {
+    mockPlanningReviewRepository.findOne.mockResolvedValue(
+      new PlanningReview(),
+    );
 
-    const result = await service.getCovenant('fake');
+    const result = await service.getPlanningReview('fake');
 
-    expect(mockCovenantRepository.findOne).toBeCalledTimes(1);
-    expect(mockCovenantRepository.findOne).toBeCalledWith({
+    expect(mockPlanningReviewRepository.findOne).toBeCalledTimes(1);
+    expect(mockPlanningReviewRepository.findOne).toBeCalledWith({
       where: {
         fileNumber: fakeFileNumber,
-        card: { archived: false },
       },
       relations: {
-        card: {
-          board: true,
-        },
         localGovernment: true,
       },
     });

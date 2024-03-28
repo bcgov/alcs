@@ -86,7 +86,7 @@ $date-ht: 32px;
   }
 }
 
-.due-date {
+.due-date:not(:only-child) {
   margin-left: 12px;
 }
 
