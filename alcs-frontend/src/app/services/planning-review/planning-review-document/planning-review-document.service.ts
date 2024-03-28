@@ -6,7 +6,7 @@ import { DocumentTypeDto } from '../../../shared/document/document.dto';
 import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 import { verifyFileSize } from '../../../shared/utils/file-size-checker';
 import { ToastService } from '../../toast/toast.service';
-import { PlanningReviewDocumentDto, CreateDocumentDto, UpdateDocumentDto } from './planning-review-document.dto';
+import { CreateDocumentDto, PlanningReviewDocumentDto, UpdateDocumentDto } from './planning-review-document.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +86,7 @@ export class PlanningReviewDocumentService {
     formData.append('documentType', dto.typeCode);
     formData.append('source', dto.source);
     formData.append('fileName', dto.fileName);
+    formData.append('visibilityFlags', dto.visibilityFlags.join(', '));
     if (dto.file) {
       formData.append('file', dto.file, dto.file.name);
     }

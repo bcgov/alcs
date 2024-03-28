@@ -6,6 +6,7 @@ import { PlanningReviewDecisionDocumentDto } from '../../../../../services/plann
 import { PlanningReviewDecisionService } from '../../../../../services/planning-review/planning-review-decision/planning-review-decision.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../shared/document/document.dto';
+import { splitExtension } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-app-decision-document-upload-dialog',
@@ -22,7 +23,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   name = new FormControl<string>('', [Validators.required]);
   type = new FormControl<string | undefined>({ disabled: true, value: undefined }, [Validators.required]);
   source = new FormControl<string>({ disabled: true, value: DOCUMENT_SOURCE.ALC }, [Validators.required]);
-  visibleToComissioner = new FormControl<boolean>({ disabled: true, value: true }, [Validators.required]);
+  visibleToCommissioner = new FormControl<boolean>({ disabled: true, value: true }, [Validators.required]);
 
   documentSources = Object.values(DOCUMENT_SOURCE);
 
@@ -30,12 +31,13 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     name: this.name,
     type: this.type,
     source: this.source,
-    visibleToComissioner: this.visibleToComissioner,
+    visibleToCommissioner: this.visibleToCommissioner,
   });
 
   pendingFile: File | undefined;
   existingFile: string | undefined;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -49,8 +51,10 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
       });
       this.existingFile = document.fileName;
     }
@@ -59,7 +63,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   async onSubmit() {
     const file = this.pendingFile;
     if (file) {
-      const renamedFile = new File([file], this.name.value ?? file.name);
+      const renamedFile = new File([file], this.name.value + this.extension ?? file.name);
       this.isSaving = true;
       if (this.data.existingDocument) {
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
@@ -81,7 +85,11 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       this.isSaving = false;
     } else if (this.data.existingDocument) {
       this.isSaving = true;
-      await this.decisionService.updateFile(this.data.decisionUuid, this.data.existingDocument.uuid, this.name.value!);
+      await this.decisionService.updateFile(
+        this.data.decisionUuid,
+        this.data.existingDocument.uuid,
+        this.name.value! + this.extension,
+      );
 
       this.dialog.close(true);
       this.isSaving = false;
@@ -93,7 +101,10 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+
+      const { fileName, extension } = splitExtension(selectedFiles[0].name);
+      this.extension = extension;
+      this.name.setValue(fileName);
       this.showVirusError = false;
     }
   }
@@ -101,6 +112,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
   }
 
   openFile() {

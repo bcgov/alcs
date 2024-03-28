@@ -77,12 +77,6 @@ export class InquiryDocumentService {
     if (dto.file) {
       formData.append('file', dto.file, dto.file.name);
     }
-    if (dto.parcelUuid) {
-      formData.append('parcelUuid', dto.parcelUuid);
-    }
-    if (dto.ownerUuid) {
-      formData.append('ownerUuid', dto.ownerUuid);
-    }
     return formData;
   }
 }

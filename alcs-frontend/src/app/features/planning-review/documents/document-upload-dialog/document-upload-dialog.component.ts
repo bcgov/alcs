@@ -9,12 +9,8 @@ import {
 } from '../../../../services/planning-review/planning-review-document/planning-review-document.dto';
 import { PlanningReviewDocumentService } from '../../../../services/planning-review/planning-review-document/planning-review-document.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import {
-  DOCUMENT_SOURCE,
-  DOCUMENT_SYSTEM,
-  DOCUMENT_TYPE,
-  DocumentTypeDto,
-} from '../../../../shared/document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/document/document.dto';
+import { splitExtension } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -48,6 +44,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -63,8 +60,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
+
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
         type: document.type?.code,
         source: document.source,
         visibleToCommissioner: document.visibilityFlags.includes('C'),
@@ -86,7 +86,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
     const file = this.pendingFile;
     const dto: UpdateDocumentDto = {
-      fileName: this.name.value!,
+      fileName: this.name.value! + this.extension,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
@@ -144,7 +144,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+      const { fileName, extension } = splitExtension(this.pendingFile.name);
+      this.extension = extension;
+      this.name.setValue(fileName);
       this.showVirusError = false;
     }
   }
@@ -152,6 +154,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
   }
 
   openFile() {

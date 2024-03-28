@@ -314,6 +314,10 @@ mat-button-toggle-group {
   font-weight: 700 !important;
 }
 
+.mat-mdc-form-field-text-suffix {
+  color: colors.$black;
+}
+
 @mixin text-ellipsis($lines: 1) {
   text-overflow: ellipsis;
   overflow: hidden;
