@@ -1,10 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CardDto } from '../../../services/card/card.dto';
-import { CommissionerPlanningReviewDto } from '../../../services/commissioner/commissioner.dto';
 import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
-import { PlanningReviewDetailedDto } from '../../../services/planning-review/planning-review.dto';
 import { CLOSED_PR_LABEL, OPEN_PR_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
 
 @Component({

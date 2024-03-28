@@ -34,7 +34,7 @@ export class HeaderComponent implements OnChanges {
       for (const [index, referral] of this.planningReview.referrals.entries()) {
         this.linkedCards.push({
           ...referral.card,
-          displayName: `Referral ${index}`,
+          displayName: `Referral #${this.planningReview.referrals.length - index}`,
         });
       }
     }
