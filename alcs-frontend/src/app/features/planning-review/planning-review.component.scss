@@ -17,12 +17,13 @@
 .content {
   display: flex;
   flex-grow: 1;
-  padding-right: 80px;
 }
 
 .child-content {
-  margin: 24px 0 0 48px;
+  padding: 24px 80px 20px 48px;
   flex-grow: 1;
+  height: calc(100vh - 246px);
+  overflow-y: auto;
 }
 
 .nav {
@@ -33,7 +34,6 @@
 }
 
 .nav-link {
-
   div {
     padding: 12px 24px;
     border: 2px solid transparent;
