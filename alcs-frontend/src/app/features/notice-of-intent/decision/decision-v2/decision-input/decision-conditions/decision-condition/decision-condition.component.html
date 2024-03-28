@@ -16,7 +16,13 @@
 
     <div>
       <mat-label>Approval Dependent*</mat-label>
-      <mat-button-toggle-group required formControlName="approvalDependant">
+      <mat-button-toggle-group
+        [ngClass]="{
+          'error-field-outlined': !approvalDependant.valid && approvalDependant.touched
+        }"
+        required
+        formControlName="approvalDependant"
+      >
         <mat-button-toggle [value]="true">Yes</mat-button-toggle>
         <mat-button-toggle [value]="false">No</mat-button-toggle>
       </mat-button-toggle-group>
