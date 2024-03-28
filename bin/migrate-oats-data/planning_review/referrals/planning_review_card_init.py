@@ -95,7 +95,7 @@ def _insert_base_fields(conn, batch_size, cursor, rows):
     return parsed_data_list
 
 
-# use audit_updated_by as temp placeholder for pr uuid
+# use audit_updated_by as temp placeholder for pr.uuid
 query = f"""
             INSERT INTO alcs.card (
                 audit_updated_by,
@@ -120,6 +120,7 @@ def _prepare_oats_planning_review_card_data(row_data_list):
         mapped_data_list.append(
             {
                 "planning_review_id": row["planning_review_id"],
+                # planning_review_uuid is used as a temporary placeholder in order to create and match referrals 1:1 to cards
                 "uuid": row["uuid"],
                 "type_code": "PLAN",
                 "status_code": "PREL",

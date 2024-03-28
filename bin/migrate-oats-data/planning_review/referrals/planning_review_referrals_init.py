@@ -34,8 +34,8 @@ def process_planning_review_referral(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             count_total = dict(cursor.fetchone())["count"]
         logger.info(f"Total Planning Referral data to insert: {count_total}")
 
-        failed_inserts = 0
-        successful_updates_count = 0
+        failed_inserts_count = 0
+        successful_inserts_count = 0
         last_planning_review_id = 0
 
         with open(
@@ -57,27 +57,27 @@ def process_planning_review_referral(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
-                    updated_data = _insert_base_fields(conn, batch_size, cursor, rows)
+                    inserted_data = _insert_base_fields(conn, batch_size, cursor, rows)
 
-                    successful_updates_count = successful_updates_count + len(
-                        updated_data
+                    successful_inserts_count = successful_inserts_count + len(
+                        inserted_data
                     )
-                    last_planning_review_id = dict(updated_data[-1])[
+                    last_planning_review_id = dict(inserted_data[-1])[
                         "planning_review_id"
                     ]
 
                     logger.debug(
-                        f"Retrieved/updated items count: {len(updated_data)}; total successfully inserted planning referral so far {successful_updates_count}; last updated planning_review_id: {last_planning_review_id}"
+                        f"Retrieved/updated items count: {len(inserted_data)}; total successfully inserted planning referral so far {successful_inserts_count}; last updated planning_review_id: {last_planning_review_id}"
                     )
                 except Exception as err:
-                    # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
+                    # this is NOT going to be caused by actual data insert failure. This code is only executed when the code error appears or connection to DB is lost
                     logger.exception(err)
                     conn.rollback()
-                    failed_inserts = count_total - successful_updates_count
+                    failed_inserts_count = count_total - successful_inserts_count
                     last_planning_review_id = last_planning_review_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful inserts {successful_updates_count}, total failed updates {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts_count}"
     )
 
 

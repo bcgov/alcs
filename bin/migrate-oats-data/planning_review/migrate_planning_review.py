@@ -20,8 +20,11 @@ def process_planning_review(batch_size):
     init_planning_review_base(batch_size)
     process_planning_review_staff_journal(batch_size)
     update_planning_review_base_fields(batch_size)
+    # planning review cards are initialized with planning_review.uuid 1:1 mapping
     init_planning_review_cards(batch_size)
+    # card_uuid is transferred to referrals
     process_planning_review_referral(batch_size)
+    # planning review cards are updated to remove pr.uuid from audit_updated_by column as they are now matched by referrals
     update_planning_review_cards(batch_size)
 
 

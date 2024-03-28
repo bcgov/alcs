@@ -91,6 +91,7 @@ def _update_base_fields(conn, batch_size, cursor, rows):
     return parsed_data_list
 
 
+# audit_updated_by is removed as the uuid is no longer needed to link referrals and cards
 _rx_items_query = """
                     UPDATE alcs.card 
                     SET board_uuid = %(board_uuid)s,
