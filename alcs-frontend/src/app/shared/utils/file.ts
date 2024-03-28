@@ -29,3 +29,10 @@ export const openFileInline = (url: string, fileName: string) => {
     newWindow.document.body.style.overflow = 'hidden';
   }
 };
+
+export const splitExtension = (documentName: string) => {
+  const lastPeriod = documentName.lastIndexOf('.');
+  const extension = documentName.substring(lastPeriod);
+  const fileName = documentName.substring(0, lastPeriod);
+  return { fileName, extension };
+};

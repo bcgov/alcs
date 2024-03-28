@@ -6,6 +6,7 @@ import { ApplicationDecisionDocumentDto } from '../../../../../../services/appli
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
+import { splitExtension } from '../../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-app-decision-document-upload-dialog',
@@ -39,21 +40,25 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   pendingFile: File | undefined;
   existingFile: string | undefined;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { fileId: string; decisionUuid: string; existingDocument?: ApplicationDecisionDocumentDto },
     protected dialog: MatDialogRef<any>,
     private decisionService: ApplicationDecisionV2Service,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
+
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
       });
       this.existingFile = document.fileName;
     }
@@ -62,7 +67,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   async onSubmit() {
     const file = this.pendingFile;
     if (file) {
-      const renamedFile = new File([file], this.name.value ?? file.name);
+      const renamedFile = new File([file], this.name.value + this.extension ?? file.name);
       this.isSaving = true;
       if (this.data.existingDocument) {
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
@@ -84,7 +89,11 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       this.isSaving = false;
     } else if (this.data.existingDocument) {
       this.isSaving = true;
-      await this.decisionService.updateFile(this.data.decisionUuid, this.data.existingDocument.uuid, this.name.value!);
+      await this.decisionService.updateFile(
+        this.data.decisionUuid,
+        this.data.existingDocument.uuid,
+        this.name.value! + this.extension,
+      );
 
       this.dialog.close(true);
       this.isSaving = false;
@@ -96,7 +105,9 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+      const { fileName, extension } = splitExtension(selectedFiles[0].name);
+      this.name.setValue(fileName);
+      this.extension = extension;
       this.showVirusError = false;
     }
   }
@@ -104,6 +115,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
   }
 
   openFile() {
@@ -118,7 +130,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       await this.decisionService.downloadFile(
         this.data.decisionUuid,
         this.data.existingDocument.uuid,
-        this.data.existingDocument.fileName
+        this.data.existingDocument.fileName,
       );
     }
   }

@@ -15,6 +15,7 @@ import {
   DOCUMENT_TYPE,
   DocumentTypeDto,
 } from '../../../../shared/document/document.dto';
+import { splitExtension } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -47,6 +48,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -63,12 +65,16 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       const document = this.data.existingDocument;
       this.title = 'Edit';
       this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
+
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
         type: document.type?.code,
         source: document.source,
       });
       this.documentTypeAhead = document.type!.code;
+
       this.existingFile = {
         name: document.fileName,
         size: 0,
@@ -79,7 +85,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   async onSubmit() {
     const file = this.pendingFile;
     const dto: UpdateDocumentDto = {
-      fileName: this.name.value!,
+      fileName: this.name.value! + this.extension,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       file,
@@ -136,7 +142,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+
+      const documentName = selectedFiles[0].name;
+      const { fileName, extension } = splitExtension(documentName);
+      this.name.setValue(fileName);
+      this.extension = extension;
       this.showVirusError = false;
     }
   }
@@ -144,6 +154,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
   }
 
   openFile() {

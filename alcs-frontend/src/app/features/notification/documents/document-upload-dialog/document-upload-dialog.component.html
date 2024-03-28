@@ -2,72 +2,75 @@
   <h4>{{ title }} Document</h4>
 </div>
 <div mat-dialog-content>
-  <form class="form" [formGroup]="form">
+  <form [formGroup]="form" class="form">
     <div class="double">
       <div>
         <mat-label>Document Upload*</mat-label>
       </div>
-      <input hidden type="file" #fileInput (change)="uploadFile($event)" placeholder="Upload file" />
+      <input #fileInput (change)="uploadFile($event)" hidden placeholder="Upload file" type="file" />
       <button
+        (click)="fileInput.click()"
         *ngIf="!pendingFile && !existingFile"
-        class="full-width upload-button"
-        mat-flat-button
-        color="accent"
         [ngClass]="{
           error: showVirusError
         }"
-        (click)="fileInput.click()"
+        class="full-width upload-button"
+        color="accent"
+        mat-flat-button
       >
         Upload
       </button>
-      <div class="file" *ngIf="pendingFile">
+      <div *ngIf="pendingFile" class="file">
         <div>
           <a (click)="openFile()">{{ pendingFile.name }}</a>
           &nbsp;({{ pendingFile.size | filesize }})
         </div>
-        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
-          <mat-icon>close</mat-icon>Remove
+        <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
+          <mat-icon>close</mat-icon>
+          Remove
         </button>
       </div>
-      <div class="file" *ngIf="existingFile">
+      <div *ngIf="existingFile" class="file">
         <div>
           <a (click)="openExistingFile()">{{ existingFile.name }}</a>
           &nbsp;({{ existingFile.size | filesize }})
         </div>
-        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
-          <mat-icon>close</mat-icon>Remove
+        <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
+          <mat-icon>close</mat-icon>
+          Remove
         </button>
       </div>
-      <mat-error class="left" style="display: flex" *ngIf="showVirusError">
+      <mat-error *ngIf="showVirusError" class="left" style="display: flex">
         <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
       </mat-error>
     </div>
 
     <div class="double">
-      <mat-form-field class="full-width" appearance="outline">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Document Name</mat-label>
-        <input required matInput id="name" [formControl]="name" name="name" />
+        <input [formControl]="name" id="name" matInput name="name" required />
+        <span matTextSuffix>{{ extension }}</span>
       </mat-form-field>
     </div>
 
     <div>
       <ng-select
-        appearance="outline"
-        required
+        (change)="onDocTypeSelected($event)"
+        [(ngModel)]="documentTypeAhead"
         [items]="documentTypes"
-        placeholder="Document Type*"
+        [ngModelOptions]="{ standalone: true }"
+        [searchFn]="filterDocumentTypes"
+        appearance="outline"
+        appendTo="body"
         bindLabel="label"
         bindValue="code"
-        [ngModelOptions]="{ standalone: true }"
-        [(ngModel)]="documentTypeAhead"
-        [searchFn]="filterDocumentTypes"
-        (change)="onDocTypeSelected($event)"
-        appendTo="body"
+        placeholder="Document Type*"
+        required
       >
       </ng-select>
     </div>
     <div>
-      <mat-form-field class="full-width" appearance="outline">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Source</mat-label>
         <mat-select [formControl]="source">
           <mat-option *ngFor="let source of documentSources" [value]="source">{{ source }}</mat-option>
@@ -87,18 +90,18 @@
 
   <mat-dialog-actions align="end">
     <div class="button-container">
-      <button type="button" mat-stroked-button color="primary" [mat-dialog-close]="false">Close</button>
+      <button [mat-dialog-close]="false" color="primary" mat-stroked-button type="button">Close</button>
       <button
-        *ngIf="!isSaving"
-        type="button"
-        mat-flat-button
-        color="primary"
-        [disabled]="!form.valid || (!pendingFile && !existingFile)"
         (click)="onSubmit()"
+        *ngIf="!isSaving"
+        [disabled]="!form.valid || (!pendingFile && !existingFile)"
+        color="primary"
+        mat-flat-button
+        type="button"
       >
         Save
       </button>
-      <button *ngIf="isSaving" type="button" mat-flat-button color="primary" [disabled]="true">
+      <button *ngIf="isSaving" [disabled]="true" color="primary" mat-flat-button type="button">
         <mat-spinner class="spinner" diameter="20"></mat-spinner>
         Uploading
       </button>
