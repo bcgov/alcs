@@ -16,3 +16,13 @@ def import_documents(batch_size):
 def clean_documents():
     clean_notification_documents()
     document_clean()
+
+
+def import_prs_documents(batch_size):
+    # fill
+    return
+
+
+def clean_pr_documents():
+    # fill
+    return

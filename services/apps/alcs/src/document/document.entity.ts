@@ -57,6 +57,13 @@ export class Document extends Base {
   @Column({
     nullable: true,
     type: 'text',
+    comment: 'used only for oats etl process',
+  })
+  oatsPlanningReviewId?: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'text',
     unique: true,
     comment: 'used only for oats etl process',
   })
