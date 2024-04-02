@@ -29,11 +29,11 @@
     }
 
     & .mat-mdc-slide-toggle .mdc-form-field {
-      color: colors.$black;
+      color: colors.$grey;
+    }
 
-      & .inactive {
-        color: colors.$grey;
-      }
+    & .mat-mdc-slide-toggle-checked .mdc-form-field {
+      color: colors.$black;
     }
   }
 }
