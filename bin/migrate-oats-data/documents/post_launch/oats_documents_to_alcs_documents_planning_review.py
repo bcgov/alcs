@@ -181,7 +181,7 @@ def document_pr_clean(conn=None):
     logger.info("Start planning review related documents cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.document WHERE audit_created_by = '{OATS_ETL_USER}' AND oats_planning_review_id IS NOT NULL AND audit_created_at > '2024-02-08';"
+            f"DELETE FROM alcs.document WHERE audit_created_by = '{OATS_ETL_USER}' AND oats_planning_review_id IS NOT NULL;"
         )
         conn.commit()
         logger.info(f"Deleted items count = {cursor.rowcount}")
