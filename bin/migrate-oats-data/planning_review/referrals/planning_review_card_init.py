@@ -123,7 +123,8 @@ def _prepare_oats_planning_review_card_data(row_data_list):
                 # planning_review_uuid is used as a temporary placeholder in order to create and match referrals 1:1 to cards
                 "uuid": row["uuid"],
                 "type_code": "PLAN",
-                "status_code": "PREL",
+                # Planning board only has single column of SUBM
+                "status_code": "SUBM",
                 "archived": True,
             }
         )

@@ -3,6 +3,7 @@ from common import (
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
     OatsToAlcsPlanningReviewType,
+    DEFAULT_ETL_USER_UUID,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -99,7 +100,8 @@ _rx_items_query = """
                     SET open = %(open_indicator)s,
                     type_code = %(alcs_planning_review_code)s,
                     legacy_id = %(legacy_number)s,
-                    closed_by_uuid = %(closed_by_uuid)s
+                    closed_by_uuid = %(closed_by_uuid)s,
+                    closed_date = %(closed_date)s
                     WHERE alcs.planning_review.file_number = %(planning_review_id)s::text
 """
 
@@ -114,6 +116,7 @@ def _prepare_oats_planning_review_data(row_data_list):
                 "alcs_planning_review_code": _map_planning_code(row),
                 "legacy_number": row["legacy_planning_review_nbr"],
                 "closed_by_uuid": _map_closed_by(row),
+                "closed_date": _map_closed_date(row),
             }
         )
 
@@ -132,7 +135,15 @@ def _map_is_open(data):
 
 def _map_closed_by(data):
     if data.get("open_ind") == "N":
-        return data.get("author_uuid")
+        return DEFAULT_ETL_USER_UUID
+    else:
+        return None
+
+
+def _map_closed_date(data):
+    if data.get("open_ind") == "N":
+        date_str = "0001-01-01 00:00:00.000 -0800"
+        return date_str
     else:
         return None
 
