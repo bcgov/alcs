@@ -1,5 +1,32 @@
 @use '../../../../../styles/colors';
 
+.menu {
+  background-color: colors.$white;
+  box-shadow: 0 4px 4px 0 #00000040;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+
+  button {
+    font-weight: normal !important;
+    text-align: left;
+    background-color: colors.$white;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: colors.$secondary-color-light;
+  }
+
+  button.mat-mdc-menu-item {
+    padding-left: 16px !important;
+  }
+}
+
 .action-btn.delete {
   color: colors.$error-color;
 }
