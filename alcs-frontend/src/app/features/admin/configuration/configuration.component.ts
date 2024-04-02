@@ -10,8 +10,7 @@ import {
   styleUrls: ['./configuration.component.scss'],
 })
 export class ConfigurationComponent implements OnInit {
-  maintenanceMode = 'false';
-  isEditing = false;
+  maintenanceMode = false;
 
   constructor(private adminConfigurationService: AdminConfigurationService) {}
 
@@ -19,21 +18,23 @@ export class ConfigurationComponent implements OnInit {
     this.loadConfigs();
   }
 
-  toggleEdit() {
-    this.isEditing = !this.isEditing;
-  }
-
   async onSave() {
-    await this.adminConfigurationService.setConfiguration(CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, this.maintenanceMode);
+    await this.adminConfigurationService.setConfiguration(
+      CONFIG_VALUE.PORTAL_MAINTENANCE_MODE,
+      this.maintenanceMode.toString(),
+    );
     this.loadConfigs();
-    this.isEditing = false;
   }
 
   private async loadConfigs() {
     const configs = await this.adminConfigurationService.listConfigurations();
     if (configs) {
       const maintenanceConfig = configs.find((config) => config.name === CONFIG_VALUE.PORTAL_MAINTENANCE_MODE);
-      this.maintenanceMode = maintenanceConfig!.value;
+      this.maintenanceMode = maintenanceConfig ? maintenanceConfig.value === 'true' : false;
     }
+  }
+
+  onToggleMaintenanceMode() {
+    this.onSave();
   }
 }

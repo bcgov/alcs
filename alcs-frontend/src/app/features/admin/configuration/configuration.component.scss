@@ -1,18 +1,39 @@
 @use '../../../../styles/colors';
 
-.value {
+.row {
+  display: flex;
+  margin: 24px 0;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.toggle {
   display: flex;
   align-items: center;
+  gap: 4px;
+  color: colors.$black;
 }
 
-.subheading2 {
-  margin-top: 36px !important;
+.inactive {
+  color: colors.$grey;
 }
 
-.editing {
-  max-width: 600px;
+:host::ng-deep {
+  .toggle {
+    & .mdc-form-field {
+      display: flex;
+    }
 
-  &.hidden {
-    display: none;
+    & .mdc-label {
+      font-size: 16px;
+    }
+
+    & .mat-mdc-slide-toggle .mdc-form-field {
+      color: colors.$black;
+
+      & .inactive {
+        color: colors.$grey;
+      }
+    }
   }
 }
