@@ -53,3 +53,24 @@ def noi_document_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
+
+
+def pr_document_import_command_parser(import_batch_size, subparsers):
+    pr_document_import_command = subparsers.add_parser(
+        "pr-document-import",
+        help=f"imports & links pr documents specified batch size: (default: {import_batch_size})",
+    )
+    pr_document_import_command.add_argument(
+        "--batch-size",
+        type=int,
+        default=import_batch_size,
+        metavar="",
+        help=f"batch size (default: {import_batch_size})",
+    )
+
+
+def pr_document_clean_command_parser(subparsers):
+    subparsers.add_parser(
+        "pr-document-clean",
+        help="Clean planning review documents",
+    )

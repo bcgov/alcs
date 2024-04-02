@@ -10,7 +10,7 @@ etl_name = "link_srw_documents_from_alcs"
 logger = setup_and_get_logger(etl_name)
 
 """
-    This script connects to postgress version of OATS DB and links data from ALCS documents to ALCS notification_document table.
+    This script connects to postgress version of OATS DB and links data from ALCS documents to ALCS planning_review_document table.
 
     NOTE:
     Before performing document import you need to import SRWs and SRW documents.
@@ -18,14 +18,14 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def link_srw_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def link_pr_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "documents/post_launch/sql/alcs_documents_to_notification_documents_count.sql",
+            "documents/post_launch/sql/planning_review/alcs_documents_to_planning_review_documents_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -39,7 +39,7 @@ def link_srw_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         last_document_id = 0
 
         with open(
-            "documents/post_launch/sql/alcs_documents_to_notification_documents.sql",
+            "documents/post_launch/sql/planning_review/alcs_documents_to_planning_review_documents.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -87,27 +87,23 @@ def _insert_records(conn, cursor, rows):
 def _compile_insert_query(number_of_rows_to_insert):
     documents_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
-                        INSERT INTO alcs.notification_document(
-                            notification_uuid,
+                        INSERT INTO alcs.planning_review_document(
+                            planning_review_uuid,
                             document_uuid,
                             type_code,
                             visibility_flags,
                             oats_document_id,
                             oats_planning_review_id,
                             audit_created_by,
-                            survey_plan_number,
-                            control_number,
                             description           
                         )
                         VALUES{documents_to_insert}
                         ON CONFLICT (oats_document_id, oats_planning_review_id) DO UPDATE SET 
-                            notification_uuid = EXCLUDED.notification_uuid, 
+                            planning_review_uuid = EXCLUDED.planning_review_uuid, 
                             document_uuid = EXCLUDED.document_uuid, 
                             type_code = EXCLUDED.type_code,
                             visibility_flags = EXCLUDED.visibility_flags,
                             audit_created_by = EXCLUDED.audit_created_by,
-                            survey_plan_number = EXCLUDED.survey_plan_number,
-                            control_number = EXCLUDED.control_number,
                             description = EXCLUDED.description;
     """
 
@@ -123,25 +119,23 @@ def _prepare_data_to_insert(rows):
 
 def _map_data(row):
     return {
-        "notification_uuid": row["notification_uuid"],
+        "planning_review_uuid": row["planning_review_uuid"],
         "document_uuid": row["document_uuid"],
         "type_code": row["type_code"],
         "visibility_flags": row["visibility_flags"],
         "oats_document_id": row["oats_document_id"],
         "oats_planning_review_id": row["oats_planning_review_id"],
         "audit_created_by": OATS_ETL_USER,
-        "plan_number": row["plan_no"],
-        "control_number": row["control_no"],
         "description": row["description"],
     }
 
 
 @inject_conn_pool
-def clean_notification_documents(conn=None):
+def clean_planning_review_documents(conn=None):
     logger.info("Start documents cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.notification_document WHERE audit_created_by = '{OATS_ETL_USER}';"
+            f"DELETE FROM alcs.planning_review_document WHERE audit_created_by = '{OATS_ETL_USER}';"
         )
         conn.commit()
         logger.info(f"Deleted items count = {cursor.rowcount}")

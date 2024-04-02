@@ -74,6 +74,9 @@ export class PlanningReviewDocument extends BaseEntity {
   })
   oatsDocumentId?: string | null;
 
+  @Column({ nullable: true })
+  auditCreatedBy: string;
+
   @OneToOne(() => Document)
   @JoinColumn()
   document: Document;

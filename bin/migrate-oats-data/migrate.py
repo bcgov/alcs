@@ -20,6 +20,8 @@ from menu.post_launch_commands import (
     planning_review_import,
     inquiry_import,
     inquiry_clean,
+    document_import_pr,
+    document_clean_pr,
 )
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
@@ -65,6 +67,10 @@ if __name__ == "__main__":
                 inquiry_import(console, args)
             case "inquiry-clean":
                 inquiry_clean(console)
+            case "pr-document-import":
+                document_import_pr(console, args)
+            case "pr-document-clean":
+                document_clean_pr(console)
 
     finally:
         if connection_pool:
