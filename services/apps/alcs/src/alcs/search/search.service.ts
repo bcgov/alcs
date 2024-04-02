@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
+import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -24,6 +25,8 @@ export class SearchService {
     private notificationRepository: Repository<Notification>,
     @InjectRepository(PlanningReview)
     private planningReviewRepository: Repository<PlanningReview>,
+    @InjectRepository(Inquiry)
+    private inquiryRepository: Repository<Inquiry>,
   ) {}
 
   async getApplication(fileNumber: string) {
@@ -62,6 +65,17 @@ export class SearchService {
 
   async getPlanningReview(fileNumber: string) {
     return await this.planningReviewRepository.findOne({
+      where: {
+        fileNumber,
+      },
+      relations: {
+        localGovernment: true,
+      },
+    });
+  }
+
+  async getInquiry(fileNumber: string) {
+    return await this.inquiryRepository.findOne({
       where: {
         fileNumber,
       },
