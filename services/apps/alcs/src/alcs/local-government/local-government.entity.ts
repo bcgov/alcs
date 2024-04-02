@@ -3,7 +3,10 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Status, type, BCeID, and contact info of local or first nation governments',
+})
 export class LocalGovernment extends Base {
   constructor(data?: Partial<LocalGovernment>) {
     super();

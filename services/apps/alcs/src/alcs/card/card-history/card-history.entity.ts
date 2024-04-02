@@ -1,8 +1,11 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { Card } from '../card.entity';
 import { EntityHistory } from '../../../common/entities/history.entity';
+import { Card } from '../card.entity';
 
-@Entity()
+@Entity({
+  comment:
+    "History of card status i.e. the column history of the card's journey on boards",
+})
 export class CardHistory extends EntityHistory {
   constructor() {
     super();

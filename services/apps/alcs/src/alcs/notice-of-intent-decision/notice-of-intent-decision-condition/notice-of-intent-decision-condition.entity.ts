@@ -6,7 +6,9 @@ import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-co
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision-condition-code.entity';
 
-@Entity()
+@Entity({
+  comment: 'Decision Conditions for Notice of Intents',
+})
 export class NoticeOfIntentDecisionCondition extends Base {
   constructor(data?: Partial<NoticeOfIntentDecisionCondition>) {
     super();

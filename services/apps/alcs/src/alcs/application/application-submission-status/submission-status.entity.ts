@@ -10,7 +10,7 @@ import {
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 
-@Entity()
+@Entity({ comment: 'Join table that links submission with its status' })
 export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
   constructor(data?: Partial<ApplicationSubmissionToSubmissionStatus>) {
     super();

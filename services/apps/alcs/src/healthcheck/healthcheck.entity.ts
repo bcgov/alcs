@@ -1,6 +1,9 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({
+  comment:
+    'Unix timestamp of the last time the connection from API to database was checked and succeeded',
+})
 export class HealthCheck extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

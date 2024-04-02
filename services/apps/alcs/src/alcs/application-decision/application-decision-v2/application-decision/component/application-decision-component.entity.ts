@@ -9,7 +9,7 @@ import { ApplicationDecisionCondition } from '../../../application-decision-cond
 import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
 
-@Entity()
+@Entity({ comment: 'Fields present on the application decision components' })
 export class ApplicationDecisionComponent extends Base {
   constructor(data?: Partial<ApplicationDecisionComponent>) {
     super();

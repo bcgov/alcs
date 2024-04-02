@@ -4,5 +4,7 @@ import { BaseCodeEntity } from '../base.code.entity';
 
 export class ParcelOwnershipTypeDto extends BaseCodeDto {}
 
-@Entity()
+@Entity({
+  comment: 'Code table for possible land ownership types (Fee simple vs Crown)',
+})
 export class ParcelOwnershipType extends BaseCodeEntity {}

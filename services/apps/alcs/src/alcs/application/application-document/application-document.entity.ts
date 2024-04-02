@@ -22,7 +22,10 @@ export enum VISIBILITY_FLAG {
 }
 
 @Unique('OATS_UQ_DOCUMENTS', ['oatsDocumentId', 'oatsApplicationId'])
-@Entity()
+@Entity({
+  comment:
+    "Links application documents with the applications they're saved to and logs other attributes",
+})
 export class ApplicationDocument extends BaseEntity {
   constructor(data?: Partial<ApplicationDocument>) {
     super();

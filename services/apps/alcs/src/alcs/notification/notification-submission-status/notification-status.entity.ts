@@ -10,7 +10,7 @@ import {
 import { NotificationSubmission } from '../../../portal/notification-submission/notification-submission.entity';
 import { NotificationSubmissionStatusType } from './notification-status-type.entity';
 
-@Entity()
+@Entity({ comment: 'Links Notifications to their Statuses with Dates' })
 export class NotificationSubmissionToSubmissionStatus extends BaseEntity {
   constructor(data?: Partial<NotificationSubmissionToSubmissionStatus>) {
     super();

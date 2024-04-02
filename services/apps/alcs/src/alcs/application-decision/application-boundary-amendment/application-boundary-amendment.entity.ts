@@ -4,7 +4,10 @@ import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Used by ALC GIS Staff to track Inclusion / Exclusion decisions and their ALR boundary impact over time',
+})
 export class ApplicationBoundaryAmendment extends Base {
   constructor(data?: Partial<ApplicationBoundaryAmendment>) {
     super();

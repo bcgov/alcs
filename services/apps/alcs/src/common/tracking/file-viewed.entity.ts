@@ -7,7 +7,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({
+  comment: 'Stores when the file(Application, NOI etc.) was last viewed.',
+})
 export class FileViewed extends BaseEntity {
   constructor(data?: Partial<FileViewed>) {
     super();

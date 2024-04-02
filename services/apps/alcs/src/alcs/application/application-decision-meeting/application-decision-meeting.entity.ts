@@ -3,7 +3,7 @@ import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { Application } from '../application.entity';
 
-@Entity()
+@Entity({ comment: 'Dates for application review discussions' })
 export class ApplicationDecisionMeeting extends Base {
   constructor(data?: Partial<ApplicationDecisionMeeting>) {
     super();

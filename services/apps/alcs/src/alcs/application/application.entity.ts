@@ -14,17 +14,20 @@ import { Base } from '../../common/entities/base.entity';
 import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
-import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
+import { ApplicationDecisionMeeting } from './application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Base data for applications including the ID, key dates, and the date of the first decision',
+})
 export class Application extends Base {
   constructor(data?: Partial<Application>) {
     super();

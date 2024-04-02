@@ -16,7 +16,9 @@ import { LocalGovernment } from '../local-government/local-government.entity';
 import { NotificationDocument } from './notification-document/notification-document.entity';
 import { NotificationType } from './notification-type/notification-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'Stores Notification Class Applications such as SRWs',
+})
 export class Notification extends Base {
   constructor(data?: Partial<Notification>) {
     super();

@@ -21,7 +21,10 @@ export enum VISIBILITY_FLAG {
 }
 
 @Unique('OATS_NOI_UQ_DOCUMENTS', ['oatsDocumentId', 'oatsApplicationId'])
-@Entity()
+@Entity({
+  comment:
+    "Links NOI documents with the NOIs they're saved to and logs other attributes",
+})
 export class NoticeOfIntentDocument extends BaseEntity {
   constructor(data?: Partial<NoticeOfIntentDocument>) {
     super();

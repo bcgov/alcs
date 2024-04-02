@@ -3,7 +3,7 @@ import { Column, Entity } from 'typeorm';
 import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 
-@Entity()
+@Entity({ comment: 'Code table for possible NOI types' })
 export class NoticeOfIntentType extends BaseCodeEntity {
   constructor(data?: Partial<NoticeOfIntentType>) {
     super();
