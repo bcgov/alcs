@@ -56,6 +56,7 @@ export class Document extends Base {
 
   @Column({
     nullable: true,
+    select: false,
     type: 'text',
     comment: 'used only for oats etl process',
   })

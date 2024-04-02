@@ -61,6 +61,7 @@ export class PlanningReviewDocument extends BaseEntity {
   @Column({
     type: 'text',
     nullable: true,
+    select: false,
     comment:
       'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.planning_review to alcs.planning_review_document.',
   })
@@ -69,13 +70,14 @@ export class PlanningReviewDocument extends BaseEntity {
   @Column({
     type: 'text',
     nullable: true,
+    select: false,
     comment:
       'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.planning_review_document.',
   })
   oatsDocumentId?: string | null;
 
   @Column({ nullable: true })
-  auditCreatedBy: string;
+  auditCreatedBy?: string | null;
 
   @OneToOne(() => Document)
   @JoinColumn()

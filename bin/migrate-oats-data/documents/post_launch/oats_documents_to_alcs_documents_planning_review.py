@@ -16,7 +16,7 @@ logger = setup_and_get_logger(etl_name)
     This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS documents table.
 
     NOTE:
-    Before performing document import you need to import SRWs from oats.
+    Before performing document import you need to import Planning Reviews from oats.
 """
 
 
