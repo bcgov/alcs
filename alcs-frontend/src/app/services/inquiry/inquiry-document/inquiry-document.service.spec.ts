@@ -35,7 +35,7 @@ describe('InquiryDocumentService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should make a get call for list', async () => {
+  it('should make a get call for listAll', async () => {
     httpClient.get.mockReturnValue(
       of([
         {
@@ -49,6 +49,22 @@ describe('InquiryDocumentService', () => {
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
     expect(res[0].uuid).toEqual('1');
+  });
+
+  it('should make a get call for fetchTypes', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          code: '1',
+        },
+      ]),
+    );
+
+    const res = await service.fetchTypes();
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0].code).toEqual('1');
   });
 
   it('should make a delete call for delete', async () => {
@@ -88,6 +104,22 @@ describe('InquiryDocumentService', () => {
     );
 
     await service.updateSort([]);
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+  });
+
+  it('should make a post call for update', async () => {
+    httpClient.post.mockReturnValue(
+      of({
+        uuid: '1',
+      }),
+    );
+
+    const res = await service.update('uuid', {
+      fileName: '',
+      source: DOCUMENT_SOURCE.APPLICANT,
+      typeCode: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+    });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
   });

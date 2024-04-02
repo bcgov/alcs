@@ -40,20 +40,21 @@ describe('NoticeOfIntentDecisionV2Service', () => {
         {
           fileNumber: '1',
         },
-      ])
+      ]),
     );
 
     const res = await service.fetchByFileNumber('1');
 
     expect(res.length).toEqual(1);
     expect(res[0].fileNumber).toEqual('1');
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
   });
 
   it('should show a toast message if fetch fails', async () => {
     httpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.fetchByFileNumber('1');
@@ -62,11 +63,39 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
+  it('should fetch and return types', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          fileNumber: '1',
+        },
+      ]),
+    );
+
+    const res = await service.fetchCodes();
+
+    expect(res).toBeDefined();
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show a toast message if fetch types fails', async () => {
+    httpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.fetchCodes();
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
   it('should make an http patch and show a success toast when updating', async () => {
     httpClient.patch.mockReturnValue(
       of({
         fileNumber: '1',
-      })
+      }),
     );
 
     await service.update('1', {
@@ -81,7 +110,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     httpClient.patch.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -100,7 +129,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     httpClient.post.mockReturnValue(
       of({
         fileNumber: '1',
-      })
+      }),
     );
 
     await service.create({
@@ -121,7 +150,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     httpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -146,7 +175,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     httpClient.delete.mockReturnValue(
       of({
         fileNumber: '1',
-      })
+      }),
     );
 
     await service.delete('');
@@ -159,7 +188,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     httpClient.delete.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -188,7 +217,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
         {
           fileNumber: '1',
         },
-      ])
+      ]),
     );
     await service.updateFile('', '', '');
 
@@ -199,7 +228,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     httpClient.delete.mockReturnValue(
       of({
         fileNumber: '1',
-      })
+      }),
     );
 
     await service.deleteFile('', '');
@@ -213,5 +242,32 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     await service.getNextAvailableResolutionNumber(2023);
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fetch and load a decision', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          fileNumber: '1',
+        },
+      ]),
+    );
+
+    await service.loadDecision('uuid');
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show a toast message if load decision fails', async () => {
+    httpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.loadDecision('uuid');
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });

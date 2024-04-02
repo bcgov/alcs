@@ -62,6 +62,34 @@ describe('PlanningReviewDecisionService', () => {
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
+  it('should fetch and return codes', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          fileNumber: '1',
+        },
+      ]),
+    );
+
+    const res = await service.fetchCodes();
+
+    expect(res).toBeDefined();
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show a toast message if fetch codes fails', async () => {
+    httpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.fetchCodes();
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
   it('should make an http patch and show a success toast when updating', async () => {
     httpClient.patch.mockReturnValue(
       of({
@@ -197,5 +225,32 @@ describe('PlanningReviewDecisionService', () => {
     await service.getNextAvailableResolutionNumber(2023);
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fetch and load a decision', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          fileNumber: '1',
+        },
+      ]),
+    );
+
+    await service.loadDecision('uuid');
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show a toast message if load decision fails', async () => {
+    httpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.loadDecision('uuid');
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });
