@@ -15,6 +15,10 @@ hr {
 
 .decision-container {
   position: relative;
+
+  .decision-description {
+    white-space: pre-line;
+  }
 }
 
 .decision {

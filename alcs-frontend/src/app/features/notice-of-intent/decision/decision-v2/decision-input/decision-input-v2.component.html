@@ -30,7 +30,7 @@
             'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
           }"
         >
-          Generate Number
+          Get Resolution Number
         </button>
         <app-error-message
           *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
@@ -133,7 +133,7 @@
     <div class="full-width">
       <mat-form-field style="width: 100%" appearance="outline">
         <mat-label>Decision Description</mat-label>
-        <input matInput formControlName="decisionDescription" />
+        <textarea matInput formControlName="decisionDescription" maxlength="4000" rows="4"></textarea>
       </mat-form-field>
     </div>
 
