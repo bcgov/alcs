@@ -5,60 +5,66 @@
 </div>
 
 <table
-  cdkDropList
-  [cdkDropListDisabled]='!sortable'
   (cdkDropListDropped)="onRowDropped($event)"
-  mat-table
+  [cdkDropListDisabled]="!sortable"
   [dataSource]="dataSource"
+  cdkDropList
+  cdkDropListAutoScrollStep="10"
   class="mat-elevation-z3 width-100"
+  mat-table
 >
+  <ng-container matColumnDef="index">
+    <th *matHeaderCellDef mat-header-cell></th>
+    <td *matCellDef="let element; let i = index" mat-cell>{{ i + 1 }}</td>
+  </ng-container>
+
   <ng-container matColumnDef="type">
-    <th mat-header-cell *matHeaderCellDef>Type</th>
-    <td mat-cell *matCellDef="let element">{{ element.type?.label }}</td>
+    <th *matHeaderCellDef mat-header-cell>Type</th>
+    <td *matCellDef="let element" mat-cell>{{ element.type?.label }}</td>
   </ng-container>
 
   <ng-container matColumnDef="fileName">
-    <th mat-header-cell *matHeaderCellDef>File Name</th>
-    <td mat-cell *matCellDef="let element">
+    <th *matHeaderCellDef mat-header-cell>File Name</th>
+    <td *matCellDef="let element" mat-cell>
       <a (click)="onOpen(element.uuid, element.fileName)">{{ element.fileName }}</a>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="source">
-    <th mat-header-cell *matHeaderCellDef>Source</th>
-    <td mat-cell *matCellDef="let element">{{ element.source }}</td>
+    <th *matHeaderCellDef mat-header-cell>Source</th>
+    <td *matCellDef="let element" mat-cell>{{ element.source }}</td>
   </ng-container>
 
   <ng-container matColumnDef="uploadedAt">
-    <th mat-header-cell *matHeaderCellDef>Upload Date</th>
-    <td mat-cell *matCellDef="let element">{{ element.uploadedAt | momentFormat }}</td>
+    <th *matHeaderCellDef mat-header-cell>Upload Date</th>
+    <td *matCellDef="let element" mat-cell>{{ element.uploadedAt | momentFormat }}</td>
   </ng-container>
 
   <ng-container matColumnDef="action">
-    <th mat-header-cell *matHeaderCellDef>Action</th>
-    <td mat-cell *matCellDef="let element">
-      <button title="Download" mat-icon-button class="action-btn" (click)="onDownload(element.uuid, element.fileName)">
+    <th *matHeaderCellDef mat-header-cell>Action</th>
+    <td *matCellDef="let element" mat-cell>
+      <button (click)="onDownload(element.uuid, element.fileName)" class="action-btn" mat-icon-button title="Download">
         <mat-icon>download</mat-icon>
       </button>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="sorting">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td class='drag-cell' mat-cell *matCellDef="let element">
+    <th *matHeaderCellDef mat-header-cell></th>
+    <td *matCellDef="let element" class="drag-cell" mat-cell>
       <mat-icon>drag_indicator</mat-icon>
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr
-    style="background-color: #fff"
-    mat-row
+    *matRowDef="let row; columns: displayedColumns"
     cdkDrag
     cdkDragLockAxis="y"
-    *matRowDef="let row; columns: displayedColumns"
+    mat-row
+    style="background-color: #fff"
   ></tr>
-  <tr class="mat-row" *matNoDataRow>
+  <tr *matNoDataRow class="mat-row">
     <td class="text-center" colspan="4">No files</td>
   </tr>
 </table>

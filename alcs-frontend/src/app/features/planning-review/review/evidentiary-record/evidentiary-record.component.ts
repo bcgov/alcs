@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { PlanningReviewDocumentDto } from '../../../../services/planning-review/planning-review-document/planning-review-document.dto';
 import { PlanningReviewDocumentService } from '../../../../services/planning-review/planning-review-document/planning-review-document.service';
@@ -15,7 +15,7 @@ export class EvidentiaryRecordComponent implements OnChanges {
   @Input() visibilityFlags: string[] = [];
   @Input() sortable = false;
 
-  displayedColumns: string[] = ['type', 'fileName', 'source', 'uploadedAt', 'action', 'sorting'];
+  displayedColumns: string[] = ['index', 'type', 'fileName', 'source', 'uploadedAt', 'action', 'sorting'];
   documents: PlanningReviewDocumentDto[] = [];
   dataSource = new MatTableDataSource<PlanningReviewDocumentDto>([]);
 
@@ -24,7 +24,7 @@ export class EvidentiaryRecordComponent implements OnChanges {
   ngOnChanges(): void {
     this.loadDocuments();
     if (!this.sortable) {
-      this.displayedColumns = ['type', 'fileName', 'source', 'uploadedAt', 'action'];
+      this.displayedColumns = ['index', 'type', 'fileName', 'source', 'uploadedAt', 'action'];
     }
   }
 

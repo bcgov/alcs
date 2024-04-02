@@ -4,14 +4,10 @@ import { environment } from '../../../../environments/environment';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
 import { NotificationDetailService } from '../../../services/notification/notification-detail.service';
 import { NotificationSubmissionService } from '../../../services/notification/notification-submission/notification-submission.service';
-import {
-  NOTIFICATION_STATUS,
-  NotificationDto,
-  UpdateNotificationDto,
-} from '../../../services/notification/notification.dto';
+import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
+import { NotificationDto, UpdateNotificationDto } from '../../../services/notification/notification.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
 
 @Component({
   selector: 'app-intake',
@@ -84,14 +80,6 @@ export class IntakeComponent implements OnInit {
       });
   }
 
-  private async loadGovernments() {
-    const localGovernment = await this.localGovernmentService.list();
-    this.localGovernments = localGovernment.map((government) => ({
-      label: government.name,
-      value: government.uuid,
-    }));
-  }
-
   async onSaveLocalGovernment($value: string | string[] | null) {
     this.confirmationDialogService
       .openDialog({
@@ -113,6 +101,23 @@ export class IntakeComponent implements OnInit {
       });
   }
 
+  async resendResponse() {
+    if (this.notification) {
+      const res = await this.notificationDetailService.resendResponse(this.notification.fileNumber);
+      if (res) {
+        this.toastService.showSuccessToast('Response Sent');
+      }
+    }
+  }
+
+  private async loadGovernments() {
+    const localGovernment = await this.localGovernmentService.list();
+    this.localGovernments = localGovernment.map((government) => ({
+      label: government.name,
+      value: government.uuid,
+    }));
+  }
+
   private async loadSubmission(fileNumber: string) {
     const submission = await this.notificationSubmissionService.fetchSubmission(fileNumber);
     this.contactEmail = submission.contactEmail;
@@ -122,12 +127,5 @@ export class IntakeComponent implements OnInit {
 
     this.responseSent = alcResponseEvent !== undefined;
     this.responseDate = alcResponseEvent?.startDate ?? null;
-  }
-
-  async resendResponse() {
-    if (this.notification) {
-      await this.notificationDetailService.resendResponse(this.notification.fileNumber);
-      this.toastService.showSuccessToast('Response Sent');
-    }
   }
 }
