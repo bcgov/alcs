@@ -10,6 +10,8 @@ import { FileNumberService } from '../../file-number/file-number.service';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
+import { CodeService } from '../code/code.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { InquiryParcel } from './inquiry-parcel/inquiry-parcel.entity';
 import { InquiryType } from './inquiry-type.entity';
 import { UpdateInquiryDto } from './inquiry.dto';
@@ -22,12 +24,16 @@ describe('InquiryService', () => {
   let mockRepository: DeepMocked<Repository<Inquiry>>;
   let mockTypeRepository: DeepMocked<Repository<InquiryType>>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockGovernmentService: DeepMocked<LocalGovernmentService>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
     mockRepository = createMock();
     mockTypeRepository = createMock();
     mockFileNumberService = createMock();
+    mockGovernmentService = createMock();
+    mockCodeService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -53,6 +59,14 @@ describe('InquiryService', () => {
         {
           provide: FileNumberService,
           useValue: mockFileNumberService,
+        },
+        {
+          provide: LocalGovernmentService,
+          useValue: mockGovernmentService,
+        },
+        {
+          provide: CodeService,
+          useValue: mockCodeService,
         },
       ],
     }).compile();

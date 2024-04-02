@@ -29,10 +29,12 @@ export class HeaderComponent implements OnChanges {
 
   async setupLinkedCards() {
     if (this.inquiry.card) {
-      this.linkedCards.push({
-        ...this.inquiry.card,
-        displayName: `Inquiry`,
-      });
+      this.linkedCards = [
+        {
+          ...this.inquiry.card,
+          displayName: `Inquiry`,
+        },
+      ];
     }
   }
 
