@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 export enum CONFIG_VALUE {
   PORTAL_MAINTENANCE_MODE = 'portal_maintenance_mode',
+  APP_MAINTENANCE_BANNER = 'app_maintenance_banner',
 }
 
 @Entity()

@@ -7,25 +7,36 @@
   justify-content: space-between;
 }
 
+.toggle-label {
+  font-weight: 700;
+}
+
 .toggle {
   display: flex;
   align-items: center;
   gap: 4px;
   color: colors.$black;
+  font-weight: 700;
 }
 
 .inactive {
   color: colors.$grey;
+  font-weight: 400;
 }
 
 :host::ng-deep {
   .toggle {
+    mat-label {
+      margin-right: 8px;
+    }
+
     & .mdc-form-field {
       display: flex;
     }
 
     & .mdc-label {
       font-size: 16px;
+      padding-left: 12px;
     }
 
     & .mat-mdc-slide-toggle .mdc-form-field {
@@ -34,6 +45,10 @@
 
     & .mat-mdc-slide-toggle-checked .mdc-form-field {
       color: colors.$black;
+
+      .mdc-label {
+        font-weight: 700 !important;
+      }
     }
   }
 }

@@ -1,7 +1,19 @@
 <div class="container">
   <h2>Maintenance</h2>
   <div class="row">
-    <div id="maintenanceModeLabel">Maintenance Mode (Portal, Public Search)</div>
+    <div class="toggle-label" id="maintenanceBannerLabel">Banner (ALCS, Portal, Public Search)</div>
+    <div class="toggle">
+      <mat-label [ngClass]="{ inactive: maintenanceBanner }">Off</mat-label>
+      <mat-slide-toggle
+        [(ngModel)]="maintenanceBanner"
+        (change)="onToggleMaintenanceBanner()"
+        aria-labelledby="maintenanceBannerLabel"
+        >On</mat-slide-toggle
+      >
+    </div>
+  </div>
+  <div class="row">
+    <div class="toggle-label" id="maintenanceModeLabel">Maintenance Mode (Portal, Public Search)</div>
     <div class="toggle">
       <mat-label [ngClass]="{ inactive: maintenanceMode }">Off</mat-label>
       <mat-slide-toggle
