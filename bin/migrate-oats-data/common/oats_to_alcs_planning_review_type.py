@@ -1,5 +1,8 @@
 from enum import Enum
-from .alcs_planning_review_enum import AlcsPlanningReviewTypes
+from .alcs_planning_review_enum import (
+    AlcsPlanningReviewTypes,
+    AlcsPlanningReviewOutcomes,
+)
 
 
 class OatsToAlcsPlanningReviewType(Enum):
@@ -15,3 +18,10 @@ class OatsToAlcsPlanningReviewType(Enum):
     UTIL = "UEPP"
     AAP = "AAPP"
     APC = "MISC"
+
+
+class OatsToAlcsDecisionOutcomes(Enum):
+    END = AlcsPlanningReviewOutcomes.ENDO
+    NOTEND = AlcsPlanningReviewOutcomes.NEND
+    PART = AlcsPlanningReviewOutcomes.PEND
+    UNC = AlcsPlanningReviewOutcomes.OTHR

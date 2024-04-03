@@ -95,7 +95,7 @@ def _update_base_fields(conn, batch_size, cursor, rows):
 _rx_items_query = """
                     UPDATE alcs.card 
                     SET board_uuid = %(board_uuid)s,
-                    audit_updated_by = %(audit_updated_by)s,
+                    audit_updated_by = %(audit_updated_by)s
                     WHERE alcs.card.uuid = %(uuid)s
 """
 
