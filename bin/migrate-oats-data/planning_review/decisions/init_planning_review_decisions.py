@@ -17,7 +17,7 @@ logger = setup_and_get_logger(etl_name)
 @inject_conn_pool
 def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for populating alcs.planning_referral in ALCS.
+    This function is responsible for populating alcs.planning_review_decision in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -38,7 +38,7 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
         failed_inserts_count = 0
         successful_inserts_count = 0
-        last_planning_review_id = 0
+        last_planning_decision_id = 0
 
         with open(
             "planning_review/sql/decisions/planning_review_decisions_insert.sql",
@@ -50,7 +50,7 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 cursor.execute(
                     f"""
                         {query} 
-                        WHERE opd.planning_decision_id > {last_planning_review_id} ORDER BY opd.planning_decision_id;
+                        WHERE opd.planning_decision_id > {last_planning_decision_id} ORDER BY opd.planning_decision_id;
                     """
                 )
 
@@ -64,19 +64,19 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     successful_inserts_count = successful_inserts_count + len(
                         inserted_data
                     )
-                    last_planning_review_id = dict(inserted_data[-1])[
+                    last_planning_decision_id = dict(inserted_data[-1])[
                         "planning_decision_id"
                     ]
 
                     logger.debug(
-                        f"Retrieved/updated items count: {len(inserted_data)}; total successfully inserted planning referral so far {successful_inserts_count}; last updated planning_decision_id: {last_planning_review_id}"
+                        f"Retrieved/updated items count: {len(inserted_data)}; total successfully inserted planning referral so far {successful_inserts_count}; last updated planning_decision_id: {last_planning_decision_id}"
                     )
                 except Exception as err:
-                    # this is NOT going to be caused by actual data insert failure. This code is only executed when the code error appears or connection to DB is lost
+
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts_count = count_total - successful_inserts_count
-                    last_planning_review_id = last_planning_review_id + 1
+                    last_planning_decision_id = last_planning_decision_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts_count}"
@@ -148,17 +148,16 @@ def _map_date(data):
 
 def _map_outcome_code(data):
     oats_code = data.get("planning_acceptance_code", "")
-    try:
-        alcs_name = OatsToAlcsDecisionOutcomes[oats_code].value.value
+    if any(oats_code == item.name for item in OatsToAlcsDecisionOutcomes):
+        alcs_value = OatsToAlcsDecisionOutcomes[oats_code].value
         for outcome in AlcsPlanningReviewOutcomes:
-            if outcome.value == alcs_name:
+            if outcome.value == alcs_value:
                 return outcome.name
-    except KeyError:
-        file_number = data.get("planning_decision_id")
-        logger.info(
-            f"Key Error for{file_number}, no match to {oats_code} in ALCS, Override to OTHR"
-        )
-        return "OTHR"
+    file_number = data.get("planning_decision_id")
+    logger.info(
+        f"Key Error for planning_decision_id {file_number}, no match to {oats_code} in ALCS, Override to OTHR"
+    )
+    return "OTHR"
 
 
 def _map_resolution_year(data):
@@ -171,9 +170,6 @@ def _map_resolution_year(data):
         date_object = full_date
     year = date_object.year
     return year
-    # date_object = datetime.strptime(full_date, "%Y-%m-%d %H:%M:%S.%f")
-    # year = date_object.year
-    # return year
 
 
 @inject_conn_pool

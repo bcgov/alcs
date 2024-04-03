@@ -21,7 +21,7 @@ class OatsToAlcsPlanningReviewType(Enum):
 
 
 class OatsToAlcsDecisionOutcomes(Enum):
-    END = AlcsPlanningReviewOutcomes.ENDO
-    NOTEND = AlcsPlanningReviewOutcomes.NEND
-    PART = AlcsPlanningReviewOutcomes.PEND
-    UNC = AlcsPlanningReviewOutcomes.OTHR
+    END = AlcsPlanningReviewOutcomes.ENDO.value
+    NOTEND = AlcsPlanningReviewOutcomes.NEND.value
+    PART = AlcsPlanningReviewOutcomes.PEND.value
+    UNC = AlcsPlanningReviewOutcomes.OTHR.value
