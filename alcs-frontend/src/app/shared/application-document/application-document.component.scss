@@ -60,6 +60,22 @@ a {
   }
 }
 
+.draggable {
+  cursor: grab;
+
+  &:hover {
+    background-color: rgba(colors.$grey-light, 0.5) !important;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.selected {
+  background-color: colors.$grey-light !important;
+}
+
 .drag-cell {
   cursor: grab;
 

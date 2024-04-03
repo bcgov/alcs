@@ -23,6 +23,7 @@ export class ApplicationDocumentComponent implements OnChanges {
   documents: ApplicationDocumentDto[] = [];
   dataSource = new MatTableDataSource<ApplicationDocumentDto>([]);
   overlayRef: OverlayRef | null = null;
+  selectedRecord: string | undefined;
 
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
@@ -63,6 +64,7 @@ export class ApplicationDocumentComponent implements OnChanges {
     }
     this.overlayRef?.detach();
     $event.preventDefault();
+    this.selectedRecord = record.uuid;
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo({ x: $event.x, y: $event.y })
@@ -91,12 +93,19 @@ export class ApplicationDocumentComponent implements OnChanges {
     const currentIndex = this.documents.findIndex((item) => item.uuid === record.uuid);
     this.moveItem(currentIndex, this.documents.length - 1);
     this.overlayRef?.detach();
+    this.selectedRecord = undefined;
   }
 
   sendToTop(record: ApplicationDocumentDto) {
     const currentIndex = this.documents.findIndex((item) => item.uuid === record.uuid);
     this.moveItem(currentIndex, 0);
     this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
+
+  clearMenu() {
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
   }
 
   private moveItem(currentIndex: number, targetIndex: number) {
