@@ -1,4 +1,7 @@
-from documents.post_launch import import_documents, clean_documents
+from documents.post_launch import (
+    import_documents,
+    clean_documents,
+)
 from srw.post_launch.srw_migration import srw_survey_plan_update
 
 

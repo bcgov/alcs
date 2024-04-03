@@ -12,6 +12,7 @@ from .command_parser.document_command_parser import (
     application_document_import_command_parser,
     document_noi_import_command_parser,
     noi_document_import_command_parser,
+    document_clean_command_parser,
 )
 from .command_parser.user_command_parser import (
     user_import_command_parser,
@@ -56,6 +57,7 @@ def setup_menu_args_parser(import_batch_size):
     application_import_command_parser(import_batch_size, subparsers)
     app_clean_command_parser(subparsers)
     document_import_command_parser(import_batch_size, subparsers)
+    document_clean_command_parser(subparsers)
     application_document_import_command_parser(import_batch_size, subparsers)
     noi_import_command_parser(import_batch_size, subparsers)
     noi_clean_command_parser(subparsers)

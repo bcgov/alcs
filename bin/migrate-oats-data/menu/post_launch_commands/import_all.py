@@ -4,6 +4,9 @@ from noi.post_launch import (
 )
 from srw.post_launch.srw_migration import process_srw, srw_survey_plan_update
 from documents.post_launch.migrate_documents import import_documents
+from planning_review.migrate_planning_review import (
+    process_planning_review,
+)
 
 
 def import_all(console, args):
@@ -29,5 +32,8 @@ def import_all(console, args):
         console.log("Process SRW Updates")
         # These are updates that need to happen after the SRW document import
         srw_survey_plan_update(batch_size=import_batch_size)
+
+        console.log("Process Planning Reviews")
+        process_planning_review(batch_size=import_batch_size)
 
         console.log("Done")
