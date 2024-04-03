@@ -24,6 +24,7 @@ export class EvidentiaryRecordComponent implements OnChanges {
   documents: PlanningReviewDocumentDto[] = [];
   dataSource = new MatTableDataSource<PlanningReviewDocumentDto>([]);
   overlayRef: OverlayRef | null = null;
+  selectedRecord: string | undefined;
 
   constructor(
     private planningReviewDocumentService: PlanningReviewDocumentService,
@@ -62,6 +63,7 @@ export class EvidentiaryRecordComponent implements OnChanges {
     if (!this.sortable) {
       return;
     }
+    this.selectedRecord = record.uuid;
     this.overlayRef?.detach();
     $event.preventDefault();
     const positionStrategy = this.overlay
@@ -92,12 +94,19 @@ export class EvidentiaryRecordComponent implements OnChanges {
     const currentIndex = this.documents.findIndex((item) => item.uuid === record.uuid);
     this.moveItem(currentIndex, this.documents.length - 1);
     this.overlayRef?.detach();
+    this.selectedRecord = undefined;
   }
 
   sendToTop(record: ApplicationDocumentDto) {
     const currentIndex = this.documents.findIndex((item) => item.uuid === record.uuid);
     this.moveItem(currentIndex, 0);
     this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
+
+  clearMenu() {
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
   }
 
   private moveItem(currentIndex: number, targetIndex: number) {

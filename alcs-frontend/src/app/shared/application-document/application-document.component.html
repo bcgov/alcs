@@ -70,7 +70,12 @@
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr
     (contextmenu)="openMenu($event, row)"
+    (mousedown)="clearMenu()"
     *matRowDef="let row; columns: displayedColumns"
+    [ngClass]="{
+      draggable: sortable,
+      selected: row.uuid === selectedRecord
+    }"
     cdkDrag
     cdkDragLockAxis="y"
     mat-row
