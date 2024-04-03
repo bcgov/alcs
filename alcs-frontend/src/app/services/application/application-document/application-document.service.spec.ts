@@ -156,5 +156,7 @@ describe('ApplicationDocumentService', () => {
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res.uuid).toEqual('1');
   });
 });

@@ -64,7 +64,7 @@ describe('ApplicationDecisionConditionService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
-  it('should make an http get and show a success toast when fetchPlanNumbers succeeds', async () => {
+  it('should make an http get for fetchPlanNumbers', async () => {
     mockHttpClient.get.mockReturnValue(
       of({
         applicationFileNumber: '1',
