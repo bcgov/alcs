@@ -1,6 +1,5 @@
 import { AutoMap } from 'automapper-classes';
 import { IsOptional, IsUUID } from 'class-validator';
-import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { AssigneeDto } from '../../../user/user.dto';
 import { PlanningReviewTypeDto } from '../../planning-review/planning-review.dto';
 import { CardDto } from '../card.dto';
@@ -8,7 +7,6 @@ import { CardDto } from '../card.dto';
 export enum PARENT_TYPE {
   APPLICATION = 'application',
   RECONSIDERATION = 'reconsideration',
-  COVENANT = 'covenant',
   MODIFICATION = 'modification',
   PLANNING_REVIEW = 'planning-review',
   NOTICE_OF_INTENT = 'notice-of-intent',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { CeoCriterionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
+import { CeoCriterionDto } from '../../../services/application/decision/application-decision-v2/application-decision.dto';
 import { CeoCriterionService } from '../../../services/ceo-criterion/ceo-criterion.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CeoCriterionDialogComponent } from './ceo-criterion-dialog/ceo-criterion-dialog.component';
@@ -20,7 +20,7 @@ export class CeoCriterionComponent implements OnInit {
   constructor(
     private ceoCriterionService: CeoCriterionService,
     public dialog: MatDialog,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {

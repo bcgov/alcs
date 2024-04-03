@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NoticeOfIntentDecisionProfile } from '../../common/automapper/notice-of-intent-decision.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
+import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
 import { NoticeOfIntentSubmissionStatusModule } from '../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.module';
@@ -16,8 +17,6 @@ import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-con
 import { NoticeOfIntentDecisionConditionService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { NoticeOfIntentDecisionDocument } from './notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
 import { NoticeOfIntentDecisionOutcome } from './notice-of-intent-decision-outcome.entity';
-import { NoticeOfIntentDecisionV1Controller } from './notice-of-intent-decision-v1/notice-of-intent-decision-v1.controller';
-import { NoticeOfIntentDecisionV1Service } from './notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
 import { NoticeOfIntentDecisionV2Controller } from './notice-of-intent-decision-v2/notice-of-intent-decision-v2.controller';
 import { NoticeOfIntentDecisionV2Service } from './notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentDecision } from './notice-of-intent-decision.entity';
@@ -25,7 +24,6 @@ import { NoticeOfIntentModificationOutcomeType } from './notice-of-intent-modifi
 import { NoticeOfIntentModificationController } from './notice-of-intent-modification/notice-of-intent-modification.controller';
 import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentModificationService } from './notice-of-intent-modification/notice-of-intent-modification.service';
-import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.module';
 
 @Module({
   imports: [
@@ -48,8 +46,6 @@ import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-su
     forwardRef(() => NoticeOfIntentSubmissionModule),
   ],
   providers: [
-    //These are in the same module, so be careful to import the correct one
-    NoticeOfIntentDecisionV1Service,
     NoticeOfIntentDecisionV2Service,
     NoticeOfIntentDecisionComponentService,
     NoticeOfIntentDecisionConditionService,
@@ -57,16 +53,11 @@ import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-su
     NoticeOfIntentModificationService,
   ],
   controllers: [
-    NoticeOfIntentDecisionV1Controller,
     NoticeOfIntentDecisionV2Controller,
     NoticeOfIntentModificationController,
     NoticeOfIntentDecisionComponentController,
     NoticeOfIntentDecisionConditionController,
   ],
-  exports: [
-    NoticeOfIntentModificationService,
-    NoticeOfIntentDecisionV1Service,
-    NoticeOfIntentDecisionV2Service,
-  ],
+  exports: [NoticeOfIntentModificationService, NoticeOfIntentDecisionV2Service],
 })
 export class NoticeOfIntentDecisionModule {}

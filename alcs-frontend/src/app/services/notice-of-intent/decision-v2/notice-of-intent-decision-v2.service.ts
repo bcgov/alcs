@@ -11,7 +11,7 @@ import {
   NoticeOfIntentDecisionDto,
   NoticeOfIntentDecisionWithLinkedResolutionDto,
   UpdateNoticeOfIntentDecisionDto,
-} from '../decision/notice-of-intent-decision.dto';
+} from './notice-of-intent-decision.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -23,13 +23,16 @@ export class NoticeOfIntentDecisionV2Service {
   $decision = new BehaviorSubject<NoticeOfIntentDecisionDto | undefined>(undefined);
   $decisions = new BehaviorSubject<NoticeOfIntentDecisionWithLinkedResolutionDto[]>([]);
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetchByFileNumber(fileNumber: string) {
     let decisions: NoticeOfIntentDecisionDto[] = [];
     try {
       decisions = await firstValueFrom(
-        this.http.get<NoticeOfIntentDecisionDto[]>(`${this.url}/notice-of-intent/${fileNumber}`)
+        this.http.get<NoticeOfIntentDecisionDto[]>(`${this.url}/notice-of-intent/${fileNumber}`),
       );
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
@@ -107,7 +110,7 @@ export class NoticeOfIntentDecisionV2Service {
       await firstValueFrom(
         this.http.patch(`${this.url}/${decisionUuid}/file/${documentUuid}`, {
           fileName,
-        })
+        }),
       );
       this.toastService.showSuccessToast('File updated');
     } catch (err) {

@@ -8,7 +8,7 @@ import {
   NOI_DECISION_COMPONENT_TYPE,
   NoticeOfIntentDecisionDto,
   NoticeOfIntentDecisionOutcomeCodeDto,
-} from '../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -60,7 +60,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private noticeOfIntentDecisionComponentService: NoticeOfIntentDecisionComponentService,
     private router: Router,
     private activatedRouter: ActivatedRoute,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
   ) {}
 
   ngOnInit(): void {

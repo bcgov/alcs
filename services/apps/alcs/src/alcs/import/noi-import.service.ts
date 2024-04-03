@@ -9,7 +9,7 @@ import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { BoardService } from '../board/board.service';
 import { CardService } from '../card/card.service';
 import { LocalGovernmentService } from '../local-government/local-government.service';
-import { NoticeOfIntentDecisionV1Service } from '../notice-of-intent-decision/notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
+import { NoticeOfIntentDecisionV2Service } from '../notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentMeetingService } from '../notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentSubtype } from '../notice-of-intent/notice-of-intent-subtype.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -82,7 +82,7 @@ export class NoticeOfIntentImportService {
     private boardService: BoardService,
     private localGovernmentService: LocalGovernmentService,
     private cardService: CardService,
-    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV1Service,
+    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV2Service,
   ) {}
 
   importNoiCsv() {
@@ -96,7 +96,6 @@ export class NoticeOfIntentImportService {
       const filePath = path.resolve(__dirname, '..', 'NOI_Import.csv');
       const stream = fs.createReadStream(filePath);
       const processing: Promise<any>[] = [];
-      let i = 0;
       stream
         .pipe(csv())
         .on('data', (data) => {
@@ -110,7 +109,6 @@ export class NoticeOfIntentImportService {
 
           const promise = this.parseRow(data, mapping);
           processing.push(promise);
-          i++;
         })
         .on('end', () => {
           Promise.all(processing).then(() => {
@@ -141,9 +139,8 @@ export class NoticeOfIntentImportService {
         mappedRow.cityOrDistrict.trim(),
       );
 
-      const localGovernment = await this.localGovernmentService.getByName(
-        mappedGovernmentName,
-      );
+      const localGovernment =
+        await this.localGovernmentService.getByName(mappedGovernmentName);
 
       if (!localGovernment) {
         this.logger.error(

@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   ApplicationModificationDto,
   ApplicationModificationUpdateDto,
 } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
-import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
+import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
@@ -39,8 +39,8 @@ export class EditModificationDialogComponent implements OnInit {
     },
     private dialogRef: MatDialogRef<EditModificationDialogComponent>,
     private modificationService: ApplicationModificationService,
-    private decisionService: ApplicationDecisionService,
-    private toastService: ToastService
+    private decisionService: ApplicationDecisionV2Service,
+    private toastService: ToastService,
   ) {
     this.form.patchValue({
       submittedDate: new Date(data.existingModification.submittedDate),

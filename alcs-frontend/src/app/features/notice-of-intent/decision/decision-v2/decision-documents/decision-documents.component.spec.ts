@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
-import { NoticeOfIntentDecisionDto } from '../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionDto } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 import { DecisionDocumentsComponent } from './decision-documents.component';

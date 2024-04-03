@@ -8,7 +8,7 @@ import {
   PfrsDecisionComponentDto,
   PofoDecisionComponentDto,
   RosoDecisionComponentDto,
-} from '../../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';

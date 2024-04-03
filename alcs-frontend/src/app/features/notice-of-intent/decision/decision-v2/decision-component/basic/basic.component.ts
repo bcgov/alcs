@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NoticeOfIntentDecisionComponentDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionComponentDto } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-noi-basic',

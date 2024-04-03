@@ -15,7 +15,7 @@ import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
-import { NoticeOfIntentDecisionV1Service } from '../notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
+import { NoticeOfIntentDecisionV2Service } from '../notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
 import {
   NoticeOfIntentModificationCreateDto,
   NoticeOfIntentModificationDto,
@@ -25,15 +25,6 @@ import { NoticeOfIntentModification } from './notice-of-intent-modification.enti
 
 @Injectable()
 export class NoticeOfIntentModificationService {
-  constructor(
-    @InjectRepository(NoticeOfIntentModification)
-    private modificationRepository: Repository<NoticeOfIntentModification>,
-    @InjectMapper() private mapper: Mapper,
-    private noticeOfIntentService: NoticeOfIntentService,
-    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV1Service,
-    private cardService: CardService,
-  ) {}
-
   private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> =
     {
       noticeOfIntent: {
@@ -47,7 +38,6 @@ export class NoticeOfIntentModificationService {
         assignee: true,
       },
     };
-
   private DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> =
     {
       noticeOfIntent: {
@@ -64,6 +54,15 @@ export class NoticeOfIntentModificationService {
       resultingDecision: true,
       reviewOutcome: true,
     };
+
+  constructor(
+    @InjectRepository(NoticeOfIntentModification)
+    private modificationRepository: Repository<NoticeOfIntentModification>,
+    @InjectMapper() private mapper: Mapper,
+    private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV2Service,
+    private cardService: CardService,
+  ) {}
 
   getByBoard(boardUuid: string) {
     return this.modificationRepository.find({
@@ -167,20 +166,6 @@ export class NoticeOfIntentModificationService {
     return this.modificationRepository.softRemove([modification]);
   }
 
-  private async getByUuidOrFail(uuid: string) {
-    const modification = await this.modificationRepository.findOneBy({
-      uuid,
-    });
-
-    if (!modification) {
-      throw new ServiceNotFoundException(
-        `Modification with uuid ${uuid} not found`,
-      );
-    }
-
-    return modification;
-  }
-
   getByCardUuid(cardUuid: string) {
     return this.getOneByOrFail({ cardUuid });
   }
@@ -220,5 +205,19 @@ export class NoticeOfIntentModificationService {
         },
       },
     });
+  }
+
+  private async getByUuidOrFail(uuid: string) {
+    const modification = await this.modificationRepository.findOneBy({
+      uuid,
+    });
+
+    if (!modification) {
+      throw new ServiceNotFoundException(
+        `Modification with uuid ${uuid} not found`,
+      );
+    }
+
+    return modification;
   }
 }

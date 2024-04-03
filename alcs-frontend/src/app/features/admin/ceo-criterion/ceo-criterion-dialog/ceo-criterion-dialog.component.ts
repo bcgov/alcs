@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v1/application-decision.dto';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
 import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-criterion.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class CeoCriterionDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CeoCriterionDto | undefined,
     private dialogRef: MatDialogRef<CeoCriterionDialogComponent>,
-    private ceoCriterionService: CeoCriterionService
+    private ceoCriterionService: CeoCriterionService,
   ) {
     if (data) {
       this.description = data.description;
