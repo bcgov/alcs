@@ -11,7 +11,10 @@ import { Auditable } from '../../../../common/entities/audit.entity';
 import { Document } from '../../../../document/document.entity';
 import { PlanningReviewDecision } from '../planning-review-decision.entity';
 
-@Entity()
+@Entity({
+  comment:
+    "Links Planning Review decision document with the decision it's saved to",
+})
 export class PlanningReviewDecisionDocument extends Auditable {
   constructor(data?: Partial<PlanningReviewDecisionDocument>) {
     super();

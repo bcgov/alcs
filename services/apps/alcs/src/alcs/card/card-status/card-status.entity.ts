@@ -7,5 +7,7 @@ export enum CARD_STATUS {
   READY_FOR_REVIEW = 'READ',
 }
 
-@Entity()
+@Entity({
+  comment: 'Code table for possible kanban columns that cards can be in',
+})
 export class CardStatus extends BaseCodeEntity {}

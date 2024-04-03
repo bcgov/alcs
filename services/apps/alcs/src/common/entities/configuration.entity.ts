@@ -4,7 +4,7 @@ export enum CONFIG_VALUE {
   PORTAL_MAINTENANCE_MODE = 'portal_maintenance_mode',
 }
 
-@Entity()
+@Entity({ comment: 'Stores real time config values editable by ALCS Admin.' })
 export class Configuration extends BaseEntity {
   constructor(data?: Partial<Configuration>) {
     super();

@@ -4,7 +4,9 @@ import { Base } from '../../../common/entities/base.entity';
 import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
 
-@Entity()
+@Entity({
+  comment: 'Stores Transferees for Restrictive Covenant Applications',
+})
 export class CovenantTransferee extends Base {
   constructor(data?: Partial<CovenantTransferee>) {
     super();

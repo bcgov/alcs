@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/user.entity';
 
-@Entity()
+@Entity({ comment: 'In-app messages' })
 export class Message {
   constructor(data?: Partial<Message>) {
     if (data) {

@@ -2,7 +2,9 @@ import { Column, CreateDateColumn, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
 
-@Entity()
+@Entity({
+  comment: 'Attributes for documents including their ORCS classification',
+})
 export class Document extends Base {
   constructor(data?: Partial<Document>) {
     super();

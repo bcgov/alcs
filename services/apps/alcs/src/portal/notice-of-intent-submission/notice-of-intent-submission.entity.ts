@@ -29,7 +29,7 @@ export class ProposedStructure {
   area?: number | null;
 }
 
-@Entity()
+@Entity({ comment: 'Portal intake form fields for NOIs' })
 export class NoticeOfIntentSubmission extends Base {
   constructor(data?: Partial<NoticeOfIntentSubmission>) {
     super();

@@ -15,7 +15,7 @@ import { ColumnNumericTransformer } from '../../../utils/column-numeric-transfor
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
 
-@Entity()
+@Entity({ comment: 'Parcels associated with application submissions' })
 export class ApplicationParcel extends Base {
   constructor(data?: Partial<ApplicationParcel>) {
     super();

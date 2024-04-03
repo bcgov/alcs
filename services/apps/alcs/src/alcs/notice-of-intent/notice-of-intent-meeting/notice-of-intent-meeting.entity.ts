@@ -4,7 +4,9 @@ import { Base } from '../../../common/entities/base.entity';
 import { NoticeOfIntent } from '../notice-of-intent.entity';
 import { NoticeOfIntentMeetingType } from './notice-of-intent-meeting-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'Actions that un/pause NOIs',
+})
 export class NoticeOfIntentMeeting extends Base {
   constructor(data?: Partial<NoticeOfIntentMeeting>) {
     super();

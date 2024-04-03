@@ -17,7 +17,10 @@ import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationReconsiderationOutcomeType } from './reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Application reconsideration requests linked to card and application',
+})
 export class ApplicationReconsideration extends Base {
   constructor(data?: Partial<ApplicationReconsideration>) {
     super();

@@ -10,7 +10,9 @@ import {
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'Join table to link Notice of Intent Submissions to their Statuses',
+})
 export class NoticeOfIntentSubmissionToSubmissionStatus extends BaseEntity {
   constructor(data?: Partial<NoticeOfIntentSubmissionToSubmissionStatus>) {
     super();

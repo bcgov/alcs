@@ -47,7 +47,7 @@ export const DEFAULT_PUBLIC_TYPES = [
   DOCUMENT_TYPE.CROSS_SECTIONS,
 ];
 
-@Entity()
+@Entity({ comment: 'Code table for possible document types' })
 export class DocumentCode extends BaseCodeEntity {
   constructor(data?: Partial<DocumentCode>) {
     super();

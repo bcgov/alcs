@@ -5,7 +5,9 @@ import { CardType } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { BoardStatus } from './board-status.entity';
 
-@Entity()
+@Entity({
+  comment: 'Kanban boards that exist in ALCS',
+})
 export class Board extends Base {
   constructor(data?: Partial<Board>) {
     super();

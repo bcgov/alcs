@@ -19,7 +19,9 @@ export enum VISIBILITY_FLAG {
   GOVERNMENT = 'G',
 }
 
-@Entity()
+@Entity({
+  comment: 'Documents for Notifications',
+})
 export class NotificationDocument extends BaseEntity {
   constructor(data?: Partial<NotificationDocument>) {
     super();

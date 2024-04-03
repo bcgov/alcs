@@ -7,7 +7,10 @@ import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Contact information, type, and corporate summary document UUID for owner or primary contact',
+})
 export class ApplicationOwner extends Base {
   constructor(data?: Partial<ApplicationOwner>) {
     super();
@@ -105,7 +108,7 @@ export class ApplicationOwner extends Base {
   @Column({
     type: 'varchar',
     nullable: true,
-    default: null
+    default: null,
   })
   crownLandOwnerType?: string | null;
 }

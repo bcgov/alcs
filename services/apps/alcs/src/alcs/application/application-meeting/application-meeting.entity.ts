@@ -13,7 +13,7 @@ import { ApplicationMeetingType } from '../../code/application-code/application-
 import { ApplicationPaused } from '../application-paused.entity';
 import { Application } from '../application.entity';
 
-@Entity()
+@Entity({ comment: 'Actions that un/pause applications' })
 export class ApplicationMeeting extends Base {
   constructor(data?: Partial<ApplicationMeeting>) {
     super();
