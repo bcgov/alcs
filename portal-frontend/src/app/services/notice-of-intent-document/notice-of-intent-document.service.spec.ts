@@ -62,6 +62,15 @@ describe('NoticeOfIntentDocumentService', () => {
     expect(mockHttpClient.get.mock.calls[0][0]).toContain('notice-of-intent-document');
   });
 
+  it('should show an error toast if downloading a file fails', async () => {
+    mockHttpClient.get.mockReturnValue(throwError(() => ({})));
+
+    await service.downloadFile('fileId');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
   it('should make a delete request for delete file', async () => {
     mockHttpClient.delete.mockReturnValue(of({}));
 
@@ -113,6 +122,24 @@ describe('NoticeOfIntentDocumentService', () => {
     await service.deleteExternalFiles(['fileId']);
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should make a get request for getByFileId', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    await service.getByFileId('fileId');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.get.mock.calls[0][0]).toContain('notice-of-intent-document');
+  });
+
+  it('should show an error toast if getByFileId fails', async () => {
+    mockHttpClient.get.mockReturnValue(throwError(() => ({})));
+
+    await service.getByFileId('fileId');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });

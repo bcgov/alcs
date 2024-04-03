@@ -131,4 +131,51 @@ describe('InboxService', () => {
     expect(res).toBeUndefined();
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
+
+  it('should fetch Notifications advanced search results by AdvancedSearchRequestDto', async () => {
+    mockHttpClient.post.mockReturnValue(of(mockSearchEntityResult));
+
+    const res = await service.searchNotifications(mockSearchRequestDto);
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res?.total).toEqual(0);
+    expect(res?.data).toEqual([]);
+  });
+
+  it('should show an error toast message if Notification advanced search fails', async () => {
+    mockHttpClient.post.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    const res = await service.searchNotifications(mockSearchRequestDto);
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeUndefined();
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call get for listing statuses', async () => {
+    mockHttpClient.get.mockReturnValue(of([]));
+
+    const res = await service.listStatuses();
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should show an error toast message if listing statuses fails', async () => {
+    mockHttpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    const res = await service.listStatuses();
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
 });
