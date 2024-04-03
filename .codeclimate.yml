@@ -45,3 +45,8 @@ exclude_patterns:
   - "**/migrations/"
   - "**/*.spec.ts"
   - "**/*.d.ts"
+  - "**/*.dto.ts"
+  - "**/*.module.ts",
+  - "**/commands/"
+  - "**/import/"
+  - "**/*.entity.ts"

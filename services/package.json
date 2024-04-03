@@ -124,7 +124,12 @@
       "!**/*.module.ts",
       "!**/main.ts",
       "!**/mockTypes.ts",
-      "!**/*orm.config.ts"
+      "!**/*orm.config.ts",
+      "!**/commands/**",
+      "!**/test/**",
+      "!**/import/**",
+      "!**/*.dto.ts",
+      "!**/*.entity.ts"
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
