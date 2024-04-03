@@ -35,16 +35,48 @@ describe('ApplicationDocumentService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should make a get call for list', async () => {
+  it('should make a get call for fetchTypes', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          code: '1',
+        },
+      ]),
+    );
+
+    const res = await service.fetchTypes();
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0].code).toEqual('1');
+  });
+
+  it('should make a get call for listByVisibility', async () => {
     httpClient.get.mockReturnValue(
       of([
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     const res = await service.listByVisibility('1', []);
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0].uuid).toEqual('1');
+  });
+
+  it('should make a get call for getApplicantDocuments', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          uuid: '1',
+        },
+      ]),
+    );
+
+    const res = await service.getApplicantDocuments('1');
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
@@ -55,7 +87,7 @@ describe('ApplicationDocumentService', () => {
     httpClient.delete.mockReturnValue(
       of({
         uuid: '1',
-      })
+      }),
     );
 
     const res = await service.delete('1');
@@ -87,7 +119,7 @@ describe('ApplicationDocumentService', () => {
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     const res = await service.getReviewDocuments('1');
@@ -101,11 +133,30 @@ describe('ApplicationDocumentService', () => {
     httpClient.post.mockReturnValue(
       of({
         uuid: '1',
-      })
+      }),
     );
 
     await service.updateSort([]);
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
+  });
+
+  it('should make a post call for update', async () => {
+    httpClient.post.mockReturnValue(
+      of({
+        uuid: '1',
+      }),
+    );
+
+    const res = await service.update('uuid', {
+      fileName: '',
+      source: DOCUMENT_SOURCE.APPLICANT,
+      typeCode: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      visibilityFlags: [],
+    });
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res.uuid).toEqual('1');
   });
 });

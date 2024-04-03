@@ -25,19 +25,6 @@ export class ApplicationSubmissionService {
     }
   }
 
-  async setSubmissionStatus(fileNumber: string, statusCode: string): Promise<ApplicationSubmissionDto> {
-    try {
-      return firstValueFrom(
-        this.http.patch<ApplicationSubmissionDto>(`${this.baseUrl}/${fileNumber}/update-status`, {
-          statusCode,
-        }),
-      );
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to update Application Submission Status');
-      throw e;
-    }
-  }
-
   update(fileNumber: string, update: UpdateApplicationSubmissionDto) {
     try {
       return firstValueFrom(this.http.patch<ApplicationSubmissionDto>(`${this.baseUrl}/${fileNumber}`, update));
