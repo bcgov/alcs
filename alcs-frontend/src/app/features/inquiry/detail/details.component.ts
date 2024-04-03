@@ -59,16 +59,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async loadTypes() {
-    const types = await this.inquiryService.fetchTypes();
-    if (types) {
-      this.types = types.map((type) => ({
-        label: type.label,
-        value: type.code,
-      }));
-    }
-  }
-
   async onSaveSubmittedToALC($event: number) {
     if (this.inquiry) {
       await this.inquiryDetailService.update(this.inquiry.fileNumber, {
@@ -77,11 +67,21 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onSaveTextField($event: string | null, inquirerFirstName: keyof UpdateInquiryDto) {
+  async onSaveTextField($event: string | null | string[], key: keyof UpdateInquiryDto) {
     if (this.inquiry) {
       await this.inquiryDetailService.update(this.inquiry.fileNumber, {
-        [inquirerFirstName]: $event,
+        [key]: $event,
       });
+    }
+  }
+
+  private async loadTypes() {
+    const types = await this.inquiryService.fetchTypes();
+    if (types) {
+      this.types = types.map((type) => ({
+        label: type.label,
+        value: type.code,
+      }));
     }
   }
 }

@@ -39,7 +39,30 @@
   margin: 12px 0;
 }
 
-h2 {
+h2, h4 {
   color: colors.$black !important;
   margin-bottom: 18px !important;
+}
+
+.mat-mdc-table {
+  border-collapse: separate !important;
+  border-spacing: 0 8px !important;
+
+  .mat-mdc-cell {
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: calc(100vw - 840px);
+  }
+}
+
+.error {
+  display: flex;
+  color: colors.$error-color;
+  font-weight: bold;
+  text-wrap: wrap;
+
+  .mat-icon {
+    min-width: 24px;
+  }
 }

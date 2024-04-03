@@ -181,6 +181,14 @@ export class UpdateInquiryDto {
   @IsOptional()
   inquirerEmail?: string;
 
+  @IsString()
+  @IsOptional()
+  regionCode?: string;
+
+  @IsString()
+  @IsOptional()
+  localGovernmentUuid?: string;
+
   @IsOptional()
   @Type(() => InquiryParcelUpdateDto)
   parcels?: InquiryParcelUpdateDto[];

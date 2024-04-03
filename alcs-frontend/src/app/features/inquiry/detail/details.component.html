@@ -23,12 +23,20 @@
   <div class="two-item-row">
     <div>
       <div class="subheading2">Local/First Nation Government</div>
-      <app-inline-dropdown (save)="onSaveType($event)" [options]="governments" [value]="inquiry.localGovernmentUuid" />
+      <app-inline-dropdown
+        (save)="onSaveTextField($event, 'localGovernmentUuid')"
+        [options]="governments"
+        [value]="inquiry.localGovernmentUuid"
+      />
     </div>
 
     <div>
       <div class="subheading2">Region</div>
-      <app-inline-dropdown (save)="onSaveType($event)" [options]="regions" [value]="inquiry.regionCode" />
+      <app-inline-dropdown
+        (save)="onSaveTextField($event, 'regionCode')"
+        [options]="regions"
+        [value]="inquiry.regionCode"
+      />
     </div>
   </div>
 </section>
@@ -37,30 +45,34 @@
   <div class="two-item-row">
     <div>
       <div class="subheading2">First Name</div>
-      <app-inline-text [value]="inquiry.inquirerFirstName" (save)="onSaveTextField($event, 'inquirerFirstName')" />
+      <app-inline-text (save)="onSaveTextField($event, 'inquirerFirstName')" [value]="inquiry.inquirerFirstName" />
     </div>
 
     <div>
       <div class="subheading2">Last Name</div>
-      <app-inline-text [value]="inquiry.inquirerLastName" (save)="onSaveTextField($event, 'inquirerLastName')" />
+      <app-inline-text (save)="onSaveTextField($event, 'inquirerLastName')" [value]="inquiry.inquirerLastName" />
     </div>
 
     <div class="full-width">
       <div class="subheading2">Organization</div>
       <app-inline-text
-        [value]="inquiry.inquirerOrganization"
         (save)="onSaveTextField($event, 'inquirerOrganization')"
+        [value]="inquiry.inquirerOrganization"
       />
     </div>
 
     <div>
       <div class="subheading2">Phone</div>
-      <app-inline-text mask="(000) 000-0000" [value]="inquiry.inquirerPhone" (save)="onSaveTextField($event, 'inquirerPhone')" />
+      <app-inline-text
+        (save)="onSaveTextField($event, 'inquirerPhone')"
+        [value]="inquiry.inquirerPhone"
+        mask="(000) 000-0000"
+      />
     </div>
 
     <div>
       <div class="subheading2">Email</div>
-      <app-inline-text [value]="inquiry.inquirerEmail" (save)="onSaveTextField($event, 'inquirerEmail')" />
+      <app-inline-text (save)="onSaveTextField($event, 'inquirerEmail')" [value]="inquiry.inquirerEmail" />
     </div>
   </div>
 </section>

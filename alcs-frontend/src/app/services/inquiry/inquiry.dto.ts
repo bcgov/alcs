@@ -57,4 +57,6 @@ export interface UpdateInquiryDto {
   inquirerPhone?: string;
   inquirerEmail?: string;
   parcels?: InquiryParcelCreateDto[];
+  regionCode?: string;
+  localGovernmentUuid?: string;
 }
