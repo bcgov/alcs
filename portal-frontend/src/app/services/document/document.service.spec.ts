@@ -49,7 +49,7 @@ describe('DocumentService', () => {
     mockHttpClient.get.mockReturnValue(of({}));
 
     const res = await service.getUploadUrl('fileNumber', null);
-    expect(service).toBeTruthy();
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
   });
 
   it('should show a warning toast if the file is too large', async () => {
