@@ -95,7 +95,8 @@ def _update_base_fields(conn, batch_size, cursor, rows):
 _rx_items_query = """
                     UPDATE alcs.card 
                     SET board_uuid = %(board_uuid)s,
-                    audit_updated_by = %(audit_updated_by)s
+                    audit_updated_by = %(audit_updated_by)s,
+                    audit_deleted_date_at = %(deleted_date)s
                     WHERE alcs.card.uuid = %(uuid)s
 """
 
@@ -108,6 +109,7 @@ def _prepare_oats_planning_review_data(row_data_list):
                 "uuid": row["uuid"],
                 "board_uuid": "e7b18852-4f8f-419e-83e3-60e706b4a494",
                 "audit_updated_by": None,
+                "deleted_date": row["audit_created_at"],
             }
         )
 

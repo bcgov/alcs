@@ -35,3 +35,4 @@ def clean_planning_review():
     clean_planning_referrals()
     clean_planning_decisions()
     clean_initial_planning_review()
+    clean_planning_review_cards()
