@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UserDto } from './authentication.dto';
@@ -18,17 +18,19 @@ export interface ICurrentUser {
   providedIn: 'root',
 })
 export class AuthenticationService {
+  isInitialized = false;
+  $currentTokenUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+  $currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
+  currentUser: ICurrentUser | undefined;
   private token: string | undefined;
   private refreshToken: string | undefined;
   private expires: number | undefined;
   private refreshExpires: number | undefined;
 
-  isInitialized = false;
-  $currentTokenUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
-  $currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
-  currentUser: ICurrentUser | undefined;
-
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   async setTokens(token: string, refreshToken: string) {
     this.token = token;
@@ -46,7 +48,7 @@ export class AuthenticationService {
     this.$currentTokenUser.next(this.currentUser);
 
     console.debug(
-      `Token Successfully Refreshed, Expires at: ${new Date(this.expires)} Refresh at: ${new Date(this.refreshExpires)}`
+      `Token Successfully Refreshed, Expires at: ${new Date(this.expires)} Refresh at: ${new Date(this.refreshExpires)}`,
     );
 
     this.loadUser();
@@ -90,6 +92,14 @@ export class AuthenticationService {
     }
   }
 
+  async logout() {
+    const logoutUrl = await this.getLogoutUrl();
+    if (logoutUrl) {
+      this.clearTokens();
+      window.location.href = logoutUrl.url;
+    }
+  }
+
   private async loadTokenFromStorage(redirect = true) {
     const existingToken = localStorage.getItem(JWT_TOKEN_KEY);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
@@ -104,14 +114,6 @@ export class AuthenticationService {
     }
   }
 
-  async logout() {
-    const logoutUrl = await this.getLogoutUrl();
-    if (logoutUrl) {
-      this.clearTokens();
-      window.location.href = logoutUrl.url;
-    }
-  }
-
   private async isTokenValid(token: string) {
     try {
       await firstValueFrom(
@@ -120,7 +122,7 @@ export class AuthenticationService {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        }),
       );
       return true;
     } catch (e) {
@@ -136,7 +138,7 @@ export class AuthenticationService {
       this.http.get<{
         refresh_token: string;
         token: string;
-      }>(`${environment.apiUrl}/authorize/refresh?r=${refreshToken}`)
+      }>(`${environment.apiUrl}/authorize/refresh?r=${refreshToken}`),
     );
   }
 
