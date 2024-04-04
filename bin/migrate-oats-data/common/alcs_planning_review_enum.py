@@ -13,3 +13,10 @@ class AlcsPlanningReviewTypes(Enum):
     UEPP = "Utility/Energy Planning"
     ZBPP = "Zoning Bylaw"
     PARK = "Parks Planning"
+
+
+class AlcsPlanningReviewOutcomes(Enum):
+    ENDO = "Endorsed"
+    NEND = "Not Endorsed"
+    PEND = "Partially Endorsed"
+    OTHR = "Other"

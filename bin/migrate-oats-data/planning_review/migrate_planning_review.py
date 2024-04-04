@@ -14,6 +14,7 @@ from .referrals import (
     clean_planning_review_cards,
     update_planning_review_cards,
 )
+from .decisions import process_planning_review_decisions, clean_planning_decisions
 
 
 def process_planning_review(batch_size):
@@ -26,10 +27,12 @@ def process_planning_review(batch_size):
     process_planning_review_referral(batch_size)
     # planning review cards are updated to remove pr.uuid from audit_updated_by column as they are now matched by referrals
     update_planning_review_cards(batch_size)
+    process_planning_review_decisions(batch_size)
 
 
 def clean_planning_review():
     clean_planning_review_staff_journal()
     clean_planning_referrals()
-    clean_planning_review_cards()
+    clean_planning_decisions()
     clean_initial_planning_review()
+    clean_planning_review_cards()
