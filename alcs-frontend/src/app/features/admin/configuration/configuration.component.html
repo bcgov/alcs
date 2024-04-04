@@ -6,7 +6,7 @@
       <mat-label [ngClass]="{ inactive: maintenanceBanner }">Off</mat-label>
       <mat-slide-toggle
         [(ngModel)]="maintenanceBanner"
-        (change)="onToggleMaintenanceBanner()"
+        (change)="onToggleMaintenanceBanner($event)"
         aria-labelledby="maintenanceBannerLabel"
         >On</mat-slide-toggle
       >
