@@ -24,5 +24,5 @@ def planning_review_import(console, args):
 
 def planning_review_clean(console):
     logger.debug("Beginning OATS -> ALCS Planning Review import clean process")
-    with console.status("[bold green]SRW clean import...\n") as status:
+    with console.status("[bold green]Planning Review clean import...\n") as status:
         clean_planning_review()
