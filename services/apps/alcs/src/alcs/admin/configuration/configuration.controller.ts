@@ -47,4 +47,10 @@ export class ConfigurationController {
       'Unable to set config that is not programmed',
     );
   }
+
+  // TODO: Update controller with maintenance status and message retrieval
+  // @Get('/maintenance-banner')
+  // async getMaintenanceBanner() {
+  //   return await this.configurationService.getMaintenaceBanner();
+  // }
 }

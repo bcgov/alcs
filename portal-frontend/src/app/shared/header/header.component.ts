@@ -27,8 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
-    private maintenanceService: MaintenanceService
+    private changeDetectorRef: ChangeDetectorRef // private maintenanceService: MaintenanceService
   ) {}
 
   ngOnInit(): void {
@@ -38,14 +37,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.maintenanceService.$showBanner.pipe(takeUntil(this.$destroy)).subscribe((value) => {
-      this.showMaintenanceBanner = value;
-    });
+    // this.setMaintenanceBanner();
+
+    // this.maintenanceService.$showBanner.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+    //   this.showMaintenanceBanner = value;
+    // });
 
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {
       const url = window.location.href;
       this.isOnPublicPage = url.includes('public');
     });
+  }
+
+  async setMaintenanceBanner() {
+    // TODO: Check banner status and set message from maintenance service
   }
 
   async onLogout() {

@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class MaintenanceService {
-  private baseUrl = `${environment.apiUrl}/inbox`;
+  private baseUrl = environment.apiUrl;
   private showBanner = new BehaviorSubject<boolean>(false);
 
   $showBanner = this.showBanner.asObservable();
@@ -16,11 +16,21 @@ export class MaintenanceService {
 
   async check() {
     try {
-      return await firstValueFrom(this.http.get<string>(`${this.baseUrl}`));
+      return await firstValueFrom(this.http.get<string>(`${this.baseUrl}/inbox`));
     } catch (e) {
       return undefined;
     }
   }
+
+  // TODO: Add emthod to retrieve banner status and message
+  // async checkBanner() {
+  //   try {
+  //     return await firstValueFrom(this.http.get<any>(`${this.baseUrl}/configuration/maintenance-banner`));
+  //   } catch (e) {
+  //     console.error(e);
+  //     return undefined;
+  //   }
+  // }
 
   // TODO: Add test
   setShowBanner(showBanner: boolean) {
