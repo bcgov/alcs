@@ -36,6 +36,10 @@
         <mat-form-field *ngIf="isEditing" appearance="outline">
           <input [(ngModel)]="parcels[i].pid" [ngModelOptions]="{ standalone: true }" mask="000-000-000" matInput />
         </mat-form-field>
+        <mat-error *ngIf="parcels[i].pid && parcels[i].pid!.length > 0 && parcels[i].pid!.length < 9" class="error">
+          <mat-icon color="warn">warning</mat-icon>
+          PID must be 9 digits including leading zeroes
+        </mat-error>
       </td>
     </ng-container>
 
