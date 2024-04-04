@@ -143,4 +143,25 @@ describe('NoticeOfIntentDecisionConditionService', () => {
     expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
     expect(mockNOIDecisionConditionRepository.save).toBeCalledTimes(0);
   });
+
+  it('should update on the repo for update', async () => {
+    const existingCondition = new NoticeOfIntentDecisionCondition();
+    mockNOIDecisionConditionRepository.update.mockResolvedValue({} as any);
+    mockNOIDecisionConditionRepository.findOneOrFail.mockResolvedValue(
+      existingCondition,
+    );
+
+    const result = await service.update(existingCondition, {
+      administrativeFee: 50,
+    });
+
+    expect(result).toBeDefined();
+    expect(mockNOIDecisionConditionRepository.update).toBeCalledTimes(1);
+    expect(
+      mockNOIDecisionConditionRepository.update.mock.calls[0][1][
+        'administrativeFee'
+      ],
+    ).toEqual(50);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
+  });
 });
