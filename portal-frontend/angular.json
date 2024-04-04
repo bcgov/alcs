@@ -23,10 +23,17 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules"]
+              "includePaths": [
+                "node_modules"
+              ]
             },
             "scripts": []
           },
@@ -72,10 +79,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "portal-frontend:build:production"
+              "buildTarget": "portal-frontend:build:production"
             },
             "development": {
-              "browserTarget": "portal-frontend:build:development"
+              "buildTarget": "portal-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,17 +90,26 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "portal-frontend:build"
+            "buildTarget": "portal-frontend:build"
           }
         },
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "polyfills": ["src/polyfills.ts"],
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": ["scss"],
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "inlineStyleLanguage": [
+              "scss"
+            ],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": [],
             "detectOpenHandles": true,
             "forceExit": true
@@ -102,7 +118,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
