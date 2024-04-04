@@ -19,12 +19,18 @@ from .oats_documents_to_alcs_documents_planning_review import (
 def import_documents(batch_size):
     import_oats_srw_documents(batch_size)
     link_srw_documents(batch_size)
-    import_oats_pr_documents(batch_size),
-    link_pr_documents(batch_size)
 
 
 def clean_documents():
     clean_notification_documents()
-    clean_planning_review_documents()
     document_clean()
+
+
+def import_documents_pr_inq(batch_size):
+    import_oats_pr_documents(batch_size)
+    link_pr_documents(batch_size)
+
+
+def clean_documents_pr_inq():
+    clean_planning_review_documents()
     document_pr_clean()
