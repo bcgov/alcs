@@ -5,6 +5,7 @@ import { AutomapperModule } from 'automapper-nestjs';
 import { ApplicationModificationService } from '../../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../../application/application.service';
+import { InquiryService } from '../../inquiry/inquiry.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../../notification/notification.service';
@@ -21,6 +22,7 @@ describe('UnarchiveCardService', () => {
   let mockNOIService: DeepMocked<NoticeOfIntentService>;
   let mockNOIModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let mockNotificationService: DeepMocked<NoticeOfIntentService>;
+  let mockInquiryService: DeepMocked<InquiryService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -30,6 +32,7 @@ describe('UnarchiveCardService', () => {
     mockNOIService = createMock();
     mockNOIModificationService = createMock();
     mockNotificationService = createMock();
+    mockInquiryService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -67,6 +70,10 @@ describe('UnarchiveCardService', () => {
           provide: NotificationService,
           useValue: mockNotificationService,
         },
+        {
+          provide: InquiryService,
+          useValue: mockInquiryService,
+        },
       ],
     }).compile();
 
@@ -85,6 +92,7 @@ describe('UnarchiveCardService', () => {
     mockNOIService.getDeletedCards.mockResolvedValue([]);
     mockNOIModificationService.getDeletedCards.mockResolvedValue([]);
     mockNotificationService.getDeletedCards.mockResolvedValue([]);
+    mockInquiryService.getDeletedCards.mockResolvedValue([]);
 
     await service.fetchByFileId('uuid');
 
@@ -97,5 +105,6 @@ describe('UnarchiveCardService', () => {
     expect(mockNOIService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockNOIModificationService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockNotificationService.getDeletedCards).toHaveBeenCalledTimes(1);
+    expect(mockInquiryService.getDeletedCards).toHaveBeenCalledTimes(1);
   });
 });
