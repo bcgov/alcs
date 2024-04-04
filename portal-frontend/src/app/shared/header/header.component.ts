@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { UserDto } from '../../services/authentication/authentication.dto';
-import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { MaintenanceService } from '../../services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-header',
@@ -19,10 +20,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   title = 'Provincial Agricultural Land Commission Portal';
   user: UserDto | undefined;
 
+  showMaintenanceBanner = false;
+  maintenanceBannerMessage =
+    'ALC Portal and Public Search will be down for maintenance on March 28, Wednesday from 3:00 PM to 5:00PM.';
+
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private maintenanceService: MaintenanceService
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +36,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isAuthenticated = !!user;
       this.user = user;
       this.changeDetectorRef.detectChanges();
+    });
+
+    this.maintenanceService.$showBanner.pipe(takeUntil(this.$destroy)).subscribe((value) => {
+      this.showMaintenanceBanner = value;
     });
 
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {

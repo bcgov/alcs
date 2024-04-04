@@ -46,6 +46,23 @@ export class MaintenanceGuard implements CanActivate {
           HttpStatus.SERVICE_UNAVAILABLE,
         );
       }
+
+      // TODO: Add ALCS banner
+      const maintenanceBanner = await this.configurationRepository.findOne({
+        where: {
+          name: CONFIG_VALUE.APP_MAINTENANCE_BANNER,
+        },
+      });
+
+      if (maintenanceBanner && maintenanceBanner.value === 'true') {
+        const httpResponse = context.switchToHttp().getResponse();
+        httpResponse.status(HttpStatus.OK);
+        httpResponse.send({
+          status: 'info',
+          message: 'Maintenance Banner Displayed',
+          showMaintenanceBanner: true,
+        });
+      }
     }
 
     return true;
