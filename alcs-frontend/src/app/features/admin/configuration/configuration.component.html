@@ -12,6 +12,7 @@
       >
     </div>
   </div>
+  <app-inline-text [value]="maintenanceBannerMessage" (save)="updateMaintenanceBannerMessage($event)"></app-inline-text>
   <div class="row">
     <div class="toggle-label" id="maintenanceModeLabel">Maintenance Mode (Portal, Public Search)</div>
     <div class="toggle">

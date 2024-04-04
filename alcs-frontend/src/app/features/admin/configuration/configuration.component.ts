@@ -11,6 +11,7 @@ import {
 })
 export class ConfigurationComponent implements OnInit {
   maintenanceBanner = false;
+  maintenanceBannerMessage = '';
   maintenanceMode = false;
 
   constructor(private adminConfigurationService: AdminConfigurationService) {}
@@ -19,8 +20,8 @@ export class ConfigurationComponent implements OnInit {
     this.loadConfigs();
   }
 
-  private async onSave(configName: CONFIG_VALUE, configValue: boolean) {
-    await this.adminConfigurationService.setConfiguration(configName, configValue.toString());
+  private async onSave(configName: CONFIG_VALUE, configValue: string) {
+    await this.adminConfigurationService.setConfiguration(configName, configValue);
     this.loadConfigs();
   }
 
@@ -34,14 +35,24 @@ export class ConfigurationComponent implements OnInit {
     if (configs) {
       this.maintenanceMode = this.getConfigBooleanValue(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE);
       this.maintenanceBanner = this.getConfigBooleanValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER);
+      this.maintenanceBannerMessage =
+        configs.find((config) => config.name === CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE)?.value || '';
     }
   }
 
   onToggleMaintenanceMode() {
-    this.onSave(CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, this.maintenanceMode);
+    this.onSave(CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, this.maintenanceMode.toString());
   }
 
   onToggleMaintenanceBanner() {
-    this.onSave(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner);
+    this.onSave(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner.toString());
+  }
+
+  updateMaintenanceBannerMessage(message: string | null) {
+    if (message === null) {
+      message = '';
+    }
+
+    this.onSave(CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE, message);
   }
 }
