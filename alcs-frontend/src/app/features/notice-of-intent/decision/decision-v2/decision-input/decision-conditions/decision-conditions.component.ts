@@ -17,7 +17,7 @@ import {
   NoticeOfIntentDecisionConditionDto,
   NoticeOfIntentDecisionDto,
   UpdateNoticeOfIntentDecisionConditionDto,
-} from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
 
@@ -49,7 +49,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   constructor(
     private decisionService: NoticeOfIntentDecisionV2Service,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -63,10 +63,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
             decision.uuid,
             decision.components,
             decision.resolutionNumber,
-            decision.resolutionYear
+            decision.resolutionYear,
           );
           const otherDecisionsComponents = mappedComponents.filter(
-            (component) => component.decisionUuid !== selectedDecision?.uuid
+            (component) => component.decisionUuid !== selectedDecision?.uuid,
           );
           otherDecisionComponents.push(...otherDecisionsComponents);
         }
@@ -78,7 +78,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
             selectedDecision.uuid,
             this.components,
             selectedDecision.resolutionNumber,
-            selectedDecision.resolutionYear
+            selectedDecision.resolutionYear,
           );
           this.selectableComponents = [...this.allComponents, ...updatedComponents];
 
@@ -128,7 +128,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
         this.decision.uuid,
         this.components,
         this.decision.resolutionNumber,
-        this.decision.resolutionYear
+        this.decision.resolutionYear,
       );
       this.selectableComponents = [...this.allComponents, ...updatedComponents];
       const validComponentIds = this.selectableComponents.map((component) => component.tempId);
@@ -136,7 +136,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       this.mappedConditions = this.mappedConditions.map((condition) => {
         if (condition.componentsToCondition) {
           condition.componentsToCondition = condition.componentsToCondition.filter((component) =>
-            validComponentIds.includes(component.tempId)
+            validComponentIds.includes(component.tempId),
           );
         }
         return condition;
@@ -153,8 +153,9 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   private populateConditions(conditions: NoticeOfIntentDecisionConditionDto[]) {
     this.mappedConditions = conditions.map((condition) => {
       const selectedComponents = this.selectableComponents
-        .filter((component) =>
-          condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid)
+        .filter(
+          (component) =>
+            condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid),
         )
         .map((e) => ({
           componentDecisionUuid: e.decisionUuid,
@@ -174,11 +175,11 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
     decisionUuid: string,
     components: NoticeOfIntentDecisionComponentDto[],
     decisionNumber: number | null,
-    decisionYear: number | null
+    decisionYear: number | null,
   ) {
     return components.map((component) => {
       const matchingType = this.codes.decisionComponentTypes.find(
-        (type) => type.code === component.noticeOfIntentDecisionComponentTypeCode
+        (type) => type.code === component.noticeOfIntentDecisionComponentTypeCode,
       );
       return {
         uuid: component.uuid,

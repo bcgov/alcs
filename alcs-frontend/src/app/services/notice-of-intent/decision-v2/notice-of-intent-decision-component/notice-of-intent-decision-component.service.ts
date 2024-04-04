@@ -6,7 +6,7 @@ import { ToastService } from '../../../toast/toast.service';
 import {
   NoticeOfIntentDecisionComponentDto,
   UpdateNoticeOfIntentDecisionComponentDto,
-} from '../../decision/notice-of-intent-decision.dto';
+} from '../notice-of-intent-decision.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +14,15 @@ import {
 export class NoticeOfIntentDecisionComponentService {
   private url = `${environment.apiUrl}/notice-of-intent-decision-component`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async update(uuid: string, data: UpdateNoticeOfIntentDecisionComponentDto) {
     try {
       const res = await firstValueFrom(
-        this.http.patch<NoticeOfIntentDecisionComponentDto>(`${this.url}/${uuid}`, data)
+        this.http.patch<NoticeOfIntentDecisionComponentDto>(`${this.url}/${uuid}`, data),
       );
       this.toastService.showSuccessToast('Decision updated');
       return res;

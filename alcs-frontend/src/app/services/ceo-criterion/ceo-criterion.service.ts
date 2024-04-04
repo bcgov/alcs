@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CeoCriterionDto } from '../application/decision/application-decision-v1/application-decision.dto';
+import { CeoCriterionDto } from '../application/decision/application-decision-v2/application-decision.dto';
 import { ToastService } from '../toast/toast.service';
 
 @Injectable({
@@ -11,7 +11,10 @@ import { ToastService } from '../toast/toast.service';
 export class CeoCriterionService {
   private url = `${environment.apiUrl}/ceo-criterion`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch() {
     try {

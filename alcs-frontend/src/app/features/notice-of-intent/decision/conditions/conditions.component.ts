@@ -7,7 +7,7 @@ import {
   NoticeOfIntentDecisionCodesDto,
   NoticeOfIntentDecisionConditionDto,
   NoticeOfIntentDecisionWithLinkedResolutionDto,
-} from '../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import {
@@ -60,7 +60,7 @@ export class ConditionsComponent implements OnInit {
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private decisionService: NoticeOfIntentDecisionV2Service,
-    private activatedRouter: ActivatedRoute
+    private activatedRouter: ActivatedRoute,
   ) {
     this.today = moment().startOf('day').toDate().getTime();
   }
@@ -98,7 +98,7 @@ export class ConditionsComponent implements OnInit {
 
   private sortConditions(
     decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
-    conditions: DecisionConditionWithStatus[]
+    conditions: DecisionConditionWithStatus[],
   ) {
     decision.conditions = conditions.sort((a, b) => {
       const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE, CONDITION_STATUS.SUPERSEDED];
@@ -116,7 +116,7 @@ export class ConditionsComponent implements OnInit {
 
   private mapConditions(
     decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
-    decisions: NoticeOfIntentDecisionWithLinkedResolutionDto[]
+    decisions: NoticeOfIntentDecisionWithLinkedResolutionDto[],
   ) {
     return decision.conditions.map((condition) => {
       const status = this.getStatus(condition, decision);
@@ -126,7 +126,7 @@ export class ConditionsComponent implements OnInit {
         status,
         conditionComponentsLabels: condition.components?.map((c) => {
           const matchingType = this.codes.decisionComponentTypes.find(
-            (type) => type.code === c.noticeOfIntentDecisionComponentTypeCode
+            (type) => type.code === c.noticeOfIntentDecisionComponentTypeCode,
           );
 
           const componentsDecision = decisions.find((d) => d.uuid === c.noticeOfIntentDecisionUuid);
@@ -148,7 +148,7 @@ export class ConditionsComponent implements OnInit {
 
   private getStatus(
     condition: NoticeOfIntentDecisionConditionDto,
-    decision: NoticeOfIntentDecisionWithLinkedResolutionDto
+    decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
   ) {
     let status = '';
     if (condition.supersededDate && condition.supersededDate <= this.today) {

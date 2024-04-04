@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
@@ -11,7 +11,7 @@ import { ApplicationModificationCreateDto } from '../../../../../services/applic
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v1/application-decision.service';
+import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
@@ -59,7 +59,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private modificationService: ApplicationModificationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    private decisionService: ApplicationDecisionService,
+    private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
     private router: Router,
     private activatedRoute: ActivatedRoute,

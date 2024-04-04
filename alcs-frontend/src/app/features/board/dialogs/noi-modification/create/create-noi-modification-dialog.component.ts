@@ -8,7 +8,7 @@ import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../service
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
 import { ApplicationService } from '../../../../../services/application/application.service';
-import { NoticeOfIntentDecisionService } from '../../../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
+import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentModificationCreateDto } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
@@ -57,7 +57,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private modificationService: NoticeOfIntentModificationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    private decisionService: NoticeOfIntentDecisionService,
+    private decisionService: NoticeOfIntentDecisionV2Service,
     private toastService: ToastService,
     private router: Router,
     private activatedRoute: ActivatedRoute,

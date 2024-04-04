@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationDecisionDocumentDto } from '../../../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { ApplicationDecisionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ApplicationDecisionDocumentDto } from '../../../../../services/application/decision/application-decision-v2/application-decision.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionDocumentUploadDialogComponent } from '../decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
@@ -27,12 +27,11 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: ApplicationDecisionDocumentDto[] = [];
-  private fileId = '';
   areDocumentsReleased = false;
-
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<ApplicationDecisionDocumentDto> =
     new MatTableDataSource<ApplicationDecisionDocumentDto>();
+  private fileId = '';
 
   constructor(
     private decisionService: ApplicationDecisionV2Service,
@@ -78,6 +77,25 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
     this.openFileDialog(element);
   }
 
+  onDeleteFile(element: ApplicationDecisionDocumentDto) {
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to delete the selected file?',
+      })
+      .subscribe(async (accepted) => {
+        if (accepted && this.decision) {
+          await this.decisionService.deleteFile(this.decision.uuid, element.uuid);
+          await this.decisionService.loadDecision(this.decision.uuid);
+          this.toastService.showSuccessToast('Document deleted');
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
+
   private openFileDialog(existingDocument?: ApplicationDecisionDocumentDto) {
     if (this.decision) {
       this.dialog
@@ -98,24 +116,5 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
           }
         });
     }
-  }
-
-  onDeleteFile(element: ApplicationDecisionDocumentDto) {
-    this.confirmationDialogService
-      .openDialog({
-        body: 'Are you sure you want to delete the selected file?',
-      })
-      .subscribe(async (accepted) => {
-        if (accepted && this.decision) {
-          await this.decisionService.deleteFile(this.decision.uuid, element.uuid);
-          await this.decisionService.loadDecision(this.decision.uuid);
-          this.toastService.showSuccessToast('Document deleted');
-        }
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
   }
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { DecisionMakerDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { ApplicationDecisionMakerService } from '../../../services/application/application-decision-maker/application-decision-maker.service';
+import { DecisionMakerDto } from '../../../services/application/decision/application-decision-v2/application-decision.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionMakerDialogComponent } from './decision-maker-dialog/decision-maker-dialog.component';
 
@@ -20,7 +20,7 @@ export class DecisionMakerComponent implements OnInit {
   constructor(
     private decisionMakerService: ApplicationDecisionMakerService,
     public dialog: MatDialog,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
