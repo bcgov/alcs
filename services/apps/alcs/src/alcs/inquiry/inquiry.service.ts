@@ -176,6 +176,7 @@ export class InquiryService {
         },
       },
       relations: {
+        type: true,
         card: {
           status: true,
           board: true,

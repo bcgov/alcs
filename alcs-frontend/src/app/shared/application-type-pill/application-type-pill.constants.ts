@@ -70,14 +70,6 @@ export const DECISION_CONDITION_SUPERSEDED_LABEL = {
   textColor: '#000',
 };
 
-export const NOTIFICATION_LABEL = {
-  label: 'Statutory Right of Way',
-  shortLabel: 'SRW',
-  backgroundColor: '#fff',
-  borderColor: '#59ADFA',
-  textColor: '#313132',
-};
-
 export const OPEN_PR_LABEL = {
   label: 'Open',
   shortLabel: 'Open',

@@ -186,6 +186,7 @@ export class NotificationService {
         },
       },
       relations: {
+        type: true,
         card: {
           status: true,
           board: true,

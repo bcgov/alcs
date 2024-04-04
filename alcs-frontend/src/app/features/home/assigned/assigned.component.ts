@@ -11,7 +11,6 @@ import { NotificationDto } from '../../../services/notification/notification.dto
 import { PlanningReferralDto } from '../../../services/planning-review/planning-review.dto';
 import {
   MODIFICATION_TYPE_LABEL,
-  NOTIFICATION_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../../../shared/application-type-pill/application-type-pill.constants';
@@ -214,7 +213,7 @@ export class AssignedComponent implements OnInit {
       card: a.card,
       date: a.dateSubmittedToAlc,
       highPriority: a.card!.highPriority,
-      labels: [NOTIFICATION_LABEL],
+      labels: [a.type],
     };
   }
 
