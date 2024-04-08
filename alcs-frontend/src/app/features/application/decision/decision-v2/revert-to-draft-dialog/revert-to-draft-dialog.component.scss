@@ -1,6 +1,17 @@
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-column-gap: 24px;
-  grid-row-gap: 24px;
+@use '../../../../../../styles/colors.scss';
+
+.content {
+  height: 100%;
+  color: colors.$black;
+  margin-top: 24px;
+}
+
+.release-data {
+  background-color: #FFF6E1;
+  padding: 12px;
+  margin: 12px;
+
+  div {
+    margin: 12px 0;
+  }
 }

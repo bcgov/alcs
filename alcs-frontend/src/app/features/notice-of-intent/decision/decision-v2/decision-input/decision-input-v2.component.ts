@@ -417,11 +417,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     if (this.runValidation()) {
       this.dialog
         .open(ReleaseDialogComponent, {
-          minWidth: '600px',
-          maxWidth: '900px',
+          minWidth: '1080px',
+          maxWidth: '1080px',
           maxHeight: '80vh',
           width: '90%',
           autoFocus: false,
+          data: {
+            fileNumber: this.fileNumber,
+          },
         })
         .afterClosed()
         .subscribe(async (didAccept) => {
