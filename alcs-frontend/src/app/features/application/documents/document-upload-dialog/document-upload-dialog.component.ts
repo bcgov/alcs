@@ -261,6 +261,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     this.pendingFile = undefined;
     this.existingFile = undefined;
     this.extension = '';
+    this.name.setValue('');
   }
 
   openFile() {

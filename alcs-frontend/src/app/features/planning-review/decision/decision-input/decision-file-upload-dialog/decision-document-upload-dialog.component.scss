@@ -47,3 +47,37 @@ a {
     align-items: center;
   }
 }
+
+// TODO make it nicer?
+.file-drag-drop {
+  background: colors.$white;
+  border-radius: 4px;
+
+  &:hover {
+    background: #f9f9f9 !important;
+  }
+
+  button:nth-child(1) {
+    width: 100%;
+    background: colors.$white;
+    padding: 24px;
+    border: none;
+
+    &:hover {
+      background: #f9f9f9 !important;
+    }
+  }
+
+  .drag-text {
+    margin-top: 14px;
+    color: colors.$grey;
+  }
+
+  .icon {
+    font-size: 36px;
+    color: colors.$grey;
+    height: 36px;
+    align-content: center;
+    margin-bottom: 4px;
+  }
+}

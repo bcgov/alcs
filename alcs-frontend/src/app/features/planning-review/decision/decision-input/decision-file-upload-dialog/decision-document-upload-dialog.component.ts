@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PlanningReviewDecisionDocumentDto } from '../../../../../services/planning-review/planning-review-decision/planning-review-decision.dto';
 import { PlanningReviewDecisionService } from '../../../../../services/planning-review/planning-review-decision/planning-review-decision.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../shared/document/document.dto';
+import { FileHandle } from '../../../../../shared/drag-drop-file/drag-drop-file.directive';
 import { splitExtension } from '../../../../../shared/utils/file';
 
 @Component({
@@ -19,6 +20,8 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   isSaving = false;
   allowsFileEdit = true;
   documentType = 'Decision Package';
+
+  @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();
 
   name = new FormControl<string>('', [Validators.required]);
   type = new FormControl<string | undefined>({ disabled: true, value: undefined }, [Validators.required]);
@@ -113,6 +116,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     this.pendingFile = undefined;
     this.existingFile = undefined;
     this.extension = '';
+    this.name.setValue('');
   }
 
   openFile() {
@@ -130,5 +134,14 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
         this.data.existingDocument.fileName,
       );
     }
+  }
+
+  filesDropped($event: FileHandle) {
+    this.pendingFile = $event.file;
+    const { fileName, extension } = splitExtension(this.pendingFile.name);
+    this.extension = extension;
+    this.name.setValue(fileName);
+    this.showVirusError = false;
+    this.uploadFiles.emit($event);
   }
 }
