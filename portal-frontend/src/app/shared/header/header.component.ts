@@ -21,13 +21,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user: UserDto | undefined;
 
   showMaintenanceBanner = false;
-  maintenanceBannerMessage =
-    'ALC Portal and Public Search will be down for maintenance on March 28, Wednesday from 3:00 PM to 5:00PM.';
+  maintenanceBannerMessage = '';
 
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef // private maintenanceService: MaintenanceService
+    private changeDetectorRef: ChangeDetectorRef,
+    private maintenanceService: MaintenanceService
   ) {}
 
   ngOnInit(): void {
@@ -37,11 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.changeDetectorRef.detectChanges();
     });
 
-    // this.setMaintenanceBanner();
-
-    // this.maintenanceService.$showBanner.pipe(takeUntil(this.$destroy)).subscribe((value) => {
-    //   this.showMaintenanceBanner = value;
-    // });
+    this.setMaintenanceBanner();
 
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {
       const url = window.location.href;
@@ -50,7 +46,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async setMaintenanceBanner() {
-    // TODO: Check banner status and set message from maintenance service
+    const maintenanceBanner = await this.maintenanceService.getBanner();
+    this.showMaintenanceBanner = maintenanceBanner?.showBanner || false;
+    this.maintenanceBannerMessage = maintenanceBanner?.message || '';
   }
 
   async onLogout() {

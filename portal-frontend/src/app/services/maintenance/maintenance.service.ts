@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -8,9 +8,6 @@ import { environment } from '../../../environments/environment';
 })
 export class MaintenanceService {
   private baseUrl = environment.apiUrl;
-  private showBanner = new BehaviorSubject<boolean>(false);
-
-  $showBanner = this.showBanner.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -22,18 +19,15 @@ export class MaintenanceService {
     }
   }
 
-  // TODO: Add emthod to retrieve banner status and message
-  // async checkBanner() {
-  //   try {
-  //     return await firstValueFrom(this.http.get<any>(`${this.baseUrl}/configuration/maintenance-banner`));
-  //   } catch (e) {
-  //     console.error(e);
-  //     return undefined;
-  //   }
-  // }
-
   // TODO: Add test
-  setShowBanner(showBanner: boolean) {
-    this.showBanner.next(showBanner);
+  async getBanner() {
+    try {
+      return await firstValueFrom(
+        this.http.get<{ showBanner: boolean; message: string }>(`${this.baseUrl}/configuration/maintenance-banner`)
+      );
+    } catch (e) {
+      console.error(e);
+      return undefined;
+    }
   }
 }

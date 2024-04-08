@@ -21,6 +21,7 @@ import { ParcelModule } from './parcel/parcel.module';
 import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
 import { NotificationSubmissionModule } from './notification-submission/notification-submission.module';
 import { PublicModule } from './public/public.module';
+import { ConfigurationModule } from './configuration/configuration.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { PublicModule } from './public/public.module';
     PublicModule,
     CodeModule,
     InboxModule,
+    ConfigurationModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: NoticeOfIntentSubmissionModule },
@@ -58,6 +60,7 @@ import { PublicModule } from './public/public.module';
       { path: 'portal', module: NotificationSubmissionModule },
       { path: 'portal', module: PortalNotificationDocumentModule },
       { path: 'portal', module: InboxModule },
+      { path: 'portal', module: ConfigurationModule },
     ]),
   ],
   controllers: [CodeController],
