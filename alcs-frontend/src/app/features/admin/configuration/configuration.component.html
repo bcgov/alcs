@@ -1,7 +1,13 @@
 <div class="container">
   <h2>Maintenance</h2>
   <div class="row">
-    <div class="toggle-label" id="maintenanceBannerLabel">Banner (ALCS, Portal, Public Search)</div>
+    <div class="label-input-container">
+      <div class="toggle-label" id="maintenanceBannerLabel">Banner (ALCS, Portal, Public Search)</div>
+      <app-inline-text
+        [value]="maintenanceBannerMessage"
+        (save)="updateMaintenanceBannerMessage($event)"
+      ></app-inline-text>
+    </div>
     <div class="toggle">
       <mat-label [ngClass]="{ inactive: maintenanceBanner }">Off</mat-label>
       <mat-slide-toggle
@@ -12,7 +18,6 @@
       >
     </div>
   </div>
-  <app-inline-text [value]="maintenanceBannerMessage" (save)="updateMaintenanceBannerMessage($event)"></app-inline-text>
   <div class="row">
     <div class="toggle-label" id="maintenanceModeLabel">Maintenance Mode (Portal, Public Search)</div>
     <div class="toggle">

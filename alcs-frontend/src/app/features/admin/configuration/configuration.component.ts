@@ -5,6 +5,8 @@ import {
 } from '../../../services/admin-configuration/admin-configuration.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { MaintenanceBannerConfirmationDialogComponent } from './maintenance-banner-confirmation-dialog/maintenance-banner-confirmation-dialog.component';
 
 @Component({
   selector: 'app-configuration',
@@ -19,6 +21,7 @@ export class ConfigurationComponent implements OnInit {
   constructor(
     private adminConfigurationService: AdminConfigurationService,
     protected confirmationDialogService: ConfirmationDialogService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -53,13 +56,15 @@ export class ConfigurationComponent implements OnInit {
 
   onToggleMaintenanceBanner(event: MatSlideToggleChange) {
     if (event.checked === true) {
-      // TODO: Change to custom dialog to show banner message
-      this.confirmationDialogService
-        .openDialog({
-          body: 'Please confirm the banner message before turning it on. Are you sure you want to enable the banner?',
+      this.dialog
+        .open(MaintenanceBannerConfirmationDialogComponent, {
+          data: {
+            message: this.maintenanceBannerMessage,
+          },
         })
-        .subscribe(async (confirmed) => {
-          if (confirmed) {
+        .beforeClosed()
+        .subscribe((didConfirm) => {
+          if (didConfirm) {
             this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner.toString());
           } else {
             this.loadConfigs();
