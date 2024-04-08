@@ -38,6 +38,7 @@ import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
+import { DragDropDirective } from './documents/document-upload-dialog/drag-drop.directive';
 
 const routes: Routes = [
   {
@@ -73,6 +74,7 @@ const routes: Routes = [
     ApplicantInfoComponent,
     LfngInfoComponent,
     DocumentsComponent,
+    DragDropDirective,
     DocumentUploadDialogComponent,
     ProposalComponent,
     NfuProposalComponent,

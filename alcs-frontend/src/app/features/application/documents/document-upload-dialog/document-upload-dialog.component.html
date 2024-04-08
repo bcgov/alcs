@@ -1,7 +1,7 @@
 <div mat-dialog-title>
   <h4>{{ title }} Document</h4>
   <span *ngIf="showSupersededWarning" class="superseded-warning"
-  >Superseded - Not associated with Applicant Submission in Portal</span
+    >Superseded - Not associated with Applicant Submission in Portal</span
   >
 </div>
 <div mat-dialog-content>
@@ -11,18 +11,25 @@
         <mat-label>Document Upload*</mat-label>
       </div>
       <input #fileInput (change)="uploadFile($event)" hidden placeholder="Upload file" type="file" />
-      <button
-        (click)="fileInput.click()"
+      <div
         *ngIf="!pendingFile && !existingFile"
         [ngClass]="{
+          'file-drag-drop': true,
           error: showVirusError
         }"
         class="full-width upload-button"
+        dragDropFile
         color="accent"
-        mat-flat-button
+        (files)="filesDropped($event)"
       >
-        Upload
-      </button>
+        <button class="content" type="button" (click)="fileInput.click()">
+          <div class="icon">
+            <mat-icon inline="true">file_upload</mat-icon>
+          </div>
+          <button type="button" mat-flat-button color="accent">Upload File</button>
+          <div class="drag-text">or drag and drop them here</div>
+        </button>
+      </div>
       <div *ngIf="pendingFile" class="file">
         <div>
           <a (click)="openFile()">{{ pendingFile.name }}</a>
