@@ -11,19 +11,11 @@ export class MaintenanceService {
 
   constructor(private http: HttpClient) {}
 
-  async check() {
-    try {
-      return await firstValueFrom(this.http.get<string>(`${this.baseUrl}/inbox`));
-    } catch (e) {
-      return undefined;
-    }
-  }
-
   // TODO: Add test
   async getBanner() {
     try {
       return await firstValueFrom(
-        this.http.get<{ showBanner: boolean; message: string }>(`${this.baseUrl}/maintenance/banner`)
+        this.http.get<{ showBanner: boolean; message: string }>(`${this.baseUrl}/maintenance/banner`),
       );
     } catch (e) {
       console.error(e);

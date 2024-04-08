@@ -1,20 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  CONFIG_VALUE,
-  Configuration,
-} from '../../common/entities/configuration.entity';
+import { CONFIG_VALUE, Configuration } from '../entities/configuration.entity';
 
 @Injectable()
-export class ConfigurationService {
+export class MaintenanceService {
   constructor(
     @InjectRepository(Configuration)
     private configurationRepository: Repository<Configuration>,
   ) {}
 
   // Add test
-  async getMaintenanceBanner() {
+  async getBanner() {
     const bannerStatus = await this.getByName(
       CONFIG_VALUE.APP_MAINTENANCE_BANNER,
     );

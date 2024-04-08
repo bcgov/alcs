@@ -10,6 +10,7 @@ import { MessageService } from '../../services/message/message.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
+import { MaintenanceService } from '../../services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-header',
@@ -27,7 +28,7 @@ export class HeaderComponent implements OnInit {
   isCommissioner = false;
   isAdmin = false;
   showMaintenanceBanner = true;
-  maintenanceBannerMessage = 'Maintenance Message';
+  maintenanceBannerMessage = '';
 
   constructor(
     private authService: AuthenticationService,
@@ -37,6 +38,7 @@ export class HeaderComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private notificationService: MessageService,
+    private maintenanceService: MaintenanceService,
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +56,7 @@ export class HeaderComponent implements OnInit {
         if (this.hasRoles) {
           this.applicationService.setup();
           this.loadNotifications();
+          this.setMaintenanceBanner();
 
           const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
             currentUser.client_roles!.includes(value),
@@ -70,6 +73,12 @@ export class HeaderComponent implements OnInit {
     this.boardService.$boards.subscribe(
       (dms) => (this.sortedBoards = dms.sort((x, y) => this.sortDecisionMakers(x, y))),
     );
+  }
+
+  private async setMaintenanceBanner() {
+    const maintenanceBanner = await this.maintenanceService.getBanner();
+    this.showMaintenanceBanner = maintenanceBanner?.showBanner || false;
+    this.maintenanceBannerMessage = maintenanceBanner?.message || '';
   }
 
   private sortDecisionMakers(x: BoardWithFavourite, y: BoardWithFavourite) {

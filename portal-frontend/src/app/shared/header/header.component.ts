@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  async setMaintenanceBanner() {
+  private async setMaintenanceBanner() {
     const maintenanceBanner = await this.maintenanceService.getBanner();
     this.showMaintenanceBanner = maintenanceBanner?.showBanner || false;
     this.maintenanceBannerMessage = maintenanceBanner?.message || '';

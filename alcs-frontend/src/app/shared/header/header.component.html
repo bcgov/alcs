@@ -1,4 +1,4 @@
-<app-maintenance-banner>{{ maintenanceBannerMessage }}</app-maintenance-banner>
+<app-maintenance-banner *ngIf="showMaintenanceBanner">{{ maintenanceBannerMessage }}</app-maintenance-banner>
 <header class="header">
   <div class="flex-grid">
     <mat-toolbar>
