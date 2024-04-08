@@ -1,0 +1,24 @@
+@use '../../../../styles/functions' as *;
+@use '../../../../styles/colors' as colors;
+
+.maintenance-banner {
+  background-color: colors.$maintenance-banner;
+  padding: rem(8) rem(24);
+  display: flex;
+  align-items: center;
+  gap: rem(8);
+
+  .maintenance-description {
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      align-items: center;
+    }
+  }
+}

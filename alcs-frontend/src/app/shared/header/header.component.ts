@@ -26,6 +26,8 @@ export class HeaderComponent implements OnInit {
   notifications: MessageDto[] = [];
   isCommissioner = false;
   isAdmin = false;
+  showMaintenanceBanner = true;
+  maintenanceBannerMessage = 'Maintenance Message';
 
   constructor(
     private authService: AuthenticationService,
@@ -34,7 +36,7 @@ export class HeaderComponent implements OnInit {
     private toastService: ToastService,
     private userService: UserService,
     private router: Router,
-    private notificationService: MessageService
+    private notificationService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +56,7 @@ export class HeaderComponent implements OnInit {
           this.loadNotifications();
 
           const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-            currentUser.client_roles!.includes(value)
+            currentUser.client_roles!.includes(value),
           );
           this.allowedSearch = overlappingRoles.length > 0;
         }
@@ -66,7 +68,7 @@ export class HeaderComponent implements OnInit {
     });
 
     this.boardService.$boards.subscribe(
-      (dms) => (this.sortedBoards = dms.sort((x, y) => this.sortDecisionMakers(x, y)))
+      (dms) => (this.sortedBoards = dms.sort((x, y) => this.sortDecisionMakers(x, y))),
     );
   }
 
