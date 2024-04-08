@@ -55,13 +55,12 @@ a {
 }
 
 
-// TODO make it nicer?
 .file-drag-drop {
   background: colors.$white;
   border-radius: 4px;
 
   &:hover {
-    background: #f9f9f9 !important;
+    background: colors.$grey-light !important;
   }
 
   button:nth-child(1) {
@@ -71,7 +70,7 @@ a {
     border: none;
 
     &:hover {
-      background: #f9f9f9 !important;
+      background: colors.$grey-light !important;
     }
   }
 
@@ -81,9 +80,9 @@ a {
   }
 
   .icon {
+    color: colors.$grey;
     font-size: 36px;
     height: 36px;
-    color: colors.$grey;
     align-content: center;
     margin-bottom: 4px;
   }
