@@ -53,3 +53,38 @@ a {
   color: #fff;
   padding: 0 4px;
 }
+
+
+// TODO make it nicer?
+.file-drag-drop {
+  background: colors.$white;
+  border-radius: 4px;
+
+  &:hover {
+    background: #f9f9f9 !important;
+  }
+
+  button:nth-child(1) {
+    width: 100%;
+    background: colors.$white;
+    padding: 24px;
+    border: none;
+
+    &:hover {
+      background: #f9f9f9 !important;
+    }
+  }
+
+  .drag-text {
+    margin-top: 14px;
+    color: colors.$grey;
+  }
+
+  .icon {
+    font-size: 36px;
+    height: 36px;
+    color: colors.$grey;
+    align-content: center;
+    margin-bottom: 4px;
+  }
+}

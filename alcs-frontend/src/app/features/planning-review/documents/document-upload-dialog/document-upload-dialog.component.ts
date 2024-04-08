@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -10,6 +10,7 @@ import {
 import { PlanningReviewDocumentService } from '../../../../services/planning-review/planning-review-document/planning-review-document.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/document/document.dto';
+import { FileHandle } from '../../../../shared/drag-drop-file/drag-drop-file.directive';
 import { splitExtension } from '../../../../shared/utils/file';
 
 @Component({
@@ -20,6 +21,8 @@ import { splitExtension } from '../../../../shared/utils/file';
 export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
+
+  @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();
 
   title = 'Create';
   isDirty = false;
@@ -171,6 +174,15 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
         this.data.existingDocument.fileName,
       );
     }
+  }
+
+  filesDropped($event: FileHandle) {
+    this.pendingFile = $event.file;
+    const { fileName, extension } = splitExtension(this.pendingFile.name);
+    this.extension = extension;
+    this.name.setValue(fileName);
+    this.showVirusError = false;
+    this.uploadFiles.emit($event);
   }
 
   private async loadDocumentTypes() {

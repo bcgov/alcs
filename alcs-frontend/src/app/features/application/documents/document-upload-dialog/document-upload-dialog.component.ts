@@ -18,7 +18,7 @@ import {
   DocumentTypeDto,
 } from '../../../../shared/document/document.dto';
 import { splitExtension } from '../../../../shared/utils/file';
-import { FileHandle } from './drag-drop.directive';
+import { FileHandle } from '../../../../shared/drag-drop-file/drag-drop-file.directive';
 
 @Component({
   selector: 'app-document-upload-dialog',
