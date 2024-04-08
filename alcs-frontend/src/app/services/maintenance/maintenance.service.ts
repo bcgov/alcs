@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -8,6 +8,9 @@ import { environment } from '../../../environments/environment';
 })
 export class MaintenanceService {
   private baseUrl = environment.apiUrl;
+
+  $showBanner = new BehaviorSubject<boolean>(false);
+  $bannerMessage = new BehaviorSubject<string>('');
 
   constructor(private http: HttpClient) {}
 
@@ -21,5 +24,13 @@ export class MaintenanceService {
       console.error(e);
       return undefined;
     }
+  }
+
+  setShowBanner(showBanner: boolean) {
+    this.$showBanner.next(showBanner);
+  }
+
+  setBannerMessage(message: string) {
+    this.$bannerMessage.next(message);
   }
 }

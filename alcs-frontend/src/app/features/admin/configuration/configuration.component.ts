@@ -7,6 +7,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { MaintenanceBannerConfirmationDialogComponent } from './maintenance-banner-confirmation-dialog/maintenance-banner-confirmation-dialog.component';
+import { MaintenanceService } from '../../../services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-configuration',
@@ -19,9 +20,10 @@ export class ConfigurationComponent implements OnInit {
   maintenanceMode = false;
 
   constructor(
-    private adminConfigurationService: AdminConfigurationService,
-    protected confirmationDialogService: ConfirmationDialogService,
     private dialog: MatDialog,
+    private adminConfigurationService: AdminConfigurationService,
+    private maintenanceService: MaintenanceService,
+    protected confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -66,12 +68,15 @@ export class ConfigurationComponent implements OnInit {
         .subscribe((didConfirm) => {
           if (didConfirm) {
             this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner.toString());
+            this.maintenanceService.setShowBanner(true);
+            this.maintenanceService.setBannerMessage(this.maintenanceBannerMessage);
           } else {
             this.loadConfigs();
           }
         });
     } else {
       this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner.toString());
+      this.maintenanceService.setShowBanner(false);
     }
   }
 
@@ -81,5 +86,9 @@ export class ConfigurationComponent implements OnInit {
 
   updateMaintenanceBannerMessage(message: string | null) {
     this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE, message || '');
+
+    if (this.maintenanceBanner === true) {
+      this.maintenanceService.setBannerMessage(message || '');
+    }
   }
 }

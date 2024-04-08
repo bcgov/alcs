@@ -31,13 +31,4 @@ export class ConfigurationService {
       },
     });
   }
-
-  // TODO: Update to retrieve both banner message and status
-  getMaintenaceBanner() {
-    return this.configurationRepository.findOne({
-      where: {
-        name: CONFIG_VALUE.APP_MAINTENANCE_BANNER,
-      },
-    });
-  }
 }

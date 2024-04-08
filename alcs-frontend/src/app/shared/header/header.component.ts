@@ -73,6 +73,14 @@ export class HeaderComponent implements OnInit {
     this.boardService.$boards.subscribe(
       (dms) => (this.sortedBoards = dms.sort((x, y) => this.sortDecisionMakers(x, y))),
     );
+
+    this.maintenanceService.$showBanner.subscribe((showBanner) => {
+      this.showMaintenanceBanner = showBanner;
+    });
+
+    this.maintenanceService.$bannerMessage.subscribe((message) => {
+      this.maintenanceBannerMessage = message;
+    });
   }
 
   private async setMaintenanceBanner() {
