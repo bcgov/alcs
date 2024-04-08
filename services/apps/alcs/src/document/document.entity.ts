@@ -66,6 +66,14 @@ export class Document extends Base {
 
   @Column({
     nullable: true,
+    select: false,
+    type: 'text',
+    comment: 'used only for oats etl process',
+  })
+  oatsIssueId?: string | null;
+
+  @Column({
+    nullable: true,
     type: 'text',
     unique: true,
     comment: 'used only for oats etl process',

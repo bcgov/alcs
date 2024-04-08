@@ -44,6 +44,27 @@ export class InquiryDocument extends BaseEntity {
   @Column({ nullable: true, type: 'uuid' })
   documentUuid?: string | null;
 
+  @Column({
+    type: 'text',
+    nullable: true,
+    select: false,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.issues to alcs.inquiry_document.',
+  })
+  oatsIssueId?: string | null;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+    select: false,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.inquiry_document.',
+  })
+  oatsDocumentId?: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  auditCreatedBy?: string | null;
+
   @OneToOne(() => Document)
   @JoinColumn()
   document: Document;

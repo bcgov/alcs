@@ -171,9 +171,9 @@ def _get_mime_type(data):
     file_name = data.get("file_name", "")
     extension = os.path.splitext(file_name)[-1].lower().strip()
     if extension == ".pdf":
-        return "planning_review/pdf"
+        return "application/pdf"
     else:
-        return "planning_review/octet-stream"
+        return "application/octet-stream"
 
 
 @inject_conn_pool
