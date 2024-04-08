@@ -6,13 +6,13 @@
 </section>
 <section *ngIf="planningReview">
   <h5>Planning Review Type</h5>
-  <div>
+  <div style="width: 50%">
     <app-inline-dropdown (save)="onSaveType($event)" [options]="types" [value]="planningReview.type.code" />
   </div>
 </section>
 <section *ngIf="planningReview">
   <h5>Status</h5>
-  <div>
+  <div style="width: 50%">
     <app-inline-button-toggle
       (save)="onSaveStatus($event)"
       [selectedValue]="planningReview.open ? 'Open' : 'Closed'"
@@ -28,4 +28,8 @@
       ]"
     />
   </div>
+</section>
+<section>
+  <h5>Planning Review Event Timeline</h5>
+  <app-timeline [events]="events"></app-timeline>
 </section>

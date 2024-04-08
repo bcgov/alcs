@@ -2,7 +2,7 @@ import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { ApplicationRegionDto } from '../../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../../card/card.dto';
-import { NoticeOfIntentDecisionDto } from '../decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionDto } from '../decision-v2/notice-of-intent-decision.dto';
 
 export interface NoticeOfIntentModificationCreateDto {
   fileNumber: string;

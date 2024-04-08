@@ -12,6 +12,8 @@ import { ApplicationService } from '../application/application.service';
 import { CommissionerProfile } from '../../common/automapper/commissioner.automapper.profile';
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
+import { PlanningReview } from '../planning-review/planning-review.entity';
+import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { CommissionerController } from './commissioner.controller';
 
 describe('CommissionerController', () => {
@@ -20,6 +22,7 @@ describe('CommissionerController', () => {
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockTrackingService: DeepMocked<TrackingService>;
+  let mockPlanningReviewService: DeepMocked<PlanningReview>;
   let mockRequest;
 
   const fileNumber = 'fake-file';
@@ -29,6 +32,7 @@ describe('CommissionerController', () => {
     mockReconsiderationService = createMock();
     mockModificationService = createMock();
     mockTrackingService = createMock();
+    mockPlanningReviewService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -53,6 +57,10 @@ describe('CommissionerController', () => {
         {
           provide: TrackingService,
           useValue: mockTrackingService,
+        },
+        {
+          provide: PlanningReviewService,
+          useValue: mockPlanningReviewService,
         },
         {
           provide: ClsService,

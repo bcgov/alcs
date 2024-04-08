@@ -3,17 +3,14 @@ import { ApplicationModificationDto } from '../../../services/application/applic
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
+import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../../../services/notification/notification.dto';
-import { PlanningReferralDto, PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
+import { PlanningReferralDto } from '../../../services/planning-review/planning-review.dto';
 import {
-  COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
-  NOTIFICATION_LABEL,
-  PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../../../shared/application-type-pill/application-type-pill.constants';
@@ -27,8 +24,9 @@ import { AssignedToMeFile } from './assigned-table/assigned-table.component';
 export class AssignedComponent implements OnInit {
   noticeOfIntents: AssignedToMeFile[] = [];
   applications: AssignedToMeFile[] = [];
-  nonApplications: AssignedToMeFile[] = [];
+  planningReferrals: AssignedToMeFile[] = [];
   notifications: AssignedToMeFile[] = [];
+  inquiries: AssignedToMeFile[] = [];
   totalFiles = 0;
 
   constructor(
@@ -47,10 +45,10 @@ export class AssignedComponent implements OnInit {
       reconsiderations,
       planningReferrals,
       modifications,
-      covenants,
       noticeOfIntents,
       noticeOfIntentModifications,
       notifications,
+      inquiries,
     } = await this.homeService.fetchAssignedToMe();
 
     this.noticeOfIntents = [
@@ -98,22 +96,25 @@ export class AssignedComponent implements OnInit {
         .sort((a, b) => a.date! - b.date!),
     ];
 
-    this.nonApplications = [
+    this.planningReferrals = [
       ...planningReferrals
         .filter((r) => r.card.highPriority)
-        .map((r) => this.mapPlanning(r))
-        .sort((a, b) => a.date! - b.date!),
-      ...covenants
-        .filter((r) => r.card.highPriority)
-        .map((r) => this.mapCovenant(r))
+        .map((r) => this.mapPlanningReferral(r))
         .sort((a, b) => a.date! - b.date!),
       ...planningReferrals
         .filter((r) => !r.card.highPriority)
-        .map((r) => this.mapPlanning(r))
+        .map((r) => this.mapPlanningReferral(r))
         .sort((a, b) => a.date! - b.date!),
-      ...covenants
-        .filter((r) => !r.card.highPriority)
-        .map((r) => this.mapCovenant(r))
+    ];
+
+    this.inquiries = [
+      ...inquiries
+        .filter((r) => r.card!.highPriority)
+        .map((r) => this.mapInquiry(r))
+        .sort((a, b) => a.date! - b.date!),
+      ...inquiries
+        .filter((r) => !r.card!.highPriority)
+        .map((r) => this.mapInquiry(r))
         .sort((a, b) => a.date! - b.date!),
     ];
 
@@ -129,28 +130,20 @@ export class AssignedComponent implements OnInit {
     ];
 
     this.totalFiles =
-      this.applications.length + this.nonApplications.length + this.noticeOfIntents.length + this.notifications.length;
+      this.applications.length +
+      this.planningReferrals.length +
+      this.noticeOfIntents.length +
+      this.notifications.length;
   }
 
-  private mapCovenant(c: CovenantDto): AssignedToMeFile {
-    return {
-      title: `${c.fileNumber} (${c.applicant})`,
-      type: c.card.type,
-      date: c.card.createdAt,
-      card: c.card,
-      highPriority: c.card.highPriority,
-      labels: [COVENANT_TYPE_LABEL],
-    };
-  }
-
-  private mapPlanning(p: PlanningReferralDto): AssignedToMeFile {
+  private mapPlanningReferral(p: PlanningReferralDto): AssignedToMeFile {
     return {
       title: `${p.planningReview.fileNumber} (${p.planningReview.documentName})`,
       type: p.card.type,
       date: p.card.createdAt,
       card: p.card,
       highPriority: p.card.highPriority,
-      labels: [PLANNING_TYPE_LABEL],
+      labels: [p.planningReview.type],
     };
   }
 
@@ -220,7 +213,18 @@ export class AssignedComponent implements OnInit {
       card: a.card,
       date: a.dateSubmittedToAlc,
       highPriority: a.card!.highPriority,
-      labels: [NOTIFICATION_LABEL],
+      labels: [a.type],
+    };
+  }
+
+  private mapInquiry(inquiry: InquiryDto) {
+    return {
+      title: `${inquiry.fileNumber} (${inquiry.inquirerLastName ?? 'Unknown'})`,
+      type: inquiry.card!.type,
+      card: inquiry.card!,
+      date: inquiry.dateSubmittedToAlc,
+      highPriority: inquiry.card!.highPriority,
+      labels: [inquiry.type],
     };
   }
 }

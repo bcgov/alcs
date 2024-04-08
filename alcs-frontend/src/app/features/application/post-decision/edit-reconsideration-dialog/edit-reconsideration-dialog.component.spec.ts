@@ -1,9 +1,9 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
+import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog.component';
@@ -11,7 +11,7 @@ import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialo
 describe('EditReconsiderationDialogComponent', () => {
   let component: EditReconsiderationDialogComponent;
   let fixture: ComponentFixture<EditReconsiderationDialogComponent>;
-  let mockDecisionService: DeepMocked<ApplicationDecisionService>;
+  let mockDecisionService: DeepMocked<ApplicationDecisionV2Service>;
 
   beforeEach(async () => {
     mockDecisionService = createMock();
@@ -24,7 +24,7 @@ describe('EditReconsiderationDialogComponent', () => {
           useValue: {},
         },
         {
-          provide: ApplicationDecisionService,
+          provide: ApplicationDecisionV2Service,
           useValue: mockDecisionService,
         },
         {

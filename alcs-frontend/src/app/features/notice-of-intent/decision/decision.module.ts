@@ -4,8 +4,6 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
 import { ConditionComponent } from './conditions/condition/condition.component';
 import { ConditionsComponent } from './conditions/conditions.component';
-import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
-import { DecisionV1Component } from './decision-v1/decision-v1.component';
 import { BasicComponent } from './decision-v2/decision-component/basic/basic.component';
 import { PfrsComponent } from './decision-v2/decision-component/pfrs/pfrs.component';
 import { PofoComponent } from './decision-v2/decision-component/pofo/pofo.component';
@@ -57,8 +55,6 @@ export const decisionChildRoutes = [
     DecisionComponent,
     DecisionV2Component,
     DecisionInputV2Component,
-    DecisionV1Component,
-    DecisionDialogComponent,
     ReleaseDialogComponent,
     DecisionComponentComponent,
     DecisionComponentsComponent,

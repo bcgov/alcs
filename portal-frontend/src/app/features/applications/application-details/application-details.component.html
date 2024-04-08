@@ -1,10 +1,10 @@
 <h2 *ngIf="showEdit" class="page-title">Review & Submit</h2>
 <section>
   <app-parcel
-    [draftMode]="draftMode"
     [$applicationSubmission]="$application"
-    [showErrors]="showErrors"
+    [draftMode]="draftMode"
     [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-parcel>
 </section>
 <section>
@@ -15,11 +15,11 @@
     </div>
     <div class="grid-double">
       <span *ngIf="applicationSubmission.hasOtherParcelsInCommunity !== null">{{
-        applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
-      }}</span>
+          applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+        }}</span>
       <app-no-data
-        [showRequired]="showErrors"
         *ngIf="applicationSubmission.hasOtherParcelsInCommunity === null"
+        [showRequired]="showErrors"
       ></app-no-data>
     </div>
     <ng-container *ngIf="applicationSubmission.hasOtherParcelsInCommunity">
@@ -28,11 +28,11 @@
       </div>
       <div class="grid-double">
         {{ applicationSubmission.otherParcelsDescription }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.otherParcelsDescription"></app-no-data>
+        <app-no-data *ngIf="!applicationSubmission.otherParcelsDescription" [showRequired]="showErrors"></app-no-data>
       </div>
     </ng-container>
     <div *ngIf="showEdit" class="edit-button">
-      <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
+      <button (click)="onNavigateToStep(1)" color="accent" mat-flat-button>Edit Section</button>
     </div>
   </div>
 </section>
@@ -42,22 +42,22 @@
     <div class="subheading2 grid-1">Type</div>
     <div class="grid-double">
       {{ primaryContact?.type?.label }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.type?.label"></app-no-data>
+      <app-no-data *ngIf="!primaryContact?.type?.label" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">First Name</div>
     <div class="grid-double">
       {{ primaryContact?.firstName }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.firstName"></app-no-data>
+      <app-no-data *ngIf="!primaryContact?.firstName" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Last Name</div>
     <div class="grid-double">
       {{ primaryContact?.lastName }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.lastName"></app-no-data>
+      <app-no-data *ngIf="!primaryContact?.lastName" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">
       <span
         *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
-        >Organization (optional)</span
+      >Organization (optional)</span
       >
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
@@ -65,33 +65,34 @@
     <div class="grid-double">
       {{ primaryContact?.organizationName }}
       <app-no-data
-        [showRequired]="showErrors && primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT"
         *ngIf="!primaryContact?.organizationName"
+        [showRequired]="showErrors && primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT"
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Phone</div>
     <div class="grid-double">
       {{ primaryContact?.phoneNumber ?? '' | mask : '(000) 000-0000' }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.phoneNumber"></app-no-data>
+      <app-no-data *ngIf="!primaryContact?.phoneNumber" [showRequired]="showErrors"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
-        >Invalid Format</app-validation-error
+      >Invalid Format
+      </app-validation-error
       >
     </div>
     <div class="subheading2 grid-1">Email</div>
     <div class="grid-double">
       {{ primaryContact?.email }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.email"></app-no-data>
+      <app-no-data *ngIf="!primaryContact?.email" [showRequired]="showErrors"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.email || '' | emailValid)">Invalid Format</app-validation-error>
     </div>
     <ng-container *ngIf="needsAuthorizationLetter || authorizationLetters.length > 0">
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
         <app-no-data
-          [showRequired]="showErrors && needsAuthorizationLetter"
           *ngIf="authorizationLetters.length === 0"
+          [showRequired]="showErrors && needsAuthorizationLetter"
         ></app-no-data>
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
         <app-validation-error *ngIf="!needsAuthorizationLetter && authorizationLetters.length > 0">
           Authorization letters are not required, please remove them
@@ -99,7 +100,7 @@
       </div>
     </ng-container>
     <div *ngIf="showEdit" class="edit-button">
-      <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
+      <button (click)="onNavigateToStep(2)" color="accent" mat-flat-button>Edit Section</button>
     </div>
   </div>
 </section>
@@ -109,13 +110,13 @@
     <div class="subheading2 grid-1">Local or First Nation Government</div>
     <div class="grid-double">
       {{ localGovernment?.name }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
+      <app-no-data *ngIf="!localGovernment" [showRequired]="showErrors"></app-no-data>
       <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
         This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
         fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
-        &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
-          >236-468-3342</a
-        >
+        &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
+      >236-468-3342</a
+      >
       </app-warning-banner>
       <app-warning-banner
         *ngIf="
@@ -132,7 +133,7 @@
       </app-warning-banner>
     </div>
     <div *ngIf="showEdit" class="edit-button">
-      <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
+      <button (click)="onNavigateToStep(3)" color="accent" mat-flat-button>Edit Section</button>
     </div>
   </div>
 </section>
@@ -146,24 +147,24 @@
     <div class="grid-double">
       {{ applicationSubmission.parcelsAgricultureDescription }}
       <app-no-data
-        [showRequired]="showErrors"
         *ngIf="!applicationSubmission.parcelsAgricultureDescription"
+        [showRequired]="showErrors"
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
     <div class="grid-double">
       {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
       <app-no-data
-        [showRequired]="showErrors"
         *ngIf="!applicationSubmission.parcelsAgricultureImprovementDescription"
+        [showRequired]="showErrors"
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
     <div class="grid-double">
       {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
       <app-no-data
-        [showRequired]="showErrors"
         *ngIf="!applicationSubmission.parcelsNonAgricultureUseDescription"
+        [showRequired]="showErrors"
       ></app-no-data>
     </div>
     <div class="full-width">
@@ -176,54 +177,54 @@
       <div class="grid-1 subheading2">North</div>
       <div class="grid-2">
         {{ applicationSubmission.northLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.northLandUseType"></app-no-data>
+        <app-no-data *ngIf="!applicationSubmission.northLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
       <div class="grid-3">
         {{ applicationSubmission.northLandUseTypeDescription }}
         <app-no-data
-          [showRequired]="showErrors"
           *ngIf="!applicationSubmission.northLandUseTypeDescription"
+          [showRequired]="showErrors"
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">East</div>
       <div class="grid-2">
         {{ applicationSubmission.eastLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.eastLandUseType"></app-no-data>
+        <app-no-data *ngIf="!applicationSubmission.eastLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
       <div class="grid-3">
         {{ applicationSubmission.eastLandUseTypeDescription }}
         <app-no-data
-          [showRequired]="showErrors"
           *ngIf="!applicationSubmission.eastLandUseTypeDescription"
+          [showRequired]="showErrors"
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">South</div>
       <div class="grid-2">
         {{ applicationSubmission.southLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.southLandUseType"></app-no-data>
+        <app-no-data *ngIf="!applicationSubmission.southLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
       <div class="grid-3">
         {{ applicationSubmission.southLandUseTypeDescription }}
         <app-no-data
-          [showRequired]="showErrors"
           *ngIf="!applicationSubmission.southLandUseTypeDescription"
+          [showRequired]="showErrors"
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">West</div>
       <div class="grid-2">
         {{ applicationSubmission.westLandUseType }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.westLandUseType"></app-no-data>
+        <app-no-data *ngIf="!applicationSubmission.westLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
       <div class="grid-3">
         {{ applicationSubmission.westLandUseTypeDescription }}
         <app-no-data
-          [showRequired]="showErrors"
           *ngIf="!applicationSubmission.westLandUseTypeDescription"
+          [showRequired]="showErrors"
         ></app-no-data>
       </div>
     </div>
     <div *ngIf="showEdit" class="edit-button">
-      <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
+      <button (click)="onNavigateToStep(4)" color="accent" mat-flat-button>Edit Section</button>
     </div>
   </div>
 </section>
@@ -231,83 +232,83 @@
   <h3>6. Proposal</h3>
   <app-nfu-details
     *ngIf="applicationSubmission.typeCode === 'NFUP'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-nfu-details>
   <app-tur-details
     *ngIf="applicationSubmission.typeCode === 'TURP'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-tur-details>
   <app-subd-details
     *ngIf="applicationSubmission.typeCode === 'SUBD'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-subd-details>
   <app-roso-details
     *ngIf="applicationSubmission.typeCode === 'ROSO'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-roso-details>
   <app-pofo-details
     *ngIf="applicationSubmission.typeCode === 'POFO'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-pofo-details>
   <app-pfrs-details
     *ngIf="applicationSubmission.typeCode === 'PFRS'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-pfrs-details>
   <app-naru-details
     *ngIf="applicationSubmission.typeCode === 'NARU'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-naru-details>
   <app-excl-details
     *ngIf="applicationSubmission.typeCode === 'EXCL'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-excl-details>
   <app-incl-details
     *ngIf="applicationSubmission.typeCode === 'INCL'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-incl-details>
   <app-cove-details
     *ngIf="applicationSubmission.typeCode === 'COVE'"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [draftMode]="draftMode"
-    [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
+    [applicationSubmission]="applicationSubmission"
+    [draftMode]="draftMode"
+    [showEdit]="showEdit"
+    [showErrors]="showErrors"
   ></app-cove-details>
 </section>
 <section>
@@ -320,23 +321,23 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
         <div class="grid-2">
           {{ file.type?.label }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!file.type"></app-no-data>
+          <app-no-data *ngIf="!file.type" [showRequired]="showErrors"></app-no-data>
         </div>
         <div class="grid-3">
           {{ file.description }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!file.description"></app-no-data>
+          <app-no-data *ngIf="!file.description" [showRequired]="showErrors"></app-no-data>
         </div>
       </ng-container>
       <div class="full-width">
-        <app-no-data [showRequired]="false" *ngIf="otherFiles.length === 0"></app-no-data>
+        <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
       </div>
     </div>
     <div *ngIf="showEdit" class="edit-button">
-      <button mat-flat-button (click)="onNavigateToStep(6)" color="accent">Edit Section</button>
+      <button (click)="onNavigateToStep(6)" color="accent" mat-flat-button>Edit Section</button>
     </div>
   </div>
 </section>

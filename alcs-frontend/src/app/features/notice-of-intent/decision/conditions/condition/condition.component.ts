@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import moment from 'moment';
 import { NoticeOfIntentDecisionConditionService } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
-import { UpdateNoticeOfIntentDecisionConditionDto } from '../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { UpdateNoticeOfIntentDecisionConditionDto } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
   DECISION_CONDITION_INCOMPLETE_LABEL,
@@ -52,7 +52,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   async onUpdateCondition(
     field: keyof UpdateNoticeOfIntentDecisionConditionDto,
-    value: string[] | string | number | null
+    value: string[] | string | number | null,
   ) {
     const condition = this.condition;
 

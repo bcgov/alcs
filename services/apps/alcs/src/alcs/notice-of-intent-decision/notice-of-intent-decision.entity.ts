@@ -18,7 +18,9 @@ import { NoticeOfIntentDecisionDocument } from './notice-of-intent-decision-docu
 import { NoticeOfIntentDecisionOutcome } from './notice-of-intent-decision-outcome.entity';
 import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
 
-@Entity()
+@Entity({
+  comment: 'Decisions saved to NOIs, linked to the modification request',
+})
 @Index(['resolutionNumber', 'resolutionYear'], {
   unique: true,
   where: '"audit_deleted_date_at" is null and "resolution_number" is not null',

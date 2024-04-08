@@ -2,7 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import { Column, Entity } from 'typeorm';
 import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 
-@Entity()
+@Entity({ comment: 'Code table for possible Notification types' })
 export class NotificationType extends BaseCodeEntity {
   constructor(data?: Partial<NotificationType>) {
     super();

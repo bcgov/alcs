@@ -7,15 +7,16 @@ import { ClsService } from 'nestjs-cls';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Application } from '../application/application.entity';
-import { Board } from '../board/board.entity';
-import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { Covenant } from '../covenant/covenant.entity';
+import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
+import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
+import { InquiryAdvancedSearchService } from './inquiry/inquiry-advanced-search.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
+import { PlanningReviewAdvancedSearchService } from './planning-review/planning-review-advanced-search.service';
 import { SearchController } from './search.controller';
 import { SearchRequestDto } from './search.dto';
 import { SearchService } from './search.service';
@@ -26,6 +27,8 @@ describe('SearchController', () => {
   let mockNoticeOfIntentAdvancedSearchService: DeepMocked<NoticeOfIntentAdvancedSearchService>;
   let mockApplicationAdvancedSearchService: DeepMocked<ApplicationAdvancedSearchService>;
   let mockNotificationAdvancedSearchService: DeepMocked<NotificationAdvancedSearchService>;
+  let mockPlanningReviewAdvancedSearchService: DeepMocked<PlanningReviewAdvancedSearchService>;
+  let mockInquiryAdvancedSearchService: DeepMocked<InquiryAdvancedSearchService>;
   let mockDataSource: DeepMocked<DataSource>;
   let mockQueryRunner: DeepMocked<QueryRunner>;
   let mockAppTypeRepo: DeepMocked<Repository<ApplicationType>>;
@@ -35,6 +38,8 @@ describe('SearchController', () => {
     mockNoticeOfIntentAdvancedSearchService = createMock();
     mockApplicationAdvancedSearchService = createMock();
     mockNotificationAdvancedSearchService = createMock();
+    mockPlanningReviewAdvancedSearchService = createMock();
+    mockInquiryAdvancedSearchService = createMock();
     mockDataSource = createMock();
     mockAppTypeRepo = createMock();
 
@@ -62,6 +67,14 @@ describe('SearchController', () => {
           useValue: mockNotificationAdvancedSearchService,
         },
         {
+          provide: PlanningReviewAdvancedSearchService,
+          useValue: mockPlanningReviewAdvancedSearchService,
+        },
+        {
+          provide: InquiryAdvancedSearchService,
+          useValue: mockInquiryAdvancedSearchService,
+        },
+        {
           provide: DataSource,
           useValue: mockDataSource,
         },
@@ -87,15 +100,8 @@ describe('SearchController', () => {
     mockSearchService.getApplication.mockResolvedValue(new Application());
     mockSearchService.getNoi.mockResolvedValue(new NoticeOfIntent());
     mockSearchService.getNotification.mockResolvedValue(new Notification());
-    mockSearchService.getCovenant.mockResolvedValue(
-      new Covenant({
-        card: {
-          board: {
-            code: 'fake_board',
-          } as Board,
-        } as Card,
-      }),
-    );
+    mockSearchService.getPlanningReview.mockResolvedValue(new PlanningReview());
+    mockSearchService.getInquiry.mockResolvedValue(new Inquiry());
 
     mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents.mockResolvedValue(
       {
@@ -113,6 +119,16 @@ describe('SearchController', () => {
       data: [],
       total: 0,
     });
+
+    mockPlanningReviewAdvancedSearchService.search.mockResolvedValue({
+      data: [],
+      total: 0,
+    });
+
+    mockInquiryAdvancedSearchService.search.mockResolvedValue({
+      data: [],
+      total: 0,
+    });
   });
 
   it('should be defined', () => {
@@ -123,19 +139,23 @@ describe('SearchController', () => {
     const searchString = 'fake';
     const result = await controller.search(searchString);
 
-    expect(mockSearchService.getApplication).toBeCalledTimes(1);
-    expect(mockSearchService.getApplication).toBeCalledWith(searchString);
-    expect(mockSearchService.getNoi).toBeCalledTimes(1);
-    expect(mockSearchService.getNoi).toBeCalledWith(searchString);
-    expect(mockSearchService.getCovenant).toBeCalledTimes(1);
-    expect(mockSearchService.getCovenant).toBeCalledWith(searchString);
+    expect(mockSearchService.getApplication).toHaveBeenCalledTimes(1);
+    expect(mockSearchService.getApplication).toHaveBeenCalledWith(searchString);
+    expect(mockSearchService.getNoi).toHaveBeenCalledTimes(1);
+    expect(mockSearchService.getNoi).toHaveBeenCalledWith(searchString);
+    expect(mockSearchService.getPlanningReview).toHaveBeenCalledTimes(1);
+    expect(mockSearchService.getPlanningReview).toHaveBeenCalledWith(
+      searchString,
+    );
     expect(mockSearchService.getNotification).toHaveBeenCalledTimes(1);
-    expect(mockSearchService.getNotification).toBeCalledWith(searchString);
+    expect(mockSearchService.getNotification).toHaveBeenCalledWith(
+      searchString,
+    );
     expect(result).toBeDefined();
-    expect(result.length).toBe(4);
+    expect(result.length).toBe(5);
   });
 
-  it('should call advanced search to retrieve Applications, NOIs, PlanningReviews, Covenants, Notifications', async () => {
+  it('should call advanced search to retrieve Applications, NOIs, PlanningReviews, Covenants, Notifications, Inquiries', async () => {
     const mockSearchRequestDto = {
       pageSize: 1,
       page: 1,
@@ -151,19 +171,26 @@ describe('SearchController', () => {
 
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto, {});
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto);
+    expect(result.noticeOfIntents).toBeDefined();
+    expect(result.totalNoticeOfIntents).toBe(0);
+
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
@@ -184,10 +211,10 @@ describe('SearchController', () => {
     expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto, {});
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
     expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
@@ -208,10 +235,10 @@ describe('SearchController', () => {
 
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
@@ -232,10 +259,10 @@ describe('SearchController', () => {
     expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto, {});
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
     expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
@@ -256,11 +283,32 @@ describe('SearchController', () => {
 
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
+  });
+
+  it('should call advanced search to retrieve Inquiries only when Inquiry file type selected', async () => {
+    const mockSearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: ['GENC'],
+    };
+
+    const result = await controller.advancedSearch(
+      mockSearchRequestDto as SearchRequestDto,
+    );
+
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
+      mockSearchRequestDto,
+    );
+    expect(result.inquiries).toBeDefined();
+    expect(result.totalInquiries).toBe(0);
   });
 });

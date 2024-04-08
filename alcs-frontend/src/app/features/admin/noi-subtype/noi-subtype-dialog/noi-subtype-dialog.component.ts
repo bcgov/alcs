@@ -1,10 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v1/application-decision.dto';
-import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-criterion.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoiSubtypeService } from '../../../../services/noi-subtype/noi-subtype.service';
 import { NoticeOfIntentSubtypeDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
-import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
 
 @Component({
   selector: 'app-noi-subtype-dialog',
@@ -23,7 +20,7 @@ export class NoiSubtypeDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: NoticeOfIntentSubtypeDto | undefined,
     private dialogRef: MatDialogRef<NoiSubtypeDialogComponent>,
-    private noiSubtypeService: NoiSubtypeService
+    private noiSubtypeService: NoiSubtypeService,
   ) {
     if (data) {
       this.description = data.description;

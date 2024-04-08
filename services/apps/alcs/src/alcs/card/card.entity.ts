@@ -7,16 +7,18 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Board } from '../board/board.entity';
-import { Comment } from '../comment/comment.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
+import { Board } from '../board/board.entity';
+import { Comment } from '../comment/comment.entity';
 import { CardHistory } from './card-history/card-history.entity';
 import { CardStatus } from './card-status/card-status.entity';
 import { CardSubtask } from './card-subtask/card-subtask.entity';
 import { CardType } from './card-type/card-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'Kanban board cards',
+})
 export class Card extends Base {
   constructor(data?: Partial<Card>) {
     super();

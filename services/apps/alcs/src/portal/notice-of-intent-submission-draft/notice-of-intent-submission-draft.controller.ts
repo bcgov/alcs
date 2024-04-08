@@ -12,7 +12,6 @@ import * as config from 'config';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubmissionDraftService } from './notice-of-intent-submission-draft.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -20,7 +19,6 @@ import { NoticeOfIntentSubmissionDraftService } from './notice-of-intent-submiss
 @UseGuards(RolesGuard)
 export class NoticeOfIntentSubmissionDraftController {
   constructor(
-    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentSubmissionDraftService: NoticeOfIntentSubmissionDraftService,
   ) {}
 

@@ -16,26 +16,6 @@ export const MODIFICATION_TYPE_LABEL: ApplicationPill = {
   textColor: '#000',
 };
 
-export const PLANNING_TYPE_LABEL = {
-  label: 'Planning Review',
-  code: 'PLAN',
-  shortLabel: 'PLAN',
-  backgroundColor: '#fff',
-  borderColor: '#b2ff59',
-  description: 'Planning Review',
-  textColor: '#000',
-};
-
-export const COVENANT_TYPE_LABEL = {
-  label: 'Covenant',
-  code: 'COV',
-  shortLabel: 'COV',
-  backgroundColor: '#fff',
-  borderColor: '#228820',
-  description: 'Covenant',
-  textColor: '#000',
-};
-
 export const RETROACTIVE_TYPE_LABEL = {
   label: 'Retroactive',
   code: 'RETRO',
@@ -90,14 +70,6 @@ export const DECISION_CONDITION_SUPERSEDED_LABEL = {
   textColor: '#000',
 };
 
-export const NOTIFICATION_LABEL = {
-  label: 'Statutory Right of Way',
-  shortLabel: 'SRW',
-  backgroundColor: '#fff',
-  borderColor: '#59ADFA',
-  textColor: '#313132',
-};
-
 export const OPEN_PR_LABEL = {
   label: 'Open',
   shortLabel: 'Open',
@@ -109,7 +81,7 @@ export const OPEN_PR_LABEL = {
 export const CLOSED_PR_LABEL = {
   label: 'Closed',
   shortLabel: 'Closed',
-  backgroundColor: '#C6242A',
-  borderColor: '#C6242A',
+  backgroundColor: '#DD8C8F',
+  borderColor: '#DD8C8F',
   textColor: '#313132',
 };

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
@@ -77,10 +85,12 @@ export class PlanningReviewController {
   async updateByFileNumber(
     @Param('fileNumber') fileNumber: string,
     @Body() updateDto: UpdatePlanningReviewDto,
+    @Req() req,
   ) {
     const review = await this.planningReviewService.update(
       fileNumber,
       updateDto,
+      req.user.entity,
     );
 
     return this.mapper.map(review, PlanningReview, PlanningReviewDetailedDto);

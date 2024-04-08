@@ -150,7 +150,7 @@ mat-panel-description {
       }
     }
 
-    .application-card:hover {
+    .meeting-card:hover {
       border-color: colors.$secondary-color;
     }
   }
@@ -180,7 +180,7 @@ mat-panel-description {
       }
     }
 
-    .application-card:hover {
+    .meeting-card:hover {
       border-color: colors.$primary-color;
     }
   }
@@ -210,7 +210,7 @@ mat-panel-description {
       }
     }
 
-    .application-card:hover {
+    .meeting-card:hover {
       border-color: colors.$accent-color;
     }
   }
@@ -245,7 +245,7 @@ mat-panel-description {
   }
 }
 
-.application-card {
+.meeting-card {
   margin-bottom: 16px;
   padding: 8px 16px;
   background-color: colors.$white;
@@ -260,18 +260,18 @@ mat-panel-description {
     margin-bottom: unset;
   }
 
-  &.application-highlighted {
+  &.meeting-highlighted {
     border: 5px solid rgba(colors.$primary-color, 0.5);
     animation: border-pulsate 2s infinite;
   }
 }
 
-.application-header {
+.meeting-header {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
 }
 
-.application-file {
+.meeting-file {
   display: flex;
   align-items: center;
   justify-content: space-between;

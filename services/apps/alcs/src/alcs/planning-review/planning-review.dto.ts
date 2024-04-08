@@ -11,6 +11,7 @@ import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
+import { PlanningReviewMeetingDto } from './planning-review-meeting/planning-review-meeting.dto';
 
 export class PlanningReviewTypeDto extends BaseCodeDto {
   @AutoMap()
@@ -83,6 +84,9 @@ export class PlanningReviewDto {
 
   @AutoMap(() => ApplicationRegionDto)
   region: ApplicationRegionDto;
+
+  @AutoMap(() => [PlanningReviewMeetingDto])
+  meetings: PlanningReviewMeetingDto[];
 
   @AutoMap(() => PlanningReviewTypeDto)
   type: PlanningReviewTypeDto;
@@ -162,4 +166,8 @@ export class UpdatePlanningReviewDto {
   @IsString()
   @IsOptional()
   typeCode?: string;
+
+  @IsNumber()
+  @IsOptional()
+  decisionDate?: number | null;
 }

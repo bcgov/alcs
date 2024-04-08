@@ -1,0 +1,78 @@
+<div class="split">
+  <h3>Inquiry Details</h3>
+</div>
+<section *ngIf="inquiry">
+  <div class="two-item-row">
+    <div class="full-width">
+      <h5>Type</h5>
+      <div style="width: 50%">
+        <app-inline-dropdown (save)="onSaveType($event)" [options]="types" [value]="inquiry.type.code" />
+      </div>
+    </div>
+
+    <div class="full-width">
+      <h5>Submitted to ALC</h5>
+      <div style="width: 50%">
+        <app-inline-datepicker (save)="onSaveSubmittedToALC($event)" [value]="inquiry.dateSubmittedToAlc" />
+      </div>
+    </div>
+  </div>
+</section>
+<section *ngIf="inquiry">
+  <h5>L/FNG Information</h5>
+  <div class="two-item-row">
+    <div>
+      <div class="subheading2">Local/First Nation Government</div>
+      <app-inline-dropdown
+        (save)="onSaveTextField($event, 'localGovernmentUuid')"
+        [options]="governments"
+        [value]="inquiry.localGovernmentUuid"
+      />
+    </div>
+
+    <div>
+      <div class="subheading2">Region</div>
+      <app-inline-dropdown
+        (save)="onSaveTextField($event, 'regionCode')"
+        [options]="regions"
+        [value]="inquiry.regionCode"
+      />
+    </div>
+  </div>
+</section>
+<section *ngIf="inquiry">
+  <h5>Inquirer</h5>
+  <div class="two-item-row">
+    <div>
+      <div class="subheading2">First Name</div>
+      <app-inline-text (save)="onSaveTextField($event, 'inquirerFirstName')" [value]="inquiry.inquirerFirstName" />
+    </div>
+
+    <div>
+      <div class="subheading2">Last Name</div>
+      <app-inline-text (save)="onSaveTextField($event, 'inquirerLastName')" [value]="inquiry.inquirerLastName" />
+    </div>
+
+    <div class="full-width">
+      <div class="subheading2">Organization</div>
+      <app-inline-text
+        (save)="onSaveTextField($event, 'inquirerOrganization')"
+        [value]="inquiry.inquirerOrganization"
+      />
+    </div>
+
+    <div>
+      <div class="subheading2">Phone</div>
+      <app-inline-text
+        (save)="onSaveTextField($event, 'inquirerPhone')"
+        [value]="inquiry.inquirerPhone"
+        mask="(000) 000-0000"
+      />
+    </div>
+
+    <div>
+      <div class="subheading2">Email</div>
+      <app-inline-text (save)="onSaveTextField($event, 'inquirerEmail')" [value]="inquiry.inquirerEmail" />
+    </div>
+  </div>
+</section>

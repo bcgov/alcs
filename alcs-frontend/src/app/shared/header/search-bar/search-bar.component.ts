@@ -1,9 +1,9 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
-import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-search-bar',
@@ -19,7 +19,11 @@ export class SearchBarComponent implements AfterViewInit {
   wasInside = false;
   @ViewChildren('searchInput') input!: QueryList<ElementRef>;
 
-  constructor(private toastService: ToastService, private router: Router, private searchService: SearchService) {}
+  constructor(
+    private toastService: ToastService,
+    private router: Router,
+    private searchService: SearchService,
+  ) {}
 
   @HostListener('click')
   clickInside() {
@@ -88,10 +92,13 @@ export class SearchBarComponent implements AfterViewInit {
           case 'NOTI':
             await this.router.navigate(['notification', result.referenceId]);
             break;
+          case 'INQR':
+            await this.router.navigate(['inquiry', result.referenceId]);
+            break;
           case 'COV':
           case 'PLAN':
             await this.router.navigateByUrl(
-              `/board/${result.boardCode}?card=${result.referenceId}&type=${result.type}`
+              `/board/${result.boardCode}?card=${result.referenceId}&type=${result.type}`,
             );
             break;
           default:

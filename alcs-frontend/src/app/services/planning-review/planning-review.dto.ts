@@ -2,6 +2,7 @@ import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
+import { PlanningReviewMeetingDto } from './planning-review-meeting/planning-review-meeting.dto';
 
 export interface CreatePlanningReviewDto {
   description: string;
@@ -16,12 +17,14 @@ export interface CreatePlanningReviewDto {
 export interface PlanningReviewDto {
   uuid: string;
   fileNumber: string;
+  decisionDate?: number;
   legacyId: string | null;
   open: boolean;
   localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
   type: PlanningReviewTypeDto;
   documentName: string;
+  meetings: PlanningReviewMeetingDto[];
 }
 
 export interface PlanningReviewDetailedDto extends PlanningReviewDto {

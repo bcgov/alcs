@@ -46,6 +46,30 @@ describe('LocalGovernmentService', () => {
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
 
+  it('should call repositories when listActive', async () => {
+    mockRepository.find.mockResolvedValue([]);
+
+    await service.listActive();
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call repositories when getByName', async () => {
+    mockRepository.findOne.mockResolvedValue(null);
+
+    await service.getByName('name');
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call repositories when getByBuid', async () => {
+    mockRepository.findOne.mockResolvedValue(null);
+
+    await service.getByGuid('name');
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+  });
+
   it('should call repository on getByUuId', async () => {
     const uuid = 'fake';
     mockRepository.findOneOrFail.mockResolvedValue(new LocalGovernment());
@@ -92,5 +116,13 @@ describe('LocalGovernmentService', () => {
     });
 
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call repositories when fetching for search', async () => {
+    mockRepository.findAndCount.mockResolvedValue([[], 0]);
+
+    await service.fetch(0, 5, 'text');
+
+    expect(mockRepository.findAndCount).toHaveBeenCalledTimes(1);
   });
 });

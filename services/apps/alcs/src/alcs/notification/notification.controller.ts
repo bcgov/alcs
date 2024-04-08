@@ -131,7 +131,7 @@ export class NotificationController {
       );
     }
 
-    return this.get(fileNumber, req.user.entity);
+    return this.get(fileNumber, req);
   }
 
   @Get('/search/:fileNumber')

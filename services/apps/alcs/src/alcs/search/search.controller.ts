@@ -14,26 +14,33 @@ import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { Covenant } from '../covenant/covenant.entity';
+import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
+import { InquiryAdvancedSearchService } from './inquiry/inquiry-advanced-search.service';
+import { InquirySearchView } from './inquiry/inquiry-search-view.entity';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
 import { NotificationSubmissionSearchView } from './notification/notification-search-view.entity';
+import { PlanningReviewAdvancedSearchService } from './planning-review/planning-review-advanced-search.service';
+import { PlanningReviewSearchView } from './planning-review/planning-review-search-view.entity';
 import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
   ApplicationSearchResultDto,
+  InquirySearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
+  PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
 import { SearchService } from './search.service';
+import { INQUIRY_TYPES } from '../inquiry/inquiry.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -45,6 +52,8 @@ export class SearchController {
     private noticeOfIntentSearchService: NoticeOfIntentAdvancedSearchService,
     private applicationSearchService: ApplicationAdvancedSearchService,
     private notificationSearchService: NotificationAdvancedSearchService,
+    private planningReviewSearchService: PlanningReviewAdvancedSearchService,
+    private inquirySearchService: InquiryAdvancedSearchService,
     @InjectRepository(ApplicationType)
     private appTypeRepo: Repository<ApplicationType>,
     @InjectDataSource()
@@ -56,8 +65,10 @@ export class SearchController {
   async search(@Param('searchTerm') searchTerm) {
     const application = await this.searchService.getApplication(searchTerm);
     const noi = await this.searchService.getNoi(searchTerm);
-    const covenant = await this.searchService.getCovenant(searchTerm);
     const notification = await this.searchService.getNotification(searchTerm);
+    const planningReview =
+      await this.searchService.getPlanningReview(searchTerm);
+    const inquiry = await this.searchService.getInquiry(searchTerm);
 
     const result: SearchResultDto[] = [];
 
@@ -65,9 +76,9 @@ export class SearchController {
       result,
       application,
       noi,
-      null, //TODO
-      covenant,
+      planningReview,
       notification,
+      inquiry,
     );
 
     return result;
@@ -78,8 +89,8 @@ export class SearchController {
     application: Application | null,
     noi: NoticeOfIntent | null,
     planningReview: PlanningReview | null,
-    covenant: Covenant | null,
     notification: Notification | null,
+    inquiry: Inquiry | null,
   ) {
     if (application) {
       result.push(this.mapApplicationToSearchResult(application));
@@ -93,12 +104,12 @@ export class SearchController {
       result.push(this.mapPlanningReviewToSearchResult(planningReview));
     }
 
-    if (covenant) {
-      result.push(this.mapCovenantToSearchResult(covenant));
-    }
-
     if (notification) {
       result.push(this.mapNotificationToSearchResult(notification));
+    }
+
+    if (inquiry) {
+      result.push(this.mapInquiryToSearchResult(inquiry));
     }
   }
 
@@ -108,8 +119,9 @@ export class SearchController {
     const {
       searchApplications,
       searchNoi,
-      searchNonApplications,
+      searchPlanningReviews,
       searchNotifications,
+      searchInquiries,
     } = this.getEntitiesTypeToSearch(searchDto);
 
     const queryRunner = this.dataSource.createQueryRunner('slave');
@@ -142,11 +154,25 @@ export class SearchController {
         notifications = await this.notificationSearchService.search(searchDto);
       }
 
+      let planningReviews: AdvancedSearchResultDto<
+        PlanningReviewSearchView[]
+      > | null = null;
+      if (searchPlanningReviews) {
+        planningReviews =
+          await this.planningReviewSearchService.search(searchDto);
+      }
+
+      let inquiries: AdvancedSearchResultDto<InquirySearchView[]> | null = null;
+      if (searchInquiries) {
+        inquiries = await this.inquirySearchService.search(searchDto);
+      }
+
       return await this.mapAdvancedSearchResults(
         applicationSearchResult,
         noticeOfIntentSearchService,
-        null,
+        planningReviews,
         notifications,
+        inquiries,
       );
     } finally {
       await queryRunner.release();
@@ -169,6 +195,7 @@ export class SearchController {
 
       const mappedSearchResult = await this.mapAdvancedSearchResults(
         applications,
+        null,
         null,
         null,
         null,
@@ -196,6 +223,7 @@ export class SearchController {
       noticeOfIntents,
       null,
       null,
+      null,
     );
 
     return {
@@ -217,6 +245,7 @@ export class SearchController {
       null,
       null,
       notifications,
+      null,
     );
 
     return {
@@ -225,12 +254,34 @@ export class SearchController {
     };
   }
 
+  @Post('/advanced/inquiries')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchInquiries(
+    @Body() searchDto: SearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<InquirySearchResultDto[]>> {
+    const inquiries = await this.inquirySearchService.search(searchDto);
+
+    const mappedSearchResult = await this.mapAdvancedSearchResults(
+      null,
+      null,
+      null,
+      null,
+      inquiries,
+    );
+
+    return {
+      total: mappedSearchResult.totalInquiries,
+      data: mappedSearchResult.inquiries,
+    };
+  }
+
   private getEntitiesTypeToSearch(searchDto: SearchRequestDto) {
     let searchApplications = true;
 
-    let nonApplicationTypeSpecified = false;
+    let planningReviewTypeSpecified = false;
     let noiTypeSpecified = false;
     let notificationTypeSpecified = false;
+    let inquiriesTypeSpecified = false;
     if (searchDto.fileTypes.length > 0) {
       searchApplications =
         searchDto.fileTypes.filter((searchType) =>
@@ -245,24 +296,24 @@ export class SearchController {
 
       notificationTypeSpecified = searchDto.fileTypes.includes('SRW');
 
-      nonApplicationTypeSpecified = searchDto.fileTypes.some((searchType) =>
-        ['COV', 'PLAN'].includes(searchType),
+      planningReviewTypeSpecified = searchDto.fileTypes.some((searchType) =>
+        ['PLAN'].includes(searchType),
       );
+
+      inquiriesTypeSpecified =
+        searchDto.fileTypes.filter((searchType) =>
+          Object.values(INQUIRY_TYPES).includes(
+            INQUIRY_TYPES[searchType as keyof typeof INQUIRY_TYPES],
+          ),
+        ).length > 0;
     }
 
     const searchNoi = searchDto.fileTypes.length > 0 ? noiTypeSpecified : true;
 
-    const searchNonApplications =
-      (searchDto.fileTypes.length > 0 ? nonApplicationTypeSpecified : true) &&
-      !searchDto.dateDecidedFrom &&
-      !searchDto.dateDecidedTo &&
-      !searchDto.dateSubmittedFrom &&
-      !searchDto.dateDecidedTo &&
-      !searchDto.resolutionNumber &&
-      !searchDto.resolutionYear &&
+    const searchPlanningReviews =
+      (searchDto.fileTypes.length > 0 ? planningReviewTypeSpecified : true) &&
       !searchDto.portalStatusCode &&
       !searchDto.pid &&
-      !isStringSetAndNotEmpty(searchDto.legacyId) &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
 
     const searchNotifications =
@@ -273,11 +324,20 @@ export class SearchController {
       !searchDto.resolutionYear &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
+    const searchInquiries =
+      (searchDto.fileTypes.length > 0 ? inquiriesTypeSpecified : true) &&
+      !searchDto.dateDecidedFrom &&
+      !searchDto.dateDecidedTo &&
+      !searchDto.resolutionNumber &&
+      !searchDto.resolutionYear &&
+      !isStringSetAndNotEmpty(searchDto.legacyId);
+
     return {
       searchApplications,
       searchNoi,
-      searchNonApplications,
+      searchPlanningReviews,
       searchNotifications,
+      searchInquiries,
     };
   }
 
@@ -288,10 +348,11 @@ export class SearchController {
     noticeOfIntents: AdvancedSearchResultDto<
       NoticeOfIntentSubmissionSearchView[]
     > | null,
-    nonApplications: null,
+    planningReviews: AdvancedSearchResultDto<PlanningReviewSearchView[]> | null,
     notifications: AdvancedSearchResultDto<
       NotificationSubmissionSearchView[]
     > | null,
+    inquiries: AdvancedSearchResultDto<InquirySearchView[]> | null,
   ) {
     const response = new AdvancedSearchResponseDto();
 
@@ -328,12 +389,38 @@ export class SearchController {
       );
     }
 
+    const mappedPlanningReviews: PlanningReviewSearchResultDto[] = [];
+    if (
+      planningReviews &&
+      planningReviews.data &&
+      planningReviews.data.length > 0
+    ) {
+      mappedPlanningReviews.push(
+        ...planningReviews.data.map((planningReview) =>
+          this.mapPlanningReviewToAdvancedSearchResult(planningReview),
+        ),
+      );
+    }
+
+    const mappedInquiries: InquirySearchResultDto[] = [];
+    if (inquiries && inquiries.data && inquiries.data.length > 0) {
+      mappedInquiries.push(
+        ...inquiries.data.map((inquiry) =>
+          this.mapInquiryToAdvancedSearchResult(inquiry),
+        ),
+      );
+    }
+
     response.applications = mappedApplications;
     response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
     response.totalNoticeOfIntents = noticeOfIntents?.total ?? 0;
     response.notifications = mappedNotifications;
     response.totalNotifications = notifications?.total ?? 0;
+    response.planningReviews = mappedPlanningReviews;
+    response.totalPlanningReviews = planningReviews?.total ?? 0;
+    response.inquiries = mappedInquiries;
+    response.totalInquiries = inquiries?.total ?? 0;
 
     return response;
   }
@@ -370,23 +457,22 @@ export class SearchController {
   private mapPlanningReviewToSearchResult(
     planning: PlanningReview,
   ): SearchResultDto {
-    //TODO
     return {
-      fileNumber: '',
-      localGovernmentName: undefined,
-      referenceId: '',
-      type: '',
+      type: CARD_TYPE.PLAN,
+      referenceId: planning.fileNumber,
+      localGovernmentName: planning.localGovernment?.name,
+      applicant: planning.documentName,
+      fileNumber: planning.fileNumber,
     };
   }
 
-  private mapCovenantToSearchResult(covenant: Covenant): SearchResultDto {
+  private mapInquiryToSearchResult(inquiry: Inquiry): SearchResultDto {
     return {
-      type: CARD_TYPE.COV,
-      referenceId: covenant.cardUuid,
-      localGovernmentName: covenant.localGovernment?.name,
-      applicant: covenant.applicant,
-      fileNumber: covenant.fileNumber,
-      boardCode: covenant.card.board.code,
+      type: CARD_TYPE.INQUIRY,
+      referenceId: inquiry.fileNumber,
+      localGovernmentName: inquiry.localGovernment?.name,
+      applicant: inquiry.inquirerLastName ?? undefined,
+      fileNumber: inquiry.fileNumber,
     };
   }
 
@@ -457,6 +543,50 @@ export class SearchController {
       ownerName: notification.applicant,
       class: 'NOTI',
       status: notification.status.status_type_code,
+    };
+  }
+
+  private mapPlanningReviewToAdvancedSearchResult(
+    planningReview: PlanningReviewSearchView,
+  ): PlanningReviewSearchResultDto {
+    return {
+      documentName: planningReview.documentName,
+      referenceId: planningReview.fileNumber,
+      fileNumber: planningReview.fileNumber,
+      open: planningReview.open,
+      type: {
+        code: planningReview.planningReviewType_code,
+        label: planningReview.planningReviewType_label,
+        backgroundColor: planningReview.planningReviewType_background_color,
+        textColor: planningReview.planningReviewType_text_color,
+        description: '',
+        shortLabel: planningReview.planningReviewType_short_label,
+      },
+      localGovernmentName: planningReview.localGovernmentName ?? null,
+      class: 'PLAN',
+    };
+  }
+
+  private mapInquiryToAdvancedSearchResult(
+    inquiry: InquirySearchView,
+  ): InquirySearchResultDto {
+    return {
+      fileNumber: inquiry.fileNumber,
+      open: inquiry.open,
+      type: {
+        code: inquiry.inquiryTypeCode,
+        label: inquiry.inquiryType.label,
+        backgroundColor: inquiry.inquiryType.backgroundColor,
+        textColor: inquiry.inquiryType.textColor,
+        description: '',
+        shortLabel: inquiry.inquiryType.shortLabel,
+      },
+      localGovernmentName: inquiry.localGovernmentName ?? null,
+      dateSubmitted: inquiry.dateSubmittedToAlc?.getTime(),
+      inquirerFirstName: inquiry.inquirerFirstName,
+      inquirerLastName: inquiry.inquirerLastName,
+      inquirerOrganizationName: inquiry.inquirerOrganization,
+      class: 'INQR',
     };
   }
 }

@@ -8,10 +8,12 @@ import {
   PfrsDecisionComponentDto,
   PofoDecisionComponentDto,
   RosoDecisionComponentDto,
-} from '../../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
+
+const MIN_SOIL_FIELDS = 0.01;
 
 @Component({
   selector: 'app-decision-component',
@@ -31,24 +33,24 @@ export class DecisionComponentComponent implements OnInit {
 
   // pofo, pfrs
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
-  volumeToPlace = new FormControl<number | null>(null, [Validators.required]);
-  areaToPlace = new FormControl<number | null>(null, [Validators.required]);
-  maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
-  averageDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
+  volumeToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  areaToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  averageDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
 
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
-  volumeToRemove = new FormControl<number | null>(null, [Validators.required]);
-  areaToRemove = new FormControl<number | null>(null, [Validators.required]);
-  maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
-  averageDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
+  volumeToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  areaToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  averageDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
 
   //pfrs
   endDate2 = new FormControl<Date | null>(null);
 
   // general
   endDate = new FormControl<Date | null>(null);
-  alrArea = new FormControl<number | null>(null, [Validators.required]);
+  alrArea = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   agCap = new FormControl<string | null>(null, [Validators.required]);
   agCapSource = new FormControl<string | null>(null, [Validators.required]);
   agCapMap = new FormControl<string | null>(null);

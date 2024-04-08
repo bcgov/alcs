@@ -1,13 +1,13 @@
+import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
-import { Injectable } from '@nestjs/common';
-import { AlcsApplicationSubmissionDto } from '../../alcs/application/application.dto';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import {
   ApplicationStatusDto,
   ApplicationSubmissionToSubmissionStatusDto,
 } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
+import { AlcsApplicationSubmissionDto } from '../../alcs/application/application.dto';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
@@ -22,8 +22,6 @@ import { ApplicationSubmission } from '../../portal/application-submission/appli
 import { CovenantTransfereeDto } from '../../portal/application-submission/covenant-transferee/covenant-transferee.dto';
 import { CovenantTransferee } from '../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
 import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
-import { NotificationTransfereeDto } from '../../portal/notification-submission/notification-transferee/notification-transferee.dto';
-import { NotificationTransferee } from '../../portal/notification-submission/notification-transferee/notification-transferee.entity';
 
 @Injectable()
 export class ApplicationSubmissionProfile extends AutomapperProfile {

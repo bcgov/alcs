@@ -2,7 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import { Column, Entity } from 'typeorm';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
 
-@Entity()
+@Entity({ comment: 'Code table for possible Planning Review types' })
 export class PlanningReviewType extends BaseCodeEntity {
   constructor(data?: Partial<PlanningReviewType>) {
     super();

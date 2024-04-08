@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
-import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, combineLatestWith, map, startWith, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
@@ -20,9 +19,10 @@ import { NotificationSubmissionStatusDto } from '../../services/notification/not
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
-  NonApplicationSearchResultDto,
+  InquirySearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
+  PlanningReviewSearchResultDto,
   SearchRequestDto,
 } from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
@@ -53,11 +53,14 @@ export class SearchComponent implements OnInit, OnDestroy {
   noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
   noticeOfIntentTotal = 0;
 
-  nonApplications: NonApplicationSearchResultDto[] = [];
-  nonApplicationsTotal = 0;
+  planningReviews: PlanningReviewSearchResultDto[] = [];
+  planningReviewsTotal = 0;
 
   notifications: NotificationSearchResultDto[] = [];
   notificationTotal = 0;
+
+  inquiries: InquirySearchResultDto[] = [];
+  inquiriesTotal = 0;
 
   isSearchExpanded = false;
   pageIndex = 0;
@@ -216,30 +219,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.isSearchExpanded = !this.isSearchExpanded;
   }
 
-  onGovernmentChange($event: MatAutocompleteSelectedEvent) {
-    const localGovernmentName = $event.option.value;
-    if (localGovernmentName) {
-      const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
-      if (localGovernment) {
-        this.localGovernmentControl.setValue(localGovernment.name);
-      }
-    }
-  }
-
-  onBlur() {
-    //Blur will fire before onGovernmentChange above, so use setTimeout to delay it
-    setTimeout(() => {
-      const localGovernmentName = this.localGovernmentControl.getRawValue();
-      if (localGovernmentName) {
-        const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
-        if (!localGovernment) {
-          this.localGovernmentControl.setValue(null);
-          console.log('Clearing Local Government field');
-        }
-      }
-    }, 500);
-  }
-
   onReset() {
     this.searchForm.reset();
 
@@ -300,12 +279,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.noticeOfIntentTotal = result?.total ?? 0;
   }
 
-  async onNonApplicationSearch() {
+  async onPlanningReviewSearch() {
     const searchParams = this.getSearchParams();
-    const result = await this.searchService.advancedSearchNonApplicationsFetch(searchParams);
+    const result = await this.searchService.advancedSearchPlanningReviewsFetch(searchParams);
 
-    this.nonApplications = result?.data ?? [];
-    this.nonApplicationsTotal = result?.total ?? 0;
+    this.planningReviews = result?.data ?? [];
+    this.planningReviewsTotal = result?.total ?? 0;
   }
 
   async onNotificationSearch() {
@@ -314,6 +293,14 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.notifications = result?.data ?? [];
     this.notificationTotal = result?.total ?? 0;
+  }
+
+  async onInquirySearch() {
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchInquiryFetch(searchParams);
+
+    this.inquiries = result?.data ?? [];
+    this.inquiriesTotal = result?.total ?? 0;
   }
 
   async onTableChange(event: TableChange) {
@@ -330,10 +317,13 @@ export class SearchComponent implements OnInit, OnDestroy {
         await this.onNoticeOfIntentSearch();
         break;
       case 'NONAPP':
-        await this.onNonApplicationSearch();
+        await this.onPlanningReviewSearch();
         break;
       case 'NOTI':
         await this.onNotificationSearch();
+        break;
+      case 'INQR':
+        await this.onInquirySearch();
         break;
       default:
         this.toastService.showErrorToast('Not implemented');
@@ -364,12 +354,14 @@ export class SearchComponent implements OnInit, OnDestroy {
       searchResult = {
         applications: [],
         noticeOfIntents: [],
-        nonApplications: [],
+        planningReviews: [],
         notifications: [],
+        inquiries: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
-        totalNonApplications: 0,
         totalNotifications: 0,
+        totalPlanningReviews: 0,
+        totalInquiries: 0,
       };
     }
 
@@ -379,11 +371,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
     this.noticeOfIntents = searchResult.noticeOfIntents;
 
-    this.nonApplicationsTotal = searchResult.totalNonApplications;
-    this.nonApplications = searchResult.nonApplications;
+    this.planningReviewsTotal = searchResult.totalPlanningReviews;
+    this.planningReviews = searchResult.planningReviews;
 
     this.notifications = searchResult.notifications;
     this.notificationTotal = searchResult.totalNotifications;
+
+    this.inquiries = searchResult.inquiries;
+    this.inquiriesTotal = searchResult.totalInquiries;
   }
 
   private setActiveTab() {
@@ -391,8 +386,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     const searchCounts = [
       this.applicationTotal,
       this.noticeOfIntentTotal,
-      this.nonApplicationsTotal,
+      this.planningReviewsTotal,
       this.notificationTotal,
+      this.inquiriesTotal,
     ];
 
     this.tabGroup.selectedIndex = searchCounts.indexOf(Math.max(...searchCounts));

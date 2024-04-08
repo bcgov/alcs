@@ -11,9 +11,12 @@ import { ApplicationDecisionMeetingDto, CreateApplicationDecisionMeetingDto } fr
 })
 export class ApplicationDecisionMeetingService {
   $decisionMeetings = new BehaviorSubject<ApplicationDecisionMeetingDto[]>([]);
-  private url = `${environment.apiUrl}/application-decision-meeting`;
+  private url = `${environment.apiUrl}/decision-meeting`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch(fileNumber: string) {
     this.clearDecisionMeeting();
@@ -34,7 +37,7 @@ export class ApplicationDecisionMeetingService {
         this.http.patch<ApplicationDecisionMeetingDto>(this.url, {
           ...decisionMeeting,
           date: formatDateForApi(decisionMeeting.date),
-        })
+        }),
       );
       await this.fetch(decisionMeeting.applicationFileNumber);
     } catch (e) {
@@ -48,7 +51,7 @@ export class ApplicationDecisionMeetingService {
         this.http.post<ApplicationDecisionMeetingDto>(this.url, {
           ...decisionMeeting,
           date: formatDateForApi(decisionMeeting.date),
-        })
+        }),
       );
       return await this.fetch(decisionMeeting.applicationFileNumber);
     } catch (e) {

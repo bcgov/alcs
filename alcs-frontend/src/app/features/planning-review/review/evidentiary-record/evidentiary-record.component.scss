@@ -1,0 +1,90 @@
+@use '../../../../../styles/colors';
+
+.menu {
+  background-color: colors.$white;
+  box-shadow: 0 4px 4px 0 #00000040;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+
+  button {
+    font-weight: normal !important;
+    text-align: left;
+    background-color: colors.$white;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: colors.$secondary-color-light;
+  }
+
+  button.mat-mdc-menu-item {
+    padding-left: 16px !important;
+  }
+}
+
+.action-btn.delete {
+  color: colors.$error-color;
+}
+
+.table-header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.mat-column-action {
+  width: 8%;
+  text-align: right;
+}
+
+a {
+  font-size: 14px !important;
+  cursor: pointer;
+}
+
+:host::ng-deep {
+  .mat-spinner circle {
+    stroke: #fff;
+  }
+}
+
+.draggable {
+  cursor: grab;
+
+  &:hover {
+    background-color: rgba(colors.$grey-light, 0.5) !important;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.selected {
+  background-color: colors.$grey-light !important;
+}
+
+.drag-cell {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.cdk-drag-placeholder,
+.cdk-drag-preview {
+  background-color: colors.$grey-light !important;
+}

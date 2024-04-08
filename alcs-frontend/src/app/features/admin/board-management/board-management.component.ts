@@ -25,7 +25,7 @@ export class BoardManagementComponent implements OnInit, OnDestroy {
     private boardService: BoardService,
     public dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService,
-    private adminBoardManagementService: AdminBoardManagementService
+    private adminBoardManagementService: AdminBoardManagementService,
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +41,7 @@ export class BoardManagementComponent implements OnInit, OnDestroy {
       minWidth: '800px',
       maxWidth: '1200px',
       width: '90%',
+      height: '80%',
       data: {
         cardTypes: this.cardTypes,
       },
@@ -57,6 +58,7 @@ export class BoardManagementComponent implements OnInit, OnDestroy {
       minWidth: '800px',
       maxWidth: '1200px',
       width: '90%',
+      height: '80%',
       data: {
         board: boardDto,
         cardTypes: this.cardTypes,

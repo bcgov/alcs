@@ -2,14 +2,14 @@
   <div class="application">
     <app-details-header
       [application]="application"
-      [reconsiderations]="reconsiderations"
       [modifications]="modifications"
-      days="Business Days"
-      heading="Application"
+      [reconsiderations]="reconsiderations"
       [showStatus]="true"
       [submissionStatusService]="applicationStatusService"
+      days="Business Days"
+      heading="Application"
     ></app-details-header>
-    <div class="content" *ngIf="application">
+    <div *ngIf="application" class="content">
       <div *ngIf="showSubmittedToAlcMenuItems" class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
@@ -17,10 +17,10 @@
               (!route.portalOnly || isApplicantSubmission) &&
               (route.appTypes ? route.appTypes.includes(application.type.code) : true)
             "
-            [routerLink]="route.path ? route.path : './'"
-            routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            [routerLink]="route.path ? route.path : './'"
             class="nav-item nav-text"
+            routerLinkActive="active"
           >
             <mat-icon>{{ route.icon }}</mat-icon>
             {{ route.menuTitle }}
@@ -30,10 +30,10 @@
       <div *ngIf="showSubmittedToLfngMenuItems" class="nav">
         <div *ngFor="let route of submittedLfngRoutes" class="nav-link">
           <div
-            [routerLink]="route.path ? route.path : './'"
-            routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            [routerLink]="route.path ? route.path : './'"
             class="nav-item nav-text"
+            routerLinkActive="active"
           >
             <mat-icon>{{ route.icon }}</mat-icon>
             {{ route.menuTitle }}
@@ -43,17 +43,17 @@
       <div *ngIf="!showSubmittedToAlcMenuItems && !showSubmittedToLfngMenuItems" class="nav">
         <div *ngFor="let route of unsubmittedRoutes" class="nav-link">
           <div
-            [routerLink]="route.path ? route.path : './'"
-            routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            [routerLink]="route.path ? route.path : './'"
             class="nav-item nav-text"
+            routerLinkActive="active"
           >
             <mat-icon>{{ route.icon }}</mat-icon>
             {{ route.menuTitle }}
           </div>
         </div>
       </div>
-      <div class="child-content">
+      <div cdkScrollable class="child-content">
         <router-outlet></router-outlet>
       </div>
     </div>

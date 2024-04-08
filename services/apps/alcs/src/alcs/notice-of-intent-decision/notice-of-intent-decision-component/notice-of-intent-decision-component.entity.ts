@@ -6,7 +6,9 @@ import { NoticeOfIntentDecisionCondition } from '../notice-of-intent-decision-co
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionComponentType } from './notice-of-intent-decision-component-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'Decision Components for Notice of Intents',
+})
 @Index(
   ['noticeOfIntentDecisionComponentTypeCode', 'noticeOfIntentDecisionUuid'],
   {

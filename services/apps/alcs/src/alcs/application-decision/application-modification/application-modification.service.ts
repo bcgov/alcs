@@ -16,7 +16,7 @@ import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
-import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
+import { ApplicationDecisionV2Service } from '../application-decision-v2/application-decision/application-decision-v2.service';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationDto,
@@ -31,7 +31,7 @@ export class ApplicationModificationService {
     private modificationRepository: Repository<ApplicationModification>,
     @InjectMapper() private mapper: Mapper,
     private applicationService: ApplicationService,
-    private applicationDecisionV1Service: ApplicationDecisionV1Service,
+    private applicationDecisionV2Service: ApplicationDecisionV2Service,
     private cardService: CardService,
   ) {}
 
@@ -131,7 +131,7 @@ export class ApplicationModificationService {
     );
     modification.application = await this.getOrCreateApplication(createDto);
     modification.modifiesDecisions =
-      await this.applicationDecisionV1Service.getMany(
+      await this.applicationDecisionV2Service.getMany(
         createDto.modifiesDecisionUuids,
       );
 
@@ -185,7 +185,7 @@ export class ApplicationModificationService {
 
     if (updateDto.modifiesDecisionUuids) {
       modification.modifiesDecisions =
-        await this.applicationDecisionV1Service.getMany(
+        await this.applicationDecisionV2Service.getMany(
           updateDto.modifiesDecisionUuids,
         );
     }

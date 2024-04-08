@@ -11,7 +11,7 @@ import { CardStatusService } from '../../../../services/card/card-status/card-st
 import { CardType } from '../../../../shared/card/card.component';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 
-const DISABLED_CREATE_CARD_TYPES = [CardType.APP, CardType.COV, CardType.NOI, CardType.NOTIFICATION];
+const DISABLED_CREATE_CARD_TYPES = [CardType.APP, CardType.NOI, CardType.NOTIFICATION];
 
 @Component({
   selector: 'app-decision-condition-types-dialog',

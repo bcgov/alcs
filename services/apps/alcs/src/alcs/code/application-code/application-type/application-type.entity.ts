@@ -3,7 +3,9 @@ import { Column, Entity } from 'typeorm';
 import { BaseCodeEntity } from '../../../../common/entities/base.code.entity';
 import { ColumnNumericTransformer } from '../../../../utils/column-numeric-transform';
 
-@Entity()
+@Entity({
+  comment: 'Code table for possible application types',
+})
 export class ApplicationType extends BaseCodeEntity {
   constructor(data?: Partial<ApplicationType>) {
     super();

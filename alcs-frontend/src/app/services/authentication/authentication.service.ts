@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -30,14 +30,13 @@ export const ALL_ROLES = Object.values(ROLES);
   providedIn: 'root',
 })
 export class AuthenticationService {
+  isInitialized = false;
+  $currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+  currentUser: ICurrentUser | undefined;
   private token: string | undefined;
   private refreshToken: string | undefined;
   private expires: number | undefined;
   private refreshExpires: number | undefined;
-
-  isInitialized = false;
-  $currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
-  currentUser: ICurrentUser | undefined;
 
   constructor(
     private http: HttpClient,
@@ -92,6 +91,16 @@ export class AuthenticationService {
     }
   }
 
+  async logout() {
+    const logoutUrl = await this.getLogoutUrl();
+    if (logoutUrl) {
+      this.clearTokens();
+      window.location.href = logoutUrl.url;
+    }
+  }
+
+  getCurrentUser = () => this.currentUser;
+
   private async loadTokenFromStorage() {
     const existingToken = localStorage.getItem(JWT_TOKEN_KEY);
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
@@ -99,14 +108,6 @@ export class AuthenticationService {
     const valid = await this.isTokenValid(existingToken || '');
     if (valid) {
       await this.setTokens(existingToken || '', refreshToken || '');
-    }
-  }
-
-  async logout() {
-    const logoutUrl = await this.getLogoutUrl();
-    if (logoutUrl) {
-      this.clearTokens();
-      window.location.href = logoutUrl.url;
     }
   }
 
@@ -146,6 +147,4 @@ export class AuthenticationService {
   private async getLogoutUrl() {
     return firstValueFrom(this.http.get<{ url: string }>(`${environment.authUrl}/logout/alcs`));
   }
-
-  getCurrentUser = () => this.currentUser;
 }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CeoCriterionDto } from '../application/decision/application-decision-v1/application-decision.dto';
+import { CeoCriterionDto } from '../application/decision/application-decision-v2/application-decision.dto';
 import { NoticeOfIntentSubtypeDto } from '../notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../toast/toast.service';
 
@@ -12,7 +12,10 @@ import { ToastService } from '../toast/toast.service';
 export class NoiSubtypeService {
   private url = `${environment.apiUrl}/noi-subtype`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch() {
     try {

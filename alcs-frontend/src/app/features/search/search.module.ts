@@ -7,10 +7,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { ApplicationSearchTableComponent } from './application-search-table/application-search-table.component';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
-import { NonApplicationSearchTableComponent } from './non-application-search-table/non-application-search-table.component';
+import { PlanningReviewSearchTableComponent } from './planning-review-search-table/planning-review-search-table.component';
 import { NoticeOfIntentSearchTableComponent } from './notice-of-intent-search-table/notice-of-intent-search-table.component';
 import { NotificationSearchTableComponent } from './notification-search-table/notification-search-table.component';
 import { SearchComponent } from './search.component';
+import { InquirySearchTableComponent } from './inquiry-search-table/inquiry-search-table.component';
 
 const routes: Routes = [
   {
@@ -24,9 +25,10 @@ const routes: Routes = [
     SearchComponent,
     ApplicationSearchTableComponent,
     NoticeOfIntentSearchTableComponent,
-    NonApplicationSearchTableComponent,
+    PlanningReviewSearchTableComponent,
     NotificationSearchTableComponent,
     FileTypeFilterDropDownComponent,
+    InquirySearchTableComponent,
   ],
   imports: [
     CommonModule,

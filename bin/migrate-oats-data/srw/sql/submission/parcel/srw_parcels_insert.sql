@@ -7,7 +7,7 @@ WITH parcels_to_insert AS (
         AND nos.type_code = 'SRW'
 ),
 grouped_oats_property_interests_ids AS (
-    SELECT subject_property_id
+    SELECT subject_property_id, MAX(property_owner_type_code) AS property_owner_type_code
     FROM oats.oats_property_interests opi
     GROUP BY opi.subject_property_id
 )
@@ -18,7 +18,8 @@ SELECT uuid AS notification_submission_uuid,
     op.pid,
     op.pin,
     osp.subject_property_id,
-    op.property_id
+    op.property_id,
+    gopi.property_owner_type_code
 FROM parcels_to_insert pti
     JOIN oats.oats_subject_properties osp ON osp.subject_property_id = pti.subject_property_id
     JOIN oats.oats_properties op ON op.property_id = osp.property_id

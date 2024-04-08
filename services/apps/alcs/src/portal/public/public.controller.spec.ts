@@ -57,6 +57,24 @@ describe('PublicController', () => {
     expect(mockAppService.getPublicData).toHaveBeenCalledTimes(1);
   });
 
+  it('should call through to service for loading an application document download', async () => {
+    mockAppService.getDownloadUrl.mockResolvedValue({} as any);
+
+    const fileId = 'file-id';
+    await controller.getApplicationDocumentDownload(fileId, '');
+
+    expect(mockAppService.getDownloadUrl).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for loading an application document open', async () => {
+    mockAppService.getInlineUrl.mockResolvedValue({} as any);
+
+    const fileId = 'file-id';
+    await controller.getApplicationDocumentOpen(fileId, '');
+
+    expect(mockAppService.getInlineUrl).toHaveBeenCalledTimes(1);
+  });
+
   it('should call through to service for loading a notice of intent', async () => {
     mockNOIService.getPublicData.mockResolvedValue({} as any);
 
@@ -66,6 +84,24 @@ describe('PublicController', () => {
     expect(mockNOIService.getPublicData).toHaveBeenCalledTimes(1);
   });
 
+  it('should call through to service for loading a notice of intent document download', async () => {
+    mockNOIService.getDownloadUrl.mockResolvedValue({} as any);
+
+    const fileId = 'file-id';
+    await controller.getNoticeOfIntentDocumentDownload(fileId, '');
+
+    expect(mockNOIService.getDownloadUrl).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for loading a notice of intent document open', async () => {
+    mockNOIService.getInlineUrl.mockResolvedValue({} as any);
+
+    const fileId = 'file-id';
+    await controller.getNoticeOfIntentDocumentOpen(fileId, '');
+
+    expect(mockNOIService.getInlineUrl).toHaveBeenCalledTimes(1);
+  });
+
   it('should call through to service for loading a notification', async () => {
     mockNotificationService.getPublicData.mockResolvedValue({} as any);
 
@@ -73,5 +109,23 @@ describe('PublicController', () => {
     await controller.getNotification(fileId);
 
     expect(mockNotificationService.getPublicData).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for loading a notice of intent document download', async () => {
+    mockNotificationService.getDownloadUrl.mockResolvedValue({} as any);
+
+    const fileId = 'file-id';
+    await controller.getNotificationDocumentDownload(fileId, '');
+
+    expect(mockNotificationService.getDownloadUrl).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for loading a notice of intent document open', async () => {
+    mockNotificationService.getInlineUrl.mockResolvedValue({} as any);
+
+    const fileId = 'file-id';
+    await controller.getNotificationDocumentOpen(fileId, '');
+
+    expect(mockNotificationService.getInlineUrl).toHaveBeenCalledTimes(1);
   });
 });

@@ -14,6 +14,14 @@ describe('NoticeOfIntentService', () => {
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
 
+  const sortFields = [
+    'fileId',
+    'type',
+    'government',
+    'portalStatus',
+    'dateSubmitted',
+  ];
+
   const mockSearchDto: SearchRequestDto = {
     fileNumber: '123',
     portalStatusCode: 'A',
@@ -92,9 +100,9 @@ describe('NoticeOfIntentService', () => {
     expect(result).toEqual({ data: [], total: 0 });
     expect(
       mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder,
-    ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(13);
-    expect(mockQuery.where).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(13);
+    expect(mockQuery.where).toHaveBeenCalledTimes(1);
   });
 
   it('should call compileNoticeOfIntentSearchQuery method correctly', async () => {
@@ -105,9 +113,30 @@ describe('NoticeOfIntentService', () => {
     const result = await service.searchNoticeOfIntents(mockSearchDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileApplicationSearchQuerySpy).toBeCalledWith(mockSearchDto);
+    expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
+      mockSearchDto,
+    );
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+  });
+
+  sortFields.forEach((sortField) => {
+    it(`should sort by ${sortField}`, async () => {
+      const compileSearchQuerySpy = jest
+        .spyOn(service as any, 'compileNoticeOfIntentSearchQuery')
+        .mockResolvedValue(mockQuery);
+
+      mockSearchDto.sortField = sortField;
+      mockSearchDto.sortDirection = 'DESC';
+
+      const result = await service.searchNoticeOfIntents(mockSearchDto);
+
+      expect(result).toEqual({ data: [], total: 0 });
+      expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
+      expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
+      expect(mockQuery.offset).toHaveBeenCalledTimes(1);
+      expect(mockQuery.limit).toHaveBeenCalledTimes(1);
+    });
   });
 });

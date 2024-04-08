@@ -23,8 +23,9 @@ export class SubtaskComponent implements OnInit, OnDestroy {
   public users: AssigneeDto[] = [];
   applicationSubtasks: HomepageSubtaskDto[] = [];
   noticeOfIntentSubtasks: HomepageSubtaskDto[] = [];
-  nonApplicationSubtasks: HomepageSubtaskDto[] = [];
+  planningReviewSubtasks: HomepageSubtaskDto[] = [];
   notificationSubtasks: HomepageSubtaskDto[] = [];
+  inquirySubtasks: HomepageSubtaskDto[] = [];
 
   showNoi = true;
   showAppAndNonApp = true;
@@ -57,10 +58,10 @@ export class SubtaskComponent implements OnInit, OnDestroy {
     const reconsiderations = allSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = allSubtasks.filter((s) => s.card.type === CardType.PLAN);
     const modifications = allSubtasks.filter((s) => s.card.type === CardType.MODI);
-    const covenants = allSubtasks.filter((s) => s.card.type === CardType.COV);
     const nois = allSubtasks.filter((s) => s.card.type === CardType.NOI);
     const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI);
     const notifications = allSubtasks.filter((s) => s.card.type === CardType.NOTIFICATION);
+    const inquiries = allSubtasks.filter((s) => s.card.type === CardType.INQUIRY);
 
     this.applicationSubtasks = [
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
@@ -78,16 +79,19 @@ export class SubtaskComponent implements OnInit, OnDestroy {
       ...noiModifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
-    this.nonApplicationSubtasks = [
+    this.planningReviewSubtasks = [
       ...planningReviews.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
-      ...covenants.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...planningReviews.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
-      ...covenants.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
     this.notificationSubtasks = [
       ...notifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...notifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+    ];
+
+    this.inquirySubtasks = [
+      ...inquiries.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+      ...inquiries.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
     if (this.showNoi) {
@@ -96,15 +100,16 @@ export class SubtaskComponent implements OnInit, OnDestroy {
 
     if (this.showAppAndNonApp) {
       this.totalSubtaskCount =
-        this.applicationSubtasks.length + this.nonApplicationSubtasks.length + this.notificationSubtasks.length;
+        this.applicationSubtasks.length + this.planningReviewSubtasks.length + this.notificationSubtasks.length;
     }
 
     if (this.showAppAndNonApp && this.showNoi) {
       this.totalSubtaskCount =
         this.applicationSubtasks.length +
         this.noticeOfIntentSubtasks.length +
-        this.nonApplicationSubtasks.length +
-        this.notificationSubtasks.length;
+        this.planningReviewSubtasks.length +
+        this.notificationSubtasks.length +
+        this.inquirySubtasks.length;
     }
   }
 

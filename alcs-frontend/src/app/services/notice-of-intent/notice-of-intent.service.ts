@@ -17,7 +17,10 @@ import {
 export class NoticeOfIntentService {
   private url = `${environment.apiUrl}/notice-of-intent`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async listSubtypes() {
     try {
@@ -35,9 +38,7 @@ export class NoticeOfIntentService {
     } catch (e) {
       console.error(e);
       if (e instanceof HttpErrorResponse && e.status === 400) {
-        this.toastService.showErrorToast(
-          `Covenant/Application/NOI with File ID ${createDto.fileNumber} already exists`
-        );
+        this.toastService.showErrorToast(`Application/NOI with File ID ${createDto.fileNumber} already exists`);
       } else {
         this.toastService.showErrorToast('Failed to create Notice of Intent');
       }

@@ -1,18 +1,19 @@
 import { AutoMap } from 'automapper-classes';
 import { IsOptional, IsUUID } from 'class-validator';
-import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { AssigneeDto } from '../../../user/user.dto';
+import { PlanningReviewTypeDto } from '../../planning-review/planning-review.dto';
 import { CardDto } from '../card.dto';
 
 export enum PARENT_TYPE {
   APPLICATION = 'application',
   RECONSIDERATION = 'reconsideration',
-  COVENANT = 'covenant',
   MODIFICATION = 'modification',
   PLANNING_REVIEW = 'planning-review',
   NOTICE_OF_INTENT = 'notice-of-intent',
   NOTIFICATION = 'notification',
+  INQUIRY = 'inquiry',
 }
+
 export class UpdateCardSubtaskDto {
   @AutoMap()
   @IsUUID()
@@ -58,7 +59,7 @@ export class CardSubtaskDto {
 export class HomepageSubtaskDTO extends CardSubtaskDto {
   card: CardDto;
   title: string;
-  appType?: ApplicationTypeDto;
+  appType?: PlanningReviewTypeDto;
   parentType: PARENT_TYPE;
   activeDays?: number;
   paused: boolean;

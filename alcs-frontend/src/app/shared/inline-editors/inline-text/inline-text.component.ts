@@ -15,10 +15,12 @@ import {
   styleUrls: ['./inline-text.component.scss'],
 })
 export class InlineTextComponent implements AfterContentChecked {
+  @Input() updateOnSave: boolean = true;
   @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
   @Input() required = false;
   @Output() save = new EventEmitter<string | null>();
+  @Input() mask?: string | undefined;
 
   @ViewChild('editInput') textInput!: ElementRef;
 
@@ -41,7 +43,10 @@ export class InlineTextComponent implements AfterContentChecked {
   confirmEdit() {
     if (this.pendingValue !== this.value) {
       this.save.emit(this.pendingValue?.toString() ?? null);
-      this.value = this.pendingValue;
+
+      if (this.updateOnSave) {
+        this.value = this.pendingValue;
+      }
     }
 
     this.isEditing = false;
@@ -49,6 +54,5 @@ export class InlineTextComponent implements AfterContentChecked {
 
   cancelEdit() {
     this.isEditing = false;
-    this.pendingValue = this.value;
   }
 }

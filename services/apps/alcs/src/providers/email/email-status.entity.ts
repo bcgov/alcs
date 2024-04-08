@@ -7,7 +7,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({
+  comment: 'Success or failure of emails sent by ALCS',
+})
 export class EmailStatus extends BaseEntity {
   constructor(data?: Partial<EmailStatus>) {
     super();

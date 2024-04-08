@@ -11,7 +11,9 @@ import { Auditable } from '../../../common/entities/audit.entity';
 import { Document } from '../../../document/document.entity';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 
-@Entity()
+@Entity({
+  comment: "Links NOI decision document with the decision it's saved to",
+})
 export class NoticeOfIntentDecisionDocument extends Auditable {
   constructor(data?: Partial<NoticeOfIntentDecisionDocument>) {
     super();

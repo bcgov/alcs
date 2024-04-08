@@ -44,6 +44,11 @@
   </div>
   <div *ngIf="contactEmail">
     <div class="subheading2">Primary Contact Email</div>
-    <app-inline-text [value]="contactEmail" [required]="true" (save)="updateSubmissionEmail($event)"></app-inline-text>
+    <app-inline-text
+      [updateOnSave]="false"
+      [value]="contactEmail"
+      [required]="true"
+      (save)="updateSubmissionEmail($event)"
+    ></app-inline-text>
   </div>
 </div>

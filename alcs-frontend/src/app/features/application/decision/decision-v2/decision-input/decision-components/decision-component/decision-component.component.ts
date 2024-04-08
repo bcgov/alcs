@@ -19,6 +19,8 @@ import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shar
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 import { SubdInputComponent } from './subd-input/subd-input.component';
 
+const MIN_SOIL_FIELDS = 0.01;
+
 @Component({
   selector: 'app-decision-component',
   templateUrl: './decision-component.component.html',
@@ -47,20 +49,20 @@ export class DecisionComponentComponent implements OnInit {
 
   // pofo, pfrs
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
-  volumeToPlace = new FormControl<number | null>(null, [Validators.required]);
-  areaToPlace = new FormControl<number | null>(null, [Validators.required]);
-  maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
-  averageDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
+  volumeToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  areaToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  averageDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
 
   //pfrs
   endDate2 = new FormControl<Date | null>(null);
 
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
-  volumeToRemove = new FormControl<number | null>(null, [Validators.required]);
-  areaToRemove = new FormControl<number | null>(null, [Validators.required]);
-  maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
-  averageDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
+  volumeToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  areaToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  averageDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
 
   // naru
   naruSubtypeCode = new FormControl<string | null>(null, [Validators.required]);
@@ -73,7 +75,7 @@ export class DecisionComponentComponent implements OnInit {
   applicantType = new FormControl<string | null>(null, [Validators.required]);
 
   // general
-  alrArea = new FormControl<number | null>(null, [Validators.required]);
+  alrArea = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   agCap = new FormControl<string | null>(null, [Validators.required]);
   agCapSource = new FormControl<string | null>(null, [Validators.required]);
   agCapMap = new FormControl<string | null>(null);
@@ -275,7 +277,11 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
+    this.form.addControl('expiryDate', this.expiryDate);
+
     const lots = this.data.lots?.sort((a, b) => a.index - b.index) ?? null;
+
+    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
     this.subdApprovedLots.setValue(lots);
   }
 
@@ -352,6 +358,7 @@ export class DecisionComponentComponent implements OnInit {
     const update = this.subdApprovedLots.value?.map((e) => ({ ...e }) as ProposedDecisionLotDto);
     return {
       lots: update ?? undefined,
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 
