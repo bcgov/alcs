@@ -35,29 +35,26 @@ export class ConfigurationComponent implements OnInit {
     this.loadConfigs();
   }
 
-  private getConfigValue(
+  private getConfigValue<T extends string | boolean = string>(
     configs: { name: CONFIG_VALUE; value: string }[],
     configName: CONFIG_VALUE,
-    isBoolean: boolean = false,
-  ): string | boolean {
-    const configValue = configs.find((config) => config.name === configName)?.value || '';
-    return isBoolean ? configValue === 'true' : configValue;
+    isBoolean?: T extends boolean ? true : false,
+  ): T {
+    const configValue = configs.find((config) => config.name === configName)?.value;
+    return (isBoolean ? configValue === 'true' : configValue) as T;
   }
 
   private async loadConfigs() {
     const configs = await this.adminConfigurationService.listConfigurations();
     if (configs) {
-      this.maintenanceMode = this.getConfigValue(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, true) as boolean;
-      this.maintenanceBanner = this.getConfigValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER, true) as boolean;
-      this.maintenanceBannerMessage = this.getConfigValue(
-        configs,
-        CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE,
-      ) as string;
+      this.maintenanceMode = this.getConfigValue<boolean>(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, true);
+      this.maintenanceBanner = this.getConfigValue<boolean>(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER, true);
+      this.maintenanceBannerMessage = this.getConfigValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE);
     }
   }
 
   onToggleMaintenanceBanner(event: MatSlideToggleChange) {
-    if (event.checked === true) {
+    if (event.checked) {
       this.dialog
         .open(MaintenanceBannerConfirmationDialogComponent, {
           data: {
@@ -68,8 +65,8 @@ export class ConfigurationComponent implements OnInit {
         .subscribe((didConfirm) => {
           if (didConfirm) {
             this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner.toString());
-            this.maintenanceService.setShowBanner(true);
             this.maintenanceService.setBannerMessage(this.maintenanceBannerMessage);
+            this.maintenanceService.setShowBanner(true);
           } else {
             this.loadConfigs();
           }

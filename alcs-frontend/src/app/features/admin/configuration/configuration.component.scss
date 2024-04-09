@@ -3,8 +3,6 @@
 .row {
   display: flex;
   margin: 24px 0;
-  width: 100%;
-  justify-content: space-between;
   align-items: flex-start;
 }
 
@@ -22,7 +20,6 @@
 
 .toggle {
   display: flex;
-  align-items: center;
   gap: 4px;
   color: colors.$black;
   font-weight: 700;
