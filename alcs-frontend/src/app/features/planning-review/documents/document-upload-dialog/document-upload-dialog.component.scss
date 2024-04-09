@@ -53,3 +53,36 @@ a {
   color: #fff;
   padding: 0 4px;
 }
+
+.file-drag-drop {
+  background: colors.$white;
+  border-radius: 4px;
+
+  &:hover {
+    background: colors.$grey-light !important;
+  }
+
+  button:nth-child(1) {
+    width: 100%;
+    background: colors.$white;
+    padding: 24px;
+    border: none;
+
+    &:hover {
+      background: colors.$grey-light !important;
+    }
+  }
+
+  .drag-text {
+    margin-top: 14px;
+    color: colors.$grey;
+  }
+
+  .icon {
+    color: colors.$grey;
+    font-size: 36px;
+    height: 36px;
+    align-content: center;
+    margin-bottom: 4px;
+  }
+}

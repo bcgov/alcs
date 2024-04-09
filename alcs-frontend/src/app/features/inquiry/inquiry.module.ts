@@ -8,7 +8,7 @@ import { DetailsComponent } from './detail/details.component';
 import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { HeaderComponent } from './header/header.component';
-import { childRoutes, InquiryComponent } from './inquiry.component';
+import { InquiryComponent, childRoutes } from './inquiry.component';
 import { OverviewComponent } from './overview/overview.component';
 import { ParcelsComponent } from './parcel/parcels.component';
 
