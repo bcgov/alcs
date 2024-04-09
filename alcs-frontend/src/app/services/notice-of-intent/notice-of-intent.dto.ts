@@ -11,15 +11,6 @@ export interface NoticeOfIntentSubtypeDto extends BaseCodeDto {
   isActive: boolean;
 }
 
-export interface CreateNoticeOfIntentDto {
-  fileNumber: string;
-  localGovernmentUuid: string;
-  regionCode: string;
-  applicant: string;
-  boardCode: string;
-  dateSubmittedToAlc: number;
-}
-
 export interface NoticeOfIntentTypeDto extends BaseCodeDto {
   shortLabel: string;
   backgroundColor: string;

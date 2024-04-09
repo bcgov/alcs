@@ -1,8 +1,7 @@
-import { Status } from '@grpc/grpc-js/build/src/constants';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { TrackingService } from '../../common/tracking/tracking.service';
@@ -10,7 +9,6 @@ import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/no
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
-import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-submission-status/notice-of-intent-status.entity';
@@ -82,26 +80,6 @@ describe('NoticeOfIntentController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  it('should call board service then main service for create', async () => {
-    mockBoardService.getOneOrFail.mockResolvedValue({} as Board);
-    mockService.create.mockResolvedValue(new NoticeOfIntent());
-    mockService.mapToDtos.mockResolvedValue([]);
-
-    await controller.create({
-      applicant: 'fake-applicant',
-      localGovernmentUuid: 'local-gov-uuid',
-      fileNumber: 'file-number',
-      regionCode: 'region-code',
-      boardCode: 'fake',
-      dateSubmittedToAlc: 0,
-      typeCode: '',
-    });
-
-    expect(mockBoardService.getOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockService.create).toHaveBeenCalledTimes(1);
-    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to service for get', async () => {

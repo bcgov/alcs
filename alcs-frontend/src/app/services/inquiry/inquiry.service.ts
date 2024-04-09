@@ -16,6 +16,16 @@ export class InquiryService {
     private toastService: ToastService,
   ) {}
 
+  async fetchTypes() {
+    try {
+      return await firstValueFrom(this.http.get<InquiryTypeDto[]>(`${this.url}/types`));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to fetch inquiry types');
+    }
+    return;
+  }
+
   async create(meeting: CreateInquiryDto) {
     try {
       const res = await firstValueFrom(this.http.post<InquiryDto>(`${this.url}`, meeting));
@@ -24,6 +34,16 @@ export class InquiryService {
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to create inquiry');
+    }
+    return;
+  }
+
+  async fetch(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.get<InquiryDto>(`${this.url}/${fileNumber}`));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to update inquiry');
     }
     return;
   }
@@ -38,29 +58,9 @@ export class InquiryService {
     return;
   }
 
-  async fetchTypes() {
-    try {
-      return await firstValueFrom(this.http.get<InquiryTypeDto[]>(`${this.url}/types`));
-    } catch (err) {
-      console.error(err);
-      this.toastService.showErrorToast('Failed to fetch inquiry types');
-    }
-    return;
-  }
-
   async update(fileNumber: string, updateDto: UpdateInquiryDto) {
     try {
       return await firstValueFrom(this.http.patch<InquiryDto>(`${this.url}/${fileNumber}`, updateDto));
-    } catch (err) {
-      console.error(err);
-      this.toastService.showErrorToast('Failed to update inquiry');
-    }
-    return;
-  }
-
-  async fetch(fileNumber: string) {
-    try {
-      return await firstValueFrom(this.http.get<InquiryDto>(`${this.url}/${fileNumber}`));
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to update inquiry');
