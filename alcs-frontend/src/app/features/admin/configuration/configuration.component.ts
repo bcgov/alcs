@@ -38,18 +38,24 @@ export class ConfigurationComponent implements OnInit {
   private getConfigValue<T extends string | boolean = string>(
     configs: { name: CONFIG_VALUE; value: string }[],
     configName: CONFIG_VALUE,
-    isBoolean?: T extends boolean ? true : false,
-  ): T {
-    const configValue = configs.find((config) => config.name === configName)?.value;
-    return (isBoolean ? configValue === 'true' : configValue) as T;
+    isBoolean?: boolean,
+  ): T | undefined {
+    const config = configs.find((config) => config.name === configName);
+
+    if (!config) {
+      return undefined;
+    }
+
+    return (isBoolean ? config.value === 'true' : config.value) as T;
   }
 
   private async loadConfigs() {
     const configs = await this.adminConfigurationService.listConfigurations();
     if (configs) {
-      this.maintenanceMode = this.getConfigValue<boolean>(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, true);
-      this.maintenanceBanner = this.getConfigValue<boolean>(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER, true);
-      this.maintenanceBannerMessage = this.getConfigValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE);
+      this.maintenanceMode = this.getConfigValue<boolean>(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, true) || false;
+      this.maintenanceBanner =
+        this.getConfigValue<boolean>(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER, true) || false;
+      this.maintenanceBannerMessage = this.getConfigValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE) || '';
     }
   }
 
