@@ -138,7 +138,7 @@ def clean_inquiry_parcels(conn=None):
     logger.info("Start inquiry parcel cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            "DELETE FROM alcs.inquiry_parcel ip WHERE ip.audit_created_by = 'oats_etl'"
+            f"DELETE FROM alcs.inquiry_parcel ip WHERE ip.audit_created_by = '{OATS_ETL_USER}'"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
     conn.commit()
