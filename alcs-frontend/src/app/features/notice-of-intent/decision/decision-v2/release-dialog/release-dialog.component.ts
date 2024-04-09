@@ -4,7 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentSubmissionStatusService } from '../../../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NOI_SUBMISSION_STATUS } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
-import { ApplicationPill } from '../../../../../shared/application-type-pill/application-type-pill.component';
+import { ApplicationSubmissionStatusPill } from '../../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 
 @Component({
   selector: 'app-release-dialog',
@@ -13,14 +13,20 @@ import { ApplicationPill } from '../../../../../shared/application-type-pill/app
 })
 export class ReleaseDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  mappedType?: ApplicationPill;
   wasReleased = false;
+  isCancelled = false;
+  firstDecision = false;
+  releasedStatus: ApplicationSubmissionStatusPill | undefined;
+  cancelledStatus: ApplicationSubmissionStatusPill | undefined;
 
   constructor(
-    private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private decisionService: NoticeOfIntentDecisionV2Service,
+    private submissionStatusService: NoticeOfIntentSubmissionStatusService,
     public matDialogRef: MatDialogRef<ReleaseDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: any
+    @Inject(MAT_DIALOG_DATA)
+    private data: {
+      fileNumber: string;
+    },
   ) {}
 
   ngOnInit(): void {
@@ -29,23 +35,8 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
         this.wasReleased = decision.wasReleased;
       }
     });
-    this.loadStatuses();
-  }
 
-  private async loadStatuses() {
-    const statuses = await this.noticeOfIntentSubmissionStatusService.listStatuses();
-    if (statuses) {
-      const releasedStatus = statuses.find((status) => status.code === NOI_SUBMISSION_STATUS.ALC_DECISION);
-      if (releasedStatus) {
-        this.mappedType = {
-          label: releasedStatus.label,
-          backgroundColor: releasedStatus.alcsBackgroundColor,
-          borderColor: releasedStatus.alcsBackgroundColor,
-          textColor: releasedStatus.alcsColor,
-          shortLabel: releasedStatus.label,
-        };
-      }
-    }
+    this.calculateStatus();
   }
 
   ngOnDestroy(): void {
@@ -55,5 +46,35 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
 
   onRelease() {
     this.matDialogRef.close(true);
+  }
+
+  private async calculateStatus() {
+    const decisions = this.decisionService.$decisions.getValue();
+    this.firstDecision = decisions.length === 1;
+
+    const statuses = await this.submissionStatusService.fetchSubmissionStatusesByFileNumber(this.data.fileNumber);
+    const releasedStatus = statuses.find((status) => status.statusTypeCode === NOI_SUBMISSION_STATUS.ALC_DECISION);
+    if (releasedStatus) {
+      this.releasedStatus = {
+        label: releasedStatus.status.label,
+        backgroundColor: releasedStatus.status.alcsBackgroundColor,
+        borderColor: releasedStatus.status.alcsBackgroundColor,
+        textColor: releasedStatus.status.alcsColor,
+        shortLabel: releasedStatus.status.label,
+      };
+    }
+
+    const cancelled = statuses.find(
+      (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.CANCELLED,
+    );
+    this.isCancelled = !!cancelled;
+
+    if (cancelled) {
+      this.cancelledStatus = {
+        label: cancelled.status.label,
+        backgroundColor: cancelled.status.alcsBackgroundColor,
+        textColor: cancelled.status.alcsColor,
+      };
+    }
   }
 }

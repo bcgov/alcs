@@ -1,10 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
+import { ApplicationSubmissionStatusService } from '../../../../../services/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../../../services/application/application.dto';
-import { ApplicationService } from '../../../../../services/application/application.service';
-import { ApplicationPill } from '../../../../../shared/application-type-pill/application-type-pill.component';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { NOI_SUBMISSION_STATUS } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
+import { ApplicationSubmissionStatusPill } from '../../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 
 @Component({
   selector: 'app-release-dialog',
@@ -13,37 +14,30 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 })
 export class ReleaseDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  mappedType?: ApplicationPill;
   wasReleased = false;
+  isCancelled = false;
+  firstDecision = false;
+  releasedStatus: ApplicationSubmissionStatusPill | undefined;
+  cancelledStatus: ApplicationSubmissionStatusPill | undefined;
 
   constructor(
-    private applicationService: ApplicationService,
     private decisionService: ApplicationDecisionV2Service,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     public matDialogRef: MatDialogRef<ReleaseDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: any
+    @Inject(MAT_DIALOG_DATA)
+    private data: {
+      fileNumber: string;
+    },
   ) {}
 
   ngOnInit(): void {
-    this.applicationService.$applicationStatuses.pipe(takeUntil(this.$destroy)).subscribe((statuses) => {
-      if (statuses) {
-        const releasedStatus = statuses.find((status) => status.code === SUBMISSION_STATUS.ALC_DECISION);
-        if (releasedStatus) {
-          this.mappedType = {
-            label: releasedStatus.label,
-            backgroundColor: releasedStatus.alcsBackgroundColor,
-            borderColor: releasedStatus.alcsBackgroundColor,
-            textColor: releasedStatus.alcsColor,
-            shortLabel: releasedStatus.label,
-          };
-        }
-      }
-    });
-
     this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
       if (decision) {
         this.wasReleased = decision.wasReleased;
       }
     });
+
+    this.calculateStatus();
   }
 
   ngOnDestroy(): void {
@@ -53,5 +47,39 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
 
   onRelease() {
     this.matDialogRef.close(true);
+  }
+
+  private async calculateStatus() {
+    const decisions = this.decisionService.$decisions.getValue();
+    this.firstDecision = decisions.length === 1;
+
+    const statuses = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
+      this.data.fileNumber,
+    );
+    if (statuses) {
+      const releasedStatus = statuses.find((status) => status.statusTypeCode === NOI_SUBMISSION_STATUS.ALC_DECISION);
+      if (releasedStatus) {
+        this.releasedStatus = {
+          label: releasedStatus.status.label,
+          backgroundColor: releasedStatus.status.alcsBackgroundColor,
+          borderColor: releasedStatus.status.alcsBackgroundColor,
+          textColor: releasedStatus.status.alcsColor,
+          shortLabel: releasedStatus.status.label,
+        };
+      }
+    }
+
+    const cancelled = statuses.find(
+      (status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.CANCELLED,
+    );
+    this.isCancelled = !!cancelled;
+
+    if (cancelled) {
+      this.cancelledStatus = {
+        label: cancelled.status.label,
+        backgroundColor: cancelled.status.alcsBackgroundColor,
+        textColor: cancelled.status.alcsColor,
+      };
+    }
   }
 }

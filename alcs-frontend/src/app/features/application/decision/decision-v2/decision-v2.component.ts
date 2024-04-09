@@ -161,6 +161,11 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     const index = this.decisions.length - position;
     this.dialog
       .open(RevertToDraftDialogComponent, {
+        minWidth: '1080px',
+        maxWidth: '1080px',
+        maxHeight: '80vh',
+        width: '90%',
+        autoFocus: false,
         data: { fileNumber: this.fileNumber },
       })
       .beforeClosed()
