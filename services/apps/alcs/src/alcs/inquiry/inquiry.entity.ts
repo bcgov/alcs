@@ -97,6 +97,24 @@ export class Inquiry extends Base {
   @Type(() => Card)
   card: Card;
 
+  @Column({
+    type: 'text',
+    nullable: true,
+    select: false,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_subject_property_id to alcs.inquiry_parcel.',
+  })
+  oatsSubjectPropertyId?: string | null;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+    select: false,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_property_id to alcs.inquiry_parcel.',
+  })
+  oatsPropertyId?: string | null;
+
   @AutoMap(() => InquiryParcel)
   @OneToMany(() => InquiryParcel, (incParcel) => incParcel.inquiry, {
     cascade: true,
