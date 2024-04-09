@@ -9,17 +9,14 @@ from psycopg2.extras import RealDictCursor
 etl_name = "link_inquiry_documents_from_alcs"
 logger = setup_and_get_logger(etl_name)
 
-"""
-    This script connects to postgress version of OATS DB and links data from ALCS documents to ALCS inquiry_document table.
-
-    NOTE:
-    Before performing document import you need to import Inquiries and Inquiry documents.
-"""
-
 
 @inject_conn_pool
 def link_inquiry_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
+    This script connects to postgres version of OATS DB and links data from ALCS documents to ALCS inquiry_document table.
+
+    NOTE:
+    Before performing document import you need to import Inquiries and Inquiry documents.
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
     logger.info(f"Start {etl_name}")
