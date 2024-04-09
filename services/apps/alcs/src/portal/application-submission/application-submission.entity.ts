@@ -9,8 +9,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Application } from '../../alcs/application/application.entity';
 import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
+import { Application } from '../../alcs/application/application.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
@@ -25,7 +25,9 @@ export class ProposedLot {
   planNumbers: string | null;
 }
 
-@Entity()
+@Entity({
+  comment: 'Portal intake form fields for applications',
+})
 export class ApplicationSubmission extends Base {
   constructor(data?: Partial<ApplicationSubmission>) {
     super();

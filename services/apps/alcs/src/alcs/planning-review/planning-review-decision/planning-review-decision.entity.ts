@@ -12,7 +12,10 @@ import { PlanningReview } from '../planning-review.entity';
 import { PlanningReviewDecisionDocument } from './planning-review-decision-document/planning-review-decision-document.entity';
 import { PlanningReviewDecisionOutcomeCode } from './planning-review-decision-outcome.entity';
 
-@Entity()
+@Entity({
+  comment:
+    "Links Planning Review decision document with the decision it's saved to",
+})
 @Index(['resolutionNumber', 'resolutionYear'], {
   unique: true,
   where: '"audit_deleted_date_at" is null and "resolution_number" is not null',

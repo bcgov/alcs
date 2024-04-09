@@ -2,7 +2,9 @@ import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from './application.entity';
 
-@Entity()
+@Entity({
+  comment: 'Date ranges responsible for un/pausing an application',
+})
 export class ApplicationPaused extends Base {
   constructor(data?: Partial<ApplicationPaused>) {
     super();

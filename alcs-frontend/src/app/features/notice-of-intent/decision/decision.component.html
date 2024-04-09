@@ -1,6 +1,5 @@
 <section>
-  <app-noi-decision-v1 *ngIf="noticeOfIntent?.source === SYSTEM_SOURCE_TYPES.ALCS"></app-noi-decision-v1>
-  <app-noi-decision-v2 *ngIf="noticeOfIntent?.source === SYSTEM_SOURCE_TYPES.APPLICANT"></app-noi-decision-v2>
+  <app-noi-decision-v2></app-noi-decision-v2>
   <div class="child-content">
     <router-outlet></router-outlet>
   </div>

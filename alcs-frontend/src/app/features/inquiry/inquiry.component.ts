@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { InquiryDetailService } from '../../services/inquiry/inquiry-detail.service';
 import { InquiryDto } from '../../services/inquiry/inquiry.dto';
 import { DetailsComponent } from './detail/details.component';
@@ -50,6 +52,7 @@ export class InquiryComponent implements OnInit, OnDestroy {
   constructor(
     private inquiryDetailService: InquiryDetailService,
     private route: ActivatedRoute,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -61,17 +64,20 @@ export class InquiryComponent implements OnInit, OnDestroy {
 
     this.inquiryDetailService.$inquiry.pipe(takeUntil(this.$destroy)).subscribe((inquiry) => {
       this.inquiry = inquiry;
+      this.titleService.setTitle(
+        `${environment.siteName} | ${inquiry?.fileNumber} (${inquiry?.inquirerLastName ?? 'Unknown'})`,
+      );
     });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   private async loadReview() {
     if (this.fileNumber) {
       await this.inquiryDetailService.loadInquiry(this.fileNumber);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
   }
 }

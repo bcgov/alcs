@@ -1,3 +1,14 @@
+<ng-template #orderMenu let-record>
+  <div class="menu">
+    <div class="menu-item">
+      <button (click)="sendToTop(record)" mat-menu-item>Move to Top</button>
+    </div>
+    <div class="menu-item">
+      <button (click)="sendToBottom(record)" mat-menu-item>Move to Bottom</button>
+    </div>
+  </div>
+</ng-template>
+
 <div class="table-header">
   <div>
     <h4>{{ tableTitle }}</h4>
@@ -58,7 +69,13 @@
 
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr
+    (contextmenu)="openMenu($event, row)"
+    (mousedown)="clearMenu()"
     *matRowDef="let row; columns: displayedColumns"
+    [ngClass]="{
+      draggable: sortable,
+      selected: row.uuid === selectedRecord
+    }"
     cdkDrag
     cdkDragLockAxis="y"
     mat-row

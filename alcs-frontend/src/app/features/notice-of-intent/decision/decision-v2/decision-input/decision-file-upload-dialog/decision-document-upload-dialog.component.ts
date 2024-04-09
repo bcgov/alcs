@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
-import { NoticeOfIntentDecisionDocumentDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionDocumentDto } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ToastService } from '../../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
 import { splitExtension } from '../../../../../../shared/utils/file';

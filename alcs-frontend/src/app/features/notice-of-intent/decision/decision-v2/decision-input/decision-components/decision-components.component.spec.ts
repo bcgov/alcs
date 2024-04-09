@@ -4,7 +4,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
-import { NoticeOfIntentDecisionDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionDto } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDetailService } from '../../../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentSubmissionService } from '../../../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentDto } from '../../../../../../services/notice-of-intent/notice-of-intent.dto';
@@ -24,7 +24,7 @@ describe('DecisionComponentsComponent', () => {
   beforeEach(async () => {
     mockNoticeOfIntentDecisionV2Service = createMock();
     mockNoticeOfIntentDecisionV2Service.$decision = new BehaviorSubject<NoticeOfIntentDecisionDto | undefined>(
-      undefined
+      undefined,
     );
 
     mockToastService = createMock();

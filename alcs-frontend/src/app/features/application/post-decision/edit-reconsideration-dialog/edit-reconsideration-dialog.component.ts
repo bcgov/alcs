@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   ApplicationReconsiderationDetailedDto,
   RECONSIDERATION_TYPE,
   UpdateApplicationReconsiderationDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
+import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
@@ -50,8 +50,8 @@ export class EditReconsiderationDialogComponent implements OnInit {
     },
     private dialogRef: MatDialogRef<EditReconsiderationDialogComponent>,
     private reconsiderationService: ApplicationReconsiderationService,
-    private decisionService: ApplicationDecisionService,
-    private toastService: ToastService
+    private decisionService: ApplicationDecisionV2Service,
+    private toastService: ToastService,
   ) {
     this.codes = data.codes;
 

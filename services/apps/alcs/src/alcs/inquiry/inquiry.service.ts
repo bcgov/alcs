@@ -18,6 +18,8 @@ import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
+import { CodeService } from '../code/code.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { InquiryParcel } from './inquiry-parcel/inquiry-parcel.entity';
 import { InquiryType } from './inquiry-type.entity';
 import {
@@ -54,6 +56,8 @@ export class InquiryService {
     private typeRepository: Repository<InquiryType>,
     @InjectMapper() private mapper: Mapper,
     private fileNumberService: FileNumberService,
+    private localGovernmentService: LocalGovernmentService,
+    private codeService: CodeService,
   ) {}
 
   async create(createDto: CreateInquiryServiceDto, board?: Board) {
@@ -152,18 +156,6 @@ export class InquiryService {
     });
   }
 
-  private get(uuid: string) {
-    return this.repository.findOne({
-      where: {
-        uuid,
-      },
-      relations: {
-        ...this.DEFAULT_RELATIONS,
-        card: { ...this.CARD_RELATIONS, board: false },
-      },
-    });
-  }
-
   async getByBoard(boardUuid: string) {
     return this.repository.find({
       where: { card: { boardUuid } },
@@ -184,6 +176,7 @@ export class InquiryService {
         },
       },
       relations: {
+        type: true,
         card: {
           status: true,
           board: true,
@@ -212,6 +205,22 @@ export class InquiryService {
       });
       inquiry.typeCode = filterUndefined(updateDto.typeCode, inquiry.typeCode);
       inquiry.type = newType;
+    }
+
+    if (updateDto.localGovernmentUuid) {
+      const newGovernment = await this.localGovernmentService.getByUuid(
+        updateDto.localGovernmentUuid,
+      );
+      inquiry.localGovernment = newGovernment;
+      inquiry.localGovernmentUuid = newGovernment.uuid;
+    }
+
+    if (updateDto.regionCode) {
+      const newRegion = await this.codeService.fetchRegion(
+        updateDto.regionCode,
+      );
+      inquiry.regionCode = newRegion.code;
+      inquiry.region = newRegion;
     }
 
     inquiry.dateSubmittedToAlc = filterUndefined(
@@ -314,5 +323,17 @@ export class InquiryService {
       },
     });
     return inquiry.uuid;
+  }
+
+  private get(uuid: string) {
+    return this.repository.findOne({
+      where: {
+        uuid,
+      },
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        card: { ...this.CARD_RELATIONS, board: false },
+      },
+    });
   }
 }

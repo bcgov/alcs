@@ -3,7 +3,9 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
 
-@Entity()
+@Entity({
+  comment: 'Code table for possible application portal statuses',
+})
 export class ApplicationSubmissionStatusType extends BaseCodeEntity {
   constructor(data?: Partial<ApplicationSubmissionStatusType>) {
     super();

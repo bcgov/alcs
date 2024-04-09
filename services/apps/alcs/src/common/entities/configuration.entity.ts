@@ -6,7 +6,7 @@ export enum CONFIG_VALUE {
   APP_MAINTENANCE_BANNER_MESSAGE = 'app_maintenance_banner_message',
 }
 
-@Entity()
+@Entity({ comment: 'Stores real time config values editable by ALCS Admin.' })
 export class Configuration extends BaseEntity {
   constructor(data?: Partial<Configuration>) {
     super();

@@ -15,7 +15,7 @@ import { ColumnNumericTransformer } from '../../../utils/column-numeric-transfor
 import { NoticeOfIntentOwner } from '../notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
 
-@Entity()
+@Entity({ comment: 'Parcels that are linked to Notice of Intent Submissions' })
 export class NoticeOfIntentParcel extends Base {
   constructor(data?: Partial<NoticeOfIntentParcel>) {
     super();

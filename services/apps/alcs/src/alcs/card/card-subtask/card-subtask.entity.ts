@@ -1,10 +1,12 @@
 import { Column, CreateDateColumn, Entity, ManyToOne } from 'typeorm';
-import { Card } from '../card.entity';
 import { Base } from '../../../common/entities/base.entity';
 import { User } from '../../../user/user.entity';
+import { Card } from '../card.entity';
 import { CardSubtaskType } from './card-subtask-type/card-subtask-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'Attributes for card subtasks',
+})
 export class CardSubtask extends Base {
   constructor(data?: Partial<CardSubtask>) {
     super();

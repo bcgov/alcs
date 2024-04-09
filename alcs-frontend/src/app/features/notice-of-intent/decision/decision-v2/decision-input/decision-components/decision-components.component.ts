@@ -15,7 +15,7 @@ import {
   NoticeOfIntentDecisionCodesDto,
   NoticeOfIntentDecisionComponentDto,
   NoticeOfIntentDecisionComponentTypeDto,
-} from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDetailService } from '../../../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentSubmissionService } from '../../../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import {

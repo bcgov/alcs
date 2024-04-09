@@ -1,3 +1,5 @@
+@use '../../../../styles/colors';
+
 h5 {
   margin: 16px 0 !important;
 }
@@ -29,4 +31,19 @@ section {
     overflow: hidden;
     max-width: calc(100vw - 840px);
   }
+}
+
+.error {
+  display: flex;
+  color: colors.$error-color;
+  font-weight: bold;
+  text-wrap: wrap;
+
+  .mat-icon {
+    min-width: 24px;
+  }
+}
+
+.mat-mdc-form-field {
+  width: 100%;
 }

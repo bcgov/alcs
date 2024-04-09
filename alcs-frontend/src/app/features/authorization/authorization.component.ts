@@ -8,7 +8,11 @@ import { AuthenticationService } from '../../services/authentication/authenticat
   template: `<>`,
 })
 export class AuthorizationComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthenticationService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthenticationService,
+  ) {}
 
   async ngOnInit() {
     const token = this.route.snapshot.queryParamMap.get('t');

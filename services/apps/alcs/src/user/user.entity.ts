@@ -9,7 +9,9 @@ export class UserSettings {
   favoriteBoards: string[];
 }
 
-@Entity()
+@Entity({
+  comment: 'Authenticated users and their attributes',
+})
 export class User extends Base {
   constructor(data?: Partial<User>) {
     super();

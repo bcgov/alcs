@@ -20,9 +20,9 @@ import { SearchService } from '../../../services/search/search.service';
 import { StatusService } from '../../../services/status/status.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
+import { scrollToElement } from '../../../shared/utils/scroll-helper';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
-import { scrollToElement } from '../../../shared/utils/scroll-helper';
 
 const STATUS_MAP = {
   'Received by ALC': 'RECA',
@@ -129,7 +129,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     private codeService: CodeService,
     private statusService: StatusService,
     private toastService: ToastService,
-    private titleService: Title
+    private titleService: Title,
   ) {
     this.titleService.setTitle('ALC Portal | Public Search');
   }
@@ -170,7 +170,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
     this.filteredLocalGovernments = this.localGovernmentControl.valueChanges.pipe(
       startWith(''),
-      map((value) => this.filterLocalGovernment(value || ''))
+      map((value) => this.filterLocalGovernment(value || '')),
     );
 
     const storedSearch = sessionStorage.getItem(SEARCH_SESSION_STORAGE_KEY);
@@ -202,10 +202,10 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     this.searchResultsHidden = false;
     this.isLoading = false;
 
+    this.mapSearchResults(result);
+
     // push tab activation to next render cycle, after the tabGroup is rendered
     setTimeout(() => {
-      this.mapSearchResults(result);
-
       this.setActiveTab();
     });
   }
@@ -367,7 +367,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     if (this.localGovernments) {
       const filterValue = value.toLowerCase();
       return this.localGovernments.filter((localGovernment) =>
-        localGovernment.name.toLowerCase().includes(filterValue)
+        localGovernment.name.toLowerCase().includes(filterValue),
       );
     }
     return [];

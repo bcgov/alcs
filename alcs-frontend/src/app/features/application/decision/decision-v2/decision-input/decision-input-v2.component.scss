@@ -96,6 +96,8 @@ form {
     align-items: center;
 
     .generate-number-btn {
+      color: white;
+      background-color: colors.$accent-color-dark;
       width: 100%;
     }
 

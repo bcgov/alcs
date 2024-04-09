@@ -123,7 +123,8 @@ def _prepare_oats_planning_review_card_data(row_data_list):
                 # planning_review_uuid is used as a temporary placeholder in order to create and match referrals 1:1 to cards
                 "uuid": row["uuid"],
                 "type_code": "PLAN",
-                "status_code": "PREL",
+                # Planning board only has single column of SUBM
+                "status_code": "SUBM",
                 "archived": True,
             }
         )
@@ -136,7 +137,7 @@ def clean_planning_review_cards(conn=None):
     logger.info("Start card cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.card nos WHERE nos.audit_created_by = '{OATS_ETL_USER}' and nos.audit_updated_by is NULL"
+            f"DELETE FROM alcs.card nos WHERE nos.audit_created_by = '{OATS_ETL_USER}' AND nos.audit_updated_by is NULL AND nos.type_code = 'PLAN'"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 

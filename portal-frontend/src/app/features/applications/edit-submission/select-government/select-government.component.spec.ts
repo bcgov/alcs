@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
@@ -20,7 +20,8 @@ describe('SelectGovernmentComponent', () => {
     mockAppService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [SelectGovernmentComponent, MatAutocomplete],
+      imports: [MatAutocompleteModule],
+      declarations: [SelectGovernmentComponent],
       providers: [
         {
           provide: CodeService,

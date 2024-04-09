@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoticeOfIntentDecisionComponentDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionComponentDto } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 import { BasicComponent } from './basic.component';
 

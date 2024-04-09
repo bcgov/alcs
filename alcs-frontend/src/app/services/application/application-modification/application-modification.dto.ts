@@ -3,7 +3,7 @@ import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../application.dto';
-import { ApplicationDecisionDto } from '../decision/application-decision-v1/application-decision.dto';
+import { ApplicationDecisionDto } from '../decision/application-decision-v2/application-decision.dto';
 
 export interface ApplicationModificationCreateDto {
   applicationFileNumber: string;

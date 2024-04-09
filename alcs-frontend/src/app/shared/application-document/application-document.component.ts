@@ -1,5 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentDto } from '../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
@@ -15,11 +17,19 @@ export class ApplicationDocumentComponent implements OnChanges {
   @Input() visibilityFlags: string[] = [];
   @Input() sortable = false;
 
+  @ViewChild('orderMenu') orderMenu!: TemplateRef<any>;
+
   displayedColumns: string[] = ['index', 'type', 'fileName', 'source', 'uploadedAt', 'action', 'sorting'];
   documents: ApplicationDocumentDto[] = [];
   dataSource = new MatTableDataSource<ApplicationDocumentDto>([]);
+  overlayRef: OverlayRef | null = null;
+  selectedRecord: string | undefined;
 
-  constructor(private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private applicationDocumentService: ApplicationDocumentService,
+    private overlay: Overlay,
+    private viewContainerRef: ViewContainerRef,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.loadDocuments();
@@ -45,7 +55,61 @@ export class ApplicationDocumentComponent implements OnChanges {
   }
 
   async onRowDropped(event: CdkDragDrop<ApplicationDocumentDto, any>) {
-    moveItemInArray(this.documents, event.previousIndex, event.currentIndex);
+    this.moveItem(event.previousIndex, event.currentIndex);
+  }
+
+  async openMenu($event: MouseEvent, record: ApplicationDocumentDto) {
+    if (!this.sortable) {
+      return;
+    }
+    this.overlayRef?.detach();
+    $event.preventDefault();
+    this.selectedRecord = record.uuid;
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo({ x: $event.x, y: $event.y })
+      .withPositions([
+        {
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+      ]);
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      scrollStrategy: this.overlay.scrollStrategies.close(),
+    });
+
+    this.overlayRef.attach(
+      new TemplatePortal(this.orderMenu, this.viewContainerRef, {
+        $implicit: record,
+      }),
+    );
+  }
+
+  sendToBottom(record: ApplicationDocumentDto) {
+    const currentIndex = this.documents.findIndex((item) => item.uuid === record.uuid);
+    this.moveItem(currentIndex, this.documents.length - 1);
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
+
+  sendToTop(record: ApplicationDocumentDto) {
+    const currentIndex = this.documents.findIndex((item) => item.uuid === record.uuid);
+    this.moveItem(currentIndex, 0);
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
+
+  clearMenu() {
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
+
+  private moveItem(currentIndex: number, targetIndex: number) {
+    moveItemInArray(this.documents, currentIndex, targetIndex);
     const order = this.documents.map((doc, index) => ({
       uuid: doc.uuid,
       order: index,

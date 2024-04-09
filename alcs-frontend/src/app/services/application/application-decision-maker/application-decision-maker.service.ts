@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { DecisionMakerDto } from '../decision/application-decision-v1/application-decision.dto';
 import { ToastService } from '../../toast/toast.service';
+import { DecisionMakerDto } from '../decision/application-decision-v2/application-decision.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,10 @@ import { ToastService } from '../../toast/toast.service';
 export class ApplicationDecisionMakerService {
   private url = `${environment.apiUrl}/decision-maker`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch() {
     try {

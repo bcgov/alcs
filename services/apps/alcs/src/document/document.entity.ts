@@ -2,7 +2,9 @@ import { Column, CreateDateColumn, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../common/entities/base.entity';
 import { User } from '../user/user.entity';
 
-@Entity()
+@Entity({
+  comment: 'Attributes for documents including their ORCS classification',
+})
 export class Document extends Base {
   constructor(data?: Partial<Document>) {
     super();
@@ -53,6 +55,14 @@ export class Document extends Base {
     comment: 'used only for oats etl process',
   })
   oatsApplicationId?: string | null;
+
+  @Column({
+    nullable: true,
+    select: false,
+    type: 'text',
+    comment: 'used only for oats etl process',
+  })
+  oatsPlanningReviewId?: string | null;
 
   @Column({
     nullable: true,

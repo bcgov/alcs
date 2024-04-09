@@ -16,7 +16,9 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NotificationParcel } from './notification-parcel/notification-parcel.entity';
 import { NotificationTransferee } from './notification-transferee/notification-transferee.entity';
 
-@Entity()
+@Entity({
+  comment: 'Portal Submissions for Notifications',
+})
 export class NotificationSubmission extends Base {
   constructor(data?: Partial<NotificationSubmission>) {
     super();

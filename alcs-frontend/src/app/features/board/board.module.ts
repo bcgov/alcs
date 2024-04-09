@@ -14,16 +14,14 @@ import { StatusFilterPipe } from '../../shared/drag-drop-board/status-filter.pip
 import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-textarea.component';
 import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
-import { CardDialogComponent } from './dialogs/card-dialog/card-dialog.component';
 import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
-import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
+import { CardDialogComponent } from './dialogs/card-dialog/card-dialog.component';
 import { CreateInquiryDialogComponent } from './dialogs/inquiry/create/create-inquiry-dialog.component';
 import { InquiryDialogComponent } from './dialogs/inquiry/inquiry-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
-import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
 import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
 import { NotificationDialogComponent } from './dialogs/notification/notification-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
@@ -46,7 +44,6 @@ const routes: Routes = [
     DragDropBoardComponent,
     StatusFilterPipe,
     ApplicationDialogComponent,
-    CreateApplicationDialogComponent,
     CardComponent,
     CommentComponent,
     CommentsComponent,
@@ -59,7 +56,6 @@ const routes: Routes = [
     CreateAppModificationDialogComponent,
     AppModificationDialogComponent,
     NoticeOfIntentDialogComponent,
-    CreateNoticeOfIntentDialogComponent,
     CreateNoiModificationDialogComponent,
     NoiModificationDialogComponent,
     NotificationDialogComponent,

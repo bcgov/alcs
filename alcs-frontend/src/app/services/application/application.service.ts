@@ -16,19 +16,21 @@ import { ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './ap
   providedIn: 'root',
 })
 export class ApplicationService {
-  constructor(private http: HttpClient, private toastService: ToastService) {}
-
-  public $cardStatuses = new BehaviorSubject<CardStatusDto[]>([]);
-  public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
-  public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
-  public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
-
+  $cardStatuses = new BehaviorSubject<CardStatusDto[]>([]);
+  $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
+  $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
+  $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
   private baseUrl = `${environment.apiUrl}/application`;
   private statuses: CardStatusDto[] = [];
   private types: ApplicationTypeDto[] = [];
   private regions: ApplicationRegionDto[] = [];
   private applicationStatuses: ApplicationStatusDto[] = [];
   private isInitialized = false;
+
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
     await this.setup();
@@ -41,9 +43,7 @@ export class ApplicationService {
       return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}`, application));
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 400) {
-        this.toastService.showErrorToast(
-          `Covenant/Application/NOI with File ID ${application.fileNumber} already exists`
-        );
+        this.toastService.showErrorToast(`Application/NOI with File ID ${application.fileNumber} already exists`);
       } else {
         this.toastService.showErrorToast('Failed to create Application');
       }
@@ -86,21 +86,6 @@ export class ApplicationService {
     }
   }
 
-  private async fetchCodes() {
-    const codes = await firstValueFrom(this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/code`));
-    this.statuses = codes.status;
-    this.$cardStatuses.next(this.statuses);
-
-    this.types = codes.type;
-    this.$applicationTypes.next(this.types);
-
-    this.regions = codes.region;
-    this.$applicationRegions.next(this.regions);
-
-    this.applicationStatuses = codes.applicationStatusType;
-    this.$applicationStatuses.next(this.applicationStatuses);
-  }
-
   async cancelApplication(fileNumber: string) {
     await this.setup();
     try {
@@ -119,5 +104,20 @@ export class ApplicationService {
       this.toastService.showErrorToast('Failed to uncancel Application');
     }
     return;
+  }
+
+  private async fetchCodes() {
+    const codes = await firstValueFrom(this.http.get<ApplicationMasterCodesDto>(`${environment.apiUrl}/code`));
+    this.statuses = codes.status;
+    this.$cardStatuses.next(this.statuses);
+
+    this.types = codes.type;
+    this.$applicationTypes.next(this.types);
+
+    this.regions = codes.region;
+    this.$applicationRegions.next(this.regions);
+
+    this.applicationStatuses = codes.applicationStatusType;
+    this.$applicationStatuses.next(this.applicationStatuses);
   }
 }

@@ -57,9 +57,12 @@
 
   <div class="full-width">
     <div class="subheading2">Description</div>
-    <span [id]="condition.uuid + 'Description'" [ngClass]="{ 'ellipsis-3': !isReadMoreClicked }">{{
-      condition.description
-    }}</span>
+    <span
+      class="decision-condition-description"
+      [id]="condition.uuid + 'Description'"
+      [ngClass]="{ 'ellipsis-3': !isReadMoreClicked }"
+      >{{ condition.description }}</span
+    >
     <app-no-data *ngIf="condition.description === null || condition.description === undefined"></app-no-data>
     <div class="read-more">
       <a

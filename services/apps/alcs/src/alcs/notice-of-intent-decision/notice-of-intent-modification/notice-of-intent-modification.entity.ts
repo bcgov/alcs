@@ -15,7 +15,9 @@ import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModificationOutcomeType } from './notice-of-intent-modification-outcome-type/notice-of-intent-modification-outcome-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'NOI modification requests linked to card and application',
+})
 export class NoticeOfIntentModification extends Base {
   constructor(data?: Partial<NoticeOfIntentModification>) {
     super();

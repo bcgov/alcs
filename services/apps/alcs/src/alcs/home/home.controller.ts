@@ -383,6 +383,7 @@ export class HomeController {
             paused: false,
             title: `${notification.fileNumber} (${notification.applicant})`,
             parentType: PARENT_TYPE.NOTIFICATION,
+            appType: notification.type,
           });
         }
       }
@@ -407,6 +408,7 @@ export class HomeController {
               inquiry.inquirerLastName ?? 'Unknown'
             })`,
             parentType: PARENT_TYPE.INQUIRY,
+            appType: inquiry.type,
           });
         }
       }

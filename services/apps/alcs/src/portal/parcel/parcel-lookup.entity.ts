@@ -1,6 +1,8 @@
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 
-@Entity()
+@Entity({
+  comment: 'Data from ParcelMapBC for use in the Portal',
+})
 export class ParcelLookup {
   @PrimaryColumn({ type: 'int4' })
   objectid: number;

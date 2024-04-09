@@ -1,12 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgSelectComponent } from '@ng-select/ng-select';
 import { HomepageSubtaskDto } from '../../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../../services/card/card-subtask/card-subtask.service';
 import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import {
   MODIFICATION_TYPE_LABEL,
-  NOTIFICATION_LABEL,
   RECON_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { CardType } from '../../../../shared/card/card.component';
@@ -22,7 +21,6 @@ export class SubtaskTableComponent {
 
   MODIFICATION_TYPE_LABEL = MODIFICATION_TYPE_LABEL;
   RECON_TYPE_LABEL = RECON_TYPE_LABEL;
-  NOTIFICATION_LABEL = NOTIFICATION_LABEL;
 
   CardType = CardType;
 

@@ -8,7 +8,10 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Staff journal entries saved to applications and NOIs, SRWs, Inquiries etc.',
+})
 export class StaffJournal extends Base {
   constructor(data?: Partial<StaffJournal>) {
     super();

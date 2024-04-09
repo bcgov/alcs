@@ -3,7 +3,9 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-status.entity';
 
-@Entity()
+@Entity({
+  comment: 'The code table for Notice of Intent Submissions Statuses',
+})
 export class NoticeOfIntentSubmissionStatusType extends BaseCodeEntity {
   constructor(data?: Partial<NoticeOfIntentSubmissionStatusType>) {
     super();

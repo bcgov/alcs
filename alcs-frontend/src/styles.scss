@@ -1,6 +1,7 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
 @use '@ng-matero/extensions' as mtx;
 
 // Plus imports for other components in your app.
@@ -145,7 +146,7 @@ $alcs-theme: mat.define-light-theme(
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($alcs-theme);
-
+@include mtx.all-component-themes($alcs-theme);
 /* You can add global styles to this file, and also import other style files */
 
 html,
@@ -285,18 +286,6 @@ mat-button-toggle-group {
   background-image: none;
 }
 
-@mixin text-ellipsis($lines: 1) {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  @if ($lines > 1) {
-    display: -webkit-box;
-    -webkit-line-clamp: $lines;
-    -webkit-box-orient: vertical;
-  } @else {
-    white-space: nowrap;
-  }
-}
-
 .margin-right {
   margin-right: 12px;
 }
@@ -332,4 +321,17 @@ mat-button-toggle-group {
 
 .ellipsis-3 {
   @include text-ellipsis($lines: 3);
+}
+
+.mat-primary {
+  &.mat-mdc-button-base {
+    --mat-fab-foreground-color: #fff;
+    --mdc-filled-button-label-text-color: #fff;
+    --mdc-protected-button-label-text-color: #fff;
+  }
+
+  &.mat-mdc-fab,
+  &.mat-mdc-mini-fab {
+    --mat-icon-color: #fff;
+  }
 }

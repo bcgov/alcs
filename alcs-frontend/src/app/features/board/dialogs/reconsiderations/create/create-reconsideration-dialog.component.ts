@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
@@ -14,7 +14,7 @@ import {
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v1/application-decision.service';
+import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { CardService } from '../../../../../services/card/card.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
@@ -73,7 +73,7 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     private reconsiderationService: ApplicationReconsiderationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private toastService: ToastService,
-    private decisionService: ApplicationDecisionService,
+    private decisionService: ApplicationDecisionV2Service,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {}

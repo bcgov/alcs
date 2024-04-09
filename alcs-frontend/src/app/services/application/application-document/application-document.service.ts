@@ -74,7 +74,7 @@ export class ApplicationDocumentService {
 
   async update(uuid: string, updateDto: UpdateDocumentDto) {
     let formData = this.convertDtoToFormData(updateDto);
-    const res = await firstValueFrom(this.http.post(`${this.url}/${uuid}`, formData));
+    const res = await firstValueFrom(this.http.post<ApplicationDocumentDto>(`${this.url}/${uuid}`, formData));
     this.toastService.showSuccessToast('Document uploaded');
     return res;
   }

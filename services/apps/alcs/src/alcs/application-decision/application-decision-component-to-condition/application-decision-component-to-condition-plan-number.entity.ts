@@ -10,7 +10,10 @@ import {
 import { ApplicationDecisionCondition } from '../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Survey plan numbers associated with survey plan conditions on decision components',
+})
 export class ApplicationDecisionConditionComponentPlanNumber extends BaseEntity {
   constructor(data?: Partial<ApplicationDecisionConditionComponentPlanNumber>) {
     super();

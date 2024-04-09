@@ -4,7 +4,9 @@ import { Base } from '../../../common/entities/base.entity';
 import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { NotificationSubmission } from '../notification-submission.entity';
 
-@Entity()
+@Entity({
+  comment: 'The Transferees related to Notification Applications',
+})
 export class NotificationTransferee extends Base {
   constructor(data?: Partial<NotificationTransferee>) {
     super();

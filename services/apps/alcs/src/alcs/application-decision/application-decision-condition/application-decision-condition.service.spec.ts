@@ -184,4 +184,87 @@ describe('ApplicationDecisionConditionService', () => {
     ).toBeCalledTimes(0);
     expect(mockApplicationDecisionConditionRepository.save).toBeCalledTimes(0);
   });
+
+  it('should call update on the repo and return the updated object', async () => {
+    const mockCondition = new ApplicationDecisionCondition();
+
+    mockApplicationDecisionConditionRepository.update.mockResolvedValue(
+      {} as any,
+    );
+    mockApplicationDecisionConditionRepository.findOneOrFail.mockResolvedValue(
+      mockCondition,
+    );
+
+    const result = await service.update(mockCondition, {
+      approvalDependant: false,
+    });
+
+    expect(
+      mockApplicationDecisionConditionRepository.update,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationDecisionConditionRepository.findOneOrFail,
+    ).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(mockCondition);
+  });
+
+  it('should call findBy on the repo for getPlanNumbers', async () => {
+    mockApplicationDecisionConditionComponentPlanNumber.findBy.mockResolvedValue(
+      [],
+    );
+
+    const planNumbers = await service.getPlanNumbers('uuid');
+
+    expect(
+      mockApplicationDecisionConditionComponentPlanNumber.findBy,
+    ).toHaveBeenCalledTimes(1);
+    expect(planNumbers).toBeDefined();
+  });
+
+  it('should create a new join record if one does not exist for updateConditionPlanNumbers', async () => {
+    mockApplicationDecisionConditionComponentPlanNumber.findOneBy.mockResolvedValue(
+      null,
+    );
+    mockApplicationDecisionConditionComponentPlanNumber.save.mockResolvedValue(
+      new ApplicationDecisionConditionComponentPlanNumber(),
+    );
+
+    await service.updateConditionPlanNumbers('uuid', 'uuid', 'plan-number');
+
+    expect(
+      mockApplicationDecisionConditionComponentPlanNumber.findOneBy,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationDecisionConditionComponentPlanNumber.save,
+    ).toHaveBeenCalledTimes(1);
+
+    const savedEntity =
+      mockApplicationDecisionConditionComponentPlanNumber.save.mock.calls[0][0];
+    expect(savedEntity.planNumbers).toEqual('plan-number');
+  });
+
+  it('should update the existing  join record if one does exist for updateConditionPlanNumbers', async () => {
+    const mockNumber = new ApplicationDecisionConditionComponentPlanNumber();
+    mockApplicationDecisionConditionComponentPlanNumber.findOneBy.mockResolvedValue(
+      mockNumber,
+    );
+    mockApplicationDecisionConditionComponentPlanNumber.save.mockResolvedValue(
+      new ApplicationDecisionConditionComponentPlanNumber(),
+    );
+
+    await service.updateConditionPlanNumbers('uuid', 'uuid', 'plan-number');
+
+    expect(
+      mockApplicationDecisionConditionComponentPlanNumber.findOneBy,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationDecisionConditionComponentPlanNumber.save,
+    ).toHaveBeenCalledTimes(1);
+
+    const savedEntity =
+      mockApplicationDecisionConditionComponentPlanNumber.save.mock.calls[0][0];
+    expect(savedEntity).toBe(mockNumber);
+    expect(savedEntity.planNumbers).toEqual('plan-number');
+    expect(mockNumber.planNumbers).toEqual('plan-number');
+  });
 });

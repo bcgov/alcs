@@ -1,76 +1,85 @@
 <div class="split">
   <h3>Parcels</h3>
-  <button *ngIf="!isEditing" color="primary" mat-flat-button (click)="onAddParcel()">+Add Parcel</button>
+  <button (click)="onAddParcel()" *ngIf="!isEditing" color="primary" mat-flat-button>+Add Parcel</button>
 </div>
 <section>
-  <table mat-table [dataSource]="tableSource">
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <table [dataSource]="tableSource" mat-table>
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
     <ng-container matColumnDef="index">
-      <th mat-header-cell *matHeaderCellDef>#</th>
-      <td mat-cell *matCellDef="let row; let i = index">
+      <th *matHeaderCellDef mat-header-cell>#</th>
+      <td *matCellDef="let row; let i = index" mat-cell>
         {{ i + 1 }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef>Civic Address<span *ngIf="isEditing">*</span></th>
-      <td mat-cell [matTooltip]="row.civicAddress" [matTooltipDisabled]="isEditing" *matCellDef="let row; let i = index">
+      <th *matHeaderCellDef mat-header-cell>Civic Address<span *ngIf="isEditing">*</span></th>
+      <td
+        *matCellDef="let row; let i = index"
+        [matTooltipDisabled]="isEditing"
+        [matTooltip]="row.civicAddress"
+        mat-cell
+      >
         <span *ngIf="!isEditing">{{ row.civicAddress }}</span>
         <mat-form-field *ngIf="isEditing" appearance="outline">
-          <input required [ngModelOptions]="{ standalone: true }" matInput [(ngModel)]="parcels[i].civicAddress" />
+          <input [(ngModel)]="parcels[i].civicAddress" [ngModelOptions]="{ standalone: true }" matInput required />
         </mat-form-field>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="pid">
-      <th mat-header-cell *matHeaderCellDef>PID</th>
-      <td mat-cell *matCellDef="let row; let i = index">
+      <th *matHeaderCellDef mat-header-cell>PID</th>
+      <td *matCellDef="let row; let i = index" mat-cell>
         <span *ngIf="!isEditing">{{ row.pid | mask: '000-000-000' }}</span>
         <mat-form-field *ngIf="isEditing" appearance="outline">
-          <input mask="000-000-000" [ngModelOptions]="{ standalone: true }" matInput [(ngModel)]="parcels[i].pid" />
+          <input [(ngModel)]="parcels[i].pid" [ngModelOptions]="{ standalone: true }" mask="000-000-000" matInput />
         </mat-form-field>
+        <mat-error *ngIf="parcels[i].pid && parcels[i].pid!.length > 0 && parcels[i].pid!.length < 9" class="error">
+          <mat-icon color="warn">warning</mat-icon>
+          PID must be 9 digits including leading zeroes
+        </mat-error>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="pin">
-      <th mat-header-cell *matHeaderCellDef>PIN</th>
-      <td mat-cell *matCellDef="let row; let i = index">
+      <th *matHeaderCellDef mat-header-cell>PIN</th>
+      <td *matCellDef="let row; let i = index" mat-cell>
         <span *ngIf="!isEditing">{{ row.pin }}</span>
         <mat-form-field *ngIf="isEditing" appearance="outline">
-          <input [ngModelOptions]="{ standalone: true }" matInput [(ngModel)]="parcels[i].pin" />
+          <input [(ngModel)]="parcels[i].pin" [ngModelOptions]="{ standalone: true }" matInput />
         </mat-form-field>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
-      <td mat-cell *matCellDef="let row; let i = index">
-        <button *ngIf="!isEditing" type="button" class="edit-btn" mat-flat-button (click)="onEditParcel()">
-          <mat-icon color="warn">edit</mat-icon>
+      <th *matHeaderCellDef mat-header-cell>Action</th>
+      <td *matCellDef="let row; let i = index" mat-cell>
+        <button (click)="onEditParcel()" *ngIf="!isEditing" class="edit-btn" mat-flat-button type="button">
+          <mat-icon>edit</mat-icon>
         </button>
-        <button type="button" class="edit-btn" mat-flat-button (click)="onRemoveParcel(i)">
+        <button (click)="onRemoveParcel(i)" class="edit-btn" mat-flat-button type="button">
           <mat-icon color="warn">delete</mat-icon>
         </button>
       </td>
     </ng-container>
 
-    <tr class="mat-row no-data" *matNoDataRow>
+    <tr *matNoDataRow class="mat-row no-data">
       <td class="text-center" colspan="5">No Parcels</td>
     </tr>
   </table>
   <button
-    style="margin-top: 36px !important"
+    (click)="onAddParcel()"
     *ngIf="isEditing"
     color="primary"
     mat-stroked-button
-    (click)="onAddParcel()"
+    style="margin-top: 36px !important"
   >
     + Add Another Parcel
   </button>
   <div *ngIf="isEditing" class="right">
-    <button mat-stroked-button color="primary" (click)="onCancelEdit()">Cancel</button>
-    <button mat-flat-button color="primary" [disabled]="!areParcelsValid()" (click)="onSave()">Save</button>
+    <button (click)="onCancelEdit()" color="primary" mat-stroked-button>Cancel</button>
+    <button (click)="onSave()" [disabled]="!areParcelsValid()" color="primary" mat-flat-button>Save</button>
   </div>
 </section>

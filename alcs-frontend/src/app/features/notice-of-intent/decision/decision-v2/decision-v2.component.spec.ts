@@ -11,7 +11,7 @@ import { NoticeOfIntentDecisionV2Service } from '../../../../services/notice-of-
 import {
   NoticeOfIntentDecisionDto,
   NoticeOfIntentDecisionWithLinkedResolutionDto,
-} from '../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
