@@ -7,7 +7,6 @@ import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authe
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { MessageDto } from '../../services/message/message.dto';
 import { MessageService } from '../../services/message/message.service';
-import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 import { MaintenanceService } from '../../services/maintenance/maintenance.service';
@@ -34,7 +33,6 @@ export class HeaderComponent implements OnInit {
     private authService: AuthenticationService,
     private applicationService: ApplicationService,
     private boardService: BoardService,
-    private toastService: ToastService,
     private userService: UserService,
     private router: Router,
     private notificationService: MessageService,

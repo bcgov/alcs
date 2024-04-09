@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { of, throwError } from 'rxjs';
-import { ToastService } from '../toast/toast.service';
+import { of } from 'rxjs';
 import { MaintenanceService } from './maintenance.service';
 
 describe('MaintenanceService', () => {
@@ -32,6 +31,14 @@ describe('MaintenanceService', () => {
 
     const res = await service.check();
 
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should make a get request for getBanner', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getBanner();
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
   });

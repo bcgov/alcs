@@ -10,7 +10,6 @@ export class MaintenanceService {
     private configurationRepository: Repository<Configuration>,
   ) {}
 
-  // Add test
   async getBanner() {
     const bannerStatus = await this.getByName(
       CONFIG_VALUE.APP_MAINTENANCE_BANNER,

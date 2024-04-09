@@ -19,7 +19,6 @@ export class MaintenanceService {
     }
   }
 
-  // TODO: Add test
   async getBanner() {
     try {
       return await firstValueFrom(
