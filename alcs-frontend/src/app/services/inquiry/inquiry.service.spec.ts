@@ -33,6 +33,36 @@ describe('PlanningReviewService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should call get for fetchTypes', async () => {
+    httpClient.get.mockReturnValue(
+      of([
+        {
+          code: 'CODE',
+        },
+      ]),
+    );
+
+    const res = await service.fetchTypes();
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res?.length).toEqual(1);
+    expect(res![0].code).toEqual('CODE');
+  });
+
+  it('should show an error toast message if fetchTypes fails', async () => {
+    httpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.fetchTypes();
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeUndefined();
+    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
   it('should call post for create', async () => {
     httpClient.post.mockReturnValue(
       of({
@@ -73,6 +103,34 @@ describe('PlanningReviewService', () => {
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
+  it('should fetch planning review by file number', async () => {
+    httpClient.get.mockReturnValue(
+      of({
+        fileNumber: '1',
+      }),
+    );
+
+    const res = await service.fetch('1');
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res!.fileNumber).toEqual('1');
+  });
+
+  it('should show an error toast message if fetch by file number fails', async () => {
+    httpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.fetch('1');
+
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeUndefined();
+    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
   it('should fetch planning reviews by card', async () => {
     httpClient.get.mockReturnValue(
       of({
@@ -97,6 +155,34 @@ describe('PlanningReviewService', () => {
     const res = await service.fetchByCardUuid('1');
 
     expect(httpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeUndefined();
+    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call patch for update', async () => {
+    httpClient.patch.mockReturnValue(
+      of({
+        fileNumber: '1',
+      }),
+    );
+
+    const res = await service.update('1', {});
+
+    expect(httpClient.patch).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res!.fileNumber).toEqual('1');
+  });
+
+  it('should show an error toast message if update fails', async () => {
+    httpClient.patch.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      }),
+    );
+
+    const res = await service.update('1', {});
+
+    expect(httpClient.patch).toHaveBeenCalledTimes(1);
     expect(res).toBeUndefined();
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });

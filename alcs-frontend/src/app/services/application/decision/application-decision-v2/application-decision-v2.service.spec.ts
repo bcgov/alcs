@@ -34,13 +34,31 @@ describe('ApplicationDecisionV2Service', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should fetch and return an codes', async () => {
+    httpClient.get.mockReturnValue(
+      of({
+        ceoCriterion: [
+          {
+            code: 'CODE',
+          },
+        ],
+      }),
+    );
+
+    const res = await service.fetchCodes();
+
+    expect(res.ceoCriterion.length).toEqual(1);
+    expect(res.ceoCriterion[0].code).toEqual('CODE');
+    expect(httpClient.get).toHaveBeenCalledTimes(1);
+  });
+
   it('should fetch and return an applicationDto', async () => {
     httpClient.get.mockReturnValue(
       of([
         {
           applicationFileNumber: '1',
         },
-      ])
+      ]),
     );
 
     const res = await service.fetchByApplication('1');
@@ -49,11 +67,24 @@ describe('ApplicationDecisionV2Service', () => {
     expect(res[0].applicationFileNumber).toEqual('1');
   });
 
+  it('should fetch and return an decision', async () => {
+    httpClient.get.mockReturnValue(
+      of({
+        applicationFileNumber: '1',
+      }),
+    );
+
+    const res = await service.getByUuid('1');
+
+    expect(res).toBeDefined();
+    expect(res!.applicationFileNumber).toEqual('1');
+  });
+
   it('should show a toast message if fetch fails', async () => {
     httpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.fetchByApplication('1');
@@ -66,7 +97,7 @@ describe('ApplicationDecisionV2Service', () => {
     httpClient.patch.mockReturnValue(
       of({
         applicationFileNumber: '1',
-      })
+      }),
     );
 
     await service.update('1', {});
@@ -79,7 +110,7 @@ describe('ApplicationDecisionV2Service', () => {
     httpClient.patch.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -96,7 +127,7 @@ describe('ApplicationDecisionV2Service', () => {
     httpClient.post.mockReturnValue(
       of({
         applicationFileNumber: '1',
-      })
+      }),
     );
 
     await service.create({
@@ -119,7 +150,7 @@ describe('ApplicationDecisionV2Service', () => {
     httpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -146,7 +177,7 @@ describe('ApplicationDecisionV2Service', () => {
     httpClient.delete.mockReturnValue(
       of({
         applicationFileNumber: '1',
-      })
+      }),
     );
 
     await service.delete('');
@@ -159,7 +190,7 @@ describe('ApplicationDecisionV2Service', () => {
     httpClient.delete.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -178,7 +209,7 @@ describe('ApplicationDecisionV2Service', () => {
         {
           fileNumber: '1',
         },
-      ])
+      ]),
     );
     await service.updateFile('', '', '');
 
@@ -199,7 +230,7 @@ describe('ApplicationDecisionV2Service', () => {
     httpClient.delete.mockReturnValue(
       of({
         applicationFileNumber: '1',
-      })
+      }),
     );
 
     await service.deleteFile('', '');
