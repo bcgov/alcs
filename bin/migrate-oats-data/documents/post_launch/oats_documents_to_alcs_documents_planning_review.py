@@ -12,17 +12,14 @@ import os
 etl_name = "import_pr_documents_from_oats"
 logger = setup_and_get_logger(etl_name)
 
-"""
-    This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS documents table.
-
-    NOTE:
-    Before performing document import you need to import Planning Reviews from oats.
-"""
-
 
 @inject_conn_pool
 def import_oats_pr_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
+    This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS documents table.
+
+    NOTE:
+    Before performing document import you need to import Planning Reviews from oats.
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
     logger.info(f"Start {etl_name}")
@@ -171,9 +168,9 @@ def _get_mime_type(data):
     file_name = data.get("file_name", "")
     extension = os.path.splitext(file_name)[-1].lower().strip()
     if extension == ".pdf":
-        return "planning_review/pdf"
+        return "application/pdf"
     else:
-        return "planning_review/octet-stream"
+        return "application/octet-stream"
 
 
 @inject_conn_pool
