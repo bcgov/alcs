@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { HttpClient } from '@angular/common/http';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { MaintenanceService } from './maintenance.service';
 
@@ -26,20 +26,22 @@ describe('MaintenanceService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call get for the health endpoint', async () => {
-    mockHttpClient.get.mockReturnValue(of({}));
-
-    const res = await service.check();
-
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(res).toBeDefined();
-  });
-
   it('should make a get request for getBanner', async () => {
     mockHttpClient.get.mockReturnValue(of({}));
 
     const res = await service.getBanner();
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
+  });
+
+  it('should set show banner', () => {
+    service.setShowBanner(true);
+    expect(service.$showBanner.value).toEqual(true);
+  });
+
+  it('should set banner message', () => {
+    const mockMessage = 'Test Message';
+    service.setBannerMessage(mockMessage);
+    expect(service.$bannerMessage.value).toEqual(mockMessage);
   });
 });

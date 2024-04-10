@@ -12,6 +12,7 @@
       </li>
     </ul>
   </div>
+  <app-maintenance-banner *ngIf="showMaintenanceBanner">{{ maintenanceBannerMessage }}</app-maintenance-banner>
   <div class="title-wrapper">
     <div class="title">
       <img class="logo" (click)="onClickLogo()" src="assets/alc_logo.svg" alt="ALC Portal" />
