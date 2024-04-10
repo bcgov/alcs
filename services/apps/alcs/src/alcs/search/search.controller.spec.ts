@@ -318,7 +318,7 @@ describe('SearchController', () => {
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
-      fileTypes: ['PLAN'],
+      fileTypes: ['MISC'],
     };
 
     const result = await controller.advancedSearch(
