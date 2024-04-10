@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Brackets, Repository, SelectQueryBuilder } from 'typeorm';
 import {
   getNextDayToPacific,
   getStartOfDayToPacific,
@@ -100,6 +100,8 @@ export class PlanningReviewAdvancedSearchService {
     query = this.compileSearchByNameQuery(searchDto, query);
     query = this.compileDecisionSearchQuery(searchDto, query);
     query = this.compileDateRangeSearchQuery(searchDto, query);
+    query = this.compileDateRangeSearchQuery(searchDto, query);
+    query = this.compileSearchByTypeQuery(searchDto, query);
 
     return query;
   }
@@ -185,6 +187,26 @@ export class PlanningReviewAdvancedSearchService {
         },
       );
     }
+    return query;
+  }
+
+  private compileSearchByTypeQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<PlanningReviewSearchView>,
+  ) {
+    if (searchDto.fileTypes.length > 0) {
+      query = query.andWhere(
+        new Brackets((qb) =>
+          qb.where(
+            'planningReviewSearch.planning_review_type_code IN (:...typeCodes)',
+            {
+              typeCodes: searchDto.fileTypes,
+            },
+          ),
+        ),
+      );
+    }
+
     return query;
   }
 }

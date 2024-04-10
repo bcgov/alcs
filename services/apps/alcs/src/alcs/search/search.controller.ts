@@ -319,9 +319,14 @@ export class SearchController {
 
       notificationTypeSpecified = searchDto.fileTypes.includes('SRW');
 
-      planningReviewTypeSpecified = searchDto.fileTypes.some((searchType) =>
-        ['PLAN'].includes(searchType),
-      );
+      planningReviewTypeSpecified =
+        searchDto.fileTypes.filter((searchType) =>
+          Object.values(PLANNING_REVIEW_TYPES).includes(
+            PLANNING_REVIEW_TYPES[
+              searchType as keyof typeof PLANNING_REVIEW_TYPES
+            ],
+          ),
+        ).length > 0;
 
       inquiriesTypeSpecified =
         searchDto.fileTypes.filter((searchType) =>
