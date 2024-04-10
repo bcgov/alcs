@@ -17,11 +17,11 @@ export class AddMaintenanceBannerConfig1712707802345
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      DELETE FROM "alcs"."configuration" WHERE "name" = 'app_maintenance_banner';
+      DELETE FROM "alcs"."configuration" WHERE "name" = 'app_maintenance_banner_message';
     `);
 
     await queryRunner.query(`
-      DELETE FROM "alcs"."configuration" WHERE "name" = 'app_maintenance_banner_message';
+      DELETE FROM "alcs"."configuration" WHERE "name" = 'app_maintenance_banner';
     `);
   }
 }
