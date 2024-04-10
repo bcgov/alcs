@@ -39,6 +39,7 @@ describe('AuthorizationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthorizationController],
       providers: [
+        ...mockKeyCloakProviders,
         {
           provide: AuthorizationService,
           useValue: mockService,
@@ -55,7 +56,6 @@ describe('AuthorizationController', () => {
           provide: ClsService,
           useValue: {},
         },
-        ...mockKeyCloakProviders,
       ],
     }).compile();
 

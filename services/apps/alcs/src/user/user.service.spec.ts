@@ -1,10 +1,11 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import * as config from 'config';
 import { Repository } from 'typeorm';
 import { initUserMockEntity } from '../../test/mocks/mockEntities';
@@ -19,6 +20,7 @@ describe('UserService', () => {
   let mockUserRepository: DeepMocked<Repository<User>>;
   let mockGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
   let emailServiceMock: DeepMocked<EmailService>;
+  let mockRedisService: DeepMocked<RedisService>;
 
   const email = 'bruce.wayne@gotham.com';
   const mockUser = initUserMockEntity();
@@ -28,6 +30,7 @@ describe('UserService', () => {
     emailServiceMock = createMock();
     mockUserRepository = createMock();
     mockGovernmentRepository = createMock();
+    mockRedisService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -39,6 +42,10 @@ describe('UserService', () => {
         {
           provide: getRepositoryToken(LocalGovernment),
           useValue: mockGovernmentRepository,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
         },
         { provide: EmailService, useValue: emailServiceMock },
         UserProfile,
@@ -118,9 +125,13 @@ describe('UserService', () => {
       mockUserEntity.settings = { favoriteBoards: ['CEO', 'SOI'] };
       mockUserEntity.email = 'some test email';
 
+      const mockClient = { setEx: jest.fn() };
+      mockRedisService.getClient.mockReturnValue(mockClient as any);
       const result = await service.update('fake-uuid', mockUserEntity);
 
       expect(result).toStrictEqual(mockUserEntity);
+      expect(mockRedisService.getClient).toHaveBeenCalledTimes(1);
+      expect(mockClient.setEx).toHaveBeenCalledTimes(1);
     });
 
     it('should fail when user does not exist', async () => {
@@ -138,7 +149,7 @@ describe('UserService', () => {
     const prefix = env === 'production' ? '' : `[${env}]`;
     const subject = `${prefix} Access Requested to ALCS`;
     const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
-<a href='https://bcgov.github.io/sso-requests/my-dashboard/integrations'>CSS</a>`;
+<a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
 
     await service.sendNewUserRequestEmail(email, userIdentifier);
 

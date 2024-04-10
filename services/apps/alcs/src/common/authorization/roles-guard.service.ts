@@ -1,3 +1,4 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import {
   CanActivate,
   ExecutionContext,
@@ -33,6 +34,7 @@ export class RolesGuard implements CanActivate {
     private reflector: Reflector,
     private cls: ClsService,
     private userService: UserService,
+    private redisService: RedisService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,
@@ -87,10 +89,46 @@ export class RolesGuard implements CanActivate {
     }
 
     if (matchingRoles.length > 0 || requiredRoles.length === 0) {
-      request.user.entity = await this.userService.getByGuid(userGuids);
+      request.user.entity = await this.getAndCacheUser(userGuids);
       return true;
     }
 
     return false;
+  }
+
+  private async getAndCacheUser(userGuids: UserGuids) {
+    const redisClient = this.redisService.getClient();
+    const bceidUser = await redisClient.get(
+      `user/bceid/${userGuids.bceidGuid}`,
+    );
+    if (bceidUser) {
+      return JSON.parse(bceidUser);
+    }
+
+    const idirUser = await redisClient.get(
+      `user/idir/${userGuids.idirUserGuid}`,
+    );
+    if (idirUser) {
+      return JSON.parse(idirUser);
+    }
+
+    const user = await this.userService.getByGuid(userGuids);
+    if (user) {
+      const serialized = JSON.stringify(user);
+      if (user.bceidGuid) {
+        await redisClient.setEx(
+          `user/bceid/${user.bceidGuid}`,
+          600,
+          serialized,
+        );
+      } else if (user.idirUserGuid) {
+        await redisClient.setEx(
+          `user/idir/${user.idirUserGuid}`,
+          600,
+          serialized,
+        );
+      }
+    }
+    return user;
   }
 }

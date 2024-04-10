@@ -1,8 +1,9 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
+import { RedisService } from '@app/common/redis/redis.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import { IConfig } from 'config';
 import { Repository } from 'typeorm';
@@ -26,6 +27,7 @@ export class UserService {
     @InjectRepository(LocalGovernment)
     private localGovernmentRepository: Repository<LocalGovernment>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
+    private redisService: RedisService,
   ) {}
 
   async getAssignableUsers() {
@@ -88,6 +90,23 @@ export class UserService {
     }
 
     const updatedUser = Object.assign(existingUser, updates);
+
+    const serialized = JSON.stringify(updatedUser);
+    const redisClient = this.redisService.getClient();
+    if (updatedUser.bceidGuid) {
+      await redisClient.setEx(
+        `user/bceid/${updatedUser.bceidGuid}`,
+        600,
+        serialized,
+      );
+    } else if (updatedUser.idirUserGuid) {
+      await redisClient.setEx(
+        `user/idir/${updatedUser.idirUserGuid}`,
+        600,
+        serialized,
+      );
+    }
+
     return this.userRepository.save(updatedUser);
   }
 
@@ -110,7 +129,7 @@ export class UserService {
     const prefix = env === 'production' ? '' : `[${env}]`;
     const subject = `${prefix} Access Requested to ALCS`;
     const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
-<a href='https://bcgov.github.io/sso-requests/my-dashboard/integrations'>CSS</a>`;
+<a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
 
     await this.emailService.sendEmail({
       to: this.config.get('EMAIL.DEFAULT_ADMINS'),

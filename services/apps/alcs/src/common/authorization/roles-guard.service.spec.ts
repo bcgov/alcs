@@ -1,5 +1,5 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -10,11 +10,11 @@ import {
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
+import { mockAppLoggerService } from '../../../test/mocks/mockLogger';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
-import { mockAppLoggerService } from '../../../test/mocks/mockLogger';
-import { RolesGuard } from './roles-guard.service';
 import { AUTH_ROLE } from './roles';
+import { RolesGuard } from './roles-guard.service';
 
 describe('RolesGuard', () => {
   let guard: RolesGuard;
@@ -22,6 +22,7 @@ describe('RolesGuard', () => {
   let mockContext;
   let mockClsService: DeepMocked<ClsService>;
   let mockUserService: DeepMocked<UserService>;
+  let mockRedisService: DeepMocked<RedisService>;
 
   const mockUser = {};
 
@@ -38,14 +39,15 @@ describe('RolesGuard', () => {
   } as any;
 
   beforeEach(async () => {
-    mockContext = createMock<ExecutionContext>();
+    mockContext = createMock();
     mockContext.switchToHttp.mockReturnValue(mockHttpContext);
 
-    reflector = createMock<Reflector>();
+    reflector = createMock();
     reflector.get.mockReturnValue([AUTH_ROLE.ADMIN, AUTH_ROLE.LUP]);
 
-    mockClsService = createMock<ClsService>();
-    mockUserService = createMock<UserService>();
+    mockClsService = createMock();
+    mockUserService = createMock();
+    mockRedisService = createMock();
 
     mockUserService.getByGuid.mockResolvedValue(mockUser as User);
 
@@ -77,6 +79,10 @@ describe('RolesGuard', () => {
           provide: Reflector,
           useValue: reflector,
         },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
       ],
     }).compile();
 
@@ -90,6 +96,11 @@ describe('RolesGuard', () => {
   });
 
   it('should accept and set the user into CLS if users has all of the roles', async () => {
+    const mockRedisClient = {
+      get: jest.fn(),
+    };
+    mockRedisService.getClient.mockReturnValue(mockRedisClient as any);
+
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeTruthy();
     expect(mockClsService.set).toHaveBeenCalledWith('userGuids', {
@@ -127,7 +138,33 @@ describe('RolesGuard', () => {
       }),
     } as any);
 
+    const mockRedisClient = {
+      get: jest.fn(),
+    };
+    mockRedisService.getClient.mockReturnValue(mockRedisClient as any);
+
     const isAllowed = await guard.canActivate(mockContext);
     expect(isAllowed).toBeTruthy();
+  });
+
+  it('should not call the user service if there is a the cached redis user', async () => {
+    mockContext.switchToHttp.mockReturnValue({
+      getRequest: () => ({
+        user: {
+          client_roles: [AUTH_ROLE.ADMIN],
+        },
+      }),
+    } as any);
+
+    const mockRedisClient = {
+      get: jest.fn(),
+    };
+    mockRedisClient.get.mockResolvedValue(JSON.stringify(new User()));
+    mockRedisService.getClient.mockReturnValue(mockRedisClient as any);
+
+    const isAllowed = await guard.canActivate(mockContext);
+    expect(isAllowed).toBeTruthy();
+    expect(mockUserService.getByGuid).toHaveBeenCalledTimes(0);
+    expect(mockRedisClient.get).toHaveBeenCalledTimes(1);
   });
 });
