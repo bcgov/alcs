@@ -39,11 +39,11 @@ export class ConfigurationComponent implements OnInit {
     configs: { name: CONFIG_VALUE; value: string }[],
     configName: CONFIG_VALUE,
     isBoolean?: boolean,
-  ): T | undefined {
+  ): T {
     const config = configs.find((config) => config.name === configName);
 
     if (!config) {
-      return undefined;
+      throw new Error(`Configuration ${configName} not found.`);
     }
 
     return (isBoolean ? config.value === 'true' : config.value) as T;
@@ -52,10 +52,9 @@ export class ConfigurationComponent implements OnInit {
   private async loadConfigs() {
     const configs = await this.adminConfigurationService.listConfigurations();
     if (configs) {
-      this.maintenanceMode = this.getConfigValue<boolean>(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, true) || false;
-      this.maintenanceBanner =
-        this.getConfigValue<boolean>(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER, true) || false;
-      this.maintenanceBannerMessage = this.getConfigValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE) || '';
+      this.maintenanceMode = this.getConfigValue<boolean>(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, true);
+      this.maintenanceBanner = this.getConfigValue<boolean>(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER, true);
+      this.maintenanceBannerMessage = this.getConfigValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE);
     }
   }
 
