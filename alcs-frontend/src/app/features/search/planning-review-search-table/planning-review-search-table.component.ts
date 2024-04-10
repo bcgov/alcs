@@ -73,7 +73,7 @@ export class PlanningReviewSearchTableComponent {
   }
 
   onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/planning-review/${record.referenceId}`]));
+    const url = this.router.serializeUrl(this.router.createUrlTree([`/planning-review/${record.fileNumber}`]));
 
     window.open(url, '_blank');
   }

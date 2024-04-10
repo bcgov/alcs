@@ -14,9 +14,11 @@ import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
+import { INQUIRY_TYPES } from '../inquiry/inquiry.dto';
 import { Inquiry } from '../inquiry/inquiry.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
+import { PLANNING_REVIEW_TYPES } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
@@ -40,7 +42,6 @@ import {
   SearchResultDto,
 } from './search.dto';
 import { SearchService } from './search.service';
-import { INQUIRY_TYPES } from '../inquiry/inquiry.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -251,6 +252,28 @@ export class SearchController {
     return {
       total: mappedSearchResult.totalNotifications,
       data: mappedSearchResult.notifications,
+    };
+  }
+
+  @Post('/advanced/planning-reviews')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchPlanningReviews(
+    @Body() searchDto: SearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<PlanningReviewSearchResultDto[]>> {
+    const planningReviews =
+      await this.planningReviewSearchService.search(searchDto);
+
+    const mappedSearchResult = await this.mapAdvancedSearchResults(
+      null,
+      null,
+      planningReviews,
+      null,
+      null,
+    );
+
+    return {
+      total: mappedSearchResult.totalPlanningReviews,
+      data: mappedSearchResult.planningReviews,
     };
   }
 
