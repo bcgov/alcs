@@ -100,7 +100,6 @@ export class PlanningReviewAdvancedSearchService {
     query = this.compileSearchByNameQuery(searchDto, query);
     query = this.compileDecisionSearchQuery(searchDto, query);
     query = this.compileDateRangeSearchQuery(searchDto, query);
-    query = this.compileDateRangeSearchQuery(searchDto, query);
     query = this.compileSearchByTypeQuery(searchDto, query);
 
     return query;
