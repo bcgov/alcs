@@ -21,6 +21,7 @@ export class InlineTextComponent implements AfterContentChecked {
   @Input() required = false;
   @Output() save = new EventEmitter<string | null>();
   @Input() mask?: string | undefined;
+  @Input() maxLength: number | null = null;
 
   @ViewChild('editInput') textInput!: ElementRef;
 
