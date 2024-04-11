@@ -31,8 +31,9 @@ export class MaintenanceGuard implements CanActivate {
 
     const routeUrl = req.routeOptions.url;
 
-    const prefixes = ['/portal', '/public'].map(
-      (item) => `/${config.get<string>('ALCS.API_PREFIX')}${item}`,
+    const apiPrefix = config.get<string>('ALCS.API_PREFIX');
+    const prefixes = ['/portal', '/public'].map((item) =>
+      apiPrefix ? `/${apiPrefix}${item}` : item,
     );
     if (routeUrl && prefixes.some((prefix) => routeUrl.startsWith(prefix))) {
       const maintenanceMode = await this.configurationRepository.findOne({
