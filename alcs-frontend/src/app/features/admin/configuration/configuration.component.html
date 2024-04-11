@@ -6,6 +6,7 @@
       <app-inline-text
         [value]="maintenanceBannerMessage"
         (save)="updateMaintenanceBannerMessage($event)"
+        [maxLength]="120"
       ></app-inline-text>
     </div>
     <div class="toggle">
