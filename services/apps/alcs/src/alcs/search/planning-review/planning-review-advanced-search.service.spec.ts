@@ -88,7 +88,7 @@ describe('PlanningReviewAdvancedSearchService', () => {
 
     expect(result).toEqual({ data: [], total: 0 });
     expect(mockPRSearchView.createQueryBuilder).toHaveBeenCalledTimes(1);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(8);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(9);
   });
 
   it('should call compileSearchQuery method correctly', async () => {

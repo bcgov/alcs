@@ -311,4 +311,27 @@ describe('SearchController', () => {
     expect(result.inquiries).toBeDefined();
     expect(result.totalInquiries).toBe(0);
   });
+
+  it('should call advanced search to retrieve Planning Review only when Planning Review file type selected', async () => {
+    const mockSearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: ['MISC'],
+    };
+
+    const result = await controller.advancedSearch(
+      mockSearchRequestDto as SearchRequestDto,
+    );
+
+    expect(
+      mockPlanningReviewAdvancedSearchService.search,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledWith(
+      mockSearchRequestDto,
+    );
+    expect(result.inquiries).toBeDefined();
+    expect(result.totalInquiries).toBe(0);
+  });
 });

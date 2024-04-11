@@ -13,6 +13,20 @@ import { ApplicationRegionDto } from '../code/application-code/application-regio
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { PlanningReviewMeetingDto } from './planning-review-meeting/planning-review-meeting.dto';
 
+export enum PLANNING_REVIEW_TYPES {
+  AAPP = 'AAPP',
+  MISC = 'MISC',
+  BAPP = 'BAPP',
+  ALRB = 'ALRB',
+  RGSP = 'RGSP',
+  CLUP = 'CLUP',
+  OCPP = 'OCPP',
+  TPPP = 'TPPP',
+  UEPP = 'UEPP',
+  ZBPP = 'ZBPP',
+  PARK = 'PARK',
+}
+
 export class PlanningReviewTypeDto extends BaseCodeDto {
   @AutoMap()
   shortLabel: string;

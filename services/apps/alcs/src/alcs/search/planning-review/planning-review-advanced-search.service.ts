@@ -100,6 +100,7 @@ export class PlanningReviewAdvancedSearchService {
     query = this.compileSearchByNameQuery(searchDto, query);
     query = this.compileDecisionSearchQuery(searchDto, query);
     query = this.compileDateRangeSearchQuery(searchDto, query);
+    query = this.compileSearchByTypeQuery(searchDto, query);
 
     return query;
   }
@@ -185,6 +186,22 @@ export class PlanningReviewAdvancedSearchService {
         },
       );
     }
+    return query;
+  }
+
+  private compileSearchByTypeQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<PlanningReviewSearchView>,
+  ) {
+    if (searchDto.fileTypes.length > 0) {
+      query = query.andWhere(
+        'planningReviewSearch.planning_review_type_code IN (:...typeCodes)',
+        {
+          typeCodes: searchDto.fileTypes,
+        },
+      );
+    }
+
     return query;
   }
 }
