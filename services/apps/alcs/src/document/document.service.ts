@@ -166,15 +166,15 @@ export class DocumentService {
       expiresIn: this.documentTimeout,
     });
 
-    // const isInfected = await this.clamAvService.scanFile(fileUrl);
-    // if (isInfected) {
-    //   await this.deleteDocument(data.fileKey);
-    //   this.logger.warn(`Deleted malicious file ${data.fileKey}`);
-    //   throw new BaseServiceException(
-    //     'File may contain malicious data, upload blocked',
-    //     403,
-    //   );
-    // }
+    const isInfected = await this.clamAvService.scanFile(fileUrl);
+    if (isInfected) {
+      await this.deleteDocument(data.fileKey);
+      this.logger.warn(`Deleted malicious file ${data.fileKey}`);
+      throw new BaseServiceException(
+        'File may contain malicious data, upload blocked',
+        403,
+      );
+    }
 
     return this.documentRepository.save(
       new Document({
