@@ -66,35 +66,26 @@ test('TUR', async ({ inboxLoggedIn }) => {
   await inboxLoggedIn
     .getByLabel('Describe all other uses that currently take place on the parcel(s).')
     .fill('The other');
-  console.log();
 
   // North
   await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(0).click();
-  await inboxLoggedIn.getByRole('option', { name: 'Agricultural / Farm' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'North land use type description' }).click();
+  await inboxLoggedIn.locator('#northLandUseType-panel').getByRole('option', { name: 'Agricultural / Farm' }).click();
   await inboxLoggedIn.getByRole('textbox', { name: 'North land use type description' }).fill('1');
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(0).press('Escape'); // Close dropdown
 
   // East
   await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(1).click();
-  await inboxLoggedIn.getByRole('option', { name: 'Civic / Institutional' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'East land use type description' }).click();
+  await inboxLoggedIn.locator('#eastLandUseType-panel').getByRole('option', { name: 'Civic / Institutional' }).click();
   await inboxLoggedIn.getByRole('textbox', { name: 'East land use type description' }).fill('1');
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(1).press('Escape'); // Close dropdown
 
   // South
   await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(2).click();
-  await inboxLoggedIn.getByRole('option', { name: 'Commercial / Retail' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'South land use type description' }).click();
+  await inboxLoggedIn.locator('#southLandUseType-panel').getByRole('option', { name: 'Commercial / Retail' }).click();
   await inboxLoggedIn.getByRole('textbox', { name: 'South land use type description' }).fill('1');
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(2).press('Escape'); // Close dropdown
 
   // West
   await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(3).click();
-  await inboxLoggedIn.getByRole('option', { name: 'Industrial' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'West land use type description' }).click();
+  await inboxLoggedIn.locator('#westLandUseType-panel').getByRole('option', { name: 'Industrial' }).click();
   await inboxLoggedIn.getByRole('textbox', { name: 'West land use type description' }).fill('1');
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(3).press('Escape'); // Close dropdown
 
   await inboxLoggedIn.getByText('Proposal', { exact: true }).click();
 
@@ -148,4 +139,26 @@ test('TUR', async ({ inboxLoggedIn }) => {
   await inboxLoggedIn.getByPlaceholder('Select a type').nth(1).click();
   await inboxLoggedIn.getByText('Site Photo').click();
   await inboxLoggedIn.getByPlaceholder('Type description').nth(1).fill('Desc');
+
+  await inboxLoggedIn.getByText('Review & Submit').click();
+
+  // Step 8: Review
+  // Parcel 1
+  await expect(inboxLoggedIn.getByTestId('parcel-0-type')).toHaveText('Fee Simple');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-legal-description')).toHaveText('Parcel description');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-map-area')).toHaveText('1 ha');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-pid')).toHaveText('111-111-111');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-purchase-date')).toHaveText('Apr 23, 2014');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-is-farm')).toHaveText('Yes');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-civic-address')).toHaveText('123 Street Rd');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-certificate-of-title')).toHaveText('temp.txt');
+
+  // Owners
+  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-name')).toHaveText('1 1');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-organization')).toHaveText('No Data');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-phone-number')).toHaveText('(111) 111-1111');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-email')).toHaveText('1@1');
+  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-corporate-summary')).toHaveText('Not Applicable');
+
+  await expect(inboxLoggedIn.getByTestId('parcel-0-is-confirmed-by-applicant')).toHaveText('Yes');
 });
