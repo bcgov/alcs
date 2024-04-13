@@ -143,6 +143,7 @@ test('TUR', async ({ inboxLoggedIn }) => {
   await inboxLoggedIn.getByText('Review & Submit').click();
 
   // Step 8: Review
+  // Parcels
   // Parcel 1
   await expect(inboxLoggedIn.getByTestId('parcel-0-type')).toHaveText('Fee Simple');
   await expect(inboxLoggedIn.getByTestId('parcel-0-legal-description')).toHaveText('Parcel description');
@@ -161,4 +162,16 @@ test('TUR', async ({ inboxLoggedIn }) => {
   await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-corporate-summary')).toHaveText('Not Applicable');
 
   await expect(inboxLoggedIn.getByTestId('parcel-0-is-confirmed-by-applicant')).toHaveText('Yes');
+
+  // Other Parcels
+  await expect(inboxLoggedIn.getByTestId('has-other-parcels')).toHaveText('Yes');
+  await expect(inboxLoggedIn.getByTestId('other-parcels-description')).toHaveText('Other parcels');
+
+  // Primary Contact
+  await expect(inboxLoggedIn.getByTestId('primary-contact-type')).toHaveText('Land Owner');
+  await expect(inboxLoggedIn.getByTestId('primary-contact-first-name')).toHaveText('1');
+  await expect(inboxLoggedIn.getByTestId('primary-contact-last-name')).toHaveText('1');
+  await expect(inboxLoggedIn.getByTestId('primary-contact-organization')).toHaveText('No Data');
+  await expect(inboxLoggedIn.getByTestId('primary-contact-phone-number')).toHaveText('(111) 111-1111');
+  await expect(inboxLoggedIn.getByTestId('primary-contact-email')).toHaveText('1@1');
 });

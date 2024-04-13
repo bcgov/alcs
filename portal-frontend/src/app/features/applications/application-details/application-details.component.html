@@ -13,7 +13,7 @@
     <div class="subheading2 grid-1">
       Do any of the land owners added previously own or lease other parcels that might inform this application process?
     </div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="has-other-parcels">
       <span *ngIf="applicationSubmission.hasOtherParcelsInCommunity !== null">{{
           applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
         }}</span>
@@ -26,7 +26,7 @@
       <div class="subheading2 grid-1">
         Describe the other parcels including their location, who owns or leases them, and their use.
       </div>
-      <div class="grid-double">
+      <div class="grid-double" data-testid="other-parcels-description">
         {{ applicationSubmission.otherParcelsDescription }}
         <app-no-data *ngIf="!applicationSubmission.otherParcelsDescription" [showRequired]="showErrors"></app-no-data>
       </div>
@@ -40,17 +40,17 @@
   <h3>3. Primary Contact</h3>
   <div *ngIf="applicationSubmission" class="review-table">
     <div class="subheading2 grid-1">Type</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-type">
       {{ primaryContact?.type?.label }}
       <app-no-data *ngIf="!primaryContact?.type?.label" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">First Name</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-first-name">
       {{ primaryContact?.firstName }}
       <app-no-data *ngIf="!primaryContact?.firstName" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Last Name</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-last-name">
       {{ primaryContact?.lastName }}
       <app-no-data *ngIf="!primaryContact?.lastName" [showRequired]="showErrors"></app-no-data>
     </div>
@@ -62,7 +62,7 @@
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
     </div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-organization">
       {{ primaryContact?.organizationName }}
       <app-no-data
         *ngIf="!primaryContact?.organizationName"
@@ -70,7 +70,7 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Phone</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-phone-number">
       {{ primaryContact?.phoneNumber ?? '' | mask : '(000) 000-0000' }}
       <app-no-data *ngIf="!primaryContact?.phoneNumber" [showRequired]="showErrors"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
@@ -79,14 +79,14 @@
       >
     </div>
     <div class="subheading2 grid-1">Email</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-email">
       {{ primaryContact?.email }}
       <app-no-data *ngIf="!primaryContact?.email" [showRequired]="showErrors"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.email || '' | emailValid)">Invalid Format</app-validation-error>
     </div>
     <ng-container *ngIf="needsAuthorizationLetter || authorizationLetters.length > 0">
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
-      <div class="grid-double">
+      <div class="grid-double" data-testid="primary-contact-authorization-letter">
         <app-no-data
           *ngIf="authorizationLetters.length === 0"
           [showRequired]="showErrors && needsAuthorizationLetter"
