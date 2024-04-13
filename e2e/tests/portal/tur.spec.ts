@@ -143,7 +143,7 @@ test('TUR', async ({ inboxLoggedIn }) => {
   await inboxLoggedIn.getByText('Review & Submit').click();
 
   // Step 8: Review
-  // Parcels
+  // 1. Parcels
   // Parcel 1
   await expect(inboxLoggedIn.getByTestId('parcel-0-type')).toHaveText('Fee Simple');
   await expect(inboxLoggedIn.getByTestId('parcel-0-legal-description')).toHaveText('Parcel description');
@@ -163,15 +163,52 @@ test('TUR', async ({ inboxLoggedIn }) => {
 
   await expect(inboxLoggedIn.getByTestId('parcel-0-is-confirmed-by-applicant')).toHaveText('Yes');
 
-  // Other Parcels
+  // 2. Other Parcels
   await expect(inboxLoggedIn.getByTestId('has-other-parcels')).toHaveText('Yes');
   await expect(inboxLoggedIn.getByTestId('other-parcels-description')).toHaveText('Other parcels');
 
-  // Primary Contact
+  // 3. Primary Contact
   await expect(inboxLoggedIn.getByTestId('primary-contact-type')).toHaveText('Land Owner');
   await expect(inboxLoggedIn.getByTestId('primary-contact-first-name')).toHaveText('1');
   await expect(inboxLoggedIn.getByTestId('primary-contact-last-name')).toHaveText('1');
   await expect(inboxLoggedIn.getByTestId('primary-contact-organization')).toHaveText('No Data');
   await expect(inboxLoggedIn.getByTestId('primary-contact-phone-number')).toHaveText('(111) 111-1111');
   await expect(inboxLoggedIn.getByTestId('primary-contact-email')).toHaveText('1@1');
+
+  // 4. Government
+  await expect(inboxLoggedIn.getByTestId('government-name')).toHaveText('Peace River Regional District');
+
+  // 5. Land Use
+  await expect(inboxLoggedIn.getByTestId('parcels-agriculture-description')).toHaveText('This');
+  await expect(inboxLoggedIn.getByTestId('parcels-agriculture-improvement-description')).toHaveText('That');
+  await expect(inboxLoggedIn.getByTestId('parcels-non-agriculture-description')).toHaveText('The other');
+  await expect(inboxLoggedIn.getByTestId('north-land-use-type')).toHaveText('Agricultural / Farm');
+  await expect(inboxLoggedIn.getByTestId('north-land-use-description')).toHaveText('1');
+  await expect(inboxLoggedIn.getByTestId('east-land-use-type')).toHaveText('Civic / Institutional');
+  await expect(inboxLoggedIn.getByTestId('east-land-use-description')).toHaveText('1');
+  await expect(inboxLoggedIn.getByTestId('south-land-use-type')).toHaveText('Commercial / Retail');
+  await expect(inboxLoggedIn.getByTestId('south-land-use-description')).toHaveText('1');
+  await expect(inboxLoggedIn.getByTestId('west-land-use-type')).toHaveText('Industrial');
+  await expect(inboxLoggedIn.getByTestId('west-land-use-description')).toHaveText('1');
+
+  // 6. Proposal
+  await expect(inboxLoggedIn.getByTestId('tur-purpose')).toHaveText('This');
+  await expect(inboxLoggedIn.getByTestId('tur-agricultural-activities')).toHaveText('That');
+  await expect(inboxLoggedIn.getByTestId('tur-reduce-negative-impacts')).toHaveText('The other');
+  await expect(inboxLoggedIn.getByTestId('tur-outside-lands')).toHaveText('And another');
+  await expect(inboxLoggedIn.getByTestId('tur-total-corridor-area')).toHaveText('1 ha');
+  await expect(inboxLoggedIn.getByTestId('tur-all-owners-notified')).toHaveText('Yes');
+  await expect(inboxLoggedIn.getByTestId('tur-proof-of-serving-notice')).toHaveText('temp.txt');
+  await expect(inboxLoggedIn.getByTestId('tur-proposal-map')).toHaveText('temp.txt');
+
+  // 7. Optional Documents
+  // Doc 1
+  await expect(inboxLoggedIn.getByTestId('optional-document-0-file-name')).toHaveText('temp.txt');
+  await expect(inboxLoggedIn.getByTestId('optional-document-0-type')).toHaveText('Professional Report');
+  await expect(inboxLoggedIn.getByTestId('optional-document-0-description')).toHaveText('Desc');
+
+  // Doc 2
+  await expect(inboxLoggedIn.getByTestId('optional-document-1-file-name')).toHaveText('temp.txt');
+  await expect(inboxLoggedIn.getByTestId('optional-document-1-type')).toHaveText('Site Photo');
+  await expect(inboxLoggedIn.getByTestId('optional-document-1-description')).toHaveText('Desc');
 });

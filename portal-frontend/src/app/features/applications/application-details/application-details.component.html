@@ -108,7 +108,7 @@
   <h3>4. Government</h3>
   <div *ngIf="applicationSubmission" class="review-table">
     <div class="subheading2 grid-1">Local or First Nation Government</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="government-name">
       {{ localGovernment?.name }}
       <app-no-data *ngIf="!localGovernment" [showRequired]="showErrors"></app-no-data>
       <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
@@ -144,7 +144,7 @@
       <h4>Land Use of Parcel(s) under Application</h4>
     </div>
     <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-agriculture-description">
       {{ applicationSubmission.parcelsAgricultureDescription }}
       <app-no-data
         *ngIf="!applicationSubmission.parcelsAgricultureDescription"
@@ -152,7 +152,7 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-agriculture-improvement-description">
       {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
       <app-no-data
         *ngIf="!applicationSubmission.parcelsAgricultureImprovementDescription"
@@ -160,7 +160,7 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-non-agriculture-description">
       {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
       <app-no-data
         *ngIf="!applicationSubmission.parcelsNonAgricultureUseDescription"
@@ -175,11 +175,11 @@
       <div class="grid-2 subheading2">Main Land Use Type</div>
       <div class="grid-3 subheading2">Specific Activity</div>
       <div class="grid-1 subheading2">North</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="north-land-use-type">
         {{ applicationSubmission.northLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.northLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="north-land-use-description">
         {{ applicationSubmission.northLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.northLandUseTypeDescription"
@@ -187,11 +187,11 @@
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">East</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="east-land-use-type">
         {{ applicationSubmission.eastLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.eastLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="east-land-use-description">
         {{ applicationSubmission.eastLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.eastLandUseTypeDescription"
@@ -199,11 +199,11 @@
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">South</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="south-land-use-type">
         {{ applicationSubmission.southLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.southLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="south-land-use-description">
         {{ applicationSubmission.southLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.southLandUseTypeDescription"
@@ -211,11 +211,11 @@
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">West</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="west-land-use-type">
         {{ applicationSubmission.westLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.westLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="west-land-use-description">
         {{ applicationSubmission.westLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.westLandUseTypeDescription"
@@ -319,15 +319,15 @@
       <div class="grid-2 subheading2">Type</div>
       <div class="grid-3 subheading2">Description</div>
 
-      <ng-container *ngFor="let file of otherFiles">
-        <div class="grid-1">
+      <ng-container *ngFor="let file of otherFiles; let docIdn = index">
+        <div class="grid-1" [attr.data-testid]="'optional-document-' + docIdn + '-file-name'">
           <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
-        <div class="grid-2">
+        <div class="grid-2" [attr.data-testid]="'optional-document-' + docIdn + '-type'">
           {{ file.type?.label }}
           <app-no-data *ngIf="!file.type" [showRequired]="showErrors"></app-no-data>
         </div>
-        <div class="grid-3">
+        <div class="grid-3" [attr.data-testid]="'optional-document-' + docIdn + '-description'">
           {{ file.description }}
           <app-no-data *ngIf="!file.description" [showRequired]="showErrors"></app-no-data>
         </div>
