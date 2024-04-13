@@ -1,6 +1,6 @@
 import { test, expect, UserPrefix } from './fixtures';
 
-test.use({ userPrefix: UserPrefix.BceidLg });
+test.use({ userPrefix: UserPrefix.BceidBasic });
 
 test('TUR', async ({ inboxLoggedIn }) => {
   // Create TUR app
