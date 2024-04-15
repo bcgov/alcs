@@ -15,11 +15,9 @@ export class TokenRefreshService {
     this.authenticationService.$currentTokenUser.subscribe((user) => {
       if (user) {
         if (this.interval) {
-          console.log('Refresh Interval Cleared');
           clearInterval(this.interval);
         }
         this.interval = window.setInterval(() => {
-          console.log('Refresh Interval Fired');
           this.authenticationService.refreshTokens();
         }, refreshTokenTime);
       }
