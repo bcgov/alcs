@@ -58,6 +58,9 @@ export class PlanningReviewAdvancedSearchService {
       case 'government':
         return '"planningReviewSearch"."local_government_name"';
 
+      case 'status':
+        return '"planningReviewSearch"."open"';
+
       default:
       case 'dateSubmitted':
         return '"planningReviewSearch"."date_submitted_to_alc"';
