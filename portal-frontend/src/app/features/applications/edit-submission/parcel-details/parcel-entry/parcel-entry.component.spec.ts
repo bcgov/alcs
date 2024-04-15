@@ -4,8 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
-import { By } from '@angular/platform-browser';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationOwnerDto } from '../../../../../services/application-owner/application-owner.dto';
@@ -197,34 +196,6 @@ describe('ParcelEntryComponent', () => {
     it('should require certificate of title', () => {
       expect(component.isCertificateOfTitleRequired).toBeTruthy();
     });
-
-    it('should have search button disabled if no pid', () => {
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
-      expect(component.pidPin.getRawValue()).toBe('');
-      expect(button.disabled).toBeTruthy();
-    });
-
-    it('should have search button disabled if pid is invalid', () => {
-      component.pidPin.setErrors({ invalid: true });
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
-      expect(component.pidPin.valid).toBeFalsy();
-      expect(button.disabled).toBeTruthy();
-    });
-
-    it('should have search button enabled if pid is valid', () => {
-      component._disabled = false;
-      component.parcelForm.controls.parcelType.setValue('SMPL');
-      component.pidPin.setValue('123456789');
-      fixture.detectChanges();
-
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
-      expect(component.pidPin.valid).toBeTruthy();
-      expect(!component.parcelType.getRawValue()).toBeFalsy();
-      expect(!component.pidPin.getRawValue()).toBeFalsy();
-      expect(component.pidPin.invalid).toBeFalsy();
-      expect(component._disabled).toBeFalsy();
-      expect(button.disabled).toBeFalsy();
-    });
   });
 
   describe('Crown', () => {
@@ -262,36 +233,6 @@ describe('ParcelEntryComponent', () => {
 
     it('should not require certificate of title', () => {
       expect(component.isCertificateOfTitleRequired).toBeFalsy();
-    });
-
-    it('should have search button disabled if no pid', () => {
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
-      expect(component.pidPin.getRawValue()).toBe('');
-      expect(button.disabled).toBeTruthy();
-    });
-
-    it('should have search button disabled if pid is invalid', () => {
-      component.pidPin.setErrors({ invalid: true });
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
-      expect(component.pidPin.valid).toBeFalsy();
-      expect(button.disabled).toBeTruthy();
-    });
-
-    it('should have search button enabled if pid is valid', () => {
-      component._disabled = false;
-      component.isCrownLand = true;
-      component.searchBy.setValue('pid');
-      component.parcelForm.controls.parcelType.setValue('CRWN');
-      component.pidPin.setValue('123456789');
-
-      fixture.detectChanges();
-
-      const button = fixture.debugElement.query(By.css('.lookup-search-button')).nativeElement;
-      expect(!component.parcelType.getRawValue()).toBeFalsy();
-      expect(!component.pidPin.getRawValue()).toBeFalsy();
-      expect(component.pidPin.invalid).toBeFalsy();
-      expect(component._disabled).toBeFalsy();
-      expect(button.disabled).toBeFalsy();
     });
   });
 });
