@@ -11,7 +11,13 @@ describe('PlanningReviewAdvancedSearchService', () => {
   let service: PlanningReviewAdvancedSearchService;
   let mockPRSearchView: DeepMocked<Repository<PlanningReviewSearchView>>;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
-  const sortFields = ['fileId', 'type', 'government', 'dateSubmitted'];
+  const sortFields = [
+    'fileId',
+    'type',
+    'government',
+    'dateSubmitted',
+    'status',
+  ];
 
   const mockSearchDto: SearchRequestDto = {
     fileNumber: '123',
