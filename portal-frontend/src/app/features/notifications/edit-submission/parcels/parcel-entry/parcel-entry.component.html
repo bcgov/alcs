@@ -56,10 +56,21 @@
             mat-flat-button
             color="primary"
             (click)="onSearch()"
-            [disabled]="!parcelType.getRawValue() || (!!isCrownLand && !searchBy.getRawValue())"
+            [disabled]="!parcelType.getRawValue() || pidPin.invalid || !pidPin.getRawValue()"
           >
             Search
           </button>
+        </div>
+        <div
+          *ngIf="
+            ((searchBy.value === 'pid' && isCrownLand) || !isCrownLand) &&
+            pidPin.invalid &&
+            (pidPin.dirty || pidPin.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="pidPin.errors?.['mask']">Please provide all 9 numbers, including leading zeros</div>
         </div>
         <div class="lookup-bottom-row">
           <button type="button" class="reset-button" mat-stroked-button color="accent" (click)="onReset()">
