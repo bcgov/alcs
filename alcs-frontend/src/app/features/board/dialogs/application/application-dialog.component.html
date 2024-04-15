@@ -14,24 +14,14 @@
       </h3>
     </div>
     <div class="center">
-      <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
-      <mat-menu xPosition="before" #moreActions="matMenu">
-        <button [mat-dialog-close]="isDirty" (click)="goToDetailpage()" mat-menu-item>View Detail</button>
-        <button
-          [mat-dialog-close]="isDirty"
-          [routerLink]="['application', application.fileNumber, 'info-request']"
-          mat-menu-item
-        >
-          Add Info Request
-        </button>
-        <button
-          [mat-dialog-close]="isDirty"
-          [routerLink]="['application', application.fileNumber, 'site-visit-meeting']"
-          mat-menu-item
-        >
-          Add Site Visit / Meeting
-        </button>
-      </mat-menu>
+      <button
+        color="accent"
+        mat-flat-button
+        [mat-dialog-close]="isDirty"
+        [routerLink]="['application', application.fileNumber]"
+      >
+        View Detail
+      </button>
     </div>
   </div>
   <div>
