@@ -4,6 +4,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { takeUntil } from 'rxjs';
+import { v4 } from 'uuid';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import {
@@ -12,8 +13,8 @@ import {
 } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
@@ -30,7 +31,7 @@ export enum STRUCTURE_TYPES {
   OTHER_STRUCTURE = 'Other Structure',
 }
 
-type FormProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null };
+type FormProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null; id: string };
 
 export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
@@ -96,7 +97,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     private confirmationDialogService: ConfirmationDialogService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(noticeOfIntentDocumentService, dialog, toastService);
   }
@@ -134,13 +135,14 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
         this.proposedStructures = noiSubmission.soilProposedStructures.map((structure) => ({
           ...structure,
+          id: v4(),
           area: structure.area ? structure.area.toString(10) : null,
         }));
 
         const newForm = new FormGroup({});
-        for (const [index, lot] of noiSubmission.soilProposedStructures.entries()) {
-          newForm.addControl(`${index}-type`, new FormControl(lot.type, [Validators.required]));
-          newForm.addControl(`${index}-area`, new FormControl(lot.area, [Validators.required]));
+        for (const lot of this.proposedStructures) {
+          newForm.addControl(`${lot.id}-type`, new FormControl(lot.type, [Validators.required]));
+          newForm.addControl(`${lot.id}-area`, new FormControl(lot.area, [Validators.required]));
         }
         this.structuresForm = newForm;
 
@@ -174,7 +176,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   private setVisibilityAndValidatorsForResidentialFields() {
     if (
       this.proposedStructures.some(
-        (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type)
+        (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type),
       )
     ) {
       this.isSoilStructureResidentialUseReasonVisible = true;
@@ -188,7 +190,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   private setVisibilityAndValidatorsForOtherFields() {
     const hasOtherStructure = this.proposedStructures.some(
-      (structure) => structure.type && structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE
+      (structure) => structure.type && structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE,
     );
     if (hasOtherStructure) {
       this.isSoilOtherUseReasonVisible = true;
@@ -241,9 +243,9 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       const soilStructureOtherUseReason = this.soilStructureOtherUseReason.value;
 
       const updatedStructures: ProposedStructure[] = [];
-      for (const [index, lot] of this.proposedStructures.entries()) {
-        const lotType = this.structuresForm.controls[`${index}-type`].value;
-        const lotArea = this.structuresForm.controls[`${index}-area`].value;
+      for (const lot of this.proposedStructures) {
+        const lotType = this.structuresForm.controls[`${lot.id}-type`].value;
+        const lotArea = this.structuresForm.controls[`${lot.id}-area`].value;
         updatedStructures.push({
           type: lotType,
           area: lotArea ? parseFloat(lotArea) : null,
@@ -315,18 +317,24 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     }
   }
 
-  private setStructureTypeInput(index: number, value: STRUCTURE_TYPES) {
-    this.proposedStructures[index].type = value;
+  private setStructureTypeInput(structure: FormProposedStructure, value: STRUCTURE_TYPES) {
+    structure.type = value;
     this.prepareStructureSpecificTextInputs();
     this.form.markAsDirty();
   }
 
-  onChangeStructureType(index: number, value: STRUCTURE_TYPES) {
-    const prevType = this.proposedStructures[index].type;
+  onChangeStructureType(id: string, value: STRUCTURE_TYPES) {
+    const structure = this.proposedStructures.find((structure) => structure.id === id);
+    if (!structure) {
+      console.error('Failed to find structure');
+      return;
+    }
+
+    const prevType = structure.type;
     const hasInput = this.checkStructureTypeInput(prevType);
 
     if (!hasInput) {
-      return this.setStructureTypeInput(index, value);
+      return this.setStructureTypeInput(structure, value);
     } else {
       const dialog = this.confirmationDialogService.openDialog({
         title: 'Change Structure Type',
@@ -337,15 +345,15 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
       dialog.subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.setStructureTypeInput(index, value);
+          this.setStructureTypeInput(structure, value);
         } else {
-          this.structuresForm.get(index + '-type')?.setValue(prevType);
+          this.structuresForm.get(structure.id + '-type')?.setValue(prevType);
         }
       });
     }
   }
 
-  onStructureRemove(index: number) {
+  onStructureRemove(id: string) {
     this.dialog
       .open(DeleteStructureConfirmationDialogComponent, {
         panelClass: 'no-padding',
@@ -354,42 +362,49 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       .beforeClosed()
       .subscribe(async (result) => {
         if (result) {
-          this.deleteStructure(index);
+          this.deleteStructure(id);
         }
       });
   }
 
-  private deleteStructure(index: number) {
-    const deletedStructure: FormProposedStructure = this.proposedStructures.splice(index, 1)[0];
+  private deleteStructure(id: string) {
+    const structureToDelete = this.proposedStructures.find((structure) => structure.id === id);
+
+    if (!structureToDelete) {
+      console.error('Failed to find deleted structure');
+      return;
+    }
+
+    this.proposedStructures = this.proposedStructures.filter((structure) => structure.id !== structureToDelete.id);
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
-    this.structuresForm.removeControl(`${index}-type`);
-    this.structuresForm.removeControl(`${index}-area`);
+    this.structuresForm.removeControl(`${id}-type`);
+    this.structuresForm.removeControl(`${id}-area`);
     this.structuresForm.markAsDirty();
 
-    if (deletedStructure.type === STRUCTURE_TYPES.FARM_STRUCTURE) {
+    if (structureToDelete.type === STRUCTURE_TYPES.FARM_STRUCTURE) {
       this.setVisibilityAndValidatorsForFarmFields();
     }
 
-    if (deletedStructure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE) {
+    if (structureToDelete.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE) {
       this.setVisibilityAndValidatorsForAccessoryFields();
     }
 
-    if (deletedStructure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(deletedStructure.type)) {
+    if (structureToDelete.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structureToDelete.type)) {
       this.setVisibilityAndValidatorsForResidentialFields();
     }
 
-    if (deletedStructure.type === STRUCTURE_TYPES.OTHER_STRUCTURE) {
+    if (structureToDelete.type === STRUCTURE_TYPES.OTHER_STRUCTURE) {
       this.setVisibilityAndValidatorsForOtherFields();
     }
   }
 
   onStructureAdd() {
-    this.proposedStructures.push({ type: null, area: '' });
+    const newStructure = { type: null, area: '', id: v4() };
+    this.proposedStructures.push(newStructure);
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
-    const index = this.proposedStructures.length - 1;
-    this.structuresForm.addControl(`${index}-type`, new FormControl(null, [Validators.required]));
-    this.structuresForm.addControl(`${index}-area`, new FormControl(null, [Validators.required]));
+    this.structuresForm.addControl(`${newStructure.id}-type`, new FormControl(null, [Validators.required]));
+    this.structuresForm.addControl(`${newStructure.id}-area`, new FormControl(null, [Validators.required]));
     this.structuresForm.markAsDirty();
   }
 
