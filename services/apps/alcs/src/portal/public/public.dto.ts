@@ -31,9 +31,6 @@ export class PublicParcelDto {
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
 
-  @AutoMap(() => String)
-  crownLandOwnerType?: string | null;
-
   ownershipType?: ApplicationParcelOwnershipTypeDto;
 
   @AutoMap(() => Number)

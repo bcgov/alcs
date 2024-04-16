@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
@@ -39,7 +38,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
     super();
   }
@@ -51,7 +50,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
         this.submissionUuid = applicationSubmission.uuid;
         this.loadParcels();
         const parcelOwners = applicationSubmission.owners.filter(
-          (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+          (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code),
         );
         this.$owners.next(parcelOwners);
       }
@@ -106,8 +105,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     parcel.purchasedDate =
       formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
-    parcel.crownLandOwnerType =
-      formData.crownLandOwnerType !== undefined ? formData.crownLandOwnerType : parcel.crownLandOwnerType;
     if (formData.owners) {
       parcel.owners = formData.owners;
     }
@@ -128,7 +125,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
           mapAreaHectares: parcel.mapAreaHectares,
           ownershipTypeCode: parcel.ownershipTypeCode,
           isConfirmedByApplicant: parcel.isConfirmedByApplicant,
-          crownLandOwnerType: parcel.crownLandOwnerType,
           ownerUuids: parcel.owners.map((owner) => owner.uuid),
         });
       }
@@ -164,6 +160,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   }
 
   expandedParcel: string = '';
+
   openParcel(index: string) {
     this.expandedParcel = index;
   }
@@ -172,7 +169,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     const owners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (owners) {
       const parcelOwners = owners.filter(
-        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code),
       );
       this.$owners.next(parcelOwners);
     }

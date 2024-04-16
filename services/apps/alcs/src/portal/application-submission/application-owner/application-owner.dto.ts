@@ -7,7 +7,6 @@ import {
   Matches,
 } from 'class-validator';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
-import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import {
   OWNER_TYPE,
   OwnerTypeDto,

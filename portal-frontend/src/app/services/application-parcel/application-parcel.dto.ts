@@ -12,7 +12,6 @@ export interface ApplicationParcelUpdateDto {
   purchasedDate?: number | null;
   isFarm?: boolean | null;
   ownershipTypeCode?: string | null;
-  crownLandOwnerType?: string | null;
   isConfirmedByApplicant: boolean;
   ownerUuids: string[] | null;
 }

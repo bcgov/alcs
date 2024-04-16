@@ -89,7 +89,6 @@ export interface ApplicationParcelDto {
   purchasedDate?: number;
   isFarm?: boolean;
   ownershipType?: string;
-  crownLandOwnerType?: string;
   certificateOfTitleUuid?: string;
   owners: SubmittedApplicationOwnerDto[];
   alrArea: number;

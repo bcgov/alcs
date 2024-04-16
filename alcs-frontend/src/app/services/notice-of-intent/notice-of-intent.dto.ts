@@ -334,7 +334,6 @@ export interface NoticeOfIntentParcelDto {
   isFarm?: boolean;
   ownershipType?: ParcelTypeDto;
   ownershipTypeCode?: string;
-  crownLandOwnerType?: string;
   certificateOfTitleUuid?: string;
   certificateOfTitle?: NoticeOfIntentDocumentDto;
   owners: SubmittedNoticeOfIntentOwnerDto[];
