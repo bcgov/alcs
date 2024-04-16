@@ -285,7 +285,7 @@ describe('AdditionalInformationComponent', () => {
       beforeClosed: () => mockConfirmDialog,
     } as any);
 
-    component.onStructureRemove(0);
+    component.onStructureRemove(component.proposedStructures[0].id);
 
     expect(Object.keys(component.structuresForm.controls)).toEqual([]);
 
