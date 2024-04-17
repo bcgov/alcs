@@ -8,11 +8,13 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
 import { Inquiry } from '../inquiry.entity';
 
+@Unique('UNIQUE_OATS_ISSUE_IDS', ['oatsDocumentId', 'oatsIssueId'])
 @Entity({
   comment: 'Stores inquiry documents',
 })

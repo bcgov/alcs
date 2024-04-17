@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
@@ -17,6 +18,7 @@ export enum PR_VISIBILITY_FLAG {
   COMMISSIONER = 'C',
 }
 
+@Unique('UNIQUE_OATS_IDS', ['oatsDocumentId', 'oatsPlanningReviewId'])
 @Entity({
   comment: 'Stores planning review documents',
 })
