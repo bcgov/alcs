@@ -34,7 +34,6 @@ export interface PublicParcelDto {
   purchasedDate?: number | null;
   isFarm?: boolean | null;
   ownershipTypeCode?: string | null;
-  crownLandOwnerType?: string | null;
   ownershipType?: BaseCodeDto;
   alrArea: number | null;
   owners: PublicOwnerDto[];

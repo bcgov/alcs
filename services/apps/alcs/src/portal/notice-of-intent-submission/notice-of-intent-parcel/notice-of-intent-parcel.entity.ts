@@ -110,15 +110,6 @@ export class NoticeOfIntentParcel extends Base {
   @ManyToOne(() => ParcelOwnershipType)
   ownershipType: ParcelOwnershipType;
 
-  @AutoMap(() => Boolean)
-  @Column({
-    type: 'text',
-    comment:
-      'For Crown Land parcels to indicate whether they are provincially owned or federally owned',
-    nullable: true,
-  })
-  crownLandOwnerType?: string | null;
-
   @ManyToMany(() => NoticeOfIntentOwner, (owner) => owner.parcels)
   @JoinTable()
   owners: NoticeOfIntentOwner[];

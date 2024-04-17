@@ -55,13 +55,6 @@
       {{ parcel.civicAddress }}
       <app-no-data *ngIf="!parcel.civicAddress"></app-no-data>
     </div>
-    <ng-container *ngIf="parcel.crownLandOwnerType">
-      <div class="subheading2 grid-1">Crown Selection</div>
-      <div class="grid-double">
-        <span class="crown-land">{{ parcel.crownLandOwnerType }}</span>
-        <app-no-data *ngIf="!parcel.crownLandOwnerType"></app-no-data>
-      </div>
-    </ng-container>
     <div class="subheading2 grid-1">Certificate Of Title</div>
     <div class="grid-double">
       <div *ngIf="parcel.certificateOfTitle">
@@ -125,8 +118,8 @@
         <div>{{ owner.email }}</div>
         <div>
           <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary)">{{
-            owner.corporateSummary.fileName
-          }}</a>
+              owner.corporateSummary.fileName
+            }}</a>
           <div class="no-data" *ngIf="!owner.corporateSummary">
             <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
             <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>
