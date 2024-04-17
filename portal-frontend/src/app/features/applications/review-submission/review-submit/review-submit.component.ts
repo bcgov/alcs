@@ -16,6 +16,7 @@ import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-submission.component';
 import { SubmitConfirmationDialogComponent } from '../submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { openFileInline } from '../../../../shared/utils/file';
+import { ApplicationParcelDto } from '../../../../services/application-parcel/application-parcel.dto';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -25,6 +26,7 @@ import { openFileInline } from '../../../../shared/utils/file';
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
+  @Input() $parcels!: BehaviorSubject<ApplicationParcelDto[]>;
   @Input() stepper!: CustomStepperComponent;
   @Output() navigateToStep = new EventEmitter<number>();
   currentStep = ReviewApplicationSteps.ReviewAndSubmit;

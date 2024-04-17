@@ -5,6 +5,7 @@ import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
+import { NotificationParcelDto } from '../../../services/notification-parcel/notification-parcel.dto';
 import { NotificationSubmissionDetailedDto } from '../../../services/notification-submission/notification-submission.dto';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
@@ -20,6 +21,7 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
 
   @Input() $notificationSubmission!: BehaviorSubject<NotificationSubmissionDetailedDto | undefined>;
   @Input() $notificationDocuments!: BehaviorSubject<NotificationDocumentDto[]>;
+  @Input() $parcels!: BehaviorSubject<NotificationParcelDto[]>;
   @Input() showErrors = true;
   @Input() showEdit = true;
 
@@ -35,7 +37,7 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private codeService: CodeService,
     private notificationDocumentService: NotificationDocumentService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {

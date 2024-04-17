@@ -10,6 +10,7 @@ import { ApplicationSubmissionService } from '../../../services/application-subm
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
+import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ViewApplicationSubmissionComponent } from './view-application-submission.component';
 
 describe('ViewApplicationSubmissionComponent', () => {
@@ -21,6 +22,7 @@ describe('ViewApplicationSubmissionComponent', () => {
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockDialogService: DeepMocked<ConfirmationDialogService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
 
   let routeParamMap: BehaviorSubject<Map<string, any>>;
 
@@ -29,9 +31,10 @@ describe('ViewApplicationSubmissionComponent', () => {
     mockAppService = createMock();
     mockAppReviewService = createMock();
     mockAppDocumentService = createMock();
+    mockApplicationParcelService = createMock();
 
     mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
+      undefined,
     );
 
     routeParamMap = new BehaviorSubject(new Map());
@@ -54,6 +57,10 @@ describe('ViewApplicationSubmissionComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: ApplicationParcelService,
+          useValue: mockApplicationParcelService,
         },
         {
           provide: ConfirmationDialogService,

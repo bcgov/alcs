@@ -7,7 +7,7 @@ import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
 } from '../../../services/application-owner/application-owner.dto';
-import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
+import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
@@ -25,6 +25,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
+  @Input() $parcels!: BehaviorSubject<ApplicationParcelDto[]>;
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -44,8 +45,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private codeService: CodeService,
     private applicationDocumentService: ApplicationDocumentService,
-    private applicationParcelService: ApplicationParcelService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -93,7 +93,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   async onNavigateToStep(step: number) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`
+        `alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`,
       );
     } else {
       await this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
@@ -116,19 +116,20 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   }
 
   private async calculateAuthorizationLetterRequired(submissionUuid: string) {
-    //Map Owners from Parcels to only count linked ones
-    const parcels = await this.applicationParcelService.fetchBySubmissionUuid(submissionUuid);
-    if (parcels) {
-      const uniqueOwnerMap = parcels
-        .flatMap((parcel) => parcel.owners)
-        .reduce((map, owner) => {
-          return map.set(owner.uuid, owner);
-        }, new Map<string, ApplicationOwnerDto>());
-      const owners = [...uniqueOwnerMap.values()];
+    // Map Owners from Parcels to only count linked ones
+    this.$parcels.pipe(takeUntil(this.$destroy)).subscribe((parcels) => {
+      if (parcels) {
+        const uniqueOwnerMap = parcels
+          .flatMap((parcel) => parcel.owners)
+          .reduce((map, owner) => {
+            return map.set(owner.uuid, owner);
+          }, new Map<string, ApplicationOwnerDto>());
+        const owners = [...uniqueOwnerMap.values()];
 
-      const isSelfApplicant = owners.length === 1 && this.primaryContact?.type.code === OWNER_TYPE.INDIVIDUAL;
-      const isGovernmentContact = this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT;
-      this.needsAuthorizationLetter = isGovernmentContact || !isSelfApplicant;
-    }
+        const isSelfApplicant = owners.length === 1 && this.primaryContact?.type.code === OWNER_TYPE.INDIVIDUAL;
+        const isGovernmentContact = this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT;
+        this.needsAuthorizationLetter = isGovernmentContact || !isSelfApplicant;
+      }
+    });
   }
 }

@@ -6,6 +6,7 @@ import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { StepComponent } from '../step.partial';
+import { NoticeOfIntentParcelDto } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 
 @Component({
   selector: 'app-review-and-submit',
@@ -14,6 +15,7 @@ import { StepComponent } from '../step.partial';
 })
 export class ReviewAndSubmitComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $noiDocuments!: BehaviorSubject<NoticeOfIntentDocumentDto[]>;
+  @Input() $noiParcels!: BehaviorSubject<NoticeOfIntentParcelDto[]>;
   @Output() submit = new EventEmitter<void>();
 
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;

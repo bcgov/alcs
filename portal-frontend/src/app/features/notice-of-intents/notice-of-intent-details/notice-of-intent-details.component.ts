@@ -6,7 +6,7 @@ import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentOwnerDto } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
-import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
+import { NoticeOfIntentParcelDto } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
@@ -22,6 +22,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
 
   @Input() $noticeOfIntentSubmission!: BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>;
   @Input() $noiDocuments!: BehaviorSubject<NoticeOfIntentDocumentDto[]>;
+  @Input() $parcels!: BehaviorSubject<NoticeOfIntentParcelDto[]>;
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -41,8 +42,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private codeService: CodeService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    private noticeOfIntentParcelService: NoticeOfIntentParcelService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +51,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
       this.noiSubmission = noiSubmission;
       if (noiSubmission) {
         this.primaryContact = noiSubmission.owners.find(
-          (owner) => owner.uuid === noiSubmission.primaryContactOwnerUuid
+          (owner) => owner.uuid === noiSubmission.primaryContactOwnerUuid,
         );
         this.populateLocalGovernment(noiSubmission.localGovernmentUuid);
         this.calculateAuthorizationLetterRequired(noiSubmission.uuid);
@@ -114,18 +114,19 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
 
   private async calculateAuthorizationLetterRequired(submissionUuid: string) {
     //Map Owners from Parcels to only count linked ones
-    const parcels = await this.noticeOfIntentParcelService.fetchBySubmissionUuid(submissionUuid);
-    if (parcels) {
-      const uniqueOwnerMap = parcels
-        .flatMap((parcel) => parcel.owners)
-        .reduce((map, owner) => {
-          return map.set(owner.uuid, owner);
-        }, new Map<string, NoticeOfIntentOwnerDto>());
-      const owners = [...uniqueOwnerMap.values()];
+    this.$parcels.pipe(takeUntil(this.$destroy)).subscribe((parcels) => {
+      if (parcels) {
+        const uniqueOwnerMap = parcels
+          .flatMap((parcel) => parcel.owners)
+          .reduce((map, owner) => {
+            return map.set(owner.uuid, owner);
+          }, new Map<string, NoticeOfIntentOwnerDto>());
+        const owners = [...uniqueOwnerMap.values()];
 
-      const isSelfApplicant = owners.length === 1 && this.primaryContact?.type.code === OWNER_TYPE.INDIVIDUAL;
-      const isGovernmentContact = this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT;
-      this.needsAuthorizationLetter = isGovernmentContact || !isSelfApplicant;
-    }
+        const isSelfApplicant = owners.length === 1 && this.primaryContact?.type.code === OWNER_TYPE.INDIVIDUAL;
+        const isGovernmentContact = this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT;
+        this.needsAuthorizationLetter = isGovernmentContact || !isSelfApplicant;
+      }
+    });
   }
 }

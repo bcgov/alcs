@@ -4,18 +4,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
+import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
+import { scrollToElement } from '../../../shared/utils/scroll-helper';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
 import { ReviewContactInformationComponent } from './review-contact-information/review-contact-information.component';
 import { ReviewOcpComponent } from './review-ocp/review-ocp.component';
 import { ReviewResolutionComponent } from './review-resolution/review-resolution.component';
 import { ReviewZoningComponent } from './review-zoning/review-zoning.component';
-import { scrollToElement } from '../../../shared/utils/scroll-helper';
 
 export enum ReviewApplicationSteps {
   ContactInformation = 0,
@@ -43,6 +45,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   application: ApplicationSubmissionDto | undefined;
   $application = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
   $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
+  $parcels = new BehaviorSubject<ApplicationParcelDto[]>([]);
   fileId = '';
 
   isFirstNationGovernment = true;
@@ -64,11 +67,12 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationSubmissionService,
     private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
+    private applicationParcelService: ApplicationParcelService,
     private router: Router,
     private dialog: MatDialog,
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +84,11 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
         const fileId = paramMap.get('fileId');
         if (fileId) {
           if (this.fileId !== fileId) {
-            this.loadApplication(fileId);
+            this.loadApplication(fileId).then(() => {
+              if (this.application?.uuid) {
+                this.loadParcels(this.application.uuid);
+              }
+            });
             this.loadApplicationDocuments(fileId);
             this.loadApplicationReview(fileId);
           }
@@ -232,5 +240,12 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
 
   async onNavigateToStep(number: number) {
     await this.router.navigateByUrl(`application/${this.fileId}/review/${number}`);
+  }
+
+  private async loadParcels(submissionUuid: string) {
+    const parcels = await this.applicationParcelService.fetchBySubmissionUuid(submissionUuid);
+    if (parcels) {
+      this.$parcels.next(parcels);
+    }
   }
 }

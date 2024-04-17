@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
+import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import {
@@ -23,6 +25,7 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   application: ApplicationSubmissionDetailedDto | undefined;
   $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
+  $parcels = new BehaviorSubject<ApplicationParcelDto[]>([]);
   applicationReview: ApplicationSubmissionReviewDto | undefined;
   selectedIndex = 0;
 
@@ -36,9 +39,10 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
     private applicationReviewService: ApplicationSubmissionReviewService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDocumentService: ApplicationDocumentService,
+    private applicationParcelService: ApplicationParcelService,
     private route: ActivatedRoute,
     private router: Router,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +64,16 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
       this.selectedIndex = 1;
     }
     this.loadApplicationDocuments(fileId);
+    if (this.application?.uuid) {
+      this.loadParcels(this.application.uuid);
+    }
+  }
+
+  private async loadParcels(submissionUuid: string) {
+    const parcels = await this.applicationParcelService.fetchBySubmissionUuid(submissionUuid);
+    if (parcels) {
+      this.$parcels.next(parcels);
+    }
   }
 
   onCancel(fileId: string) {

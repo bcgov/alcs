@@ -9,7 +9,6 @@ import {
   ApplicationParcelUpdateDto,
   PARCEL_OWNERSHIP_TYPE,
 } from '../../../../services/application-parcel/application-parcel.dto';
-import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
@@ -49,6 +48,7 @@ export class ParcelComponent {
   $destroy = new Subject<void>();
 
   @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
+  @Input() $parcels!: BehaviorSubject<ApplicationParcelDto[]>;
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -64,9 +64,8 @@ export class ParcelComponent {
   application!: ApplicationSubmissionDetailedDto;
 
   constructor(
-    private applicationParcelService: ApplicationParcelService,
     private applicationDocumentService: ApplicationDocumentService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +74,13 @@ export class ParcelComponent {
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
         this.application = applicationSubmission;
-        this.loadParcels().then(async () => await this.validateParcelDetails());
+      }
+    });
+
+    this.$parcels.pipe(takeUntil(this.$destroy)).subscribe((parcels) => {
+      if (parcels) {
+        this.parcels = parcels.map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
+        this.validateParcelDetails();
       }
     });
   }
@@ -85,12 +90,7 @@ export class ParcelComponent {
     this.$destroy.complete();
   }
 
-  async loadParcels() {
-    const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
-    this.parcels = parcels.map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
-  }
-
-  private async validateParcelDetails() {
+  private validateParcelDetails() {
     if (this.parcels) {
       this.parcels.forEach((p) => {
         p.validation = this.validateParcelBasic(p);
@@ -179,11 +179,11 @@ export class ParcelComponent {
   async onEditParcelClick(uuid: string) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `alcs/application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
+        `alcs/application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`,
       );
     } else {
       await this.router.navigateByUrl(
-        `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
+        `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`,
       );
     }
   }

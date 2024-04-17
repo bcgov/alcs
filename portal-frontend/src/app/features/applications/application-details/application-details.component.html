@@ -2,6 +2,7 @@
 <section>
   <app-parcel
     [$applicationSubmission]="$application"
+    [$parcels]="$parcels"
     [draftMode]="draftMode"
     [showEdit]="showEdit"
     [showErrors]="showErrors"
@@ -15,8 +16,8 @@
     </div>
     <div class="grid-double">
       <span *ngIf="applicationSubmission.hasOtherParcelsInCommunity !== null">{{
-          applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
-        }}</span>
+        applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+      }}</span>
       <app-no-data
         *ngIf="applicationSubmission.hasOtherParcelsInCommunity === null"
         [showRequired]="showErrors"
@@ -57,7 +58,7 @@
     <div class="subheading2 grid-1">
       <span
         *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
-      >Organization (optional)</span
+        >Organization (optional)</span
       >
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
@@ -71,12 +72,11 @@
     </div>
     <div class="subheading2 grid-1">Phone</div>
     <div class="grid-double">
-      {{ primaryContact?.phoneNumber ?? '' | mask : '(000) 000-0000' }}
+      {{ primaryContact?.phoneNumber ?? '' | mask: '(000) 000-0000' }}
       <app-no-data *ngIf="!primaryContact?.phoneNumber" [showRequired]="showErrors"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
-      >Invalid Format
-      </app-validation-error
-      >
+        >Invalid Format
+      </app-validation-error>
     </div>
     <div class="subheading2 grid-1">Email</div>
     <div class="grid-double">
@@ -115,8 +115,8 @@
         This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
         fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
         &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
-      >236-468-3342</a
-      >
+          >236-468-3342</a
+        >
       </app-warning-banner>
       <app-warning-banner
         *ngIf="

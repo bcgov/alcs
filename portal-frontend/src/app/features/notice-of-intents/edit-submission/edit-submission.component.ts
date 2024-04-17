@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentParcelDto } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
+import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import {
   NOI_SUBMISSION_STATUS,
   NoticeOfIntentSubmissionDetailedDto,
@@ -48,6 +50,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
   $noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
   $noiDocuments = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
+  $noiParcels = new BehaviorSubject<NoticeOfIntentParcelDto[]>([]);
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
   steps = EditNoiSteps;
@@ -70,18 +73,29 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private noticeOfIntentParcelService: NoticeOfIntentParcelService,
     private pdfGenerationService: PdfGenerationService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
-    private router: Router
+    private router: Router,
   ) {
     this.expandedParcelUuid = undefined;
 
     this.$noiSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
       this.noiSubmission = submission;
+      if (submission) {
+        this.loadParcels(submission?.uuid);
+      }
     });
+  }
+
+  private async loadParcels(submissionUuid: string) {
+    const parcels = await this.noticeOfIntentParcelService.fetchBySubmissionUuid(submissionUuid);
+    if (parcels) {
+      this.$noiParcels.next(parcels);
+    }
   }
 
   ngAfterViewInit(): void {

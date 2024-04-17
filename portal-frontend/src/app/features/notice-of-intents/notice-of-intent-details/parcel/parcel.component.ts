@@ -50,6 +50,7 @@ export class ParcelComponent {
   $destroy = new Subject<void>();
 
   @Input() $noticeOfIntentSubmission!: BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>;
+  @Input() $parcels!: BehaviorSubject<NoticeOfIntentParcelDto[]>;
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -62,10 +63,8 @@ export class ParcelComponent {
   noticeOfIntentSubmission!: NoticeOfIntentSubmissionDetailedDto;
 
   constructor(
-    private noticeOfIntentParcelService: NoticeOfIntentParcelService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    private ownerService: NoticeOfIntentOwnerService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -74,7 +73,13 @@ export class ParcelComponent {
         this.fileId = noiSubmission.fileNumber;
         this.submissionUuid = noiSubmission.uuid;
         this.noticeOfIntentSubmission = noiSubmission;
-        this.loadParcels().then(async () => await this.validateParcelDetails());
+      }
+    });
+
+    this.$parcels.pipe(takeUntil(this.$destroy)).subscribe((parcels) => {
+      if (parcels) {
+        this.parcels = parcels.map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
+        this.validateParcelDetails();
       }
     });
   }
@@ -82,11 +87,6 @@ export class ParcelComponent {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  async loadParcels() {
-    const parcels = (await this.noticeOfIntentParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
-    this.parcels = parcels.map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
   }
 
   private async validateParcelDetails() {

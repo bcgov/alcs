@@ -2,10 +2,12 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentParcelDto } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
+import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionDraftService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission-draft.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
@@ -37,6 +39,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   $destroy = new Subject<void>();
   $noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
   $noiDocuments = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
+  $noiParcels = new BehaviorSubject<NoticeOfIntentParcelDto[]>([]);
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
   steps = EditNoiSteps;
@@ -60,12 +63,13 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private noticeOfIntentSubmissionDraftService: NoticeOfIntentSubmissionDraftService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private noticeOfIntentParcelService: NoticeOfIntentParcelService,
     private pdfGenerationService: PdfGenerationService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +91,9 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
         const fileId = paramMap.get('fileId');
         if (fileId) {
           this.loadDraftSubmission(fileId).then(() => {
+            if (this.noiSubmission?.uuid) {
+              this.loadParcels(this.noiSubmission.uuid);
+            }
             const stepInd = paramMap.get('stepInd');
             const parcelUuid = queryParamMap.get('parcelUuid');
             const showErrors = queryParamMap.get('errors');
@@ -112,6 +119,13 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  private async loadParcels(submissionUuid: string) {
+    const parcels = await this.noticeOfIntentParcelService.fetchBySubmissionUuid(submissionUuid);
+    if (parcels) {
+      this.$noiParcels.next(parcels);
+    }
   }
 
   private async loadDraftSubmission(fileId: string) {

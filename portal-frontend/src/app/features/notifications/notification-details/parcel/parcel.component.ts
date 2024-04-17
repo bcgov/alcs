@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { NotificationParcelDto } from '../../../../services/notification-parcel/notification-parcel.dto';
-import { NotificationParcelService } from '../../../../services/notification-parcel/notification-parcel.service';
 import { NotificationSubmissionDetailedDto } from '../../../../services/notification-submission/notification-submission.dto';
 
 @Component({
@@ -15,6 +14,7 @@ export class ParcelComponent {
   $destroy = new Subject<void>();
 
   @Input() $notificationSubmission!: BehaviorSubject<NotificationSubmissionDetailedDto | undefined>;
+  @Input() $parcels!: BehaviorSubject<NotificationParcelDto[]>;
   @Input() showErrors = true;
   @Input() showEdit = true;
 
@@ -25,7 +25,7 @@ export class ParcelComponent {
   parcels: NotificationParcelDto[] = [];
   noticeOfIntentSubmission!: NotificationSubmissionDetailedDto;
 
-  constructor(private noticeOfIntentParcelService: NotificationParcelService, private router: Router) {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.$notificationSubmission.pipe(takeUntil(this.$destroy)).subscribe((noiSubmission) => {
@@ -33,7 +33,12 @@ export class ParcelComponent {
         this.fileId = noiSubmission.fileNumber;
         this.submissionUuid = noiSubmission.uuid;
         this.noticeOfIntentSubmission = noiSubmission;
-        this.loadParcels();
+      }
+    });
+
+    this.$parcels.pipe(takeUntil(this.$destroy)).subscribe((parcels) => {
+      if (parcels) {
+        this.parcels = parcels;
       }
     });
   }
@@ -41,10 +46,6 @@ export class ParcelComponent {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  async loadParcels() {
-    this.parcels = (await this.noticeOfIntentParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
   }
 
   async onEditParcelsClick($event: any) {

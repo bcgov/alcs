@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
+import { NotificationParcelDto } from '../../../services/notification-parcel/notification-parcel.dto';
+import { NotificationParcelService } from '../../../services/notification-parcel/notification-parcel.service';
 import {
   NOTIFICATION_STATUS,
   NotificationSubmissionDetailedDto,
@@ -19,6 +21,8 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   $notificationSubmission = new BehaviorSubject<NotificationSubmissionDetailedDto | undefined>(undefined);
   $notificationDocuments = new BehaviorSubject<NotificationDocumentDto[]>([]);
+  $parcels = new BehaviorSubject<NotificationParcelDto[]>([]);
+
   submission: NotificationSubmissionDetailedDto | undefined;
   selectedIndex = 0;
 
@@ -26,15 +30,21 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
     private notificationSubmissionService: NotificationSubmissionService,
     private notificationDocumentService: NotificationDocumentService,
     private confirmationDialogService: ConfirmationDialogService,
+    private noticeOfIntentParcelService: NotificationParcelService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.pipe(takeUntil(this.$destroy)).subscribe((paramMap) => {
       const fileId = paramMap.get('fileId');
       if (fileId) {
-        this.loadSubmission(fileId);
+        this.loadSubmission(fileId).then(() => {
+          if (this.submission?.uuid) {
+            this.loadParcels(this.submission.uuid);
+          }
+        });
+
         this.loadDocuments(fileId);
       }
     });
@@ -54,6 +64,11 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
     if (documents) {
       this.$notificationDocuments.next(documents);
     }
+  }
+
+  async loadParcels(submissionUuid: string) {
+    const parcels = (await this.noticeOfIntentParcelService.fetchBySubmissionUuid(submissionUuid)) || [];
+    this.$parcels.next(parcels);
   }
 
   ngOnDestroy(): void {
