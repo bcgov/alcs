@@ -1,214 +1,212 @@
-import { test, expect, UserPrefix } from './fixtures';
+import { test, expect } from '@playwright/test';
+import { LoginPage } from './pages/login-page';
 
-test.use({ userPrefix: UserPrefix.BceidBasic });
+test('TUR', async ({ browser }) => {
+  const context = await browser.newContext({ baseURL: process.env.PORTAL_BASE_URL });
+  const page = await context.newPage();
 
-test('TUR', async ({ inboxLoggedIn }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.logIn(process.env.BCEID_BASIC_USERNAME, process.env.BCEID_BASIC_PASSWORD);
+
   // Create TUR app
-  await inboxLoggedIn.getByRole('button', { name: '+ Create New' }).click();
-  await inboxLoggedIn.getByText('Application', { exact: true }).click();
-  await inboxLoggedIn.getByRole('button', { name: 'Next' }).click();
-  await inboxLoggedIn.getByText('Transportation, Utility, or Recreational Trail Uses within the ALR').click();
-  await inboxLoggedIn.getByRole('button', { name: 'create' }).click();
-  await inboxLoggedIn.getByText('Parcel Details', { exact: true }).click(); // Ensure parcels page
+  await page.getByRole('button', { name: '+ Create New' }).click();
+  await page.getByText('Application', { exact: true }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByText('Transportation, Utility, or Recreational Trail Uses within the ALR').click();
+  await page.getByRole('button', { name: 'create' }).click();
+  await page.getByText('Parcel Details', { exact: true }).click(); // Ensure parcels page
 
   // Step 1a: Parcels
-  await inboxLoggedIn.getByRole('button', { name: 'Fee Simple' }).click();
-  await inboxLoggedIn.getByPlaceholder('Type legal description').fill('Parcel description');
-  await inboxLoggedIn.getByPlaceholder('Type parcel size').fill('1');
-  await inboxLoggedIn.getByPlaceholder('Type PID').fill('111-111-111');
-  await inboxLoggedIn.getByRole('button', { name: 'Open calendar' }).click();
-  await inboxLoggedIn.getByText('2014').click();
-  await inboxLoggedIn.getByText('Apr').click();
-  await inboxLoggedIn.getByText('23').click();
-  await inboxLoggedIn.getByText('Yes').click();
-  await inboxLoggedIn.getByPlaceholder('Type Address').fill('123 Street Rd');
+  await page.getByRole('button', { name: 'Fee Simple' }).click();
+  await page.getByPlaceholder('Type legal description').fill('Parcel description');
+  await page.getByPlaceholder('Type parcel size').fill('1');
+  await page.getByPlaceholder('Type PID').fill('111-111-111');
+  await page.getByRole('button', { name: 'Open calendar' }).click();
+  await page.getByText('2014').click();
+  await page.getByText('Apr').click();
+  await page.getByText('23').click();
+  await page.getByText('Yes').click();
+  await page.getByPlaceholder('Type Address').fill('123 Street Rd');
 
   // Upload
-  const titleFileChooserPromise = inboxLoggedIn.waitForEvent('filechooser');
-  await inboxLoggedIn.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
+  const titleFileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
   const titleFileChooser = await titleFileChooserPromise;
   titleFileChooser.setFiles('data/temp.txt');
 
   // Step 1b: Parcel Owners
-  await inboxLoggedIn.getByRole('button', { name: 'Add new owner' }).click();
-  await inboxLoggedIn.getByRole('button', { name: 'Individual' }).click();
-  await inboxLoggedIn.getByPlaceholder('Enter First Name').fill('1');
-  await inboxLoggedIn.getByPlaceholder('Enter Last Name').fill('1');
-  await inboxLoggedIn.getByPlaceholder('(555) 555-5555').fill('(111) 111-11111');
-  await inboxLoggedIn.getByPlaceholder('Enter Email').fill('1@1');
-  await inboxLoggedIn.getByRole('button', { name: 'Add' }).click();
-  await inboxLoggedIn
-    .getByText('I confirm that the owner information provided above matches the current Certific')
-    .click();
-  await inboxLoggedIn.getByText('Other Owned Parcels', { exact: true }).click();
+  await page.getByRole('button', { name: 'Add new owner' }).click();
+  await page.getByRole('button', { name: 'Individual' }).click();
+  await page.getByPlaceholder('Enter First Name').fill('1');
+  await page.getByPlaceholder('Enter Last Name').fill('1');
+  await page.getByPlaceholder('(555) 555-5555').fill('(111) 111-11111');
+  await page.getByPlaceholder('Enter Email').fill('1@1');
+  await page.getByRole('button', { name: 'Add' }).click();
+  await page.getByText('I confirm that the owner information provided above matches the current Certific').click();
+  await page.getByText('Other Owned Parcels', { exact: true }).click();
 
   // Step 2: Other Parcels
-  await inboxLoggedIn.getByRole('button', { name: 'Yes' }).click();
-  await inboxLoggedIn
+  await page.getByRole('button', { name: 'Yes' }).click();
+  await page
     .getByLabel('Describe the other parcels including their location, who owns or leases them, and their use.')
     .fill('Other parcels');
-  await inboxLoggedIn.getByText('Primary Contact', { exact: true }).click();
+  await page.getByText('Primary Contact', { exact: true }).click();
 
   // Step 3: Primary Contact
-  await inboxLoggedIn.getByRole('button', { name: 'Yes' }).click();
-  await inboxLoggedIn.getByLabel('1 1').check();
-  await inboxLoggedIn.getByText('Government', { exact: true }).click();
+  await page.getByRole('button', { name: 'Yes' }).click();
+  await page.getByLabel('1 1').check();
+  await page.getByText('Government', { exact: true }).click();
 
   // Step 4: Government
-  await inboxLoggedIn.getByPlaceholder('Type government').click();
-  await inboxLoggedIn.getByPlaceholder('Type government').fill('peace');
-  await inboxLoggedIn.getByText('Peace River Regional District').click();
-  await inboxLoggedIn.getByText('Land Use').click();
+  await page.getByPlaceholder('Type government').click();
+  await page.getByPlaceholder('Type government').fill('peace');
+  await page.getByText('Peace River Regional District').click();
+  await page.getByText('Land Use').click();
 
   // Step 5: Land Use
-  await inboxLoggedIn.getByLabel('Describe all agriculture that currently takes place on the parcel(s).').fill('This');
-  await inboxLoggedIn.getByLabel('Describe all agricultural improvements made to the parcel(s).').fill('That');
-  await inboxLoggedIn
-    .getByLabel('Describe all other uses that currently take place on the parcel(s).')
-    .fill('The other');
+  await page.getByLabel('Describe all agriculture that currently takes place on the parcel(s).').fill('This');
+  await page.getByLabel('Describe all agricultural improvements made to the parcel(s).').fill('That');
+  await page.getByLabel('Describe all other uses that currently take place on the parcel(s).').fill('The other');
 
   // North
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(0).click();
-  await inboxLoggedIn.locator('#northLandUseType-panel').getByRole('option', { name: 'Agricultural / Farm' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'North land use type description' }).fill('1');
+  await page.getByPlaceholder('Main Land Use Type').nth(0).click();
+  await page.locator('#northLandUseType-panel').getByRole('option', { name: 'Agricultural / Farm' }).click();
+  await page.getByRole('textbox', { name: 'North land use type description' }).fill('1');
 
   // East
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(1).click();
-  await inboxLoggedIn.locator('#eastLandUseType-panel').getByRole('option', { name: 'Civic / Institutional' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'East land use type description' }).fill('1');
+  await page.getByPlaceholder('Main Land Use Type').nth(1).click();
+  await page.locator('#eastLandUseType-panel').getByRole('option', { name: 'Civic / Institutional' }).click();
+  await page.getByRole('textbox', { name: 'East land use type description' }).fill('1');
 
   // South
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(2).click();
-  await inboxLoggedIn.locator('#southLandUseType-panel').getByRole('option', { name: 'Commercial / Retail' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'South land use type description' }).fill('1');
+  await page.getByPlaceholder('Main Land Use Type').nth(2).click();
+  await page.locator('#southLandUseType-panel').getByRole('option', { name: 'Commercial / Retail' }).click();
+  await page.getByRole('textbox', { name: 'South land use type description' }).fill('1');
 
   // West
-  await inboxLoggedIn.getByPlaceholder('Main Land Use Type').nth(3).click();
-  await inboxLoggedIn.locator('#westLandUseType-panel').getByRole('option', { name: 'Industrial' }).click();
-  await inboxLoggedIn.getByRole('textbox', { name: 'West land use type description' }).fill('1');
+  await page.getByPlaceholder('Main Land Use Type').nth(3).click();
+  await page.locator('#westLandUseType-panel').getByRole('option', { name: 'Industrial' }).click();
+  await page.getByRole('textbox', { name: 'West land use type description' }).fill('1');
 
-  await inboxLoggedIn.getByText('Proposal', { exact: true }).click();
+  await page.getByText('Proposal', { exact: true }).click();
 
   // Step 6: Proposal
-  await inboxLoggedIn.getByLabel('What is the purpose of the proposal?').fill('This');
-  await inboxLoggedIn
+  await page.getByLabel('What is the purpose of the proposal?').fill('This');
+  await page
     .getByLabel(
       'Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in proximity to the proposal.',
     )
     .fill('That');
-  await inboxLoggedIn
+  await page
     .getByLabel('What steps will you take to reduce potential negative impacts on surrounding agricultural lands?')
     .fill('The other');
-  await inboxLoggedIn
-    .getByLabel('Could this proposal be accommodated on lands outside of the ALR?')
-    .fill('And another');
-  await inboxLoggedIn.getByPlaceholder('Type total area').fill('1');
-  await inboxLoggedIn
-    .getByText('I confirm that all affected property owners with land in the ALR have been notif')
-    .click();
+  await page.getByLabel('Could this proposal be accommodated on lands outside of the ALR?').fill('And another');
+  await page.getByPlaceholder('Type total area').fill('1');
+  await page.getByText('I confirm that all affected property owners with land in the ALR have been notif').click();
 
   // File upload
-  const proofOfServiceNoticeFileChooserPromise = inboxLoggedIn.waitForEvent('filechooser');
-  await inboxLoggedIn.getByRole('button', { name: 'Choose file to Upload', exact: true }).nth(0).click();
+  const proofOfServiceNoticeFileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).nth(0).click();
   const proofOfServiceNoticeFileChooser = await proofOfServiceNoticeFileChooserPromise;
   proofOfServiceNoticeFileChooser.setFiles('data/temp.txt');
 
   // File upload
-  const proposalMapFileChooserPromise = inboxLoggedIn.waitForEvent('filechooser');
-  await inboxLoggedIn.getByRole('button', { name: 'Choose file to Upload', exact: true }).nth(1).click();
+  const proposalMapFileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).nth(1).click();
   const proposalMapFileChooser = await proposalMapFileChooserPromise;
   proposalMapFileChooser.setFiles('data/temp.txt');
 
-  await inboxLoggedIn.getByText('Upload Attachments').click();
+  await page.getByText('Upload Attachments').click();
 
   // Step 7: Optional attachments
   // File upload first file
-  const optionalFile1ChooserPromise = inboxLoggedIn.waitForEvent('filechooser');
-  await inboxLoggedIn.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
+  const optionalFile1ChooserPromise = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
   const optionalFile1Chooser = await optionalFile1ChooserPromise;
   optionalFile1Chooser.setFiles('data/temp.txt');
-  await inboxLoggedIn.getByPlaceholder('Select a type').nth(0).click();
-  await inboxLoggedIn.getByText('Professional Report').click();
-  await inboxLoggedIn.getByPlaceholder('Type description').nth(0).fill('Desc');
+  await page.getByPlaceholder('Select a type').nth(0).click();
+  await page.getByText('Professional Report').click();
+  await page.getByPlaceholder('Type description').nth(0).fill('Desc');
 
   // File upload second file
-  const optionalFile2ChooserPromise = inboxLoggedIn.waitForEvent('filechooser');
-  await inboxLoggedIn.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
+  const optionalFile2ChooserPromise = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
   const optionalFile2Chooser = await optionalFile2ChooserPromise;
   optionalFile2Chooser.setFiles('data/temp.txt');
-  await inboxLoggedIn.getByPlaceholder('Select a type').nth(1).click();
-  await inboxLoggedIn.getByText('Site Photo').click();
-  await inboxLoggedIn.getByPlaceholder('Type description').nth(1).fill('Desc');
+  await page.getByPlaceholder('Select a type').nth(1).click();
+  await page.getByText('Site Photo').click();
+  await page.getByPlaceholder('Type description').nth(1).fill('Desc');
 
-  await inboxLoggedIn.getByText('Review & Submit').click();
+  await page.getByText('Review & Submit').click();
 
   // Step 8: Review
   // 1. Parcels
   // Parcel 1
-  await expect(inboxLoggedIn.getByTestId('parcel-0-type')).toHaveText('Fee Simple');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-legal-description')).toHaveText('Parcel description');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-map-area')).toHaveText('1 ha');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-pid')).toHaveText('111-111-111');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-purchase-date')).toHaveText('Apr 23, 2014');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-is-farm')).toHaveText('Yes');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-civic-address')).toHaveText('123 Street Rd');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-certificate-of-title')).toHaveText('temp.txt');
+  await expect(page.getByTestId('parcel-0-type')).toHaveText('Fee Simple');
+  await expect(page.getByTestId('parcel-0-legal-description')).toHaveText('Parcel description');
+  await expect(page.getByTestId('parcel-0-map-area')).toHaveText('1 ha');
+  await expect(page.getByTestId('parcel-0-pid')).toHaveText('111-111-111');
+  await expect(page.getByTestId('parcel-0-purchase-date')).toHaveText('Apr 23, 2014');
+  await expect(page.getByTestId('parcel-0-is-farm')).toHaveText('Yes');
+  await expect(page.getByTestId('parcel-0-civic-address')).toHaveText('123 Street Rd');
+  await expect(page.getByTestId('parcel-0-certificate-of-title')).toHaveText('temp.txt');
 
   // Owners
-  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-name')).toHaveText('1 1');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-organization')).toHaveText('No Data');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-phone-number')).toHaveText('(111) 111-1111');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-email')).toHaveText('1@1');
-  await expect(inboxLoggedIn.getByTestId('parcel-0-owner-0-corporate-summary')).toHaveText('Not Applicable');
+  await expect(page.getByTestId('parcel-0-owner-0-name')).toHaveText('1 1');
+  await expect(page.getByTestId('parcel-0-owner-0-organization')).toHaveText('No Data');
+  await expect(page.getByTestId('parcel-0-owner-0-phone-number')).toHaveText('(111) 111-1111');
+  await expect(page.getByTestId('parcel-0-owner-0-email')).toHaveText('1@1');
+  await expect(page.getByTestId('parcel-0-owner-0-corporate-summary')).toHaveText('Not Applicable');
 
-  await expect(inboxLoggedIn.getByTestId('parcel-0-is-confirmed-by-applicant')).toHaveText('Yes');
+  await expect(page.getByTestId('parcel-0-is-confirmed-by-applicant')).toHaveText('Yes');
 
   // 2. Other Parcels
-  await expect(inboxLoggedIn.getByTestId('has-other-parcels')).toHaveText('Yes');
-  await expect(inboxLoggedIn.getByTestId('other-parcels-description')).toHaveText('Other parcels');
+  await expect(page.getByTestId('has-other-parcels')).toHaveText('Yes');
+  await expect(page.getByTestId('other-parcels-description')).toHaveText('Other parcels');
 
   // 3. Primary Contact
-  await expect(inboxLoggedIn.getByTestId('primary-contact-type')).toHaveText('Land Owner');
-  await expect(inboxLoggedIn.getByTestId('primary-contact-first-name')).toHaveText('1');
-  await expect(inboxLoggedIn.getByTestId('primary-contact-last-name')).toHaveText('1');
-  await expect(inboxLoggedIn.getByTestId('primary-contact-organization')).toHaveText('No Data');
-  await expect(inboxLoggedIn.getByTestId('primary-contact-phone-number')).toHaveText('(111) 111-1111');
-  await expect(inboxLoggedIn.getByTestId('primary-contact-email')).toHaveText('1@1');
+  await expect(page.getByTestId('primary-contact-type')).toHaveText('Land Owner');
+  await expect(page.getByTestId('primary-contact-first-name')).toHaveText('1');
+  await expect(page.getByTestId('primary-contact-last-name')).toHaveText('1');
+  await expect(page.getByTestId('primary-contact-organization')).toHaveText('No Data');
+  await expect(page.getByTestId('primary-contact-phone-number')).toHaveText('(111) 111-1111');
+  await expect(page.getByTestId('primary-contact-email')).toHaveText('1@1');
 
   // 4. Government
-  await expect(inboxLoggedIn.getByTestId('government-name')).toHaveText('Peace River Regional District');
+  await expect(page.getByTestId('government-name')).toHaveText('Peace River Regional District');
 
   // 5. Land Use
-  await expect(inboxLoggedIn.getByTestId('parcels-agriculture-description')).toHaveText('This');
-  await expect(inboxLoggedIn.getByTestId('parcels-agriculture-improvement-description')).toHaveText('That');
-  await expect(inboxLoggedIn.getByTestId('parcels-non-agriculture-description')).toHaveText('The other');
-  await expect(inboxLoggedIn.getByTestId('north-land-use-type')).toHaveText('Agricultural / Farm');
-  await expect(inboxLoggedIn.getByTestId('north-land-use-description')).toHaveText('1');
-  await expect(inboxLoggedIn.getByTestId('east-land-use-type')).toHaveText('Civic / Institutional');
-  await expect(inboxLoggedIn.getByTestId('east-land-use-description')).toHaveText('1');
-  await expect(inboxLoggedIn.getByTestId('south-land-use-type')).toHaveText('Commercial / Retail');
-  await expect(inboxLoggedIn.getByTestId('south-land-use-description')).toHaveText('1');
-  await expect(inboxLoggedIn.getByTestId('west-land-use-type')).toHaveText('Industrial');
-  await expect(inboxLoggedIn.getByTestId('west-land-use-description')).toHaveText('1');
+  await expect(page.getByTestId('parcels-agriculture-description')).toHaveText('This');
+  await expect(page.getByTestId('parcels-agriculture-improvement-description')).toHaveText('That');
+  await expect(page.getByTestId('parcels-non-agriculture-description')).toHaveText('The other');
+  await expect(page.getByTestId('north-land-use-type')).toHaveText('Agricultural / Farm');
+  await expect(page.getByTestId('north-land-use-description')).toHaveText('1');
+  await expect(page.getByTestId('east-land-use-type')).toHaveText('Civic / Institutional');
+  await expect(page.getByTestId('east-land-use-description')).toHaveText('1');
+  await expect(page.getByTestId('south-land-use-type')).toHaveText('Commercial / Retail');
+  await expect(page.getByTestId('south-land-use-description')).toHaveText('1');
+  await expect(page.getByTestId('west-land-use-type')).toHaveText('Industrial');
+  await expect(page.getByTestId('west-land-use-description')).toHaveText('1');
 
   // 6. Proposal
-  await expect(inboxLoggedIn.getByTestId('tur-purpose')).toHaveText('This');
-  await expect(inboxLoggedIn.getByTestId('tur-agricultural-activities')).toHaveText('That');
-  await expect(inboxLoggedIn.getByTestId('tur-reduce-negative-impacts')).toHaveText('The other');
-  await expect(inboxLoggedIn.getByTestId('tur-outside-lands')).toHaveText('And another');
-  await expect(inboxLoggedIn.getByTestId('tur-total-corridor-area')).toHaveText('1 ha');
-  await expect(inboxLoggedIn.getByTestId('tur-all-owners-notified')).toHaveText('Yes');
-  await expect(inboxLoggedIn.getByTestId('tur-proof-of-serving-notice')).toHaveText('temp.txt');
-  await expect(inboxLoggedIn.getByTestId('tur-proposal-map')).toHaveText('temp.txt');
+  await expect(page.getByTestId('tur-purpose')).toHaveText('This');
+  await expect(page.getByTestId('tur-agricultural-activities')).toHaveText('That');
+  await expect(page.getByTestId('tur-reduce-negative-impacts')).toHaveText('The other');
+  await expect(page.getByTestId('tur-outside-lands')).toHaveText('And another');
+  await expect(page.getByTestId('tur-total-corridor-area')).toHaveText('1 ha');
+  await expect(page.getByTestId('tur-all-owners-notified')).toHaveText('Yes');
+  await expect(page.getByTestId('tur-proof-of-serving-notice')).toHaveText('temp.txt');
+  await expect(page.getByTestId('tur-proposal-map')).toHaveText('temp.txt');
 
   // 7. Optional Documents
   // Doc 1
-  await expect(inboxLoggedIn.getByTestId('optional-document-0-file-name')).toHaveText('temp.txt');
-  await expect(inboxLoggedIn.getByTestId('optional-document-0-type')).toHaveText('Professional Report');
-  await expect(inboxLoggedIn.getByTestId('optional-document-0-description')).toHaveText('Desc');
+  await expect(page.getByTestId('optional-document-0-file-name')).toHaveText('temp.txt');
+  await expect(page.getByTestId('optional-document-0-type')).toHaveText('Professional Report');
+  await expect(page.getByTestId('optional-document-0-description')).toHaveText('Desc');
 
   // Doc 2
-  await expect(inboxLoggedIn.getByTestId('optional-document-1-file-name')).toHaveText('temp.txt');
-  await expect(inboxLoggedIn.getByTestId('optional-document-1-type')).toHaveText('Site Photo');
-  await expect(inboxLoggedIn.getByTestId('optional-document-1-description')).toHaveText('Desc');
+  await expect(page.getByTestId('optional-document-1-file-name')).toHaveText('temp.txt');
+  await expect(page.getByTestId('optional-document-1-type')).toHaveText('Site Photo');
+  await expect(page.getByTestId('optional-document-1-description')).toHaveText('Desc');
 });
