@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from './pages/login-page';
+import { PortalLoginPage } from './pages/portal-login-page';
 
 test('TUR', async ({ browser }) => {
   const context = await browser.newContext({ baseURL: process.env.PORTAL_BASE_URL });
   const page = await context.newPage();
 
-  const loginPage = new LoginPage(page);
-  await loginPage.goto();
-  await loginPage.logIn(process.env.BCEID_BASIC_USERNAME, process.env.BCEID_BASIC_PASSWORD);
+  const portalLoginPage = new PortalLoginPage(page);
+  await portalLoginPage.goto();
+  await portalLoginPage.logIn(process.env.BCEID_BASIC_USERNAME, process.env.BCEID_BASIC_PASSWORD);
 
   // Create TUR app
   await page.getByRole('button', { name: '+ Create New' }).click();
