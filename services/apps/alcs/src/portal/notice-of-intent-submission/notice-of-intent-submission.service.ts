@@ -25,7 +25,6 @@ import { User } from '../../user/user.entity';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
 import { GenerateNoiSubmissionDocumentService } from '../pdf-generation/generate-noi-submission-document.service';
-import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import {
   NoticeOfIntentSubmissionDetailedDto,
@@ -640,6 +639,15 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async canAccessDocument(document: NoticeOfIntentDocument, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles.includes(value),
+    );
+
+    //If user is ALCS staff
+    if (overlappingRoles.length > 0) {
+      return true;
+    }
+
     //If document has P, skip all checks.
     if (document.visibilityFlags.includes(VISIBILITY_FLAG.PUBLIC)) {
       return true;
@@ -677,6 +685,7 @@ export class NoticeOfIntentSubmissionService {
       .where('document.uuid = :uuid', {
         uuid: document.uuid,
       })
+      .andWhere('submission.is_draft = FALSE')
       .execute();
 
     return {
