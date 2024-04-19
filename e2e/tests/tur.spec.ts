@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { PortalLoginPage } from './pages/portal-login-page';
+import { ApplicationType, InboxPage } from './pages/inbox-page';
 
 test('TUR', async ({ browser }) => {
   const context = await browser.newContext({ baseURL: process.env.PORTAL_BASE_URL });
@@ -9,13 +10,8 @@ test('TUR', async ({ browser }) => {
   await portalLoginPage.goto();
   await portalLoginPage.logIn(process.env.BCEID_BASIC_USERNAME, process.env.BCEID_BASIC_PASSWORD);
 
-  // Create TUR app
-  await page.getByRole('button', { name: '+ Create New' }).click();
-  await page.getByText('Application', { exact: true }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByText('Transportation, Utility, or Recreational Trail Uses within the ALR').click();
-  await page.getByRole('button', { name: 'create' }).click();
-  await page.getByText('Parcel Details', { exact: true }).click(); // Ensure parcels page
+  const inbox = new InboxPage(page);
+  await inbox.createApplication(ApplicationType.TUR);
 
   // Step 1a: Parcels
   await page.getByRole('button', { name: 'Fee Simple' }).click();
