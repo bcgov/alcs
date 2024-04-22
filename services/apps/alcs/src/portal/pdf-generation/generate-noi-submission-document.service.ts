@@ -130,7 +130,7 @@ export class GenerateNoiSubmissionDocumentService {
 
       await this.noiDocumentService.attachDocumentAsBuffer({
         fileNumber: fileNumber,
-        fileName: `${fileNumber}_Submission_Updated`,
+        fileName: `${fileNumber}_Submission_Updated.pdf`,
         user: user,
         file: generatedRes.data,
         mimeType: 'application/pdf',
