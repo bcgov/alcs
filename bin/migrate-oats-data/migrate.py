@@ -25,6 +25,7 @@ from menu.post_launch_commands import (
     import_all_pr_inq,
     clean_all_pr_inq,
 )
+from menu import start_obfuscation
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
 
@@ -69,6 +70,8 @@ if __name__ == "__main__":
                 inquiry_import(console, args)
             case "inquiry-clean":
                 inquiry_clean(console)
+            case "obfuscate":
+                start_obfuscation(console)
 
     finally:
         if connection_pool:
