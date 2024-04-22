@@ -3,11 +3,11 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 
-import { AuthInterceptorService } from './auth-interceptor.service';
+import { AuthInterceptor } from './auth.interceptor';
 import { AuthenticationService, ICurrentUser } from './authentication.service';
 
-describe('AuthInterceptorService', () => {
-  let service: AuthInterceptorService;
+describe('AuthInterceptor', () => {
+  let service: AuthInterceptor;
   let mockAuthService: DeepMocked<AuthenticationService>;
 
   beforeEach(() => {
@@ -16,6 +16,7 @@ describe('AuthInterceptorService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        AuthInterceptor,
         {
           provide: AuthenticationService,
           useValue: mockAuthService,
@@ -23,7 +24,7 @@ describe('AuthInterceptorService', () => {
       ],
       imports: [HttpClientTestingModule],
     });
-    service = TestBed.inject(AuthInterceptorService);
+    service = TestBed.inject(AuthInterceptor);
   });
 
   it('should be created', () => {

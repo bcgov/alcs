@@ -3,10 +3,8 @@ import { Injectable } from '@angular/core';
 import { from, lastValueFrom, Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthInterceptorService implements HttpInterceptor {
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
   constructor(private authenticationService: AuthenticationService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
