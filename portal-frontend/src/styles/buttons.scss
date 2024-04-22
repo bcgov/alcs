@@ -1,9 +1,9 @@
 @use 'functions' as *;
 @use 'colors';
 
-.mat-flat-button,
-.mat-stroked-button {
+.mdc-button__label {
   font-weight: 700 !important;
+  text-transform: uppercase;
 }
 
 .mat-stroked-button {
