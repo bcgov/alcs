@@ -48,6 +48,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
             SUBMISSION_STATUS.IN_REVIEW_BY_LG,
             SUBMISSION_STATUS.WRONG_GOV,
             SUBMISSION_STATUS.INCOMPLETE,
+            SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG
           ].includes(this.submission?.status?.code);
       }
     });
