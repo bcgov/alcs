@@ -3,7 +3,6 @@ import { ApplicationDecision } from '../../../../alcs/application-decision/appli
 import { SUBMISSION_STATUS } from '../../../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../../../alcs/application/application.entity';
-import { ApplicationType } from '../../../../alcs/code/application-code/application-type/application-type.entity';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { ApplicationSubmission } from '../../../application-submission/application-submission.entity';
 import { LinkedStatusType } from '../public-search.dto';
@@ -37,11 +36,6 @@ import { LinkedStatusType } from '../public-search.dto';
         Application,
         'app',
         'app.file_number = app_sub.file_number AND app.hide_from_portal = FALSE',
-      )
-      .innerJoinAndSelect(
-        ApplicationType,
-        'applicationType',
-        'app_sub.type_code = applicationType.code',
       )
       .leftJoin(
         LocalGovernment,

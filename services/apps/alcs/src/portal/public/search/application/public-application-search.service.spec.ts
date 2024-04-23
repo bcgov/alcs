@@ -4,8 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { SearchRequestDto } from '../public-search.dto';
-import { PublicApplicationSearchService } from './public-application-search.service';
 import { PublicApplicationSubmissionSearchView } from './public-application-search-view.entity';
+import { PublicApplicationSearchService } from './public-application-search.service';
 
 describe('PublicApplicationSearchService', () => {
   let service: PublicApplicationSearchService;
@@ -49,6 +49,7 @@ describe('PublicApplicationSearchService', () => {
       andWhere: jest.fn().mockReturnThis(),
       setParameters: jest.fn().mockReturnThis(),
       leftJoin: jest.fn().mockReturnThis(),
+      innerJoin: jest.fn().mockReturnThis(),
       withDeleted: jest.fn().mockReturnThis(),
     };
 

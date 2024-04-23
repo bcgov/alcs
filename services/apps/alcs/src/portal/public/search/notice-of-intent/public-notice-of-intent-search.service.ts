@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
@@ -14,6 +14,8 @@ import { PublicNoticeOfIntentSubmissionSearchView } from './public-notice-of-int
 
 @Injectable()
 export class PublicNoticeOfIntentSearchService {
+  private logger: Logger = new Logger(PublicNoticeOfIntentSearchService.name);
+
   constructor(
     @InjectRepository(PublicNoticeOfIntentSubmissionSearchView)
     private noiSearchRepository: Repository<PublicNoticeOfIntentSubmissionSearchView>,
@@ -37,8 +39,10 @@ export class PublicNoticeOfIntentSearchService {
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
+    const t0 = performance.now();
     const result = await query.getManyAndCount();
-
+    const t1 = performance.now();
+    this.logger.debug(`NOI public search took ${t1 - t0} milliseconds.`);
     return {
       data: result[0],
       total: result[1],

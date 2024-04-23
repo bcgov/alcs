@@ -1,7 +1,7 @@
+import { Body, Controller, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Post } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { Repository } from 'typeorm';
 import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
@@ -39,33 +39,44 @@ export class PublicSearchController {
     const { searchApplications, searchNoi, searchNotifications } =
       this.getEntitiesTypeToSearch(searchDto);
 
-    let applicationSearchResult: AdvancedSearchResultDto<
+    let applicationSearchPromise: Promise<AdvancedSearchResultDto<
       PublicApplicationSubmissionSearchView[]
-    > | null = null;
+    > | null> = Promise.resolve(null);
     if (searchApplications) {
-      applicationSearchResult =
-        await this.applicationSearchService.searchApplications(searchDto);
+      applicationSearchPromise =
+        this.applicationSearchService.searchApplications(searchDto);
     }
 
-    let noticeOfIntentResults: AdvancedSearchResultDto<
+    let noticedOfIntentSearchPromise: Promise<AdvancedSearchResultDto<
       PublicNoticeOfIntentSubmissionSearchView[]
-    > | null = null;
+    > | null> = Promise.resolve(null);
     if (searchNoi) {
-      noticeOfIntentResults =
-        await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
+      noticedOfIntentSearchPromise =
+        this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
     }
 
-    let notifications: AdvancedSearchResultDto<
+    let notificationSearchPromise: Promise<AdvancedSearchResultDto<
       PublicNotificationSubmissionSearchView[]
-    > | null = null;
+    > | null> = Promise.resolve(null);
     if (searchNotifications) {
-      notifications = await this.notificationSearchService.search(searchDto);
+      notificationSearchPromise =
+        this.notificationSearchService.search(searchDto);
     }
+
+    const [
+      applicationSearchResults,
+      noticeOfIntentResults,
+      notificationSearchResults,
+    ] = await Promise.all([
+      applicationSearchPromise,
+      noticedOfIntentSearchPromise,
+      notificationSearchPromise,
+    ]);
 
     return await this.mapSearchResults(
-      applicationSearchResult,
+      applicationSearchResults,
       noticeOfIntentResults,
-      notifications,
+      notificationSearchResults,
     );
   }
 
