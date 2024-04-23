@@ -1,10 +1,10 @@
 <div class="inline-number-wrapper">
   <span class="left" *ngIf="!isEditing">
-    <a (click)="startEdit()" class="add" *ngIf="!value"> Add amount </a>
-    <span *ngIf="value">
+    <a (click)="startEdit()" class="add" *ngIf="value === null"> Add amount </a>
+    <span *ngIf="value !== null">
       {{ value }}
     </span>
-    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
+    <button *ngIf="value !== null" class="edit-button" mat-icon-button (click)="startEdit()">
       <mat-icon class="edit-icon">edit</mat-icon>
     </button>
   </span>
