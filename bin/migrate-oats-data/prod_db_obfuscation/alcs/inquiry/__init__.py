@@ -1,0 +1,1 @@
+from .inquiry import obfuscate_inquiry_related_data

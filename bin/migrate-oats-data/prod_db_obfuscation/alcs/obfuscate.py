@@ -8,6 +8,8 @@ from .application import obfuscate_application_related_data
 from .covenant import obfuscate_covenant_related_data
 from .notice_of_intent import obfuscate_notice_of_intent_related_data
 from .notification import obfuscate_notification_related_data
+from .planning_review import obfuscate_pr_related_data
+from .inquiry import obfuscate_inquiry_related_data
 
 logger = setup_and_get_logger("prod_data_obfuscation")
 
@@ -33,6 +35,10 @@ def process_alcs_data():
     obfuscate_notice_of_intent_related_data()
 
     obfuscate_notification_related_data()
+
+    obfuscate_inquiry_related_data()
+
+    obfuscate_pr_related_data()
 
 
 @log_process(logger, "update_description_columns")
