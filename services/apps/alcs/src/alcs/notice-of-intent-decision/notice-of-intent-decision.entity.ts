@@ -130,6 +130,9 @@ export class NoticeOfIntentDecision extends Base {
 
   @AutoMap()
   @Column()
+  @Index('IDX_noticeOfIntentUuid', {
+    synchronize: false, //TypeORM does not support Hash Indexes
+  })
   noticeOfIntentUuid: string;
 
   @ManyToMany(

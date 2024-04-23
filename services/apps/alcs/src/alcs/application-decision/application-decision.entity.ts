@@ -168,6 +168,9 @@ export class ApplicationDecision extends Base {
 
   @AutoMap()
   @Column({ type: 'uuid' })
+  @Index('IDX_applicationUuid', {
+    synchronize: false, //TypeORM does not support Hash Indexes
+  })
   applicationUuid: string;
 
   @AutoMap(() => [ApplicationDecisionDocument])
