@@ -1261,7 +1261,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
 
-    it('should accept matching parcel sizes', async () => {
+    it('should accept exactly matching parcel sizes', async () => {
       const application = new ApplicationSubmission({
         owners: [],
         typeCode: 'SUBD',
@@ -1275,6 +1275,43 @@ describe('ApplicationSubmissionValidatorService', () => {
           {
             type: 'Lot',
             size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+        ],
+      });
+
+      mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+        new ApplicationParcel({
+          mapAreaHectares: 12,
+          owners: [],
+        }),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD parcels area is different from proposed lot area`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should accept matching parcel sizes up to 5 decimal places', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 6.0,
+            planNumbers: null,
+            alrArea: null,
+          },
+          {
+            type: 'Lot',
+            size: 6.000001,
             planNumbers: null,
             alrArea: null,
           },

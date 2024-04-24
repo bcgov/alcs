@@ -506,13 +506,21 @@ export class ApplicationSubmissionValidatorService {
       }
     }
 
-    const initialArea = parcels.reduce(
-      (totalSize, parcel) => totalSize + (parcel.mapAreaHectares ?? 0),
-      0,
+    const initialArea = parseFloat(
+      parcels
+        .reduce(
+          (totalSize, parcel) => totalSize + (parcel.mapAreaHectares ?? 0),
+          0,
+        )
+        .toFixed(5),
     );
-    const subdividedArea = applicationSubmission.subdProposedLots.reduce(
-      (totalSize, proposedLot) => totalSize + (proposedLot.size ?? 0),
-      0,
+    const subdividedArea = parseFloat(
+      applicationSubmission.subdProposedLots
+        .reduce(
+          (totalSize, proposedLot) => totalSize + (proposedLot.size ?? 0),
+          0,
+        )
+        .toFixed(5),
     );
 
     if (initialArea !== subdividedArea) {
