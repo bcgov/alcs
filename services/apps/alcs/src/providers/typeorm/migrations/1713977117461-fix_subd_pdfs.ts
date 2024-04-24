@@ -8,7 +8,7 @@ export class FixSubdPdfs1713977117461 implements MigrationInterface {
         WHEN "file_name" NOT LIKE '%.pdf' THEN CONCAT("file_name", '.pdf')
         ELSE "file_name"
       END
-      WHERE uuid in (SELECT "document_uuid" from "alcs"."application_document" WHERE "type_code" = 'SUBU');
+      WHERE "uuid" in (SELECT "document_uuid" from "alcs"."application_document" WHERE "type_code" = 'SUBU') AND "mime_type" = 'application/pdf';
     `);
 
     await queryRunner.query(`
@@ -17,7 +17,7 @@ export class FixSubdPdfs1713977117461 implements MigrationInterface {
         WHEN "file_name" NOT LIKE '%.pdf' THEN CONCAT("file_name", '.pdf')
         ELSE "file_name"
       END
-      WHERE uuid in (SELECT "document_uuid" from "alcs"."notice_of_intent_document" WHERE "type_code" = 'SUBU');
+      WHERE "uuid" in (SELECT "document_uuid" from "alcs"."notice_of_intent_document" WHERE "type_code" = 'SUBU') AND "mime_type" = 'application/pdf';
     `);
   }
 
