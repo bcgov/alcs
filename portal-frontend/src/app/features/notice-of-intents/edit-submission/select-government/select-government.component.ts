@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, Observable, startWith, takeUntil } from 'rxjs';
+import { Observable, map, startWith, takeUntil } from 'rxjs';
 import { LocalGovernmentDto } from '../../../../services/code/code.dto';
 import { CodeService } from '../../../../services/code/code.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
@@ -32,7 +32,7 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
 
   constructor(
     private codeService: CodeService,
-    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
   ) {
     super();
   }
@@ -49,13 +49,9 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
       }
     });
 
-    if (this.draftMode) {
-      this.localGovernment.disable();
-    }
-
     this.filteredLocalGovernments = this.localGovernment.valueChanges.pipe(
       startWith(''),
-      map((value) => this.filter(value || ''))
+      map((value) => this.filter(value || '')),
     );
 
     if (this.showErrors) {
@@ -120,7 +116,7 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
     if (this.localGovernments) {
       const filterValue = value.toLowerCase();
       return this.localGovernments.filter((localGovernment) =>
-        localGovernment.name.toLowerCase().includes(filterValue)
+        localGovernment.name.toLowerCase().includes(filterValue),
       );
     }
     return [];

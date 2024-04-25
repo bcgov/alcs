@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LocalGovernmentModule } from '../../alcs/local-government/local-government.module';
 import { NoticeOfIntentSubmissionStatusModule } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentModule } from '../../alcs/notice-of-intent/notice-of-intent.module';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
@@ -15,6 +16,7 @@ import { NoticeOfIntentSubmissionDraftService } from './notice-of-intent-submiss
     PdfGenerationModule,
     NoticeOfIntentSubmissionStatusModule,
     NoticeOfIntentModule,
+    LocalGovernmentModule,
   ],
   providers: [NoticeOfIntentSubmissionDraftService],
   controllers: [NoticeOfIntentSubmissionDraftController],

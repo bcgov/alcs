@@ -2,8 +2,13 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { generateSUBMNoiGovernmentHtml } from '../../../../../templates/emails/submitted-to-alc/noi-government.template';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcelUpdateDto } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.dto';
@@ -25,6 +30,8 @@ export class NoticeOfIntentSubmissionDraftService {
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private generateNoiSubmissionDocumentService: GenerateNoiSubmissionDocumentService,
     private noticeOfIntentService: NoticeOfIntentService,
+    private localGovernmentService: LocalGovernmentService,
+    private statusEmailService: StatusEmailService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string, user: User) {
@@ -219,19 +226,51 @@ export class NoticeOfIntentSubmissionDraftService {
 
     draft.createdBy = original.createdBy;
     draft.isDraft = false;
-    await this.noticeOfIntentSubmissionRepository.save(draft);
+    const savedDraft =
+      await this.noticeOfIntentSubmissionRepository.save(draft);
 
-    await this.generateNoiSubmissionDocumentService.generateUpdate(
-      fileNumber,
-      user,
-    );
+    await this.noticeOfIntentService.updateNoticeOfIntentInfo(fileNumber, {
+      applicant: draft.applicant!,
+      localGovernmentUuid: draft.localGovernmentUuid!,
+    });
 
-    await this.noticeOfIntentService.updateApplicant(
-      fileNumber,
-      draft.applicant!,
-    );
+    await this.tryGenerateNoiDocument(fileNumber, user);
+
+    if (draft.localGovernmentUuid !== original.localGovernmentUuid) {
+      await this.sendGovernmentEmail(savedDraft);
+    }
 
     this.logger.debug(`Published Draft for file number ${fileNumber}`);
+  }
+
+  private async sendGovernmentEmail(savedDraft: NoticeOfIntentSubmission) {
+    const submissionGovernment = await this.localGovernmentService.getByGuid(
+      savedDraft.localGovernmentUuid!,
+    );
+
+    if (submissionGovernment) {
+      await this.statusEmailService.sendNoticeOfIntentStatusEmail({
+        generateStatusHtml: generateSUBMNoiGovernmentHtml,
+        status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        noticeOfIntentSubmission: savedDraft,
+        government: submissionGovernment,
+        parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+      });
+    }
+  }
+
+  private async tryGenerateNoiDocument(fileNumber: string, user: User) {
+    try {
+      await this.generateNoiSubmissionDocumentService.generateUpdate(
+        fileNumber,
+        user,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error generating NOI submission document {error}`,
+        error,
+      );
+    }
   }
 
   async deleteDraft(fileNumber: string, user: User) {
