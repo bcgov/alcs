@@ -227,8 +227,6 @@ export class ParcelEntryComponent implements OnInit {
 
     if (this.showErrors) {
       this.parcelForm.markAllAsTouched();
-    } else {
-      this.parcelForm.controls.isFarm.markAsTouched();
     }
   }
 
