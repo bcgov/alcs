@@ -1,8 +1,8 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentOwnerProfile } from '../../../common/automapper/notice-of-intent-owner.automapper.profile';
 import { NoticeOfIntentSubmissionProfile } from '../../../common/automapper/notice-of-intent-submission.automapper.profile';
@@ -23,11 +23,15 @@ describe('NoticeOfIntentSubmissionService', () => {
     Repository<NoticeOfIntentSubmissionStatusType>
   >;
   let mockNoticeOfIntentSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNoticeOfIntentOwnerRepository: DeepMocked<
+    Repository<NoticeOfIntentOwner>
+  >;
 
   beforeEach(async () => {
     mockNoticeOfIntentSubmissionRepository = createMock();
     mockNoticeOfIntentStatusRepository = createMock();
     mockNoticeOfIntentSubmissionStatusService = createMock();
+    mockNoticeOfIntentOwnerRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -51,6 +55,10 @@ describe('NoticeOfIntentSubmissionService', () => {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNoticeOfIntentSubmissionStatusService,
         },
+        {
+          provide: getRepositoryToken(NoticeOfIntentOwner),
+          useValue: mockNoticeOfIntentOwnerRepository,
+        },
       ],
     }).compile();
 
@@ -71,30 +79,35 @@ describe('NoticeOfIntentSubmissionService', () => {
     const fakeFileNumber = 'fake';
 
     mockNoticeOfIntentSubmissionRepository.findOneOrFail.mockResolvedValue(
-      {} as NoticeOfIntentSubmission,
+      new NoticeOfIntentSubmission({
+        uuid: 'fake-uuid',
+      }),
     );
+    mockNoticeOfIntentOwnerRepository.find.mockResolvedValue([]);
 
     const result = await service.get(fakeFileNumber);
 
     expect(result).toBeDefined();
     expect(
       mockNoticeOfIntentSubmissionRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentSubmissionRepository.findOneOrFail).toBeCalledWith(
-      {
-        where: { fileNumber: fakeFileNumber, isDraft: false },
-        relations: {
-          noticeOfIntent: {
-            documents: {
-              document: true,
-            },
-          },
-          owners: {
-            type: true,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockNoticeOfIntentSubmissionRepository.findOneOrFail,
+    ).toHaveBeenCalledWith({
+      where: { fileNumber: fakeFileNumber, isDraft: false },
+      relations: {
+        noticeOfIntent: {
+          documents: {
+            document: true,
           },
         },
       },
-    );
+    });
+    expect(mockNoticeOfIntentOwnerRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentOwnerRepository.find).toHaveBeenCalledWith({
+      where: { noticeOfIntentSubmissionUuid: 'fake-uuid' },
+      relations: { type: true },
+    });
   });
 
   it('should properly map to dto', async () => {
@@ -121,8 +134,12 @@ describe('NoticeOfIntentSubmissionService', () => {
     const result = await service.getStatus(NOI_SUBMISSION_STATUS.ALC_DECISION);
 
     expect(result).toBeDefined();
-    expect(mockNoticeOfIntentStatusRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentStatusRepository.findOneOrFail).toBeCalledWith({
+    expect(
+      mockNoticeOfIntentStatusRepository.findOneOrFail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockNoticeOfIntentStatusRepository.findOneOrFail,
+    ).toHaveBeenCalledWith({
       where: { code: NOI_SUBMISSION_STATUS.ALC_DECISION },
     });
   });
@@ -139,19 +156,19 @@ describe('NoticeOfIntentSubmissionService', () => {
 
     expect(
       mockNoticeOfIntentSubmissionRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentSubmissionRepository.findOneOrFail).toBeCalledWith(
-      {
-        where: {
-          fileNumber: 'fake',
-        },
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockNoticeOfIntentSubmissionRepository.findOneOrFail,
+    ).toHaveBeenCalledWith({
+      where: {
+        fileNumber: 'fake',
       },
-    );
+    });
     expect(
       mockNoticeOfIntentSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentSubmissionStatusService.setStatusDate,
-    ).toBeCalledWith('fake', NOI_SUBMISSION_STATUS.ALC_DECISION);
+    ).toHaveBeenCalledWith('fake', NOI_SUBMISSION_STATUS.ALC_DECISION);
   });
 });

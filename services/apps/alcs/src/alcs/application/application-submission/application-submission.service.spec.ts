@@ -1,17 +1,17 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { Repository } from 'typeorm';
-import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
-import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
-import { ApplicationSubmissionStatusType } from '../application-submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../../common/automapper/application-submission.automapper.profile';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
+import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
 describe('ApplicationSubmissionService', () => {
@@ -24,12 +24,14 @@ describe('ApplicationSubmissionService', () => {
   >;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
   let mockCovenantTransfereeRepo: DeepMocked<Repository<CovenantTransferee>>;
+  let mockApplicationOwnerRepository: DeepMocked<Repository<ApplicationOwner>>;
 
   beforeEach(async () => {
     mockApplicationSubmissionRepository = createMock();
     mockApplicationStatusRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
     mockCovenantTransfereeRepo = createMock();
+    mockApplicationOwnerRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -57,6 +59,10 @@ describe('ApplicationSubmissionService', () => {
           provide: getRepositoryToken(CovenantTransferee),
           useValue: mockCovenantTransfereeRepo,
         },
+        {
+          provide: getRepositoryToken(ApplicationOwner),
+          useValue: mockApplicationOwnerRepository,
+        },
       ],
     }).compile();
 
@@ -77,16 +83,19 @@ describe('ApplicationSubmissionService', () => {
     const fakeFileNumber = 'fake';
 
     mockApplicationSubmissionRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationSubmission,
+      new ApplicationSubmission({ uuid: 'fake-uuid' }),
     );
+    mockApplicationOwnerRepository.find.mockResolvedValue([]);
 
     const result = await service.get(fakeFileNumber);
 
     expect(result).toBeDefined();
-    expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledTimes(
-      1,
-    );
-    expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledWith({
+    expect(
+      mockApplicationSubmissionRepository.findOneOrFail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionRepository.findOneOrFail,
+    ).toHaveBeenCalledWith({
       where: { fileNumber: fakeFileNumber, isDraft: false },
       relations: {
         naruSubtype: true,
@@ -95,9 +104,14 @@ describe('ApplicationSubmissionService', () => {
             document: true,
           },
         },
-        owners: {
-          type: true,
-        },
+      },
+    });
+
+    expect(mockApplicationOwnerRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockApplicationOwnerRepository.find).toHaveBeenCalledWith({
+      where: { applicationSubmissionUuid: 'fake-uuid' },
+      relations: {
+        type: true,
       },
     });
   });
@@ -126,8 +140,10 @@ describe('ApplicationSubmissionService', () => {
     const result = await service.getStatus(SUBMISSION_STATUS.ALC_DECISION);
 
     expect(result).toBeDefined();
-    expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledWith({
+    expect(mockApplicationStatusRepository.findOneOrFail).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockApplicationStatusRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { code: SUBMISSION_STATUS.ALC_DECISION },
     });
   });
@@ -142,21 +158,22 @@ describe('ApplicationSubmissionService', () => {
 
     await service.updateStatus('fake', SUBMISSION_STATUS.ALC_DECISION);
 
-    expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledTimes(
-      1,
-    );
-    expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledWith({
+    expect(
+      mockApplicationSubmissionRepository.findOneOrFail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionRepository.findOneOrFail,
+    ).toHaveBeenCalledWith({
       where: {
         fileNumber: 'fake',
       },
     });
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
-      'fake',
-      SUBMISSION_STATUS.ALC_DECISION,
-    );
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toHaveBeenCalledWith('fake', SUBMISSION_STATUS.ALC_DECISION);
   });
 
   it('should call repo for retrieving transferees', async () => {
@@ -165,6 +182,6 @@ describe('ApplicationSubmissionService', () => {
     const result = await service.getTransferees('file-number');
 
     expect(result).toBeDefined();
-    expect(mockCovenantTransfereeRepo.find).toBeCalledTimes(1);
+    expect(mockCovenantTransfereeRepo.find).toHaveBeenCalledTimes(1);
   });
 });
