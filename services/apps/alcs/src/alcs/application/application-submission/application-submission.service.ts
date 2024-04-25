@@ -1,7 +1,7 @@
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Repository } from 'typeorm';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
@@ -25,23 +25,33 @@ export class ApplicationSubmissionService {
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectRepository(CovenantTransferee)
     private covenantTransfereeRepository: Repository<CovenantTransferee>,
+    @InjectRepository(ApplicationOwner)
+    private applicationOwnerRepository: Repository<ApplicationOwner>,
   ) {}
 
   async get(fileNumber: string) {
-    return await this.applicationSubmissionRepository.findOneOrFail({
-      where: { fileNumber, isDraft: false },
-      relations: {
-        naruSubtype: true,
-        application: {
-          documents: {
-            document: true,
+    const submission = await this.applicationSubmissionRepository.findOneOrFail(
+      {
+        where: { fileNumber, isDraft: false },
+        relations: {
+          naruSubtype: true,
+          application: {
+            documents: {
+              document: true,
+            },
           },
         },
-        owners: {
-          type: true,
-        },
+      },
+    );
+
+    submission.owners = await this.applicationOwnerRepository.find({
+      where: { applicationSubmissionUuid: submission.uuid },
+      relations: {
+        type: true,
       },
     });
+
+    return submission;
   }
 
   async getTransferees(fileNumber: string) {

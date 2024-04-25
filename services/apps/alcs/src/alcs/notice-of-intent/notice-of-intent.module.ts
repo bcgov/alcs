@@ -5,11 +5,11 @@ import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.
 import { DocumentCode } from '../../document/document-code.entity';
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
+import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
-import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { CodeModule } from '../code/code.module';
 import { LocalGovernmentModule } from '../local-government/local-government.module';
 import { NoticeOfIntentDocumentController } from './notice-of-intent-document/notice-of-intent-document.controller';
@@ -25,6 +25,7 @@ import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent-submiss
 import { NoticeOfIntentSubmissionController } from './notice-of-intent-submission/notice-of-intent-submission.controller';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
+import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
@@ -41,6 +42,7 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
       NoticeOfIntentSubmission,
       NoticeOfIntentSubmissionStatusType,
       DocumentCode,
+      NoticeOfIntentOwner,
     ]),
     forwardRef(() => BoardModule),
     CardModule,
