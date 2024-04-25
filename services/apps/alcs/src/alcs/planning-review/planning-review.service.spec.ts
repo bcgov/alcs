@@ -1,13 +1,15 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { Repository } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
+import { CodeService } from '../code/code.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { PlanningReferral } from './planning-referral/planning-referral.entity';
 import { PlanningReviewType } from './planning-review-type.entity';
 import { PlanningReview } from './planning-review.entity';
@@ -20,6 +22,8 @@ describe('PlanningReviewService', () => {
   let mockReferralRepository: DeepMocked<Repository<PlanningReferral>>;
   let mockCardService: DeepMocked<CardService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
@@ -27,6 +31,8 @@ describe('PlanningReviewService', () => {
     mockTypeRepository = createMock();
     mockReferralRepository = createMock();
     mockFileNumberService = createMock();
+    mockLocalGovernmentService = createMock();
+    mockCardService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -54,6 +60,14 @@ describe('PlanningReviewService', () => {
         {
           provide: CardService,
           useValue: mockCardService,
+        },
+        {
+          provide: CodeService,
+          useValue: mockCodeService,
+        },
+        {
+          provide: LocalGovernmentService,
+          useValue: mockLocalGovernmentService,
         },
         PlanningReviewService,
       ],

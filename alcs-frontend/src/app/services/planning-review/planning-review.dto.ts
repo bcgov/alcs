@@ -66,4 +66,6 @@ export interface PlanningReferralDto {
 export interface UpdatePlanningReviewDto {
   open?: boolean;
   typeCode?: string;
+  regionCode?: string;
+  localGovernmentUuid?: string;
 }

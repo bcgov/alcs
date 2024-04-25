@@ -7,6 +7,7 @@ import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
+import { LocalGovernmentModule } from '../local-government/local-government.module';
 import { PlanningReferralController } from './planning-referral/planning-referral.controller';
 import { PlanningReferral } from './planning-referral/planning-referral.entity';
 import { PlanningReferralService } from './planning-referral/planning-referral.service';
@@ -36,6 +37,7 @@ import { PlanningReviewService } from './planning-review.service';
     forwardRef(() => BoardModule),
     CardModule,
     CodeModule,
+    LocalGovernmentModule,
     FileNumberModule,
     DocumentModule,
   ],

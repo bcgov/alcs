@@ -1,14 +1,24 @@
 <div class="intake">
   <h3>ALC Intake</h3>
-  <div>
-    <h5>Submitted to ALC</h5>
-    <app-inline-datepicker
-      [value]="noticeOfIntent?.dateSubmittedToAlc"
-      (save)="updateDate('dateSubmittedToAlc', $event)"
-    ></app-inline-datepicker>
+  <div class="two-grid">
+    <div>
+      <h5>Submitted to ALC</h5>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.dateSubmittedToAlc"
+        (save)="updateDate('dateSubmittedToAlc', $event)"
+      ></app-inline-datepicker>
+    </div>
+    <div>
+      <h5>Region</h5>
+      <app-inline-dropdown
+        [options]="regions"
+        [value]="noticeOfIntent?.region?.code"
+        (save)="updateNoticeOfIntentRegion($event)"
+      ></app-inline-dropdown>
+    </div>
   </div>
   <h5>Payment</h5>
-  <div class="payment-section">
+  <div class="two-grid">
     <div>
       <div class="subheading2">Payment Date</div>
       <app-inline-datepicker
@@ -42,7 +52,7 @@
     <div class="label-wrapper">
       <h5>Acknowledged Incomplete</h5>
       <mat-icon class="icon" matTooltip='Creates / deletes "Submitted to ALC Incomplete" portal status'
-        >info_outline
+      >info_outline
       </mat-icon>
     </div>
     <div>
@@ -58,7 +68,7 @@
       <mat-icon
         class="icon"
         matTooltip='Creates / deletes "Received by ALC" portal status and controls public release. Tracking starts the following calendar day.'
-        >info_outline
+      >info_outline
       </mat-icon>
     </div>
     <div>
