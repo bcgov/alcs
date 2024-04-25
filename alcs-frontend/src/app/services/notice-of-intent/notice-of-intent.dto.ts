@@ -59,6 +59,7 @@ export interface NoticeOfIntentDto {
 export interface UpdateNoticeOfIntentDto {
   dateSubmittedToAlc?: number;
   hideFromPortal?: boolean;
+  regionCode?: string;
   feePaidDate?: number;
   feeWaived?: boolean | null;
   feeSplitWithLg?: boolean | null;

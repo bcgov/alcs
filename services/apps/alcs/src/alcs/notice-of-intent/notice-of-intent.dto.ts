@@ -117,6 +117,10 @@ export class UpdateNoticeOfIntentDto {
   typeCode?: string;
 
   @IsOptional()
+  @IsString()
+  regionCode?: string;
+
+  @IsOptional()
   @IsBoolean()
   hideFromPortal?: boolean;
 

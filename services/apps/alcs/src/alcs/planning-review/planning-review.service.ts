@@ -11,6 +11,8 @@ import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
+import { CodeService } from '../code/code.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { PlanningReferral } from './planning-referral/planning-referral.entity';
 import { PlanningReviewType } from './planning-review-type.entity';
 import {
@@ -32,6 +34,8 @@ export class PlanningReviewService {
     private referralRepository: Repository<PlanningReferral>,
     @InjectMapper() private mapper: Mapper,
     private fileNumberService: FileNumberService,
+    private governmentService: LocalGovernmentService,
+    private codeService: CodeService,
   ) {}
 
   private DEFAULT_RELATIONS: FindOptionsRelations<PlanningReview> = {
@@ -168,6 +172,18 @@ export class PlanningReviewService {
       updateDto.typeCode,
       existingReview.typeCode,
     );
+
+    if (updateDto.localGovernmentUuid) {
+      existingReview.localGovernment = await this.governmentService.getByUuid(
+        updateDto.localGovernmentUuid,
+      );
+    }
+
+    if (updateDto.regionCode) {
+      existingReview.region = await this.codeService.fetchRegion(
+        updateDto.regionCode,
+      );
+    }
 
     await this.reviewRepository.save(existingReview);
     return this.getDetailedReview(fileNumber);

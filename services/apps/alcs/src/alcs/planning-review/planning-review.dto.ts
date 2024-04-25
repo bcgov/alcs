@@ -184,4 +184,12 @@ export class UpdatePlanningReviewDto {
   @IsNumber()
   @IsOptional()
   decisionDate?: number | null;
+
+  @IsString()
+  @IsOptional()
+  regionCode?: string;
+
+  @IsString()
+  @IsOptional()
+  localGovernmentUuid?: string;
 }

@@ -341,6 +341,12 @@ export class NoticeOfIntentService {
       });
     }
 
+    if (updateDto.regionCode) {
+      noticeOfIntent.region = await this.codeService.fetchRegion(
+        updateDto.regionCode,
+      );
+    }
+
     await this.repository.save(noticeOfIntent);
 
     await this.updateStatus(updateDto, noticeOfIntent);

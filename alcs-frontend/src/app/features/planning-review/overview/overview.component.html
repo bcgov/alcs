@@ -29,6 +29,27 @@
     />
   </div>
 </section>
+<section *ngIf="planningReview">
+  <h5>L/FNG Information</h5>
+  <div class="two-grid">
+    <div>
+      <div class="subheading2">Local/First Nation Government</div>
+      <app-inline-dropdown
+        [options]="localGovernments"
+        [value]="planningReview.localGovernment.uuid"
+        (save)="updateLocalGovernment($event)"
+      ></app-inline-dropdown>
+    </div>
+    <div>
+      <div class="subheading2">Region</div>
+      <app-inline-dropdown
+        [options]="regions"
+        [value]="planningReview.region.code"
+        (save)="updateRegion($event)"
+      ></app-inline-dropdown>
+    </div>
+  </div>
+</section>
 <section>
   <h5>Planning Review Event Timeline</h5>
   <app-timeline [events]="events"></app-timeline>
