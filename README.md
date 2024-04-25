@@ -8,9 +8,10 @@
 [![Stars](https://img.shields.io/github/stars/bcgov/alcs.svg)](https://github.com/bcgov/tno/stargazers)
 [![Wachters](https://img.shields.io/github/watchers/bcgov/alcs.svg)](https://github.com/bcgov/tno/watchers)
 
-This project contains the frontend and backend for the ALCS used for tracking various permits and other ALC related documents
+This project contains the frontend and backend for the ALCS used for tracking various permits and other ALC related
+documents
 
-## Getting Help or Reporting an Issue 
+## Getting Help or Reporting an Issue
 
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/alcs/issues).
 
@@ -25,9 +26,8 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 - [One time Jobs](./docs/jobs.md)
 
 ## Run dev setup
+
+- [Prerequisites](./docs/prerequisites.md)
 - [Run ALCS Frontend](./alcs-frontend/README.md)
 - [Run Portal Frontend Readme](./portal-frontend/README.md)
 - [Run Services](./services/README.md)
-- [Setup database](./services/README.md)
-- Acquire latest development.json from some developer on the team
-- Run docker - `docker compose up`
