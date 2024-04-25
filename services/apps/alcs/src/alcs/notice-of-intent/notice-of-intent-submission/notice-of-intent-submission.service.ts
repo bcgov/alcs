@@ -36,6 +36,7 @@ export class NoticeOfIntentSubmissionService {
       },
     });
 
+    // owners retrieved separately for performance reasons
     submission.owners = await this.noiSubmissionOwnerRepository.find({
       where: { noticeOfIntentSubmissionUuid: submission.uuid },
       relations: { type: true },

@@ -44,6 +44,7 @@ export class ApplicationSubmissionService {
       },
     );
 
+    // owners retrieved separately for performance reasons
     submission.owners = await this.applicationOwnerRepository.find({
       where: { applicationSubmissionUuid: submission.uuid },
       relations: {
