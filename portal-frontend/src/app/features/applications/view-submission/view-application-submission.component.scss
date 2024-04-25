@@ -186,7 +186,6 @@ section {
   margin-bottom: rem(8);
 }
 
-
 .continue-button-container {
   position: sticky;
   bottom: 0;
@@ -197,7 +196,9 @@ section {
   flex-direction: column-reverse;
   justify-content: space-between;
   z-index: 2;
-  box-shadow: -3px 0 colors.$white, 3px 0 colors.$white;
+  box-shadow:
+    -3px 0 colors.$white,
+    3px 0 colors.$white;
 
   button:nth-child(1) {
     margin-top: rem(16) !important;
@@ -206,13 +207,11 @@ section {
   @media screen and (min-width: $tabletBreakpoint) {
     flex-direction: row;
     justify-content: center;
+
     button:nth-child(1) {
+      margin-right: rem(16) !important;
       margin-top: 0 !important;
     }
-  }
-
-  button {
-    margin-right: rem(16) !important;
   }
 }
 
