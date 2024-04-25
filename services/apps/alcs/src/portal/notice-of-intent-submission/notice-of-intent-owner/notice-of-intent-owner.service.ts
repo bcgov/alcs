@@ -331,9 +331,9 @@ export class NoticeOfIntentOwnerService {
               submissionUuid,
             );
           if (fileNumber) {
-            await this.noticeOfIntentService.updateApplicant(
+            await this.noticeOfIntentService.updateNoticeOfIntentInfo(
               fileNumber,
-              applicantName || FALLBACK_APPLICANT_NAME,
+              { applicant: applicantName || FALLBACK_APPLICANT_NAME },
             );
           }
         }

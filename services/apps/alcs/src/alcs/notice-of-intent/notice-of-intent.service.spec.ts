@@ -1,8 +1,8 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { Repository } from 'typeorm';
 import {
   ServiceNotFoundException,
@@ -15,7 +15,6 @@ import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
-import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { CodeService } from '../code/code.service';
 import { LocalGovernmentService } from '../local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
@@ -23,6 +22,7 @@ import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-s
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
+import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 
@@ -117,7 +117,7 @@ describe('NoticeOfIntentService', () => {
       new NoticeOfIntentType(),
     );
 
-    const res = await service.create(
+    await service.create(
       {
         applicant: 'fake-applicant',
         fileNumber: '1512311',
@@ -345,7 +345,9 @@ describe('NoticeOfIntentService', () => {
   it('should call the repo for get update applicant', async () => {
     mockRepository.update.mockResolvedValue({} as any);
 
-    await service.updateApplicant('file-number', 'applicant');
+    await service.updateNoticeOfIntentInfo('file-number', {
+      applicant: 'applicant',
+    });
 
     expect(mockRepository.update).toHaveBeenCalledTimes(1);
   });
