@@ -3,7 +3,6 @@ WITH parcels_to_insert AS (
         osp.subject_property_id
     FROM alcs.inquiry i
         JOIN oats.oats_subject_properties osp ON osp.issue_id = i.file_number::bigint
-    WHERE osp.alr_application_land_ind = 'Y' -- ensure that only parcels related to application/issue are selected
 )
 SELECT uuid AS inquiry_uuid,
     op.civic_address,
