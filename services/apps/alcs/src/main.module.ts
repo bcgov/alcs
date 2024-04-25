@@ -1,14 +1,13 @@
 import { ConfigModule } from '@app/common/config/config.module';
 import { RedisModule } from '@app/common/redis/redis.module';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
-import * as config from 'config';
 import { AuthGuard } from 'nest-keycloak-connect';
+import { WinstonModule } from 'nest-winston';
 import { ClsModule } from 'nestjs-cls';
-import { LoggerModule } from 'nestjs-pino';
 import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
 import { AlcsModule } from './alcs/alcs.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
@@ -41,30 +40,10 @@ import { UserModule } from './user/user.module';
       global: true,
       middleware: { mount: true },
     }),
+    WinstonModule,
     DocumentModule,
     AuthorizationModule,
     RedisModule,
-    LoggerModule.forRoot({
-      pinoHttp: {
-        redact: {
-          paths: ['req.headers'],
-        },
-        level: config.get('LOG_LEVEL'),
-        autoLogging: false, //Disable auto-logging every request/response for now
-        transport:
-          config.get('ENV') === 'development'
-            ? {
-                target: 'pino-pretty',
-                options: {
-                  colorize: true,
-                  levelFirst: true,
-                  translateTime: 'mmm-dd h:MM:ss',
-                  ignore: 'hostname',
-                },
-              }
-            : undefined,
-      },
-    }),
     CdogsModule,
     AlcsModule,
     PortalModule,
@@ -78,6 +57,7 @@ import { UserModule } from './user/user.module';
   providers: [
     MainService,
     AuditSubscriber,
+    Logger,
     {
       provide: APP_GUARD,
       useClass: MaintenanceGuard, //Should come before AuthGuard
