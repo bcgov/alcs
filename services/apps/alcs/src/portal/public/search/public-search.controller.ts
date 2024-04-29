@@ -5,6 +5,8 @@ import { InjectMapper } from 'automapper-nestjs';
 import { Public } from 'nest-keycloak-connect';
 import { Repository } from 'typeorm';
 import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
+import { NoticeOfIntentType } from '../../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { NotificationType } from '../../../alcs/notification/notification-type/notification-type.entity';
 import { isStringSetAndNotEmpty } from '../../../utils/string-helper';
 import { APPLICATION_SUBMISSION_TYPES } from '../../pdf-generation/generate-submission-document.service';
 import { PublicApplicationSubmissionSearchView } from './application/public-application-search-view.entity';
@@ -32,6 +34,10 @@ export class PublicSearchController {
     private notificationSearchService: PublicNotificationSearchService,
     @InjectRepository(ApplicationType)
     private appTypeRepo: Repository<ApplicationType>,
+    @InjectRepository(NoticeOfIntentType)
+    private noiTypeRepo: Repository<NoticeOfIntentType>,
+    @InjectRepository(NotificationType)
+    private notificationTypeRepo: Repository<NotificationType>,
   ) {}
 
   @Post('/')
@@ -211,18 +217,40 @@ export class PublicSearchController {
 
     const mappedNoticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
     if (noticeOfIntents && noticeOfIntents.data.length > 0) {
+      const noiTypes = await this.noiTypeRepo.find({
+        select: {
+          code: true,
+          label: true,
+        },
+      });
+      const noiTypeMap = new Map<string, NoticeOfIntentType>();
+      for (const type of noiTypes) {
+        noiTypeMap.set(type.code, type);
+      }
+
       mappedNoticeOfIntents.push(
         ...noticeOfIntents.data.map((noi) =>
-          this.mapNoticeOfIntentToSearchResult(noi),
+          this.mapNoticeOfIntentToSearchResult(noi, noiTypeMap),
         ),
       );
     }
 
     const mappedNotifications: NotificationSearchResultDto[] = [];
     if (notifications && notifications.data && notifications.data.length > 0) {
+      const notificationTypes = await this.notificationTypeRepo.find({
+        select: {
+          code: true,
+          label: true,
+        },
+      });
+      const notificationTypeMap = new Map<string, NoticeOfIntentType>();
+      for (const type of notificationTypes) {
+        notificationTypeMap.set(type.code, type);
+      }
+
       mappedNotifications.push(
         ...notifications.data.map((notification) =>
-          this.mapNotificationToSearchResult(notification),
+          this.mapNotificationToSearchResult(notification, notificationTypeMap),
         ),
       );
     }
@@ -256,13 +284,14 @@ export class PublicSearchController {
 
   private mapNoticeOfIntentToSearchResult(
     noi: PublicNoticeOfIntentSubmissionSearchView,
+    noiTypeMap: Map<string, NoticeOfIntentType>,
   ): NoticeOfIntentSearchResultDto {
     return {
       referenceId: noi.fileNumber,
       fileNumber: noi.fileNumber,
       lastUpdate: noi.lastUpdate?.getTime(),
       dateSubmitted: noi.dateSubmittedToAlc?.getTime(),
-      type: noi.noticeOfIntentType.label,
+      type: noiTypeMap.get(noi.noticeOfIntentTypeCode)!.label,
       localGovernmentName: noi.localGovernmentName,
       ownerName: noi.applicant,
       class: 'NOI',
@@ -272,13 +301,14 @@ export class PublicSearchController {
 
   private mapNotificationToSearchResult(
     notification: PublicNotificationSubmissionSearchView,
+    notificationTypeMap: Map<string, NotificationType>,
   ): NotificationSearchResultDto {
     return {
       referenceId: notification.fileNumber,
       fileNumber: notification.fileNumber,
       lastUpdate: notification.status.effective_date,
       dateSubmitted: notification.dateSubmittedToAlc?.getTime(),
-      type: notification.notificationType.label,
+      type: notificationTypeMap.get(notification.notificationTypeCode)!.label,
       localGovernmentName: notification.localGovernmentName,
       ownerName: notification.applicant,
       class: 'NOTI',

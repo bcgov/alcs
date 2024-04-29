@@ -7,6 +7,8 @@ import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
+import { NoticeOfIntentType } from '../../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { NotificationType } from '../../../alcs/notification/notification-type/notification-type.entity';
 import { PublicApplicationSearchService } from './application/public-application-search.service';
 import { PublicNoticeOfIntentSearchService } from './notice-of-intent/public-notice-of-intent-search.service';
 import { PublicNotificationSearchService } from './notification/public-notification-search.service';
@@ -19,12 +21,16 @@ describe('PublicSearchController', () => {
   let mockAppPublicSearchService: DeepMocked<PublicApplicationSearchService>;
   let mockNotiPublicSearchService: DeepMocked<PublicNotificationSearchService>;
   let mockAppTypeRepo: DeepMocked<Repository<ApplicationType>>;
+  let mockNOITypeRepo: DeepMocked<Repository<NoticeOfIntentType>>;
+  let mockNotificationTypeRepo: DeepMocked<Repository<NotificationType>>;
 
   beforeEach(async () => {
     mockNOIPublicSearchService = createMock();
     mockAppPublicSearchService = createMock();
     mockNotiPublicSearchService = createMock();
     mockAppTypeRepo = createMock();
+    mockNOITypeRepo = createMock();
+    mockNotificationTypeRepo = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -48,6 +54,14 @@ describe('PublicSearchController', () => {
         {
           provide: getRepositoryToken(ApplicationType),
           useValue: mockAppTypeRepo,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntentType),
+          useValue: mockNOITypeRepo,
+        },
+        {
+          provide: getRepositoryToken(NotificationType),
+          useValue: mockNotificationTypeRepo,
         },
         {
           provide: ClsService,
