@@ -1,7 +1,7 @@
 configuration
 application_region
-board
 document_code
+board
 owner_type
 card_type
 parcel_ownership_type
@@ -21,6 +21,7 @@ application_reconsideration_type
 application_submission_status_type
 application_type
 card_subtask_type
+inquiry_type
 notice_of_intent_decision_component_type
 notice_of_intent_decision_condition_type
 notice_of_intent_decision_outcome
@@ -31,6 +32,8 @@ notice_of_intent_subtype
 notice_of_intent_type
 notification_submission_status_type
 notification_type
+planning_review_decision_outcome_code
+planning_review_meeting_type
 planning_review_type
 user
 local_government
@@ -42,6 +45,7 @@ application_modification
 application_reconsideration
 application_decision
 notice_of_intent_modification
+planning_review
 application_decision_component
 application_submission
 notice_of_intent_decision
@@ -51,12 +55,13 @@ application_document
 notice_of_intent_document
 application_decision_condition
 notification_submission
-planning_review
+inquiry
 application_paused
 application_decision_component_lot
 comment
 notice_of_intent_decision_component
 notice_of_intent_decision_condition
+planning_review_decision
 application_parcel
 notice_of_intent_parcel
 application_owner
@@ -64,6 +69,7 @@ notice_of_intent_owner
 application_decision_meeting
 card_history
 holiday_entity
+inquiry_parcel
 migrations
 typeorm_metadata
 application_boundary_amendments_to_components
@@ -90,15 +96,17 @@ notice_of_intent_subtype_notice_of_intent_subtype
 notification_parcel
 notification_submission_to_submission_status
 planning_referral
+planning_review_decision_document
+planning_review_meeting
 card_subtask
-covenant
+inquiry_document
 notification_document
 planning_review_document
 application_meeting
 covenant_transferee
 notification_transferee
-staff_journal
 application_submission_review
+staff_journal
 email_status
 file_viewed
 health_check

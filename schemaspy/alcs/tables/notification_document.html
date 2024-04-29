@@ -321,7 +321,7 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
-                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.notification_document.</p></td>
+                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.alr_application to alcs.notification_document.</p></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -396,62 +396,66 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="notification_document.html" target="_top" title="notification_document" alt="" coords="323,108,743,500">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="10,480,274,685">
-<area shape="rect" id="node3" href="notification.html" target="_top" title="notification" alt="" coords="5,199,279,463">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="10,5,274,181">
+<area shape="rect" id="node1" href="notification_document.html" target="_top" title="notification_document" alt="" coords="335,108,755,500">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="5,480,291,685">
+<area shape="rect" id="node3" href="notification.html" target="_top" title="notification" alt="" coords="11,199,285,463">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="16,5,280,181">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/notification_document.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="954,731,1342,819">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="618,441,882,647">
-<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="74,811,201,899">
-<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="999,111,1297,199">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="618,161,882,337">
-<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="378,847,505,935">
-<area shape="rect" id="node7" href="local_government.html" target="_top" title="local_government" alt="" coords="313,952,569,1040">
-<area shape="rect" id="node8" href="application_region.html" target="_top" title="application_region" alt="" coords="5,987,269,1075">
-<area shape="rect" id="node9" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="931,836,1365,924">
-<area shape="rect" id="node10" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="975,216,1321,304">
-<area shape="rect" id="node11" href="notification.html" target="_top" title="notification" alt="" coords="613,900,887,1164">
-<area shape="rect" id="node12" href="notification_type.html" target="_top" title="notification_type" alt="" coords="317,1093,565,1181">
-<area shape="rect" id="node13" href="notification_document.html" target="_top" title="notification_document" alt="" coords="938,321,1358,713">
-<area shape="rect" id="node14" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="991,1123,1305,1211">
-<area shape="rect" id="node15" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="973,5,1323,93">
-<area shape="rect" id="node16" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1045,941,1251,1029">
+<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="968,5,1356,93">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="613,365,899,571">
+<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="74,999,201,1087">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1013,321,1311,409">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="624,588,888,764">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="378,1035,505,1123">
+<area shape="rect" id="node7" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1033,427,1291,515">
+<area shape="rect" id="node8" href="local_government.html" target="_top" title="local_government" alt="" coords="313,1140,569,1228">
+<area shape="rect" id="node9" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1175,269,1263">
+<area shape="rect" id="node10" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="945,111,1379,199">
+<area shape="rect" id="node11" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="989,532,1335,620">
+<area shape="rect" id="node12" href="notification.html" target="_top" title="notification" alt="" coords="619,1088,893,1352">
+<area shape="rect" id="node13" href="notification_type.html" target="_top" title="notification_type" alt="" coords="317,1281,565,1369">
+<area shape="rect" id="node14" href="notification_document.html" target="_top" title="notification_document" alt="" coords="952,743,1372,1135">
+<area shape="rect" id="node15" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1005,1152,1319,1240">
+<area shape="rect" id="node16" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="943,216,1381,304">
+<area shape="rect" id="node17" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="987,637,1337,725">
+<area shape="rect" id="node18" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1059,1288,1265,1376">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/notification_document.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="notification_document.html" target="_top" title="notification_document" alt="" coords="323,108,743,500">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="10,480,274,685">
-<area shape="rect" id="node3" href="notification.html" target="_top" title="notification" alt="" coords="5,199,279,463">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="10,5,274,181">
+<area shape="rect" id="node1" href="notification_document.html" target="_top" title="notification_document" alt="" coords="335,108,755,500">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="5,480,291,685">
+<area shape="rect" id="node3" href="notification.html" target="_top" title="notification" alt="" coords="11,199,285,463">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="16,5,280,181">
 </map>
                                         <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/notification_document.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1213,427,1601,515">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="877,367,1141,572">
-<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="333,964,459,1052">
-<area shape="rect" id="node7" href="configuration.html" target="_top" title="configuration" alt="" coords="5,964,220,1052">
-<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1257,5,1556,93">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="877,165,1141,341">
-<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="637,1036,763,1124">
-<area shape="rect" id="node8" href="local_government.html" target="_top" title="local_government" alt="" coords="572,1141,828,1229">
-<area shape="rect" id="node9" href="application_region.html" target="_top" title="application_region" alt="" coords="264,1184,528,1272">
-<area shape="rect" id="node10" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1189,321,1624,409">
-<area shape="rect" id="node11" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1234,111,1579,199">
-<area shape="rect" id="node12" href="notification.html" target="_top" title="notification" alt="" coords="872,1044,1145,1308">
-<area shape="rect" id="node13" href="notification_type.html" target="_top" title="notification_type" alt="" coords="576,1283,824,1371">
-<area shape="rect" id="node14" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1197,532,1617,924">
-<area shape="rect" id="node15" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1249,941,1564,1029">
-<area shape="rect" id="node16" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="1232,216,1581,304">
-<area shape="rect" id="node17" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1303,1047,1510,1135">
+<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1227,5,1615,93">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="872,412,1157,617">
+<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="333,889,459,977">
+<area shape="rect" id="node7" href="configuration.html" target="_top" title="configuration" alt="" coords="5,889,220,977">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1271,321,1570,409">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="883,635,1147,811">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="637,855,763,943">
+<area shape="rect" id="node8" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1291,427,1550,515">
+<area shape="rect" id="node9" href="local_government.html" target="_top" title="local_government" alt="" coords="572,960,828,1048">
+<area shape="rect" id="node10" href="application_region.html" target="_top" title="application_region" alt="" coords="264,1031,528,1119">
+<area shape="rect" id="node11" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1203,111,1638,199">
+<area shape="rect" id="node12" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1248,532,1593,620">
+<area shape="rect" id="node13" href="notification.html" target="_top" title="notification" alt="" coords="878,908,1151,1172">
+<area shape="rect" id="node14" href="notification_type.html" target="_top" title="notification_type" alt="" coords="576,1101,824,1189">
+<area shape="rect" id="node15" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1211,743,1631,1135">
+<area shape="rect" id="node16" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1263,1257,1578,1345">
+<area shape="rect" id="node17" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="1201,216,1640,304">
+<area shape="rect" id="node18" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="1246,637,1595,725">
+<area shape="rect" id="node19" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1317,1152,1524,1240">
 </map>
                                         <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/notification_document.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>

@@ -255,6 +255,57 @@
                                     </td>
                                     <td></td>
                                 </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="oats_document_id">oats_document_id</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.planning_review_document.</p></td>
+                                </tr>
+                                <tr>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="oats_planning_review_id">oats_planning_review_id</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.planning_review_document.</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="audit_created_by">audit_created_by</span></td>
+                                    <td>varchar</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -303,6 +354,12 @@
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>document_uuid</td>
                                 </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> unique_oats_ids</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
+                                    <td>oats_document_id + oats_planning_review_id</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div><!-- /.box-body -->
@@ -328,60 +385,68 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="323,108,791,383">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="10,509,274,715">
-<area shape="rect" id="node3" href="planning_review.html" target="_top" title="planning_review" alt="" coords="5,199,279,492">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="10,5,274,181">
+<area shape="rect" id="node1" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="335,108,821,471">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="5,509,291,715">
+<area shape="rect" id="node3" href="planning_review.html" target="_top" title="planning_review" alt="" coords="11,199,285,492">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="16,5,280,181">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/planning_review_document.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1009,824,1397,912">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="657,699,921,904">
-<area shape="rect" id="node5" href="user.html" target="_top" title="user" alt="" coords="397,381,524,469">
-<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1054,508,1353,596">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="657,505,921,681">
-<area shape="rect" id="node6" href="local_government.html" target="_top" title="local_government" alt="" coords="333,131,589,219">
-<area shape="rect" id="node7" href="application_region.html" target="_top" title="application_region" alt="" coords="5,165,269,253">
-<area shape="rect" id="node8" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="986,929,1421,1017">
-<area shape="rect" id="node9" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1031,613,1376,701">
-<area shape="rect" id="node10" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1053,719,1354,807">
-<area shape="rect" id="node11" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1077,5,1329,93">
-<area shape="rect" id="node12" href="planning_review.html" target="_top" title="planning_review" alt="" coords="652,108,925,401">
-<area shape="rect" id="node13" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="313,272,608,360">
-<area shape="rect" id="node14" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="969,216,1437,491">
-<area shape="rect" id="node15" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1100,111,1307,199">
+<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1031,1228,1419,1316">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="652,1059,937,1264">
+<area shape="rect" id="node5" href="user.html" target="_top" title="user" alt="" coords="397,487,524,575">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1075,912,1374,1000">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="663,865,927,1041">
+<area shape="rect" id="node6" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1095,1017,1354,1105">
+<area shape="rect" id="node7" href="local_government.html" target="_top" title="local_government" alt="" coords="333,236,589,324">
+<area shape="rect" id="node8" href="application_region.html" target="_top" title="application_region" alt="" coords="5,271,269,359">
+<area shape="rect" id="node9" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1007,1333,1442,1421">
+<area shape="rect" id="node10" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1052,1123,1397,1211">
+<area shape="rect" id="node11" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1074,807,1375,895">
+<area shape="rect" id="node12" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1099,5,1351,93">
+<area shape="rect" id="node13" href="planning_review.html" target="_top" title="planning_review" alt="" coords="658,213,931,507">
+<area shape="rect" id="node14" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="313,377,608,465">
+<area shape="rect" id="node15" href="planning_review_decision.html" target="_top" title="planning_review_decision" alt="" coords="1059,111,1391,199">
+<area shape="rect" id="node16" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="1512,756,1951,844">
+<area shape="rect" id="node17" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="981,427,1468,789">
+<area shape="rect" id="node18" href="planning_review_meeting.html" target="_top" title="planning_review_meeting" alt="" coords="1059,216,1391,304">
+<area shape="rect" id="node19" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1121,321,1328,409">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/planning_review_document.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="323,108,791,383">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="10,509,274,715">
-<area shape="rect" id="node3" href="planning_review.html" target="_top" title="planning_review" alt="" coords="5,199,279,492">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="10,5,274,181">
+<area shape="rect" id="node1" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="335,108,821,471">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="5,509,291,715">
+<area shape="rect" id="node3" href="planning_review.html" target="_top" title="planning_review" alt="" coords="11,199,285,492">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="16,5,280,181">
 </map>
                                         <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/planning_review_document.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1009,216,1397,304">
-<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="657,491,921,696">
-<area shape="rect" id="node5" href="configuration.html" target="_top" title="configuration" alt="" coords="30,420,245,508">
-<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="397,420,524,508">
-<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1054,824,1353,912">
-<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="657,785,921,961">
-<area shape="rect" id="node7" href="local_government.html" target="_top" title="local_government" alt="" coords="333,137,589,225">
-<area shape="rect" id="node8" href="application_region.html" target="_top" title="application_region" alt="" coords="5,172,269,260">
-<area shape="rect" id="node9" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="986,613,1421,701">
-<area shape="rect" id="node10" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1031,929,1376,1017">
-<area shape="rect" id="node11" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1053,719,1354,807">
-<area shape="rect" id="node12" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1077,5,1329,93">
-<area shape="rect" id="node13" href="planning_review.html" target="_top" title="planning_review" alt="" coords="652,117,925,411">
-<area shape="rect" id="node14" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="313,315,608,403">
-<area shape="rect" id="node15" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="969,321,1437,596">
-<area shape="rect" id="node16" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1100,111,1307,199">
+<area shape="rect" id="node1" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1031,1228,1419,1316">
+<area shape="rect" id="node2" href="document.html" target="_top" title="document" alt="" coords="652,1015,937,1220">
+<area shape="rect" id="node5" href="configuration.html" target="_top" title="configuration" alt="" coords="30,569,245,657">
+<area shape="rect" id="node6" href="user.html" target="_top" title="user" alt="" coords="397,569,524,657">
+<area shape="rect" id="node3" href="application_document.html" target="_top" title="application_document" alt="" coords="1075,912,1374,1000">
+<area shape="rect" id="node4" href="document_code.html" target="_top" title="document_code" alt="" coords="663,821,927,997">
+<area shape="rect" id="node7" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1095,1017,1354,1105">
+<area shape="rect" id="node8" href="local_government.html" target="_top" title="local_government" alt="" coords="333,287,589,375">
+<area shape="rect" id="node9" href="application_region.html" target="_top" title="application_region" alt="" coords="5,321,269,409">
+<area shape="rect" id="node10" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1007,1333,1442,1421">
+<area shape="rect" id="node11" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1052,1123,1397,1211">
+<area shape="rect" id="node12" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1074,807,1375,895">
+<area shape="rect" id="node13" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1099,5,1351,93">
+<area shape="rect" id="node14" href="planning_review.html" target="_top" title="planning_review" alt="" coords="658,267,931,560">
+<area shape="rect" id="node15" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="313,464,608,552">
+<area shape="rect" id="node16" href="planning_review_decision.html" target="_top" title="planning_review_decision" alt="" coords="1059,111,1391,199">
+<area shape="rect" id="node17" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="1512,756,1951,844">
+<area shape="rect" id="node18" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="981,427,1468,789">
+<area shape="rect" id="node19" href="planning_review_meeting.html" target="_top" title="planning_review_meeting" alt="" coords="1059,216,1391,304">
+<area shape="rect" id="node20" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1121,321,1328,409">
 </map>
                                         <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/planning_review_document.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
