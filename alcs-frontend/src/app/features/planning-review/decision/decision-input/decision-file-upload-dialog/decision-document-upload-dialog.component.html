@@ -1,0 +1,108 @@
+<div mat-dialog-title>
+  <h4>{{ title }} Document</h4>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="form" class="form">
+    <div class="double">
+      <div>
+        <mat-label>Document Upload*</mat-label>
+      </div>
+      <input #fileInput (change)="uploadFile($event)" hidden placeholder="Upload file" type="file" />
+      <div
+        *ngIf="!pendingFile && !existingFile"
+        [ngClass]="{
+          'file-drag-drop': true,
+          error: showVirusError
+        }"
+        class="full-width upload-button"
+        appDragDropFile
+        color="accent"
+        (files)="filesDropped($event)"
+      >
+        <button class="content" type="button" (click)="fileInput.click()">
+          <div class="icon">
+            <mat-icon inline="true">file_upload</mat-icon>
+          </div>
+          <button type="button" mat-flat-button color="accent">Upload File</button>
+          <div class="drag-text">or drag and drop them here</div>
+        </button>
+      </div>
+      <div *ngIf="pendingFile" class="file">
+        <div>
+          <a (click)="openFile()">{{ pendingFile.name }}</a>
+          &nbsp;({{ pendingFile.size | filesize }})
+        </div>
+        <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
+          <mat-icon>close</mat-icon>
+          Remove
+        </button>
+      </div>
+      <div *ngIf="existingFile" class="file">
+        <div>
+          <a (click)="openExistingFile()">{{ existingFile }}</a>
+        </div>
+        <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
+          <mat-icon>close</mat-icon>
+          Remove
+        </button>
+      </div>
+      <mat-error *ngIf="showVirusError" class="left" style="display: flex">
+        <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
+      </mat-error>
+    </div>
+
+    <div class="double">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Document Name</mat-label>
+        <input [formControl]="name" id="name" matInput name="name" required />
+        <span matTextSuffix>{{ extension }}</span>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <ng-select
+        [(ngModel)]="documentType"
+        [ngModelOptions]="{ standalone: true }"
+        appearance="outline"
+        disabled="true"
+        placeholder="Document Type*"
+        required
+      >
+      </ng-select>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Source</mat-label>
+        <mat-select [formControl]="source">
+          <mat-option *ngFor="let source of documentSources" [value]="source">{{ source }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="double">
+      <mat-label>Visible To:</mat-label>
+      <div>
+        <mat-checkbox [formControl]="visibleToCommissioner">Commissioner</mat-checkbox>
+      </div>
+    </div>
+  </form>
+
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button [mat-dialog-close]="false" color="primary" mat-stroked-button type="button">Close</button>
+      <button
+        (click)="onSubmit()"
+        *ngIf="!isSaving"
+        [disabled]="!form.valid || (!pendingFile && !existingFile)"
+        color="primary"
+        mat-flat-button
+        type="button"
+      >
+        Save
+      </button>
+      <button *ngIf="isSaving" [disabled]="true" color="primary" mat-flat-button type="button">
+        <mat-spinner class="spinner" diameter="20"></mat-spinner>
+        Uploading
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

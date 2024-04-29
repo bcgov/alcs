@@ -4,11 +4,8 @@ import { environment } from '../../../../environments/environment';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
 import { NotificationDetailService } from '../../../services/notification/notification-detail.service';
 import { NotificationSubmissionService } from '../../../services/notification/notification-submission/notification-submission.service';
-import {
-  NOTIFICATION_STATUS,
-  NotificationDto,
-  UpdateNotificationDto,
-} from '../../../services/notification/notification.dto';
+import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
+import { NotificationDto, UpdateNotificationDto } from '../../../services/notification/notification.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
@@ -28,9 +25,10 @@ export class IntakeComponent implements OnInit {
   constructor(
     private notificationDetailService: NotificationDetailService,
     private notificationSubmissionService: NotificationSubmissionService,
+    private notificationTimelineService: NotificationTimelineService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private confirmationDialogService: ConfirmationDialogService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -75,18 +73,11 @@ export class IntakeComponent implements OnInit {
             const update = await this.notificationSubmissionService.setContactEmail(email, notification.fileNumber);
             if (update) {
               this.toastService.showSuccessToast('Notification updated');
+              this.contactEmail = email;
             }
           }
         }
       });
-  }
-
-  private async loadGovernments() {
-    const localGovernment = await this.localGovernmentService.list();
-    this.localGovernments = localGovernment.map((government) => ({
-      label: government.name,
-      value: government.uuid,
-    }));
   }
 
   async onSaveLocalGovernment($value: string | string[] | null) {
@@ -110,18 +101,31 @@ export class IntakeComponent implements OnInit {
       });
   }
 
+  async resendResponse() {
+    if (this.notification) {
+      const res = await this.notificationDetailService.resendResponse(this.notification.fileNumber);
+      if (res) {
+        this.toastService.showSuccessToast('Response Sent');
+      }
+    }
+  }
+
+  private async loadGovernments() {
+    const localGovernment = await this.localGovernmentService.list();
+    this.localGovernments = localGovernment.map((government) => ({
+      label: government.name,
+      value: government.uuid,
+    }));
+  }
+
   private async loadSubmission(fileNumber: string) {
     const submission = await this.notificationSubmissionService.fetchSubmission(fileNumber);
     this.contactEmail = submission.contactEmail;
 
-    this.responseSent = submission.status.code === NOTIFICATION_STATUS.ALC_RESPONSE;
-    this.responseDate = submission.lastStatusUpdate;
-  }
+    const events = await this.notificationTimelineService.fetchByFileNumber(fileNumber);
+    const alcResponseEvent = events.find((event) => /alc response sent/i.test(event.htmlText));
 
-  async resendResponse() {
-    if (this.notification) {
-      await this.notificationDetailService.resendResponse(this.notification.fileNumber);
-      this.toastService.showSuccessToast('Response Sent');
-    }
+    this.responseSent = alcResponseEvent !== undefined;
+    this.responseDate = alcResponseEvent?.startDate ?? null;
   }
 }

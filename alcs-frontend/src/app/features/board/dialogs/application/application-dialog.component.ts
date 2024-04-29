@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   ApplicationSubmissionToSubmissionStatusDto,
@@ -41,7 +41,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
     toastService: ToastService,
     cardService: CardService,
     authService: AuthenticationService,
-    private applicationSubmissionStatusService: ApplicationSubmissionStatusService
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {
     super(authService, dialogRef, cardService, confirmationDialogService, toastService, userService, boardService);
   }
@@ -65,7 +65,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
     try {
       submissionStatus = await this.applicationSubmissionStatusService.fetchCurrentStatusByFileNumber(
         fileNumber,
-        false
+        false,
       );
     } catch (e) {
       console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
@@ -118,9 +118,5 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
           this.toastService.showSuccessToast('Card updated');
         });
     }
-  }
-
-  async goToDetailpage() {
-    await this.router.navigateByUrl(`application/${this.application.fileNumber}`);
   }
 }

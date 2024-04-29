@@ -1,6 +1,8 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({
+  comment: 'Holidays used by the application active day tracking function',
+})
 export class HolidayEntity extends BaseEntity {
   constructor(data?: Partial<HolidayEntity>) {
     super();

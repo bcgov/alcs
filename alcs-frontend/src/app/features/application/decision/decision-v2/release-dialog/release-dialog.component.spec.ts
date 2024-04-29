@@ -3,39 +3,43 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationStatusDto } from '../../../../../services/application/application-submission-status/application-submission-status.dto';
-import { ApplicationService } from '../../../../../services/application/application.service';
-import { ReleaseDialogComponent } from './release-dialog.component';
+import { ApplicationSubmissionStatusService } from '../../../../../services/application/application-submission-status/application-submission-status.service';
+import {
+  ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
+} from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
-import { ApplicationDecisionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ReleaseDialogComponent } from './release-dialog.component';
 
 describe('ReleaseDialogComponent', () => {
   let component: ReleaseDialogComponent;
   let fixture: ComponentFixture<ReleaseDialogComponent>;
-  let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationDecisionV2Service: DeepMocked<ApplicationDecisionV2Service>;
+  let mockSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(async () => {
-    mockApplicationService = createMock();
-    mockApplicationService.$applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
     mockApplicationDecisionV2Service = createMock();
     mockApplicationDecisionV2Service.$decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
+    mockApplicationDecisionV2Service.$decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
+    mockSubmissionStatusService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ReleaseDialogComponent],
       providers: [
         {
-          provide: ApplicationService,
-          useValue: mockApplicationService,
-        },
-        {
           provide: ApplicationDecisionV2Service,
           useValue: mockApplicationDecisionV2Service,
+        },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockSubmissionStatusService,
         },
         { provide: MatDialogRef, useValue: {} },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: {},
+          useValue: {
+            fileNumber: '12313',
+          },
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

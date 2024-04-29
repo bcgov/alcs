@@ -6,12 +6,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as config from 'config';
+import { FastifyRequest } from 'fastify';
 import { Repository } from 'typeorm';
 import {
   CONFIG_VALUE,
   Configuration,
 } from '../../common/entities/configuration.entity';
-import { FastifyRequest } from 'fastify';
 
 @Injectable()
 export class MaintenanceGuard implements CanActivate {
@@ -28,12 +29,13 @@ export class MaintenanceGuard implements CanActivate {
       return true;
     }
 
-    if (
-      req.routeOptions.url.startsWith('/portal') ||
-      req.routeOptions.url.startsWith('/public') ||
-      req.routeOptions.url.startsWith('/api/portal') ||
-      req.routeOptions.url.startsWith('/api/public')
-    ) {
+    const routeUrl = req.routeOptions.url;
+
+    const apiPrefix = config.get<string>('ALCS.API_PREFIX');
+    const prefixes = ['/portal', '/public'].map((item) =>
+      apiPrefix ? `/${apiPrefix}${item}` : item,
+    );
+    if (routeUrl && prefixes.some((prefix) => routeUrl.startsWith(prefix))) {
       const maintenanceMode = await this.configurationRepository.findOne({
         where: {
           name: CONFIG_VALUE.PORTAL_MAINTENANCE_MODE,

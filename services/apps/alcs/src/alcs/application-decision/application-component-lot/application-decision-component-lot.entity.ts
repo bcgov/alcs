@@ -14,7 +14,9 @@ export class ProposedLot {
 }
 
 //Contains the approved subdivision lots
-@Entity()
+@Entity({
+  comment: 'Approved lots on the subdivision decision component',
+})
 export class ApplicationDecisionComponentLot extends Base {
   constructor(data?: Partial<ApplicationDecisionComponentLot>) {
     super();

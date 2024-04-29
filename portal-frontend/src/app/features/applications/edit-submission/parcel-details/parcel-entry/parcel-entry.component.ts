@@ -19,9 +19,9 @@ import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.direc
 import { CrownOwnerDialogComponent } from '../../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { OwnerDialogComponent } from '../../../../../shared/owner-dialogs/owner-dialog/owner-dialog.component';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
+import { openFileInline } from '../../../../../shared/utils/file';
 import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
-import { openFileIframe } from '../../../../../shared/utils/file';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -33,7 +33,6 @@ export interface ParcelEntryFormData {
   parcelType: string | undefined | null;
   isFarm: string | undefined | null;
   purchaseDate?: Date | null;
-  crownLandOwnerType?: string | null;
   isConfirmedByApplicant: boolean;
   owners: ApplicationOwnerDto[];
 }
@@ -83,21 +82,21 @@ export class ParcelEntryComponent implements OnInit {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   mapArea = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   pid = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   pin = new FormControl<string | null>({
     disabled: true,
@@ -108,30 +107,29 @@ export class ParcelEntryComponent implements OnInit {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   isFarm = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   purchaseDate = new FormControl<any | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   isConfirmedByApplicant = new FormControl<boolean>(
     {
       disabled: true,
       value: false,
     },
-    [Validators.requiredTrue]
+    [Validators.requiredTrue],
   );
-  crownLandOwnerType = new FormControl<string | null>(null);
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
     legalDescription: this.legalDescription,
@@ -142,7 +140,6 @@ export class ParcelEntryComponent implements OnInit {
     parcelType: this.parcelType,
     isFarm: this.isFarm,
     purchaseDate: this.purchaseDate,
-    crownLandOwnerType: this.crownLandOwnerType,
     isConfirmedByApplicant: this.isConfirmedByApplicant,
     searchBy: this.searchBy,
   });
@@ -163,7 +160,7 @@ export class ParcelEntryComponent implements OnInit {
     public applicationOwnerService: ApplicationOwnerService,
     public applicationDocumentService: ApplicationDocumentService,
     private dialog: MatDialog,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -271,7 +268,6 @@ export class ParcelEntryComponent implements OnInit {
         this.pidPinPlaceholder = 'Type 9 digit PID';
         this.isCrownLand = false;
         this.pid.addValidators([Validators.required]);
-        this.crownLandOwnerType.setValue(null);
         this.purchaseDate.enable();
       }
 
@@ -315,7 +311,7 @@ export class ParcelEntryComponent implements OnInit {
         this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
           this.fileId,
           parcelUuid,
-          mappedFiles
+          mappedFiles,
         );
       } catch (e) {
         this.showVirusError = true;
@@ -343,10 +339,10 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
+  async openFile(file: ApplicationDocumentDto) {
+    const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileIframe(res);
+      openFileInline(res.url, file.fileName);
     }
   }
 
@@ -423,7 +419,7 @@ export class ParcelEntryComponent implements OnInit {
       {
         isConfirmedByApplicant: false,
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
     this.onOwnersUpdated.emit();
   }
@@ -446,7 +442,7 @@ export class ParcelEntryComponent implements OnInit {
           {
             isConfirmedByApplicant: false,
           },
-          { emitEvent: false }
+          { emitEvent: false },
         );
 
         this.onOwnersUpdated.emit();
@@ -580,7 +576,7 @@ export class ParcelEntryComponent implements OnInit {
           {
             isConfirmedByApplicant: false,
           },
-          { emitEvent: false }
+          { emitEvent: false },
         );
       }
 
@@ -613,7 +609,7 @@ export class ParcelEntryComponent implements OnInit {
       {
         isConfirmedByApplicant: false,
       },
-      { emitEvent: false }
+      { emitEvent: false },
     );
 
     this.parcel.owners = updatedArray;

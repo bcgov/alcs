@@ -7,10 +7,10 @@ import {
   AdvancedSearchEntityResponseDto,
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
-  NonApplicationSearchResultDto,
-  NonApplicationsSearchRequestDto,
+  InquirySearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
+  PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
@@ -21,7 +21,10 @@ import {
 export class SearchService {
   private baseUrl = `${environment.apiUrl}/search`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async advancedSearchFetch(searchDto: SearchRequestDto) {
     try {
@@ -48,8 +51,8 @@ export class SearchService {
       return await firstValueFrom(
         this.http.post<AdvancedSearchEntityResponseDto<ApplicationSearchResultDto>>(
           `${this.baseUrl}/advanced/application`,
-          searchDto
-        )
+          searchDto,
+        ),
       );
     } catch (e) {
       console.error(e);
@@ -63,8 +66,8 @@ export class SearchService {
       return await firstValueFrom(
         this.http.post<AdvancedSearchEntityResponseDto<NoticeOfIntentSearchResultDto>>(
           `${this.baseUrl}/advanced/notice-of-intent`,
-          searchDto
-        )
+          searchDto,
+        ),
       );
     } catch (e) {
       console.error(e);
@@ -73,13 +76,13 @@ export class SearchService {
     }
   }
 
-  async advancedSearchNonApplicationsFetch(searchDto: NonApplicationsSearchRequestDto) {
+  async advancedSearchPlanningReviewsFetch(searchDto: SearchRequestDto) {
     try {
       return await firstValueFrom(
-        this.http.post<AdvancedSearchEntityResponseDto<NonApplicationSearchResultDto>>(
-          `${this.baseUrl}/advanced/non-applications`,
-          searchDto
-        )
+        this.http.post<AdvancedSearchEntityResponseDto<PlanningReviewSearchResultDto>>(
+          `${this.baseUrl}/advanced/planning-reviews`,
+          searchDto,
+        ),
       );
     } catch (e) {
       console.error(e);
@@ -88,13 +91,28 @@ export class SearchService {
     }
   }
 
-  async advancedSearchNotificationsFetch(searchDto: NonApplicationsSearchRequestDto) {
+  async advancedSearchNotificationsFetch(searchDto: SearchRequestDto) {
     try {
       return await firstValueFrom(
         this.http.post<AdvancedSearchEntityResponseDto<NotificationSearchResultDto>>(
           `${this.baseUrl}/advanced/notifications`,
-          searchDto
-        )
+          searchDto,
+        ),
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      return undefined;
+    }
+  }
+
+  async advancedSearchInquiryFetch(searchDto: SearchRequestDto) {
+    try {
+      return await firstValueFrom(
+        this.http.post<AdvancedSearchEntityResponseDto<InquirySearchResultDto>>(
+          `${this.baseUrl}/advanced/inquiries`,
+          searchDto,
+        ),
       );
     } catch (e) {
       console.error(e);

@@ -48,9 +48,6 @@ export class NoticeOfIntentParcelDto {
   @AutoMap(() => String)
   ownershipTypeCode?: string | null;
 
-  @AutoMap(() => String)
-  crownLandOwnerType?: string | null;
-
   ownershipType?: ParcelOwnershipTypeDto;
 
   @AutoMap(() => Number)
@@ -109,10 +106,6 @@ export class NoticeOfIntentParcelUpdateDto {
   @IsString()
   @IsOptional()
   ownershipTypeCode?: string | null;
-
-  @IsString()
-  @IsOptional()
-  crownLandOwnerType?: string | null;
 
   @IsArray()
   @IsOptional()

@@ -6,7 +6,7 @@ import { ApplicationModificationDto } from '../application/application-modificat
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
-import { CovenantDto } from '../covenant/covenant.dto';
+import { InquiryDto } from '../inquiry/inquiry.dto';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../notification/notification.dto';
@@ -25,10 +25,10 @@ export class HomeService {
         reconsiderations: ApplicationReconsiderationDto[];
         planningReferrals: PlanningReferralDto[];
         modifications: ApplicationModificationDto[];
-        covenants: CovenantDto[];
         noticeOfIntents: NoticeOfIntentDto[];
         noticeOfIntentModifications: NoticeOfIntentModificationDto[];
         notifications: NotificationDto[];
+        inquiries: InquiryDto[];
       }>(`${environment.apiUrl}/home/assigned`),
     );
   }

@@ -38,7 +38,7 @@
       <div class="subheading2 grid-1">Purchase Date</div>
       <div class="grid-double">
         {{ parcel.purchasedDate | date }}
-        <app-no-data *ngIf="!parcel.purchasedDate"> </app-no-data>
+        <app-no-data *ngIf="!parcel.purchasedDate"></app-no-data>
       </div>
     </ng-container>
     <div class="subheading2 grid-1">Farm Classification</div>
@@ -51,13 +51,6 @@
       {{ parcel.civicAddress }}
       <app-no-data *ngIf="!parcel.civicAddress"></app-no-data>
     </div>
-    <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <div class="subheading2 grid-1">Crown Selection</div>
-      <div class="grid-double">
-        <span class="crown-land" *ngIf="parcel.crownLandOwnerType !== null">{{ parcel.crownLandOwnerType }}</span>
-        <app-no-data *ngIf="parcel.crownLandOwnerType === null"></app-no-data>
-      </div>
-    </ng-container>
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
       <h5>Government Parcel Contact</h5>
       <ng-container *ngIf="parcel.owners[0]">

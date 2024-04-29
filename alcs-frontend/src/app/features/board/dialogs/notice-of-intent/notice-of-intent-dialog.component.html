@@ -18,23 +18,14 @@
       </h3>
     </div>
     <div class="center">
-      <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
-      <mat-menu xPosition="before" #moreActions="matMenu">
-        <button
-          [mat-dialog-close]="isDirty"
-          mat-menu-item
-          [routerLink]="['notice-of-intent', noticeOfIntent.fileNumber]"
-        >
-          View Detail
-        </button>
-        <button
-          [mat-dialog-close]="isDirty"
-          [routerLink]="['notice-of-intent', noticeOfIntent.fileNumber, 'info-request']"
-          mat-menu-item
-        >
-          Add Info Request
-        </button>
-      </mat-menu>
+      <button
+        color="accent"
+        mat-flat-button
+        [mat-dialog-close]="isDirty"
+        [routerLink]="['notice-of-intent', noticeOfIntent.fileNumber]"
+      >
+        View Detail
+      </button>
     </div>
   </div>
   <div>

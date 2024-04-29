@@ -16,9 +16,15 @@
 
     <div>
       <mat-label>Approval Dependent*</mat-label>
-      <mat-button-toggle-group required formControlName="approvalDependant">
-        <mat-button-toggle value="true">Yes</mat-button-toggle>
-        <mat-button-toggle value="false">No</mat-button-toggle>
+      <mat-button-toggle-group
+        [ngClass]="{
+          'error-field-outlined': !approvalDependant.valid && approvalDependant.touched
+        }"
+        required
+        formControlName="approvalDependant"
+      >
+        <mat-button-toggle [value]="true">Yes</mat-button-toggle>
+        <mat-button-toggle [value]="false">No</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
 
@@ -46,7 +52,7 @@
 
     <mat-form-field appearance="outline" class="condition-full-width">
       <mat-label>Description</mat-label>
-      <input matInput type="text" formControlName="description" />
+      <textarea matInput formControlName="description" maxlength="4000" rows="4"></textarea>
     </mat-form-field>
   </div>
 </form>

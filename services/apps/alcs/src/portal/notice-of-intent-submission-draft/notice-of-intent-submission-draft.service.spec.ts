@@ -2,7 +2,11 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
@@ -19,6 +23,9 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
   let mockAppOwnerService: DeepMocked<NoticeOfIntentOwnerService>;
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateNoiSubmissionDocumentService>;
   let mockNoiSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNoiService: DeepMocked<NoticeOfIntentService>;
+  let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
 
   let mockUser;
 
@@ -29,6 +36,9 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
     mockAppOwnerService = createMock();
     mockGenerateSubmissionDocumentService = createMock();
     mockNoiSubmissionStatusService = createMock();
+    mockNoiService = createMock();
+    mockLocalGovernmentService = createMock();
+    mockStatusEmailService = createMock();
 
     mockUser = new User({
       clientRoles: [],
@@ -60,6 +70,18 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNoiSubmissionStatusService,
+        },
+        {
+          provide: NoticeOfIntentService,
+          useValue: mockNoiService,
+        },
+        {
+          provide: LocalGovernmentService,
+          useValue: mockLocalGovernmentService,
+        },
+        {
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
         },
       ],
     }).compile();
@@ -133,7 +155,7 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
     );
   });
 
-  it('should load two submissions and save one as not draft when publishing', async () => {
+  it('should load two submissions and save one as not draft when publishing and not send local government email', async () => {
     mockSubmissionRepo.findOne.mockResolvedValue(
       new NoticeOfIntentSubmission({
         uuid: 'fake',
@@ -147,21 +169,23 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
     mockParcelService.deleteMany.mockResolvedValueOnce([]);
     mockGenerateSubmissionDocumentService.generateUpdate.mockResolvedValue();
     mockNoiSubmissionStatusService.removeStatuses.mockResolvedValue({} as any);
+    mockNoiService.updateNoticeOfIntentInfo.mockResolvedValue();
 
     await service.publish('fileNumber', new User());
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(2);
     expect(mockSubmissionRepo.delete).toHaveBeenCalledTimes(1);
-    expect(mockSubmissionRepo.delete).toBeCalledWith({ uuid: 'fake' });
+    expect(mockSubmissionRepo.delete).toHaveBeenCalledWith({ uuid: 'fake' });
     expect(mockParcelService.deleteMany).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.save).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionStatusService.removeStatuses).toHaveBeenCalledTimes(
       1,
     );
     expect(mockSubmissionRepo.save.mock.calls[0][0].isDraft).toEqual(false);
-    // expect(
-    //   mockGenerateSubmissionDocumentService.generateUpdate,
-    // ).toHaveBeenCalledTimes(1);
+    expect(
+      mockGenerateSubmissionDocumentService.generateUpdate,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateNoticeOfIntentInfo).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for mapToDto', async () => {
@@ -177,5 +201,57 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
     expect(mockNoiSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
     expect(res.canEdit).toBeTruthy();
+  });
+
+  it('should update submission to not draft and send new local government email', async () => {
+    const newNoi = new NoticeOfIntentSubmission({
+      uuid: 'fake',
+      owners: [],
+      parcels: [],
+      localGovernmentUuid: 'new',
+    });
+
+    mockSubmissionRepo.findOne.mockResolvedValueOnce(
+      new NoticeOfIntentSubmission({
+        uuid: 'fake',
+        owners: [],
+        parcels: [],
+        localGovernmentUuid: 'old',
+      }),
+    );
+
+    mockSubmissionRepo.findOne.mockResolvedValue(newNoi);
+
+    mockSubmissionRepo.delete.mockResolvedValue({} as any);
+    mockSubmissionRepo.save.mockResolvedValue(newNoi);
+    mockParcelService.deleteMany.mockResolvedValueOnce([]);
+    mockGenerateSubmissionDocumentService.generateUpdate.mockResolvedValue();
+    mockNoiSubmissionStatusService.removeStatuses.mockResolvedValue({} as any);
+    mockNoiService.updateNoticeOfIntentInfo.mockResolvedValue();
+    mockLocalGovernmentService.getByGuid.mockResolvedValue(
+      new LocalGovernment({ uuid: 'new' }),
+    );
+    mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
+
+    await service.publish('fileNumber', new User());
+
+    expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(2);
+    expect(mockSubmissionRepo.delete).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionRepo.delete).toHaveBeenCalledWith({ uuid: 'fake' });
+    expect(mockParcelService.deleteMany).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionRepo.save).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionStatusService.removeStatuses).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockSubmissionRepo.save.mock.calls[0][0].isDraft).toEqual(false);
+    expect(
+      mockGenerateSubmissionDocumentService.generateUpdate,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateNoticeOfIntentInfo).toHaveBeenCalledTimes(1);
+    expect(mockLocalGovernmentService.getByGuid).toHaveBeenCalledTimes(1);
+    expect(mockLocalGovernmentService.getByGuid).toHaveBeenCalledWith('new');
+    expect(
+      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
+    ).toHaveBeenCalledTimes(1);
   });
 });

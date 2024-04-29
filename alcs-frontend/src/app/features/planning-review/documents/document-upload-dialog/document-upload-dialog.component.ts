@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -9,12 +9,9 @@ import {
 } from '../../../../services/planning-review/planning-review-document/planning-review-document.dto';
 import { PlanningReviewDocumentService } from '../../../../services/planning-review/planning-review-document/planning-review-document.service';
 import { ToastService } from '../../../../services/toast/toast.service';
-import {
-  DOCUMENT_SOURCE,
-  DOCUMENT_SYSTEM,
-  DOCUMENT_TYPE,
-  DocumentTypeDto,
-} from '../../../../shared/document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/document/document.dto';
+import { FileHandle } from '../../../../shared/drag-drop-file/drag-drop-file.directive';
+import { splitExtension } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -25,39 +22,32 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
 
+  @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();
+
   title = 'Create';
   isDirty = false;
   isSaving = false;
-  allowsFileEdit = true;
   documentTypeAhead: string | undefined = undefined;
 
   name = new FormControl<string>('', [Validators.required]);
   type = new FormControl<string | undefined>(undefined, [Validators.required]);
   source = new FormControl<string>('', [Validators.required]);
-
-  parcelId = new FormControl<string | null>(null);
-  ownerId = new FormControl<string | null>(null);
-
   visibleToCommissioner = new FormControl<boolean>(false, [Validators.required]);
 
   documentTypes: DocumentTypeDto[] = [];
   documentSources = Object.values(DOCUMENT_SOURCE);
-  selectableParcels: { uuid: string; index: number; pid?: string }[] = [];
-  selectableOwners: { uuid: string; label: string }[] = [];
 
   form = new FormGroup({
     name: this.name,
     type: this.type,
     source: this.source,
     visibleToCommissioner: this.visibleToCommissioner,
-    parcelId: this.parcelId,
-    ownerId: this.ownerId,
   });
 
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
-  showSupersededWarning = false;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -73,9 +63,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
-      this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
+
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
         type: document.type?.code,
         source: document.source,
         visibleToCommissioner: document.visibilityFlags.includes('C'),
@@ -95,16 +87,15 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags.push('C');
     }
 
+    const file = this.pendingFile;
     const dto: UpdateDocumentDto = {
-      fileName: this.name.value!,
+      fileName: this.name.value! + this.extension,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
-      parcelUuid: this.parcelId.value ?? undefined,
-      ownerUuid: this.ownerId.value ?? undefined,
+      file,
     };
 
-    const file = this.pendingFile;
     this.isSaving = true;
     if (this.data.existingDocument) {
       await this.planningReviewDocumentService.update(this.data.existingDocument.uuid, dto);
@@ -156,7 +147,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+      const { fileName, extension } = splitExtension(this.pendingFile.name);
+      this.extension = extension;
+      this.name.setValue(fileName);
       this.showVirusError = false;
     }
   }
@@ -164,6 +157,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
+    this.name.setValue('');
   }
 
   openFile() {
@@ -180,6 +175,15 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
         this.data.existingDocument.fileName,
       );
     }
+  }
+
+  filesDropped($event: FileHandle) {
+    this.pendingFile = $event.file;
+    const { fileName, extension } = splitExtension(this.pendingFile.name);
+    this.extension = extension;
+    this.name.setValue(fileName);
+    this.showVirusError = false;
+    this.uploadFiles.emit($event);
   }
 
   private async loadDocumentTypes() {

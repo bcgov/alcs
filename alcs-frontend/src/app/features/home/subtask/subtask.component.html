@@ -2,16 +2,20 @@
   <h4>{{ subtaskLabel }} Subtasks: {{ totalSubtaskCount }}</h4>
 
   <section *ngIf="noticeOfIntentSubtasks.length && showNoi">
-    <div class="subheading2">Notice of Intent</div>
+    <div class="subheading2">Notices of Intent</div>
     <app-subtask-table [subtasks]="noticeOfIntentSubtasks" [users]="users"></app-subtask-table>
   </section>
   <section *ngIf="applicationSubtasks.length && showAppAndNonApp">
     <div class="subheading2">Applications</div>
     <app-subtask-table [subtasks]="applicationSubtasks" [users]="users"></app-subtask-table>
   </section>
-  <section *ngIf="nonApplicationSubtasks.length && showAppAndNonApp">
-    <div class="subheading2">Non-Applications</div>
-    <app-subtask-table [subtasks]="nonApplicationSubtasks" [users]="users"></app-subtask-table>
+  <section *ngIf="planningReviewSubtasks.length && showAppAndNonApp">
+    <div class="subheading2">Planning Reviews</div>
+    <app-subtask-table [subtasks]="planningReviewSubtasks" [users]="users"></app-subtask-table>
+  </section>
+  <section *ngIf="inquirySubtasks.length">
+    <div class="subheading2">Inquiries</div>
+    <app-subtask-table [subtasks]="inquirySubtasks" [users]="users"></app-subtask-table>
   </section>
   <section *ngIf="notificationSubtasks.length">
     <div class="subheading2">Notifications</div>

@@ -55,18 +55,12 @@
       {{ parcel.civicAddress }}
       <app-no-data *ngIf="!parcel.civicAddress"></app-no-data>
     </div>
-    <ng-container *ngIf="parcel.crownLandOwnerType">
-      <div class="subheading2 grid-1">Crown Selection</div>
-      <div class="grid-double">
-        <span class="crown-land">{{ parcel.crownLandOwnerType }}</span>
-        <app-no-data *ngIf="!parcel.crownLandOwnerType"></app-no-data>
-      </div>
-    </ng-container>
-    <div *ngIf="parcel.certificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
-    <div *ngIf="parcel.certificateOfTitle" class="grid-double">
-      <div>
+    <div class="subheading2 grid-1">Certificate Of Title</div>
+    <div class="grid-double">
+      <div *ngIf="parcel.certificateOfTitle">
         <a (click)="onOpenFile(parcel.certificateOfTitle)">{{ parcel.certificateOfTitle.fileName }}</a>
       </div>
+      <app-no-data *ngIf="!parcel.certificateOfTitle"></app-no-data>
     </div>
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
       <h5>Government Parcel Contact</h5>
@@ -76,37 +70,27 @@
           {{ parcel.owners[0].firstName }}
           <app-no-data *ngIf="!parcel.owners[0].firstName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Last Name
-        </div>
+        <div class="subheading2 grid-1">Last Name</div>
         <div class="grid-double">
           {{ parcel.owners[0].lastName }}
           <app-no-data *ngIf="!parcel.owners[0].lastName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Ministry or Department
-        </div>
+        <div class="subheading2 grid-1">Ministry or Department</div>
         <div class="grid-double">
           {{ parcel.owners[0].organizationName }}
           <app-no-data *ngIf="!parcel.owners[0].organizationName"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Phone
-        </div>
+        <div class="subheading2 grid-1">Phone</div>
         <div class="grid-double">
           {{ parcel.owners[0].phoneNumber }}
           <app-no-data *ngIf="!parcel.owners[0].phoneNumber"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Email
-        </div>
+        <div class="subheading2 grid-1">Email</div>
         <div class="grid-double">
           {{ parcel.owners[0].email }}
           <app-no-data *ngIf="!parcel.owners[0].email"></app-no-data>
         </div>
-        <div class="subheading2 grid-1">
-          Crown Type
-        </div>
+        <div class="subheading2 grid-1">Crown Type</div>
         <div class="grid-double">
           {{ parcel.owners[0].crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
           {{ parcel.owners[0].crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
@@ -115,10 +99,7 @@
       </ng-container>
       <app-no-data *ngIf="!parcel.owners[0]"></app-no-data>
     </ng-container>
-    <div
-      class="full-width owner-information"
-      *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN"
-    >
+    <div class="full-width owner-information" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
       <div class="subheading2">Land Owner(s)</div>
       <div class="subheading2">Organization</div>
       <div class="subheading2">Phone</div>
@@ -128,17 +109,24 @@
         <div>{{ owner.displayName }}</div>
         <div>
           {{ owner.organizationName }}
-          <app-no-data *ngIf="!owner.organizationName"></app-no-data>
+          <div class="no-data" *ngIf="!owner.organizationName">
+            <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
+            <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>
+          </div>
         </div>
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
         <div>
           <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary)">{{
-            owner.corporateSummary.fileName
-          }}</a>
-          <app-no-data *ngIf="!owner.corporateSummary"></app-no-data>
+              owner.corporateSummary.fileName
+            }}</a>
+          <div class="no-data" *ngIf="!owner.corporateSummary">
+            <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
+            <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>
+          </div>
         </div>
       </ng-container>
+      <app-no-data *ngIf="parcel.owners.length === 0"></app-no-data>
     </div>
   </ng-container>
 </div>

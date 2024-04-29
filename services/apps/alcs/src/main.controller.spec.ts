@@ -1,13 +1,14 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { KEYCLOAK_MULTITENANT_SERVICE } from 'nest-keycloak-connect';
 import { ClsService } from 'nestjs-cls';
-import { MainController } from './main.controller';
-import { MainService } from './main.service';
 import { mockKeyCloakProviders } from '../test/mocks/mockTypes';
 import {
   HealthCheckDbDto,
   HealthCheckDto,
 } from './healthcheck/healthcheck.dto';
+import { MainController } from './main.controller';
+import { MainService } from './main.service';
 
 describe('AlcsController', () => {
   let alcsController: MainController;
@@ -25,6 +26,10 @@ describe('AlcsController', () => {
         },
         {
           provide: ClsService,
+          useValue: {},
+        },
+        {
+          provide: KEYCLOAK_MULTITENANT_SERVICE,
           useValue: {},
         },
         ...mockKeyCloakProviders,

@@ -6,7 +6,7 @@ import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output
   styleUrls: ['./inline-number.component.scss'],
 })
 export class InlineNumberComponent implements AfterContentChecked {
-  @Input() value?: string | undefined;
+  @Input() value?: string | null;
   @Input() placeholder: string = 'Enter a value';
   @Input() decimals = 2;
   @Output() save = new EventEmitter<string | null>();
@@ -14,7 +14,7 @@ export class InlineNumberComponent implements AfterContentChecked {
   @ViewChild('editInput') textInput!: ElementRef;
 
   isEditing = false;
-  pendingValue: undefined | string;
+  pendingValue: null | string | undefined;
 
   constructor() {}
 

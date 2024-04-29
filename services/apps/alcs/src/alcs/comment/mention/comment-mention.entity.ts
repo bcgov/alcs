@@ -4,7 +4,7 @@ import { Base } from '../../../common/entities/base.entity';
 import { User } from '../../../user/user.entity';
 import { Comment } from '../comment.entity';
 
-@Entity()
+@Entity({ comment: 'Links comment mentions with the corresponding user' })
 export class CommentMention extends Base {
   @AutoMap()
   @Column()

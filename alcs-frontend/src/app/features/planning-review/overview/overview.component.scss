@@ -5,3 +5,12 @@ h5 {
 section {
   margin: 32px 0;
 }
+
+.two-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 16px !important;
+  row-gap: 32px;
+  column-gap: 24px;
+  margin-bottom: 48px;
+}

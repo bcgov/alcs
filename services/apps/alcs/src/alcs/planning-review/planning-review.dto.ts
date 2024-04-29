@@ -11,6 +11,21 @@ import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
+import { PlanningReviewMeetingDto } from './planning-review-meeting/planning-review-meeting.dto';
+
+export enum PLANNING_REVIEW_TYPES {
+  AAPP = 'AAPP',
+  MISC = 'MISC',
+  BAPP = 'BAPP',
+  ALRB = 'ALRB',
+  RGSP = 'RGSP',
+  CLUP = 'CLUP',
+  OCPP = 'OCPP',
+  TPPP = 'TPPP',
+  UEPP = 'UEPP',
+  ZBPP = 'ZBPP',
+  PARK = 'PARK',
+}
 
 export class PlanningReviewTypeDto extends BaseCodeDto {
   @AutoMap()
@@ -83,6 +98,9 @@ export class PlanningReviewDto {
 
   @AutoMap(() => ApplicationRegionDto)
   region: ApplicationRegionDto;
+
+  @AutoMap(() => [PlanningReviewMeetingDto])
+  meetings: PlanningReviewMeetingDto[];
 
   @AutoMap(() => PlanningReviewTypeDto)
   type: PlanningReviewTypeDto;
@@ -162,4 +180,16 @@ export class UpdatePlanningReviewDto {
   @IsString()
   @IsOptional()
   typeCode?: string;
+
+  @IsNumber()
+  @IsOptional()
+  decisionDate?: number | null;
+
+  @IsString()
+  @IsOptional()
+  regionCode?: string;
+
+  @IsString()
+  @IsOptional()
+  localGovernmentUuid?: string;
 }

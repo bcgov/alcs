@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -13,6 +13,8 @@ import {
   DOCUMENT_TYPE,
   DocumentTypeDto,
 } from '../../../../shared/document/document.dto';
+import { splitExtension } from '../../../../shared/utils/file';
+import { FileHandle } from '../../../../shared/drag-drop-file/drag-drop-file.directive';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -22,6 +24,8 @@ import {
 export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
+
+  @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();
 
   title = 'Create';
   isDirty = false;
@@ -50,6 +54,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -67,8 +72,10 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.title = 'Edit';
       this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
 
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
         type: document.type?.code,
         source: document.source,
         visibleToInternal: document.visibilityFlags.includes('A'),
@@ -96,7 +103,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
     const file = this.pendingFile;
     const dto: UpdateNoticeOfIntentDocumentDto = {
-      fileName: this.name.value!,
+      fileName: this.name.value! + this.extension,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
@@ -151,14 +158,18 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const element = event.target as HTMLInputElement;
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
+      const { fileName, extension } = splitExtension(selectedFiles[0].name);
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+      this.name.setValue(fileName);
+      this.extension = extension;
     }
   }
 
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
+    this.name.setValue('');
   }
 
   openFile() {
@@ -175,6 +186,15 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
         this.data.existingDocument.fileName,
       );
     }
+  }
+
+  filesDropped($event: FileHandle) {
+    this.pendingFile = $event.file;
+    const { fileName, extension } = splitExtension(this.pendingFile.name);
+    this.extension = extension;
+    this.name.setValue(fileName);
+    this.showVirusError = false;
+    this.uploadFiles.emit($event);
   }
 
   private async loadDocumentTypes() {

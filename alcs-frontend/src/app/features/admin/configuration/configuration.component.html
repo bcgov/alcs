@@ -1,29 +1,34 @@
 <div class="container">
-  <h2>Portal Maintenance</h2>
-  <div>
-    <div class="subheading2">Maintenance Mode</div>
-    <div>
-      <span class="value" *ngIf="!isEditing">
-        {{ maintenanceMode === 'true' ? 'On' : 'Off' }}
-        <button class="edit-button" mat-icon-button (click)="toggleEdit()">
-          <mat-icon class="edit-icon">edit</mat-icon>
-        </button>
-      </span>
-      <div
-        class="editing"
-        [ngClass]="{
-          hidden: !isEditing
-        }"
+  <h2>Maintenance</h2>
+  <div class="row">
+    <div class="label-input-container">
+      <div class="toggle-label" id="maintenanceBannerLabel">Banner (ALCS, Portal, Public Search)</div>
+      <app-inline-text
+        [value]="maintenanceBannerMessage"
+        (save)="updateMaintenanceBannerMessage($event)"
+        [maxLength]="120"
+      ></app-inline-text>
+    </div>
+    <div class="toggle">
+      <mat-label [ngClass]="{ inactive: maintenanceBanner }">Off</mat-label>
+      <mat-slide-toggle
+        [(ngModel)]="maintenanceBanner"
+        (change)="onToggleMaintenanceBanner($event)"
+        aria-labelledby="maintenanceBannerLabel"
+        >On</mat-slide-toggle
       >
-        <mat-button-toggle-group [(value)]="maintenanceMode">
-          <mat-button-toggle value="true">On</mat-button-toggle>
-          <mat-button-toggle value="false">Off</mat-button-toggle>
-        </mat-button-toggle-group>
-        <div class="button-container">
-          <button mat-button (click)="toggleEdit()">CANCEL</button>
-          <button mat-button color="primary" (click)="onSave()">SAVE</button>
-        </div>
-      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="toggle-label" id="maintenanceModeLabel">Maintenance Mode (Portal, Public Search)</div>
+    <div class="toggle">
+      <mat-label [ngClass]="{ inactive: maintenanceMode }">Off</mat-label>
+      <mat-slide-toggle
+        [(ngModel)]="maintenanceMode"
+        (change)="onToggleMaintenanceMode()"
+        aria-labelledby="maintenanceModeLabel"
+        >On</mat-slide-toggle
+      >
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationSubmissionStatusModule } from '../../alcs/application/application-submission-status/application-submission-status.module';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { ApplicationModule } from '../../alcs/application/application.module';
 import { ParcelOwnershipType } from '../../common/entities/parcel-ownership-type/parcel-ownership-type.entity';
 import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
@@ -22,6 +23,7 @@ import { ApplicationSubmissionDraftService } from './application-submission-draf
       ApplicationOwner,
       OwnerType,
     ]),
+    ApplicationModule,
     ApplicationSubmissionModule,
     PdfGenerationModule,
     ApplicationSubmissionStatusModule,

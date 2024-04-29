@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationDecisionMeetingService } from '../../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.service';
+import { ApplicationDecisionMeetingService } from '../application-decision-meeting/application-decision-meeting.service';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { ApplicationModification } from '../../application-decision/application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../application-decision/application-reconsideration/application-reconsideration.entity';

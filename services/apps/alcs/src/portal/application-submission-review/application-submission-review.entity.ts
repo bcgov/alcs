@@ -4,7 +4,9 @@ import { Application } from '../../alcs/application/application.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 
-@Entity()
+@Entity({
+  comment: 'Portal local or first nation government review form fields',
+})
 export class ApplicationSubmissionReview extends Base {
   constructor(data?: Partial<ApplicationSubmissionReview>) {
     super();

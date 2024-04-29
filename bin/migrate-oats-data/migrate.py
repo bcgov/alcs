@@ -16,7 +16,16 @@ from menu.post_launch_commands import (
     srw_clean,
     document_import,
     document_clean,
+    planning_review_clean,
+    planning_review_import,
+    inquiry_import,
+    inquiry_clean,
+    document_import_pr_inq,
+    document_clean_pr_inq,
+    import_all_pr_inq,
+    clean_all_pr_inq,
 )
+from menu import start_obfuscation
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
 
@@ -34,9 +43,9 @@ if __name__ == "__main__":
         # Call function corresponding to selected action using match statement
         match args.command:
             case "import":
-                import_all(console, args)
+                import_all_pr_inq(console, args)
             case "clean":
-                clean_all(console, args)
+                clean_all_pr_inq(console, args)
             case "noi-import":
                 notice_of_intent_import(console, args)
             case "noi-clean":
@@ -53,6 +62,16 @@ if __name__ == "__main__":
                 document_import(console, args)
             case "document-clean":
                 document_clean(console)
+            case "pr-import":
+                planning_review_import(console, args)
+            case "pr-clean":
+                planning_review_clean(console)
+            case "inquiry-import":
+                inquiry_import(console, args)
+            case "inquiry-clean":
+                inquiry_clean(console)
+            case "obfuscate":
+                start_obfuscation(console)
 
     finally:
         if connection_pool:

@@ -2,10 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { FindOptionsRelations, IsNull, Not, Repository } from 'typeorm';
+import {
+  FindOptionsRelations,
+  FindOptionsWhere,
+  In,
+  IsNull,
+  Not,
+  Repository,
+} from 'typeorm';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../../utils/undefined';
 import { Board } from '../../board/board.entity';
+import { CARD_SUBTASK_TYPE } from '../../card/card-subtask/card-subtask.dto';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
 import {
@@ -33,6 +41,7 @@ export class PlanningReferralService {
       type: true,
       status: true,
       board: true,
+      assignee: true,
     },
     planningReview: {
       localGovernment: true,
@@ -48,7 +57,20 @@ export class PlanningReferralService {
           boardUuid,
         },
       },
-      relations: this.DEFAULT_RELATIONS,
+      relations: {
+        card: {
+          type: true,
+          status: true,
+          board: true,
+          assignee: true,
+        },
+        planningReview: {
+          localGovernment: true,
+          region: true,
+          type: true,
+          meetings: true,
+        },
+      },
     });
   }
 
@@ -149,5 +171,50 @@ export class PlanningReferralService {
     });
 
     await this.referralRepository.softRemove(existingReferral);
+  }
+
+  async getBy(assignedFindOptions: FindOptionsWhere<PlanningReferral>) {
+    return this.referralRepository.find({
+      where: assignedFindOptions,
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  async getWithIncompleteSubtaskByType(subtaskType: CARD_SUBTASK_TYPE) {
+    return this.referralRepository.find({
+      where: {
+        card: {
+          subtasks: {
+            completedAt: IsNull(),
+            type: {
+              code: subtaskType,
+            },
+          },
+        },
+      },
+      relations: {
+        planningReview: {
+          type: true,
+          localGovernment: true,
+        },
+        card: {
+          status: true,
+          board: true,
+          type: true,
+          subtasks: { type: true, assignee: true },
+        },
+      },
+    });
+  }
+
+  async getManyByPlanningReview(planningReviewIds: string[]) {
+    return this.referralRepository.find({
+      where: {
+        planningReview: {
+          uuid: In(planningReviewIds),
+        },
+      },
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 }

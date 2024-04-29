@@ -12,10 +12,12 @@ import { AuthorizationComponent } from './features/authorization/authorization.c
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
-import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
+import { AuthInterceptor } from './services/authentication/auth.interceptor';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
+import { UnauthorizedInterceptor } from './services/authentication/unauthorized.interceptor';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { HeaderComponent } from './shared/header/header.component';
+import { MaintenanceBannerComponent } from './shared/header/maintenance-banner/maintenance-banner.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
 import { SharedModule } from './shared/shared.module';
@@ -31,10 +33,12 @@ import { SharedModule } from './shared/shared.module';
     ConfirmationDialogComponent,
     NotificationsComponent,
     SearchBarComponent,
+    MaintenanceBannerComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, MomentDateModule],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedInterceptor, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
     provideEnvironmentNgxMask(),
     {

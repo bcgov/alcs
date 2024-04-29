@@ -341,6 +341,12 @@ export class NoticeOfIntentService {
       });
     }
 
+    if (updateDto.regionCode) {
+      noticeOfIntent.region = await this.codeService.fetchRegion(
+        updateDto.regionCode,
+      );
+    }
+
     await this.repository.save(noticeOfIntent);
 
     await this.updateStatus(updateDto, noticeOfIntent);
@@ -557,14 +563,15 @@ export class NoticeOfIntentService {
     return this.getByFileNumber(createDto.fileNumber);
   }
 
-  async updateApplicant(fileNumber: string, applicant: string) {
+  async updateNoticeOfIntentInfo(
+    fileNumber: string,
+    noticeOfIntent: { applicant?: string; localGovernmentUuid?: string },
+  ) {
     await this.repository.update(
       {
         fileNumber,
       },
-      {
-        applicant,
-      },
+      { ...noticeOfIntent },
     );
   }
 }

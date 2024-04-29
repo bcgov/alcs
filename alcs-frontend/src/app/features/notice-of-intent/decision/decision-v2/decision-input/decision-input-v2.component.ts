@@ -14,7 +14,7 @@ import {
   NoticeOfIntentDecisionDto,
   NoticeOfIntentDecisionOutcomeCodeDto,
   UpdateNoticeOfIntentDecisionConditionDto,
-} from '../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDetailService } from '../../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentModificationDto } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
@@ -417,11 +417,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     if (this.runValidation()) {
       this.dialog
         .open(ReleaseDialogComponent, {
-          minWidth: '600px',
-          maxWidth: '900px',
+          minWidth: '1080px',
+          maxWidth: '1080px',
           maxHeight: '80vh',
           width: '90%',
           autoFocus: false,
+          data: {
+            fileNumber: this.fileNumber,
+          },
         })
         .afterClosed()
         .subscribe(async (didAccept) => {

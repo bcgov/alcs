@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
-import { NoticeOfIntentDecisionDocumentDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionDocumentDto } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ToastService } from '../../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
+import { FileHandle } from '../../../../../../shared/drag-drop-file/drag-drop-file.directive';
+import { splitExtension } from '../../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-noi-decision-document-upload-dialog',
@@ -18,6 +20,8 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   isSaving = false;
   allowsFileEdit = true;
   documentType = 'Decision Package';
+
+  @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();
 
   name = new FormControl<string>('', [Validators.required]);
   type = new FormControl<string | undefined>({ disabled: true, value: undefined }, [Validators.required]);
@@ -39,6 +43,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   pendingFile: File | undefined;
   existingFile: string | undefined;
   showVirusError = false;
+  extension = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -52,8 +57,10 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
+      const { fileName, extension } = splitExtension(document.fileName);
+      this.extension = extension;
       this.form.patchValue({
-        name: document.fileName,
+        name: fileName,
       });
       this.existingFile = document.fileName;
     }
@@ -62,7 +69,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   async onSubmit() {
     const file = this.pendingFile;
     if (file) {
-      const renamedFile = new File([file], this.name.value ?? file.name);
+      const renamedFile = new File([file], this.name.value + this.extension ?? file.name);
       this.isSaving = true;
       if (this.data.existingDocument) {
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
@@ -84,7 +91,11 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       this.isSaving = false;
     } else if (this.data.existingDocument) {
       this.isSaving = true;
-      await this.decisionService.updateFile(this.data.decisionUuid, this.data.existingDocument.uuid, this.name.value!);
+      await this.decisionService.updateFile(
+        this.data.decisionUuid,
+        this.data.existingDocument.uuid,
+        this.name.value! + this.extension,
+      );
 
       this.dialog.close(true);
       this.isSaving = false;
@@ -96,7 +107,10 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     const selectedFiles = element.files;
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
-      this.name.setValue(selectedFiles[0].name);
+
+      const { fileName, extension } = splitExtension(this.pendingFile.name);
+      this.name.setValue(fileName);
+      this.extension = extension;
       this.showVirusError = false;
     }
   }
@@ -104,6 +118,8 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   onRemoveFile() {
     this.pendingFile = undefined;
     this.existingFile = undefined;
+    this.extension = '';
+    this.name.setValue('');
   }
 
   openFile() {
@@ -121,5 +137,14 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
         this.data.existingDocument.fileName,
       );
     }
+  }
+
+  filesDropped($event: FileHandle) {
+    this.pendingFile = $event.file;
+    const { fileName, extension } = splitExtension(this.pendingFile.name);
+    this.extension = extension;
+    this.name.setValue(fileName);
+    this.showVirusError = false;
+    this.uploadFiles.emit($event);
   }
 }

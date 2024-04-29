@@ -11,10 +11,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
-import {
-  generateCANCApplicationHtml,
-  generateCANCNoticeOfIntentHtml,
-} from '../../../../../templates/emails/cancelled';
+import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 import {
   ROLES_ALLOWED_APPLICATIONS,
   ROLES_ALLOWED_BOARDS,
@@ -23,7 +20,6 @@ import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { TrackingService } from '../../common/tracking/tracking.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
-import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { BoardService } from '../board/board.service';
 import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
@@ -31,7 +27,6 @@ import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submis
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
-  CreateNoticeOfIntentDto,
   NoticeOfIntentSubtypeDto,
   UpdateNoticeOfIntentDto,
 } from './notice-of-intent.dto';
@@ -70,25 +65,6 @@ export class NoticeOfIntentController {
       NoticeOfIntentSubtype,
       NoticeOfIntentSubtypeDto,
     );
-  }
-
-  @Post()
-  @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async create(@Body() createDto: CreateNoticeOfIntentDto) {
-    const board = await this.boardService.getOneOrFail({
-      code: createDto.boardCode,
-    });
-
-    const createdNoi = await this.noticeOfIntentService.create(
-      {
-        ...createDto,
-        dateSubmittedToAlc: formatIncomingDate(createDto.dateSubmittedToAlc),
-      },
-      board,
-    );
-
-    const mapped = this.noticeOfIntentService.mapToDtos([createdNoi]);
-    return mapped[0];
   }
 
   @Get('/card/:uuid')

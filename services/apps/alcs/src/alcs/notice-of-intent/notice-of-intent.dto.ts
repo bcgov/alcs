@@ -2,7 +2,6 @@ import { AutoMap } from 'automapper-classes';
 import {
   IsArray,
   IsBoolean,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -13,45 +12,17 @@ import { NoticeOfIntentOwnerDto } from '../../portal/notice-of-intent-submission
 import { NoticeOfIntentSubmissionDetailedDto } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
-import { NoticeOfIntentTypeDto } from './notice-of-intent-type/notice-of-intent-type.dto';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
+import { NoticeOfIntentTypeDto } from './notice-of-intent-type/notice-of-intent-type.dto';
 
 export class AlcsNoticeOfIntentSubmissionDto extends NoticeOfIntentSubmissionDetailedDto {
   primaryContact?: NoticeOfIntentOwnerDto;
 }
+
 export class NoticeOfIntentSubtypeDto extends BaseCodeDto {
   @AutoMap()
   @IsBoolean()
   isActive: boolean;
-}
-
-export class CreateNoticeOfIntentDto {
-  @IsNumber()
-  dateSubmittedToAlc: number;
-
-  @IsString()
-  @IsNotEmpty()
-  fileNumber: string;
-
-  @IsString()
-  @IsNotEmpty()
-  applicant: string;
-
-  @IsString()
-  @IsNotEmpty()
-  localGovernmentUuid: string;
-
-  @IsString()
-  @IsNotEmpty()
-  regionCode: string;
-
-  @IsString()
-  @IsNotEmpty()
-  boardCode: string;
-
-  @IsString()
-  @IsOptional()
-  typeCode: string;
 }
 
 export class NoticeOfIntentDto {
@@ -144,6 +115,10 @@ export class UpdateNoticeOfIntentDto {
   @IsOptional()
   @IsString()
   typeCode?: string;
+
+  @IsOptional()
+  @IsString()
+  regionCode?: string;
 
   @IsOptional()
   @IsBoolean()

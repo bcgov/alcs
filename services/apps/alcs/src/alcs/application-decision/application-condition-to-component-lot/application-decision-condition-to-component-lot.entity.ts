@@ -4,7 +4,10 @@ import { Base } from '../../../common/entities/base.entity';
 import { ApplicationDecisionComponentLot } from '../application-component-lot/application-decision-component-lot.entity';
 import { ApplicationDecisionCondition } from '../application-decision-condition/application-decision-condition.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Join table to link approved subdivision lots between condition and components and provide plan numbers associated with survey plan per lot',
+})
 export class ApplicationDecisionConditionToComponentLot extends Base {
   constructor(data?: Partial<ApplicationDecisionConditionToComponentLot>) {
     super();

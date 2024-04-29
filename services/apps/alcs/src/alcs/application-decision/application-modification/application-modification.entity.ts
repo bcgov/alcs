@@ -15,7 +15,9 @@ import { Card } from '../../card/card.entity';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationModificationOutcomeType } from './application-modification-outcome-type/application-modification-outcome-type.entity';
 
-@Entity()
+@Entity({
+  comment: 'Application modification requests linked to card and application',
+})
 export class ApplicationModification extends Base {
   constructor(data?: Partial<ApplicationModification>) {
     super();

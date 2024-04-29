@@ -1,3 +1,4 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
@@ -31,6 +32,10 @@ export const mockKeyCloakProviders = [
   KeycloakMultiTenantService,
   {
     provide: UserService,
+    useValue: {},
+  },
+  {
+    provide: RedisService,
     useValue: {},
   },
 ];

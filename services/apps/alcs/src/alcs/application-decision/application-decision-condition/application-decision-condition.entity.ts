@@ -9,13 +9,12 @@ import {
 } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
-import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 
-@Entity()
+@Entity({ comment: 'Fields present on the application decision conditions' })
 export class ApplicationDecisionCondition extends Base {
   constructor(data?: Partial<ApplicationDecisionCondition>) {
     super();

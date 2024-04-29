@@ -15,7 +15,7 @@ import { ColumnNumericTransformer } from '../../../utils/column-numeric-transfor
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
 
-@Entity()
+@Entity({ comment: 'Parcels associated with application submissions' })
 export class ApplicationParcel extends Base {
   constructor(data?: Partial<ApplicationParcel>) {
     super();
@@ -109,15 +109,6 @@ export class ApplicationParcel extends Base {
   @AutoMap()
   @ManyToOne(() => ParcelOwnershipType)
   ownershipType: ParcelOwnershipType;
-
-  @AutoMap(() => Boolean)
-  @Column({
-    type: 'text',
-    comment:
-      'For Crown Land parcels to indicate whether they are provincially owned or federally owned',
-    nullable: true,
-  })
-  crownLandOwnerType?: string | null;
 
   @ManyToMany(() => ApplicationOwner, (owner) => owner.parcels)
   @JoinTable()

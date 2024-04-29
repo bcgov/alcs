@@ -68,8 +68,8 @@ export const childRoutes = [
   },
   {
     path: 'configuration',
-    menuTitle: 'Portal Maintenance',
-    icon: 'settings_configuration',
+    menuTitle: 'Maintenance',
+    icon: 'settings_applications',
     component: ConfigurationComponent,
   },
 ];

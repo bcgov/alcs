@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ToastService } from '../../toast/toast.service';
 import { of } from 'rxjs';
+import { ToastService } from '../../toast/toast.service';
 
 import { NoticeOfIntentParcelService } from './notice-of-intent-parcel.service';
 
@@ -37,6 +37,15 @@ describe('NoticeOfIntentParcelService', () => {
     const result = await service.fetchParcels('1');
 
     expect(result).toEqual([]);
-    expect(mockHttpClient.get).toBeCalledTimes(1);
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call post for setting parcel area', async () => {
+    mockHttpClient.post.mockReturnValue(of([]));
+
+    const result = await service.setParcelArea('1', 5);
+
+    expect(result).toEqual([]);
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
   });
 });

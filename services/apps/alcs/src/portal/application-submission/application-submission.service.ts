@@ -2,10 +2,10 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -1111,6 +1111,15 @@ export class ApplicationSubmissionService {
   }
 
   async canAccessDocument(document: ApplicationDocument, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles.includes(value),
+    );
+
+    //If user is ALCS staff
+    if (overlappingRoles.length > 0) {
+      return true;
+    }
+
     //If document has P, skip all checks.
     if (document.visibilityFlags.includes(VISIBILITY_FLAG.PUBLIC)) {
       return true;
@@ -1148,6 +1157,7 @@ export class ApplicationSubmissionService {
       .where('document.uuid = :uuid', {
         uuid: document.uuid,
       })
+      .andWhere('submission.is_draft = FALSE')
       .execute();
 
     return {

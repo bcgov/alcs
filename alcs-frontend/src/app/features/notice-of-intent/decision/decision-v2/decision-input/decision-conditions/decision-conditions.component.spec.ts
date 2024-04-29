@@ -7,7 +7,7 @@ import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/noti
 import {
   NoticeOfIntentDecisionDto,
   NoticeOfIntentDecisionWithLinkedResolutionDto,
-} from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+} from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionConditionsComponent } from './decision-conditions.component';

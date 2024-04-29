@@ -12,17 +12,20 @@ import {
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from '../application/application.entity';
-import { ApplicationDecisionOutcomeCode } from './application-decision-outcome.entity';
-import { ApplicationModification } from './application-modification/application-modification.entity';
-import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 import { ApplicationCeoCriterionCode } from './application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionCondition } from './application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionDocument } from './application-decision-document/application-decision-document.entity';
 import { ApplicationDecisionMakerCode } from './application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from './application-decision-outcome-type/application-decision-outcome-type.entity';
+import { ApplicationDecisionOutcomeCode } from './application-decision-outcome.entity';
 import { ApplicationDecisionComponent } from './application-decision-v2/application-decision/component/application-decision-component.entity';
+import { ApplicationModification } from './application-modification/application-modification.entity';
+import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 
-@Entity()
+@Entity({
+  comment:
+    'Decisions saved to applications, incl. those linked to the recon/modification request',
+})
 @Index(['resolutionNumber', 'resolutionYear'], {
   unique: true,
   where: '"audit_deleted_date_at" is null and "resolution_number" is not null',
@@ -165,6 +168,9 @@ export class ApplicationDecision extends Base {
 
   @AutoMap()
   @Column({ type: 'uuid' })
+  @Index('IDX_applicationUuid', {
+    synchronize: false, //TypeORM does not support Hash Indexes
+  })
   applicationUuid: string;
 
   @AutoMap(() => [ApplicationDecisionDocument])

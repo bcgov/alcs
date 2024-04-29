@@ -4,7 +4,7 @@ import { Base } from '../../../common/entities/base.entity';
 import { ParcelOwnershipType } from '../../../common/entities/parcel-ownership-type/parcel-ownership-type.entity';
 import { NotificationSubmission } from '../notification-submission.entity';
 
-@Entity()
+@Entity({ comment: 'Parcels Related to Notification Applications' })
 export class NotificationParcel extends Base {
   constructor(data?: Partial<NotificationParcel>) {
     super();

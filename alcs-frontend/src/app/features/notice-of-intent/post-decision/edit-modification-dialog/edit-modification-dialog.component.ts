@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { NoticeOfIntentDecisionService } from '../../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
+import { NoticeOfIntentDecisionV2Service } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import {
   NoticeOfIntentModificationDto,
   NoticeOfIntentModificationUpdateDto,
@@ -37,8 +37,8 @@ export class EditModificationDialogComponent implements OnInit {
     },
     private dialogRef: MatDialogRef<EditModificationDialogComponent>,
     private modificationService: NoticeOfIntentModificationService,
-    private decisionService: NoticeOfIntentDecisionService,
-    private toastService: ToastService
+    private decisionService: NoticeOfIntentDecisionV2Service,
+    private toastService: ToastService,
   ) {
     this.form.patchValue({
       submittedDate: new Date(data.existingModification.submittedDate),

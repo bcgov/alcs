@@ -7,12 +7,17 @@ import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
+import { LocalGovernmentModule } from '../local-government/local-government.module';
 import { PlanningReferralController } from './planning-referral/planning-referral.controller';
 import { PlanningReferral } from './planning-referral/planning-referral.entity';
 import { PlanningReferralService } from './planning-referral/planning-referral.service';
 import { PlanningReviewDocumentController } from './planning-review-document/planning-review-document.controller';
 import { PlanningReviewDocument } from './planning-review-document/planning-review-document.entity';
 import { PlanningReviewDocumentService } from './planning-review-document/planning-review-document.service';
+import { PlanningReviewMeetingType } from './planning-review-meeting/planning-review-meeting-type.entity';
+import { PlanningReviewMeetingController } from './planning-review-meeting/planning-review-meeting.controller';
+import { PlanningReviewMeeting } from './planning-review-meeting/planning-review-meeting.entity';
+import { PlanningReviewMeetingService } from './planning-review-meeting/planning-review-meeting.service';
 import { PlanningReviewType } from './planning-review-type.entity';
 import { PlanningReviewController } from './planning-review.controller';
 import { PlanningReview } from './planning-review.entity';
@@ -25,11 +30,14 @@ import { PlanningReviewService } from './planning-review.service';
       PlanningReferral,
       PlanningReviewType,
       PlanningReviewDocument,
+      PlanningReviewMeeting,
+      PlanningReviewMeetingType,
       DocumentCode,
     ]),
     forwardRef(() => BoardModule),
     CardModule,
     CodeModule,
+    LocalGovernmentModule,
     FileNumberModule,
     DocumentModule,
   ],
@@ -37,13 +45,19 @@ import { PlanningReviewService } from './planning-review.service';
     PlanningReviewController,
     PlanningReferralController,
     PlanningReviewDocumentController,
+    PlanningReviewMeetingController,
   ],
   providers: [
     PlanningReviewService,
     PlanningReviewProfile,
     PlanningReferralService,
     PlanningReviewDocumentService,
+    PlanningReviewMeetingService,
   ],
-  exports: [PlanningReviewService, PlanningReferralService],
+  exports: [
+    PlanningReviewService,
+    PlanningReferralService,
+    PlanningReviewMeetingService,
+  ],
 })
 export class PlanningReviewModule {}

@@ -22,7 +22,7 @@ export interface FlatTreeNode {
 
 const TREE_DATA: TreeNode[] = [
   {
-    item: { label: 'Application', value: null },
+    item: { label: 'Applications', value: null },
     children: [
       { item: { label: 'Exclusion', value: 'EXCL' } },
       { item: { label: 'Inclusion', value: 'INCL' } },
@@ -53,26 +53,77 @@ const TREE_DATA: TreeNode[] = [
     ],
   },
   {
-    item: { label: 'Notice of Intent', value: 'NOI' },
+    item: { label: 'Notices of Intent', value: 'NOI' },
   },
   {
-    item: { label: 'Non-Application', value: null },
-
+    item: { label: 'Planning Reviews', value: 'PLAN' },
     children: [
       {
-        item: { label: 'Covenants', value: 'COV' },
+        item: { label: 'Agricultural Area Plan', value: 'AAPP' },
       },
       {
-        item: { label: 'Planning Review', value: 'PLAN' },
+        item: { label: 'ALR Boundary', value: 'ALRB' },
+      },
+      {
+        item: { label: 'L/FNG Boundary Adjustment', value: 'BAPP' },
+      },
+      {
+        item: { label: 'Crown Land Use Plan', value: 'CLUP' },
+      },
+      {
+        item: { label: 'Misc Studies and Projects', value: 'MISC' },
+      },
+      {
+        item: { label: 'Official Community Plan', value: 'OCPP' },
+      },
+      {
+        item: { label: 'Parks Planning', value: 'PARK' },
+      },
+      {
+        item: { label: 'Regional Growth Strategy', value: 'RGSP' },
+      },
+      {
+        item: { label: 'Transportation Plan', value: 'TPPP' },
+      },
+      {
+        item: { label: 'Utility/Energy Planning', value: 'UEPP' },
+      },
+      {
+        item: { label: 'Zoning Bylaw', value: 'ZBPP' },
       },
     ],
   },
   {
     item: { label: 'Notifications', value: null },
-
     children: [
       {
         item: { label: 'SRW', value: 'SRW' },
+      },
+    ],
+  },
+  {
+    item: { label: 'Inquiry', value: null },
+    children: [
+      {
+        item: { label: 'ALR Boundary Definition', value: 'ABDF' },
+      },
+      {
+        item: { label: 'Area of Interest', value: 'AOIN' },
+      },
+      {
+        item: { label: 'General Correspondence', value: 'GENC' },
+      },
+      {
+        item: { label: 'Inquiry for Investigation', value: 'INVN' },
+      },
+      {
+        item: { label: 'Parcel Under 2 Acres', value: 'P2AC' },
+      },
+      {
+        item: { label: 'Referral', value: 'REFR' },
+      },
+      {
+        item: { label: 'Subdivision by Approving Officer', value: 'SAOF' },
       },
     ],
   },

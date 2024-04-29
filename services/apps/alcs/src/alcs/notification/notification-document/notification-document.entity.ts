@@ -19,7 +19,9 @@ export enum VISIBILITY_FLAG {
   GOVERNMENT = 'G',
 }
 
-@Entity()
+@Entity({
+  comment: 'Documents for Notifications',
+})
 export class NotificationDocument extends BaseEntity {
   constructor(data?: Partial<NotificationDocument>) {
     super();
@@ -56,10 +58,20 @@ export class NotificationDocument extends BaseEntity {
   @Column({ nullable: true, type: 'uuid' })
   documentUuid?: string | null;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({
+    type: 'text',
+    nullable: true,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.alr_application to alcs.notification_document.',
+  })
   oatsApplicationId?: string | null;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({
+    type: 'text',
+    nullable: true,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.notification_document.',
+  })
   oatsDocumentId?: string | null;
 
   @AutoMap(() => [String])

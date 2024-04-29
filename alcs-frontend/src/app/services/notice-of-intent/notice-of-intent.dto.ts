@@ -11,15 +11,6 @@ export interface NoticeOfIntentSubtypeDto extends BaseCodeDto {
   isActive: boolean;
 }
 
-export interface CreateNoticeOfIntentDto {
-  fileNumber: string;
-  localGovernmentUuid: string;
-  regionCode: string;
-  applicant: string;
-  boardCode: string;
-  dateSubmittedToAlc: number;
-}
-
 export interface NoticeOfIntentTypeDto extends BaseCodeDto {
   shortLabel: string;
   backgroundColor: string;
@@ -68,6 +59,7 @@ export interface NoticeOfIntentDto {
 export interface UpdateNoticeOfIntentDto {
   dateSubmittedToAlc?: number;
   hideFromPortal?: boolean;
+  regionCode?: string;
   feePaidDate?: number;
   feeWaived?: boolean | null;
   feeSplitWithLg?: boolean | null;
@@ -343,7 +335,6 @@ export interface NoticeOfIntentParcelDto {
   isFarm?: boolean;
   ownershipType?: ParcelTypeDto;
   ownershipTypeCode?: string;
-  crownLandOwnerType?: string;
   certificateOfTitleUuid?: string;
   certificateOfTitle?: NoticeOfIntentDocumentDto;
   owners: SubmittedNoticeOfIntentOwnerDto[];

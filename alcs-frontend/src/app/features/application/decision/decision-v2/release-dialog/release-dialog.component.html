@@ -1,25 +1,26 @@
 <div mat-dialog-title>
   <h2 class="card-title">Confirm Release Decision</h2>
 </div>
-<mat-dialog-content style="height: 100%">
-  <div class="grid">
-    <p>
-      This decision and document will be immediately visible to the Applicant, Local/First Nation Government, and
-      Public.
-    </p>
-    <p>
-      Upon releasing the decision, the application will be updated to the status:
-      <app-application-type-pill *ngIf="mappedType" [type]="mappedType"></app-application-type-pill>
-    </p>
-    <app-warning-banner> If there is more than one decision, the status will not change</app-warning-banner>
-    <p *ngIf="wasReleased">
-      If this decision is being released for the first time, the Applicant and Local/First Nation Government will receive 
-      an auto-email containing a link to the decision document(s). Otherwise an auto-email will not be sent.
-    </p>
-    <p *ngIf="!wasReleased">
-      If this decision is being released for the first time, the Applicant and Local/First Nation Government will receive 
-      an auto-email containing a link to the decision document(s). Otherwise an auto-email will not be sent.
-    </p>
+<mat-dialog-content class="content">
+  <p>Upon releasing the decision:</p>
+  <div class="release-data">
+    <div><strong>Visibility:</strong> Applicant, Local/First Nation Government, and Public</div>
+    <div>
+      <strong>Portal Status: </strong>
+      <app-application-submission-status-type-pill
+        *ngIf="releasedStatus && !isCancelled"
+        [type]="releasedStatus"
+      ></app-application-submission-status-type-pill>
+      <app-application-submission-status-type-pill
+        *ngIf="cancelledStatus && isCancelled"
+        [type]="cancelledStatus"
+      ></app-application-submission-status-type-pill>
+    </div>
+    <div>
+      <strong>Email (with decision document) sent to: </strong>
+      <span *ngIf="!wasReleased">Primary Contact and Local/First Nation Government</span>
+      <span *ngIf="wasReleased">No auto-emails will be sent</span>
+    </div>
   </div>
 </mat-dialog-content>
 

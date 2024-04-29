@@ -1,0 +1,34 @@
+<div mat-dialog-title>
+  <h2 class="card-title">{{ data.existingMeeting ? 'Edit Scheduled Date' : 'Add Date to Schedule' }}</h2>
+</div>
+<form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
+  <mat-dialog-content class="form">
+    <mat-form-field appearance="outline">
+      <mat-label>Date</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        [(ngModel)]="selectedDate"
+        name="date"
+        required
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+      <mat-select [required]="true" name="type" [(ngModel)]="selectedType">
+        <mat-option *ngFor="let type of types" [value]="type.code">{{ type.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button [loading]="isLoading" mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

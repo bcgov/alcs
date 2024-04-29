@@ -1,24 +1,21 @@
 <div mat-dialog-title>
   <h2 class="card-title">Confirm Revert to Draft</h2>
 </div>
-<mat-dialog-content style="height: 100%">
-  <div class="grid">
-    <p>
-      This decision and document will be reverted into draft form, providing you with full editing capabilities but
-      hiding it from the Applicant, Local/First Nation Government, and the Public.
-    </p>
-    <p>
-      Upon reverting the decision to draft, the application will be updated to the status:
+<mat-dialog-content class="content">
+  <p>Upon reverting the decision to a draft:</p>
+  <div class="release-data">
+    <div><strong>Visibility:</strong> ALC staff only (with full editing capabilities)</div>
+    <div>
+      <strong>Portal Status: </strong>
       <app-application-submission-status-type-pill
         *ngIf="mappedType"
         [type]="mappedType"
       ></app-application-submission-status-type-pill>
-    </p>
-    <app-warning-banner> If there is more than one decision, the status will not change</app-warning-banner>
-    <p>
-      The Applicant and Local/First Nation Government will not receive an auto-email notification. Please complete any
-      notification manually.
-    </p>
+    </div>
+    <div>
+      <strong>Email (with decision document) sent to: </strong>
+      No auto-emails will be sent
+    </div>
   </div>
 </mat-dialog-content>
 

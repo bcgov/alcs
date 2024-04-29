@@ -4,26 +4,19 @@ import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { ApplicationSubmissionDraftController } from './application-submission-draft.controller';
 import { ApplicationSubmissionDraftService } from './application-submission-draft.service';
 
 describe('ApplicationSubmissionDraftController', () => {
   let controller: ApplicationSubmissionDraftController;
-  let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockAppEditService: DeepMocked<ApplicationSubmissionDraftService>;
 
   beforeEach(async () => {
-    mockAppSubmissionService = createMock();
     mockAppEditService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationSubmissionDraftController],
       providers: [
-        {
-          provide: ApplicationSubmissionService,
-          useValue: mockAppSubmissionService,
-        },
         {
           provide: ApplicationSubmissionDraftService,
           useValue: mockAppEditService,

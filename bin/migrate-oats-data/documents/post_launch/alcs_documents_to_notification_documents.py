@@ -9,17 +9,14 @@ from psycopg2.extras import RealDictCursor
 etl_name = "link_srw_documents_from_alcs"
 logger = setup_and_get_logger(etl_name)
 
-"""
-    This script connects to postgress version of OATS DB and links data from ALCS documents to ALCS notification_document table.
-
-    NOTE:
-    Before performing document import you need to import SRWs and SRW documents.
-"""
-
 
 @inject_conn_pool
 def link_srw_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
+    This script connects to postgress version of OATS DB and links data from ALCS documents to ALCS notification_document table.
+
+    NOTE:
+    Before performing document import you need to import SRWs and SRW documents.
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
     logger.info(f"Start {etl_name}")
@@ -96,7 +93,8 @@ def _compile_insert_query(number_of_rows_to_insert):
                             oats_application_id,
                             audit_created_by,
                             survey_plan_number,
-                            control_number           
+                            control_number,
+                            description           
                         )
                         VALUES{documents_to_insert}
                         ON CONFLICT (oats_document_id, oats_application_id) DO UPDATE SET 
@@ -106,7 +104,8 @@ def _compile_insert_query(number_of_rows_to_insert):
                             visibility_flags = EXCLUDED.visibility_flags,
                             audit_created_by = EXCLUDED.audit_created_by,
                             survey_plan_number = EXCLUDED.survey_plan_number,
-                            control_number = EXCLUDED.control_number;
+                            control_number = EXCLUDED.control_number,
+                            description = EXCLUDED.description;
     """
 
 
@@ -130,6 +129,7 @@ def _map_data(row):
         "audit_created_by": OATS_ETL_USER,
         "plan_number": row["plan_no"],
         "control_number": row["control_no"],
+        "description": row["description"],
     }
 
 

@@ -1,16 +1,26 @@
 <div class="intake">
   <h3>ALC Intake</h3>
-  <div>
-    <h5>Submitted to ALC</h5>
-    <app-inline-datepicker
-      [value]="application?.dateSubmittedToAlc"
-      (save)="updateApplicationDate('dateSubmittedToAlc', $event)"
-      [required]="true"
-    ></app-inline-datepicker>
+  <div class="two-grid">
+    <div>
+      <h5>Submitted to ALC</h5>
+      <app-inline-datepicker
+        [value]="application?.dateSubmittedToAlc"
+        (save)="updateApplicationDate('dateSubmittedToAlc', $event)"
+        [required]="true"
+      ></app-inline-datepicker>
+    </div>
+    <div>
+      <h5>Region</h5>
+      <app-inline-dropdown
+        [options]="regions"
+        [value]="application?.region?.code"
+        (save)="updateApplicationRegion($event)"
+      ></app-inline-dropdown>
+    </div>
   </div>
   <div *ngIf="application && application.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS">
     <h5>Payment</h5>
-    <div class="payment-section">
+    <div class="two-grid">
       <div>
         <div class="subheading2">Payment Date</div>
         <app-inline-datepicker
@@ -52,7 +62,7 @@
     <div class="label-wrapper">
       <h5>Acknowledged Incomplete</h5>
       <mat-icon class="icon" matTooltip='Creates / deletes "Submitted to ALC Incomplete" portal status'
-        >info_outline
+      >info_outline
       </mat-icon>
     </div>
     <div>
@@ -66,7 +76,7 @@
     <div class="label-wrapper">
       <h5>Received All Items</h5>
       <mat-icon class="icon" matTooltip='Creates / deletes "Received by ALC" portal status and controls public release'
-        >info_outline
+      >info_outline
       </mat-icon>
     </div>
     <div>
@@ -79,7 +89,7 @@
   <div>
     <div class="label-wrapper">
       <h5>Acknowledged Complete</h5>
-      <mat-icon class="icon" matTooltip="Tracking starts the following business day">info_outline </mat-icon>
+      <mat-icon class="icon" matTooltip="Tracking starts the following business day">info_outline</mat-icon>
     </div>
     <div>
       <app-inline-datepicker

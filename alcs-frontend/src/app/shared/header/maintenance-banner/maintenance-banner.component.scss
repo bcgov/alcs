@@ -1,0 +1,19 @@
+@use '../../../../styles/colors';
+
+.maintenance-banner {
+  background-color: colors.$maintenance-banner;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .maintenance-description {
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -7,7 +7,7 @@ import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { NoticeOfIntentParcel } from '../notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
 
-@Entity()
+@Entity({ comment: 'Owners for Notice of Intent Submissions' })
 export class NoticeOfIntentOwner extends Base {
   constructor(data?: Partial<NoticeOfIntentOwner>) {
     super();
@@ -105,7 +105,7 @@ export class NoticeOfIntentOwner extends Base {
   @Column({
     type: 'varchar',
     nullable: true,
-    default: null
+    default: null,
   })
   crownLandOwnerType?: string | null;
 }

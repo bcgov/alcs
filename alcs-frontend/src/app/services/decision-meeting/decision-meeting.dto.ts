@@ -1,3 +1,4 @@
+import { CardType } from '../../shared/card/card.component';
 import { AssigneeDto } from '../user/user.dto';
 
 export type UpcomingMeetingDto = {
@@ -6,6 +7,7 @@ export type UpcomingMeetingDto = {
   applicant: string;
   boardCode: string;
   assignee: AssigneeDto;
+  type: CardType;
 };
 
 export type UpcomingMeetingBoardMapDto = Record<string, UpcomingMeetingDto[]>;

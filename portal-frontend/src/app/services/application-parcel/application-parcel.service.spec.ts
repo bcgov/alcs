@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ToastService } from '../toast/toast.service';
 
 import { of, throwError } from 'rxjs';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { DocumentService } from '../document/document.service';
+import { ToastService } from '../toast/toast.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
 import { ApplicationParcelService } from './application-parcel.service';
 
@@ -13,12 +14,15 @@ describe('ApplicationParcelService', () => {
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockToastService: DeepMocked<ToastService>;
+  let mockOverlayService: DeepMocked<OverlaySpinnerService>;
 
   const mockUuid = 'fake_uuid';
 
   beforeEach(() => {
     mockHttpClient = createMock();
     mockToastService = createMock();
+    mockDocumentService = createMock();
+    mockOverlayService = createMock();
 
     TestBed.configureTestingModule({
       imports: [],
@@ -34,6 +38,10 @@ describe('ApplicationParcelService', () => {
         {
           provide: DocumentService,
           useValue: mockDocumentService,
+        },
+        {
+          provide: OverlaySpinnerService,
+          useValue: mockOverlayService,
         },
       ],
     });
@@ -98,5 +106,54 @@ describe('ApplicationParcelService', () => {
 
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call document service for attaching certificate of title', async () => {
+    mockDocumentService.uploadFile.mockResolvedValue({});
+
+    await service.attachCertificateOfTitle('fileId', 'parcelUuid', {} as File);
+
+    expect(mockDocumentService.uploadFile).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show an error toast if document service fails', async () => {
+    mockDocumentService.uploadFile.mockRejectedValue({});
+
+    await service.attachCertificateOfTitle('fileId', 'parcelUuid', {} as File);
+
+    expect(mockDocumentService.uploadFile).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should make a delete request and show the overlay for removing all parcels', async () => {
+    mockDocumentService.uploadFile.mockRejectedValue({});
+    mockOverlayService.showSpinner.mockReturnValue();
+    mockOverlayService.hideSpinner.mockReturnValue();
+    mockHttpClient.delete.mockReturnValue(of({}));
+
+    await service.deleteMany([]);
+
+    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
+    expect(mockOverlayService.showSpinner).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
+    expect(mockOverlayService.hideSpinner).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show an error toast if document service fails', async () => {
+    mockDocumentService.uploadFile.mockRejectedValue({});
+    mockOverlayService.showSpinner.mockReturnValue();
+    mockOverlayService.hideSpinner.mockReturnValue();
+    mockHttpClient.delete.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    await service.deleteMany([]);
+
+    expect(mockOverlayService.showSpinner).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+    expect(mockOverlayService.hideSpinner).toHaveBeenCalledTimes(1);
   });
 });

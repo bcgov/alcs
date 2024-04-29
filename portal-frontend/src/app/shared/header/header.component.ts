@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { UserDto } from '../../services/authentication/authentication.dto';
-import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { MaintenanceService } from '../../services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-header',
@@ -19,10 +20,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   title = 'Provincial Agricultural Land Commission Portal';
   user: UserDto | undefined;
 
+  showMaintenanceBanner = false;
+  maintenanceBannerMessage = '';
+
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private maintenanceService: MaintenanceService
   ) {}
 
   ngOnInit(): void {
@@ -32,10 +37,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.changeDetectorRef.detectChanges();
     });
 
+    this.setMaintenanceBanner();
+
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {
       const url = window.location.href;
       this.isOnPublicPage = url.includes('public');
     });
+  }
+
+  private async setMaintenanceBanner() {
+    const maintenanceBanner = await this.maintenanceService.getBanner();
+    this.showMaintenanceBanner = maintenanceBanner?.showBanner || false;
+    this.maintenanceBannerMessage = maintenanceBanner?.message || '';
   }
 
   async onLogout() {

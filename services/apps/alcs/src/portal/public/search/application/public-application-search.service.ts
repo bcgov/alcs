@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { ApplicationDecisionComponent } from '../../../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
@@ -15,6 +15,8 @@ import { PublicApplicationSubmissionSearchView } from './public-application-sear
 
 @Injectable()
 export class PublicApplicationSearchService {
+  private logger: Logger = new Logger(PublicApplicationSearchService.name);
+
   constructor(
     @InjectRepository(PublicApplicationSubmissionSearchView)
     private applicationSearchRepository: Repository<PublicApplicationSubmissionSearchView>,
@@ -35,7 +37,12 @@ export class PublicApplicationSearchService {
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
+    const t0 = performance.now();
     const results = await Promise.all([query.getMany(), query.getCount()]);
+    const t1 = performance.now();
+    this.logger.debug(
+      `Application public search took ${t1 - t0} milliseconds.`,
+    );
 
     return {
       data: results[0],
@@ -178,7 +185,7 @@ export class PublicApplicationSearchService {
   }
 
   private joinApplicationDecision(query: any) {
-    query = query.leftJoin(
+    query = query.innerJoin(
       ApplicationDecision,
       'decision',
       'decision.application_uuid = "appSearch"."application_uuid" AND decision.is_draft = FALSE',

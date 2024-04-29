@@ -7,9 +7,9 @@ import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authe
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { MessageDto } from '../../services/message/message.dto';
 import { MessageService } from '../../services/message/message.service';
-import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
+import { MaintenanceService } from '../../services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-header',
@@ -26,15 +26,17 @@ export class HeaderComponent implements OnInit {
   notifications: MessageDto[] = [];
   isCommissioner = false;
   isAdmin = false;
+  showMaintenanceBanner = true;
+  maintenanceBannerMessage = '';
 
   constructor(
     private authService: AuthenticationService,
     private applicationService: ApplicationService,
     private boardService: BoardService,
-    private toastService: ToastService,
     private userService: UserService,
     private router: Router,
-    private notificationService: MessageService
+    private notificationService: MessageService,
+    private maintenanceService: MaintenanceService,
   ) {}
 
   ngOnInit(): void {
@@ -52,9 +54,10 @@ export class HeaderComponent implements OnInit {
         if (this.hasRoles) {
           this.applicationService.setup();
           this.loadNotifications();
+          this.setMaintenanceBanner();
 
           const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-            currentUser.client_roles!.includes(value)
+            currentUser.client_roles!.includes(value),
           );
           this.allowedSearch = overlappingRoles.length > 0;
         }
@@ -66,8 +69,22 @@ export class HeaderComponent implements OnInit {
     });
 
     this.boardService.$boards.subscribe(
-      (dms) => (this.sortedBoards = dms.sort((x, y) => this.sortDecisionMakers(x, y)))
+      (dms) => (this.sortedBoards = dms.sort((x, y) => this.sortDecisionMakers(x, y))),
     );
+
+    this.maintenanceService.$showBanner.subscribe((showBanner) => {
+      this.showMaintenanceBanner = showBanner;
+    });
+
+    this.maintenanceService.$bannerMessage.subscribe((message) => {
+      this.maintenanceBannerMessage = message;
+    });
+  }
+
+  private async setMaintenanceBanner() {
+    const maintenanceBanner = await this.maintenanceService.getBanner();
+    this.showMaintenanceBanner = maintenanceBanner?.showBanner || false;
+    this.maintenanceBannerMessage = maintenanceBanner?.message || '';
   }
 
   private sortDecisionMakers(x: BoardWithFavourite, y: BoardWithFavourite) {

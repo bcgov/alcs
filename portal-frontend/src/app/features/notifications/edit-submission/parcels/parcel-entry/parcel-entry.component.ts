@@ -4,7 +4,6 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../../services/application-parcel/application-parcel.dto';
 import { NotificationParcelDto } from '../../../../../services/notification-parcel/notification-parcel.dto';
-import { NotificationParcelService } from '../../../../../services/notification-parcel/notification-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 
@@ -18,7 +17,6 @@ export interface ParcelEntryFormData {
   parcelType: string | undefined | null;
   isFarm: string | undefined | null;
   purchaseDate?: Date | null;
-  crownLandOwnerType?: string | null;
   isConfirmedByApplicant: boolean;
 }
 
@@ -50,21 +48,21 @@ export class ParcelEntryComponent implements OnInit {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   mapArea = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   pid = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   pin = new FormControl<string | null>({
     disabled: true,
@@ -75,7 +73,7 @@ export class ParcelEntryComponent implements OnInit {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
@@ -91,7 +89,10 @@ export class ParcelEntryComponent implements OnInit {
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
-  constructor(private parcelService: ParcelService, private dialog: MatDialog) {}
+  constructor(
+    private parcelService: ParcelService,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
     this.setupForm();

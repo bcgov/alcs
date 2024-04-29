@@ -20,6 +20,7 @@ import { MaintenanceInterceptorService } from './shared/maintenance/maintenance-
 import { SharedModule } from './shared/shared.module';
 import { WarningBannerComponent } from './shared/warning-banner/warning-banner.component';
 import { MaintenanceComponent } from './features/maintenance/maintenance.component';
+import { MaintenanceBannerComponent } from './shared/header/maintenance-banner/maintenance-banner.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MaintenanceComponent } from './features/maintenance/maintenance.compone
     AuthorizationComponent,
     ConfirmationDialogComponent,
     MaintenanceComponent,
+    MaintenanceBannerComponent,
   ],
   imports: [
     BrowserModule,

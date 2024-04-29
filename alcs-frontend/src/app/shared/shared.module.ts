@@ -72,6 +72,7 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
+import { DragDropDirective } from './drag-drop-file/drag-drop-file.directive';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     TableColumnNoDataPipe,
     InlineChairReviewOutcomeComponent,
     InlineButtonToggleComponent,
+    DragDropDirective
   ],
   imports: [
     CommonModule,
@@ -208,6 +210,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     InlineChairReviewOutcomeComponent,
     MatSlideToggleModule,
     InlineButtonToggleComponent,
+    DragDropDirective
   ],
 })
 export class SharedModule {

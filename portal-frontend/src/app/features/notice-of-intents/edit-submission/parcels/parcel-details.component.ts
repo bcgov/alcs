@@ -38,7 +38,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     private noiParcelService: NoticeOfIntentParcelService,
     private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
     private toastService: ToastService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
     super();
   }
@@ -50,7 +50,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
         this.submissionUuid = noiSubmission.uuid;
         this.loadParcels();
         const parcelOwners = noiSubmission.owners.filter(
-          (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+          (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code),
         );
         this.$owners.next(parcelOwners);
       }
@@ -105,8 +105,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     parcel.purchasedDate =
       formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
     parcel.isConfirmedByApplicant = formData.isConfirmedByApplicant || false;
-    parcel.crownLandOwnerType =
-      formData.crownLandOwnerType !== undefined ? formData.crownLandOwnerType : parcel.crownLandOwnerType;
     if (formData.owners) {
       parcel.owners = formData.owners;
     }
@@ -127,7 +125,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
           mapAreaHectares: parcel.mapAreaHectares,
           ownershipTypeCode: parcel.ownershipTypeCode,
           isConfirmedByApplicant: parcel.isConfirmedByApplicant,
-          crownLandOwnerType: parcel.crownLandOwnerType,
           ownerUuids: parcel.owners.map((owner) => owner.uuid),
         });
       }
@@ -161,7 +158,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     const owners = await this.noticeOfIntentOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (owners) {
       const parcelOwners = owners.filter(
-        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code),
       );
       this.$owners.next(parcelOwners);
     }

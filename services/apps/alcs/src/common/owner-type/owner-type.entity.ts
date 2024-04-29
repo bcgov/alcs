@@ -12,7 +12,9 @@ export enum OWNER_TYPE {
 
 export class OwnerTypeDto extends BaseCodeDto {}
 
-@Entity()
+@Entity({
+  comment: 'Code table for possible types of owners or primary contacts',
+})
 export class OwnerType extends BaseCodeEntity {
   constructor(data?: Partial<OwnerType>) {
     super();

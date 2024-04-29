@@ -39,7 +39,7 @@ describe('ApplicationStaffJournalService', () => {
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     const res = await service.fetchNotes('1');
@@ -55,7 +55,7 @@ describe('ApplicationStaffJournalService', () => {
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     await service.createNoteForApplication({ body: '', applicationUuid: '' });
@@ -70,10 +70,55 @@ describe('ApplicationStaffJournalService', () => {
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     await service.createNoteForNoticeOfIntent({ body: '', noticeOfIntentUuid: '' });
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+    expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create a note for notifications', async () => {
+    httpClient.post.mockReturnValue(
+      of([
+        {
+          uuid: '1',
+        },
+      ]),
+    );
+
+    await service.createNoteForNotification({ body: '', notificationUuid: '' });
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+    expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create a note for planning reviews', async () => {
+    httpClient.post.mockReturnValue(
+      of([
+        {
+          uuid: '1',
+        },
+      ]),
+    );
+
+    await service.createNoteForPlanningReview({ body: '', planningReviewUuid: '' });
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+    expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create a note for inquiries', async () => {
+    httpClient.post.mockReturnValue(
+      of([
+        {
+          uuid: '1',
+        },
+      ]),
+    );
+
+    await service.createNoteForInquiry({ body: '', inquiryUuid: '' });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
@@ -85,7 +130,7 @@ describe('ApplicationStaffJournalService', () => {
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     await service.updateNote({ body: '', uuid: '' });
@@ -100,7 +145,7 @@ describe('ApplicationStaffJournalService', () => {
         {
           uuid: '1',
         },
-      ])
+      ]),
     );
 
     await service.deleteNote('');

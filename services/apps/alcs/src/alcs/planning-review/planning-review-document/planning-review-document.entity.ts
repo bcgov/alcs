@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
@@ -17,6 +18,7 @@ export enum PR_VISIBILITY_FLAG {
   COMMISSIONER = 'C',
 }
 
+@Unique('UNIQUE_OATS_IDS', ['oatsDocumentId', 'oatsPlanningReviewId'])
 @Entity({
   comment: 'Stores planning review documents',
 })
@@ -57,6 +59,27 @@ export class PlanningReviewDocument extends BaseEntity {
 
   @Column({ nullable: true, type: 'int' })
   evidentiaryRecordSorting?: number | null;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+    select: false,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.planning_review to alcs.planning_review_document.',
+  })
+  oatsPlanningReviewId?: string | null;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+    select: false,
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.documents/alcs.documents to alcs.planning_review_document.',
+  })
+  oatsDocumentId?: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  auditCreatedBy?: string | null;
 
   @OneToOne(() => Document)
   @JoinColumn()

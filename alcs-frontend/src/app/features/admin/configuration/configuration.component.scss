@@ -1,18 +1,70 @@
 @use '../../../../styles/colors';
 
-.value {
+.row {
   display: flex;
-  align-items: center;
+  margin: 24px 0;
+  align-items: flex-start;
 }
 
-.subheading2 {
-  margin-top: 36px !important;
+.label-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
-.editing {
-  max-width: 600px;
+.toggle-label {
+  font-weight: 700;
+  flex-grow: 1;
+}
 
-  &.hidden {
-    display: none;
+.toggle {
+  display: flex;
+  gap: 4px;
+  color: colors.$black;
+  font-weight: 700;
+}
+
+.inactive {
+  color: colors.$grey;
+  font-weight: 400;
+}
+
+:host::ng-deep {
+  .toggle {
+    mat-label {
+      margin-right: 8px;
+    }
+
+    & .mdc-form-field {
+      display: flex;
+    }
+
+    & .mdc-label {
+      font-size: 16px;
+      padding-left: 12px;
+    }
+
+    & .mat-mdc-slide-toggle .mdc-form-field {
+      color: colors.$grey;
+    }
+
+    & .mat-mdc-slide-toggle-checked .mdc-form-field {
+      color: colors.$black;
+
+      .mdc-label {
+        font-weight: 700 !important;
+      }
+    }
+  }
+
+  app-inline-text {
+    .editing {
+      width: 100%;
+
+      mat-form-field {
+        width: 100%;
+      }
+    }
   }
 }

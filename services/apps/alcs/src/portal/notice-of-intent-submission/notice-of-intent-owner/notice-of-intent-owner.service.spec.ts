@@ -73,7 +73,7 @@ describe('NoticeOfIntentOwnerService', () => {
     mockNoiSubmissionService.update.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
-    mockNoiService.updateApplicant.mockResolvedValue();
+    mockNoiService.updateNoticeOfIntentInfo.mockResolvedValue();
     mockNoiSubmissionService.getFileNumber.mockResolvedValue('file-number');
   });
 
@@ -253,7 +253,7 @@ describe('NoticeOfIntentOwnerService', () => {
       'A',
     );
     expect(mockNoiSubmissionService.getFileNumber).toHaveBeenCalledTimes(1);
-    expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateNoticeOfIntentInfo).toHaveBeenCalledTimes(1);
   });
 
   it('should call update with the first parcels last name', async () => {
@@ -289,7 +289,7 @@ describe('NoticeOfIntentOwnerService', () => {
       'A et al.',
     );
     expect(mockNoiSubmissionService.getFileNumber).toHaveBeenCalledTimes(1);
-    expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateNoticeOfIntentInfo).toHaveBeenCalledTimes(1);
   });
 
   it('should call update with the number owners last name', async () => {
@@ -350,7 +350,7 @@ describe('NoticeOfIntentOwnerService', () => {
       'C et al.',
     );
     expect(mockNoiSubmissionService.getFileNumber).toHaveBeenCalledTimes(1);
-    expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateNoticeOfIntentInfo).toHaveBeenCalledTimes(1);
   });
 
   it('should load then delete non application owners', async () => {

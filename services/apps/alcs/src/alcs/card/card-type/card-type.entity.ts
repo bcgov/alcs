@@ -11,9 +11,12 @@ export enum CARD_TYPE {
   NOI = 'NOI',
   NOI_MODI = 'NOIM',
   NOTIFICATION = 'NOTI',
+  INQUIRY = 'INQR',
 }
 
-@Entity()
+@Entity({
+  comment: 'Code table for possible card types',
+})
 export class CardType extends BaseCodeEntity {
   constructor(data?: Partial<CardType>) {
     super();

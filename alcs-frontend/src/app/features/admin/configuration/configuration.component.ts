@@ -3,6 +3,11 @@ import {
   AdminConfigurationService,
   CONFIG_VALUE,
 } from '../../../services/admin-configuration/admin-configuration.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { MaintenanceBannerConfirmationDialogComponent } from './maintenance-banner-confirmation-dialog/maintenance-banner-confirmation-dialog.component';
+import { MaintenanceService } from '../../../services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-configuration',
@@ -10,30 +15,82 @@ import {
   styleUrls: ['./configuration.component.scss'],
 })
 export class ConfigurationComponent implements OnInit {
-  maintenanceMode = 'false';
-  isEditing = false;
+  maintenanceBanner = false;
+  maintenanceBannerMessage = '';
+  maintenanceMode = false;
 
-  constructor(private adminConfigurationService: AdminConfigurationService) {}
+  constructor(
+    private dialog: MatDialog,
+    private adminConfigurationService: AdminConfigurationService,
+    private maintenanceService: MaintenanceService,
+    protected confirmationDialogService: ConfirmationDialogService,
+  ) {}
 
   ngOnInit(): void {
     this.loadConfigs();
   }
 
-  toggleEdit() {
-    this.isEditing = !this.isEditing;
+  private async updateConfig(configName: CONFIG_VALUE, configValue: string) {
+    await this.adminConfigurationService.setConfiguration(configName, configValue);
+    this.loadConfigs();
   }
 
-  async onSave() {
-    await this.adminConfigurationService.setConfiguration(CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, this.maintenanceMode);
-    this.loadConfigs();
-    this.isEditing = false;
+  private getConfigValue<T extends string | boolean = string>(
+    configs: { name: CONFIG_VALUE; value: string }[],
+    configName: CONFIG_VALUE,
+    isBoolean?: boolean,
+  ): T {
+    const config = configs.find((config) => config.name === configName);
+
+    if (!config) {
+      throw new Error(`Configuration ${configName} not found.`);
+    }
+
+    return (isBoolean ? config.value === 'true' : config.value) as T;
   }
 
   private async loadConfigs() {
     const configs = await this.adminConfigurationService.listConfigurations();
     if (configs) {
-      const maintenanceConfig = configs.find((config) => config.name === CONFIG_VALUE.PORTAL_MAINTENANCE_MODE);
-      this.maintenanceMode = maintenanceConfig!.value;
+      this.maintenanceMode = this.getConfigValue<boolean>(configs, CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, true);
+      this.maintenanceBanner = this.getConfigValue<boolean>(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER, true);
+      this.maintenanceBannerMessage = this.getConfigValue(configs, CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE);
+    }
+  }
+
+  onToggleMaintenanceBanner(event: MatSlideToggleChange) {
+    if (event.checked) {
+      this.dialog
+        .open(MaintenanceBannerConfirmationDialogComponent, {
+          data: {
+            message: this.maintenanceBannerMessage,
+          },
+        })
+        .beforeClosed()
+        .subscribe((didConfirm) => {
+          if (didConfirm) {
+            this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner.toString());
+            this.maintenanceService.setBannerMessage(this.maintenanceBannerMessage);
+            this.maintenanceService.setShowBanner(true);
+          } else {
+            this.loadConfigs();
+          }
+        });
+    } else {
+      this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER, this.maintenanceBanner.toString());
+      this.maintenanceService.setShowBanner(false);
+    }
+  }
+
+  onToggleMaintenanceMode() {
+    this.updateConfig(CONFIG_VALUE.PORTAL_MAINTENANCE_MODE, this.maintenanceMode.toString());
+  }
+
+  updateMaintenanceBannerMessage(message: string | null) {
+    this.updateConfig(CONFIG_VALUE.APP_MAINTENANCE_BANNER_MESSAGE, message || '');
+
+    if (this.maintenanceBanner === true) {
+      this.maintenanceService.setBannerMessage(message || '');
     }
   }
 }

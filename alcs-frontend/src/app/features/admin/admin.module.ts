@@ -1,4 +1,4 @@
-import { CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -23,6 +23,7 @@ import { LocalGovernmentComponent } from './local-government/local-government.co
 import { NoiSubtypeDialogComponent } from './noi-subtype/noi-subtype-dialog/noi-subtype-dialog.component';
 import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
 import { UnarchiveComponent } from './unarchive/unarchive.component';
+import { MaintenanceBannerConfirmationDialogComponent } from './configuration/maintenance-banner-confirmation-dialog/maintenance-banner-confirmation-dialog.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,7 @@ const routes: Routes = [
     BoardManagementComponent,
     BoardManagementDialogComponent,
     ConfigurationComponent,
+    MaintenanceBannerConfirmationDialogComponent,
   ],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule, DragDropModule],
 })

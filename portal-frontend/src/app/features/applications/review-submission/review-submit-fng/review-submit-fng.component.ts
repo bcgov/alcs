@@ -16,7 +16,7 @@ import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationFngSteps } from '../review-submission.component';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { SubmitConfirmationDialogComponent } from '../submit-confirmation-dialog/submit-confirmation-dialog.component';
-import { openFileIframe } from '../../../../shared/utils/file';
+import { openFileInline } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-review-submit-fng[stepper]',
@@ -121,10 +121,10 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     }
   }
 
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
+  async openFile(file: ApplicationDocumentDto) {
+    const res = await this.applicationDocumentService.openFile(file.uuid);
     if (res) {
-      openFileIframe(res);
+      openFileInline(res.url, file.fileName);
     }
   }
 

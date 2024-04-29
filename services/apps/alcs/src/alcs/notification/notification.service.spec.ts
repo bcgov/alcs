@@ -146,7 +146,7 @@ describe('NotificationService', () => {
     const promise = service.getByCardUuid(cardUuid);
 
     await expect(promise).rejects.toMatchObject(
-      new Error(`Failed to find notice of intent with card uuid ${cardUuid}`),
+      new Error(`Failed to find notification with card uuid ${cardUuid}`),
     );
 
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
@@ -176,7 +176,7 @@ describe('NotificationService', () => {
 
     await expect(promise).rejects.toMatchObject(
       new ServiceNotFoundException(
-        `Failed to find notice of intent with uuid uuid`,
+        `Failed to find notification with uuid uuid`,
       ),
     );
 

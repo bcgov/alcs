@@ -109,3 +109,20 @@ a {
 .backdrop {
   background-color: rgba(255, 255, 255, 0.7);
 }
+
+.mat-primary {
+  &.mat-mdc-button-base {
+    --mat-fab-foreground-color: #fff;
+    --mdc-filled-button-label-text-color: #fff;
+    --mdc-protected-button-label-text-color: #fff;
+  }
+
+  &.mat-mdc-fab,
+  &.mat-mdc-mini-fab {
+    --mat-icon-color: #fff;
+  }
+}
+
+.mdc-checkbox {
+  --mdc-checkbox-selected-checkmark-color: #fff;
+}

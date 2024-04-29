@@ -7,12 +7,14 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Card } from '../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
+import { Card } from '../card/card.entity';
 import { CommentMention } from './mention/comment-mention.entity';
 
-@Entity()
+@Entity({
+  comment: 'Attributes for card comments',
+})
 export class Comment extends Base {
   constructor(data?: Partial<Comment>) {
     super();

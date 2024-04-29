@@ -15,7 +15,7 @@ import { ColumnNumericTransformer } from '../../../utils/column-numeric-transfor
 import { NoticeOfIntentOwner } from '../notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
 
-@Entity()
+@Entity({ comment: 'Parcels that are linked to Notice of Intent Submissions' })
 export class NoticeOfIntentParcel extends Base {
   constructor(data?: Partial<NoticeOfIntentParcel>) {
     super();
@@ -109,15 +109,6 @@ export class NoticeOfIntentParcel extends Base {
   @AutoMap()
   @ManyToOne(() => ParcelOwnershipType)
   ownershipType: ParcelOwnershipType;
-
-  @AutoMap(() => Boolean)
-  @Column({
-    type: 'text',
-    comment:
-      'For Crown Land parcels to indicate whether they are provincially owned or federally owned',
-    nullable: true,
-  })
-  crownLandOwnerType?: string | null;
 
   @ManyToMany(() => NoticeOfIntentOwner, (owner) => owner.parcels)
   @JoinTable()

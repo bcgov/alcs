@@ -9,7 +9,9 @@ const mockToken = {
   exp: 1,
 };
 
-jest.mock('jwt-decode', () => (token: string) => mockToken);
+jest.mock('jwt-decode', () => ({
+  jwtDecode: (token: string) => mockToken,
+}));
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -65,7 +67,7 @@ describe('AuthenticationService', () => {
       of({
         refresh_token: 'newRefreshToken',
         token: 'newToken',
-      })
+      }),
     );
 
     await service.getToken();
@@ -78,7 +80,7 @@ describe('AuthenticationService', () => {
     httpClient.get.mockReturnValue(
       of({
         url: fakeUrl,
-      })
+      }),
     );
 
     window = Object.create(window);
@@ -118,8 +120,8 @@ describe('AuthenticationService', () => {
           new HttpErrorResponse({
             error: fakeLoginUrl,
             status: 401,
-          })
-      )
+          }),
+      ),
     );
 
     await service.getToken();

@@ -2,11 +2,11 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import {
   ApplicationDocument,
@@ -48,6 +48,7 @@ describe('ApplicationSubmissionService', () => {
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockQueryBuilder;
+  let mockUser;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -60,6 +61,10 @@ describe('ApplicationSubmissionService', () => {
     mockNaruSubtypeRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
     mockFileNumberService = createMock();
+
+    mockUser = new User({
+      clientRoles: [],
+    });
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -128,6 +133,7 @@ describe('ApplicationSubmissionService', () => {
     mockQueryBuilder.leftJoin.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.select.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.where.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.andWhere.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.execute.mockResolvedValue([
       {
         user_uuid: 'user_uuid',
@@ -154,14 +160,14 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const app = await service.getIfCreatorByFileNumber('', new User());
+    const app = await service.getIfCreatorByFileNumber('', mockUser);
     expect(app).toBe(application);
   });
 
   it('should throw an exception if the application is not found the fetched application', async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
-    const promise = service.getIfCreatorByFileNumber('', new User());
+    const promise = service.getIfCreatorByFileNumber('', mockUser);
     await expect(promise).rejects.toMatchObject(
       new Error(`Failed to load application with File ID `),
     );
@@ -189,7 +195,7 @@ describe('ApplicationSubmissionService', () => {
       {} as any,
     );
 
-    const fileNumber = await service.create('type', new User());
+    const fileNumber = await service.create('type', mockUser);
 
     expect(fileNumber).toEqual(fileId);
     expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
@@ -204,7 +210,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.find.mockResolvedValue([application]);
 
-    const res = await service.getByUser(new User());
+    const res = await service.getByUser(mockUser);
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
     expect(res[0]).toBe(application);
@@ -214,7 +220,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission();
     mockRepository.findOne.mockResolvedValue(application);
 
-    const res = await service.getByFileNumber('', new User());
+    const res = await service.getByFileNumber('', mockUser);
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
   });
@@ -258,7 +264,7 @@ describe('ApplicationSubmissionService', () => {
         statusTypeCode: SUBMISSION_STATUS.CANCELLED,
         submissionUuid: 'fake',
       }),
-      createdBy: new User(),
+      createdBy: mockUser,
     });
     mockRepository.findOne.mockResolvedValue(submission);
 
@@ -346,7 +352,7 @@ describe('ApplicationSubmissionService', () => {
     });
     mockRepository.findOne.mockResolvedValue(application);
 
-    const res = await service.mapToDTOs([application], new User());
+    const res = await service.mapToDTOs([application], mockUser);
     expect(mockApplicationService.fetchApplicationTypes).toHaveBeenCalledTimes(
       1,
     );
@@ -371,7 +377,7 @@ describe('ApplicationSubmissionService', () => {
     await expect(
       service.submitToAlcs(
         applicationSubmission as ValidatedApplicationSubmission,
-        new User(),
+        mockUser,
       ),
     ).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit application: ${fileNumber}`),
@@ -400,7 +406,7 @@ describe('ApplicationSubmissionService', () => {
     mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
-      new User(),
+      mockUser,
     );
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);
@@ -441,7 +447,7 @@ describe('ApplicationSubmissionService', () => {
 
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
-      new User(),
+      mockUser,
     );
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);
@@ -488,7 +494,7 @@ describe('ApplicationSubmissionService', () => {
 
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
-      new User(),
+      mockUser,
     );
 
     await new Promise((r) => setTimeout(r, 100));
@@ -499,7 +505,7 @@ describe('ApplicationSubmissionService', () => {
     ).toBeCalledTimes(1);
     expect(
       mockGenerateSubmissionDocumentService.generateAndAttach,
-    ).toBeCalledWith(fileNumber, new User());
+    ).toBeCalledWith(fileNumber, mockUser);
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
     ).toBeCalledTimes(1);
@@ -589,7 +595,7 @@ describe('ApplicationSubmissionService', () => {
       new ApplicationDocument({
         visibilityFlags: [VISIBILITY_FLAG.PUBLIC],
       }),
-      new User(),
+      mockUser,
     );
 
     expect(res).toBe(true);
@@ -605,6 +611,7 @@ describe('ApplicationSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         uuid: 'user_uuid',
       }),
     );
@@ -622,6 +629,7 @@ describe('ApplicationSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         uuid: 'NOT_user_uuid',
       }),
     );
@@ -639,6 +647,7 @@ describe('ApplicationSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'localGovernment_bceid_business_guid',
       }),
     );
@@ -656,6 +665,7 @@ describe('ApplicationSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'NOT_localGovernment_bceid_business_guid',
       }),
     );
@@ -673,6 +683,7 @@ describe('ApplicationSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'bceid_business_guid',
       }),
     );
@@ -690,6 +701,7 @@ describe('ApplicationSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'NOT_bceid_business_guid',
       }),
     );
@@ -705,8 +717,8 @@ describe('ApplicationSubmissionService', () => {
     const res = await service.canDeleteDocument(
       new ApplicationDocument({}),
       new User({
+        ...mockUser,
         uuid: 'user_uuid',
-        clientRoles: [],
       }),
     );
 
@@ -721,8 +733,8 @@ describe('ApplicationSubmissionService', () => {
     const res = await service.canDeleteDocument(
       new ApplicationDocument({}),
       new User({
+        ...mockUser,
         uuid: 'NOT_user_uuid',
-        clientRoles: [],
       }),
     );
 

@@ -12,17 +12,14 @@ import os
 etl_name = "import_srw_documents_from_oats"
 logger = setup_and_get_logger(etl_name)
 
-"""
-    This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS documents table.
-
-    NOTE:
-    Before performing document import you need to import SRWs from oats.
-"""
-
 
 @inject_conn_pool
 def import_oats_srw_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
+    This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS documents table.
+
+    NOTE:
+    Before performing document import you need to import SRWs from oats.
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
     logger.info(f"Start {etl_name}")
@@ -181,7 +178,7 @@ def document_clean(conn=None):
     logger.info("Start documents cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.document WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_created_at > '2024-02-08';"
+            f"DELETE FROM alcs.document WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_created_at > '2024-02-08' AND oats_application_id IS NOT NULL;"
         )
         conn.commit()
         logger.info(f"Deleted items count = {cursor.rowcount}")

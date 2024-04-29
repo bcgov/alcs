@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { parseStringToBoolean } from '../../../../../../../shared/utils/boolean-helper';
 import { SelectableComponent, TempApplicationDecisionConditionDto } from '../decision-conditions.component';
 
 @Component({
@@ -16,7 +15,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   @Input() selectableComponents: SelectableComponent[] = [];
 
   componentsToCondition = new FormControl<string[] | null>(null, [Validators.required]);
-  approvalDependant = new FormControl<string | null>(null, [Validators.required]);
+  approvalDependant = new FormControl<boolean | null>(null, [Validators.required]);
 
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
@@ -32,11 +31,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.data) {
-      let approvalDependant = null;
-      if (this.data.approvalDependant !== null) {
-        approvalDependant = this.data.approvalDependant ? 'true' : 'false';
-      }
-
       const selectedOptions = this.selectableComponents
         .filter((component) => this.data.componentsToCondition?.map((e) => e.tempId)?.includes(component.tempId))
         .map((e) => ({
@@ -48,7 +42,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       this.componentsToCondition.setValue(selectedOptions.map((e) => e.tempId) ?? null);
 
       this.form.patchValue({
-        approvalDependant,
+        approvalDependant: this.data.approvalDependant,
         securityAmount: this.data.securityAmount?.toString() ?? null,
         administrativeFee: this.data.administrativeFee?.toString() ?? null,
         description: this.data.description ?? null,
@@ -68,7 +62,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         type: this.data.type,
         tempUuid: this.data.tempUuid,
         uuid: this.data.uuid,
-        approvalDependant: parseStringToBoolean(this.approvalDependant.value),
+        approvalDependant: this.approvalDependant.value,
         securityAmount: this.securityAmount.value !== null ? parseFloat(this.securityAmount.value) : undefined,
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,

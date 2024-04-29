@@ -1,8 +1,11 @@
 <div class="inline-number-wrapper">
   <span class="left" *ngIf="!isEditing">
     <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
-    <span *ngIf="value">
+    <span *ngIf="value && !mask">
       {{ value }}
+    </span>
+    <span *ngIf="value && mask">
+      {{ value | mask: mask }}
     </span>
     <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
       <mat-icon class="edit-icon">edit</mat-icon>
@@ -26,12 +29,19 @@
           [(ngModel)]="pendingValue"
           (keydown.enter)="confirmEdit()"
           (keydown.escape)="cancelEdit()"
+          [mask]="mask"
+          [maxlength]="maxLength"
         />
       </mat-form-field>
     </form>
     <div class="button-container">
+      <mat-hint *ngIf="maxLength" class="char-limit button-text"
+        >{{ editInput?.value?.length || 0 }}/{{ maxLength }}</mat-hint
+      >
       <button mat-button (click)="cancelEdit()">CANCEL</button>
-      <button mat-button class="save" [disabled]="required && !pendingValue" (click)="confirmEdit()">SAVE</button>
+      <button mat-button color="primary" class="save" [disabled]="required && !pendingValue" (click)="confirmEdit()">
+        SAVE
+      </button>
     </div>
   </div>
 </div>

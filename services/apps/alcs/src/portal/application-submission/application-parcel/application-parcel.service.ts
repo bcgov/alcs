@@ -93,7 +93,6 @@ export class ApplicationParcelService {
         updateDto.isConfirmedByApplicant,
         parcel.isConfirmedByApplicant,
       );
-      parcel.crownLandOwnerType = updateDto.crownLandOwnerType;
       parcel.alrArea = updateDto.alrArea;
 
       if (updateDto.ownerUuids) {

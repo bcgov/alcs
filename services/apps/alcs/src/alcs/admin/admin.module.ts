@@ -1,14 +1,14 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Configuration } from '../../common/entities/configuration.entity';
+import { ApplicationCeoCriterionCode } from '../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
 import { ApplicationModule } from '../application/application.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
-import { CovenantModule } from '../covenant/covenant.module';
-import { ApplicationCeoCriterionCode } from '../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
-import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
+import { InquiryModule } from '../inquiry/inquiry.module';
 import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentSubtype } from '../notice-of-intent/notice-of-intent-subtype.entity';
 import { NoticeOfIntentModule } from '../notice-of-intent/notice-of-intent.module';
@@ -48,12 +48,12 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     NoticeOfIntentDecisionModule,
     forwardRef(() => ApplicationDecisionModule),
     forwardRef(() => PlanningReviewModule),
-    forwardRef(() => CovenantModule),
     NoticeOfIntentModule,
     NoticeOfIntentDecisionModule,
     CardModule,
     BoardModule,
     NotificationModule,
+    InquiryModule,
   ],
   controllers: [
     HolidayController,

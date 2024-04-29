@@ -1,9 +1,9 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import {
@@ -42,6 +42,7 @@ describe('NoticeOfIntentSubmissionService', () => {
   let mockGenerateNoiSubmissionDocumentService: DeepMocked<GenerateNoiSubmissionDocumentService>;
   let mockNoiSubmission;
   let mockQueryBuilder;
+  let mockUser;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -52,6 +53,10 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockFileNumberService = createMock();
     mockNoiStatusService = createMock();
     mockGenerateNoiSubmissionDocumentService = createMock();
+
+    mockUser = new User({
+      clientRoles: [],
+    });
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -107,9 +112,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       typeCode: 'fake',
       soilProposedStructures: [],
       localGovernmentUuid: 'uuid',
-      createdBy: new User({
-        clientRoles: [],
-      }),
+      createdBy: mockUser,
     });
 
     mockQueryBuilder =
@@ -117,6 +120,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockQueryBuilder.leftJoin.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.select.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.where.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.andWhere.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.execute.mockResolvedValue([
       {
         user_uuid: 'user_uuid',
@@ -135,12 +139,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     const noiSubmission = new NoticeOfIntentSubmission();
     mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
 
-    const app = await service.getByFileNumber(
-      '',
-      new User({
-        clientRoles: [],
-      }),
-    );
+    const app = await service.getByFileNumber('', mockUser);
     expect(app).toBe(noiSubmission);
   });
 
@@ -148,12 +147,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     const noiSubmission = new NoticeOfIntentSubmission();
     mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
 
-    const app = await service.getByFileNumber(
-      '',
-      new User({
-        clientRoles: [],
-      }),
-    );
+    const app = await service.getByFileNumber('', mockUser);
     expect(app).toBe(noiSubmission);
   });
 
@@ -165,12 +159,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiService.create.mockResolvedValue(new NoticeOfIntent());
     mockNoiStatusService.setInitialStatuses.mockResolvedValue([]);
 
-    const fileNumber = await service.create(
-      'type',
-      new User({
-        clientRoles: [],
-      }),
-    );
+    const fileNumber = await service.create('type', mockUser);
 
     expect(fileNumber).toEqual(fileId);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -182,11 +171,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     const noiSubmission = new NoticeOfIntentSubmission();
     mockRepository.find.mockResolvedValue([noiSubmission]);
 
-    const res = await service.getAllByUser(
-      new User({
-        clientRoles: [],
-      }),
-    );
+    const res = await service.getAllByUser(mockUser);
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
     expect(res[0]).toBe(noiSubmission);
@@ -196,12 +181,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     const noiSubmission = new NoticeOfIntentSubmission();
     mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
 
-    const res = await service.getByFileNumber(
-      '',
-      new User({
-        clientRoles: [],
-      }),
-    );
+    const res = await service.getByFileNumber('', mockUser);
     expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toBe(noiSubmission);
   });
@@ -227,16 +207,11 @@ describe('NoticeOfIntentSubmissionService', () => {
         statusTypeCode: 'status-code',
         submissionUuid: 'fake',
       }),
-      createdBy: new User(),
+      createdBy: mockUser,
     });
     mockRepository.findOne.mockResolvedValue(noiSubmission);
 
-    const res = await service.mapToDTOs(
-      [noiSubmission],
-      new User({
-        clientRoles: [],
-      }),
-    );
+    const res = await service.mapToDTOs([noiSubmission], mockUser);
     expect(mockNoiService.listTypes).toHaveBeenCalledTimes(1);
     expect(res[0].type).toEqual('label');
     expect(res[0].applicant).toEqual(applicant);
@@ -259,7 +234,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     await expect(
       service.submitToAlcs(
         noticeOfIntentSubmission as ValidatedNoticeOfIntentSubmission,
-        new User(),
+        mockUser,
       ),
     ).rejects.toMatchObject(
       new BaseServiceException(
@@ -280,7 +255,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
     await service.submitToAlcs(
       mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
-      new User(),
+      mockUser,
     );
 
     expect(mockNoiService.submit).toBeCalledTimes(1);
@@ -333,7 +308,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
     await service.submitToAlcs(
       mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
-      new User(),
+      mockUser,
     );
 
     expect(mockNoiService.submit).toHaveBeenCalledTimes(1);
@@ -368,16 +343,14 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockRepository.save.mockResolvedValue(mockNoiSubmission);
     mockNoiService.update.mockResolvedValue(new NoticeOfIntent());
 
-    const result = await service.update(
+    await service.update(
       fileNumber,
       {
         applicant,
         typeCode,
         localGovernmentUuid,
       },
-      new User({
-        clientRoles: [],
-      }),
+      mockUser,
     );
 
     expect(mockRepository.save).toBeCalledTimes(1);
@@ -401,7 +374,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       new NoticeOfIntentDocument({
         visibilityFlags: [VISIBILITY_FLAG.PUBLIC],
       }),
-      new User(),
+      mockUser,
     );
 
     expect(res).toBe(true);
@@ -417,6 +390,7 @@ describe('NoticeOfIntentSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         uuid: 'user_uuid',
       }),
     );
@@ -434,6 +408,7 @@ describe('NoticeOfIntentSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         uuid: 'NOT_user_uuid',
       }),
     );
@@ -451,6 +426,7 @@ describe('NoticeOfIntentSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'localGovernment_bceid_business_guid',
       }),
     );
@@ -468,6 +444,7 @@ describe('NoticeOfIntentSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'NOT_localGovernment_bceid_business_guid',
       }),
     );
@@ -485,6 +462,7 @@ describe('NoticeOfIntentSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'bceid_business_guid',
       }),
     );
@@ -502,6 +480,7 @@ describe('NoticeOfIntentSubmissionService', () => {
         visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
       }),
       new User({
+        ...mockUser,
         bceidBusinessGuid: 'NOT_bceid_business_guid',
       }),
     );
@@ -517,8 +496,8 @@ describe('NoticeOfIntentSubmissionService', () => {
     const res = await service.canDeleteDocument(
       new NoticeOfIntentDocument({}),
       new User({
+        ...mockUser,
         uuid: 'user_uuid',
-        clientRoles: [],
       }),
     );
 
@@ -533,8 +512,8 @@ describe('NoticeOfIntentSubmissionService', () => {
     const res = await service.canDeleteDocument(
       new NoticeOfIntentDocument({}),
       new User({
+        ...mockUser,
         uuid: 'NOT_user_uuid',
-        clientRoles: [],
       }),
     );
 

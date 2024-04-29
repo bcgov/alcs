@@ -1,7 +1,7 @@
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentOwnerDto } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
@@ -20,10 +20,12 @@ export class NoticeOfIntentSubmissionService {
     private noiStatusRepository: Repository<NoticeOfIntentSubmissionStatusType>,
     @InjectMapper() private mapper: Mapper,
     private noiSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    @InjectRepository(NoticeOfIntentOwner)
+    private noiSubmissionOwnerRepository: Repository<NoticeOfIntentOwner>,
   ) {}
 
   async get(fileNumber: string) {
-    return await this.noiSubmissionRepository.findOneOrFail({
+    const submission = await this.noiSubmissionRepository.findOneOrFail({
       where: { fileNumber, isDraft: false },
       relations: {
         noticeOfIntent: {
@@ -31,11 +33,16 @@ export class NoticeOfIntentSubmissionService {
             document: true,
           },
         },
-        owners: {
-          type: true,
-        },
       },
     });
+
+    // owners retrieved separately for performance reasons
+    submission.owners = await this.noiSubmissionOwnerRepository.find({
+      where: { noticeOfIntentSubmissionUuid: submission.uuid },
+      relations: { type: true },
+    });
+
+    return submission;
   }
 
   async mapToDto(submission: NoticeOfIntentSubmission) {

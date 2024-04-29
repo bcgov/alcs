@@ -7,17 +7,17 @@
   <div class="form-row">
     <div class="full-row">
       <label for="government">Local or First Nation Government</label>
-      <mat-form-field class="full-width-input" appearance="outline">
+      <mat-form-field appearance="outline" class="full-width-input">
         <input
           (blur)="onBlur()"
-          id="government"
-          type="text"
-          matInput
-          formControlName="localGovernment"
-          placeholder="Type government"
           [matAutocomplete]="auto"
+          formControlName="localGovernment"
+          id="government"
+          matInput
+          placeholder="Type government"
+          type="text"
         />
-        <mat-autocomplete (optionSelected)="onChange($event)" #auto="matAutocomplete">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onChange($event)">
           <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
             {{ option.name }}
           </mat-option>
@@ -40,22 +40,22 @@
 <app-warning-banner *ngIf="showWarning" class="full-row">
   This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to fill
   out the form but you will be unable to submit. Please contact the ALC directly as soon as possible: &nbsp;<a
-    href="mailto:ALC.Portal@gov.bc.ca"
-    >ALC.Portal@gov.bc.ca</a
-  >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
+  href="mailto:ALC.Portal@gov.bc.ca"
+>ALC.Portal&#64;gov.bc.ca</a
+>&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
 </app-warning-banner>
 <p>
   Please Note: If your Local or First Nation Government is not listed, please contact the ALC directly.
-  <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a> / <a href="tel:236-468-3342">236-468-3342</a>
+  <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a> / <a href="tel:236-468-3342">236-468-3342</a>
 </p>
 <div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <button (click)="onSaveExit()" *ngIf="!draftMode" color="accent" mat-stroked-button>Save and Exit</button>
+  <button (click)="onSaveExit()" *ngIf="draftMode" color="accent" mat-stroked-button>Discard all Changes</button>
   <div>
-    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+    <button (click)="onNavigateToStep(currentStep - 1)" color="primary" mat-stroked-button>
       Previous<span class="mobile-hidden"> Step</span>
     </button>
-    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+    <button (click)="onNavigateToStep(currentStep + 1)" color="primary" mat-flat-button>
       Next<span class="mobile-hidden"> Step</span>
     </button>
   </div>
