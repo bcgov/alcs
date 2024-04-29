@@ -2,9 +2,9 @@
   <div class="header">
     <h2>Local/First Nation Gov Review</h2>
   </div>
-  <div *ngIf="!applicationReview" class="warning">
-    <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government review.
-  </div>
+  <app-warning-banner *ngIf="!applicationReview">
+    Application not subject to Local/First Nation Government review.
+  </app-warning-banner>
   <div *ngIf="applicationReview">
     <section>
       <h4>Contact Information</h4>

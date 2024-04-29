@@ -57,40 +57,38 @@
       </button>
     </div>
   </div>
-  <div
+  <app-warning-banner
     *ngIf="
       (application.status.code === SUBMISSION_STATUS.IN_PROGRESS ||
         application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
         application.status.code === SUBMISSION_STATUS.INCOMPLETE) &&
       !isTurOrCov
     "
-    class="warning"
   >
-    <mat-icon>info</mat-icon>This section will update after the application is submitted.
-  </div>
-  <div
+    This section will update after the application is submitted.
+  </app-warning-banner>
+  <app-warning-banner
     *ngIf="
       (application.status.code === SUBMISSION_STATUS.IN_PROGRESS ||
         application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
         application.status.code === SUBMISSION_STATUS.INCOMPLETE) &&
       isTurOrCov
     "
-    class="warning"
   >
-    <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government review.
-  </div>
-  <div *ngIf="!applicationReview && submittedToAlcStatus" class="warning">
-    <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government review.
-  </div>
-  <div
+    Application not subject to Local/First Nation Government review.
+  </app-warning-banner>
+
+  <app-warning-banner *ngIf="!applicationReview && submittedToAlcStatus">
+    Application not subject to Local/First Nation Government review.
+  </app-warning-banner>
+  <app-warning-banner
     *ngIf="
       application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG ||
       (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG && (!applicationReview || !application.canReview))
     "
-    class="warning"
   >
-    <mat-icon>info</mat-icon>Pending Local/First Nation Government review.
-  </div>
+    Pending Local/First Nation Government review.
+  </app-warning-banner>
   <div *ngIf="application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG" class="comment-container">
     <div><strong>Comment for L/FNG</strong></div>
     {{ application.returnedToLfngComment }}
@@ -137,7 +135,7 @@
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
-            {{ applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000' }}
+            {{ applicationReview.phoneNumber ?? '' | mask: '(000) 000-0000' }}
             <app-no-data *ngIf="!applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>
