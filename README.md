@@ -21,11 +21,12 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 - [Portal Frontend Readme](./portal-frontend/README.md)
 - [Services Readme](./services/README.md)
 - [Architecture](./docs/architecture.md)
+- [Pipelines](./docs/pipelines.md)
 - [SchemaSpy - ALCS](https://bcgov.github.io/alcs/schemaspy/alcs/index.html)
 - [SchemaSpy - OATS](https://bcgov.github.io/alcs/schemaspy/oats/index.html)
 - [One time Jobs](./docs/jobs.md)
 
-## Run dev setup
+## Development Environment Setup
 
 - [Prerequisites](./docs/prerequisites.md)
 - [Run ALCS Frontend](./alcs-frontend/README.md)
