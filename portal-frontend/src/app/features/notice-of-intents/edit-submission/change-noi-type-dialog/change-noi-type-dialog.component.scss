@@ -30,17 +30,13 @@
   }
 }
 
-.dialog-action-container {
-  margin: rem(4) 0;
-  padding: 0 rem(24);
-}
-
 .dialog-controls-wrapper {
   display: flex;
-  justify-content: space-between;
+  width: 100%;
+  gap: rem(16);
 
   button {
-    width: rem(116);
+    flex: 1 1 auto;
   }
 }
 
@@ -79,14 +75,15 @@
 
   .dialog-controls-wrapper {
     justify-content: flex-end;
-
-    button {
-      margin-left: rem(16) !important;
-    }
   }
 
   .dialog-action-container {
     margin: rem(24) 0;
+    width: unset;
+
+    button {
+      flex: unset;
+    }
   }
 
   .change-app-type-modal {

@@ -77,7 +77,7 @@
     </div>
   </form>
 </div>
-<div mat-dialog-actions class="actions">
+<div mat-dialog-actions class="actions" align="end">
   <button mat-stroked-button color="primary" (click)="onClose()">Cancel</button>
   <button mat-flat-button color="primary" [disabled]="form.invalid || isLoading" *ngIf="!isEdit" (click)="onCreate()">
     Add

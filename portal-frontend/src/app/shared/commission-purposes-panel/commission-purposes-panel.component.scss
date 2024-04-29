@@ -1,3 +1,5 @@
+@use '../../../styles/functions.scss' as *;
+
 .list-item {
   counter-reset: listCounter;
 }
@@ -9,4 +11,13 @@
 .list-item li:before {
   content: '(' counter(listCounter, lower-alpha) ') ';
   counter-increment: listCounter;
+}
+
+.custom-mat-expansion-panel-header {
+  height: fit-content;
+  padding: rem(16) rem(24);
+
+  &.mat-expanded {
+    height: fit-content;
+  }
 }

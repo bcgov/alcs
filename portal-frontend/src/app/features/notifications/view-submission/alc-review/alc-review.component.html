@@ -2,9 +2,9 @@
   <div class="header">
     <h3>ALC Review and Response</h3>
   </div>
-  <div *ngIf="notificationSubmission.status.code === NOTIFICATION_STATUS.IN_PROGRESS" class="warning">
-    <mat-icon>info</mat-icon>This section will update after the notification is submitted to the ALC.
-  </div>
+  <app-warning-banner *ngIf="notificationSubmission.status.code === NOTIFICATION_STATUS.IN_PROGRESS">
+    This section will update after the notification is submitted to the ALC.
+  </app-warning-banner>
   <div
     *ngIf="
       notificationSubmission.status.code === NOTIFICATION_STATUS.SUBMITTED_TO_ALC ||

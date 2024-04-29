@@ -91,4 +91,16 @@ section {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  @media screen and (max-width: $tabletBreakpoint) {
+    .row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .key {
+      width: auto;
+      margin-bottom: rem(5);
+    }
+  }
 }

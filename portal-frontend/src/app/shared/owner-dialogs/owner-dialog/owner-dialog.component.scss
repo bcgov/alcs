@@ -3,9 +3,33 @@
 
 .actions {
   display: flex;
-  justify-content: space-between;
-  button:not(:last-child) {
-    margin-right: rem(8) !important;
+  padding: 0 rem(24);
+  flex-direction: column-reverse;
+  gap: rem(8);
+  margin-top: rem(8);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: unset;
+    gap: unset;
+    margin-top: unset;
+  }
+}
+
+.btn-group {
+  width: 100%;
+  display: flex;
+  gap: rem(16);
+
+  button {
+    flex: 1 1 auto;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
+
+    button {
+      flex: unset;
+    }
   }
 }
 
@@ -14,7 +38,6 @@
     padding: 0.5rem !important;
   }
 }
-
 
 .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
   background-color: colors.$primary-color-light;
@@ -33,4 +56,10 @@
 
 .delete-btn {
   order: -1;
+  margin-right: auto !important;
+  width: 100%;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
+  }
 }

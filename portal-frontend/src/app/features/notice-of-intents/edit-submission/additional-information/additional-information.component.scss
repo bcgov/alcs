@@ -3,3 +3,15 @@
 .steps-list {
   margin: rem(16) 0;
 }
+
+.scrollable {
+  overflow-x: auto;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-table .mdc-data-table__row {
+  height: rem(75);
+}
