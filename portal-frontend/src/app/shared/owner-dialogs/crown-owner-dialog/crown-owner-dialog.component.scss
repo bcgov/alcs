@@ -3,10 +3,32 @@
 
 .actions {
   display: flex;
-  justify-content: space-between;
-  padding: 10px 24px 10px 24px;
-  button:not(:last-child) {
-    margin-right: rem(8) !important;
+  padding: rem(16) rem(24);
+  flex-direction: column-reverse;
+  gap: rem(8);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: unset;
+    gap: unset;
+    margin-top: unset;
+  }
+}
+
+.btn-group {
+  width: 100%;
+  display: flex;
+  gap: rem(16);
+
+  button {
+    flex: 1 1 auto;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
+
+    button {
+      flex: unset;
+    }
   }
 }
 
@@ -25,5 +47,15 @@
 :host::ng-deep {
   .warning-banner {
     padding: 0 !important;
+  }
+}
+
+.delete-btn {
+  order: -1;
+  margin-right: auto !important;
+  width: 100%;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
   }
 }
