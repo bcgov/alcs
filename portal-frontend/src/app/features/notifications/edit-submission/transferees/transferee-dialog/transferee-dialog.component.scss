@@ -2,8 +2,21 @@
 @use '../../../../../../styles/colors';
 
 .actions {
-  button:not(:last-child) {
-    margin-right: rem(8) !important;
+  display: flex;
+  padding: rem(16) rem(24);
+  width: 100%;
+  gap: rem(16);
+
+  button {
+    flex: 1 1 auto;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
+
+    button {
+      flex: unset;
+    }
   }
 }
 
