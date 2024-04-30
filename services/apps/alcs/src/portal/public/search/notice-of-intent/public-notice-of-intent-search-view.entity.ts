@@ -1,16 +1,8 @@
-import {
-  DataSource,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
+import { DataSource, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { NoticeOfIntentDecision } from '../../../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 import { NOI_SUBMISSION_STATUS } from '../../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
-import { NoticeOfIntentType } from '../../../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntent } from '../../../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentSubmission } from '../../../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { LinkedStatusType } from '../public-search.dto';
@@ -22,15 +14,10 @@ import { LinkedStatusType } from '../public-search.dto';
       .select('noi_sub.uuid', 'uuid')
       .addSelect('noi_sub.file_number', 'file_number')
       .addSelect('noi_sub.applicant', 'applicant')
-      .addSelect('noi_sub.local_government_uuid', 'local_government_uuid')
       .addSelect('localGovernment.name', 'local_government_name')
       .addSelect('noi_sub.type_code', 'notice_of_intent_type_code')
       .addSelect('noi.date_submitted_to_alc', 'date_submitted_to_alc')
-      .addSelect('noi.decision_date', 'decision_date')
       .addSelect('decision_date.outcome', 'outcome')
-      .addSelect('decision_date.dest_rank', 'dest_rank')
-      .addSelect('noi.uuid', 'notice_of_intent_uuid')
-      .addSelect('noi.region_code', 'notice_of_intent_region_code')
       .addSelect(
         'GREATEST(status_link.effective_date,  decision_date.date)',
         'last_update',
@@ -44,11 +31,6 @@ import { LinkedStatusType } from '../public-search.dto';
         NoticeOfIntent,
         'noi',
         'noi.file_number = noi_sub.file_number AND noi.hide_from_portal = FALSE',
-      )
-      .innerJoinAndSelect(
-        NoticeOfIntentType,
-        'noticeOfIntentType',
-        'noi_sub.type_code = noticeOfIntentType.code',
       )
       .leftJoin(
         LocalGovernment,
@@ -106,22 +88,10 @@ export class PublicNoticeOfIntentSubmissionSearchView {
   uuid: string;
 
   @ViewColumn()
-  noticeOfIntentUuid: string;
-
-  @ViewColumn()
-  lastUpdate: Date;
-
-  @ViewColumn()
-  noticeOfIntentRegionCode?: string;
-
-  @ViewColumn()
   fileNumber: string;
 
   @ViewColumn()
   applicant?: string;
-
-  @ViewColumn()
-  localGovernmentUuid?: string;
 
   @ViewColumn()
   localGovernmentName?: string;
@@ -130,23 +100,14 @@ export class PublicNoticeOfIntentSubmissionSearchView {
   noticeOfIntentTypeCode: string;
 
   @ViewColumn()
-  status: LinkedStatusType;
-
-  @ViewColumn()
   dateSubmittedToAlc: Date | null;
-
-  @ViewColumn()
-  decisionDate: Date | null;
-
-  @ViewColumn()
-  destRank: number | null;
 
   @ViewColumn()
   outcome: string | null;
 
-  @ManyToOne(() => NoticeOfIntentType, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'notice_of_intent_type_code' })
-  noticeOfIntentType: NoticeOfIntentType;
+  @ViewColumn()
+  lastUpdate: Date;
+
+  @ViewColumn()
+  status: LinkedStatusType;
 }

@@ -14,15 +14,10 @@ import { LinkedStatusType } from '../public-search.dto';
       .select('app_sub.uuid', 'uuid')
       .addSelect('app_sub.file_number', 'file_number')
       .addSelect('app_sub.applicant', 'applicant')
-      .addSelect('app_sub.local_government_uuid', 'local_government_uuid')
       .addSelect('localGovernment.name', 'local_government_name')
       .addSelect('app_sub.type_code', 'application_type_code')
       .addSelect('app.date_submitted_to_alc', 'date_submitted_to_alc')
-      .addSelect('app.decision_date', 'decision_date')
       .addSelect('decision_date.outcome', 'outcome')
-      .addSelect('decision_date.dest_rank', 'dest_rank')
-      .addSelect('app.uuid', 'application_uuid')
-      .addSelect('app.region_code', 'application_region_code')
       .addSelect(
         'GREATEST(status_link.effective_date,  decision_date.date)',
         'last_update',
@@ -93,22 +88,13 @@ export class PublicApplicationSubmissionSearchView {
   uuid: string;
 
   @ViewColumn()
-  applicationUuid: string;
-
-  @ViewColumn()
-  lastUpdate: Date;
-
-  @ViewColumn()
-  applicationRegionCode?: string;
-
-  @ViewColumn()
   fileNumber: string;
 
   @ViewColumn()
   applicant?: string;
 
   @ViewColumn()
-  localGovernmentUuid?: string;
+  lastUpdate: Date;
 
   @ViewColumn()
   localGovernmentName?: string;
@@ -117,17 +103,11 @@ export class PublicApplicationSubmissionSearchView {
   applicationTypeCode: string;
 
   @ViewColumn()
-  status: LinkedStatusType;
-
-  @ViewColumn()
   dateSubmittedToAlc: Date | null;
 
   @ViewColumn()
-  decisionDate: Date | null;
-
-  @ViewColumn()
-  destRank: number | null;
-
-  @ViewColumn()
   outcome: string | null;
+
+  @ViewColumn()
+  status: LinkedStatusType;
 }

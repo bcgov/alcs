@@ -46,6 +46,7 @@ export class NoticeOfIntent extends Base {
   })
   hideFromPortal?: boolean;
 
+  @Index()
   @Column({ type: 'uuid', nullable: true })
   cardUuid: string;
 

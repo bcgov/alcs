@@ -1,8 +1,12 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { createMockQuery } from '../../../../../test/mocks/mockTypes';
+import { Application } from '../../../../alcs/application/application.entity';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
+import { ApplicationSubmission } from '../../../application-submission/application-submission.entity';
 import { SearchRequestDto } from '../public-search.dto';
 import { PublicApplicationSubmissionSearchView } from './public-application-search-view.entity';
 import { PublicApplicationSearchService } from './public-application-search.service';
@@ -13,6 +17,11 @@ describe('PublicApplicationSearchService', () => {
     Repository<PublicApplicationSubmissionSearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  let mockApplicationRepository: DeepMocked<Repository<Application>>;
+  let mockApplicationSubmissionRepository: DeepMocked<
+    Repository<ApplicationSubmission>
+  >;
+  let mockRedisService: DeepMocked<RedisService>;
 
   const mockSearchRequestDto: SearchRequestDto = {
     fileNumber: '123',
@@ -36,22 +45,11 @@ describe('PublicApplicationSearchService', () => {
   beforeEach(async () => {
     mockApplicationSubmissionSearchViewRepository = createMock();
     mockLocalGovernmentRepository = createMock();
+    mockApplicationRepository = createMock();
+    mockApplicationSubmissionRepository = createMock();
+    mockRedisService = createMock();
 
-    mockQuery = {
-      getMany: jest.fn().mockResolvedValue([]),
-      getCount: jest.fn().mockResolvedValue(0),
-      orderBy: jest.fn().mockReturnThis(),
-      offset: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      innerJoinAndMapOne: jest.fn().mockReturnThis(),
-      groupBy: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      andWhere: jest.fn().mockReturnThis(),
-      setParameters: jest.fn().mockReturnThis(),
-      leftJoin: jest.fn().mockReturnThis(),
-      innerJoin: jest.fn().mockReturnThis(),
-      withDeleted: jest.fn().mockReturnThis(),
-    };
+    mockQuery = createMockQuery();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -64,6 +62,18 @@ describe('PublicApplicationSearchService', () => {
           provide: getRepositoryToken(LocalGovernment),
           useValue: mockLocalGovernmentRepository,
         },
+        {
+          provide: getRepositoryToken(Application),
+          useValue: mockApplicationRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationSubmission),
+          useValue: mockApplicationSubmissionRepository,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
       ],
     }).compile();
 
@@ -74,6 +84,11 @@ describe('PublicApplicationSearchService', () => {
     mockLocalGovernmentRepository.findOneByOrFail.mockResolvedValue(
       new LocalGovernment(),
     );
+
+    mockRedisService.getClient.mockReturnValue({
+      get: async () => null,
+      setEx: async () => null,
+    } as any);
   });
 
   it('should be defined', () => {
@@ -81,6 +96,31 @@ describe('PublicApplicationSearchService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
+    mockApplicationRepository.find.mockResolvedValue([]);
+    mockApplicationRepository.createQueryBuilder.mockReturnValue(mockQuery);
+    mockApplicationSubmissionRepository.find.mockResolvedValue([]);
+    mockApplicationSubmissionRepository.createQueryBuilder.mockReturnValue(
+      mockQuery,
+    );
+
+    const result = await service.searchApplications(mockSearchRequestDto);
+
+    expect(result).toEqual({ data: [], total: 0 });
+    expect(mockApplicationRepository.find).toHaveBeenCalledTimes(3);
+    expect(mockApplicationRepository.createQueryBuilder).toHaveBeenCalledTimes(
+      2,
+    );
+    expect(
+      mockApplicationSubmissionRepository.createQueryBuilder,
+    ).toHaveBeenCalledTimes(3);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(6);
+  });
+
+  it('should call compileApplicationSearchQuery method correctly', async () => {
+    const searchForFilerNumbers = jest
+      .spyOn(service as any, 'searchForFilerNumbers')
+      .mockResolvedValue(new Set('100000'));
+
     mockApplicationSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
       mockQuery as any,
     );
@@ -88,23 +128,7 @@ describe('PublicApplicationSearchService', () => {
     const result = await service.searchApplications(mockSearchRequestDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(
-      mockApplicationSubmissionSearchViewRepository.createQueryBuilder,
-    ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(10);
-  });
-
-  it('should call compileApplicationSearchQuery method correctly', async () => {
-    const compileApplicationSearchQuerySpy = jest
-      .spyOn(service as any, 'compileApplicationSearchQuery')
-      .mockResolvedValue(mockQuery);
-
-    const result = await service.searchApplications(mockSearchRequestDto);
-
-    expect(result).toEqual({ data: [], total: 0 });
-    expect(compileApplicationSearchQuerySpy).toBeCalledWith(
-      mockSearchRequestDto,
-    );
+    expect(searchForFilerNumbers).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
