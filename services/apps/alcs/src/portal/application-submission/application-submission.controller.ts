@@ -16,8 +16,8 @@ import {
 } from '../../../../../libs/common/src/exceptions/base.exception';
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
-  generateSUBGTurApplicantHtml,
   generateSUBGNoReviewGovernmentTemplateEmail,
+  generateSUBGTurApplicantHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
 import { generateSUBGCoveApplicantHtml } from '../../../../../templates/emails/submitted-to-alc/cove-applicant.template';
 import {
@@ -288,39 +288,25 @@ export class ApplicationSubmissionController {
       );
 
     if (matchingType.requiresGovernmentReview) {
-      const wasSubmittedToLfng = validatedSubmission.submissionStatuses.find(
-        (s) =>
-          [
-            SUBMISSION_STATUS.SUBMITTED_TO_LG,
-            SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-            SUBMISSION_STATUS.WRONG_GOV,
-            SUBMISSION_STATUS.INCOMPLETE,
-          ].includes(s.statusTypeCode as SUBMISSION_STATUS) &&
-          !!s.effectiveDate,
-      );
+      if (primaryContact) {
+        await this.statusEmailService.sendApplicationStatusEmail({
+          generateStatusHtml: generateSUBGApplicantHtml,
+          status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+          applicationSubmission: validatedSubmission,
+          government: submissionGovernment,
+          parentType: PARENT_TYPE.APPLICATION,
+          primaryContact,
+        });
+      }
 
-      // Send status emails for first time submissions
-      if (!wasSubmittedToLfng) {
-        if (primaryContact) {
-          await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateSUBGApplicantHtml,
-            status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
-            applicationSubmission: validatedSubmission,
-            government: submissionGovernment,
-            parentType: PARENT_TYPE.APPLICATION,
-            primaryContact,
-          });
-        }
-
-        if (submissionGovernment) {
-          await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateSUBGGovernmentHtml,
-            status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
-            applicationSubmission: validatedSubmission,
-            government: submissionGovernment,
-            parentType: PARENT_TYPE.APPLICATION,
-          });
-        }
+      if (submissionGovernment) {
+        await this.statusEmailService.sendApplicationStatusEmail({
+          generateStatusHtml: generateSUBGGovernmentHtml,
+          status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+          applicationSubmission: validatedSubmission,
+          government: submissionGovernment,
+          parentType: PARENT_TYPE.APPLICATION,
+        });
       }
 
       return await this.applicationSubmissionService.submitToLg(
