@@ -1,5 +1,5 @@
 <h3>ALC Intake</h3>
-<div class="intake">
+<div class="intake header-row">
   <div>
     <div class="subheading2">Submitted to ALC</div>
     <app-inline-datepicker
@@ -14,7 +14,7 @@
       <mat-icon
         class="icon"
         matTooltip='Portal status updated to "ALC Response Sent" when auto-email is successfully sent.'
-        >info_outline
+      >info_outline
       </mat-icon>
     </div>
     <ng-container *ngIf="responseSent && responseDate">
@@ -28,19 +28,11 @@
     </ng-container>
     <ng-container *ngIf="!responseSent">
       <div class="failed-text">
-        <mat-icon>warning</mat-icon>Failed
+        <mat-icon>warning</mat-icon>
+        Failed
         <button mat-flat-button color="primary" (click)="resendResponse()">Resend</button>
       </div>
     </ng-container>
-  </div>
-  <div *ngIf="notification">
-    <div class="subheading2">Local / First Nation Government</div>
-    <app-inline-dropdown
-      [options]="localGovernments"
-      [value]="notification.localGovernment.uuid"
-      (save)="onSaveLocalGovernment($event)"
-    >
-    </app-inline-dropdown>
   </div>
   <div *ngIf="contactEmail">
     <div class="subheading2">Primary Contact Email</div>
@@ -52,3 +44,24 @@
     ></app-inline-text>
   </div>
 </div>
+<div class="header-row">
+  <h5>L/FNG Information</h5>
+</div>
+<section *ngIf="notification" class="intake">
+  <div *ngIf="notification">
+    <div class="subheading2">Local/First Nation Government</div>
+    <app-inline-dropdown
+      [options]="localGovernments"
+      [value]="notification.localGovernment.uuid"
+      (save)="onSaveLocalGovernment($event)"
+    ></app-inline-dropdown>
+  </div>
+  <div *ngIf="notification">
+    <div class="subheading2">Region</div>
+    <app-inline-dropdown
+      [options]="regions"
+      [value]="notification.region.code"
+      (save)="updateRegion($event)"
+    ></app-inline-dropdown>
+  </div>
+</section>

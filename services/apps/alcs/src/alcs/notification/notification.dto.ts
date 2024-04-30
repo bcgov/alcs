@@ -58,6 +58,10 @@ export class UpdateNotificationDto {
   @IsOptional()
   @IsNumber()
   proposalEndDate?: number;
+
+  @IsOptional()
+  @IsString()
+  regionCode?: string;
 }
 
 export class CreateNotificationServiceDto {
