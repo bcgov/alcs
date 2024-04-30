@@ -3,10 +3,9 @@
 
 .actions {
   display: flex;
-  padding: 0 rem(24);
+  padding: rem(16) rem(24);
   flex-direction: column-reverse;
   gap: rem(8);
-  margin-top: rem(8);
 
   @media screen and (min-width: $tabletBreakpoint) {
     flex-direction: unset;

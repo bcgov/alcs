@@ -67,18 +67,15 @@
   }
 }
 
-.absolute {
-  position: absolute;
-  left: 0;
-  right: 0;
-}
-
 .banner {
   background-color: colors.$secondary-color;
-  width: 100%;
+  width: 100vw;
   color: #fff;
   padding: rem(16) rem(24);
-  margin-bottom: rem(32);
+  margin-bottom: rem(16);
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 
   @media screen and (min-width: $tabletBreakpoint) {
     padding: rem(12) rem(36) !important;

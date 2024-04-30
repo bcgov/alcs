@@ -99,17 +99,8 @@
   </form>
 </div>
 
-<div mat-dialog-actions class="actions">
-  <button
-    *ngIf="isEdit"
-    mat-stroked-button
-    color="warn"
-    style="margin-right: auto"
-    class="delete-btn"
-    (click)="onDelete()"
-  >
-    Delete Contact
-  </button>
+<div mat-dialog-actions class="actions" align="end">
+  <button *ngIf="isEdit" mat-stroked-button color="warn" class="delete-btn" (click)="onDelete()">Delete Contact</button>
   <div class="btn-group">
     <button mat-stroked-button (click)="onClose()" style="margin-left: auto">Cancel</button>
     <button mat-flat-button color="primary" *ngIf="!isEdit" [disabled]="isLoading" (click)="onCreate()">Add</button>
