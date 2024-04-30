@@ -127,6 +127,10 @@ export class PublicNotificationSearchService {
       await this.addGovernmentResults(searchDto, promises);
     }
 
+    if (searchDto.fileTypes) {
+      this.addFileTypeResults(searchDto, promises);
+    }
+
     if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
       this.addRegionResults(searchDto, promises);
     }
@@ -305,5 +309,19 @@ export class PublicNotificationSearchService {
     }
 
     promises.push(query.getMany());
+  }
+
+  private addFileTypeResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    if (searchDto.fileTypes.includes('SRW')) {
+      const query = this.notificationRepository.find({
+        select: {
+          fileNumber: true,
+        },
+      });
+      promises.push(query);
+    }
   }
 }

@@ -118,6 +118,10 @@ export class PublicNoticeOfIntentSearchService {
       this.addFileNumberResults(searchDto, promises);
     }
 
+    if (searchDto.fileTypes) {
+      this.addFileTypeResults(searchDto, promises);
+    }
+
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       this.addPortalStatusResult(searchDto, promises);
     }
@@ -357,5 +361,19 @@ export class PublicNoticeOfIntentSearchService {
     }
 
     promises.push(query.getMany());
+  }
+
+  private addFileTypeResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    if (searchDto.fileTypes.includes('NOI')) {
+      const query = this.noiRepository.find({
+        select: {
+          fileNumber: true,
+        },
+      });
+      promises.push(query);
+    }
   }
 }
