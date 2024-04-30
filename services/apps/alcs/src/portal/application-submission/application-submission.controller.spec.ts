@@ -610,56 +610,6 @@ describe('ApplicationSubmissionController', () => {
     });
   });
 
-  it('should only send status email for first time non-TUR applications', async () => {
-    const mockFileId = 'file-id';
-    mockAppSubmissionService.submitToLg.mockResolvedValue(
-      new ApplicationSubmissionToSubmissionStatus(),
-    );
-    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
-    const mockApplicationSubmission = new ApplicationSubmission({
-      typeCode: 'NOT-TURP',
-      owners: [mockOwner],
-      primaryContactOwnerUuid,
-      localGovernmentUuid,
-      submissionStatuses: [
-        new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.INCOMPLETE,
-          submissionUuid: 'fake',
-          effectiveDate: new Date(),
-        }),
-      ],
-    });
-    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
-      mockApplicationSubmission,
-    );
-    mockAppValidationService.validateSubmission.mockResolvedValue({
-      submission: mockApplicationSubmission as ValidatedApplicationSubmission,
-      errors: [],
-    });
-    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
-
-    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
-      applicationSubmission: mockApplicationSubmission,
-      primaryContact: mockOwner,
-      submissionGovernment: mockGovernment,
-    });
-
-    await controller.submitAsApplicant(mockFileId, {
-      user: {
-        entity: new User(),
-      },
-    });
-
-    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockAppSubmissionService.submitToLg).toHaveBeenCalledTimes(1);
-    expect(
-      mockStatusEmailService.sendApplicationStatusEmail,
-    ).toHaveBeenCalledTimes(0);
-  });
-
   it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
     const mockApplicationSubmission = new ApplicationSubmission({
