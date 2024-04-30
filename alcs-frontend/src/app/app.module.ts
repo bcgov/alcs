@@ -12,6 +12,7 @@ import { AuthorizationComponent } from './features/authorization/authorization.c
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
+import { AnalyticsService } from './services/analytics/analytics.service';
 import { AuthInterceptor } from './services/authentication/auth.interceptor';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
 import { UnauthorizedInterceptor } from './services/authentication/unauthorized.interceptor';
@@ -37,6 +38,7 @@ import { SharedModule } from './shared/shared.module';
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, MomentDateModule],
   providers: [
+    AnalyticsService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedInterceptor, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
