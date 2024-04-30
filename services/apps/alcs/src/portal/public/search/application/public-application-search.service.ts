@@ -386,7 +386,7 @@ export class PublicApplicationSearchService {
     query = query.andWhere(
       new Brackets((qb) =>
         qb
-          .where('appSearch.application_type_code IN (:...typeCodes)', {
+          .where('app.type_code IN (:...typeCodes)', {
             typeCodes: searchDto.fileTypes,
           })
           .orWhere(
