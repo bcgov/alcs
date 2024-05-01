@@ -32,7 +32,9 @@
     "AUTH_SERVER": "test.loginproxy.gov.bc.ca",
     "AUTH_SERVER_URL": "https://test.loginproxy.gov.bc.ca/auth",
     "AUTH_TOKEN_URL": "https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
-    "SCOPES": ["openid"],
+    "SCOPES": [
+      "openid"
+    ],
     "REALM": "standard"
   },
   "SITEMINDER": {
@@ -61,12 +63,14 @@
     "MAX_FILE_SIZE": 104857600
   },
   "REDIS": {
-    "HOST": "localhost",
+    "HOST": "redis",
     "PORT": "6379",
-    "PASSWORD": ""
+    "PASSWORD": "redis"
   },
   "EMAIL": {
-    "DEFAULT_ADMINS": [""]
+    "DEFAULT_ADMINS": [
+      ""
+    ]
   },
   "GRPC": {
     "BIND_URL": "localhost:50057",
