@@ -5,13 +5,15 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 # Copy package.json file
-COPY package.json .
+COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy the source code to the /app directory
 COPY . .
+
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Build the application
 RUN npm run build --  --output-path=dist --output-hashing=all
