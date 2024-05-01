@@ -218,6 +218,12 @@ export class NotificationService {
         );
     }
 
+    if (updateDto.regionCode) {
+      notification.region = await this.codeService.fetchRegion(
+        updateDto.regionCode,
+      );
+    }
+
     notification.staffObservations = filterUndefined(
       updateDto.staffObservations,
       notification.staffObservations,

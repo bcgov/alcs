@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import moment from 'moment';
+import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../services/application/application.service';
 import { NotificationDetailService } from '../../../services/notification/notification-detail.service';
 import { NotificationSubmissionService } from '../../../services/notification/notification-submission/notification-submission.service';
 import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
@@ -14,13 +16,16 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
   templateUrl: './intake.component.html',
   styleUrls: ['./intake.component.scss'],
 })
-export class IntakeComponent implements OnInit {
+export class IntakeComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
+
   dateSubmittedToAlc?: string;
   notification?: NotificationDto;
   localGovernments: { label: string; value: string; disabled?: boolean | null }[] = [];
   contactEmail: string | null = null;
   responseSent = false;
   responseDate: number | null = null;
+  regions: { label: string; value: string }[] = [];
 
   constructor(
     private notificationDetailService: NotificationDetailService,
@@ -28,11 +33,12 @@ export class IntakeComponent implements OnInit {
     private notificationTimelineService: NotificationTimelineService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private confirmationDialogService: ConfirmationDialogService,
+    private applicationService: ApplicationService,
     private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
-    this.notificationDetailService.$notification.subscribe((notification) => {
+    this.notificationDetailService.$notification.pipe(takeUntil(this.$destroy)).subscribe((notification) => {
       if (notification) {
         this.dateSubmittedToAlc = moment(notification.dateSubmittedToAlc).format(environment.dateFormat);
         this.notification = notification;
@@ -41,7 +47,19 @@ export class IntakeComponent implements OnInit {
       }
     });
 
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
+      this.regions = regions.map((region) => ({
+        label: region.label,
+        value: region.code,
+      }));
+    });
+
     this.loadGovernments();
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   async updateNotificationDate(field: keyof UpdateNotificationDto, time: number) {
@@ -99,6 +117,17 @@ export class IntakeComponent implements OnInit {
           }
         }
       });
+  }
+
+  async updateRegion($event: string | string[] | null) {
+    if (this.notification && $event && !Array.isArray($event)) {
+      const update = await this.notificationDetailService.update(this.notification.fileNumber, {
+        regionCode: $event,
+      });
+      if (update) {
+        this.toastService.showSuccessToast('Notification updated');
+      }
+    }
   }
 
   async resendResponse() {
