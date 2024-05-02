@@ -4,7 +4,7 @@ from common import (
     add_timezone_and_keep_date_part,
 )
 from db import inject_conn_pool
-from psycopg2.extras import RealDictCursor, execute_batch
+from psycopg2.extras import RealDictCursor
 
 etl_name = "readjust_lfng_statuses"
 logger = setup_and_get_logger(etl_name)
@@ -64,8 +64,8 @@ def readjust_lfng_statuses(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     )
                     last_entry_id = dict(rows[-1])["alr_application_id"]
 
-                    logger.debug(
-                        f"retrieved/inserted items count: {0}; total successfully updated entries so far {successful_updates_count}; last updated alr_application_id: {last_entry_id}"
+                    logger.info(
+                        f"retrieved/updated items count: {processed_applications_count}; total successfully updated entries so far {successful_updates_count}; last updated alr_application_id: {last_entry_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
@@ -96,58 +96,23 @@ def _process_statuses_for_update(conn, batch_size, cursor, rows):
             processed_applications_count += 1
             grouped_by_fn = []
             grouped_by_fn.append(row)
-    # TODO: delete this
-    # for update_statement in update_statements:
-    #     cursor.execute(update_statement)
-
-    # conn.commit()
 
     combined_statements = "; ".join(update_statements)
-    print('combined_statements: ', combined_statements)
-    #TODO uncomment this
-    # cursor.execute(combined_statements)
-    # conn.commit()
+    # this is useful for debugging
+    # logger.debug("combined_statements: %s", combined_statements)
+    cursor.execute(combined_statements)
+    conn.commit()
     return processed_applications_count
 
 
 def _prepare_update_statement(statuses, update_statements):
-    """
-    1. get OATS status
-    2. map it to ALCS status
-    3. check if statuses have the status from step 2
-    4. get the weight of status from step 2
-    5. check if status from step 2 is of max weight
-    6. if yes then proceed otherwise for all statuses that are higher weight rest effective_date and email_sent
-    """
     oats_status = statuses[0]["accomplishment_code"]
     alcs_status = _map_oats_accomplishment_code_to_alcs_status_code(oats_status)
-
-    print(
-        "oats_status ",
-        oats_status,
-        " ",
-        alcs_status,
-    )
 
     if alcs_status == "RFFG":
         update_statements.append(
             _compile_update_statement(statuses, oats_status, "RFFG", [])
         )
-        # check if RFFG exists in statuses and if yes do nothing, otherwise set to specific value
-        # status = _get_status(statuses, "RFFG")
-        # if status:
-        #     print("no action needed")
-        # else:
-        #     print("Set RFFG value")
-        #     date = add_timezone_and_keep_date_part(status["completion_date"])
-        #     update_statements.append(
-        #         f"""
-        #             UPDATE alcs.application_submission_to_submission_status
-        #             SET effective_date = {date},
-        #                 email_sent_date = '0001-01-01 06:00:00.000 -0800'
-        #             WHERE status_type_code = 'RFFG' AND submission_uuid = {status["uuid"]};
-        #         """
-        #     )
     elif alcs_status == "REVG":
         update_statements.append(
             _compile_update_statement(statuses, oats_status, "REVG", ["RFFG"])
@@ -175,7 +140,6 @@ def _compile_update_statement(
 ):
     oats_status = _get_oats_status(statuses, oats_target_status)
     alcs_status = _get_alcs_status(statuses, oats_target_status)
-    print("status retrieved ", oats_status, alcs_status, statuses)
 
     str_statuses_to_reset = ""
     reset_statuses_query = ""
@@ -190,10 +154,10 @@ def _compile_update_statement(
         """
 
     if alcs_status:
-        print(f"reset {str_statuses_to_reset}")
+        logger.debug(f"reset {str_statuses_to_reset}")
         return reset_statuses_query
     else:
-        print(f"{str_statuses_to_reset} and set {alcs_target_status}")
+        logger.debug(f"{str_statuses_to_reset} and set {alcs_target_status}")
         date = add_timezone_and_keep_date_part(oats_status["completion_date"])
         return f"""
                     {reset_statuses_query}
@@ -210,6 +174,7 @@ def _get_oats_status(statuses, code):
         if status["accomplishment_code"] == code:
             return status
     return None
+
 
 def _get_alcs_status(statuses, code):
     for status in statuses:
