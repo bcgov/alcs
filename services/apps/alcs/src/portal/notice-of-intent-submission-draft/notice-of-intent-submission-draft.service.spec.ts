@@ -228,7 +228,7 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
     mockGenerateSubmissionDocumentService.generateUpdate.mockResolvedValue();
     mockNoiSubmissionStatusService.removeStatuses.mockResolvedValue({} as any);
     mockNoiService.updateNoticeOfIntentInfo.mockResolvedValue();
-    mockLocalGovernmentService.getByGuid.mockResolvedValue(
+    mockLocalGovernmentService.getByUuid.mockResolvedValue(
       new LocalGovernment({ uuid: 'new' }),
     );
     mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
@@ -248,8 +248,8 @@ describe('NoticeOfIntentSubmissionDraftService', () => {
       mockGenerateSubmissionDocumentService.generateUpdate,
     ).toHaveBeenCalledTimes(1);
     expect(mockNoiService.updateNoticeOfIntentInfo).toHaveBeenCalledTimes(1);
-    expect(mockLocalGovernmentService.getByGuid).toHaveBeenCalledTimes(1);
-    expect(mockLocalGovernmentService.getByGuid).toHaveBeenCalledWith('new');
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith('new');
     expect(
       mockStatusEmailService.sendNoticeOfIntentStatusEmail,
     ).toHaveBeenCalledTimes(1);

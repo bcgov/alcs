@@ -166,7 +166,6 @@ export class NoticeOfIntentSubmissionStatusService {
   async saveSubmissionToSubmissionStatus(
     submissionStatus: NoticeOfIntentSubmissionToSubmissionStatus,
   ) {
-    console.log('save', submissionStatus);
     return await this.statusesRepository.save(submissionStatus);
   }
 }
