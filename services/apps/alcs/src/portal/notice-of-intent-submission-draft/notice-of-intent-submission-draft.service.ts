@@ -244,7 +244,7 @@ export class NoticeOfIntentSubmissionDraftService {
   }
 
   private async sendGovernmentEmail(savedDraft: NoticeOfIntentSubmission) {
-    const submissionGovernment = await this.localGovernmentService.getByGuid(
+    const submissionGovernment = await this.localGovernmentService.getByUuid(
       savedDraft.localGovernmentUuid!,
     );
 
@@ -267,7 +267,7 @@ export class NoticeOfIntentSubmissionDraftService {
       );
     } catch (error) {
       this.logger.error(
-        `Error generating NOI submission document {error}`,
+        `Error generating NOI submission document ${error}`,
         error,
       );
     }
