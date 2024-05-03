@@ -14,7 +14,7 @@
     <div class="subheading2 grid-1">
       Do any of the land owners added previously own or lease other parcels that might inform this application process?
     </div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="has-other-parcels">
       <span *ngIf="submission.hasOtherParcelsInCommunity !== null">{{
         submission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
       }}</span>
@@ -24,7 +24,7 @@
       <div class="subheading2 grid-1">
         Describe the other parcels including their location, who owns or leases them, and their use.
       </div>
-      <div class="grid-double">
+      <div class="grid-double" data-testid="other-parcels-description">
         {{ submission.otherParcelsDescription }}
         <app-no-data *ngIf="!submission.otherParcelsDescription"></app-no-data>
       </div>
@@ -42,17 +42,17 @@
   <h3>Primary Contact Information</h3>
   <div *ngIf="submission" class="review-table">
     <div class="subheading2 grid-1">Type</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-type">
       {{ submission.primaryContact?.type?.label }}
       <app-no-data *ngIf="!submission.primaryContact?.type?.label"></app-no-data>
     </div>
     <div class="subheading2 grid-1">First Name</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-first-name">
       {{ submission.primaryContact?.firstName }}
       <app-no-data *ngIf="!submission.primaryContact?.firstName"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Last Name</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-last-name">
       {{ submission.primaryContact?.lastName }}
       <app-no-data *ngIf="!submission.primaryContact?.lastName"></app-no-data>
     </div>
@@ -63,17 +63,17 @@
       <span *ngIf="submission.primaryContact?.type?.code === 'CRWN'">Ministry/Department Responsible</span>
       <span *ngIf="submission.primaryContact?.type?.code === 'GOVR'">Department</span>
     </div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-organization">
       {{ submission.primaryContact?.organizationName }}
       <app-no-data *ngIf="!submission.primaryContact?.organizationName"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Phone</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-phone-number">
       {{ submission.primaryContact?.phoneNumber }}
       <app-no-data *ngIf="!submission.primaryContact?.phoneNumber"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Email</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-email">
       {{ submission.primaryContact?.email }}
       <app-no-data *ngIf="!submission.primaryContact?.email"></app-no-data>
     </div>
@@ -81,7 +81,7 @@
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)" data-testid="authorization-letter">{{ file.fileName }}</a>
         </div>
       </div>
     </ng-container>
@@ -99,15 +99,15 @@
       <h4>Land Use of Parcel(s) under Application</h4>
     </div>
     <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-agriculture-description">
       {{ submission.parcelsAgricultureDescription }}
     </div>
     <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-agriculture-improvement-description">
       {{ submission.parcelsAgricultureImprovementDescription }}
     </div>
     <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-non-agriculture-description">
       {{ submission.parcelsNonAgricultureUseDescription }}
     </div>
     <div class="full-width">
@@ -118,31 +118,31 @@
       <div class="grid-2 subheading2">Main Land Use Type</div>
       <div class="grid-3 subheading2">Specific Activity</div>
       <div class="grid-1 subheading2">North</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="north-land-use-type">
         {{ submission.northLandUseType }}
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="north-land-use-description">
         {{ submission.northLandUseTypeDescription }}
       </div>
       <div class="grid-1 subheading2">East</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="east-land-use-type">
         {{ submission.eastLandUseType }}
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="east-land-use-description">
         {{ submission.eastLandUseTypeDescription }}
       </div>
       <div class="grid-1 subheading2">South</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="south-land-use-type">
         {{ submission.southLandUseType }}
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="south-land-use-description">
         {{ submission.southLandUseTypeDescription }}
       </div>
       <div class="grid-1 subheading2">West</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="west-land-use-type">
         {{ submission.westLandUseType }}
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="west-land-use-description">
         {{ submission.westLandUseTypeDescription }}
       </div>
     </div>
@@ -225,13 +225,13 @@
       <div class="grid-3 subheading2">Description</div>
 
       <ng-container *ngFor="let file of otherFiles">
-        <div class="grid-1">
+        <div class="grid-1" data-testid="optional-document-file-name">
           <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
-        <div class="grid-2">
+        <div class="grid-2" data-testid="optional-document-type">
           {{ file.type?.label }}
         </div>
-        <div class="grid-3">
+        <div class="grid-3" data-testid="optional-document-description">
           {{ file.description }}
         </div>
       </ng-container>

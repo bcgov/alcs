@@ -11,8 +11,12 @@ import { TURProposalPage } from './pages/portal/tur-proposal-page';
 import { OptionalAttachmentType, OptionalAttachmentsPage } from './pages/portal/optional-attachments-page';
 import { ReviewAndSubmitPage } from './pages/portal/review-and-submit-page/review-and-submit-page';
 import { SubmissionSuccessPage } from './pages/portal/submission-success-page';
+import { ALCSLoginPage } from './pages/alcs/alcs-login-page';
+import { ALCSHomePage } from './pages/alcs/home-page';
+import { ALCSDetailsNavigation } from './pages/alcs/details-navigation';
+import { ALCSApplicantInfoPage } from './pages/alcs/applicant-info-page/applicant-info-page';
 
-test('TUR', async ({ browser }) => {
+test.describe.serial('Portal TUR submission and ALCS applicant info flow', () => {
   const parcels = [
     {
       type: ParcelType.FeeSimple,
@@ -117,68 +121,89 @@ test('TUR', async ({ browser }) => {
 
   let submittedFileId: string;
 
-  const context = await browser.newContext({ baseURL: process.env.PORTAL_BASE_URL });
-  const page = await context.newPage();
+  test('should have working UI, data should populate review, and submission should succeed', async ({ page }) => {
+    const portalLoginPage = new PortalLoginPage(page, process.env.PORTAL_BASE_URL);
+    await portalLoginPage.goto();
+    await portalLoginPage.logIn(process.env.BCEID_BASIC_USERNAME, process.env.BCEID_BASIC_PASSWORD);
 
-  const portalLoginPage = new PortalLoginPage(page);
-  await portalLoginPage.goto();
-  await portalLoginPage.logIn(process.env.BCEID_BASIC_USERNAME, process.env.BCEID_BASIC_PASSWORD);
+    const inboxPage = new InboxPage(page);
+    await inboxPage.createApplication(ApplicationType.TUR);
 
-  const inbox = new InboxPage(page);
-  await inbox.createApplication(ApplicationType.TUR);
+    const portalStepsNavigation = new PortalStepsNavigation(page);
 
-  const portalStepsNavigation = new PortalStepsNavigation(page);
+    const parcelsPage = new ParcelsPage(page);
+    await parcelsPage.fill(parcels);
 
-  const parcelsPage = new ParcelsPage(page);
-  await parcelsPage.fill(parcels);
+    await portalStepsNavigation.gotoOtherParcelsPage();
 
-  await portalStepsNavigation.gotoOtherParcelsPage();
+    const otherParcelsPage = new OtherParcelsPage(page);
+    await otherParcelsPage.setHasOtherParcels(hasOtherParcels);
+    await otherParcelsPage.fillDescription(otherParcelsDescription);
 
-  const otherParcelsPage = new OtherParcelsPage(page);
-  await otherParcelsPage.setHasOtherParcels(hasOtherParcels);
-  await otherParcelsPage.fillDescription(otherParcelsDescription);
+    await portalStepsNavigation.gotoPrimaryContactPage();
 
-  await portalStepsNavigation.gotoPrimaryContactPage();
+    const primaryContactPage = new PrimaryContactPage(page);
+    await primaryContactPage.setPrimaryContactType(primaryContactType);
+    await primaryContactPage.fillThirdPartyContact(thirdPartPrimaryContact);
+    await primaryContactPage.uploadAuthorizationLetters(authorizationLetterPaths);
 
-  const primaryContactPage = new PrimaryContactPage(page);
-  await primaryContactPage.setPrimaryContactType(primaryContactType);
-  await primaryContactPage.fillThirdPartyContact(thirdPartPrimaryContact);
-  await primaryContactPage.uploadAuthorizationLetters(authorizationLetterPaths);
+    await portalStepsNavigation.gotoGovernmentPage();
 
-  await portalStepsNavigation.gotoGovernmentPage();
+    const governmentPage = new GovernmentPage(page);
+    await governmentPage.fill(government);
 
-  const governmentPage = new GovernmentPage(page);
-  await governmentPage.fill(government);
+    await portalStepsNavigation.gotoLandUsePage();
 
-  await portalStepsNavigation.gotoLandUsePage();
+    const landUsePage = new LandUsePage(page);
+    await landUsePage.fill(landUse);
 
-  const landUsePage = new LandUsePage(page);
-  await landUsePage.fill(landUse);
+    await portalStepsNavigation.gotoProposalPage();
 
-  await portalStepsNavigation.gotoProposalPage();
+    const turProposalPage = new TURProposalPage(page);
+    await turProposalPage.fill(turProposal);
 
-  const turProposalPage = new TURProposalPage(page);
-  await turProposalPage.fill(turProposal);
+    await portalStepsNavigation.gotoOptionalAttachmentsPage();
 
-  await portalStepsNavigation.gotoOptionalAttachmentsPage();
+    const optionalAttachmentsPage = new OptionalAttachmentsPage(page);
+    await optionalAttachmentsPage.addAttachments(optionalAttachments);
 
-  const optionalAttachmentsPage = new OptionalAttachmentsPage(page);
-  await optionalAttachmentsPage.addAttachments(optionalAttachments);
+    await portalStepsNavigation.gotoReviewAndSubmitPage();
 
-  await portalStepsNavigation.gotoReviewAndSubmitPage();
+    const reviewAndSubmitPage = new ReviewAndSubmitPage(page);
+    await reviewAndSubmitPage.parcelsSection.expectParcels(parcels);
+    await reviewAndSubmitPage.otherOwnedParcelsSection.expectHasOtherParcels(hasOtherParcels);
+    await reviewAndSubmitPage.otherOwnedParcelsSection.expectDescription(otherParcelsDescription);
+    await reviewAndSubmitPage.primaryContactSection.expectThirdPartyContact(thirdPartPrimaryContact);
+    await reviewAndSubmitPage.primaryContactSection.expectAuthorizationLetters(authorizationLetterPaths);
+    await reviewAndSubmitPage.governmentSection.expectGovernment(government);
+    await reviewAndSubmitPage.landUseSection.expectLandUse(landUse);
+    await reviewAndSubmitPage.turProposalSection.expectProposal(turProposal);
+    await reviewAndSubmitPage.optionalDocumentsSection.expectAttachments(optionalAttachments);
+    await reviewAndSubmitPage.submit();
 
-  const reviewAndSubmitPage = new ReviewAndSubmitPage(page);
-  await reviewAndSubmitPage.parcelsSection.expectParcels(parcels);
-  await reviewAndSubmitPage.otherOwnedParcelsSection.expectHasOtherParcels(hasOtherParcels);
-  await reviewAndSubmitPage.otherOwnedParcelsSection.expectDescription(otherParcelsDescription);
-  await reviewAndSubmitPage.primaryContactSection.expectThirdPartyContact(thirdPartPrimaryContact);
-  await reviewAndSubmitPage.primaryContactSection.expectAuthorizationLetters(authorizationLetterPaths);
-  await reviewAndSubmitPage.governmentSection.expectGovernment(government);
-  await reviewAndSubmitPage.landUseSection.expectLandUse(landUse);
-  await reviewAndSubmitPage.turProposalSection.expectProposal(turProposal);
-  await reviewAndSubmitPage.optionalDocumentsSection.expectAttachments(optionalAttachments);
-  await reviewAndSubmitPage.submit();
+    const submissionSuccessPage = new SubmissionSuccessPage(page);
+    submittedFileId = await submissionSuccessPage.fileId();
+  });
 
-  const submissionSuccessPage = new SubmissionSuccessPage(page);
-  submittedFileId = await submissionSuccessPage.fileId();
+  test('submission data should appear in ALCS applicant info', async ({ page }) => {
+    const alcsLoginPage = new ALCSLoginPage(page, process.env.ALCS_BASE_URL);
+    await alcsLoginPage.goto();
+    await alcsLoginPage.login(process.env.IDIR_USERNAME, process.env.IDIR_PASSWORD);
+
+    const alcsHomePage = new ALCSHomePage(page);
+    await alcsHomePage.search(submittedFileId);
+
+    const alcsDetailsNavigation = new ALCSDetailsNavigation(page);
+    await alcsDetailsNavigation.gotoApplicantInfoPage();
+
+    const alcsApplicantInfoPage = new ALCSApplicantInfoPage(page);
+    await alcsApplicantInfoPage.parcelsSection.expectParcels(parcels);
+    await alcsApplicantInfoPage.otherOwnedParcelsSection.expectHasOtherParcels(hasOtherParcels);
+    await alcsApplicantInfoPage.otherOwnedParcelsSection.expectDescription(otherParcelsDescription);
+    await alcsApplicantInfoPage.primaryContactSection.expectThirdPartyContact(thirdPartPrimaryContact);
+    await alcsApplicantInfoPage.primaryContactSection.expectAuthorizationLetters(authorizationLetterPaths);
+    await alcsApplicantInfoPage.landUseSection.expectLandUse(landUse);
+    await alcsApplicantInfoPage.turProposalSection.expectProposal(turProposal);
+    await alcsApplicantInfoPage.optionalDocumentsSection.expectAttachments(optionalAttachments);
+  });
 });
