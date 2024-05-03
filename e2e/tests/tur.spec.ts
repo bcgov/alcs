@@ -1,20 +1,20 @@
 import { test } from '@playwright/test';
-import { PortalLoginPage } from './pages/portal/portal-login-page';
-import { ApplicationType, InboxPage } from './pages/portal/inbox-page';
-import { PortalStepsNavigation } from './pages/portal/portal-steps-navigation';
-import { OwnerType, ParcelType, ParcelsPage } from './pages/portal/parcels-page';
-import { OtherParcelsPage } from './pages/portal/other-parcels-page';
-import { PrimaryContactPage, PrimaryContactType } from './pages/portal/primary-contact-page';
-import { GovernmentPage } from './pages/portal/government-page';
-import { Direction, LandUsePage, LandUseType } from './pages/portal/land-use-page';
-import { TURProposalPage } from './pages/portal/tur-proposal-page';
-import { OptionalAttachmentType, OptionalAttachmentsPage } from './pages/portal/optional-attachments-page';
-import { ReviewAndSubmitPage } from './pages/portal/review-and-submit-page/review-and-submit-page';
-import { SubmissionSuccessPage } from './pages/portal/submission-success-page';
-import { ALCSLoginPage } from './pages/alcs/alcs-login-page';
-import { ALCSHomePage } from './pages/alcs/home-page';
-import { ALCSDetailsNavigation } from './pages/alcs/details-navigation';
-import { ALCSApplicantInfoPage } from './pages/alcs/applicant-info-page/applicant-info-page';
+import { PortalLoginPage } from '../pages/portal/portal-login-page';
+import { ApplicationType, InboxPage } from '../pages/portal/inbox-page';
+import { PortalStepsNavigation } from '../pages/portal/portal-steps-navigation';
+import { OwnerType, ParcelType, ParcelsPage } from '../pages/portal/parcels-page';
+import { OtherParcelsPage } from '../pages/portal/other-parcels-page';
+import { PrimaryContactPage, PrimaryContactType } from '../pages/portal/primary-contact-page';
+import { GovernmentPage } from '../pages/portal/government-page';
+import { Direction, LandUsePage, LandUseType } from '../pages/portal/land-use-page';
+import { TURProposalPage } from '../pages/portal/tur-proposal-page';
+import { OptionalAttachmentType, OptionalAttachmentsPage } from '../pages/portal/optional-attachments-page';
+import { ReviewAndSubmitPage } from '../pages/portal/review-and-submit-page/review-and-submit-page';
+import { SubmissionSuccessPage } from '../pages/portal/submission-success-page';
+import { ALCSLoginPage } from '../pages/alcs/alcs-login-page';
+import { ALCSHomePage } from '../pages/alcs/home-page';
+import { ALCSDetailsNavigation } from '../pages/alcs/details-navigation';
+import { ALCSApplicantInfoPage } from '../pages/alcs/applicant-info-page/applicant-info-page';
 
 test.describe.serial('Portal TUR submission and ALCS applicant info flow', () => {
   const parcels = [
