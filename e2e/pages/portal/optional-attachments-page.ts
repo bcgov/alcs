@@ -1,26 +1,5 @@
 import { type Locator, type Page } from '@playwright/test';
 
-// // Step 7: Optional attachments
-// // File upload first file
-// const optionalFile1ChooserPromise = page.waitForEvent('filechooser');
-// await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
-// const optionalFile1Chooser = await optionalFile1ChooserPromise;
-// optionalFile1Chooser.setFiles('data/temp.txt');
-// await page.getByPlaceholder('Select a type').nth(0).click();
-// await page.getByText('Professional Report').click();
-// await page.getByPlaceholder('Type description').nth(0).fill('Desc');
-
-// // File upload second file
-// const optionalFile2ChooserPromise = page.waitForEvent('filechooser');
-// await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
-// const optionalFile2Chooser = await optionalFile2ChooserPromise;
-// optionalFile2Chooser.setFiles('data/temp.txt');
-// await page.getByPlaceholder('Select a type').nth(1).click();
-// await page.getByText('Site Photo').click();
-// await page.getByPlaceholder('Type description').nth(1).fill('Desc');
-
-// await page.getByText('Review & Submit').click();
-
 export enum OptionalAttachmentType {
   SitePhoto = 'Site Photo',
   ProfessionalReport = 'Professional Report',
