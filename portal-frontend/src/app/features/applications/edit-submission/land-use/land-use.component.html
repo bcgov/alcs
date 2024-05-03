@@ -117,7 +117,12 @@
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
             <mat-form-field appearance="outline">
-              <mat-select id="northLandUseType" placeholder="Main Land Use Type" formControlName="northLandUseType">
+              <mat-select
+                id="northLandUseType"
+                placeholder="Main Land Use Type"
+                formControlName="northLandUseType"
+                data-testid="north-type-combobox"
+              >
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
                 }}</mat-option>
@@ -140,6 +145,7 @@
                 maxlength="500"
                 [formControl]="northLandUseTypeDescription"
                 aria-label="North land use type description"
+                data-testid="north-activity-textbox"
               />
             </mat-form-field>
             <div
@@ -162,7 +168,12 @@
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
             <mat-form-field appearance="outline">
-              <mat-select id="eastLandUseType" placeholder="Main Land Use Type" formControlName="eastLandUseType">
+              <mat-select
+                id="eastLandUseType"
+                placeholder="Main Land Use Type"
+                formControlName="eastLandUseType"
+                data-testid="east-type-combobox"
+              >
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
                 }}</mat-option>
@@ -185,6 +196,7 @@
                 matInput
                 maxlength="500"
                 aria-label="East land use type description"
+                data-testid="east-activity-textbox"
               />
             </mat-form-field>
             <div
@@ -207,7 +219,12 @@
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
             <mat-form-field appearance="outline">
-              <mat-select id="southLandUseType" placeholder="Main Land Use Type" formControlName="southLandUseType">
+              <mat-select
+                id="southLandUseType"
+                placeholder="Main Land Use Type"
+                formControlName="southLandUseType"
+                data-testid="south-type-combobox"
+              >
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
                 }}</mat-option>
@@ -230,6 +247,7 @@
                 matInput
                 [formControl]="southLandUseTypeDescription"
                 aria-label="South land use type description"
+                data-testid="south-activity-textbox"
               />
             </mat-form-field>
             <div
@@ -252,7 +270,12 @@
         <div class="land-use-type-wrapper">
           <div class="land-use-type">
             <mat-form-field appearance="outline">
-              <mat-select id="westLandUseType" placeholder="Main Land Use Type" formControlName="westLandUseType">
+              <mat-select
+                id="westLandUseType"
+                placeholder="Main Land Use Type"
+                formControlName="westLandUseType"
+                data-testid="west-type-combobox"
+              >
                 <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
                   enum.value
                 }}</mat-option>
@@ -275,6 +298,7 @@
                 matInput
                 [formControl]="westLandUseTypeDescription"
                 aria-label="West land use type description"
+                data-testid="west-activity-textbox"
               />
             </mat-form-field>
             <div

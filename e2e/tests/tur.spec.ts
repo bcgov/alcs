@@ -1,8 +1,122 @@
-import { test, expect } from '@playwright/test';
-import { PortalLoginPage } from './pages/portal-login-page';
-import { ApplicationType, InboxPage } from './pages/inbox-page';
+import { test } from '@playwright/test';
+import { PortalLoginPage } from './pages/portal/portal-login-page';
+import { ApplicationType, InboxPage } from './pages/portal/inbox-page';
+import { PortalStepsNavigation } from './pages/portal/portal-steps-navigation';
+import { OwnerType, ParcelType, ParcelsPage } from './pages/portal/parcels-page';
+import { OtherParcelsPage } from './pages/portal/other-parcels-page';
+import { PrimaryContactPage, PrimaryContactType } from './pages/portal/primary-contact-page';
+import { GovernmentPage } from './pages/portal/government-page';
+import { Direction, LandUsePage, LandUseType } from './pages/portal/land-use-page';
+import { TURProposalPage } from './pages/portal/tur-proposal-page';
+import { OptionalAttachmentType, OptionalAttachmentsPage } from './pages/portal/optional-attachments-page';
+import { ReviewAndSubmitPage } from './pages/portal/review-and-submit-page/review-and-submit-page';
+import { SubmissionSuccessPage } from './pages/portal/submission-success-page';
 
 test('TUR', async ({ browser }) => {
+  const parcels = [
+    {
+      type: ParcelType.FeeSimple,
+      legalDescription: 'Legal description 1',
+      mapArea: '1',
+      pid: '111-111-111',
+      year: '2014',
+      month: 'Apr',
+      day: '21',
+      isFarm: true,
+      civicAddress: '123 Street Rd',
+      certificateOfTitlePath: 'data/temp.txt',
+      isConfirmed: true,
+      owners: [
+        {
+          type: OwnerType.Individual,
+          firstName: 'John',
+          lastName: 'Doe',
+          phoneNumber: '(111) 111-1111',
+          email: '1@1',
+        },
+        {
+          type: OwnerType.Organization,
+          organization: 'Company X',
+          corporateSummaryPath: 'data/temp.txt',
+          firstName: 'Jane',
+          lastName: 'Doe',
+          phoneNumber: '(222) 222-2222',
+          email: '2@2',
+        },
+      ],
+    },
+  ];
+  const otherParcelsDescription = 'Other parcels description';
+  const hasOtherParcels = true;
+  const primaryContactType = PrimaryContactType.ThirdParty;
+  const thirdPartPrimaryContact = {
+    firstName: 'Person',
+    lastName: 'Human',
+    phoneNumber: '(555) 555-5555',
+    email: '1@1',
+  };
+  const authorizationLetterPaths = ['data/temp.txt', 'data/temp2.txt'];
+  const government = 'Peace River Regional District';
+  const landUse = {
+    currentAgriculture: 'Current agriculture',
+    improvements: 'Improvements',
+    otherUses: 'Other uses',
+    neighbouringLandUse: new Map([
+      [
+        Direction.North,
+        {
+          type: LandUseType.Agricultural,
+          activity: 'Doing agriculture',
+        },
+      ],
+      [
+        Direction.East,
+        {
+          type: LandUseType.Civic,
+          activity: 'Doing agriculture',
+        },
+      ],
+      [
+        Direction.South,
+        {
+          type: LandUseType.Commercial,
+          activity: 'Doing agriculture',
+        },
+      ],
+      [
+        Direction.West,
+        {
+          type: LandUseType.Industrial,
+          activity: 'Doing agriculture',
+        },
+      ],
+    ]),
+  };
+  const turProposal = {
+    purpose: 'To do stuff',
+    activities: 'Doing stuff',
+    stepsToReduceImpact: 'Steps 1, 2, and 3',
+    alternativeLand: 'This land over here',
+    totalArea: '1',
+    isConfirmed: true,
+    proofOfServingNoticePath: 'data/temp.txt',
+    proposalMapPath: 'data/temp2.txt',
+  };
+  const optionalAttachments = [
+    {
+      path: 'data/temp.txt',
+      type: OptionalAttachmentType.SitePhoto,
+      description: 'Some site photo',
+    },
+    {
+      path: 'data/temp2.txt',
+      type: OptionalAttachmentType.ProfessionalReport,
+      description: 'Some professional report',
+    },
+  ];
+
+  let submittedFileId: string;
+
   const context = await browser.newContext({ baseURL: process.env.PORTAL_BASE_URL });
   const page = await context.newPage();
 
@@ -13,196 +127,58 @@ test('TUR', async ({ browser }) => {
   const inbox = new InboxPage(page);
   await inbox.createApplication(ApplicationType.TUR);
 
-  // Step 1a: Parcels
-  await page.getByRole('button', { name: 'Fee Simple' }).click();
-  await page.getByPlaceholder('Type legal description').fill('Parcel description');
-  await page.getByPlaceholder('Type parcel size').fill('1');
-  await page.getByPlaceholder('Type PID').fill('111-111-111');
-  await page.getByRole('button', { name: 'Open calendar' }).click();
-  await page.getByText('2014').click();
-  await page.getByText('Apr').click();
-  await page.getByText('23').click();
-  await page.getByText('Yes').click();
-  await page.getByPlaceholder('Type Address').fill('123 Street Rd');
+  const portalStepsNavigation = new PortalStepsNavigation(page);
 
-  // Upload
-  const titleFileChooserPromise = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
-  const titleFileChooser = await titleFileChooserPromise;
-  titleFileChooser.setFiles('data/temp.txt');
+  const parcelsPage = new ParcelsPage(page);
+  await parcelsPage.fill(parcels);
 
-  // Step 1b: Parcel Owners
-  await page.getByRole('button', { name: 'Add new owner' }).click();
-  await page.getByRole('button', { name: 'Individual' }).click();
-  await page.getByPlaceholder('Enter First Name').fill('1');
-  await page.getByPlaceholder('Enter Last Name').fill('1');
-  await page.getByPlaceholder('(555) 555-5555').fill('(111) 111-11111');
-  await page.getByPlaceholder('Enter Email').fill('1@1');
-  await page.getByRole('button', { name: 'Add' }).click();
-  await page.getByText('I confirm that the owner information provided above matches the current Certific').click();
-  await page.getByText('Other Owned Parcels', { exact: true }).click();
+  await portalStepsNavigation.gotoOtherParcelsPage();
 
-  // Step 2: Other Parcels
-  await page.getByRole('button', { name: 'Yes' }).click();
-  await page
-    .getByLabel('Describe the other parcels including their location, who owns or leases them, and their use.')
-    .fill('Other parcels');
-  await page.getByText('Primary Contact', { exact: true }).click();
+  const otherParcelsPage = new OtherParcelsPage(page);
+  await otherParcelsPage.setHasOtherParcels(hasOtherParcels);
+  await otherParcelsPage.fillDescription(otherParcelsDescription);
 
-  // Step 3: Primary Contact
-  await page.getByRole('button', { name: 'Yes' }).click();
-  await page.getByLabel('1 1').check();
-  await page.getByText('Government', { exact: true }).click();
+  await portalStepsNavigation.gotoPrimaryContactPage();
 
-  // Step 4: Government
-  await page.getByPlaceholder('Type government').click();
-  await page.getByPlaceholder('Type government').fill('peace');
-  await page.getByText('Peace River Regional District').click();
-  await page.getByText('Land Use').click();
+  const primaryContactPage = new PrimaryContactPage(page);
+  await primaryContactPage.setPrimaryContactType(primaryContactType);
+  await primaryContactPage.fillThirdPartyContact(thirdPartPrimaryContact);
+  await primaryContactPage.uploadAuthorizationLetters(authorizationLetterPaths);
 
-  // Step 5: Land Use
-  await page.getByLabel('Describe all agriculture that currently takes place on the parcel(s).').fill('This');
-  await page.getByLabel('Describe all agricultural improvements made to the parcel(s).').fill('That');
-  await page.getByLabel('Describe all other uses that currently take place on the parcel(s).').fill('The other');
+  await portalStepsNavigation.gotoGovernmentPage();
 
-  // North
-  await page.getByPlaceholder('Main Land Use Type').nth(0).click();
-  await page.locator('#northLandUseType-panel').getByRole('option', { name: 'Agricultural / Farm' }).click();
-  await page.getByRole('textbox', { name: 'North land use type description' }).fill('1');
+  const governmentPage = new GovernmentPage(page);
+  await governmentPage.fill(government);
 
-  // East
-  await page.getByPlaceholder('Main Land Use Type').nth(1).click();
-  await page.locator('#eastLandUseType-panel').getByRole('option', { name: 'Civic / Institutional' }).click();
-  await page.getByRole('textbox', { name: 'East land use type description' }).fill('1');
+  await portalStepsNavigation.gotoLandUsePage();
 
-  // South
-  await page.getByPlaceholder('Main Land Use Type').nth(2).click();
-  await page.locator('#southLandUseType-panel').getByRole('option', { name: 'Commercial / Retail' }).click();
-  await page.getByRole('textbox', { name: 'South land use type description' }).fill('1');
+  const landUsePage = new LandUsePage(page);
+  await landUsePage.fill(landUse);
 
-  // West
-  await page.getByPlaceholder('Main Land Use Type').nth(3).click();
-  await page.locator('#westLandUseType-panel').getByRole('option', { name: 'Industrial' }).click();
-  await page.getByRole('textbox', { name: 'West land use type description' }).fill('1');
+  await portalStepsNavigation.gotoProposalPage();
 
-  await page.getByText('Proposal', { exact: true }).click();
+  const turProposalPage = new TURProposalPage(page);
+  await turProposalPage.fill(turProposal);
 
-  // Step 6: Proposal
-  await page.getByLabel('What is the purpose of the proposal?').fill('This');
-  await page
-    .getByLabel(
-      'Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in proximity to the proposal.',
-    )
-    .fill('That');
-  await page
-    .getByLabel('What steps will you take to reduce potential negative impacts on surrounding agricultural lands?')
-    .fill('The other');
-  await page.getByLabel('Could this proposal be accommodated on lands outside of the ALR?').fill('And another');
-  await page.getByPlaceholder('Type total area').fill('1');
-  await page.getByText('I confirm that all affected property owners with land in the ALR have been notif').click();
+  await portalStepsNavigation.gotoOptionalAttachmentsPage();
 
-  // File upload
-  const proofOfServiceNoticeFileChooserPromise = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).nth(0).click();
-  const proofOfServiceNoticeFileChooser = await proofOfServiceNoticeFileChooserPromise;
-  proofOfServiceNoticeFileChooser.setFiles('data/temp.txt');
+  const optionalAttachmentsPage = new OptionalAttachmentsPage(page);
+  await optionalAttachmentsPage.addAttachments(optionalAttachments);
 
-  // File upload
-  const proposalMapFileChooserPromise = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).nth(1).click();
-  const proposalMapFileChooser = await proposalMapFileChooserPromise;
-  proposalMapFileChooser.setFiles('data/temp.txt');
+  await portalStepsNavigation.gotoReviewAndSubmitPage();
 
-  await page.getByText('Upload Attachments').click();
+  const reviewAndSubmitPage = new ReviewAndSubmitPage(page);
+  await reviewAndSubmitPage.parcelsSection.expectParcels(parcels);
+  await reviewAndSubmitPage.otherOwnedParcelsSection.expectHasOtherParcels(hasOtherParcels);
+  await reviewAndSubmitPage.otherOwnedParcelsSection.expectDescription(otherParcelsDescription);
+  await reviewAndSubmitPage.primaryContactSection.expectThirdPartyContact(thirdPartPrimaryContact);
+  await reviewAndSubmitPage.primaryContactSection.expectAuthorizationLetters(authorizationLetterPaths);
+  await reviewAndSubmitPage.governmentSection.expectGovernment(government);
+  await reviewAndSubmitPage.landUseSection.expectLandUse(landUse);
+  await reviewAndSubmitPage.turProposalSection.expectProposal(turProposal);
+  await reviewAndSubmitPage.optionalDocumentsSection.expectAttachments(optionalAttachments);
+  await reviewAndSubmitPage.submit();
 
-  // Step 7: Optional attachments
-  // File upload first file
-  const optionalFile1ChooserPromise = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
-  const optionalFile1Chooser = await optionalFile1ChooserPromise;
-  optionalFile1Chooser.setFiles('data/temp.txt');
-  await page.getByPlaceholder('Select a type').nth(0).click();
-  await page.getByText('Professional Report').click();
-  await page.getByPlaceholder('Type description').nth(0).fill('Desc');
-
-  // File upload second file
-  const optionalFile2ChooserPromise = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Choose file to Upload', exact: true }).click();
-  const optionalFile2Chooser = await optionalFile2ChooserPromise;
-  optionalFile2Chooser.setFiles('data/temp.txt');
-  await page.getByPlaceholder('Select a type').nth(1).click();
-  await page.getByText('Site Photo').click();
-  await page.getByPlaceholder('Type description').nth(1).fill('Desc');
-
-  await page.getByText('Review & Submit').click();
-
-  // Step 8: Review
-  // 1. Parcels
-  // Parcel 1
-  await expect(page.getByTestId('parcel-0-type')).toHaveText('Fee Simple');
-  await expect(page.getByTestId('parcel-0-legal-description')).toHaveText('Parcel description');
-  await expect(page.getByTestId('parcel-0-map-area')).toHaveText('1 ha');
-  await expect(page.getByTestId('parcel-0-pid')).toHaveText('111-111-111');
-  await expect(page.getByTestId('parcel-0-purchase-date')).toHaveText('Apr 23, 2014');
-  await expect(page.getByTestId('parcel-0-is-farm')).toHaveText('Yes');
-  await expect(page.getByTestId('parcel-0-civic-address')).toHaveText('123 Street Rd');
-  await expect(page.getByTestId('parcel-0-certificate-of-title')).toHaveText('temp.txt');
-
-  // Owners
-  await expect(page.getByTestId('parcel-0-owner-0-name')).toHaveText('1 1');
-  await expect(page.getByTestId('parcel-0-owner-0-organization')).toHaveText('No Data');
-  await expect(page.getByTestId('parcel-0-owner-0-phone-number')).toHaveText('(111) 111-1111');
-  await expect(page.getByTestId('parcel-0-owner-0-email')).toHaveText('1@1');
-  await expect(page.getByTestId('parcel-0-owner-0-corporate-summary')).toHaveText('Not Applicable');
-
-  await expect(page.getByTestId('parcel-0-is-confirmed-by-applicant')).toHaveText('Yes');
-
-  // 2. Other Parcels
-  await expect(page.getByTestId('has-other-parcels')).toHaveText('Yes');
-  await expect(page.getByTestId('other-parcels-description')).toHaveText('Other parcels');
-
-  // 3. Primary Contact
-  await expect(page.getByTestId('primary-contact-type')).toHaveText('Land Owner');
-  await expect(page.getByTestId('primary-contact-first-name')).toHaveText('1');
-  await expect(page.getByTestId('primary-contact-last-name')).toHaveText('1');
-  await expect(page.getByTestId('primary-contact-organization')).toHaveText('No Data');
-  await expect(page.getByTestId('primary-contact-phone-number')).toHaveText('(111) 111-1111');
-  await expect(page.getByTestId('primary-contact-email')).toHaveText('1@1');
-
-  // 4. Government
-  await expect(page.getByTestId('government-name')).toHaveText('Peace River Regional District');
-
-  // 5. Land Use
-  await expect(page.getByTestId('parcels-agriculture-description')).toHaveText('This');
-  await expect(page.getByTestId('parcels-agriculture-improvement-description')).toHaveText('That');
-  await expect(page.getByTestId('parcels-non-agriculture-description')).toHaveText('The other');
-  await expect(page.getByTestId('north-land-use-type')).toHaveText('Agricultural / Farm');
-  await expect(page.getByTestId('north-land-use-description')).toHaveText('1');
-  await expect(page.getByTestId('east-land-use-type')).toHaveText('Civic / Institutional');
-  await expect(page.getByTestId('east-land-use-description')).toHaveText('1');
-  await expect(page.getByTestId('south-land-use-type')).toHaveText('Commercial / Retail');
-  await expect(page.getByTestId('south-land-use-description')).toHaveText('1');
-  await expect(page.getByTestId('west-land-use-type')).toHaveText('Industrial');
-  await expect(page.getByTestId('west-land-use-description')).toHaveText('1');
-
-  // 6. Proposal
-  await expect(page.getByTestId('tur-purpose')).toHaveText('This');
-  await expect(page.getByTestId('tur-agricultural-activities')).toHaveText('That');
-  await expect(page.getByTestId('tur-reduce-negative-impacts')).toHaveText('The other');
-  await expect(page.getByTestId('tur-outside-lands')).toHaveText('And another');
-  await expect(page.getByTestId('tur-total-corridor-area')).toHaveText('1 ha');
-  await expect(page.getByTestId('tur-all-owners-notified')).toHaveText('Yes');
-  await expect(page.getByTestId('tur-proof-of-serving-notice')).toHaveText('temp.txt');
-  await expect(page.getByTestId('tur-proposal-map')).toHaveText('temp.txt');
-
-  // 7. Optional Documents
-  // Doc 1
-  await expect(page.getByTestId('optional-document-0-file-name')).toHaveText('temp.txt');
-  await expect(page.getByTestId('optional-document-0-type')).toHaveText('Professional Report');
-  await expect(page.getByTestId('optional-document-0-description')).toHaveText('Desc');
-
-  // Doc 2
-  await expect(page.getByTestId('optional-document-1-file-name')).toHaveText('temp.txt');
-  await expect(page.getByTestId('optional-document-1-type')).toHaveText('Site Photo');
-  await expect(page.getByTestId('optional-document-1-description')).toHaveText('Desc');
+  const submissionSuccessPage = new SubmissionSuccessPage(page);
+  submittedFileId = await submissionSuccessPage.fileId();
 });
