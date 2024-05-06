@@ -10,7 +10,7 @@ import { Direction, LandUsePage, LandUseType } from '../pages/portal/land-use-pa
 import { TURProposalPage } from '../pages/portal/tur-proposal-page';
 import { OptionalAttachmentType, OptionalAttachmentsPage } from '../pages/portal/optional-attachments-page';
 import { ReviewAndSubmitPage } from '../pages/portal/review-and-submit-page/review-and-submit-page';
-import { SubmissionSuccessPage } from '../pages/portal/submission-success-page';
+import { ApplicationStatus, SubmissionSuccessPage } from '../pages/portal/submission-success-page';
 import { ALCSLoginPage } from '../pages/alcs/alcs-login-page';
 import { ALCSHomePage } from '../pages/alcs/home-page';
 import { ALCSDetailsNavigation } from '../pages/alcs/details-navigation';
@@ -50,8 +50,8 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
       ],
     },
   ];
-  const otherParcelsDescription = 'Other parcels description';
   const hasOtherParcels = true;
+  const otherParcelsDescription = 'Other parcels description';
   const primaryContactType = PrimaryContactType.ThirdParty;
   const thirdPartPrimaryContact = {
     firstName: 'Person',
@@ -183,6 +183,8 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
 
     const submissionSuccessPage = new SubmissionSuccessPage(page);
     submittedFileId = await submissionSuccessPage.fileId();
+    await submissionSuccessPage.viewSubmission();
+    await submissionSuccessPage.expectApplicationStatus(ApplicationStatus.SubmittedToALC);
   });
 
   test('submission data should appear in ALCS applicant info', async ({ page }) => {
