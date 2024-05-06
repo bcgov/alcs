@@ -42,7 +42,8 @@ alr_applications_to_exclude AS ( SELECT alr_application_id FROM completion_with_
 , submitted_under_review AS (
     SELECT astss.submission_uuid AS initial_sub_uuid FROM alcs.application_submission_to_submission_status astss 
     JOIN alcs.application_submission as2 ON as2."uuid"  = astss.submission_uuid AND as2.audit_created_by='oats_etl' AND as2.audit_updated_by IS NULL
-    WHERE astss.effective_date IS NOT NULL AND astss.status_type_code IN ('SUBG', 'REVG')
+    LEFT JOIN alcs.application_submission_review asr ON asr.application_file_number = as2.file_number
+    WHERE astss.effective_date IS NOT NULL AND astss.status_type_code IN ('SUBG', 'REVG') AND ( asr.uuid IS NULL OR asr.audit_created_by='oats_etl' AND asr.audit_updated_by IS NULL)
     GROUP BY astss.submission_uuid
 )
 , returned_incomplete_refused AS (
