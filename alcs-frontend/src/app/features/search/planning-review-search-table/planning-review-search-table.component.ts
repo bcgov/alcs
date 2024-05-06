@@ -8,6 +8,7 @@ import { TableChange } from '../search.interface';
 
 interface SearchResult {
   fileNumber: string;
+  dateSubmitted: number;
   applicant: string;
   localGovernmentName?: string;
   referenceId: string;
@@ -36,13 +37,13 @@ export class PlanningReviewSearchTableComponent {
 
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'type', 'applicant', 'government', 'status'];
+  displayedColumns = ['fileId', 'dateSubmitted', 'type', 'applicant', 'government', 'status'];
   dataSource: PlanningReviewSearchResultDto[] = [];
 
   itemsPerPage = 20;
   total = 0;
   sortDirection: SortDirection = 'desc';
-  sortField = 'fileId';
+  sortField = 'dateSubmitted';
   isLoading = false;
 
   constructor(private router: Router) {}

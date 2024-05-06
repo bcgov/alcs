@@ -16,6 +16,13 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="dateSubmitted">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>Date Submitted to ALC</th>
+      <td *matCellDef="let element" mat-cell>
+        {{ element.dateSubmitted | date | emptyColumn }}
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="type">
       <th *matHeaderCellDef mat-header-cell mat-sort-header>Type</th>
 

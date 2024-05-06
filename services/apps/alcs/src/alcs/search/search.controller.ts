@@ -581,6 +581,7 @@ export class SearchController {
       documentName: planningReview.documentName,
       referenceId: planningReview.fileNumber,
       fileNumber: planningReview.fileNumber,
+      dateSubmitted: planningReview.dateSubmittedToAlc,
       open: planningReview.open,
       type: {
         code: planningReview.planningReviewType_code,
