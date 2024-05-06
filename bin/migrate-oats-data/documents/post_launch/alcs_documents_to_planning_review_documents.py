@@ -119,7 +119,7 @@ def _map_data(row):
         "planning_review_uuid": row["planning_review_uuid"],
         "document_uuid": row["document_uuid"],
         "type_code": row["type_code"],
-        "visibility_flags": row["visibility_flags"],
+        "visibility_flags": '{""}',
         "oats_document_id": row["oats_document_id"],
         "oats_planning_review_id": row["oats_planning_review_id"],
         "audit_created_by": OATS_ETL_USER,
