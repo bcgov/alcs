@@ -60,7 +60,7 @@ export interface PlanningReferralDto {
   responseDescription?: string;
   submissionDate: number;
   planningReview: PlanningReviewDto;
-  card: CardDto;
+  card?: CardDto;
 }
 
 export interface UpdatePlanningReviewDto {

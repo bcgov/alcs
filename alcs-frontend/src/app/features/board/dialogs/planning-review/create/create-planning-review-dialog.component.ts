@@ -91,7 +91,7 @@ export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
       this.dialogRef.close(true);
       if (res) {
         await this.router.navigate(this.activatedRoute.snapshot.url, {
-          queryParams: res.card.uuid && res.card.type ? { card: res.card.uuid, type: res.card.type } : {},
+          queryParams: res.card && res.card.uuid && res.card.type ? { card: res.card.uuid, type: res.card.type } : {},
           relativeTo: this.activatedRoute,
         });
       }
