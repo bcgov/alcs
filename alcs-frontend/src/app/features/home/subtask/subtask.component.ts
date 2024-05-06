@@ -100,7 +100,10 @@ export class SubtaskComponent implements OnInit, OnDestroy {
 
     if (this.showAppAndNonApp) {
       this.totalSubtaskCount =
-        this.applicationSubtasks.length + this.planningReviewSubtasks.length + this.notificationSubtasks.length;
+        this.applicationSubtasks.length +
+        this.planningReviewSubtasks.length +
+        this.notificationSubtasks.length +
+        this.inquirySubtasks.length;
     }
 
     if (this.showAppAndNonApp && this.showNoi) {
