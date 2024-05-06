@@ -133,7 +133,8 @@ export class AssignedComponent implements OnInit {
       this.applications.length +
       this.planningReferrals.length +
       this.noticeOfIntents.length +
-      this.notifications.length;
+      this.notifications.length +
+      this.inquiries.length;
   }
 
   private mapPlanningReferral(p: PlanningReferralDto): AssignedToMeFile {
