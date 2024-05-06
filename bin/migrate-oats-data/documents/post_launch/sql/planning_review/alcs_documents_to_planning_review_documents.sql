@@ -15,15 +15,6 @@ with oats_documents_to_map as (
 select otm.planning_review_uuid,
 	otm.document_uuid,
 	otm.code as type_code,
-	(
-		case
-			when is_public = 'Y'
-			and is_app_lg = 'Y' then '{P, A, C, G}'::text []
-			when is_public = 'Y' then '{P}'::text []
-			when is_app_lg = 'Y' then '{A, C, G}'::text []
-			else '{}'::text []
-		end
-	) as visibility_flags,
 	oats_document_id,
 	oats_planning_review_id,
     otm."description"
