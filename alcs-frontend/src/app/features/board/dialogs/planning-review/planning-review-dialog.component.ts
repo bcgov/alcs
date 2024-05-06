@@ -55,7 +55,7 @@ export class PlanningReviewDialogComponent extends CardDialogComponent implement
       ...this.data.planningReview.type,
       borderColor: this.data.planningReview.type.backgroundColor,
     };
-    this.populateCardData(this.data.card);
+    this.populateCardData(this.data.card!);
 
     this.selectedRegion = this.data.planningReview.region.code;
     this.cardTitle = `${this.data.planningReview.fileNumber} (${this.data.planningReview.documentName})`;
@@ -64,16 +64,16 @@ export class PlanningReviewDialogComponent extends CardDialogComponent implement
   }
 
   private async reload() {
-    const planningReferral = await this.planningReferralService.fetchByCardUuid(this.planningReferral.card.uuid);
+    const planningReferral = await this.planningReferralService.fetchByCardUuid(this.planningReferral.card!.uuid);
     if (planningReferral) {
-      await this.populateCardData(planningReferral.card);
+      await this.populateCardData(planningReferral.card!);
     }
   }
 
   async onBoardSelected(board: BoardWithFavourite) {
     this.selectedBoard = board.code;
     try {
-      await this.boardService.changeBoard(this.planningReferral.card.uuid, board.code);
+      await this.boardService.changeBoard(this.planningReferral.card!.uuid, board.code);
       const loadedBoard = await this.boardService.fetchBoardDetail(board.code);
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;

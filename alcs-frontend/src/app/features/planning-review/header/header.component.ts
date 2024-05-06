@@ -32,10 +32,12 @@ export class HeaderComponent implements OnChanges {
   async setupLinkedCards() {
     if ('referrals' in this.planningReview) {
       for (const [index, referral] of this.planningReview.referrals.entries()) {
-        this.linkedCards.push({
-          ...referral.card,
-          displayName: `Referral #${this.planningReview.referrals.length - index}`,
-        });
+        if (referral.card) {
+          this.linkedCards.push({
+            ...referral.card,
+            displayName: `Referral #${this.planningReview.referrals.length - index}`,
+          });
+        }
       }
     }
   }
