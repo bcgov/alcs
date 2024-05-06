@@ -192,7 +192,7 @@ export class DecisionMeetingController {
           (meeting) => meeting.uuid === planningReferral.planningReview.uuid,
         );
 
-        if (!meetingDate) {
+        if (!meetingDate || !planningReferral.card) {
           return [];
         }
 
@@ -201,10 +201,10 @@ export class DecisionMeetingController {
             meetingDate: new Date(meetingDate.next_meeting).getTime(),
             fileNumber: planningReferral.planningReview.fileNumber,
             applicant: planningReferral.planningReview.documentName,
-            boardCode: planningReferral.card!.board.code,
+            boardCode: planningReferral.card.board.code,
             type: CARD_TYPE.PLAN,
             assignee: this.mapper.map(
-              planningReferral.card!.assignee,
+              planningReferral.card.assignee,
               User,
               UserDto,
             ),
