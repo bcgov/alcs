@@ -16,6 +16,8 @@ import { ALCSHomePage } from '../pages/alcs/home-page';
 import { ALCSDetailsNavigation } from '../pages/alcs/details-navigation';
 import { ALCSApplicantInfoPage } from '../pages/alcs/applicant-info-page/applicant-info-page';
 import { ALCSDocumentsPage } from '../pages/alcs/documents-page';
+import { ALCSMainNavigation } from '../pages/alcs/main-navigation';
+import { ALCSBoardPage } from '../pages/alcs/board-page';
 
 test.describe.serial('Portal TUR submission and ALCS applicant info flow', () => {
   const parcels = [
@@ -193,6 +195,8 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
     await alcsLoginPage.goto();
     await alcsLoginPage.login(process.env.IDIR_USERNAME, process.env.IDIR_PASSWORD);
 
+    const alcsMainNavidation = new ALCSMainNavigation(page);
+
     const alcsHomePage = new ALCSHomePage(page);
     await alcsHomePage.search(submittedFileId);
 
@@ -213,5 +217,10 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
 
     const alcsDocumentsPage = new ALCSDocumentsPage(page);
     await alcsDocumentsPage.expectSubmissionOriginalPdfInTable(submittedFileId);
+
+    await alcsMainNavidation.gotoBoardPage('Vetting');
+
+    const vettingBoardPage = new ALCSBoardPage(page);
+    await vettingBoardPage.expectCard(submittedFileId);
   });
 });
