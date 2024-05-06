@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { ParcelsSection } from './parcels-section';
 import { PrimaryContactSection } from './primary-contact-section';
 import { OtherOwnedParcelsSection } from './other-owned-parcels-section';
