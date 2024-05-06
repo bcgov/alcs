@@ -13,7 +13,7 @@ logger = setup_and_get_logger(etl_name)
 @inject_conn_pool
 def readjust_lfng_statuses(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    TODO copy description from JIRA
+    This function is responsible for resetting LFNG status on application to the final state from OATS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -56,7 +56,7 @@ def readjust_lfng_statuses(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     break
                 try:
                     processed_applications_count = _process_statuses_for_update(
-                        conn, batch_size, cursor, rows
+                        conn, cursor, rows
                     )
 
                     successful_updates_count = (
@@ -78,7 +78,7 @@ def readjust_lfng_statuses(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     )
 
 
-def _process_statuses_for_update(conn, batch_size, cursor, rows):
+def _process_statuses_for_update(conn, cursor, rows):
 
     update_statements = []
     grouped_by_fn = []
@@ -98,7 +98,6 @@ def _process_statuses_for_update(conn, batch_size, cursor, rows):
             grouped_by_fn.append(row)
 
     combined_statements = "; ".join(update_statements)
-    # this is useful for debugging
     # logger.debug("combined_statements: %s", combined_statements)
     cursor.execute(combined_statements)
     conn.commit()
@@ -154,10 +153,10 @@ def _compile_update_statement(
         """
 
     if alcs_status:
-        logger.debug(f"reset {str_statuses_to_reset}")
+        # logger.debug(f"reset {str_statuses_to_reset}")
         return reset_statuses_query
     else:
-        logger.debug(f"{str_statuses_to_reset} and set {alcs_target_status}")
+        # logger.debug(f"{str_statuses_to_reset} and set {alcs_target_status}")
         date = add_timezone_and_keep_date_part(oats_status["completion_date"])
         return f"""
                     {reset_statuses_query}
