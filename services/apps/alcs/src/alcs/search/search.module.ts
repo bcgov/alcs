@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { NotificationSubmission } from '../../portal/notification-submission/notification-submission.entity';
 import { Application } from '../application/application.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { Inquiry } from '../inquiry/inquiry.entity';
@@ -26,16 +29,19 @@ import { SearchService } from './search.service';
     TypeOrmModule.forFeature([
       Application,
       ApplicationType,
-      NoticeOfIntent,
-      PlanningReview,
-      Notification,
-      Inquiry,
-      LocalGovernment,
+      ApplicationSubmission,
       ApplicationSubmissionSearchView,
+      NoticeOfIntent,
+      NoticeOfIntentSubmission,
       NoticeOfIntentSubmissionSearchView,
-      NotificationSubmissionSearchView,
+      PlanningReview,
       PlanningReviewSearchView,
+      Notification,
+      NotificationSubmission,
+      NotificationSubmissionSearchView,
+      Inquiry,
       InquirySearchView,
+      LocalGovernment,
     ]),
   ],
   providers: [

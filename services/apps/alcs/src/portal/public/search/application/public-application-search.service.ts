@@ -48,7 +48,7 @@ export class PublicApplicationSearchService {
       const cachedNumbers = JSON.parse(cachedSearch) as string[];
       fileNumbers = new Set<string>(cachedNumbers);
     } else {
-      fileNumbers = await this.searchForFilerNumbers(searchDto);
+      fileNumbers = await this.searchForFileNumbers(searchDto);
       await client.setEx(
         searchKey,
         180,
@@ -112,7 +112,7 @@ export class PublicApplicationSearchService {
     }
   }
 
-  private async searchForFilerNumbers(searchDto: SearchRequestDto) {
+  private async searchForFileNumbers(searchDto: SearchRequestDto) {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
@@ -126,6 +126,7 @@ export class PublicApplicationSearchService {
     if (searchDto.governmentName) {
       await this.addGovernmentResults(searchDto, promises);
     }
+
     if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
       this.addRegionResults(searchDto, promises);
     }
@@ -171,7 +172,7 @@ export class PublicApplicationSearchService {
 
     const t1 = performance.now();
     this.logger.debug(
-      `Application pre-search search took ${t1 - t0} milliseconds.`,
+      `Public Application pre-search search took ${t1 - t0} milliseconds.`,
     );
     return finalResult;
   }
@@ -368,35 +369,28 @@ export class PublicApplicationSearchService {
     searchDto: SearchRequestDto,
     promises: Promise<{ fileNumber: string }[]>[],
   ) {
-    let query = this.applicationRepository
+    const query = this.applicationRepository
       .createQueryBuilder('app')
       .select('app.fileNumber')
-      .innerJoin(
+      .leftJoin(
         ApplicationDecision,
         'decision',
         'decision.application_uuid = "app"."uuid" AND decision.is_draft = FALSE',
+      )
+      .leftJoin(
+        ApplicationDecisionComponent,
+        'decisionComponent',
+        'decisionComponent.application_decision_uuid = decision.uuid',
+      )
+      .where('app.type_code IN (:...typeCodes)', {
+        typeCodes: searchDto.fileTypes,
+      })
+      .orWhere(
+        'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
+        {
+          typeCodes: searchDto.fileTypes,
+        },
       );
-
-    query = query.leftJoin(
-      ApplicationDecisionComponent,
-      'decisionComponent',
-      'decisionComponent.application_decision_uuid = decision.uuid',
-    );
-
-    query = query.andWhere(
-      new Brackets((qb) =>
-        qb
-          .where('app.type_code IN (:...typeCodes)', {
-            typeCodes: searchDto.fileTypes,
-          })
-          .orWhere(
-            'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
-            {
-              typeCodes: searchDto.fileTypes,
-            },
-          ),
-      ),
-    );
 
     promises.push(query.getMany());
   }

@@ -183,13 +183,14 @@ describe('SearchController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toHaveBeenCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
 
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
       mockSearchRequestDto,
+      {},
     );
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
@@ -238,7 +239,7 @@ describe('SearchController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toHaveBeenCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
@@ -286,7 +287,7 @@ describe('SearchController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toHaveBeenCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
@@ -307,6 +308,7 @@ describe('SearchController', () => {
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
       mockSearchRequestDto,
+      {},
     );
     expect(result.inquiries).toBeDefined();
     expect(result.totalInquiries).toBe(0);
@@ -330,6 +332,7 @@ describe('SearchController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledWith(
       mockSearchRequestDto,
+      {},
     );
     expect(result.inquiries).toBeDefined();
     expect(result.totalInquiries).toBe(0);

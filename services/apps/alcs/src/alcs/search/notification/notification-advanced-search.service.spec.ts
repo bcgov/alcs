@@ -1,8 +1,12 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { createMockQuery } from '../../../../test/mocks/mockTypes';
+import { NotificationSubmission } from '../../../portal/notification-submission/notification-submission.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
+import { Notification } from '../../notification/notification.entity';
 import { SearchRequestDto } from '../search.dto';
 import { NotificationAdvancedSearchService } from './notification-advanced-search.service';
 import { NotificationSubmissionSearchView } from './notification-search-view.entity';
@@ -13,6 +17,12 @@ describe('NotificationAdvancedSearchService', () => {
     Repository<NotificationSubmissionSearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  let mockNotificationRepo: DeepMocked<Repository<Notification>>;
+  let mockNotificationSubmissionRepo: DeepMocked<
+    Repository<NotificationSubmission>
+  >;
+  let mockRedisService: DeepMocked<RedisService>;
+
   const sortFields = [
     'fileId',
     'type',
@@ -47,20 +57,11 @@ describe('NotificationAdvancedSearchService', () => {
   beforeEach(async () => {
     mockNotificationSubmissionSearchViewRepository = createMock();
     mockLocalGovernmentRepository = createMock();
+    mockNotificationRepo = createMock();
+    mockNotificationSubmissionRepo = createMock();
+    mockRedisService = createMock();
 
-    mockQuery = {
-      getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
-      orderBy: jest.fn().mockReturnThis(),
-      offset: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      innerJoinAndMapOne: jest.fn().mockReturnThis(),
-      groupBy: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      andWhere: jest.fn().mockReturnThis(),
-      setParameters: jest.fn().mockReturnThis(),
-      leftJoin: jest.fn().mockReturnThis(),
-      withDeleted: jest.fn().mockReturnThis(),
-    };
+    mockQuery = createMockQuery();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -73,6 +74,18 @@ describe('NotificationAdvancedSearchService', () => {
           provide: getRepositoryToken(LocalGovernment),
           useValue: mockLocalGovernmentRepository,
         },
+        {
+          provide: getRepositoryToken(Notification),
+          useValue: mockNotificationRepo,
+        },
+        {
+          provide: getRepositoryToken(NotificationSubmission),
+          useValue: mockNotificationSubmissionRepo,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
       ],
     }).compile();
 
@@ -80,9 +93,18 @@ describe('NotificationAdvancedSearchService', () => {
       NotificationAdvancedSearchService,
     );
 
+    mockNotificationSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
+      mockQuery as any,
+    );
+
     mockLocalGovernmentRepository.findOneByOrFail.mockResolvedValue(
       new LocalGovernment(),
     );
+
+    mockRedisService.getClient.mockReturnValue({
+      get: async () => null,
+      setEx: async () => null,
+    } as any);
   });
 
   it('should be defined', () => {
@@ -90,28 +112,32 @@ describe('NotificationAdvancedSearchService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
-    mockNotificationSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
-      mockQuery as any,
+    mockNotificationRepo.find.mockResolvedValue([]);
+    mockNotificationRepo.createQueryBuilder.mockReturnValue(mockQuery);
+    mockNotificationSubmissionRepo.createQueryBuilder.mockReturnValue(
+      mockQuery,
     );
 
-    const result = await service.search(mockSearchDto);
+    const result = await service.search(mockSearchDto, {} as any);
 
     expect(result).toEqual({ data: [], total: 0 });
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(4);
     expect(
-      mockNotificationSubmissionSearchViewRepository.createQueryBuilder,
-    ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(9);
+      mockNotificationSubmissionRepo.createQueryBuilder,
+    ).toHaveBeenCalledTimes(3);
+    expect(mockNotificationRepo.createQueryBuilder).toHaveBeenCalledTimes(2);
+    expect(mockNotificationRepo.find).toHaveBeenCalledTimes(3);
   });
 
-  it('should call compileNotificationSearchQuery method correctly', async () => {
-    const compileSearchQuerySpy = jest
-      .spyOn(service as any, 'compileNotificationSearchQuery')
-      .mockResolvedValue(mockQuery);
+  it('should call searchForFileNumbers method correctly', async () => {
+    const searchForFileNumbersSpy = jest
+      .spyOn(service as any, 'searchForFileNumbers')
+      .mockResolvedValue(new Set(['100000']));
 
-    const result = await service.search(mockSearchDto);
+    const result = await service.search(mockSearchDto, {} as any);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileSearchQuerySpy).toBeCalledWith(mockSearchDto);
+    expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
@@ -119,17 +145,17 @@ describe('NotificationAdvancedSearchService', () => {
 
   sortFields.forEach((sortField) => {
     it(`should sort by ${sortField}`, async () => {
-      const compileSearchQuerySpy = jest
-        .spyOn(service as any, 'compileNotificationSearchQuery')
-        .mockResolvedValue(mockQuery);
+      const searchForFileNumbersSpy = jest
+        .spyOn(service as any, 'searchForFileNumbers')
+        .mockResolvedValue(new Set(['100000']));
 
       mockSearchDto.sortField = sortField;
       mockSearchDto.sortDirection = 'DESC';
 
-      const result = await service.search(mockSearchDto);
+      const result = await service.search(mockSearchDto, {} as any);
 
       expect(result).toEqual({ data: [], total: 0 });
-      expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
+      expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);
       expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
       expect(mockQuery.offset).toHaveBeenCalledTimes(1);
       expect(mockQuery.limit).toHaveBeenCalledTimes(1);

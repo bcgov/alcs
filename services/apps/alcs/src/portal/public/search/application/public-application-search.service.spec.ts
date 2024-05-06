@@ -98,7 +98,6 @@ describe('PublicApplicationSearchService', () => {
   it('should successfully build a query using all search parameters defined', async () => {
     mockApplicationRepository.find.mockResolvedValue([]);
     mockApplicationRepository.createQueryBuilder.mockReturnValue(mockQuery);
-    mockApplicationSubmissionRepository.find.mockResolvedValue([]);
     mockApplicationSubmissionRepository.createQueryBuilder.mockReturnValue(
       mockQuery,
     );
@@ -113,12 +112,13 @@ describe('PublicApplicationSearchService', () => {
     expect(
       mockApplicationSubmissionRepository.createQueryBuilder,
     ).toHaveBeenCalledTimes(3);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(6);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(5);
+    expect(mockQuery.orWhere).toHaveBeenCalledTimes(1);
   });
 
   it('should call compileApplicationSearchQuery method correctly', async () => {
-    const searchForFilerNumbers = jest
-      .spyOn(service as any, 'searchForFilerNumbers')
+    const searchForFileNumbers = jest
+      .spyOn(service as any, 'searchForFileNumbers')
       .mockResolvedValue(new Set('100000'));
 
     mockApplicationSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
@@ -128,7 +128,7 @@ describe('PublicApplicationSearchService', () => {
     const result = await service.searchApplications(mockSearchRequestDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(searchForFilerNumbers).toHaveBeenCalledWith(mockSearchRequestDto);
+    expect(searchForFileNumbers).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
