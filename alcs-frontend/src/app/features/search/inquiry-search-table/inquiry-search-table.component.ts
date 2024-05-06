@@ -43,7 +43,7 @@ export class InquirySearchTableComponent {
   itemsPerPage = 20;
   total = 0;
   sortDirection: SortDirection = 'desc';
-  sortField = 'fileId';
+  sortField = 'dateSubmitted';
   isLoading = false;
 
   constructor(private router: Router) {}
