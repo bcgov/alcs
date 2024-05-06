@@ -11,7 +11,7 @@
     ></app-details-header>
     <div *ngIf="application" class="content">
       <div *ngIf="showSubmittedToAlcMenuItems" class="nav">
-        <div *ngFor="let route of childRoutes" class="nav-link">
+        <div *ngFor="let route of childRoutes" class="nav-link" data-testid="details-nav-link">
           <div
             *ngIf="
               (!route.portalOnly || isApplicantSubmission) &&

@@ -15,6 +15,7 @@ import { ALCSLoginPage } from '../pages/alcs/alcs-login-page';
 import { ALCSHomePage } from '../pages/alcs/home-page';
 import { ALCSDetailsNavigation } from '../pages/alcs/details-navigation';
 import { ALCSApplicantInfoPage } from '../pages/alcs/applicant-info-page/applicant-info-page';
+import { ALCSDocumentsPage } from '../pages/alcs/documents-page';
 
 test.describe.serial('Portal TUR submission and ALCS applicant info flow', () => {
   const parcels = [
@@ -207,5 +208,10 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
     await alcsApplicantInfoPage.landUseSection.expectLandUse(landUse);
     await alcsApplicantInfoPage.turProposalSection.expectProposal(turProposal);
     await alcsApplicantInfoPage.optionalDocumentsSection.expectAttachments(optionalAttachments);
+
+    await alcsDetailsNavigation.gotoDocumentsPage();
+
+    const alcsDocumentsPage = new ALCSDocumentsPage(page);
+    await alcsDocumentsPage.expectSubmissionOriginalPdfInTable(submittedFileId);
   });
 });
