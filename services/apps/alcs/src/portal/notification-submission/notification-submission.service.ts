@@ -470,7 +470,7 @@ export class NotificationSubmissionService {
       );
 
       if (localGovernment && localGovernment.emails) {
-        ccEmails = localGovernment.emails;
+        ccEmails = localGovernment.emails.filter((email) => email !== '');
       }
     }
 
