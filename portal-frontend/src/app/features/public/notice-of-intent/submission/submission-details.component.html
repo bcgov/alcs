@@ -22,7 +22,7 @@
     <div class="subheading2 grid-1">
       <span
         *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
-        >Organization (optional)</span
+      >Organization (optional)</span
       >
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
@@ -127,4 +127,8 @@
     [noiSubmission]="submission"
     [noiDocuments]="documents"
   ></app-pfrs-details>
+</section>
+<section *ngIf="submission">
+  <h3>Additional Information</h3>
+  <app-additional-information [noiSubmission]="submission" [noiDocuments]="documents"></app-additional-information>
 </section>
