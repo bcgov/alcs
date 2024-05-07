@@ -6,24 +6,17 @@ from logging.handlers import RotatingFileHandler
 
 from menu import setup_menu_args_parser
 from menu.post_launch_commands import (
-    import_all,
-    clean_all,
-    application_import,
-    application_clean,
     notice_of_intent_import,
     notice_of_intent_clean,
-    srw_import,
-    srw_clean,
     document_import,
     document_clean,
     planning_review_clean,
     planning_review_import,
     inquiry_import,
     inquiry_clean,
-    document_import_pr_inq,
-    document_clean_pr_inq,
     import_all_pr_inq,
     clean_all_pr_inq,
+    application_local_government_status_reset,
 )
 from menu import start_obfuscation
 from db import connection_pool
@@ -51,13 +44,7 @@ if __name__ == "__main__":
             case "noi-clean":
                 notice_of_intent_clean(console)
             case "application-import":
-                application_import(console, args)
-            case "application-clean":
-                application_clean(console)
-            case "srw-import":
-                srw_import(console, args)
-            case "srw-clean":
-                srw_clean(console)
+                application_local_government_status_reset(console, args)
             case "document-import":
                 document_import(console, args)
             case "document-clean":
