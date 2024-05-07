@@ -26,7 +26,6 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   name = new FormControl<string>('', [Validators.required]);
   type = new FormControl<string | undefined>({ disabled: true, value: undefined }, [Validators.required]);
   source = new FormControl<string>({ disabled: true, value: DOCUMENT_SOURCE.ALC }, [Validators.required]);
-  visibleToCommissioner = new FormControl<boolean>({ disabled: true, value: true }, [Validators.required]);
 
   documentSources = Object.values(DOCUMENT_SOURCE);
 
@@ -34,7 +33,6 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     name: this.name,
     type: this.type,
     source: this.source,
-    visibleToCommissioner: this.visibleToCommissioner,
   });
 
   pendingFile: File | undefined;
