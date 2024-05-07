@@ -32,7 +32,7 @@ import { PlanningReviewDecisionService } from './planning-review-decision.servic
 @UseGuards(RolesGuard)
 export class PlanningReviewDecisionController {
   constructor(
-    private plannigReviewDecisionService: PlanningReviewDecisionService,
+    private planningReviewDecisionService: PlanningReviewDecisionService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -42,7 +42,7 @@ export class PlanningReviewDecisionController {
     @Param('fileNumber') fileNumber,
   ): Promise<PlanningReviewDecisionDto[]> {
     const decisions =
-      await this.plannigReviewDecisionService.getByFileNumber(fileNumber);
+      await this.planningReviewDecisionService.getByFileNumber(fileNumber);
 
     return await this.mapper.mapArrayAsync(
       decisions,
@@ -54,7 +54,7 @@ export class PlanningReviewDecisionController {
   @Get('/codes')
   @UserRoles(...ANY_AUTH_ROLE)
   async getCodes() {
-    const codes = await this.plannigReviewDecisionService.fetchCodes();
+    const codes = await this.planningReviewDecisionService.fetchCodes();
     return await this.mapper.mapArrayAsync(
       codes.outcomes,
       PlanningReviewDecisionOutcomeCode,
@@ -65,7 +65,7 @@ export class PlanningReviewDecisionController {
   @Get('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('uuid') uuid: string): Promise<PlanningReviewDecisionDto> {
-    const decision = await this.plannigReviewDecisionService.get(uuid);
+    const decision = await this.planningReviewDecisionService.get(uuid);
 
     return this.mapper.mapAsync(
       decision,
@@ -80,7 +80,7 @@ export class PlanningReviewDecisionController {
     @Body() createDto: CreatePlanningReviewDecisionDto,
   ): Promise<PlanningReviewDecisionDto> {
     const newDecision =
-      await this.plannigReviewDecisionService.create(createDto);
+      await this.planningReviewDecisionService.create(createDto);
 
     return this.mapper.mapAsync(
       newDecision,
@@ -95,7 +95,7 @@ export class PlanningReviewDecisionController {
     @Param('uuid') uuid: string,
     @Body() updateDto: UpdatePlanningReviewDecisionDto,
   ): Promise<PlanningReviewDecisionDto> {
-    const updatedDecision = await this.plannigReviewDecisionService.update(
+    const updatedDecision = await this.planningReviewDecisionService.update(
       uuid,
       updateDto,
     );
@@ -110,7 +110,7 @@ export class PlanningReviewDecisionController {
   @Delete('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async delete(@Param('uuid') uuid: string) {
-    return await this.plannigReviewDecisionService.delete(uuid);
+    return await this.planningReviewDecisionService.delete(uuid);
   }
 
   @Post('/:uuid/file')
@@ -121,7 +121,7 @@ export class PlanningReviewDecisionController {
     }
 
     const file = req.body.file;
-    await this.plannigReviewDecisionService.attachDocument(
+    await this.planningReviewDecisionService.attachDocument(
       decisionUuid,
       file,
       req.user.entity,
@@ -138,7 +138,7 @@ export class PlanningReviewDecisionController {
     @Param('documentUuid') documentUuid: string,
     @Body() body: { fileName: string },
   ) {
-    await this.plannigReviewDecisionService.updateDocument(
+    await this.planningReviewDecisionService.updateDocument(
       documentUuid,
       body.fileName,
     );
@@ -154,7 +154,7 @@ export class PlanningReviewDecisionController {
     @Param('fileUuid') documentUuid: string,
   ) {
     const downloadUrl =
-      await this.plannigReviewDecisionService.getDownloadUrl(documentUuid);
+      await this.planningReviewDecisionService.getDownloadUrl(documentUuid);
     return {
       url: downloadUrl,
     };
@@ -166,7 +166,7 @@ export class PlanningReviewDecisionController {
     @Param('uuid') decisionUuid: string,
     @Param('fileUuid') documentUuid: string,
   ) {
-    const downloadUrl = await this.plannigReviewDecisionService.getDownloadUrl(
+    const downloadUrl = await this.planningReviewDecisionService.getDownloadUrl(
       documentUuid,
       true,
     );
@@ -181,7 +181,7 @@ export class PlanningReviewDecisionController {
     @Param('uuid') decisionUuid: string,
     @Param('fileUuid') documentUuid: string,
   ) {
-    await this.plannigReviewDecisionService.deleteDocument(documentUuid);
+    await this.planningReviewDecisionService.deleteDocument(documentUuid);
     return {};
   }
 
@@ -190,7 +190,7 @@ export class PlanningReviewDecisionController {
   async getNextAvailableResolutionNumber(
     @Param('resolutionYear') resolutionYear: number,
   ) {
-    return this.plannigReviewDecisionService.generateResolutionNumber(
+    return this.planningReviewDecisionService.generateResolutionNumber(
       resolutionYear,
     );
   }
