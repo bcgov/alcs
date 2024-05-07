@@ -24,6 +24,9 @@ describe('AdditionalInformationComponent', () => {
 
     fixture = TestBed.createComponent(AdditionalInformationComponent);
     component = fixture.componentInstance;
+    component.noiSubmission = {
+      soilProposedStructures: [],
+    } as any;
     fixture.detectChanges();
   });
 
