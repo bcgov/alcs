@@ -409,16 +409,15 @@ export class NotificationSubmissionService {
   ): Promise<boolean> {
     const templateData = await this.generateSrwEmailData(submission, document);
 
-    const didSend =
-      (await this.emailService.sendEmail({
-        to: [templateData.to],
-        body: templateData.html,
-        subject: `Agricultural Land Commission SRW${submission.fileNumber} (${submission.applicant})`,
-        parentType: PARENT_TYPE.NOTIFICATION,
-        parentId: templateData.parentId,
-        cc: templateData.cc,
-        attachments: [document.document],
-      })) ?? false;
+    const didSend = await this.emailService.sendEmail({
+      to: [templateData.to],
+      body: templateData.html,
+      subject: `Agricultural Land Commission SRW${submission.fileNumber} (${submission.applicant})`,
+      parentType: PARENT_TYPE.NOTIFICATION,
+      parentId: templateData.parentId,
+      cc: templateData.cc,
+      attachments: [document.document],
+    });
 
     if (didSend) {
       const fileBuffer = Buffer.from(templateData.html);
