@@ -1,4 +1,7 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import {
+  BaseServiceException,
+  ServiceNotFoundException,
+} from '@app/common/exceptions/base.exception';
 import {
   Body,
   Controller,
@@ -120,11 +123,18 @@ export class NotificationController {
     );
 
     if (document) {
-      await this.notificationSubmissionService.sendAndRecordLTSAPackage(
-        submission,
-        document,
-        user,
-      );
+      const emailDidSend =
+        await this.notificationSubmissionService.sendAndRecordLTSAPackage(
+          submission,
+          document,
+          user,
+        );
+
+      if (!emailDidSend) {
+        throw new BaseServiceException(
+          `Failed to send LTSA Package ${fileNumber}`,
+        );
+      }
     } else {
       throw new ServiceNotFoundException(
         `Failed to find LTSA Letter on File Number ${fileNumber}`,
