@@ -1,6 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-purpose">
     {{ _applicationSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
@@ -8,24 +8,24 @@
     Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in
     proximity to the proposal.
   </div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-agricultural-activities">
     {{ _applicationSubmission.turAgriculturalActivities }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turAgriculturalActivities"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
     What steps will you take to reduce potential negative impacts on surrounding agricultural lands?
   </div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-reduce-negative-impacts">
     {{ _applicationSubmission.turReduceNegativeImpacts }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turReduceNegativeImpacts"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Could this proposal be accommodated on lands outside of the ALR?</div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-outside-lands">
     {{ _applicationSubmission.turOutsideLands }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turOutsideLands"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Total area of corridor</div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-total-corridor-area">
     <span *ngIf="_applicationSubmission.turTotalCorridorArea !== null"
       >{{ _applicationSubmission.turTotalCorridorArea }} ha</span
     >
@@ -34,19 +34,19 @@
   <div class="subheading2 grid-1">
     I confirm that all affected property owners with land in the ALR have been notified.
   </div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-all-owners-notified">
     <span *ngIf="_applicationSubmission.turAllOwnersNotified">Yes</span>
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turAllOwnersNotified"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proof of Serving Notice</div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-proof-of-serving-notice">
     <a *ngFor="let notice of servingNotice" (click)="openFile(notice)">
       {{ notice.fileName }}
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="servingNotice.length === 0"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
-  <div class="grid-double">
+  <div class="grid-double" data-testid="tur-proposal-map">
     <a *ngFor="let file of proposalMap" (click)="openFile(file)">
       {{ file.fileName }}
     </a>

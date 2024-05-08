@@ -12,6 +12,7 @@
         *ngFor="let card of cards | statusfilter: column.status"
         [cardData]="card"
         (cardSelected)="cardClicked(card)"
+        data-testid="card"
       >
       </app-card>
     </div>

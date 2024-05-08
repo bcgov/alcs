@@ -13,10 +13,10 @@
     <div class="subheading2 grid-1">
       Do any of the land owners added previously own or lease other parcels that might inform this application process?
     </div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="has-other-parcels">
       <span *ngIf="applicationSubmission.hasOtherParcelsInCommunity !== null">{{
-          applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
-        }}</span>
+        applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+      }}</span>
       <app-no-data
         *ngIf="applicationSubmission.hasOtherParcelsInCommunity === null"
         [showRequired]="showErrors"
@@ -26,7 +26,7 @@
       <div class="subheading2 grid-1">
         Describe the other parcels including their location, who owns or leases them, and their use.
       </div>
-      <div class="grid-double">
+      <div class="grid-double" data-testid="other-parcels-description">
         {{ applicationSubmission.otherParcelsDescription }}
         <app-no-data *ngIf="!applicationSubmission.otherParcelsDescription" [showRequired]="showErrors"></app-no-data>
       </div>
@@ -40,29 +40,29 @@
   <h3>3. Primary Contact</h3>
   <div *ngIf="applicationSubmission" class="review-table">
     <div class="subheading2 grid-1">Type</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-type">
       {{ primaryContact?.type?.label }}
       <app-no-data *ngIf="!primaryContact?.type?.label" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">First Name</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-first-name">
       {{ primaryContact?.firstName }}
       <app-no-data *ngIf="!primaryContact?.firstName" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Last Name</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-last-name">
       {{ primaryContact?.lastName }}
       <app-no-data *ngIf="!primaryContact?.lastName" [showRequired]="showErrors"></app-no-data>
     </div>
     <div class="subheading2 grid-1">
       <span
         *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
-      >Organization (optional)</span
+        >Organization (optional)</span
       >
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
     </div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-organization">
       {{ primaryContact?.organizationName }}
       <app-no-data
         *ngIf="!primaryContact?.organizationName"
@@ -70,16 +70,15 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Phone</div>
-    <div class="grid-double">
-      {{ primaryContact?.phoneNumber ?? '' | mask : '(000) 000-0000' }}
+    <div class="grid-double" data-testid="primary-contact-phone-number">
+      {{ primaryContact?.phoneNumber ?? '' | mask: '(000) 000-0000' }}
       <app-no-data *ngIf="!primaryContact?.phoneNumber" [showRequired]="showErrors"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
-      >Invalid Format
-      </app-validation-error
-      >
+        >Invalid Format
+      </app-validation-error>
     </div>
     <div class="subheading2 grid-1">Email</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="primary-contact-email">
       {{ primaryContact?.email }}
       <app-no-data *ngIf="!primaryContact?.email" [showRequired]="showErrors"></app-no-data>
       <app-validation-error *ngIf="!(primaryContact?.email || '' | emailValid)">Invalid Format</app-validation-error>
@@ -92,7 +91,7 @@
           [showRequired]="showErrors && needsAuthorizationLetter"
         ></app-no-data>
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file)">{{ file.fileName }}</a>
+          <a (click)="openFile(file)" data-testid="authorization-letter">{{ file.fileName }}</a>
         </div>
         <app-validation-error *ngIf="!needsAuthorizationLetter && authorizationLetters.length > 0">
           Authorization letters are not required, please remove them
@@ -108,15 +107,15 @@
   <h3>4. Government</h3>
   <div *ngIf="applicationSubmission" class="review-table">
     <div class="subheading2 grid-1">Local or First Nation Government</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="government-name">
       {{ localGovernment?.name }}
       <app-no-data *ngIf="!localGovernment" [showRequired]="showErrors"></app-no-data>
       <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
         This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
         fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
         &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
-      >236-468-3342</a
-      >
+          >236-468-3342</a
+        >
       </app-warning-banner>
       <app-warning-banner
         *ngIf="
@@ -144,7 +143,7 @@
       <h4>Land Use of Parcel(s) under Application</h4>
     </div>
     <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-agriculture-description">
       {{ applicationSubmission.parcelsAgricultureDescription }}
       <app-no-data
         *ngIf="!applicationSubmission.parcelsAgricultureDescription"
@@ -152,7 +151,7 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-agriculture-improvement-description">
       {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
       <app-no-data
         *ngIf="!applicationSubmission.parcelsAgricultureImprovementDescription"
@@ -160,7 +159,7 @@
       ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
-    <div class="grid-double">
+    <div class="grid-double" data-testid="parcels-non-agriculture-description">
       {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
       <app-no-data
         *ngIf="!applicationSubmission.parcelsNonAgricultureUseDescription"
@@ -175,11 +174,11 @@
       <div class="grid-2 subheading2">Main Land Use Type</div>
       <div class="grid-3 subheading2">Specific Activity</div>
       <div class="grid-1 subheading2">North</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="north-land-use-type">
         {{ applicationSubmission.northLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.northLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="north-land-use-description">
         {{ applicationSubmission.northLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.northLandUseTypeDescription"
@@ -187,11 +186,11 @@
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">East</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="east-land-use-type">
         {{ applicationSubmission.eastLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.eastLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="east-land-use-description">
         {{ applicationSubmission.eastLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.eastLandUseTypeDescription"
@@ -199,11 +198,11 @@
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">South</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="south-land-use-type">
         {{ applicationSubmission.southLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.southLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="south-land-use-description">
         {{ applicationSubmission.southLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.southLandUseTypeDescription"
@@ -211,11 +210,11 @@
         ></app-no-data>
       </div>
       <div class="grid-1 subheading2">West</div>
-      <div class="grid-2">
+      <div class="grid-2" data-testid="west-land-use-type">
         {{ applicationSubmission.westLandUseType }}
         <app-no-data *ngIf="!applicationSubmission.westLandUseType" [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
+      <div class="grid-3" data-testid="west-land-use-description">
         {{ applicationSubmission.westLandUseTypeDescription }}
         <app-no-data
           *ngIf="!applicationSubmission.westLandUseTypeDescription"
@@ -320,14 +319,14 @@
       <div class="grid-3 subheading2">Description</div>
 
       <ng-container *ngFor="let file of otherFiles">
-        <div class="grid-1">
+        <div class="grid-1" data-testid="optional-document-file-name">
           <a (click)="openFile(file)">{{ file.fileName }}</a>
         </div>
-        <div class="grid-2">
+        <div class="grid-2" data-testid="optional-document-type">
           {{ file.type?.label }}
           <app-no-data *ngIf="!file.type" [showRequired]="showErrors"></app-no-data>
         </div>
-        <div class="grid-3">
+        <div class="grid-3" data-testid="optional-document-description">
           {{ file.description }}
           <app-no-data *ngIf="!file.description" [showRequired]="showErrors"></app-no-data>
         </div>
