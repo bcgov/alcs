@@ -38,7 +38,6 @@ import { UserModule } from './user/user.module';
     }),
     ClsModule.forRoot({
       global: true,
-      middleware: { mount: true },
     }),
     WinstonModule,
     DocumentModule,

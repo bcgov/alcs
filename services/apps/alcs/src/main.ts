@@ -9,6 +9,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
+import { ClsMiddleware } from 'nestjs-cls';
 import { S3StreamLogger } from 's3-streamlogger';
 import { install } from 'source-map-support';
 import * as winston from 'winston';
@@ -148,7 +149,6 @@ function setupLogger() {
       http: 4,
       debug: 5,
       verbose: 6,
-      log: 7,
     },
     transports:
       config.get('ENV') === 'production'
@@ -170,6 +170,7 @@ async function bootstrap() {
     },
   );
   app.useLogger(logger);
+  app.use(new ClsMiddleware().use);
 
   const extraArg = process.argv[2];
   if (extraArg === 'graph') {
