@@ -2,7 +2,7 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { createMockQuery } from '../../../../test/mocks/mockTypes';
 import { NotificationSubmission } from '../../../portal/notification-submission/notification-submission.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -22,6 +22,7 @@ describe('NotificationAdvancedSearchService', () => {
     Repository<NotificationSubmission>
   >;
   let mockRedisService: DeepMocked<RedisService>;
+  let mockQueryRunner: DeepMocked<QueryRunner>;
 
   const sortFields = [
     'fileId',
@@ -60,6 +61,7 @@ describe('NotificationAdvancedSearchService', () => {
     mockNotificationRepo = createMock();
     mockNotificationSubmissionRepo = createMock();
     mockRedisService = createMock();
+    mockQueryRunner = createMock();
 
     mockQuery = createMockQuery();
 
@@ -118,7 +120,7 @@ describe('NotificationAdvancedSearchService', () => {
       mockQuery,
     );
 
-    const result = await service.search(mockSearchDto, {} as any);
+    const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
     expect(mockQuery.andWhere).toHaveBeenCalledTimes(4);
@@ -134,7 +136,7 @@ describe('NotificationAdvancedSearchService', () => {
       .spyOn(service as any, 'searchForFileNumbers')
       .mockResolvedValue(new Set(['100000']));
 
-    const result = await service.search(mockSearchDto, {} as any);
+    const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
     expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);
@@ -152,7 +154,7 @@ describe('NotificationAdvancedSearchService', () => {
       mockSearchDto.sortField = sortField;
       mockSearchDto.sortDirection = 'DESC';
 
-      const result = await service.search(mockSearchDto, {} as any);
+      const result = await service.search(mockSearchDto, mockQueryRunner);
 
       expect(result).toEqual({ data: [], total: 0 });
       expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);

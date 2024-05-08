@@ -2,7 +2,7 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { createMockQuery } from '../../../../test/mocks/mockTypes';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -22,6 +22,7 @@ describe('NoticeOfIntentService', () => {
     Repository<NoticeOfIntentSubmission>
   >;
   let mockRedisService: DeepMocked<RedisService>;
+  let mockQueryRunner: DeepMocked<QueryRunner>;
 
   const sortFields = [
     'fileId',
@@ -60,6 +61,7 @@ describe('NoticeOfIntentService', () => {
     mockNOIRepository = createMock();
     mockNOISubmissionRepository = createMock();
     mockRedisService = createMock();
+    mockQueryRunner = createMock();
 
     mockQuery = createMockQuery();
 
@@ -118,7 +120,7 @@ describe('NoticeOfIntentService', () => {
 
     const result = await service.searchNoticeOfIntents(
       mockSearchDto,
-      {} as any,
+      mockQueryRunner,
     );
 
     expect(result).toEqual({ data: [], total: 0 });
@@ -138,7 +140,7 @@ describe('NoticeOfIntentService', () => {
 
     const result = await service.searchNoticeOfIntents(
       mockSearchDto,
-      {} as any,
+      mockQueryRunner,
     );
 
     expect(result).toEqual({ data: [], total: 0 });
@@ -159,7 +161,7 @@ describe('NoticeOfIntentService', () => {
 
       const result = await service.searchNoticeOfIntents(
         mockSearchDto,
-        {} as any,
+        mockQueryRunner,
       );
 
       expect(result).toEqual({ data: [], total: 0 });

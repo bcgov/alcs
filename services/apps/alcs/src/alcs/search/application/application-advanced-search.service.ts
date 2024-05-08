@@ -16,6 +16,7 @@ import { ApplicationDecisionComponent } from '../../application-decision/applica
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
+import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { ApplicationSubmissionSearchView } from './application-search-view.entity';
 
@@ -53,7 +54,7 @@ export class ApplicationAdvancedSearchService {
       fileNumbers = await this.searchForFileNumbers(searchDto);
       await client.setEx(
         searchKey,
-        180, //Seconds
+        SEARCH_CACHE_TIME,
         JSON.stringify([...fileNumbers.values()]),
       );
     }

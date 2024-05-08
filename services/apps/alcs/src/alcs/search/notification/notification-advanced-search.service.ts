@@ -10,6 +10,7 @@ import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../ut
 import { intersectSets } from '../../../utils/set-helper';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { Notification } from '../../notification/notification.entity';
+import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NotificationSubmissionSearchView } from './notification-search-view.entity';
 
@@ -47,7 +48,7 @@ export class NotificationAdvancedSearchService {
       fileNumbers = await this.searchForFileNumbers(searchDto);
       await client.setEx(
         searchKey,
-        180, //Seconds
+        SEARCH_CACHE_TIME,
         JSON.stringify([...fileNumbers.values()]),
       );
     }

@@ -1,0 +1,1 @@
+export const SEARCH_CACHE_TIME = 180; //SECONDS

@@ -15,6 +15,7 @@ import { intersectSets } from '../../../utils/set-helper';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { NoticeOfIntentDecision } from '../../notice-of-intent-decision/notice-of-intent-decision.entity';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
+import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search-view.entity';
 
@@ -52,7 +53,7 @@ export class NoticeOfIntentAdvancedSearchService {
       fileNumbers = await this.searchForFileNumbers(searchDto);
       await client.setEx(
         searchKey,
-        180, //Seconds
+        SEARCH_CACHE_TIME,
         JSON.stringify([...fileNumbers.values()]),
       );
     }

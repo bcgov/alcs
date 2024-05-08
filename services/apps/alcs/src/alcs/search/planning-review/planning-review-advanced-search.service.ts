@@ -13,6 +13,7 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
 import { PlanningReferral } from '../../planning-review/planning-referral/planning-referral.entity';
 import { PlanningReviewDecision } from '../../planning-review/planning-review-decision/planning-review-decision.entity';
 import { PlanningReview } from '../../planning-review/planning-review.entity';
+import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { PlanningReviewSearchView } from './planning-review-search-view.entity';
 
@@ -48,7 +49,7 @@ export class PlanningReviewAdvancedSearchService {
       fileNumbers = await this.searchForFileNumbers(searchDto);
       await client.setEx(
         searchKey,
-        180, //Seconds
+        SEARCH_CACHE_TIME,
         JSON.stringify([...fileNumbers.values()]),
       );
     }

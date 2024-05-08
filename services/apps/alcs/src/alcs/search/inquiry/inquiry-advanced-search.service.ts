@@ -8,6 +8,7 @@ import { intersectSets } from '../../../utils/set-helper';
 import { InquiryParcel } from '../../inquiry/inquiry-parcel/inquiry-parcel.entity';
 import { Inquiry } from '../../inquiry/inquiry.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
+import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { InquirySearchView } from './inquiry-search-view.entity';
 
@@ -43,7 +44,7 @@ export class InquiryAdvancedSearchService {
       fileNumbers = await this.searchForFileNumbers(searchDto);
       await client.setEx(
         searchKey,
-        180, //Seconds
+        SEARCH_CACHE_TIME,
         JSON.stringify([...fileNumbers.values()]),
       );
     }
