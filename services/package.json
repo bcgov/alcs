@@ -60,7 +60,7 @@
     "mjml": "^4.15.3",
     "nest-keycloak-connect": "^1.10.0",
     "nest-winston": "^1.9.4",
-    "nestjs-cls": "^4.3.0",
+    "nestjs-cls": "~3.6.0",
     "nestjs-grpc-reflection": "^0.2.2",
     "nestjs-spelunker": "^1.3.0",
     "node-jose": "^2.2.0",
