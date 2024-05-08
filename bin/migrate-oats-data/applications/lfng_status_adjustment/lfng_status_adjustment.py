@@ -185,7 +185,7 @@ def _get_alcs_status(statuses, code):
 def _map_oats_accomplishment_code_to_alcs_status_code(code):
     if code == "LRF":
         return "RFFG"
-    if code == "SLG":
+    if code == "SLG" or code == 'RSL':
         return "SUBG"
     if code == "WLG":
         return "WRNG"

@@ -57,7 +57,7 @@ alr_applications_to_exclude AS ( SELECT alr_application_id FROM completion_with_
 , oats_accomplishments AS (
     SELECT rir.*, oaac.* FROM oats.oats_accomplishments oaac 
     JOIN returned_incomplete_refused AS rir ON rir.file_number::bigint = oaac.alr_application_id
-    WHERE oaac.accomplishment_code IN ('LRF', 'SLG', 'WLG', 'ULG', 'LGI')
+    WHERE oaac.accomplishment_code IN ('LRF', 'SLG', 'WLG', 'ULG', 'LGI', 'RSL')
 )
 -- ranked_statuses will select the latest status based on max completion_date, then when_updated, then when_created for all records per file_number
 , ranked_statuses AS (
