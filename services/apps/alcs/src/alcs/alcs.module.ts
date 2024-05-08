@@ -11,11 +11,11 @@ import { CodeModule } from './code/code.module';
 import { CommentModule } from './comment/comment.module';
 import { CommissionerModule } from './commissioner/commissioner.module';
 import { HomeModule } from './home/home.module';
-import { ImportModule } from './import/import.module';
 import { InquiryModule } from './inquiry/inquiry.module';
 import { LocalGovernmentModule } from './local-government/local-government.module';
-import { MessageModule } from './message/message.module';
+import { MaintenanceModule } from './maintenance/maintenance.module';
 import { MeetingModule } from './meetings/meeting.module';
+import { MessageModule } from './message/message.module';
 import { NoticeOfIntentDecisionModule } from './notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentTimelineModule } from './notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.module';
@@ -28,11 +28,9 @@ import { PlanningReviewTimelineModule } from './planning-review/planning-review-
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
-import { MaintenanceModule } from './maintenance/maintenance.module';
 
 @Module({
   imports: [
-    ImportModule,
     ApplicationModule,
     CommentModule,
     MessageModule,

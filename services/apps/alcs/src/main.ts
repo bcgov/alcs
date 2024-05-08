@@ -14,7 +14,6 @@ import { install } from 'source-map-support';
 import * as winston from 'winston';
 import { createLogger } from 'winston';
 import { generateModuleGraph } from './commands/graph';
-import { importApplications } from './commands/import';
 import { MainModule } from './main.module';
 
 const registerSwagger = (app: NestFastifyApplication) => {
@@ -174,9 +173,6 @@ async function bootstrap() {
   const extraArg = process.argv[2];
   if (extraArg === 'graph') {
     await generateModuleGraph(app);
-  }
-  if (extraArg == 'import') {
-    await importApplications(logger);
   }
 
   // config variables
