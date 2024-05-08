@@ -18,28 +18,25 @@ export class SearchApplicationSubmissionStatusType {
   expression: (datasource: DataSource) =>
     datasource
       .createQueryBuilder()
-      .select('as2.uuid', 'uuid')
-      .addSelect('as2.file_number', 'file_number')
-      .addSelect('as2.applicant', 'applicant')
-      .addSelect('as2.local_government_uuid', 'local_government_uuid')
+      .select('app_sub.uuid', 'uuid')
+      .addSelect('app_sub.file_number', 'file_number')
+      .addSelect('app_sub.applicant', 'applicant')
       .addSelect('localGovernment.name', 'local_government_name')
-      .addSelect('as2.type_code', 'application_type_code')
-      .addSelect('as2.is_draft', 'is_draft')
-      .addSelect('a.legacy_id', 'legacy_id')
-      .addSelect('a.date_submitted_to_alc', 'date_submitted_to_alc')
-      .addSelect('a.decision_date', 'decision_date')
-      .addSelect('a.uuid', 'application_uuid')
-      .addSelect('a.region_code', 'application_region_code')
+      .addSelect('app.type_code', 'application_type_code')
+      .addSelect('app.date_submitted_to_alc', 'date_submitted_to_alc')
+      .addSelect('app.decision_date', 'decision_date')
+      .addSelect('app.uuid', 'application_uuid')
+      .addSelect('app.region_code', 'application_region_code')
       .addSelect(
-        'alcs.get_current_status_for_application_submission_by_uuid(as2.uuid)',
+        'alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)',
         'status',
       )
-      .from(ApplicationSubmission, 'as2')
-      .innerJoin(Application, 'a', 'a.file_number = as2.file_number')
+      .from(ApplicationSubmission, 'app_sub')
+      .innerJoin(Application, 'app', 'app.file_number = app_sub.file_number')
       .leftJoin(
         LocalGovernment,
         'localGovernment',
-        'as2.local_government_uuid = localGovernment.uuid',
+        'app_sub.local_government_uuid = localGovernment.uuid',
       ),
 })
 export class ApplicationSubmissionSearchView {
@@ -51,9 +48,6 @@ export class ApplicationSubmissionSearchView {
   applicationUuid: string;
 
   @ViewColumn()
-  isDraft: boolean;
-
-  @ViewColumn()
   applicationRegionCode?: string;
 
   @ViewColumn()
@@ -63,16 +57,10 @@ export class ApplicationSubmissionSearchView {
   applicant?: string;
 
   @ViewColumn()
-  localGovernmentUuid?: string;
-
-  @ViewColumn()
   localGovernmentName?: string;
 
   @ViewColumn()
   applicationTypeCode: string;
-
-  @ViewColumn()
-  legacyId?: string;
 
   @ViewColumn()
   status: SearchApplicationSubmissionStatusType;

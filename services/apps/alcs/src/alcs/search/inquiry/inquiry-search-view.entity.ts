@@ -22,9 +22,7 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
       .addSelect('inquiry.type_code', 'inquiry_type_code')
       .addSelect('inquiry.open', 'open')
       .addSelect('inquiry.date_submitted_to_alc', 'date_submitted_to_alc')
-      .addSelect('inquiry.local_government_uuid', 'local_government_uuid')
       .addSelect('localGovernment.name', 'local_government_name')
-      .addSelect('inquiry.region_code', 'inquiry_region_code')
       .from(Inquiry, 'inquiry')
       .innerJoinAndSelect(
         InquiryType,
@@ -43,9 +41,6 @@ export class InquirySearchView {
   inquiryUuid: string;
 
   @ViewColumn()
-  inquiryRegionCode?: string;
-
-  @ViewColumn()
   fileNumber: string;
 
   @ViewColumn()
@@ -56,9 +51,6 @@ export class InquirySearchView {
 
   @ViewColumn()
   inquirerOrganization?: string;
-
-  @ViewColumn()
-  localGovernmentUuid?: string;
 
   @ViewColumn()
   localGovernmentName?: string;

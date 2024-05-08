@@ -1,8 +1,12 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
+import { createMockQuery } from '../../../../test/mocks/mockTypes';
+import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
+import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { SearchRequestDto } from '../search.dto';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search-view.entity';
@@ -13,6 +17,12 @@ describe('NoticeOfIntentService', () => {
     Repository<NoticeOfIntentSubmissionSearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  let mockNOIRepository: DeepMocked<Repository<NoticeOfIntent>>;
+  let mockNOISubmissionRepository: DeepMocked<
+    Repository<NoticeOfIntentSubmission>
+  >;
+  let mockRedisService: DeepMocked<RedisService>;
+  let mockQueryRunner: DeepMocked<QueryRunner>;
 
   const sortFields = [
     'fileId',
@@ -48,20 +58,12 @@ describe('NoticeOfIntentService', () => {
   beforeEach(async () => {
     mockNoticeOfIntentSubmissionSearchViewRepository = createMock();
     mockLocalGovernmentRepository = createMock();
+    mockNOIRepository = createMock();
+    mockNOISubmissionRepository = createMock();
+    mockRedisService = createMock();
+    mockQueryRunner = createMock();
 
-    mockQuery = {
-      getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
-      orderBy: jest.fn().mockReturnThis(),
-      offset: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      innerJoinAndMapOne: jest.fn().mockReturnThis(),
-      groupBy: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      andWhere: jest.fn().mockReturnThis(),
-      setParameters: jest.fn().mockReturnThis(),
-      leftJoin: jest.fn().mockReturnThis(),
-      withDeleted: jest.fn().mockReturnThis(),
-    };
+    mockQuery = createMockQuery();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -74,6 +76,18 @@ describe('NoticeOfIntentService', () => {
           provide: getRepositoryToken(LocalGovernment),
           useValue: mockLocalGovernmentRepository,
         },
+        {
+          provide: getRepositoryToken(NoticeOfIntent),
+          useValue: mockNOIRepository,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntentSubmission),
+          useValue: mockNOISubmissionRepository,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
       ],
     }).compile();
 
@@ -84,6 +98,15 @@ describe('NoticeOfIntentService', () => {
     mockLocalGovernmentRepository.findOneByOrFail.mockResolvedValue(
       new LocalGovernment(),
     );
+
+    mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
+      mockQuery as any,
+    );
+
+    mockRedisService.getClient.mockReturnValue({
+      get: async () => null,
+      setEx: async () => null,
+    } as any);
   });
 
   it('should be defined', () => {
@@ -91,31 +114,37 @@ describe('NoticeOfIntentService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
-    mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
-      mockQuery as any,
+    mockNOIRepository.find.mockResolvedValue([]);
+    mockNOIRepository.createQueryBuilder.mockReturnValue(mockQuery);
+    mockNOISubmissionRepository.createQueryBuilder.mockReturnValue(mockQuery);
+
+    const result = await service.searchNoticeOfIntents(
+      mockSearchDto,
+      mockQueryRunner,
     );
 
-    const result = await service.searchNoticeOfIntents(mockSearchDto);
-
     expect(result).toEqual({ data: [], total: 0 });
-    expect(
-      mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(13);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(9);
     expect(mockQuery.where).toHaveBeenCalledTimes(1);
+    expect(mockNOIRepository.find).toHaveBeenCalledTimes(3);
+    expect(mockNOIRepository.createQueryBuilder).toHaveBeenCalledTimes(3);
+    expect(
+      mockNOISubmissionRepository.createQueryBuilder,
+    ).toHaveBeenCalledTimes(3);
   });
 
-  it('should call compileNoticeOfIntentSearchQuery method correctly', async () => {
-    const compileApplicationSearchQuerySpy = jest
-      .spyOn(service as any, 'compileNoticeOfIntentSearchQuery')
-      .mockResolvedValue(mockQuery);
+  it('should call searchForFileNumbers method correctly', async () => {
+    const searchForFileNumbersSpy = jest
+      .spyOn(service as any, 'searchForFileNumbers')
+      .mockResolvedValue(new Set(['100000']));
 
-    const result = await service.searchNoticeOfIntents(mockSearchDto);
+    const result = await service.searchNoticeOfIntents(
+      mockSearchDto,
+      mockQueryRunner,
+    );
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
-      mockSearchDto,
-    );
+    expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
@@ -123,17 +152,20 @@ describe('NoticeOfIntentService', () => {
 
   sortFields.forEach((sortField) => {
     it(`should sort by ${sortField}`, async () => {
-      const compileSearchQuerySpy = jest
-        .spyOn(service as any, 'compileNoticeOfIntentSearchQuery')
-        .mockResolvedValue(mockQuery);
+      const searchForFileNumbersSpy = jest
+        .spyOn(service as any, 'searchForFileNumbers')
+        .mockResolvedValue(new Set(['100000']));
 
       mockSearchDto.sortField = sortField;
       mockSearchDto.sortDirection = 'DESC';
 
-      const result = await service.searchNoticeOfIntents(mockSearchDto);
+      const result = await service.searchNoticeOfIntents(
+        mockSearchDto,
+        mockQueryRunner,
+      );
 
       expect(result).toEqual({ data: [], total: 0 });
-      expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
+      expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);
       expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
       expect(mockQuery.offset).toHaveBeenCalledTimes(1);
       expect(mockQuery.limit).toHaveBeenCalledTimes(1);

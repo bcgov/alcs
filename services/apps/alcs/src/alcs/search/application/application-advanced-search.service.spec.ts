@@ -1,7 +1,11 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
+import { createMockQuery } from '../../../../test/mocks/mockTypes';
+import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { Application } from '../../application/application.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { SearchRequestDto } from '../search.dto';
 import { ApplicationAdvancedSearchService } from './application-advanced-search.service';
@@ -13,6 +17,10 @@ describe('ApplicationAdvancedSearchService', () => {
     Repository<ApplicationSubmissionSearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  let mockAppRepo: DeepMocked<Repository<Application>>;
+  let mockAppSubmissionRepo: DeepMocked<Repository<ApplicationSubmission>>;
+  let mockRedisService: DeepMocked<RedisService>;
+
   const sortFields = [
     'fileId',
     'type',
@@ -48,21 +56,10 @@ describe('ApplicationAdvancedSearchService', () => {
   beforeEach(async () => {
     mockApplicationSubmissionSearchViewRepository = createMock();
     mockLocalGovernmentRepository = createMock();
-
-    mockQuery = {
-      getMany: jest.fn().mockResolvedValue([]),
-      getCount: jest.fn().mockResolvedValue(0),
-      orderBy: jest.fn().mockReturnThis(),
-      offset: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      innerJoinAndMapOne: jest.fn().mockReturnThis(),
-      groupBy: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      andWhere: jest.fn().mockReturnThis(),
-      setParameters: jest.fn().mockReturnThis(),
-      leftJoin: jest.fn().mockReturnThis(),
-      withDeleted: jest.fn().mockReturnThis(),
-    };
+    mockAppRepo = createMock();
+    mockAppSubmissionRepo = createMock();
+    mockRedisService = createMock();
+    mockQuery = createMockQuery();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -75,6 +72,18 @@ describe('ApplicationAdvancedSearchService', () => {
           provide: getRepositoryToken(LocalGovernment),
           useValue: mockLocalGovernmentRepository,
         },
+        {
+          provide: getRepositoryToken(Application),
+          useValue: mockAppRepo,
+        },
+        {
+          provide: getRepositoryToken(ApplicationSubmission),
+          useValue: mockAppSubmissionRepo,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
       ],
     }).compile();
 
@@ -85,6 +94,15 @@ describe('ApplicationAdvancedSearchService', () => {
     mockLocalGovernmentRepository.findOneByOrFail.mockResolvedValue(
       new LocalGovernment(),
     );
+
+    mockApplicationSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
+      mockQuery as any,
+    );
+
+    mockRedisService.getClient.mockReturnValue({
+      get: async () => null,
+      setEx: async () => null,
+    } as any);
   });
 
   it('should be defined', () => {
@@ -92,9 +110,10 @@ describe('ApplicationAdvancedSearchService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
-    mockApplicationSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
-      mockQuery as any,
-    );
+    mockAppRepo.find.mockResolvedValue([]);
+    mockAppRepo.createQueryBuilder.mockReturnValue(mockQuery);
+    mockAppSubmissionRepo.find.mockResolvedValue([]);
+    mockAppSubmissionRepo.createQueryBuilder.mockReturnValue(mockQuery);
 
     const mockQueryRunner = createMock<QueryRunner>();
 
@@ -104,17 +123,17 @@ describe('ApplicationAdvancedSearchService', () => {
     );
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(
-      mockApplicationSubmissionSearchViewRepository.createQueryBuilder,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(15);
-    expect(mockQuery.where).toHaveBeenCalledTimes(1);
+    expect(mockAppRepo.find).toHaveBeenCalledTimes(4);
+    expect(mockAppRepo.createQueryBuilder).toHaveBeenCalledTimes(4);
+    expect(mockAppSubmissionRepo.createQueryBuilder).toHaveBeenCalledTimes(3);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(9);
+    expect(mockQuery.where).toHaveBeenCalledTimes(2);
   });
 
   it('should call compileApplicationSearchQuery method correctly', async () => {
-    const compileApplicationSearchQuerySpy = jest
-      .spyOn(service as any, 'compileApplicationSearchQuery')
-      .mockResolvedValue(mockQuery);
+    const searchForFileNumbersSpy = jest
+      .spyOn(service as any, 'searchForFileNumbers')
+      .mockResolvedValue(new Set(['100000']));
 
     const mockQueryRunner = createMock<QueryRunner>();
 
@@ -124,10 +143,7 @@ describe('ApplicationAdvancedSearchService', () => {
     );
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
-      mockSearchRequestDto,
-      {},
-    );
+    expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchRequestDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
@@ -137,9 +153,9 @@ describe('ApplicationAdvancedSearchService', () => {
     it(`should sort by ${sortField}`, async () => {
       const mockQueryRunner = createMock<QueryRunner>();
 
-      const compileApplicationSearchQuerySpy = jest
-        .spyOn(service as any, 'compileApplicationSearchQuery')
-        .mockResolvedValue(mockQuery);
+      const searchForFileNumbersSpy = jest
+        .spyOn(service as any, 'searchForFileNumbers')
+        .mockResolvedValue(new Set(['100000']));
 
       mockSearchRequestDto.sortField = sortField;
       mockSearchRequestDto.sortDirection = 'DESC';
@@ -150,9 +166,8 @@ describe('ApplicationAdvancedSearchService', () => {
       );
 
       expect(result).toEqual({ data: [], total: 0 });
-      expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
+      expect(searchForFileNumbersSpy).toHaveBeenCalledWith(
         mockSearchRequestDto,
-        {},
       );
       expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
       expect(mockQuery.offset).toHaveBeenCalledTimes(1);

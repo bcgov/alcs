@@ -1,7 +1,10 @@
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { RedisService } from '@app/common/redis/redis.service';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
+import { createMockQuery } from '../../../../test/mocks/mockTypes';
+import { Inquiry } from '../../inquiry/inquiry.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { SearchRequestDto } from '../search.dto';
 import { InquiryAdvancedSearchService } from './inquiry-advanced-search.service';
@@ -13,6 +16,9 @@ describe('InquiryAdvancedSearchService', () => {
     Repository<InquirySearchView>
   >;
   let mockLocalGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
+  let mockInquiryRepository: DeepMocked<Repository<Inquiry>>;
+  let mockRedisService: DeepMocked<RedisService>;
+  let mockQueryRunner: DeepMocked<QueryRunner>;
 
   const sortFields = [
     'fileId',
@@ -43,20 +49,11 @@ describe('InquiryAdvancedSearchService', () => {
   beforeEach(async () => {
     mockInquirySearchViewRepository = createMock();
     mockLocalGovernmentRepository = createMock();
+    mockInquiryRepository = createMock();
+    mockRedisService = createMock();
 
-    mockQuery = {
-      getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
-      orderBy: jest.fn().mockReturnThis(),
-      offset: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      innerJoinAndMapOne: jest.fn().mockReturnThis(),
-      groupBy: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      andWhere: jest.fn().mockReturnThis(),
-      setParameters: jest.fn().mockReturnThis(),
-      leftJoin: jest.fn().mockReturnThis(),
-      withDeleted: jest.fn().mockReturnThis(),
-    };
+    mockQuery = createMockQuery();
+    mockQueryRunner = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -69,6 +66,14 @@ describe('InquiryAdvancedSearchService', () => {
           provide: getRepositoryToken(LocalGovernment),
           useValue: mockLocalGovernmentRepository,
         },
+        {
+          provide: getRepositoryToken(Inquiry),
+          useValue: mockInquiryRepository,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
+        },
       ],
     }).compile();
 
@@ -79,6 +84,15 @@ describe('InquiryAdvancedSearchService', () => {
     mockLocalGovernmentRepository.findOneByOrFail.mockResolvedValue(
       new LocalGovernment(),
     );
+
+    mockInquirySearchViewRepository.createQueryBuilder.mockReturnValue(
+      mockQuery,
+    );
+
+    mockRedisService.getClient.mockReturnValue({
+      get: async () => null,
+      setEx: async () => null,
+    } as any);
   });
 
   it('should be defined', () => {
@@ -86,28 +100,26 @@ describe('InquiryAdvancedSearchService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
-    mockInquirySearchViewRepository.createQueryBuilder.mockReturnValue(
-      mockQuery as any,
-    );
+    mockInquiryRepository.find.mockResolvedValue([]);
+    mockInquiryRepository.createQueryBuilder.mockReturnValue(mockQuery);
 
-    const result = await service.search(mockSearchDto);
+    const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(
-      mockInquirySearchViewRepository.createQueryBuilder,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(9);
+    expect(mockInquiryRepository.find).toHaveBeenCalledTimes(3);
+    expect(mockInquiryRepository.createQueryBuilder).toHaveBeenCalledTimes(4);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(4);
   });
 
-  it('should call compileInquirySearchQuery method correctly', async () => {
-    const compileSearchQuerySpy = jest
-      .spyOn(service as any, 'compileInquirySearchQuery')
-      .mockResolvedValue(mockQuery);
+  it('should call searchForFileNumbers method correctly', async () => {
+    const searchForFileNumbersSpy = jest
+      .spyOn(service as any, 'searchForFileNumbers')
+      .mockResolvedValue(new Set(['100000']));
 
-    const result = await service.search(mockSearchDto);
+    const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
+    expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
@@ -115,17 +127,17 @@ describe('InquiryAdvancedSearchService', () => {
 
   sortFields.forEach((sortField) => {
     it(`should sort by ${sortField}`, async () => {
-      const compileSearchQuerySpy = jest
-        .spyOn(service as any, 'compileInquirySearchQuery')
-        .mockResolvedValue(mockQuery);
+      const searchForFileNumbersSpy = jest
+        .spyOn(service as any, 'searchForFileNumbers')
+        .mockResolvedValue(new Set(['100000']));
 
       mockSearchDto.sortField = sortField;
       mockSearchDto.sortDirection = 'DESC';
 
-      const result = await service.search(mockSearchDto);
+      const result = await service.search(mockSearchDto, mockQueryRunner);
 
       expect(result).toEqual({ data: [], total: 0 });
-      expect(compileSearchQuerySpy).toHaveBeenCalledWith(mockSearchDto);
+      expect(searchForFileNumbersSpy).toHaveBeenCalledWith(mockSearchDto);
       expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
       expect(mockQuery.offset).toHaveBeenCalledTimes(1);
       expect(mockQuery.limit).toHaveBeenCalledTimes(1);
