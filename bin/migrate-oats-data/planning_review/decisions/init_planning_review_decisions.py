@@ -53,10 +53,10 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             while True:
                 query_condition = ""
                 if last_decision_date:
-                    query_condition = f"WHERE pr.file_number::bigint >= {last_file_number} AND opd.decision_date >= {last_decision_date} AND opd.planning_decision_id > {last_planning_decision_id} ORDER BY pr.file_number::bigint, opd.decision_date, opd.planning_decision_id;"
-                else: 
+                    query_condition = f"WHERE pr.file_number::bigint >= {last_file_number} AND opd.decision_date >= '{last_decision_date}' AND opd.planning_decision_id > {last_planning_decision_id} ORDER BY pr.file_number::bigint, opd.decision_date, opd.planning_decision_id;"
+                else:
                     query_condition = f"WHERE pr.file_number::bigint >= {last_file_number} AND opd.planning_decision_id > {last_planning_decision_id} ORDER BY pr.file_number::bigint, opd.decision_date, opd.planning_decision_id;"
-                
+
                 cursor.execute(
                     f"""
                         {query} 
@@ -76,8 +76,16 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     )
                     last_record = dict(inserted_data[-1])
                     last_planning_decision_id = last_record["planning_decision_id"]
-                    last_file_number = last_record["file_number"]
-                    last_decision_date = last_record["decision_date"]
+                    last_inserted_row = next(
+                        (
+                            row
+                            for row in rows
+                            if row["uuid"] == last_record["review_uuid"]
+                        ),
+                        None,
+                    ) 
+                    last_file_number = last_inserted_row["file_number"]
+                    last_decision_date = last_inserted_row["decision_date"]
 
                     logger.debug(
                         f"Retrieved/updated items count: {len(inserted_data)}; total successfully inserted planning referral so far {successful_inserts_count}; last updated planning_decision_id: {last_planning_decision_id}"
@@ -150,6 +158,7 @@ def _prepare_oats_planning_review_data(row_data_list):
                 "resolution_number": row["resolution_number"],
                 "resolution_year": _map_resolution_year(row),
                 "created_at": to_alcs_format(get_now_with_offset(insert_index)),
+                "file_number": row["file_number"],
             }
         )
         insert_index += 1
