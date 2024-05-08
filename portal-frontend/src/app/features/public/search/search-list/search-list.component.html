@@ -1,5 +1,5 @@
 <div class="result-list" *ngIf="totalCount > 0">
-  <div *ngFor="let result of _results" (click)="onSelectRecord(result)" class="result">
+  <div *ngFor="let result of mappedResults" (click)="onSelectRecord(result)" class="result">
     <div class="subheading2">{{ result.fileNumber }} - {{ result.ownerName }}</div>
     <div [title]="result.type">{{ result.type }}</div>
     <div [title]="result.localGovernmentName">{{ result.localGovernmentName }}</div>

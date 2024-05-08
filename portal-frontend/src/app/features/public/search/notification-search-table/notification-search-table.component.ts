@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
 import { NotificationSearchResultDto } from '../../../../services/search/search.dto';
 import { SearchResult, TableChange } from '../search.interface';
@@ -14,17 +13,22 @@ import { SearchResult, TableChange } from '../search.interface';
   styleUrls: ['./notification-search-table.component.scss'],
 })
 export class NotificationSearchTableComponent {
-  _notifications: NotificationSearchResultDto[] = [];
-
-  @Input() statuses: ApplicationStatusDto[] = [];
-
-  @Input() set notifications(notifications: NotificationSearchResultDto[]) {
-    this._notifications = notifications;
-    this.dataSource = new MatTableDataSource<SearchResult>(this.mapNotifications(notifications));
-  }
-
   @Input() totalCount: number | undefined;
   @Input() pageIndex: number = 0;
+
+  _notifications: NotificationSearchResultDto[] = [];
+  @Input() set notifications(notifications: NotificationSearchResultDto[]) {
+    this._notifications = notifications;
+    this.mapNotifications();
+    this.isLoading = false;
+  }
+
+  _statuses!: ApplicationStatusDto[];
+  @Input() set statuses(statuses: ApplicationStatusDto[]) {
+    this._statuses = statuses;
+    this.mapNotifications();
+  }
+
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
@@ -33,7 +37,7 @@ export class NotificationSearchTableComponent {
   total = 0;
   sortDirection: SortDirection = 'desc';
   sortField = 'lastUpdate';
-  isLoading = false;
+  isLoading = true;
 
   constructor(private router: Router) {}
 
@@ -65,14 +69,18 @@ export class NotificationSearchTableComponent {
     await this.router.navigateByUrl(`/public/notification/${record.referenceId}`);
   }
 
-  private mapNotifications(notifications: NotificationSearchResultDto[]): SearchResult[] {
-    return notifications.map((e) => {
-      const status = this.statuses.find((st) => st.code === e.status);
+  private mapNotifications() {
+    if (!this._notifications || !this._statuses) {
+      return;
+    }
+    const results = this._notifications.map((e) => {
+      const status = this._statuses.find((st) => st.code === e.status);
 
       return {
         ...e,
         status,
       };
     });
+    this.dataSource = new MatTableDataSource<SearchResult>(results);
   }
 }
