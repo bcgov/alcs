@@ -40,7 +40,6 @@ export class SubmissionSuccessPage {
 
     const fileId: string = matches![0];
 
-    // Should never return empty string, but necessary to appease TypeScript
     return fileId;
   }
 
