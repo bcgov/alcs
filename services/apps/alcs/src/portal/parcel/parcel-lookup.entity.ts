@@ -4,10 +4,13 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
   comment: 'Data from ParcelMapBC for use in the Portal',
 })
 export class ParcelLookup {
-  @PrimaryColumn({ type: 'int4' })
-  objectid: number;
+  constructor(data?: Partial<ParcelLookup>) {
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 
-  @Column({ type: 'varchar', length: 254 })
+  @PrimaryColumn({ type: 'varchar', length: 254 })
   globalUid: string;
 
   @Column({ type: 'varchar', length: 50 })

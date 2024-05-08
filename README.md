@@ -24,7 +24,7 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 - [Pipelines](./docs/pipelines.md)
 - [SchemaSpy - ALCS](https://bcgov.github.io/alcs/schemaspy/alcs/index.html)
 - [SchemaSpy - OATS](https://bcgov.github.io/alcs/schemaspy/oats/index.html)
-- [One time Jobs](./docs/jobs.md)
+- [Maintenance Jobs](./docs/jobs.md)
 
 ## Development Environment Setup
 
