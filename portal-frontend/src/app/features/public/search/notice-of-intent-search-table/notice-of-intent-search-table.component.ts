@@ -16,16 +16,22 @@ export class NoticeOfIntentSearchTableComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
+  @Input() pageIndex: number = 0;
+  @Input() totalCount: number | undefined;
+
   _noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
   @Input() set noticeOfIntents(noticeOfIntents: NoticeOfIntentSearchResultDto[]) {
     this._noticeOfIntents = noticeOfIntents;
-    this.dataSource = new MatTableDataSource<SearchResult>(this.mapNoticeOfIntent(noticeOfIntents));
+    this.mapNoticeOfIntent();
     this.isLoading = false;
   }
 
-  @Input() pageIndex: number = 0;
-  @Input() totalCount: number | undefined;
-  @Input() statuses: ApplicationStatusDto[] = [];
+  _statuses!: ApplicationStatusDto[];
+  @Input() set statuses(statuses: ApplicationStatusDto[]) {
+    this._statuses = statuses;
+    this.mapNoticeOfIntent();
+  }
+
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = displayedColumns;
@@ -69,14 +75,18 @@ export class NoticeOfIntentSearchTableComponent {
     await this.router.navigateByUrl(`/public/notice-of-intent/${record.referenceId}`);
   }
 
-  private mapNoticeOfIntent(applications: NoticeOfIntentSearchResultDto[]): SearchResult[] {
-    return applications.map((e) => {
-      const status = this.statuses.find((st) => st.code === e.status);
+  private mapNoticeOfIntent() {
+    if (!this._noticeOfIntents || !this._statuses) {
+      return;
+    }
+    const results = this._noticeOfIntents.map((e) => {
+      const status = this._statuses.find((st) => st.code === e.status);
 
       return {
         ...e,
         status,
       };
     });
+    this.dataSource = new MatTableDataSource<SearchResult>(results);
   }
 }

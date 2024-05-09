@@ -416,15 +416,14 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
   private async loadStatuses() {
     const statuses = await this.statusService.getStatuses();
-
     if (statuses) {
       this.populateAllStatuses(statuses);
     }
   }
 
   private populateAllStatuses(statuses: ApplicationStatusDto[]) {
+    statuses.sort((a, b) => (a.label > b.label ? 1 : -1));
     this.statuses = statuses;
-    this.statuses.sort((a, b) => (a.label > b.label ? 1 : -1));
   }
 
   private populateForm(storedSearch: SearchRequestDto) {

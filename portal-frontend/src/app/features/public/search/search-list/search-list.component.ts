@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationSearchResultDto, BaseSearchResultDto } from '../../../../services/search/search.dto';
+import { BaseSearchResultDto } from '../../../../services/search/search.dto';
 import { SearchResult } from '../search.interface';
 
 const CLASS_TO_URL_MAP: Record<string, string> = {
@@ -20,15 +20,23 @@ export class SearchListComponent implements OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() totalCount = 0;
-  @Input() statuses: ApplicationStatusDto[] = [];
   @Input() pageIndex: number = 0;
   @Input() type = '';
 
-  _results: SearchResult[] = [];
-  @Input() set results(results: BaseSearchResultDto[]) {
-    this._results = this.mapResults(results);
-    this.visibleCount = this._results.length;
+  _statuses!: ApplicationStatusDto[];
+  @Input() set statuses(statuses: ApplicationStatusDto[]) {
+    this._statuses = statuses;
+    this.mapResults();
   }
+
+  _results: BaseSearchResultDto[] = [];
+  @Input() set results(results: BaseSearchResultDto[]) {
+    this._results = results;
+    this.visibleCount = this._results.length;
+    this.mapResults();
+  }
+
+  mappedResults: SearchResult[] = [];
 
   @Output() loadMore = new EventEmitter<void>();
   visibleCount = 0;
@@ -45,9 +53,13 @@ export class SearchListComponent implements OnDestroy {
     await this.router.navigateByUrl(`/public/${targetUrl}/${record.referenceId}`);
   }
 
-  private mapResults(applications: ApplicationSearchResultDto[]): SearchResult[] {
-    return applications.map((e) => {
-      const status = this.statuses.find((st) => st.code === e.status);
+  private mapResults() {
+    if (!this._results || !this._statuses) {
+      return;
+    }
+
+    this.mappedResults = this._results.map((e) => {
+      const status = this._statuses.find((st) => st.code === e.status);
 
       return {
         ...e,
