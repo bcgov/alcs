@@ -60,7 +60,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async loadGovernments(uuidToInclude?: string) {
+  private async loadGovernments() {
     const governments = await this.localGovernmentService.listAll();
 
     if (governments) {
