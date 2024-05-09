@@ -5,6 +5,7 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
 import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
+import { ApplicationDecisionV2Service } from '../../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationSubmissionStatusService } from '../../../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../../../alcs/application/application-submission-status/submission-status.entity';
@@ -18,12 +19,13 @@ import { QUEUES } from '../../scheduler.service';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-@Processor(QUEUES.APPLICATION_STATUS_EMAILS)
-export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
-  private logger = new Logger(ApplicationSubmissionStatusEmailConsumer.name);
+@Processor(QUEUES.APPLICATION_DECISION_EMAILS)
+export class ApplicationDecisionEmailConsumer extends WorkerHost {
+  private logger = new Logger(ApplicationDecisionEmailConsumer.name);
 
   constructor(
     private submissionStatusService: ApplicationSubmissionStatusService,
+    private appDecisionService: ApplicationDecisionV2Service,
     private statusEmailService: StatusEmailService,
   ) {
     super();
@@ -31,9 +33,7 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
 
   async process() {
     try {
-      this.logger.debug(
-        'Starting application submission status email consumer.',
-      );
+      this.logger.debug('Starting application decision email consumer.');
 
       const tomorrow = dayjs(new Date())
         .tz('Canada/Pacific')
@@ -41,26 +41,43 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
         .add(1, 'day')
         .toDate();
 
-      const submissionStatuses =
-        await this.submissionStatusService.getSubmissionToSubmissionStatusForSendingEmails(
-          tomorrow,
-        );
+      const decisions =
+        await this.appDecisionService.getDecisionsPendingEmail(tomorrow);
 
-      for (const submissionStatus of submissionStatuses) {
+      for (const decision of decisions) {
         try {
           const {
             applicationSubmission,
             primaryContact,
             submissionGovernment,
           } = await this.statusEmailService.getApplicationEmailData(
-            submissionStatus.submission.fileNumber,
+            decision.application.fileNumber,
           );
 
-          await this.sendEmailAndUpdateStatus(
+          const submissionStatus =
+            await this.submissionStatusService.getCurrentStatusByFileNumber(
+              decision.application.fileNumber,
+            );
+
+          await this.sendEmail(
             applicationSubmission,
             submissionGovernment,
             primaryContact,
             submissionStatus,
+            decision.uuid,
+          );
+
+          await this.appDecisionService.update(
+            decision.uuid,
+            {
+              isDraft: false,
+              emailSent: new Date(),
+            },
+            undefined,
+            undefined,
+          );
+          this.logger.debug(
+            `Email sent for Application Decision ${decision.uuid}`,
           );
         } catch (e) {
           this.logger.error(e);
@@ -73,16 +90,15 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
 
   @OnWorkerEvent('completed')
   onCompleted() {
-    this.logger.debug(
-      'Completed ApplicationSubmissionStatusEmailConsumer job.',
-    );
+    this.logger.debug('Completed ApplicationDecisionEmailConsumer job.');
   }
 
-  private async sendEmailAndUpdateStatus(
+  private async sendEmail(
     applicationSubmission: ApplicationSubmission,
     submissionGovernment: LocalGovernment | null,
     primaryContact: ApplicationOwner | undefined,
     submissionStatus: ApplicationSubmissionToSubmissionStatus,
+    decisionUuid: string,
   ) {
     if (
       primaryContact &&
@@ -95,9 +111,9 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
           : generateREVAHtml;
 
       const documents =
-        submissionStatus.statusTypeCode === SUBMISSION_STATUS.ALC_DECISION
-          ? await this.getDecisionDocuments(applicationSubmission.fileNumber)
-          : [];
+        await this.statusEmailService.getApplicationDecisionDocuments(
+          decisionUuid,
+        );
 
       await this.statusEmailService.sendApplicationStatusEmail({
         applicationSubmission,
@@ -109,29 +125,6 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
         status: <SUBMISSION_STATUS>submissionStatus.statusTypeCode,
         documents,
       });
-
-      await this.updateSubmissionStatus(submissionStatus);
-      this.logger.debug(
-        `Status email sent for Application {submissionStatus.submissionUuid} status code: {submissionStatus.statusTypeCode}`,
-      );
     }
-  }
-
-  private async updateSubmissionStatus(
-    submissionStatus: ApplicationSubmissionToSubmissionStatus,
-  ) {
-    const today = dayjs(new Date())
-      .tz('Canada/Pacific')
-      .startOf('day')
-      .toDate();
-
-    submissionStatus.emailSentDate = today;
-    await this.submissionStatusService.saveSubmissionToSubmissionStatus(
-      submissionStatus,
-    );
-  }
-
-  private async getDecisionDocuments(fileNumber: string) {
-    return this.statusEmailService.getApplicationDecisionDocuments(fileNumber);
   }
 }

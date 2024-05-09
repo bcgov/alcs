@@ -5,7 +5,7 @@ import {
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Repository } from 'typeorm';
+import { In, IsNull, LessThan, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import {
   DOCUMENT_SOURCE,
@@ -215,6 +215,7 @@ export class NoticeOfIntentDecisionV2Service {
     existingDecision.rescindedComment = updateDto.rescindedComment;
     existingDecision.wasReleased =
       existingDecision.wasReleased || !updateDto.isDraft;
+    existingDecision.emailSent = updateDto.emailSent;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -691,6 +692,19 @@ export class NoticeOfIntentDecisionV2Service {
     await this.documentService.update(document.document, {
       fileName,
       source: DOCUMENT_SOURCE.ALC,
+    });
+  }
+
+  async getDecisionsPendingEmail(tomorrow: Date) {
+    return this.noticeOfIntentDecisionRepository.find({
+      where: {
+        emailSent: IsNull(),
+        date: LessThan(tomorrow),
+        isDraft: false,
+      },
+      relations: {
+        noticeOfIntent: true,
+      },
     });
   }
 }

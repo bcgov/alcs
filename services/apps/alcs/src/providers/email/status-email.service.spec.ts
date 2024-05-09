@@ -1,17 +1,24 @@
 import { CONFIG_TOKEN, ConfigModule } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MJMLParseResults } from 'mjml-core';
 import * as config from 'config';
+import { MJMLParseResults } from 'mjml-core';
+import { ApplicationDecisionDocument } from '../../alcs/application-decision/application-decision-document/application-decision-document.entity';
+import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { NoticeOfIntentDecisionDocument } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
+import { NoticeOfIntentDecisionV2Service } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
+import { NoticeOfIntentDecision } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { Document } from '../../document/document.entity';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
@@ -20,13 +27,6 @@ import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submissi
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { EmailService } from './email.service';
 import { StatusEmailService } from './status-email.service';
-import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
-import { NoticeOfIntentDecisionV2Service } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
-import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
-import { ApplicationDecisionDocument } from '../../alcs/application-decision/application-decision-document/application-decision-document.entity';
-import { Document } from '../../document/document.entity';
-import { NoticeOfIntentDecisionDocument } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
-import { NoticeOfIntentDecision } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 
 describe('StatusEmailService', () => {
   let service: StatusEmailService;
@@ -166,15 +166,11 @@ describe('StatusEmailService', () => {
       documents: [mockDocument1, mockDocument2],
     });
 
-    mockApplicationDecisionService.getByAppFileNumber.mockResolvedValue([
-      mockDecision,
-    ]);
+    mockApplicationDecisionService.get.mockResolvedValue(mockDecision);
 
-    const res = await service.getApplicationDocumentEmailData('file-number');
+    const res = await service.getApplicationDecisionDocuments('file-number');
 
-    expect(mockApplicationDecisionService.getByAppFileNumber).toBeCalledTimes(
-      1,
-    );
+    expect(mockApplicationDecisionService.get).toBeCalledTimes(1);
 
     const baseUrl = config.get('ALCS.BASE_URL');
 
@@ -203,15 +199,11 @@ describe('StatusEmailService', () => {
       documents: [mockDocument1, mockDocument2],
     });
 
-    mockNoticeOfIntentDecisionService.getByFileNumber.mockResolvedValue([
-      mockDecision,
-    ]);
+    mockNoticeOfIntentDecisionService.get.mockResolvedValue(mockDecision);
 
-    const res = await service.getNoticeOfIntentDocumentEmailData('file-number');
+    const res = await service.getNoticeOfIntentDecisionDocuments('uuid');
 
-    expect(mockNoticeOfIntentDecisionService.getByFileNumber).toBeCalledTimes(
-      1,
-    );
+    expect(mockNoticeOfIntentDecisionService.get).toBeCalledTimes(1);
 
     const baseUrl = config.get('ALCS.BASE_URL');
 

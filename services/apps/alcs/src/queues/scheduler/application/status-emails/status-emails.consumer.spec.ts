@@ -1,6 +1,5 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
 import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
 import { ApplicationSubmissionStatusService } from '../../../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../../alcs/application/application-submission-status/submission-status.dto';
@@ -102,74 +101,6 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       generateStatusHtml: generateREVAHtml,
       status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       documents: [],
-    });
-  });
-
-  it('should send email and update submissionToStatus entry of ALC_DECISION status', async () => {
-    const mockSubmission = new ApplicationSubmission({
-      fileNumber: 'fake',
-      submissionStatuses: [
-        new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.ALC_DECISION,
-          effectiveDate: new Date(),
-        }),
-      ],
-    });
-    mockSubmission.populateCurrentStatus();
-    const mockPrimaryContact = new ApplicationOwner();
-    const mockLocalGovernment = new LocalGovernment();
-    const mockDocuments = [{ name: 'fake-document', url: 'fake-url' }];
-
-    mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails.mockResolvedValue(
-      [
-        new ApplicationSubmissionToSubmissionStatus({
-          submission: mockSubmission,
-          statusTypeCode: SUBMISSION_STATUS.ALC_DECISION,
-        }),
-      ],
-    );
-    mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus.mockResolvedValue(
-      new ApplicationSubmissionToSubmissionStatus(),
-    );
-
-    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
-      applicationSubmission: mockSubmission,
-      primaryContact: mockPrimaryContact,
-      submissionGovernment: mockLocalGovernment,
-    });
-    mockStatusEmailService.getApplicationDocumentEmailData.mockResolvedValue(
-      mockDocuments,
-    );
-    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
-
-    await consumer.process();
-
-    expect(
-      mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus,
-    ).toBeCalledTimes(1);
-
-    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledWith(
-      'fake',
-    );
-    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledTimes(1);
-    expect(
-      mockStatusEmailService.getApplicationDocumentEmailData,
-    ).toBeCalledTimes(1);
-    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledTimes(
-      1,
-    );
-    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledWith({
-      applicationSubmission: mockSubmission,
-      government: mockLocalGovernment,
-      parentType: PARENT_TYPE.APPLICATION,
-      primaryContact: mockPrimaryContact,
-      ccGovernment: true,
-      generateStatusHtml: generateALCDApplicationHtml,
-      status: SUBMISSION_STATUS.ALC_DECISION,
-      documents: mockDocuments,
     });
   });
 

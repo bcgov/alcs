@@ -72,6 +72,7 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     NoticeOfIntentService,
     NoticeOfIntentMeetingService,
     NoticeOfIntentDocumentService,
+    NoticeOfIntentSubmissionService,
   ],
 })
 export class NoticeOfIntentModule {}

@@ -135,6 +135,13 @@ export class NoticeOfIntentDecision extends Base {
   })
   noticeOfIntentUuid: string;
 
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+    comment: 'Used to track if/when the email was sent for this decision',
+  })
+  emailSent: Date | null;
+
   @ManyToMany(
     () => NoticeOfIntentModification,
     (modification) => modification.modifiesDecisions,

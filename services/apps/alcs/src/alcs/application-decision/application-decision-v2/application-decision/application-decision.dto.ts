@@ -2,6 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import {
   IsArray,
   IsBoolean,
+  IsDate,
   IsNumber,
   IsOptional,
   IsString,
@@ -105,6 +106,10 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   @IsArray()
   conditions?: UpdateApplicationDecisionConditionDto[];
+
+  @IsOptional()
+  @IsDate()
+  emailSent?: Date;
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
