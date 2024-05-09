@@ -52,7 +52,7 @@ describe('LocalGovernmentController', () => {
         code: 'code',
         label: 'label',
       } as ApplicationRegion,
-      isActive: false,
+      isActive: true,
     });
     mockService.listActive.mockResolvedValue([mockGovernment]);
     const res = await mockService.listActive();
