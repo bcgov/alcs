@@ -37,7 +37,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       this.planningReview = review;
       if (review) {
         this.loadEvents(review.fileNumber);
-        this.loadGovernments(review.localGovernment.uuid);
+        this.loadGovernments();
       }
     });
 

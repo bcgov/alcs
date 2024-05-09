@@ -31,6 +31,7 @@ describe('HeaderComponent', () => {
         name: '',
         isFirstNation: false,
         preferredRegionCode: '',
+        isActive: true,
       },
       open: false,
       region: {

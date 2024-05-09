@@ -154,6 +154,7 @@ describe('CommissionerController', () => {
         uuid: '',
         name: 'goverment-name',
         preferredRegionCode: 'code',
+        isActive: true,
       },
     } as any;
     mockApplicationService.mapToDtos.mockResolvedValue([mockDto]);

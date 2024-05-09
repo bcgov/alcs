@@ -58,6 +58,7 @@ describe('ApplicationDialogComponent', () => {
       name: 'Local Government',
       preferredRegionCode: 'FAKE_CODE',
       isFirstNation: false,
+      isActive: true,
     },
     summary: 'MOCK SUMMARY',
     activeDays: 10,

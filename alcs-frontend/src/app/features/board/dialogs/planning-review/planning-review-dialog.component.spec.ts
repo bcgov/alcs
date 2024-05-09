@@ -41,6 +41,7 @@ describe('PlanningReviewDialogComponent', () => {
       uuid: 'uuid',
       preferredRegionCode: 'CODE',
       isFirstNation: false,
+      isActive: true,
     },
     fileNumber: 'file-number',
     meetings: [],
