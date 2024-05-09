@@ -97,9 +97,7 @@ export class SearchBarComponent implements AfterViewInit {
             break;
           case 'COV':
           case 'PLAN':
-            await this.router.navigateByUrl(
-              `/board/${result.boardCode}?card=${result.referenceId}&type=${result.type}`,
-            );
+            await this.router.navigate(['planning-review', result.referenceId]);
             break;
           default:
             this.toastService.showErrorToast(`Unable to navigate to ${result.referenceId}`);

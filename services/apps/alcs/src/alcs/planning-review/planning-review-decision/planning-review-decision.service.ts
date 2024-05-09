@@ -5,7 +5,7 @@ import {
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,

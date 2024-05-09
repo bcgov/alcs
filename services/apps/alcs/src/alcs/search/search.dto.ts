@@ -56,6 +56,7 @@ export class PlanningReviewSearchResultDto {
   documentName: string | null;
   referenceId: string | null;
   localGovernmentName: string | null;
+  dateSubmitted: number;
   fileNumber: string;
   class: SearchEntityClass;
   open: boolean;

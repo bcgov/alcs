@@ -102,7 +102,7 @@ export class EmailService {
     parentId?: string;
     triggerStatus?: string;
     attachments?: Document[];
-  }) {
+  }): Promise<boolean> {
     const serviceUrl = this.config.get<string>('CHES.URL');
     const from = this.config.get<string>('CHES.FROM');
     const token = await this.getToken();
@@ -134,7 +134,7 @@ export class EmailService {
           { to, body, subject, cc, bcc },
           'EmailService did not send the email. Set CHES.MODE to production if you need to send an email.',
         );
-        return;
+        return false;
       }
       const res = await firstValueFrom(
         this.httpService.post<{

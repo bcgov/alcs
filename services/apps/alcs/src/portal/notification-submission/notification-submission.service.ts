@@ -406,7 +406,7 @@ export class NotificationSubmissionService {
     submission: NotificationSubmission,
     document: NotificationDocument,
     user: User,
-  ) {
+  ): Promise<boolean> {
     const templateData = await this.generateSrwEmailData(submission, document);
 
     const didSend = await this.emailService.sendEmail({
@@ -442,6 +442,8 @@ export class NotificationSubmissionService {
         NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
       );
     }
+
+    return didSend;
   }
 
   private async generateSrwEmailData(
@@ -470,7 +472,7 @@ export class NotificationSubmissionService {
       );
 
       if (localGovernment && localGovernment.emails) {
-        ccEmails = localGovernment.emails;
+        ccEmails = localGovernment.emails.filter((email) => email !== '');
       }
     }
 

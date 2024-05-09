@@ -5,6 +5,8 @@ from common import (
     add_timezone_and_keep_date_part,
     OatsToAlcsDecisionOutcomes,
     AlcsPlanningReviewOutcomes,
+    to_alcs_format,
+    get_now_with_offset,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -39,6 +41,8 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         failed_inserts_count = 0
         successful_inserts_count = 0
         last_planning_decision_id = 0
+        last_file_number = 0
+        last_decision_date = ""
 
         with open(
             "planning_review/sql/decisions/planning_review_decisions_insert.sql",
@@ -47,10 +51,16 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         ) as sql_file:
             query = sql_file.read()
             while True:
+                query_condition = ""
+                if last_decision_date:
+                    query_condition = f"WHERE pr.file_number::bigint >= {last_file_number} AND opd.decision_date >= '{last_decision_date}' AND opd.planning_decision_id > {last_planning_decision_id} ORDER BY pr.file_number::bigint, opd.decision_date, opd.planning_decision_id;"
+                else:
+                    query_condition = f"WHERE pr.file_number::bigint >= {last_file_number} AND opd.planning_decision_id > {last_planning_decision_id} ORDER BY pr.file_number::bigint, opd.decision_date, opd.planning_decision_id;"
+
                 cursor.execute(
                     f"""
                         {query} 
-                        WHERE opd.planning_decision_id > {last_planning_decision_id} ORDER BY opd.planning_decision_id;
+                        {query_condition}
                     """
                 )
 
@@ -64,9 +74,18 @@ def process_planning_review_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     successful_inserts_count = successful_inserts_count + len(
                         inserted_data
                     )
-                    last_planning_decision_id = dict(inserted_data[-1])[
-                        "planning_decision_id"
-                    ]
+                    last_record = dict(inserted_data[-1])
+                    last_planning_decision_id = last_record["planning_decision_id"]
+                    last_inserted_row = next(
+                        (
+                            row
+                            for row in rows
+                            if row["uuid"] == last_record["review_uuid"]
+                        ),
+                        None,
+                    ) 
+                    last_file_number = last_inserted_row["file_number"]
+                    last_decision_date = last_inserted_row["decision_date"]
 
                     logger.debug(
                         f"Retrieved/updated items count: {len(inserted_data)}; total successfully inserted planning referral so far {successful_inserts_count}; last updated planning_decision_id: {last_planning_decision_id}"
@@ -106,7 +125,8 @@ query = f"""
                 outcome_code,
                 resolution_number,
                 resolution_year,
-                date
+                date,
+                created_at
             )
             VALUES (
                 %(review_uuid)s,
@@ -116,13 +136,16 @@ query = f"""
                 %(outcome_code)s,
                 %(resolution_number)s,
                 %(resolution_year)s,
-                %(date)s
+                %(date)s,
+                %(created_at)s
             )
+            ON CONFLICT DO NOTHING;
 """
 
 
 def _prepare_oats_planning_review_data(row_data_list):
     mapped_data_list = []
+    insert_index = 0
     for row in row_data_list:
         mapped_data_list.append(
             {
@@ -134,8 +157,11 @@ def _prepare_oats_planning_review_data(row_data_list):
                 "outcome_code": _map_outcome_code(row),
                 "resolution_number": row["resolution_number"],
                 "resolution_year": _map_resolution_year(row),
+                "created_at": to_alcs_format(get_now_with_offset(insert_index)),
+                "file_number": row["file_number"],
             }
         )
+        insert_index += 1
 
     return mapped_data_list
 

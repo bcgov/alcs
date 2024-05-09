@@ -98,11 +98,11 @@ export class AssignedComponent implements OnInit {
 
     this.planningReferrals = [
       ...planningReferrals
-        .filter((r) => r.card.highPriority)
+        .filter((r) => r.card!.highPriority)
         .map((r) => this.mapPlanningReferral(r))
         .sort((a, b) => a.date! - b.date!),
       ...planningReferrals
-        .filter((r) => !r.card.highPriority)
+        .filter((r) => !r.card!.highPriority)
         .map((r) => this.mapPlanningReferral(r))
         .sort((a, b) => a.date! - b.date!),
     ];
@@ -133,16 +133,17 @@ export class AssignedComponent implements OnInit {
       this.applications.length +
       this.planningReferrals.length +
       this.noticeOfIntents.length +
-      this.notifications.length;
+      this.notifications.length +
+      this.inquiries.length;
   }
 
   private mapPlanningReferral(p: PlanningReferralDto): AssignedToMeFile {
     return {
       title: `${p.planningReview.fileNumber} (${p.planningReview.documentName})`,
-      type: p.card.type,
-      date: p.card.createdAt,
-      card: p.card,
-      highPriority: p.card.highPriority,
+      type: p.card!.type,
+      date: p.card!.createdAt,
+      card: p.card!,
+      highPriority: p.card!.highPriority,
       labels: [p.planningReview.type],
     };
   }
