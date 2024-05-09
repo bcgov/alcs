@@ -15,4 +15,8 @@ export class ApplicationLocalGovernmentService {
   async list() {
     return firstValueFrom(this.http.get<ApplicationLocalGovernmentDto[]>(`${this.baseUrl}`));
   }
+
+  async listAll() {
+    return firstValueFrom(this.http.get<ApplicationLocalGovernmentDto[]>(`${this.baseUrl}/all`));
+  }
 }

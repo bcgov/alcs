@@ -3,4 +3,5 @@ export interface ApplicationLocalGovernmentDto {
   name: string;
   preferredRegionCode: string;
   isFirstNation: boolean;
+  isActive: boolean;
 }

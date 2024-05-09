@@ -5,6 +5,7 @@ import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { LocalGovernmentDto } from './local-government.dto';
+import { LocalGovernment } from './local-government.entity';
 import { LocalGovernmentService } from './local-government.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -21,11 +22,25 @@ export class LocalGovernmentController {
     const localGovernments =
       await this.applicationLocalGovernmentService.listActive();
 
-    return localGovernments.map((government) => ({
+    return localGovernments.map((government) => this.mapGovernment(government));
+  }
+
+  @Get('/all')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async listAll(): Promise<LocalGovernmentDto[]> {
+    const localGovernments =
+      await this.applicationLocalGovernmentService.list();
+
+    return localGovernments.map((government) => this.mapGovernment(government));
+  }
+
+  private mapGovernment(government: LocalGovernment): LocalGovernmentDto {
+    return {
       name: government.name,
       preferredRegionCode: government.preferredRegion.code,
       uuid: government.uuid,
       isFirstNation: government.isFirstNation,
-    }));
+      isActive: government.isActive,
+    };
   }
 }
