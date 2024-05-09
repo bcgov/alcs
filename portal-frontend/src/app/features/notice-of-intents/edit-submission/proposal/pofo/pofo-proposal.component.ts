@@ -61,7 +61,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(noticeOfIntentDocumentService, dialog, toastService);
   }
@@ -96,7 +96,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           followUpIds: noiSubmission.soilFollowUpIDs,
           purpose: noiSubmission.purpose,
           soilFillTypeToPlace: noiSubmission.soilFillTypeToPlace,
-          projectDuration: noiSubmission.soilProjectDuration,
+          projectDuration: noiSubmission.fillProjectDuration,
           isAreaWideFilling: formatBooleanToString(noiSubmission.soilIsAreaWideFilling),
         });
         if (this.showErrors) {
@@ -137,13 +137,13 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       const soilFollowUpIDs = this.followUpIds.getRawValue();
       const purpose = this.purpose.getRawValue();
       const soilFillTypeToPlace = this.soilFillTypeToPlace.getRawValue();
-      const soilProjectDuration = this.projectDuration.getRawValue();
+      const fillProjectDuration = this.projectDuration.getRawValue();
       const isAreaWideFilling = this.isAreaWideFilling.getRawValue();
 
       const updateDto: NoticeOfIntentSubmissionUpdateDto = {
         purpose,
         soilFillTypeToPlace,
-        soilProjectDuration,
+        fillProjectDuration,
         soilIsFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilFollowUpIDs,
         soilToPlaceVolume: this.fillToPlaceTableData?.volume ?? null,
