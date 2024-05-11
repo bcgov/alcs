@@ -97,7 +97,7 @@ export class ParcelOwnersComponent {
         if (result.action === 'delete') {
           this.onOwnersDeleted.emit();
         } else {
-          this.onOwnersUpdated.emit(result);
+          this.onOwnersUpdated.emit();
         }
       }
     });
