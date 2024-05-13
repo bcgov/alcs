@@ -22,7 +22,7 @@ import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-do
 })
 export class ParcelOwnersComponent {
   @Output() saveParcel = new EventEmitter<void>();
-  @Output() onOwnersUpdated = new EventEmitter<void>();
+  @Output() onOwnersUpdated = new EventEmitter<ApplicationOwnerDto>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
   @Output() onOwnersDeleted = new EventEmitter<string>();
 
@@ -97,7 +97,7 @@ export class ParcelOwnersComponent {
         if (result.action === 'delete') {
           this.onOwnersDeleted.emit();
         } else {
-          this.onOwnersUpdated.emit();
+          this.onOwnersUpdated.emit(result);
         }
       }
     });

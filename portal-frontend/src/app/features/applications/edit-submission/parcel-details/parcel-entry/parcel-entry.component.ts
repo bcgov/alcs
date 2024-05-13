@@ -175,12 +175,6 @@ export class ParcelEntryComponent implements OnInit {
           : undefined;
 
       this.selectedOwner = selectedOwner;
-      this.parcel.owners = this.parcel.owners
-        .filter((owner) => owners.some((updatedOwner) => updatedOwner.uuid === owner.uuid))
-        .map((owner) => {
-          const updatedOwner = owners.find((uOwner) => uOwner.uuid === owner.uuid);
-          return updatedOwner || owner;
-        });
     });
   }
 
@@ -411,13 +405,15 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  onOwnerEdited() {
+  onOwnerEdited(updatedOwner: ApplicationOwnerDto) {
     this.parcelForm.patchValue(
       {
         isConfirmedByApplicant: false,
       },
       { emitEvent: false },
     );
+    const updatedOwners = this.parcel.owners.map((owner) => (owner.uuid === updatedOwner.uuid ? updatedOwner : owner));
+    this.updateParcelOwners(updatedOwners);
     this.onOwnersUpdated.emit();
   }
 

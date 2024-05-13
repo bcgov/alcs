@@ -256,7 +256,7 @@
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (saveParcel)="saveParcelProgress()"
-          (onOwnersUpdated)="onOwnerEdited()"
+          (onOwnersUpdated)="onOwnerEdited($event)"
           (onOwnerRemoved)="onRemoveOwner($event)"
           (onOwnersDeleted)="onDeleteOwner()"
           [documentService]="applicationDocumentService"
