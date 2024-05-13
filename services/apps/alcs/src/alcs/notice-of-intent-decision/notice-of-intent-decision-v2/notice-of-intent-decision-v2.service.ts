@@ -216,6 +216,7 @@ export class NoticeOfIntentDecisionV2Service {
     existingDecision.wasReleased =
       existingDecision.wasReleased || !updateDto.isDraft;
     existingDecision.emailSent = updateDto.emailSent;
+    existingDecision.ccEmails = updateDto.ccEmails;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(

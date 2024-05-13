@@ -22,11 +22,40 @@
       <span *ngIf="wasReleased">No auto-emails will be sent</span>
     </div>
   </div>
+  <div style="margin-top: 24px">
+    <div style="margin-bottom: 4px">
+      <mat-label>CC additional recipients on decision release email (optional):</mat-label>
+    </div>
+    <mat-form-field style="width: 100%" appearance="outline">
+      <mat-chip-grid #chipGrid aria-label="Enter emails">
+        <mat-chip-row
+          *ngFor="let email of emails"
+          class="chip"
+          (removed)="onRemoveEmail(email)"
+          [editable]="true"
+          (edited)="editEmail(email, $event)"
+          [aria-description]="'press enter to edit ' + email"
+        >
+          {{ email }}
+          <button matChipRemove [attr.aria-label]="'remove ' + email">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input
+        placeholder="Type and hit ‘space’ to add emails"
+        [matChipInputFor]="chipGrid"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="addEmail($event)"
+      />
+    </mat-form-field>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <div class="button-container">
-    <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+    <button mat-stroked-button color="primary" [mat-dialog-close]="{ confirmed: false }">Cancel</button>
     <button mat-flat-button color="primary" type="button" (click)="onRelease()">Release decision</button>
   </div>
 </mat-dialog-actions>

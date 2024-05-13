@@ -255,6 +255,7 @@ export class NoticeOfIntentSubmissionDraftService {
         noticeOfIntentSubmission: savedDraft,
         government: submissionGovernment,
         parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+        ccEmails: [],
       });
     }
   }

@@ -16,6 +16,7 @@ export interface UpdateNoticeOfIntentDecisionDto {
   isDraft?: boolean;
   decisionComponents?: NoticeOfIntentDecisionComponentDto[];
   conditions?: UpdateNoticeOfIntentDecisionConditionDto[];
+  ccEmails?: string[];
 }
 
 export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
@@ -67,6 +68,7 @@ export interface NoticeOfIntentDecisionDocumentDto {
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
 
 export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {}
+
 export interface NoticeOfIntentDecisionConditionDto {
   uuid: string;
   approvalDependant: boolean | null;

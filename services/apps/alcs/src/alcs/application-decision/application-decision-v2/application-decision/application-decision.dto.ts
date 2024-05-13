@@ -110,6 +110,10 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   @IsDate()
   emailSent?: Date;
+
+  @IsOptional()
+  @IsArray()
+  ccEmails?: string[];
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {

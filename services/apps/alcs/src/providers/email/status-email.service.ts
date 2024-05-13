@@ -40,16 +40,17 @@ type BaseStatusEmailData = {
   government: LocalGovernment | null;
   parentType: PARENT_TYPE;
   ccGovernment?: boolean;
+  ccEmails: string[];
   documents?: DocumentEmailData[];
 };
 
-type ApplicationEmailData = BaseStatusEmailData & {
+export type ApplicationEmailData = BaseStatusEmailData & {
   applicationSubmission: ApplicationSubmission;
   status: SUBMISSION_STATUS;
   primaryContact?: ApplicationOwner;
 };
 
-type NoticeOfIntentEmailData = BaseStatusEmailData & {
+export type NoticeOfIntentEmailData = BaseStatusEmailData & {
   noticeOfIntentSubmission: NoticeOfIntentSubmission;
   status: NOI_SUBMISSION_STATUS;
   primaryContact?: NoticeOfIntentOwner;
@@ -248,7 +249,7 @@ export class StatusEmailService {
   async sendApplicationStatusEmail(data: ApplicationEmailData) {
     const email = await this.getApplicationEmailTemplate(data);
 
-    this.sendStatusEmail(data, email);
+    await this.sendStatusEmail(data, email);
   }
 
   async sendNoticeOfIntentStatusEmail(data: NoticeOfIntentEmailData) {
@@ -261,16 +262,25 @@ export class StatusEmailService {
     data: ApplicationEmailData | NoticeOfIntentEmailData,
     email,
   ) {
+    const ccEmails: string[] = [];
+    const toEmails: string[] = [];
     if (data.primaryContact && data.primaryContact.email) {
+      toEmails.push(data.primaryContact.email);
+      if (data.ccGovernment && data.government?.emails) {
+        ccEmails.push(...data.government.emails);
+      }
+    } else {
+      if (data.ccGovernment && data.government?.emails) {
+        toEmails.push(...data.government.emails);
+      }
+    }
+    ccEmails.push(...data.ccEmails);
+
+    if (toEmails.length > 0) {
       await this.emailService.sendEmail({
         ...email,
-        to: [data.primaryContact.email],
-        cc: data.ccGovernment ? data.government?.emails : [],
-      });
-    } else if (data.government && data.government.emails.length > 0) {
-      await this.emailService.sendEmail({
-        ...email,
-        to: data.government.emails,
+        to: toEmails,
+        cc: ccEmails,
       });
     } else {
       this.logger.warn(

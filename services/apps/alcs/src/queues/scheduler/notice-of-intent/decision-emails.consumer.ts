@@ -63,6 +63,7 @@ export class NoticeOfIntentDecisionEmailsConsumer extends WorkerHost {
               primaryContact,
               ccGovernment: true,
               documents,
+              ccEmails: decision.ccEmails,
             });
 
             await this.noiDecisionService.update(

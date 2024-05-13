@@ -261,7 +261,7 @@ describe('ApplicationController', () => {
 
     await controller.update(fileNumber, mockUpdate);
 
-    expect(applicationService.update).toBeCalledTimes(1);
+    expect(applicationService.update).toHaveBeenCalledTimes(1);
     const savedData = applicationService.update.mock.calls[0][1];
     expect(savedData.regionCode).toEqual(mockRegion);
   });
@@ -306,8 +306,8 @@ describe('ApplicationController', () => {
       }),
     ).rejects.toMatchObject(new Error(`Card ${cardUuid} not found`));
 
-    expect(cardService.update).toBeCalledTimes(0);
-    expect(notificationService.createForCard).toBeCalledTimes(0);
+    expect(cardService.update).toHaveBeenCalledTimes(0);
+    expect(notificationService.createForCard).toHaveBeenCalledTimes(0);
   });
 
   it('should update card status if it changed', async () => {
@@ -354,7 +354,7 @@ describe('ApplicationController', () => {
       },
     );
 
-    expect(cardService.update).toBeCalledTimes(1);
+    expect(cardService.update).toHaveBeenCalledTimes(1);
     expect(result.card!.status.code).toStrictEqual(updatedCard.status.code);
   });
 
@@ -365,8 +365,8 @@ describe('ApplicationController', () => {
 
     await controller.getByCardUuid(mockApplicationEntity.card!.uuid);
 
-    expect(applicationService.getByCard).toBeCalledTimes(1);
-    expect(applicationService.mapToDtos).toBeCalledTimes(1);
+    expect(applicationService.getByCard).toHaveBeenCalledTimes(1);
+    expect(applicationService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for searching applications', async () => {
@@ -377,10 +377,10 @@ describe('ApplicationController', () => {
     const res = await controller.searchApplications('1231');
 
     expect(res.length).toEqual(1);
-    expect(applicationService.searchApplicationsByFileNumber).toBeCalledTimes(
-      1,
-    );
-    expect(applicationService.mapToDtos).toBeCalledTimes(1);
+    expect(
+      applicationService.searchApplicationsByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(applicationService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for get', async () => {
@@ -392,8 +392,8 @@ describe('ApplicationController', () => {
       },
     });
 
-    expect(applicationService.getOrFail).toBeCalledTimes(1);
-    expect(applicationService.mapToDtos).toBeCalledTimes(1);
+    expect(applicationService.getOrFail).toHaveBeenCalledTimes(1);
+    expect(applicationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });
 
@@ -421,9 +421,11 @@ describe('ApplicationController', () => {
 
     await controller.cancel(mockApplicationEntity.uuid);
 
-    expect(applicationService.cancel).toBeCalledTimes(1);
-    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
-    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledWith({
+    expect(applicationService.cancel).toHaveBeenCalledTimes(1);
+    expect(statusEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(statusEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateCANCApplicationHtml,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplicationSubmission,
@@ -431,6 +433,7 @@ describe('ApplicationController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
+      ccEmails: [],
     });
   });
 
@@ -458,14 +461,16 @@ describe('ApplicationController', () => {
 
     await controller.cancel(mockApplicationEntity.uuid);
 
-    expect(applicationService.cancel).toBeCalledTimes(1);
-    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
+    expect(applicationService.cancel).toHaveBeenCalledTimes(1);
+    expect(statusEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
+      0,
+    );
   });
 
   it('should call through for uncancel', async () => {
     applicationService.uncancel.mockResolvedValue();
     await controller.uncancel(mockApplicationEntity.uuid);
 
-    expect(applicationService.uncancel).toBeCalledTimes(1);
+    expect(applicationService.uncancel).toHaveBeenCalledTimes(1);
   });
 });

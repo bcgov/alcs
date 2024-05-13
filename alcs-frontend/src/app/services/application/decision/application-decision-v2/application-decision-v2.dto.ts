@@ -27,6 +27,7 @@ export interface UpdateApplicationDecisionDto {
   rescindedComment?: string | null;
   conditions?: UpdateApplicationDecisionConditionDto[];
   isDraft?: boolean;
+  ccEmails?: string[];
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -216,6 +217,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+
 export interface NaruSubtypesDto extends BaseCodeDto {}
 
 export interface ApplicationDecisionConditionDto {
@@ -236,6 +238,7 @@ export interface ComponentToCondition {
   componentToConditionType?: string;
   tempId: string;
 }
+
 export interface UpdateApplicationDecisionConditionDto {
   uuid?: string;
   componentsToCondition?: ComponentToCondition[] | null;

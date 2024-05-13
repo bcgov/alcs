@@ -26,7 +26,11 @@ import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/no
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { EmailService } from './email.service';
-import { StatusEmailService } from './status-email.service';
+import {
+  ApplicationEmailData,
+  NoticeOfIntentEmailData,
+  StatusEmailService,
+} from './status-email.service';
 
 describe('StatusEmailService', () => {
   let service: StatusEmailService;
@@ -220,13 +224,14 @@ describe('StatusEmailService', () => {
   });
 
   it('should call through services to set application email template', async () => {
-    const mockData = {
+    const mockData: ApplicationEmailData = {
       generateStatusHtml: () => ({}) as MJMLParseResults,
       status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
       applicationSubmission: new ApplicationSubmission({ typeCode: 'TURP' }),
       parentType: 'application' as PARENT_TYPE,
       government: new LocalGovernment({ emails: [] }),
       primaryContact: new ApplicationOwner(),
+      ccEmails: [],
     };
 
     mockApplicationSubmissionService.getStatus.mockResolvedValue(
@@ -245,13 +250,14 @@ describe('StatusEmailService', () => {
   });
 
   it('should call through services to set notice of intent email template', async () => {
-    const mockData = {
+    const mockData: NoticeOfIntentEmailData = {
       generateStatusHtml: () => ({}) as MJMLParseResults,
       status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       noticeOfIntentSubmission: new NoticeOfIntentSubmission(),
       parentType: 'notice-of-intent' as PARENT_TYPE,
       government: new LocalGovernment({ emails: [] }),
       primaryContact: new NoticeOfIntentOwner(),
+      ccEmails: [],
     };
 
     mockNoticeOfIntentSubmissionService.getStatus.mockResolvedValue(
@@ -262,10 +268,46 @@ describe('StatusEmailService', () => {
 
     await service.sendNoticeOfIntentStatusEmail(mockData);
 
-    expect(mockNoticeOfIntentSubmissionService.getStatus).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentSubmissionService.getStatus).toBeCalledWith(
+    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledWith(
       mockData.status,
     );
-    expect(mockNoticeOfIntentService.listTypes).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentService.listTypes).toHaveBeenCalledTimes(1);
+  });
+
+  it('should add CC emails to the send call', async () => {
+    const ccEmails = ['bruce.wayne@fakeemail.com', 'iam.batman@fakeemail.com'];
+    const mockData: NoticeOfIntentEmailData = {
+      generateStatusHtml: () => ({}) as MJMLParseResults,
+      status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      noticeOfIntentSubmission: new NoticeOfIntentSubmission(),
+      parentType: 'notice-of-intent' as PARENT_TYPE,
+      government: new LocalGovernment({ emails: [] }),
+      primaryContact: new NoticeOfIntentOwner({
+        email: 'primary.contact@fakeemail.com',
+      }),
+      ccEmails,
+    };
+
+    mockNoticeOfIntentSubmissionService.getStatus.mockResolvedValue(
+      new NoticeOfIntentSubmissionStatusType(),
+    );
+    mockNoticeOfIntentService.listTypes.mockResolvedValue([]);
+    mockNoticeOfIntentService.getUuid.mockResolvedValue('fake-uuid');
+
+    await service.sendNoticeOfIntentStatusEmail(mockData);
+
+    expect(mockNoticeOfIntentSubmissionService.getStatus).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockNoticeOfIntentService.listTypes).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        cc: ccEmails,
+      }),
+    );
   });
 });

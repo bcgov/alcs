@@ -65,6 +65,7 @@ export class ApplicationDecisionEmailConsumer extends WorkerHost {
             primaryContact,
             submissionStatus,
             decision.uuid,
+            decision.ccEmails,
           );
 
           await this.appDecisionService.update(
@@ -99,6 +100,7 @@ export class ApplicationDecisionEmailConsumer extends WorkerHost {
     primaryContact: ApplicationOwner | undefined,
     submissionStatus: ApplicationSubmissionToSubmissionStatus,
     decisionUuid: string,
+    ccEmails: string[],
   ) {
     if (
       primaryContact &&
@@ -124,6 +126,7 @@ export class ApplicationDecisionEmailConsumer extends WorkerHost {
         generateStatusHtml,
         status: <SUBMISSION_STATUS>submissionStatus.statusTypeCode,
         documents,
+        ccEmails,
       });
     }
   }

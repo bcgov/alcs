@@ -6,10 +6,10 @@ import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/fi
 import { verifyFileSize } from '../../../../shared/utils/file-size-checker';
 import { ToastService } from '../../../toast/toast.service';
 import {
+  ApplicationDecisionCodesDto,
   ApplicationDecisionDto,
   ApplicationDecisionWithLinkedResolutionDto,
   CreateApplicationDecisionDto,
-  ApplicationDecisionCodesDto,
   UpdateApplicationDecisionDto,
 } from './application-decision-v2.dto';
 
@@ -23,13 +23,16 @@ export class ApplicationDecisionV2Service {
   $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
   $decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetchByApplication(fileNumber: string) {
     let decisions: ApplicationDecisionDto[] = [];
     try {
       decisions = await firstValueFrom(
-        this.http.get<ApplicationDecisionDto[]>(`${this.url}/application/${fileNumber}`)
+        this.http.get<ApplicationDecisionDto[]>(`${this.url}/application/${fileNumber}`),
       );
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
@@ -121,7 +124,7 @@ export class ApplicationDecisionV2Service {
       await firstValueFrom(
         this.http.patch(`${this.url}/${decisionUuid}/file/${documentUuid}`, {
           fileName,
-        })
+        }),
       );
       this.toastService.showSuccessToast('File updated');
     } catch (err) {

@@ -180,6 +180,14 @@ export class ApplicationDecision extends Base {
   })
   emailSent: Date | null;
 
+  @Column({
+    default: [],
+    array: true,
+    type: 'text',
+    comment: 'Tracks extra emails to send the decision email to',
+  })
+  ccEmails: string[];
+
   @AutoMap(() => [ApplicationDecisionDocument])
   @OneToMany(() => ApplicationDecisionDocument, (document) => document.decision)
   documents: ApplicationDecisionDocument[];

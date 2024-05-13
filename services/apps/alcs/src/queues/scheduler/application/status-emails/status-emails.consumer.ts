@@ -108,6 +108,7 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
         generateStatusHtml,
         status: <SUBMISSION_STATUS>submissionStatus.statusTypeCode,
         documents,
+        ccEmails: [],
       });
 
       await this.updateSubmissionStatus(submissionStatus);

@@ -142,6 +142,14 @@ export class NoticeOfIntentDecision extends Base {
   })
   emailSent: Date | null;
 
+  @Column({
+    default: [],
+    array: true,
+    type: 'text',
+    comment: 'Tracks extra emails to send the decision email to',
+  })
+  ccEmails: string[];
+
   @ManyToMany(
     () => NoticeOfIntentModification,
     (modification) => modification.modifiesDecisions,
