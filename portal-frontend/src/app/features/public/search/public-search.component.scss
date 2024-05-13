@@ -14,6 +14,31 @@
   }
 }
 
+
+:host::ng-deep .clear-button {
+  padding: 0 !important;
+  margin-right: 6px !important;
+  width: rem(24) !important;
+  height: rem(24) !important;
+
+
+  & > *[role=img] {
+    width: rem(16);
+    height: rem(16);
+    font-size: rem(16);
+
+    svg {
+      width: rem(16);
+      height: rem(16);
+    }
+  }
+
+  .mat-mdc-button-touch-target {
+    width: rem(24) !important;
+    height: rem(24) !important;
+  }
+}
+
 .search-form {
   display: grid;
   grid-template-columns: 1fr;

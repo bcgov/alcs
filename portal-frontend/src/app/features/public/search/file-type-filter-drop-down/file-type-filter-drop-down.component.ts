@@ -3,7 +3,6 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { Observable } from 'rxjs';
 import {
   FileTypeDataSourceService,
   FlatTreeNode,
@@ -28,7 +27,6 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<FlatTreeNode>(true);
 
-  filteredOptions = new Observable<string[]>();
   componentTypeControl = new FormControl<string | undefined>(undefined);
   @Output() fileTypeChange = new EventEmitter<string[]>();
 
@@ -179,7 +177,7 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     this.fileTypeChange.emit(
       this.checklistSelection.selected
         .filter((selectedItem) => selectedItem.item.value)
-        .map((selectedItem) => selectedItem.item.value!)
+        .map((selectedItem) => selectedItem.item.value!),
     );
   }
 
@@ -190,5 +188,10 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.treeControl.expandAll();
+  }
+
+  onBlur() {
+    this.populateSelectedItems();
+    this.fileTypeData.filter('');
   }
 }
