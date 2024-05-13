@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +49,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   async onCreateSubmission() {
     this.dialog.open(CreateSubmissionDialogComponent, {
       panelClass: 'no-padding',
-      disableClose: true,
       autoFocus: false,
     });
   }

@@ -69,7 +69,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     private authenticationService: AuthenticationService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
@@ -180,7 +180,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   protected async save() {
     if (this.isDirty || this.form.dirty || !this.selectedThirdPartyAgent) {
       let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
-        (owner) => owner.uuid === this.selectedOwnerUuid
+        (owner) => owner.uuid === this.selectedOwnerUuid,
       );
 
       if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
@@ -227,7 +227,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         return map.set(owner.uuid, owner);
       }, new Map<string, ApplicationOwnerDto>());
     const nonParcelOwners = allOwners.filter((owner) =>
-      [OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+      [OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code),
     );
     const parcelOwners = [...uniqueParcelOwners.values()];
     const owners = [...parcelOwners, ...nonParcelOwners];
@@ -273,7 +273,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       await this.dialog
         .open(PrimaryContactConfirmationDialogComponent, {
           panelClass: 'no-padding',
-          disableClose: true,
           data: {
             isGovernmentUser: this.isGovernmentUser,
             governmentName: this.governmentName,

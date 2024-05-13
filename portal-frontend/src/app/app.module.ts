@@ -21,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
 import { WarningBannerComponent } from './shared/warning-banner/warning-banner.component';
 import { MaintenanceComponent } from './features/maintenance/maintenance.component';
 import { MaintenanceBannerComponent } from './shared/header/maintenance-banner/maintenance-banner.component';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogConfig } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,13 @@ import { MaintenanceBannerComponent } from './shared/header/maintenance-banner/m
     ConfirmationDialogService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: MaintenanceInterceptorService, multi: true },
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        ...new MatDialogConfig(),
+        disableClose: true,
+      } as MatDialogConfig,
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: (service: TokenRefreshService) => () => {

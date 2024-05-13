@@ -75,7 +75,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     private dialog: MatDialog,
     private toastService: ToastService,
     private overlayService: OverlaySpinnerService,
-    private router: Router
+    private router: Router,
   ) {
     this.expandedParcelUuid = undefined;
 
@@ -203,7 +203,6 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
       this.dialog
         .open(ChangeNoiTypeDialogComponent, {
           panelClass: 'no-padding',
-          disableClose: true,
           autoFocus: false,
           data: {
             submissionUuid: this.noiSubmission.uuid,
