@@ -42,6 +42,7 @@ describe('InquiryDialogComponent', () => {
       uuid: 'uuid',
       preferredRegionCode: 'CODE',
       isFirstNation: false,
+      isActive: true,
     },
     fileNumber: 'file-number',
     dateSubmittedToAlc: 0,

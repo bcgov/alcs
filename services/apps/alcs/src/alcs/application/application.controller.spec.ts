@@ -58,6 +58,7 @@ describe('ApplicationController', () => {
       name: 'Local Government',
       preferredRegionCode: 'fake',
       isFirstNation: false,
+      isActive: true,
     },
     activeDays: 2,
     pausedDays: 0,
