@@ -406,7 +406,7 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  onOwnerEdited(updatedOwner: any) {
+  onOwnerEdited(updatedOwner: ApplicationOwnerDto) {
     this.parcelForm.patchValue(
       {
         isConfirmedByApplicant: false,
