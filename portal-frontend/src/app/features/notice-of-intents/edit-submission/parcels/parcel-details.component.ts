@@ -140,7 +140,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     this.dialog
       .open(DeleteParcelDialogComponent, {
         panelClass: 'no-padding',
-        disableClose: true,
         data: {
           parcelUuid,
           parcelNumber,

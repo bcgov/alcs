@@ -274,7 +274,6 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       this.dialog
         .open(SoilRemovalConfirmationDialogComponent, {
           panelClass: 'no-padding',
-          disableClose: true,
         })
         .beforeClosed()
         .subscribe(async (result) => {
@@ -357,7 +356,6 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     this.dialog
       .open(DeleteStructureConfirmationDialogComponent, {
         panelClass: 'no-padding',
-        disableClose: true,
       })
       .beforeClosed()
       .subscribe(async (result) => {

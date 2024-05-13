@@ -68,7 +68,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
   ) {}
 
   ngOnInit(): void {
@@ -130,7 +130,6 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     this.dialog
       .open(ReturnApplicationDialogComponent, {
         panelClass: 'no-padding',
-        disableClose: true,
         data: {
           fileId: this.application?.fileNumber,
         },

@@ -173,7 +173,6 @@ export class ParcelEntryComponent implements OnInit {
       this.dialog
         .open(ParcelEntryConfirmationDialogComponent, {
           panelClass: 'no-padding',
-          disableClose: true,
         })
         .beforeClosed()
         .subscribe(async (result) => {
