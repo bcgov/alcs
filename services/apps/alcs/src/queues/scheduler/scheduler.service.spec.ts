@@ -4,10 +4,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { isDST } from '../../utils/pacific-date-time-helper';
 import { BullConfigService } from '../bullConfig.service';
 import {
-  EVERYDAY_MIDNIGHT_PDT_IN_UTC,
-  EVERYDAY_MIDNIGHT_PST_IN_UTC,
   EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC,
   EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
+  EVERYDAY_MIDNIGHT_PDT_IN_UTC,
+  EVERYDAY_MIDNIGHT_PST_IN_UTC,
   QUEUES,
   SchedulerService,
 } from './scheduler.service';
@@ -17,7 +17,8 @@ describe('SchedulerService', () => {
   let mockAppExpiryQueue;
   let mockNotificationCleanUpQueue;
   let mockApplicationStatusEmailsQueue;
-  let mockNoticeOfIntentStatusEmailsQueue;
+  let mockNoticeOfIntentDecisionEmailsQueue;
+  let mockApplicationDecisionEmailsQueue;
 
   beforeEach(async () => {
     mockAppExpiryQueue = {
@@ -39,7 +40,13 @@ describe('SchedulerService', () => {
       getRepeatableJobs: jest.fn().mockResolvedValue([]),
     };
 
-    mockNoticeOfIntentStatusEmailsQueue = {
+    mockNoticeOfIntentDecisionEmailsQueue = {
+      add: jest.fn(),
+      process: jest.fn(),
+      getRepeatableJobs: jest.fn().mockResolvedValue([]),
+    };
+
+    mockApplicationDecisionEmailsQueue = {
       add: jest.fn(),
       process: jest.fn(),
       getRepeatableJobs: jest.fn().mockResolvedValue([]),
@@ -68,8 +75,12 @@ describe('SchedulerService', () => {
           useValue: mockApplicationStatusEmailsQueue,
         },
         {
-          provide: getQueueToken(QUEUES.NOTICE_OF_INTENTS_STATUS_EMAILS),
-          useValue: mockNoticeOfIntentStatusEmailsQueue,
+          provide: getQueueToken(QUEUES.NOTICE_OF_INTENTS_DECISION_EMAILS),
+          useValue: mockNoticeOfIntentDecisionEmailsQueue,
+        },
+        {
+          provide: getQueueToken(QUEUES.APPLICATION_DECISION_EMAILS),
+          useValue: mockApplicationDecisionEmailsQueue,
         },
       ],
     }).compile();
@@ -92,7 +103,7 @@ describe('SchedulerService', () => {
   //     {
   //       repeat: {
   //         pattern: isDST()
-  //           ? MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC 
+  //           ? MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC
   //           : MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC,
   //       },
   //     },
@@ -110,7 +121,7 @@ describe('SchedulerService', () => {
         repeat: {
           pattern: isDST()
             ? EVERYDAY_MIDNIGHT_PDT_IN_UTC
-            :  EVERYDAY_MIDNIGHT_PST_IN_UTC,
+            : EVERYDAY_MIDNIGHT_PST_IN_UTC,
         },
       },
     );
@@ -135,14 +146,33 @@ describe('SchedulerService', () => {
     );
   });
 
-  it('should call add for notice of intent status email', async () => {
+  it('should call add for application emails', async () => {
     await schedulerService.setup();
     expect(
-      mockNoticeOfIntentStatusEmailsQueue.getRepeatableJobs,
+      mockApplicationDecisionEmailsQueue.getRepeatableJobs,
     ).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledWith(
-      'noticeOfIntentSubmissionStatusEmails',
+    expect(mockApplicationDecisionEmailsQueue.add).toBeCalledTimes(1);
+    expect(mockApplicationDecisionEmailsQueue.add).toBeCalledWith(
+      'applicationDecisionEmails',
+      {},
+      {
+        repeat: {
+          pattern: isDST()
+            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
+            : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
+        },
+      },
+    );
+  });
+
+  it('should call add for notice of intent decision emails', async () => {
+    await schedulerService.setup();
+    expect(
+      mockNoticeOfIntentDecisionEmailsQueue.getRepeatableJobs,
+    ).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toBeCalledWith(
+      'noticeOfIntentDecisionEmails',
       {},
       {
         repeat: {

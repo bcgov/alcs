@@ -435,7 +435,7 @@ describe('ApplicationSubmissionStatusService', () => {
     expect(result).toMatchObject(copiedStatuses);
   });
 
-  it('should call find to retrieve ALCD and REVA statuses', async () => {
+  it('should call find to retrieve REVA statuses', async () => {
     const mockStatuses = [
       new ApplicationSubmissionToSubmissionStatus({
         statusTypeCode: SUBMISSION_STATUS.ALC_DECISION,
@@ -456,10 +456,7 @@ describe('ApplicationSubmissionStatusService', () => {
       mockApplicationSubmissionToSubmissionStatusRepository.find,
     ).toBeCalledWith({
       where: {
-        statusTypeCode: In([
-          SUBMISSION_STATUS.ALC_DECISION,
-          SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
-        ]),
+        statusTypeCode: In([SUBMISSION_STATUS.IN_REVIEW_BY_ALC]),
         emailSentDate: IsNull(),
         effectiveDate: And(Not(IsNull()), LessThan(date)),
       },

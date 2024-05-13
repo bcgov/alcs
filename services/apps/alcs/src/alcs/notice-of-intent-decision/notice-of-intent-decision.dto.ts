@@ -2,6 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import {
   IsArray,
   IsBoolean,
+  IsDate,
   IsNumber,
   IsOptional,
   IsString,
@@ -78,6 +79,10 @@ export class UpdateNoticeOfIntentDecisionDto {
   @IsOptional()
   @IsArray()
   conditions?: UpdateNoticeOfIntentDecisionConditionDto[];
+
+  @IsDate()
+  @IsOptional()
+  emailSent?: Date | null;
 }
 
 export class CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {

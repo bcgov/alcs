@@ -1,7 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Repository } from 'typeorm';
+import { In, IsNull, LessThan, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import {
   ServiceNotFoundException,
@@ -290,6 +290,7 @@ export class ApplicationDecisionV2Service {
       existingDecision.wasReleased || !updateDto.isDraft;
     existingDecision.linkedResolutionOutcomeCode =
       updateDto.linkedResolutionOutcomeCode;
+    existingDecision.emailSent = updateDto.emailSent;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -813,6 +814,19 @@ export class ApplicationDecisionV2Service {
     await this.documentService.update(document.document, {
       fileName,
       source: DOCUMENT_SOURCE.ALC,
+    });
+  }
+
+  async getDecisionsPendingEmail(tomorrow: Date) {
+    return this.appDecisionRepository.find({
+      where: {
+        emailSent: IsNull(),
+        date: LessThan(tomorrow),
+        isDraft: false,
+      },
+      relations: {
+        application: true,
+      },
     });
   }
 }

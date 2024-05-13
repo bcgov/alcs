@@ -1,11 +1,15 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { MJMLParseResults } from 'mjml-core';
+import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { NoticeOfIntentDecisionV2Service } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
+import { NoticeOfIntentDecision } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
@@ -16,10 +20,6 @@ import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submissi
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { EmailService } from './email.service';
-import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
-import { NoticeOfIntentDecisionV2Service } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
-import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
-import { NoticeOfIntentDecision } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -133,43 +133,37 @@ export class StatusEmailService {
     return { primaryContact, submissionGovernment };
   }
 
-  async getApplicationDocumentEmailData(fileNumber: string) {
-    const decisions =
-      await this.applicationDecisionService.getByAppFileNumber(fileNumber);
+  async getApplicationDecisionDocuments(decisionUuid: string) {
+    const decision = await this.applicationDecisionService.get(decisionUuid);
 
-    return this.sortAndMapDecisionDocuments(decisions, PARENT_TYPE.APPLICATION);
+    return this.sortAndMapDecisionDocuments(decision, PARENT_TYPE.APPLICATION);
   }
 
-  async getNoticeOfIntentDocumentEmailData(fileNumber: string) {
-    const decisions =
-      await this.noticeOfIntentDecisionService.getByFileNumber(fileNumber);
+  async getNoticeOfIntentDecisionDocuments(decisionUuid: string) {
+    const decision = await this.noticeOfIntentDecisionService.get(decisionUuid);
 
     return this.sortAndMapDecisionDocuments(
-      decisions,
+      decision,
       PARENT_TYPE.NOTICE_OF_INTENT,
     );
   }
 
   private sortAndMapDecisionDocuments(
-    decisions: ApplicationDecision[] | NoticeOfIntentDecision[],
+    decision: ApplicationDecision | NoticeOfIntentDecision,
     type: PARENT_TYPE,
   ): DocumentEmailData[] {
-    return decisions
-      .sort(
-        (a, b) => new Date(b.date!).valueOf() - new Date(a.date!).valueOf(),
-      )[0]
-      .documents.map((doc) => {
-        const baseUrl = this.config.get<string>('ALCS.BASE_URL');
-        const controller = `public/${type}/decision`;
-        const endpoint = 'email';
+    return decision.documents.map((doc) => {
+      const baseUrl = this.config.get<string>('ALCS.BASE_URL');
+      const controller = `public/${type}/decision`;
+      const endpoint = 'email';
 
-        const url = `${baseUrl}/${controller}/${doc.uuid}/${endpoint}`;
+      const url = `${baseUrl}/${controller}/${doc.uuid}/${endpoint}`;
 
-        return {
-          name: doc.document.fileName,
-          url,
-        };
-      });
+      return {
+        name: doc.document.fileName,
+        url,
+      };
+    });
   }
 
   private async getApplicationEmailTemplate(data: ApplicationEmailData) {
