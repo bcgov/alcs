@@ -95,12 +95,12 @@ using [ts-proto](https://github.com/stephenh/ts-proto/blob/main/NESTJS.markdown)
 
 - Install & add open shift to path
 - Login to with token from silver cluster
-- Set preferred project ```oc project NAMESPACE```
+- Set preferred project `oc project NAMESPACE`
 - Forward port, usually 5432
 
 ```bash
   oc port-forward service/alcs-patroni 5432:5432
-  ```
+```
 
 - Add new connection to app with preferred DB tool (DBeaver, TablePlus)
 - Backup DB & save dump file. ensure postgresql 12.x is selected
@@ -112,4 +112,8 @@ using [ts-proto](https://github.com/stephenh/ts-proto/blob/main/NESTJS.markdown)
 - In DB tool select restore for app DB
 - Select file to restore from
 - Ensure postgresql 12.x being used
-- If databse does not exist, example *app*, select create option
+- If databse does not exist, example _app_, select create option
+
+# Security Logs
+
+Navigate to this README on how to access [API Logs](../docs/logs.md)
