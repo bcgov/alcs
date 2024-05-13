@@ -6,8 +6,14 @@
     (input)="filterChanged($event)"
     [matAutocomplete]="auto"
     [formControl]="componentTypeControl"
+    (blur)="onBlur()"
   />
-  <mat-icon class='dropdown-arrow' matSuffix>arrow_drop_down</mat-icon>
+  <mat-icon class="dropdown-arrow" matSuffix>arrow_drop_down</mat-icon>
+  <button class="clear-button" *ngIf="componentTypeControl.value?.length" matSuffix mat-icon-button
+          aria-label="Clear"
+          (click)="reset()">
+    <mat-icon>close</mat-icon>
+  </button>
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" class="tall-autocomplete">
     <mat-option disabled>Please select an item from below</mat-option>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
@@ -17,7 +23,8 @@
           class="checklist-leaf-node"
           [checked]="checklistSelection.isSelected(node)"
           (change)="leafItemSelectionToggle(node)"
-          >{{ node.item?.label ?? node.item }}</mat-checkbox
+        >{{ node.item?.label ?? node.item }}
+        </mat-checkbox
         >
       </mat-tree-node>
 
@@ -32,7 +39,8 @@
           [indeterminate]="descendantsPartiallySelected(node)"
           (change)="itemSelectionToggle(node)"
         >
-          {{ node.item?.label ?? node.item }}</mat-checkbox
+          {{ node.item?.label ?? node.item }}
+        </mat-checkbox
         >
       </mat-tree-node>
     </mat-tree>

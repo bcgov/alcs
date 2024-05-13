@@ -16,12 +16,22 @@
         <label for="fileNumber">ALC ID</label>
         <mat-form-field appearance="outline">
           <input mask="0*" id="fileNumber" matInput formControlName="fileNumber" />
+          <button class="clear-button" *ngIf="searchForm.controls.fileNumber.value" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="searchForm.controls.fileNumber.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
       </div>
       <div>
         <label for="pid">PID</label>
         <mat-form-field appearance="outline">
           <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
+          <button class="clear-button" *ngIf="pidControl.value" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="pidControl.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
         <div *ngIf="pidInvalid" class="field-error">
           <mat-icon>warning</mat-icon>
@@ -32,6 +42,11 @@
         <label for="name">Name</label>
         <mat-form-field appearance="outline">
           <input id="name" matInput formControlName="name" minlength="3" />
+          <button class="clear-button" *ngIf="nameControl.value" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="nameControl.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
         <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
@@ -42,6 +57,11 @@
         <label for="civicAddress">Civic Address</label>
         <mat-form-field appearance="outline">
           <input id="civicAddress" matInput formControlName="civicAddress" minlength="3" />
+          <button class="clear-button" *ngIf="civicAddressControl.value" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="civicAddressControl.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
         <div *ngIf="civicAddressInvalid" class="field-error">
           <mat-icon>warning</mat-icon>
@@ -59,6 +79,11 @@
             formControlName="government"
             [matAutocomplete]="auto"
           />
+          <button class="clear-button" *ngIf="localGovernmentControl.value" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="localGovernmentControl.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
           <mat-autocomplete (optionSelected)="onGovernmentChange($event)" #auto="matAutocomplete">
             <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
               {{ option.name }}
@@ -72,6 +97,11 @@
           <mat-select multiple="true" id="region" formControlName="region">
             <mat-option *ngFor="let region of regions" [value]="region.code">{{ region.label }}</mat-option>
           </mat-select>
+          <button class="clear-button" *ngIf="searchForm.controls.region.value?.length" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="searchForm.controls.region.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
       </div>
       <div>
@@ -82,6 +112,11 @@
               {{ decision[0] }}
             </mat-option>
           </mat-select>
+          <button class="clear-button" *ngIf="portalDecisionOutcomeControl.value?.length" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="portalDecisionOutcomeControl.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
       </div>
       <div>
@@ -89,9 +124,15 @@
         <mat-form-field appearance="outline">
           <mat-select id="decisionMaker" formControlName="decisionMaker">
             <mat-option *ngFor="let decisionMaker of decisionMakers" [value]="decisionMaker.code">{{
-              decisionMaker.label
-            }}</mat-option>
+                decisionMaker.label
+              }}
+            </mat-option>
           </mat-select>
+          <button class="clear-button" *ngIf="searchForm.controls.decisionMaker.value" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="searchForm.controls.decisionMaker.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
       </div>
       <div>
@@ -110,6 +151,11 @@
               {{ status[0] }}
             </mat-option>
           </mat-select>
+          <button class="clear-button" *ngIf="portalStatusControl.value?.length" matSuffix mat-icon-button
+                  aria-label="Clear"
+                  (click)="portalStatusControl.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
       </div>
       <div class="full-width">
@@ -119,9 +165,17 @@
             <input matStartDate formControlName="dateDecidedFrom" aria-label="date-decided-from" />
             <input matEndDate formControlName="dateDecidedTo" aria-label="date-decided-to" />
           </mat-date-range-input>
+          <button class="clear-button"
+                  *ngIf="searchForm.controls.dateDecidedFrom.value || searchForm.controls.dateDecidedTo.value" matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  (click)="searchForm.controls.dateDecidedFrom.reset(); searchForm.controls.dateDecidedTo.reset()">
+            <mat-icon>close</mat-icon>
+          </button>
           <mat-datepicker-toggle matIconSuffix [for]="decisionDatePicker"></mat-datepicker-toggle>
           <mat-date-range-picker #decisionDatePicker></mat-date-range-picker
-        ></mat-form-field>
+          >
+        </mat-form-field>
       </div>
     </div>
 
@@ -140,7 +194,7 @@
     </div>
     <mat-tab-group *ngIf="!isLoading && !searchResultsHidden" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
       <mat-tab>
-        <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
+        <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
         <app-search-list
           *ngIf="isMobile"
           type="applications"
@@ -162,7 +216,7 @@
       </mat-tab>
 
       <mat-tab>
-        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
+        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
         <app-search-list
           *ngIf="isMobile"
           type="notices of intent"
@@ -184,7 +238,7 @@
       </mat-tab>
 
       <mat-tab>
-        <ng-template mat-tab-label> Notifications: {{ notificationTotal }} </ng-template>
+        <ng-template mat-tab-label> Notifications: {{ notificationTotal }}</ng-template>
         <app-search-list
           *ngIf="isMobile"
           type="notifications"
