@@ -104,6 +104,8 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   isLoading = false;
   today = new Date();
 
+  minDate = new Date(1970, 0);
+
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;

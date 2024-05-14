@@ -166,6 +166,8 @@
             formControlName="dateDecidedFrom"
             [matDatepicker]="dateDecidedFromPicker"
             aria-label="date-decided-from"
+            [min]="minDate"
+            [max]="today"
           />
           <button
             class="clear-button"
@@ -189,6 +191,8 @@
             formControlName="dateDecidedTo"
             [matDatepicker]="dateDecidedToPicker"
             aria-label="date-decided-to"
+            [min]="searchForm.controls.dateDecidedFrom.value"
+            [max]="today"
           />
           <button
             class="clear-button"
