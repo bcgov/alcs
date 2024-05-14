@@ -160,7 +160,7 @@ export class NoticeOfIntentAdvancedSearchService {
       this.addFileTypeResults(searchDto, promises);
     }
 
-    if (searchDto.dateSubmittedTo || searchDto.dateSubmittedFrom) {
+    if (searchDto.dateSubmittedFrom || searchDto.dateSubmittedTo) {
       this.addSubmittedDateResults(searchDto, promises);
     }
 
@@ -312,26 +312,32 @@ export class NoticeOfIntentAdvancedSearchService {
       .select('noiSub.fileNumber')
       .leftJoin(
         NoticeOfIntentOwner,
-        'application_owner',
-        'application_owner.application_submission_uuid = appSub.uuid',
+        'notice_of_intent_owner',
+        'notice_of_intent_owner.notice_of_intent_submission_uuid = noiSub.uuid',
       )
       .andWhere(
         new Brackets((qb) =>
           qb
             .where(
-              "LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)",
+              "LOWER(notice_of_intent_owner.first_name || ' ' || notice_of_intent_owner.last_name) LIKE ANY (:names)",
               {
                 names: formattedSearchString,
               },
             )
-            .orWhere('LOWER(application_owner.first_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            })
-            .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            })
             .orWhere(
-              'LOWER(application_owner.organization_name) LIKE ANY (:names)',
+              'LOWER(notice_of_intent_owner.first_name) LIKE ANY (:names)',
+              {
+                names: formattedSearchString,
+              },
+            )
+            .orWhere(
+              'LOWER(notice_of_intent_owner.last_name) LIKE ANY (:names)',
+              {
+                names: formattedSearchString,
+              },
+            )
+            .orWhere(
+              'LOWER(notice_of_intent_owner.organization_name) LIKE ANY (:names)',
               {
                 names: formattedSearchString,
               },
@@ -395,15 +401,21 @@ export class NoticeOfIntentAdvancedSearchService {
       .select('noi.fileNumber');
 
     if (searchDto.dateSubmittedFrom !== undefined) {
-      query = query.andWhere('noi.date_submitted_to_alc >= :date_submitted', {
-        date_submitted: new Date(searchDto.dateSubmittedFrom),
-      });
+      query = query.andWhere(
+        'noi.date_submitted_to_alc >= :date_submitted_from',
+        {
+          date_submitted_from: new Date(searchDto.dateSubmittedFrom),
+        },
+      );
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query = query.andWhere('noi.date_submitted_to_alc <= :date_submitted', {
-        date_submitted: new Date(searchDto.dateSubmittedTo),
-      });
+      query = query.andWhere(
+        'noi.date_submitted_to_alc <= :date_submitted_to',
+        {
+          date_submitted_to: new Date(searchDto.dateSubmittedTo),
+        },
+      );
     }
     promises.push(query.getMany());
   }

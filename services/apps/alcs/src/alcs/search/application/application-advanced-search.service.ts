@@ -156,7 +156,7 @@ export class ApplicationAdvancedSearchService {
       this.addFileTypeResults(searchDto, promises);
     }
 
-    if (searchDto.dateSubmittedTo || searchDto.dateSubmittedFrom) {
+    if (searchDto.dateSubmittedFrom || searchDto.dateSubmittedTo) {
       this.addSubmittedDateResults(searchDto, promises);
     }
 
@@ -400,14 +400,18 @@ export class ApplicationAdvancedSearchService {
       .select('app.fileNumber');
 
     if (searchDto.dateSubmittedFrom !== undefined) {
-      query.andWhere('app.date_submitted_to_alc >= :date_submitted', {
-        date_submitted: new Date(searchDto.dateSubmittedFrom),
+      query.andWhere('app.date_submitted_to_alc >= :date_submitted_from', {
+        date_submitted_from: getStartOfDayToPacific(
+          searchDto.dateSubmittedFrom,
+        ).toISOString(),
       });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query.andWhere('app.date_submitted_to_alc <= :date_submitted', {
-        date_submitted: new Date(searchDto.dateSubmittedTo),
+      query.andWhere('app.date_submitted_to_alc <= :date_submitted_to', {
+        date_submitted_to: getNextDayToPacific(
+          searchDto.dateSubmittedTo,
+        ).toISOString(),
       });
     }
     promises.push(query.getMany());
