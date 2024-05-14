@@ -373,11 +373,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.form.controls['criterionModification'].updateValueAndValidity();
   }
 
-  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
+  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true, ccEmails: string[] = []) {
     this.isLoading = true;
 
     try {
-      await this.saveDecision(isDraft);
+      await this.saveDecision(isDraft, ccEmails);
     } finally {
       if (!isStayOnPage) {
         this.onCancel();
@@ -389,8 +389,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  async saveDecision(isDraft: boolean = true) {
-    const data = this.mapDecisionDataForSave(isDraft);
+  async saveDecision(isDraft: boolean = true, ccEmails: string[] = []) {
+    const data = this.mapDecisionDataForSave(isDraft, ccEmails);
 
     if (this.uuid) {
       await this.decisionService.update(this.uuid, data);
@@ -403,7 +403,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  private mapDecisionDataForSave(isDraft: boolean) {
+  private mapDecisionDataForSave(isDraft: boolean, ccEmails: string[]) {
     const {
       date,
       outcome,
@@ -448,6 +448,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedComment: rescindedComment,
       decisionComponents: this.components,
       conditions: this.conditionUpdates,
+      ccEmails,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -581,9 +582,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           },
         })
         .afterClosed()
-        .subscribe(async (didAccept) => {
-          if (didAccept) {
-            await this.onSubmit(false, false);
+        .subscribe(async (result: { confirmed: boolean; ccEmails: string[] }) => {
+          if (result.confirmed) {
+            await this.onSubmit(false, false, result.ccEmails);
             await this.applicationService.loadApplication(this.fileNumber);
           }
         });

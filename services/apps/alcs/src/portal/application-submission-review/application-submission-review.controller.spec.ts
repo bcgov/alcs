@@ -388,6 +388,7 @@ describe('ApplicationSubmissionReviewController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
+      ccEmails: [],
     });
   });
 
@@ -462,6 +463,7 @@ describe('ApplicationSubmissionReviewController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
+      ccEmails: [],
     });
   });
 
@@ -564,6 +566,7 @@ describe('ApplicationSubmissionReviewController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
+      ccEmails: [],
     });
   });
 
@@ -641,6 +644,7 @@ describe('ApplicationSubmissionReviewController', () => {
       government: mockLG,
       parentType: 'application',
       primaryContact: mockOwner,
+      ccEmails: [],
     });
   });
 

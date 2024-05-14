@@ -296,6 +296,7 @@ describe('ApplicationSubmissionController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
+      ccEmails: [],
     });
   });
 
@@ -536,6 +537,7 @@ describe('ApplicationSubmissionController', () => {
       government: mockGovernment,
       parentType: 'application',
       primaryContact: mockOwner,
+      ccEmails: [],
     });
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
@@ -545,6 +547,7 @@ describe('ApplicationSubmissionController', () => {
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
       parentType: 'application',
+      ccEmails: [],
     });
   });
 
@@ -598,6 +601,7 @@ describe('ApplicationSubmissionController', () => {
       government: mockGovernment,
       parentType: 'application',
       primaryContact: mockOwner,
+      ccEmails: [],
     });
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
@@ -607,6 +611,7 @@ describe('ApplicationSubmissionController', () => {
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
       parentType: 'application',
+      ccEmails: [],
     });
   });
 

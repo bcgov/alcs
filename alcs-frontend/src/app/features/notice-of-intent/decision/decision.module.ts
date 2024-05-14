@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatChipsModule } from '@angular/material/chips';
 import { RouterModule } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
@@ -73,6 +74,6 @@ export const decisionChildRoutes = [
     ConditionComponent,
     BasicComponent,
   ],
-  imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), NgxMaskDirective],
+  imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), NgxMaskDirective, MatChipsModule],
 })
 export class DecisionModule {}

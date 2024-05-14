@@ -15,3 +15,9 @@
     margin: 12px 0;
   }
 }
+
+:host::ng-deep {
+  .mat-mdc-form-field-infix {
+    display: flex;
+  }
+}

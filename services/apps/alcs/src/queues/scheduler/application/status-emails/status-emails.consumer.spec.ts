@@ -80,19 +80,23 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
 
     expect(
       mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
 
-    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledWith(
+    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledWith(
       'fake',
     );
-    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledTimes(1);
-    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledTimes(
-      1,
-    );
-    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledWith({
+    expect(
+      mockStatusEmailService.getApplicationEmailData,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       applicationSubmission: mockSubmission,
       government: mockLocalGovernment,
       parentType: PARENT_TYPE.APPLICATION,
@@ -101,6 +105,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       generateStatusHtml: generateREVAHtml,
       status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       documents: [],
+      ccEmails: [],
     });
   });
 
@@ -131,17 +136,19 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
 
     expect(
       mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,
-    ).toBeCalledTimes(1);
+    ).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus,
-    ).toBeCalledTimes(0);
+    ).toHaveBeenCalledTimes(0);
 
-    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledWith(
+    expect(mockStatusEmailService.getApplicationEmailData).toHaveBeenCalledWith(
       'fake',
     );
-    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledTimes(1);
-    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledTimes(
-      0,
-    );
+    expect(
+      mockStatusEmailService.getApplicationEmailData,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(0);
   });
 });

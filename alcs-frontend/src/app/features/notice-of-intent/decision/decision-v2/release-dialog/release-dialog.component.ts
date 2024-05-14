@@ -1,4 +1,6 @@
+import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
@@ -18,6 +20,9 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
   firstDecision = false;
   releasedStatus: ApplicationSubmissionStatusPill | undefined;
   cancelledStatus: ApplicationSubmissionStatusPill | undefined;
+
+  readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
+  emails: string[] = [];
 
   constructor(
     private decisionService: NoticeOfIntentDecisionV2Service,
@@ -45,7 +50,10 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
   }
 
   onRelease() {
-    this.matDialogRef.close(true);
+    this.matDialogRef.close({
+      confirmed: true,
+      ccEmails: this.emails,
+    });
   }
 
   private async calculateStatus() {
@@ -75,6 +83,34 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
         backgroundColor: cancelled.status.alcsBackgroundColor,
         textColor: cancelled.status.alcsColor,
       };
+    }
+  }
+
+  onRemoveEmail(email: string) {
+    const index = this.emails.indexOf(email);
+
+    if (index >= 0) {
+      this.emails.splice(index, 1);
+    }
+  }
+
+  addEmail(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.emails.push(value);
+    }
+    event.chipInput!.clear();
+  }
+
+  editEmail(email: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+    if (!value) {
+      this.onRemoveEmail(email);
+      return;
+    }
+    const index = this.emails.indexOf(email);
+    if (index >= 0) {
+      this.emails[index] = value;
     }
   }
 }

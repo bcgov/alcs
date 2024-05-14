@@ -20,7 +20,6 @@ import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.tem
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
-import { ApplicationService } from '../../alcs/application/application.service';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
@@ -200,6 +199,7 @@ export class ApplicationSubmissionReviewController {
         government: userLocalGovernment,
         parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
+        ccEmails: [],
       });
     }
 
@@ -309,6 +309,7 @@ export class ApplicationSubmissionReviewController {
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
+            ccEmails: [],
           });
         }
       } else {
@@ -326,6 +327,7 @@ export class ApplicationSubmissionReviewController {
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
+            ccEmails: [],
           });
         }
       }
@@ -416,6 +418,7 @@ export class ApplicationSubmissionReviewController {
             government: userLocalGovernment,
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
+            ccEmails: [],
           });
         }
 
@@ -428,6 +431,7 @@ export class ApplicationSubmissionReviewController {
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
+            ccEmails: [],
           });
         }
       }

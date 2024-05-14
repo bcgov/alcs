@@ -118,6 +118,7 @@ export class NoticeOfIntentController {
         parentType: PARENT_TYPE.NOTICE_OF_INTENT,
         primaryContact,
         ccGovernment: !!submissionGovernment,
+        ccEmails: [],
       });
     }
   }

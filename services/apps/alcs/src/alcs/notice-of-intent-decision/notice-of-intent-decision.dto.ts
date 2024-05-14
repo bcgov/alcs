@@ -83,6 +83,10 @@ export class UpdateNoticeOfIntentDecisionDto {
   @IsDate()
   @IsOptional()
   emailSent?: Date | null;
+
+  @IsOptional()
+  @IsArray()
+  ccEmails?: string[];
 }
 
 export class CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
