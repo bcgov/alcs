@@ -1,6 +1,7 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
@@ -12,6 +13,7 @@ import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionDialogComponent } from './ceo-criterion/ceo-criterion-dialog/ceo-criterion-dialog.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
+import { MaintenanceBannerConfirmationDialogComponent } from './configuration/maintenance-banner-confirmation-dialog/maintenance-banner-confirmation-dialog.component';
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types/decision-condition-types-dialog/decision-condition-types-dialog.component';
 import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
 import { DecisionMakerDialogComponent } from './decision-maker/decision-maker-dialog/decision-maker-dialog.component';
@@ -23,7 +25,6 @@ import { LocalGovernmentComponent } from './local-government/local-government.co
 import { NoiSubtypeDialogComponent } from './noi-subtype/noi-subtype-dialog/noi-subtype-dialog.component';
 import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
 import { UnarchiveComponent } from './unarchive/unarchive.component';
-import { MaintenanceBannerConfirmationDialogComponent } from './configuration/maintenance-banner-confirmation-dialog/maintenance-banner-confirmation-dialog.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
     children: childRoutes,
   },
 ];
+
 @NgModule({
   declarations: [
     AdminComponent,
@@ -55,6 +57,13 @@ const routes: Routes = [
     ConfigurationComponent,
     MaintenanceBannerConfirmationDialogComponent,
   ],
-  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule, DragDropModule],
+  imports: [
+    CommonModule,
+    SharedModule.forRoot(),
+    RouterModule.forChild(routes),
+    MatPaginatorModule,
+    DragDropModule,
+    MatChipsModule,
+  ],
 })
 export class AdminModule {}

@@ -39,14 +39,27 @@
     </div>
 
     <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Contact Emails (comma separated)</mat-label>
+      <mat-form-field style="width: 100%" appearance="outline">
+        <mat-chip-grid #chipGrid aria-label="Enter emails">
+          <mat-chip-row
+            *ngFor="let email of model.emails"
+            (removed)="onRemoveEmail(email)"
+            [editable]="true"
+            (edited)="editEmail(email, $event)"
+            [aria-description]="'press enter to edit ' + email"
+          >
+            {{ email }}
+            <button matChipRemove [attr.aria-label]="'remove ' + email">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
         <input
-          matInput
-          id="emails"
-          placeholder="steve@gov.bc.ca, john@gov.bc.ca"
-          [(ngModel)]="model.emails"
-          name="emails"
+          placeholder="Type and hit ‘space’ to add emails"
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="addEmail($event)"
         />
       </mat-form-field>
     </div>
