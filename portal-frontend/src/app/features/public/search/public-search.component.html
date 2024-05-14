@@ -162,6 +162,7 @@
         <mat-label for="decisionDates">Decision Date Range - Start Date</mat-label>
         <mat-form-field appearance="outline" (click)="dateDecidedFromPicker.open()">
           <input
+            readonly
             matInput
             formControlName="dateDecidedFrom"
             [matDatepicker]="dateDecidedFromPicker"
@@ -187,6 +188,7 @@
         <mat-label for="decisionDates">Decision Date Range - End Date</mat-label>
         <mat-form-field appearance="outline" (click)="dateDecidedToPicker.open()">
           <input
+            readonly
             matInput
             formControlName="dateDecidedTo"
             [matDatepicker]="dateDecidedToPicker"
