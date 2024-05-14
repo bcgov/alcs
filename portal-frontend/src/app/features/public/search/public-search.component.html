@@ -158,23 +158,56 @@
           </button>
         </mat-form-field>
       </div>
-      <div class="full-width">
-        <mat-label for="decisionDates">Decision Dates</mat-label>
-        <mat-form-field appearance="outline">
-          <mat-date-range-input [max]="today" [rangePicker]="decisionDatePicker">
-            <input matStartDate formControlName="dateDecidedFrom" aria-label="date-decided-from" />
-            <input matEndDate formControlName="dateDecidedTo" aria-label="date-decided-to" />
-          </mat-date-range-input>
-          <button class="clear-button"
-                  *ngIf="searchForm.controls.dateDecidedFrom.value || searchForm.controls.dateDecidedTo.value" matSuffix
-                  mat-icon-button
-                  aria-label="Clear"
-                  (click)="searchForm.controls.dateDecidedFrom.reset(); searchForm.controls.dateDecidedTo.reset()">
+      <div>
+        <mat-label for="decisionDates">Decision Date Range - Start Date</mat-label>
+        <mat-form-field appearance="outline" (click)="dateDecidedFromPicker.open()">
+          <input
+            readonly
+            matInput
+            formControlName="dateDecidedFrom"
+            [matDatepicker]="dateDecidedFromPicker"
+            aria-label="date-decided-from"
+            [min]="minDate"
+            [max]="today"
+          />
+          <button
+            class="clear-button"
+            *ngIf="searchForm.controls.dateDecidedFrom.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="onClickFromClear($event)"
+          >
             <mat-icon>close</mat-icon>
           </button>
-          <mat-datepicker-toggle matIconSuffix [for]="decisionDatePicker"></mat-datepicker-toggle>
-          <mat-date-range-picker #decisionDatePicker></mat-date-range-picker
+          <mat-datepicker-toggle matIconSuffix [for]="dateDecidedFromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedFromPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-label for="decisionDates">Decision Date Range - End Date</mat-label>
+        <mat-form-field appearance="outline" (click)="dateDecidedToPicker.open()">
+          <input
+            readonly
+            matInput
+            formControlName="dateDecidedTo"
+            [matDatepicker]="dateDecidedToPicker"
+            aria-label="date-decided-to"
+            [min]="searchForm.controls.dateDecidedFrom.value"
+            [max]="today"
+          />
+          <button
+            class="clear-button"
+            *ngIf="searchForm.controls.dateDecidedTo.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="onClickToClear($event)"
           >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle matIconSuffix [for]="dateDecidedToPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedToPicker></mat-datepicker>
         </mat-form-field>
       </div>
     </div>

@@ -104,6 +104,8 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   isLoading = false;
   today = new Date();
 
+  minDate = new Date(1970, 0);
+
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
@@ -461,5 +463,17 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     this.previousFileTypes = storedSearch.fileTypes;
     this.componentTypeControl.setValue(storedSearch.fileTypes);
     this.formEmpty = false;
+  }
+
+  onClickFromClear(event: MouseEvent) {
+    // Prevent opening picker on close
+    event.stopPropagation();
+    this.searchForm.controls.dateDecidedFrom.reset();
+  }
+
+  onClickToClear(event: MouseEvent) {
+    // Prevent opening picker on close
+    event.stopPropagation();
+    this.searchForm.controls.dateDecidedTo.reset();
   }
 }
