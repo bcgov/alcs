@@ -123,7 +123,7 @@ export class NotificationAdvancedSearchService {
       this.addFileNumberResults(searchDto, promises);
     }
 
-    if (searchDto.portalStatusCode) {
+    if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       this.addPortalStatusResults(searchDto, promises);
     }
 
@@ -195,9 +195,9 @@ export class NotificationAdvancedSearchService {
       .createQueryBuilder('notiSub')
       .select('notiSub.fileNumber')
       .where(
-        "alcs.get_current_status_for_notification_submission_by_uuid(notiSub.uuid) ->> 'status_type_code' = :statusCode",
+        "alcs.get_current_status_for_notification_submission_by_uuid(notiSub.uuid) ->> 'status_type_code' IN(:...statusCodes)",
         {
-          statusCode: searchDto.portalStatusCode,
+          statusCodes: searchDto.portalStatusCodes,
         },
       )
       .getMany();

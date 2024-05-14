@@ -34,7 +34,7 @@ describe('NotificationAdvancedSearchService', () => {
 
   const mockSearchDto: SearchRequestDto = {
     fileNumber: '123',
-    portalStatusCode: 'A',
+    portalStatusCodes: ['A'],
     governmentName: 'B',
     regionCode: 'C',
     name: 'D',

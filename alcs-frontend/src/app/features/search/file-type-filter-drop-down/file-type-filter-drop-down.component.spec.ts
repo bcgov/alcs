@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FileTypeDataSourceService } from '../../../services/search/file-type/file-type-data-source.service';
 
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down.component';
 
@@ -17,6 +18,8 @@ describe('FileTypeFilterDropDownComponent', () => {
 
     fixture = TestBed.createComponent(FileTypeFilterDropDownComponent);
     component = fixture.componentInstance;
+    component.label = 'Label';
+    component.fileTypeData = new FileTypeDataSourceService();
     fixture.detectChanges();
   });
 

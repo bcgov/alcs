@@ -15,6 +15,7 @@ export interface ApplicationSearchResultDto {
 }
 
 export interface NoticeOfIntentSearchResultDto extends ApplicationSearchResultDto {}
+
 export interface NotificationSearchResultDto extends ApplicationSearchResultDto {}
 
 export interface PlanningReviewSearchResultDto {
@@ -71,7 +72,7 @@ export interface SearchRequestDto extends PagingRequestDto {
   civicAddress?: string;
   resolutionNumber?: number;
   resolutionYear?: number;
-  portalStatusCode?: string;
+  portalStatusCodes?: string[];
   governmentName?: string;
   regionCode?: string;
   dateSubmittedFrom?: number;

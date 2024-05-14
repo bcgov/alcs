@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { AfterViewInit, Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import {
@@ -10,11 +10,11 @@ import {
 } from '../../../services/search/file-type/file-type-data-source.service';
 
 @Component({
-  selector: 'app-file-type-filter-drop-down',
+  selector: 'app-file-type-filter-drop-down[fileTypeData]',
   templateUrl: './file-type-filter-drop-down.component.html',
   styleUrls: ['./file-type-filter-drop-down.component.scss'],
 })
-export class FileTypeFilterDropDownComponent {
+export class FileTypeFilterDropDownComponent implements OnInit {
   hasItemsSelected = false;
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<FlatTreeNode, TreeNode>();
@@ -34,14 +34,28 @@ export class FileTypeFilterDropDownComponent {
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   @Output() fileTypeChange = new EventEmitter<string[]>();
 
-  constructor(private fileTypeData: FileTypeDataSourceService) {
+  @Input() fileTypeData!: FileTypeDataSourceService;
+  @Input() label!: string;
+  @Input() tooltip = '';
+  @Input() preExpanded: string[] = [];
+
+  constructor() {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<FlatTreeNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  }
 
-    fileTypeData.dataChange.subscribe((data) => {
+  ngOnInit(): void {
+    this.fileTypeData.dataChange.subscribe((data) => {
       this.dataSource.data = data;
     });
+
+    if (this.preExpanded.length > 0) {
+      const nodes = this.treeControl.dataNodes.filter((node) => this.preExpanded.includes(node.item.label));
+      for (const node of nodes) {
+        this.treeControl.expand(node);
+      }
+    }
   }
 
   getLevel = (node: FlatTreeNode) => node.level;

@@ -1,9 +1,10 @@
 <mat-form-field
-  matTooltip="Note: This field searches both proposal and decision component type"
+  [matTooltip]="tooltip"
+  [matTooltipDisabled]="!tooltip"
   appearance="outline"
   class="file-type-input"
 >
-  <mat-label>File Type</mat-label>
+  <mat-label>{{ label }}</mat-label>
   <input
     value="{{ getSelectedItems() }}"
     id="type"
@@ -24,7 +25,7 @@
   >
     <mat-icon>close</mat-icon>
   </button>
-  <mat-icon matSuffix>info</mat-icon>
+  <mat-icon *ngIf="tooltip" matSuffix>info</mat-icon>
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" class="tall-autocomplete">
     <mat-option disabled>Please select an item from below</mat-option>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
