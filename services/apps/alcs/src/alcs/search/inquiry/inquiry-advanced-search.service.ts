@@ -135,7 +135,7 @@ export class InquiryAdvancedSearchService {
       this.addParcelResults(searchDto, promises);
     }
 
-    if (searchDto.dateSubmittedTo || searchDto.dateSubmittedFrom) {
+    if (searchDto.dateSubmittedFrom || searchDto.dateSubmittedTo) {
       this.addSubmittedDateResults(searchDto, promises);
     }
 
@@ -224,18 +224,18 @@ export class InquiryAdvancedSearchService {
       .createQueryBuilder('inquiry')
       .select('inquiry.fileNumber')
       .where(
-        "LOWER(inquirySearch.inquirer_first_name || ' ' || inquirySearch.inquirer_last_name) LIKE ANY (:names)",
+        "LOWER(inquiry.inquirer_first_name || ' ' || inquiry.inquirer_last_name) LIKE ANY (:names)",
         {
           names: formattedSearchString,
         },
       )
-      .orWhere('LOWER(inquirySearch.inquirer_first_name) LIKE ANY (:names)', {
+      .orWhere('LOWER(inquiry.inquirer_first_name) LIKE ANY (:names)', {
         names: formattedSearchString,
       })
-      .orWhere('LOWER(inquirySearch.inquirer_last_name) LIKE ANY (:names)', {
+      .orWhere('LOWER(inquiry.inquirer_last_name) LIKE ANY (:names)', {
         names: formattedSearchString,
       })
-      .orWhere('LOWER(inquirySearch.inquirer_organization) LIKE ANY (:names)', {
+      .orWhere('LOWER(inquiry.inquirer_organization) LIKE ANY (:names)', {
         names: formattedSearchString,
       })
       .getMany();
@@ -291,18 +291,18 @@ export class InquiryAdvancedSearchService {
 
     if (searchDto.dateSubmittedFrom !== undefined) {
       query = query.andWhere(
-        'inquiry.date_submitted_to_alc >= :date_submitted',
+        'inquiry.date_submitted_to_alc >= :date_submitted_from',
         {
-          date_submitted: new Date(searchDto.dateSubmittedFrom),
+          date_submitted_from: new Date(searchDto.dateSubmittedFrom),
         },
       );
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
       query = query.andWhere(
-        'inquiry.date_submitted_to_alc <= :date_submitted',
+        'inquiry.date_submitted_to_alc <= :date_submitted_to',
         {
-          date_submitted: new Date(searchDto.dateSubmittedTo),
+          date_submitted_to: new Date(searchDto.dateSubmittedTo),
         },
       );
     }

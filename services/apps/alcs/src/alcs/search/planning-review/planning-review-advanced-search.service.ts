@@ -141,7 +141,7 @@ export class PlanningReviewAdvancedSearchService {
       this.addFileTypeResults(searchDto, promises);
     }
 
-    if (searchDto.dateSubmittedTo || searchDto.dateSubmittedFrom) {
+    if (searchDto.dateSubmittedFrom || searchDto.dateSubmittedTo) {
       this.addSubmittedDateResults(searchDto, promises);
     }
 
@@ -292,14 +292,14 @@ export class PlanningReviewAdvancedSearchService {
       );
 
     if (searchDto.dateSubmittedFrom !== undefined) {
-      query.andWhere('referral.submission_date >= :date_submitted', {
-        date_submitted: new Date(searchDto.dateSubmittedFrom),
+      query.andWhere('referral.submission_date >= :date_submitted_from', {
+        date_submitted_from: new Date(searchDto.dateSubmittedFrom),
       });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query.andWhere('referral.submission_date <= :date_submitted', {
-        date_submitted: new Date(searchDto.dateSubmittedTo),
+      query.andWhere('referral.submission_date <= :date_submitted_to', {
+        date_submitted_to: new Date(searchDto.dateSubmittedTo),
       });
     }
     promises.push(query.getMany());

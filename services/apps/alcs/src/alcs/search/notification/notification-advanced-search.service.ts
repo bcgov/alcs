@@ -146,7 +146,7 @@ export class NotificationAdvancedSearchService {
       this.addFileTypeResults(searchDto, promises);
     }
 
-    if (searchDto.dateSubmittedTo || searchDto.dateSubmittedFrom) {
+    if (searchDto.dateSubmittedFrom || searchDto.dateSubmittedTo) {
       this.addSubmittedDateResults(searchDto, promises);
     }
 
@@ -250,7 +250,7 @@ export class NotificationAdvancedSearchService {
       .leftJoin(
         NotificationTransferee,
         'notification_transferee',
-        'notification_transferee.notification_submission_uuid = notificationSearch.uuid',
+        'notification_transferee.notification_submission_uuid = notiSub.uuid',
       )
       .where(
         "LOWER(notification_transferee.first_name || ' ' || notification_transferee.last_name) LIKE ANY (:names)",
@@ -326,18 +326,18 @@ export class NotificationAdvancedSearchService {
 
     if (searchDto.dateSubmittedFrom !== undefined) {
       query = query.andWhere(
-        'notification.date_submitted_to_alc >= :date_submitted',
+        'notification.date_submitted_to_alc >= :date_submitted_from',
         {
-          date_submitted: new Date(searchDto.dateSubmittedFrom),
+          date_submitted_from: new Date(searchDto.dateSubmittedFrom),
         },
       );
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
       query = query.andWhere(
-        'notification.date_submitted_to_alc <= :date_submitted',
+        'notification.date_submitted_to_alc <= :date_submitted_to',
         {
-          date_submitted: new Date(searchDto.dateSubmittedTo),
+          date_submitted_to: new Date(searchDto.dateSubmittedTo),
         },
       );
     }
