@@ -1,13 +1,30 @@
-<mat-form-field appearance="outline"  class="file-type-input">
+<mat-form-field
+  matTooltip="Note: This field searches both proposal and decision component type"
+  appearance="outline"
+  class="file-type-input"
+>
+  <mat-label>File Type</mat-label>
   <input
     value="{{ getSelectedItems() }}"
-    placeholder="File Type"
+    id="type"
     type="text"
     matInput
     [matAutocomplete]="auto"
     onkeydown="return false;"
     [formControl]="componentTypeControl"
   />
+  <button
+    matSuffix
+    mat-icon-button
+    aria-label="Clear"
+    *ngIf="hasItemsSelected"
+    class="clear-button"
+    type="button"
+    (click)="clear()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-icon matSuffix>info</mat-icon>
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" class="tall-autocomplete">
     <mat-option disabled>Please select an item from below</mat-option>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
@@ -17,8 +34,8 @@
           class="checklist-leaf-node"
           [checked]="checklistSelection.isSelected(node)"
           (change)="leafItemSelectionToggle(node)"
-          >{{ node.item?.label ?? node.item }}</mat-checkbox
-        >
+        >{{ node.item?.label ?? node.item }}
+        </mat-checkbox>
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
@@ -32,10 +49,9 @@
           [indeterminate]="descendantsPartiallySelected(node)"
           (change)="itemSelectionToggle(node)"
         >
-          {{ node.item?.label ?? node.item }}</mat-checkbox
-        >
+          {{ node.item?.label ?? node.item }}
+        </mat-checkbox>
       </mat-tree-node>
     </mat-tree>
   </mat-autocomplete>
-  <button *ngIf="hasItemsSelected" class="clear-button" type="button" (click)="clear()">×</button>
 </mat-form-field>

@@ -4,6 +4,38 @@
   margin: 20px;
 }
 
+h4 {
+  margin-bottom: -4px !important;
+  margin-top: 48px !important;
+}
+
+.info-banner {
+  margin-top: -16px;
+  background-color: rgba(#F7F7F7, 0.5);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+
+  .info-description {
+    min-width: 0;
+    word-break: break-word;
+    color: colors.$grey;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+      margin-right: 8px;
+    }
+  }
+}
+
 :host::ng-deep {
   h3,
   div,
@@ -18,10 +50,6 @@
     display: flex;
     justify-content: left;
     align-items: center;
-
-    h4 {
-      margin-right: 12px !important;
-    }
   }
 
   .table {
@@ -54,7 +82,7 @@
   }
 
   .search-fields-wrapper {
-    padding: 0 80px;
+    padding: 0 160px;
   }
 
   .row {
@@ -65,19 +93,9 @@
     width: 100%;
     margin: 24px 0;
 
-    &.date-row {
-      margin: 0 0 12px 0;
-    }
-
-    &.date-row-label {
-      margin: 0 0 4px 0;
-      gap: 4px;
-    }
-
     .column {
       display: flex;
       flex-direction: column;
-      flex-basis: 100%;
       flex: 1;
     }
 
@@ -88,7 +106,6 @@
   }
 
   .address-search-fields-wrapper {
-    background-color: rgba(254, 233, 180, 0.502);
     padding: 12px 80px;
 
     .address-field {
@@ -100,57 +117,18 @@
     }
   }
 
-  .expand-search {
-    display: flex;
-    align-items: center;
-    justify-content: right;
-
-    .expand-search-btn {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      color: #1a5a96;
-      margin-top: 12px;
-      margin-bottom: 24px;
-
-      span {
-        color: #1a5a96;
-      }
-    }
-  }
-
   .btn-controls {
-    padding: 12px 80px;
+    padding: 12px 160px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+
+    button:not(:last-child) {
+      margin-right: 16px !important;
+    }
   }
 
   .title {
-    margin: 36px 80px;
-  }
-
-  .subtitle {
-    margin: 18px 80px;
-  }
-
-  .info-banner {
-    display: flex;
-    align-items: center;
-
-    .info-description {
-      min-width: 0;
-      word-break: break-word;
-    }
-
-    .icon {
-      display: flex;
-      justify-content: center;
-      mat-icon {
-        font-size: 18px;
-        height: 18px;
-        width: 18px;
-      }
-    }
+    margin: 36px 160px;
   }
 
   .search-result-wrapper {
@@ -177,10 +155,12 @@
     .reset-btn span {
       color: colors.$primary-color;
     }
+
     .search-btn span {
       color: #fff !important;
     }
   }
+
   .mat-mdc-select-placeholder {
     color: rgba(0, 0, 0, 0.6);
   }
@@ -189,5 +169,28 @@
     overflow: hidden;
     margin: 20px 0;
     padding: 8px 12px;
+  }
+
+  .clear-button {
+    padding: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+
+
+    & > *[role=img] {
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .mat-mdc-button-touch-target {
+      width: 24px !important;
+      height: 24px !important;
+    }
   }
 }
