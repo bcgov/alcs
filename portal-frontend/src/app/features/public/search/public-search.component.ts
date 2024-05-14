@@ -464,4 +464,16 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     this.componentTypeControl.setValue(storedSearch.fileTypes);
     this.formEmpty = false;
   }
+
+  onClickFromClear(event: MouseEvent) {
+    // Prevent opening picker on close
+    event.stopPropagation();
+    this.searchForm.controls.dateDecidedFrom.reset();
+  }
+
+  onClickToClear(event: MouseEvent) {
+    // Prevent opening picker on close
+    event.stopPropagation();
+    this.searchForm.controls.dateDecidedTo.reset();
+  }
 }

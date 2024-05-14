@@ -160,7 +160,7 @@
       </div>
       <div>
         <mat-label for="decisionDates">Decision Date Range - Start Date</mat-label>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" (click)="dateDecidedFromPicker.open()">
           <input
             matInput
             formControlName="dateDecidedFrom"
@@ -175,7 +175,7 @@
             matSuffix
             mat-icon-button
             aria-label="Clear"
-            (click)="searchForm.controls.dateDecidedFrom.reset()"
+            (click)="onClickFromClear($event)"
           >
             <mat-icon>close</mat-icon>
           </button>
@@ -185,7 +185,7 @@
       </div>
       <div>
         <mat-label for="decisionDates">Decision Date Range - End Date</mat-label>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" (click)="dateDecidedToPicker.open()">
           <input
             matInput
             formControlName="dateDecidedTo"
@@ -200,7 +200,7 @@
             matSuffix
             mat-icon-button
             aria-label="Clear"
-            (click)="searchForm.controls.dateDecidedTo.reset()"
+            (click)="onClickToClear($event)"
           >
             <mat-icon>close</mat-icon>
           </button>
