@@ -2,14 +2,19 @@
   width: 100%;
 }
 
+#type {
+  text-overflow: ellipsis;
+}
+
 .clear-button {
   background: transparent;
   padding: 0;
-  position: absolute;
-  right: 0;
   border: none;
   cursor: pointer;
   font-size: 20px !important;
   font-weight: 400 !important;
   color: #313132;
+  text-align: center;
+  vertical-align: bottom;
+  max-height: 24px;
 }

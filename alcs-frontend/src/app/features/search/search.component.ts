@@ -6,7 +6,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
-import { Observable, Subject, combineLatestWith, map, startWith, takeUntil } from 'rxjs';
+import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
@@ -105,6 +105,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   notificationStatuses: NotificationSubmissionStatusDto[] = [];
   noiStatuses: NoticeOfIntentStatusDto[] = [];
   isLoading = false;
+  today = new Date();
 
   constructor(
     private searchService: SearchService,
