@@ -71,6 +71,7 @@
     <div class="subheading2 grid-1">Total area of the SRW</div>
     <div class="grid-double">
       {{ submission.totalArea }}
+      <span *ngIf="submission.totalArea"> ha</span>
       <app-no-data *ngIf="!submission.totalArea"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Upload Terms of the SRW</div>

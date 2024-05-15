@@ -37,21 +37,21 @@
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilToRemoveVolume }}
-      <span *ngIf="_noiSubmission.soilToRemoveVolume">m<sup>3</sup></span>
+      <span *ngIf="_noiSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
     </div>
     <div class="grid-1"><strong>Area</strong></div>
     <div class="grid-2">
-      {{ _noiSubmission.soilToRemoveArea }} <span *ngIf="_noiSubmission.soilToRemoveArea">m<sup>2</sup></span>
+      {{ _noiSubmission.soilToRemoveArea }} <span *ngIf="_noiSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
     </div>
     <div class="grid-1"><strong>Maximum Depth</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilToRemoveMaximumDepth }}
-      <span *ngIf="_noiSubmission.soilToRemoveMaximumDepth">m</span>
+      <span *ngIf="_noiSubmission.soilToRemoveMaximumDepth !== null">m</span>
     </div>
     <div class="grid-1"><strong>Average Depth</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilToRemoveAverageDepth }}
-      <span *ngIf="_noiSubmission.soilToRemoveAverageDepth">m</span>
+      <span *ngIf="_noiSubmission.soilToRemoveAverageDepth !== null">m</span>
     </div>
   </div>
 

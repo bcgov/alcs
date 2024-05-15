@@ -3,7 +3,7 @@
 <div class="review-table">
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
-      <h4 [id]="parcel.uuid">Parcel {{ parcelInd + 1 }} Information</h4>
+      <h4 [id]="parcel.uuid">Parcel #{{ parcelInd + 1 }}</h4>
     </div>
     <div class="subheading2 grid-1">Ownership Type</div>
     <div class="grid-double">
@@ -15,10 +15,11 @@
       {{ parcel.legalDescription }}
       <app-no-data *ngIf="!parcel.legalDescription"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Area (Hectares)</div>
+    <div class="subheading2 grid-1">Approx. Map Area</div>
     <div class="grid-double">
       {{ parcel.mapAreaHectares }}
       <app-no-data *ngIf="!parcel.mapAreaHectares"></app-no-data>
+      <span *ngIf="parcel.mapAreaHectares"> ha</span>
     </div>
     <div class="subheading2 grid-1">
       PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
