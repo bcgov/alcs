@@ -171,13 +171,28 @@ h4 {
     padding: 8px 12px;
   }
 
+  .mat-mdc-form-field-icon-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mat-mdc-form-field-icon-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .clear-button {
     padding: 0 !important;
     width: 24px !important;
     height: 24px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:last-child {
-      margin-right: 6px !important;
+      margin-right: 4px !important;
     }
 
     & > *[role=img] {
