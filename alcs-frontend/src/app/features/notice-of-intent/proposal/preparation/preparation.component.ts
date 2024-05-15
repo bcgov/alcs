@@ -20,7 +20,7 @@ import { ToastService } from '../../../../services/toast/toast.service';
 })
 export class PreparationComponent implements OnInit {
   dateSubmittedToAlc?: string;
-  selectableTypes: { label: string; value: string; disabled: boolean }[] = [];
+  selectableTypes: { label: string; value: string }[] = [];
   selectedSubtypes: string[] = [];
   private subtypes: NoticeOfIntentSubtypeDto[] = [];
 
@@ -66,7 +66,6 @@ export class PreparationComponent implements OnInit {
         return {
           label: subtype.label,
           value: subtype.label,
-          disabled: false,
         };
       });
     }
