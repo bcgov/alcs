@@ -75,12 +75,10 @@ export class PreparationComponent implements OnInit {
   }
 
   async saveSubtypes(selectedLabels: string | string[] | null) {
-    console.log(selectedLabels);
     if (this._noticeOfIntent && selectedLabels instanceof Array) {
       const selectedCodes = selectedLabels.map(
         (selectedLabel) => this.subtypes.find((subtype) => subtype.label === selectedLabel)!.code,
       );
-      console.log(selectedCodes);
       await this.noticeOfIntentDetailService.update(this._noticeOfIntent?.fileNumber, {
         subtype: selectedCodes,
       });
