@@ -276,6 +276,10 @@
     display: flex;
     align-items: center;
     margin-top: rem(4);
+
+    .mat-icon {
+      min-width: rem(24)
+    }
   }
 
   .form-row {
