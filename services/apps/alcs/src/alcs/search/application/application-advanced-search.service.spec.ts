@@ -32,7 +32,7 @@ describe('ApplicationAdvancedSearchService', () => {
   const mockSearchRequestDto: SearchRequestDto = {
     fileNumber: '123',
     legacyId: '123',
-    portalStatusCode: 'A',
+    portalStatusCodes: ['A'],
     governmentName: 'B',
     regionCode: 'C',
     name: 'D',

@@ -132,7 +132,7 @@ export class NoticeOfIntentAdvancedSearchService {
       this.addLegacyIDResults(searchDto, promises);
     }
 
-    if (searchDto.portalStatusCode) {
+    if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       this.addPortalStatusResults(searchDto, promises);
     }
 
@@ -258,9 +258,9 @@ export class NoticeOfIntentAdvancedSearchService {
       .createQueryBuilder('noiSubs')
       .select('noiSubs.fileNumber')
       .where(
-        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSubs.uuid) ->> 'status_type_code' = :statusCode",
+        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSubs.uuid) ->> 'status_type_code' IN(:...statusCodes)",
         {
-          statusCode: searchDto.portalStatusCode,
+          statusCodes: searchDto.portalStatusCodes,
         },
       )
       .getMany();

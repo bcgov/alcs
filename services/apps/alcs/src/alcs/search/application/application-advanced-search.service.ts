@@ -128,7 +128,7 @@ export class ApplicationAdvancedSearchService {
       this.addLegacyIDResults(searchDto, promises);
     }
 
-    if (searchDto.portalStatusCode) {
+    if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       this.addPortalStatusResults(searchDto, promises);
     }
 
@@ -224,9 +224,9 @@ export class ApplicationAdvancedSearchService {
       .createQueryBuilder('appSubs')
       .select('appSubs.fileNumber')
       .where(
-        "alcs.get_current_status_for_application_submission_by_uuid(appSubs.uuid) ->> 'status_type_code' = :statusCode",
+        "alcs.get_current_status_for_application_submission_by_uuid(appSubs.uuid) ->> 'status_type_code' IN (:...statusCodes)",
         {
-          statusCode: searchDto.portalStatusCode,
+          statusCodes: searchDto.portalStatusCodes,
         },
       )
       .getMany();

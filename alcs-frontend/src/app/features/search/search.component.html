@@ -31,19 +31,23 @@
     </div>
     <div class="row">
       <div class="column">
-        <ng-select
-          appearance="outline"
-          placeholder="Current Portal Status"
-          [items]="allStatuses"
-          bindLabel="label"
-          bindValue="code"
-          [formControl]="portalStatusControl"
-        >
-        </ng-select>
+        <app-file-type-filter-drop-down
+          label="Current Portal Status"
+          #statusTypeDropDown
+          [fileTypeData]="portalStatusDataService"
+          (fileTypeChange)="onPortalStatusChange($event)"
+          [preExpanded]="['With ALC']"
+        />
       </div>
 
       <div class="column">
-        <app-file-type-filter-drop-down #fileTypeDropDown (fileTypeChange)="onFileTypeChange($event)" />
+        <app-file-type-filter-drop-down
+          label="File Type"
+          tooltip="Note: This field searches both proposal and decision component type"
+          #fileTypeDropDown
+          [fileTypeData]="fileTypeService"
+          (fileTypeChange)="onFileTypeChange($event)"
+        />
       </div>
     </div>
     <div class="row">

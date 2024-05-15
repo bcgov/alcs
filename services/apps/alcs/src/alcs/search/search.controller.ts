@@ -367,7 +367,7 @@ export class SearchController {
 
     const searchPlanningReviews =
       (searchDto.fileTypes.length > 0 ? planningReviewTypeSpecified : true) &&
-      !searchDto.portalStatusCode &&
+      !searchDto.portalStatusCodes &&
       !searchDto.pid &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
 
@@ -385,7 +385,7 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      !searchDto.portalStatusCode &&
+      !searchDto.portalStatusCodes &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
     return {
