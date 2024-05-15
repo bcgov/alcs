@@ -59,8 +59,6 @@ export class PreparationComponent implements OnInit {
 
   private async loadSubtypes() {
     if (this._noticeOfIntent) {
-      const submission = await this.noticeOfIntentSubmissionService.fetchSubmission(this._noticeOfIntent.fileNumber);
-
       const subtypes = await this.noticeOfIntentService.listSubtypes();
       this.subtypes = subtypes;
 
