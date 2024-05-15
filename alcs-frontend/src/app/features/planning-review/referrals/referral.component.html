@@ -39,7 +39,7 @@
         <div>
           <div class="subheading2">Referral Description</div>
           <div>
-            <app-inline-text
+            <app-inline-textarea
               [value]="referral.referralDescription"
               [required]="true"
               (save)="updateReferralField(referral.uuid, 'referralDescription', $event)"
@@ -61,7 +61,7 @@
           <div>
             <div class="subheading2">Response Description</div>
             <div>
-              <app-inline-text
+              <app-inline-textarea
                 [value]="referral.responseDescription"
                 [required]="true"
                 (save)="updateReferralField(referral.uuid, 'responseDescription', $event)"

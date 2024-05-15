@@ -1,7 +1,8 @@
 @use '../../../../styles/colors';
 
-.inline-number-wrapper {
+.inline-textarea-wrapper {
   padding-top: 4px;
+  white-space: pre-line;
 }
 
 .editing {
@@ -16,7 +17,7 @@
 .edit-button {
   height: 24px;
   width: 24px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
 }
 

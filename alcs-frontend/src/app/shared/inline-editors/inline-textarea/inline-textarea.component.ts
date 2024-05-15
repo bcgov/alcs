@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-inline-textarea[value]',
@@ -8,6 +8,7 @@ import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output
 export class InlineTextareaComponent {
   @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
+  @Input() required = false;
   @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
