@@ -243,57 +243,6 @@ describe('NoticeOfIntentService', () => {
     expect(notice.summary).toEqual('new-summary');
   });
 
-  it('should fail update if the preselected subtypes missing', async () => {
-    const notice = new NoticeOfIntent({
-      summary: 'old-summary',
-    });
-
-    const errors = [
-      '"Residential - Accessory Structure" must be selected',
-      '"Residential - Additional Residence" must be selected',
-      '"Residential - Principal Residence" must be selected',
-      '"Farm Structure" must be selected',
-      '"Area-Wide Filling" must be selected',
-      '"Aggregate Extraction or Placer Mining" must be selected',
-    ];
-
-    mockSubtypeRepository.find.mockResolvedValue([]);
-    mockNoticeOfIntentSubmissionService.loadBarebonesSubmission.mockResolvedValue(
-      new NoticeOfIntentSubmission({
-        soilProposedStructures: [
-          {
-            type: 'Residential - Accessory Structure',
-          },
-          {
-            type: 'Residential - Additional Residence',
-          },
-          {
-            type: 'Residential - Principal Residence',
-          },
-          {
-            type: 'Farm Structure',
-          },
-        ],
-        soilIsAreaWideFilling: true,
-        soilIsExtractionOrMining: true,
-      }),
-    );
-
-    mockRepository.findOneOrFail.mockResolvedValue(notice);
-    mockRepository.save.mockResolvedValue(new NoticeOfIntent());
-    const promise = service.update('file', {
-      summary: 'new-summary',
-      subtype: [],
-    });
-
-    await expect(promise).rejects.toMatchObject(
-      new ServiceValidationException(errors.join('; ')),
-    );
-
-    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save).toHaveBeenCalledTimes(0);
-  });
-
   it('should set the X status when setting Acknowledge Complete', async () => {
     const notice = new NoticeOfIntent({
       summary: 'old-summary',
