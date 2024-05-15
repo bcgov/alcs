@@ -170,6 +170,8 @@
             [min]="minDate"
             [max]="today"
           />
+          <mat-datepicker-toggle matIconSuffix [for]="dateDecidedFromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedFromPicker></mat-datepicker>
           <button
             class="clear-button"
             *ngIf="searchForm.controls.dateDecidedFrom.value"
@@ -180,8 +182,6 @@
           >
             <mat-icon>close</mat-icon>
           </button>
-          <mat-datepicker-toggle matIconSuffix [for]="dateDecidedFromPicker"></mat-datepicker-toggle>
-          <mat-datepicker #dateDecidedFromPicker></mat-datepicker>
         </mat-form-field>
       </div>
       <div>
@@ -196,6 +196,8 @@
             [min]="searchForm.controls.dateDecidedFrom.value"
             [max]="today"
           />
+          <mat-datepicker-toggle matIconSuffix [for]="dateDecidedToPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedToPicker></mat-datepicker>
           <button
             class="clear-button"
             *ngIf="searchForm.controls.dateDecidedTo.value"
@@ -206,8 +208,6 @@
           >
             <mat-icon>close</mat-icon>
           </button>
-          <mat-datepicker-toggle matIconSuffix [for]="dateDecidedToPicker"></mat-datepicker-toggle>
-          <mat-datepicker #dateDecidedToPicker></mat-datepicker>
         </mat-form-field>
       </div>
     </div>
