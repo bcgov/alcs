@@ -93,18 +93,18 @@
     </div>
   </div>
 
+  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
+  <div class="grid-double">
+    {{ applicationSubmission.soilFillTypeToPlace }}
+    <app-no-data *ngIf="!applicationSubmission.soilFillTypeToPlace"></app-no-data>
+  </div>
+
   <div class="subheading2 grid-1">
     What alternative measures have you considered or attempted before proposing to place fill?
   </div>
   <div class="grid-double">
     {{ applicationSubmission.soilAlternativeMeasures }}
     <app-no-data *ngIf="!applicationSubmission.soilAlternativeMeasures"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilFillTypeToPlace }}
-    <app-no-data *ngIf="!applicationSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
