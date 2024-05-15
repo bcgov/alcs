@@ -38,7 +38,7 @@ export class PreparationComponent implements OnInit {
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -65,69 +65,22 @@ export class PreparationComponent implements OnInit {
       this.subtypes = subtypes;
 
       this.selectableTypes = subtypes.map((subtype) => {
-        let disabled = false;
-
-        disabled = this.isSubtypeDisabled(submission, subtype);
-
         return {
           label: subtype.label,
           value: subtype.label,
-          disabled,
+          disabled: false,
         };
       });
     }
   }
 
-  private isSubtypeDisabled(submission: NoticeOfIntentSubmissionDto, subtype: NoticeOfIntentSubtypeDto) {
-    const isResidentialAccessory =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE) &&
-      subtype.code === 'RACS';
-    if (isResidentialAccessory) {
-      return true;
-    }
-
-    const isPrincipalResidence =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE) &&
-      subtype.code === 'RPRI';
-    if (isPrincipalResidence) {
-      return true;
-    }
-
-    const isAdditionalResidence =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE) &&
-      subtype.code === 'RADD';
-    if (isAdditionalResidence) {
-      return true;
-    }
-
-    const isFarmStructure =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.FARM_STRUCTURE) &&
-      subtype.code === 'FRST';
-    if (isFarmStructure) {
-      return true;
-    }
-
-    const isOther =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.OTHER) &&
-      subtype.code === 'OTHR';
-    if (isOther) {
-      return true;
-    }
-
-    if (submission.soilIsAreaWideFilling && subtype.code === 'ARWF') {
-      return true;
-    }
-
-    if (submission.soilIsExtractionOrMining && subtype.code === 'AEPM') {
-      return true;
-    }
-
-    return false;
-  }
-
-  async saveSubtypes($event: string | string[] | null) {
-    if (this._noticeOfIntent && $event instanceof Array) {
-      const selectedCodes = $event.map((label) => this.subtypes.find((subtype) => subtype.label === label)!.code);
+  async saveSubtypes(selectedLabels: string | string[] | null) {
+    console.log(selectedLabels);
+    if (this._noticeOfIntent && selectedLabels instanceof Array) {
+      const selectedCodes = selectedLabels.map(
+        (selectedLabel) => this.subtypes.find((subtype) => subtype.label === selectedLabel)!.code,
+      );
+      console.log(selectedCodes);
       await this.noticeOfIntentDetailService.update(this._noticeOfIntent?.fileNumber, {
         subtype: selectedCodes,
       });
