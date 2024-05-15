@@ -5,9 +5,7 @@ import { NoticeOfIntentDetailService } from '../../../../services/notice-of-inte
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import {
   NoticeOfIntentDto,
-  NoticeOfIntentSubmissionDto,
   NoticeOfIntentSubtypeDto,
-  STRUCTURE_TYPES,
   UpdateNoticeOfIntentDto,
 } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
