@@ -2,16 +2,12 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
-import { Brackets, Repository } from 'typeorm';
-import { ApplicationDecisionComponent } from '../../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
-import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
+import { Repository } from 'typeorm';
 import { Application } from '../../../alcs/application/application.entity';
 import { SEARCH_CACHE_TIME } from '../../../alcs/search/search.config';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
-import { intersectSets } from '../../../utils/set-helper';
+import { APP_SEARCH_FILTERS } from '../../../utils/search/application-search-filters';
+import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
-import { ApplicationOwner } from '../../application-submission/application-owner/application-owner.entity';
-import { ApplicationParcel } from '../../application-submission/application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 import { AdvancedSearchResultDto, InboxRequestDto } from '../inbox.dto';
 import { InboxApplicationSubmissionView } from './inbox-application-view.entity';
@@ -127,14 +123,13 @@ export class InboxApplicationService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
     let didSearch = false;
 
-    if (searchDto.fileNumber) {
-      didSearch = true;
-      this.addFileNumberResults(searchDto, promises);
-    }
-
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       didSearch = true;
-      this.addPortalStatusResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.governmentFileNumber) {
@@ -144,71 +139,38 @@ export class InboxApplicationService {
 
     if (searchDto.name) {
       didSearch = true;
-      this.addNameResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
       didSearch = true;
-      this.addParcelResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.fileTypes.length > 0) {
       didSearch = true;
-      this.addFileTypeResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.applicationRepository,
+      );
+      promises.push(promise);
     }
 
-    //Intersect Sets
     const t0 = performance.now();
-    const queryResults = await Promise.all(promises);
-
-    const allIds: Set<string>[] = [];
-    for (const result of queryResults) {
-      const fileNumbers = new Set<string>();
-      result.forEach((currentValue) => {
-        fileNumbers.add(currentValue.fileNumber);
-      });
-      allIds.push(fileNumbers);
-    }
-
-    const finalResult = intersectSets(allIds);
-
+    const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
     this.logger.debug(
       `Inbox Application pre-search search took ${t1 - t0} milliseconds.`,
     );
     return { didSearch, finalResult };
-  }
-
-  private addFileNumberResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.applicationRepository.find({
-      where: {
-        fileNumber: searchDto.fileNumber,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
-  }
-
-  private addPortalStatusResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.applicationSubmissionRepository
-      .createQueryBuilder('appSubs')
-      .select('appSubs.fileNumber')
-      .where(
-        "alcs.get_current_status_for_application_submission_by_uuid(appSubs.uuid) ->> 'status_type_code' IN (:...statusCodes)",
-        {
-          statusCodes: searchDto.portalStatusCodes,
-        },
-      )
-      .getMany();
-    promises.push(promise);
   }
 
   private addGovernmentFileNumberResults(
@@ -230,102 +192,5 @@ export class InboxApplicationService {
         }));
       });
     promises.push(promise);
-  }
-
-  private addNameResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-    const promise = this.applicationSubmissionRepository
-      .createQueryBuilder('appSub')
-      .select('appSub.fileNumber')
-      .leftJoin(
-        ApplicationOwner,
-        'application_owner',
-        'application_owner.application_submission_uuid = appSub.uuid',
-      )
-      .andWhere(
-        new Brackets((qb) =>
-          qb
-            .where(
-              "LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)",
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere('LOWER(application_owner.first_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            })
-            .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            })
-            .orWhere(
-              'LOWER(application_owner.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
-        ),
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private addParcelResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const query = this.applicationSubmissionRepository
-      .createQueryBuilder('appSub')
-      .select('appSub.fileNumber')
-      .leftJoin(
-        ApplicationParcel,
-        'parcel',
-        'parcel.application_submission_uuid = appSub.uuid',
-      );
-
-    if (searchDto.pid) {
-      query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
-    }
-
-    promises.push(query.getMany());
-  }
-
-  private addFileTypeResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const query = this.applicationRepository
-      .createQueryBuilder('app')
-      .select('app.fileNumber')
-      .leftJoin(
-        ApplicationDecision,
-        'decision',
-        'decision.application_uuid = "app"."uuid" AND decision.is_draft = FALSE',
-      )
-      .leftJoin(
-        ApplicationDecisionComponent,
-        'decisionComponent',
-        'decisionComponent.application_decision_uuid = decision.uuid',
-      )
-      .where('app.type_code IN (:...typeCodes)', {
-        typeCodes: searchDto.fileTypes,
-      })
-      .orWhere(
-        'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
-        {
-          typeCodes: searchDto.fileTypes,
-        },
-      );
-
-    promises.push(query.getMany());
   }
 }

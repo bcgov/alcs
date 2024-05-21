@@ -2,14 +2,12 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
-import { Brackets, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Notification } from '../../../alcs/notification/notification.entity';
 import { SEARCH_CACHE_TIME } from '../../../alcs/search/search.config';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
-import { intersectSets } from '../../../utils/set-helper';
-import { NotificationParcel } from '../../notification-submission/notification-parcel/notification-parcel.entity';
+import { NOTIFICATION_SEARCH_FILTERS } from '../../../utils/search/notification-search-filters';
+import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { NotificationSubmission } from '../../notification-submission/notification-submission.entity';
-import { NotificationTransferee } from '../../notification-submission/notification-transferee/notification-transferee.entity';
 import { AdvancedSearchResultDto, InboxRequestDto } from '../inbox.dto';
 import { InboxNotificationSubmissionView } from './inbox-notification-view.entity';
 
@@ -125,172 +123,47 @@ export class InboxNotificationService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
     let didSearch = false;
 
-    if (searchDto.fileNumber) {
-      didSearch = true;
-      this.addFileNumberResults(searchDto, promises);
-    }
-
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       didSearch = true;
-      this.addPortalStatusResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.name) {
       didSearch = true;
-      this.addNameResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
       didSearch = true;
-      this.addParcelResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
     }
 
-    if (searchDto.fileTypes.length > 0) {
-      didSearch = true;
-      this.addFileTypeResults(searchDto, promises);
+    if (searchDto.fileTypes.includes('SRW')) {
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.notificationRepository,
+      );
+      promises.push(promise);
     }
 
-    //Intersect Sets
     const t0 = performance.now();
-    const queryResults = await Promise.all(promises);
-
-    const allIds: Set<string>[] = [];
-    for (const result of queryResults) {
-      const fileNumbers = new Set<string>();
-      result.forEach((currentValue) => {
-        fileNumbers.add(currentValue.fileNumber);
-      });
-      allIds.push(fileNumbers);
-    }
-
-    const finalResult = intersectSets(allIds);
-
+    const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
     this.logger.debug(
       `Inbox Notification pre-search search took ${t1 - t0} milliseconds.`,
     );
     return { didSearch, finalResult };
-  }
-
-  private addFileNumberResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.notificationRepository.find({
-      where: {
-        fileNumber: searchDto.fileNumber,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
-  }
-
-  private addPortalStatusResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.notificationSubRepository
-      .createQueryBuilder('notiSub')
-      .select('notiSub.fileNumber')
-      .where(
-        "alcs.get_current_status_for_notification_submission_by_uuid(notiSub.uuid) ->> 'status_type_code' IN(:...statusCodes)",
-        {
-          statusCodes: searchDto.portalStatusCodes,
-        },
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private addNameResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-    const promise = this.notificationSubRepository
-      .createQueryBuilder('notiSub')
-      .select('notiSub.fileNumber')
-      .leftJoin(
-        NotificationTransferee,
-        'notification_transferee',
-        'notification_transferee.notification_submission_uuid = notiSub.uuid',
-      )
-      .andWhere(
-        new Brackets((qb) =>
-          qb
-            .where(
-              "LOWER(notification_transferee.first_name || ' ' || notification_transferee.last_name) LIKE ANY (:names)",
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.first_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.last_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
-        ),
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private addParcelResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    let query = this.notificationSubRepository
-      .createQueryBuilder('notiSub')
-      .select('notiSub.fileNumber')
-      .leftJoin(
-        NotificationParcel,
-        'parcel',
-        'parcel.notification_submission_uuid = notiSub.uuid',
-      );
-
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
-    }
-
-    promises.push(query.getMany());
-  }
-
-  private addFileTypeResults(
-    searchDto: InboxRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    if (searchDto.fileTypes.includes('SRW')) {
-      const query = this.notificationRepository.find({
-        select: {
-          fileNumber: true,
-        },
-      });
-      promises.push(query);
-    }
   }
 }
