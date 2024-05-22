@@ -5,12 +5,7 @@
   <a (click)="goToRecons()">Reconsideration Requests</a> | <a (click)="goToModifications()">Modification Requests</a>
 </div>
 
-<h5 id="recons" class="post-decision-header">
-  Reconsideration Requests
-  <mat-icon class="icon" matTooltip="Create new Reconsideration Request from application tracking boards"
-    >info_outline
-  </mat-icon>
-</h5>
+<h5 id="recons" class="post-decision-header">Reconsideration Requests</h5>
 
 <section class="no-decisions" *ngIf="!reconsiderations.length">
   <div>No Reconsiderations</div>
@@ -114,10 +109,7 @@
   </div>
 </section>
 
-<h5 id="modifications" class="post-decision-header">
-  Modification Requests
-  <mat-icon class="icon" matTooltip="Create new Modification Requests from CEO tracking board">info_outline </mat-icon>
-</h5>
+<h5 id="modifications" class="post-decision-header">Modification Requests</h5>
 
 <section class="no-decisions" *ngIf="!modifications.length">
   <div>No Requests</div>
