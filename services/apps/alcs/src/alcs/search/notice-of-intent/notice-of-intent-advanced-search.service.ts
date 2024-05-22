@@ -2,15 +2,13 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
-import { Brackets, QueryRunner, Repository } from 'typeorm';
-import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentParcel } from '../../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
+import { QueryRunner, Repository } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import {
   getNextDayToPacific,
   getStartOfDayToPacific,
 } from '../../../utils/pacific-date-time-helper';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
+import { NOI_SEARCH_FILTERS } from '../../../utils/search/notice-of-intent-search-filters';
 import { intersectSets } from '../../../utils/set-helper';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { NoticeOfIntentDecision } from '../../notice-of-intent-decision/notice-of-intent-decision.entity';
@@ -125,7 +123,11 @@ export class NoticeOfIntentAdvancedSearchService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      this.addFileNumberResults(searchDto, promises);
+      const promise = NOI_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.noiRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.legacyId) {
@@ -133,11 +135,20 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      this.addPortalStatusResults(searchDto, promises);
+      const promise = NOI_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.noiSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.governmentName) {
-      await this.addGovernmentResults(searchDto, promises);
+      const promise = NOI_SEARCH_FILTERS.addGovernmentResults(
+        searchDto,
+        this.noiRepository,
+        this.governmentRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.regionCode) {
@@ -145,19 +156,31 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     if (searchDto.name) {
-      this.addNameResults(searchDto, promises);
+      const promise = NOI_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.noiSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
-      this.addParcelResults(searchDto, promises);
+      const promise = NOI_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.noiSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.resolutionNumber || searchDto.resolutionYear) {
       this.addDecisionResolutionResults(searchDto, promises);
     }
 
-    if (searchDto.fileTypes.length > 0) {
-      this.addFileTypeResults(searchDto, promises);
+    if (searchDto.fileTypes.includes('NOI')) {
+      const promise = NOI_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.noiRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.dateSubmittedFrom || searchDto.dateSubmittedTo) {
@@ -220,21 +243,6 @@ export class NoticeOfIntentAdvancedSearchService {
     promises.push(query.getMany());
   }
 
-  private addFileNumberResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.noiRepository.find({
-      where: {
-        fileNumber: searchDto.fileNumber,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
-  }
-
   private addLegacyIDResults(
     searchDto: SearchRequestDto,
     promises: Promise<{ fileNumber: string }[]>[],
@@ -242,42 +250,6 @@ export class NoticeOfIntentAdvancedSearchService {
     const promise = this.noiRepository.find({
       where: {
         legacyId: searchDto.legacyId,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
-  }
-
-  private addPortalStatusResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.noiSubmissionRepository
-      .createQueryBuilder('noiSubs')
-      .select('noiSubs.fileNumber')
-      .where(
-        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSubs.uuid) ->> 'status_type_code' IN(:...statusCodes)",
-        {
-          statusCodes: searchDto.portalStatusCodes,
-        },
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private async addGovernmentResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const government = await this.governmentRepository.findOneByOrFail({
-      name: searchDto.governmentName,
-    });
-
-    const promise = this.noiRepository.find({
-      where: {
-        localGovernmentUuid: government.uuid,
       },
       select: {
         fileNumber: true,
@@ -299,97 +271,6 @@ export class NoticeOfIntentAdvancedSearchService {
       },
     });
     promises.push(promise);
-  }
-
-  private addNameResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-    const promise = this.noiSubmissionRepository
-      .createQueryBuilder('noiSub')
-      .select('noiSub.fileNumber')
-      .leftJoin(
-        NoticeOfIntentOwner,
-        'notice_of_intent_owner',
-        'notice_of_intent_owner.notice_of_intent_submission_uuid = noiSub.uuid',
-      )
-      .andWhere(
-        new Brackets((qb) =>
-          qb
-            .where(
-              "LOWER(notice_of_intent_owner.first_name || ' ' || notice_of_intent_owner.last_name) LIKE ANY (:names)",
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notice_of_intent_owner.first_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notice_of_intent_owner.last_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notice_of_intent_owner.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
-        ),
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private addParcelResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    let query = this.noiSubmissionRepository
-      .createQueryBuilder('noiSub')
-      .select('noiSub.fileNumber')
-      .leftJoin(
-        NoticeOfIntentParcel,
-        'parcel',
-        'parcel.notice_of_intent_submission_uuid = noiSub.uuid',
-      );
-
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
-    }
-
-    promises.push(query.getMany());
-  }
-
-  private addFileTypeResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    if (searchDto.fileTypes.includes('NOI')) {
-      const query = this.noiRepository.find({
-        select: {
-          fileNumber: true,
-        },
-      });
-
-      promises.push(query);
-    }
   }
 
   private addSubmittedDateResults(

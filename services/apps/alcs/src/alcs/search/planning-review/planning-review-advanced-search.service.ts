@@ -8,7 +8,7 @@ import {
   getStartOfDayToPacific,
 } from '../../../utils/pacific-date-time-helper';
 import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
-import { intersectSets } from '../../../utils/set-helper';
+import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { PlanningReferral } from '../../planning-review/planning-referral/planning-referral.entity';
 import { PlanningReviewDecision } from '../../planning-review/planning-review-decision/planning-review-decision.entity';
@@ -149,21 +149,8 @@ export class PlanningReviewAdvancedSearchService {
       this.addDecisionDateResults(searchDto, promises);
     }
 
-    //Intersect Sets
     const t0 = performance.now();
-    const queryResults = await Promise.all(promises);
-
-    const allIds: Set<string>[] = [];
-    for (const result of queryResults) {
-      const fileNumbers = new Set<string>();
-      result.forEach((currentValue) => {
-        fileNumbers.add(currentValue.fileNumber);
-      });
-      allIds.push(fileNumbers);
-    }
-
-    const finalResult = intersectSets(allIds);
-
+    const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
     this.logger.debug(
       `ALCS Planning Review pre-search search took ${t1 - t0} milliseconds.`,

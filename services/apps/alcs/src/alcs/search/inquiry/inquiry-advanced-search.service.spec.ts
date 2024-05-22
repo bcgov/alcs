@@ -42,6 +42,7 @@ describe('InquiryAdvancedSearchService', () => {
     pageSize: 10,
     sortField: 'applicant',
     sortDirection: 'ASC',
+    portalStatusCodes: [],
   };
 
   let mockQuery: any = {};
@@ -54,6 +55,11 @@ describe('InquiryAdvancedSearchService', () => {
 
     mockQuery = createMockQuery();
     mockQueryRunner = createMock();
+
+    mockRedisService.getClient.mockReturnValue({
+      get: async () => null,
+      setEx: async () => null,
+    } as any);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

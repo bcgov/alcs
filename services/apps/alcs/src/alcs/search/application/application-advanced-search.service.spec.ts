@@ -130,7 +130,7 @@ describe('ApplicationAdvancedSearchService', () => {
     expect(mockQuery.where).toHaveBeenCalledTimes(2);
   });
 
-  it('should call compileApplicationSearchQuery method correctly', async () => {
+  it('should call searchForFileNumbers method correctly', async () => {
     const searchForFileNumbersSpy = jest
       .spyOn(service as any, 'searchForFileNumbers')
       .mockResolvedValue(new Set(['100000']));

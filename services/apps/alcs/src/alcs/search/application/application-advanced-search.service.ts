@@ -2,17 +2,14 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
-import { Brackets, QueryRunner, Repository } from 'typeorm';
-import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
+import { QueryRunner, Repository } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import {
   getNextDayToPacific,
   getStartOfDayToPacific,
 } from '../../../utils/pacific-date-time-helper';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
-import { intersectSets } from '../../../utils/set-helper';
-import { ApplicationDecisionComponent } from '../../application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
+import { APP_SEARCH_FILTERS } from '../../../utils/search/application-search-filters';
+import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { Application } from '../../application/application.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -121,7 +118,11 @@ export class ApplicationAdvancedSearchService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      this.addFileNumberResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.applicationRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.legacyId) {
@@ -129,11 +130,20 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      this.addPortalStatusResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.governmentName) {
-      await this.addGovernmentResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addGovernmentResults(
+        searchDto,
+        this.applicationRepository,
+        this.governmentRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.regionCode) {
@@ -141,11 +151,19 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.name) {
-      this.addNameResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
-      this.addParcelResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.resolutionNumber || searchDto.resolutionYear) {
@@ -153,7 +171,11 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.fileTypes.length > 0) {
-      this.addFileTypeResults(searchDto, promises);
+      const promise = APP_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.applicationRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.dateSubmittedFrom || searchDto.dateSubmittedTo) {
@@ -164,41 +186,13 @@ export class ApplicationAdvancedSearchService {
       this.addDecisionDateResults(searchDto, promises);
     }
 
-    //Intersect Sets
     const t0 = performance.now();
-    const queryResults = await Promise.all(promises);
-
-    const allIds: Set<string>[] = [];
-    for (const result of queryResults) {
-      const fileNumbers = new Set<string>();
-      result.forEach((currentValue) => {
-        fileNumbers.add(currentValue.fileNumber);
-      });
-      allIds.push(fileNumbers);
-    }
-
-    const finalResult = intersectSets(allIds);
-
+    const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
     this.logger.debug(
       `ALCS Application pre-search search took ${t1 - t0} milliseconds.`,
     );
     return finalResult;
-  }
-
-  private addFileNumberResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.applicationRepository.find({
-      where: {
-        fileNumber: searchDto.fileNumber,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
   }
 
   private addLegacyIDResults(
@@ -208,42 +202,6 @@ export class ApplicationAdvancedSearchService {
     const promise = this.applicationRepository.find({
       where: {
         legacyId: searchDto.legacyId,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
-  }
-
-  private addPortalStatusResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.applicationSubmissionRepository
-      .createQueryBuilder('appSubs')
-      .select('appSubs.fileNumber')
-      .where(
-        "alcs.get_current_status_for_application_submission_by_uuid(appSubs.uuid) ->> 'status_type_code' IN (:...statusCodes)",
-        {
-          statusCodes: searchDto.portalStatusCodes,
-        },
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private async addGovernmentResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const government = await this.governmentRepository.findOneByOrFail({
-      name: searchDto.governmentName,
-    });
-
-    const promise = this.applicationRepository.find({
-      where: {
-        localGovernmentUuid: government.uuid,
       },
       select: {
         fileNumber: true,
@@ -265,73 +223,6 @@ export class ApplicationAdvancedSearchService {
       },
     });
     promises.push(promise);
-  }
-
-  private addNameResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-    const promise = this.applicationSubmissionRepository
-      .createQueryBuilder('appSub')
-      .select('appSub.fileNumber')
-      .leftJoin(
-        ApplicationOwner,
-        'application_owner',
-        'application_owner.application_submission_uuid = appSub.uuid',
-      )
-      .andWhere(
-        new Brackets((qb) =>
-          qb
-            .where(
-              "LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)",
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere('LOWER(application_owner.first_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            })
-            .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            })
-            .orWhere(
-              'LOWER(application_owner.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
-        ),
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private addParcelResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const query = this.applicationSubmissionRepository
-      .createQueryBuilder('appSub')
-      .select('appSub.fileNumber')
-      .leftJoin(
-        ApplicationParcel,
-        'parcel',
-        'parcel.application_submission_uuid = appSub.uuid',
-      );
-
-    if (searchDto.pid) {
-      query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
-    }
-
-    promises.push(query.getMany());
   }
 
   private addDecisionResolutionResults(
@@ -358,36 +249,6 @@ export class ApplicationAdvancedSearchService {
         resolution_year: searchDto.resolutionYear,
       });
     }
-    promises.push(query.getMany());
-  }
-
-  private addFileTypeResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const query = this.applicationRepository
-      .createQueryBuilder('app')
-      .select('app.fileNumber')
-      .leftJoin(
-        ApplicationDecision,
-        'decision',
-        'decision.application_uuid = "app"."uuid" AND decision.is_draft = FALSE',
-      )
-      .leftJoin(
-        ApplicationDecisionComponent,
-        'decisionComponent',
-        'decisionComponent.application_decision_uuid = decision.uuid',
-      )
-      .where('app.type_code IN (:...typeCodes)', {
-        typeCodes: searchDto.fileTypes,
-      })
-      .orWhere(
-        'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
-        {
-          typeCodes: searchDto.fileTypes,
-        },
-      );
-
     promises.push(query.getMany());
   }
 

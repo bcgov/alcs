@@ -2,14 +2,12 @@ import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
-import { Brackets, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { Notification } from '../../../../alcs/notification/notification.entity';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../../utils/search-helper';
-import { intersectSets } from '../../../../utils/set-helper';
-import { NotificationParcel } from '../../../notification-submission/notification-parcel/notification-parcel.entity';
+import { NOTIFICATION_SEARCH_FILTERS } from '../../../../utils/search/notification-search-filters';
+import { processSearchPromises } from '../../../../utils/search/search-intersection';
 import { NotificationSubmission } from '../../../notification-submission/notification-submission.entity';
-import { NotificationTransferee } from '../../../notification-submission/notification-transferee/notification-transferee.entity';
 import {
   AdvancedSearchResultDto,
   SearchRequestDto,
@@ -116,19 +114,36 @@ export class PublicNotificationSearchService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      this.addFileNumberResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.notificationRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      this.addPortalStatusResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.governmentName) {
-      await this.addGovernmentResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addGovernmentResults(
+        searchDto,
+        this.notificationRepository,
+        this.governmentRepository,
+      );
+      promises.push(promise);
     }
 
-    if (searchDto.fileTypes) {
-      this.addFileTypeResults(searchDto, promises);
+    if (searchDto.fileTypes.includes('SRW')) {
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.notificationRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
@@ -136,88 +151,28 @@ export class PublicNotificationSearchService {
     }
 
     if (searchDto.name) {
-      this.addNameResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
-      this.addParcelResults(searchDto, promises);
+      const promise = NOTIFICATION_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
     }
 
-    if (searchDto.pid || searchDto.civicAddress) {
-      this.addParcelResults(searchDto, promises);
-    }
-
-    //Intersect Sets
     const t0 = performance.now();
-    const queryResults = await Promise.all(promises);
-
-    const allIds: Set<string>[] = [];
-    for (const result of queryResults) {
-      const fileNumbers = new Set<string>();
-      result.forEach((currentValue) => {
-        fileNumbers.add(currentValue.fileNumber);
-      });
-      allIds.push(fileNumbers);
-    }
-
-    const finalResult = intersectSets(allIds);
-
+    const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
     this.logger.debug(
       `Notification pre-search search took ${t1 - t0} milliseconds.`,
     );
     return finalResult;
-  }
-
-  private addFileNumberResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.notificationRepository.find({
-      where: {
-        fileNumber: searchDto.fileNumber,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
-  }
-
-  private addPortalStatusResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const promise = this.notificationSubRepository
-      .createQueryBuilder('notiSub')
-      .select('notiSub.fileNumber')
-      .where(
-        "alcs.get_current_status_for_notification_submission_by_uuid(notiSub.uuid) ->> 'status_type_code' IN(:...statusCodes)",
-        {
-          statusCodes: searchDto.portalStatusCodes,
-        },
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private async addGovernmentResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const government = await this.governmentRepository.findOneByOrFail({
-      name: searchDto.governmentName,
-    });
-
-    const promise = this.notificationRepository.find({
-      where: {
-        localGovernmentUuid: government.uuid,
-      },
-      select: {
-        fileNumber: true,
-      },
-    });
-    promises.push(promise);
   }
 
   private addRegionResults(
@@ -233,95 +188,5 @@ export class PublicNotificationSearchService {
       },
     });
     promises.push(promise);
-  }
-
-  private addNameResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-    const promise = this.notificationSubRepository
-      .createQueryBuilder('notiSub')
-      .select('notiSub.fileNumber')
-      .leftJoin(
-        NotificationTransferee,
-        'notification_transferee',
-        'notification_transferee.notification_submission_uuid = notiSub.uuid',
-      )
-      .andWhere(
-        new Brackets((qb) =>
-          qb
-            .where(
-              "LOWER(notification_transferee.first_name || ' ' || notification_transferee.last_name) LIKE ANY (:names)",
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.first_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.last_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
-        ),
-      )
-      .getMany();
-    promises.push(promise);
-  }
-
-  private addParcelResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    let query = this.notificationSubRepository
-      .createQueryBuilder('notiSub')
-      .select('notiSub.fileNumber')
-      .leftJoin(
-        NotificationParcel,
-        'parcel',
-        'parcel.notification_submission_uuid = notiSub.uuid',
-      );
-
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
-    }
-
-    promises.push(query.getMany());
-  }
-
-  private addFileTypeResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    if (searchDto.fileTypes.includes('SRW')) {
-      const query = this.notificationRepository.find({
-        select: {
-          fileNumber: true,
-        },
-      });
-      promises.push(query);
-    }
   }
 }

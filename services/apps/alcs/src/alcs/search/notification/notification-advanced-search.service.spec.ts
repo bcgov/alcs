@@ -123,11 +123,11 @@ describe('NotificationAdvancedSearchService', () => {
     const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(4);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(5);
     expect(
       mockNotificationSubmissionRepo.createQueryBuilder,
     ).toHaveBeenCalledTimes(3);
-    expect(mockNotificationRepo.createQueryBuilder).toHaveBeenCalledTimes(2);
+    expect(mockNotificationRepo.createQueryBuilder).toHaveBeenCalledTimes(1);
     expect(mockNotificationRepo.find).toHaveBeenCalledTimes(3);
   });
 

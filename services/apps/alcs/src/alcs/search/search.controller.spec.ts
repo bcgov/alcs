@@ -163,6 +163,7 @@ describe('SearchController', () => {
       sortDirection: 'ASC',
       name: 'test',
       fileTypes: [],
+      portalStatusCodes: [],
     };
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
@@ -201,6 +202,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: [],
+      portalStatusCodes: [],
     };
 
     const result =
@@ -225,6 +227,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: [],
+      portalStatusCodes: [],
     };
 
     const result =
@@ -247,6 +250,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['NFUP'],
+      portalStatusCodes: [],
     };
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
@@ -270,6 +274,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['NOI'],
+      portalStatusCodes: [],
     };
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
@@ -291,6 +296,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['GENC'],
+      portalStatusCodes: [],
     };
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
@@ -311,6 +317,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['MISC'],
+      portalStatusCodes: [],
     };
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
