@@ -149,6 +149,10 @@ export class PlanningReviewAdvancedSearchService {
       this.addDecisionDateResults(searchDto, promises);
     }
 
+    if (searchDto.legacyId) {
+      this.addLegacyIDResults(searchDto, promises);
+    }
+
     const t0 = performance.now();
     const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
@@ -321,5 +325,20 @@ export class PlanningReviewAdvancedSearchService {
       });
     }
     promises.push(query.getMany());
+  }
+
+  private addLegacyIDResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.planningReviewRepository.find({
+      where: {
+        legacyId: searchDto.legacyId,
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    promises.push(promise);
   }
 }

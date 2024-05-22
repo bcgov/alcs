@@ -143,6 +143,10 @@ export class InquiryAdvancedSearchService {
       this.addFileTypeResults(searchDto, promises);
     }
 
+    if (searchDto.legacyId) {
+      this.addLegacyIDResults(searchDto, promises);
+    }
+
     const t0 = performance.now();
     const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
@@ -294,5 +298,20 @@ export class InquiryAdvancedSearchService {
       );
     }
     promises.push(query.getMany());
+  }
+
+  private addLegacyIDResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.inquiryRepository.find({
+      where: {
+        legacyId: searchDto.legacyId,
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    promises.push(promise);
   }
 }

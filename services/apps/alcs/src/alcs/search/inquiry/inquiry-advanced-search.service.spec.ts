@@ -43,6 +43,7 @@ describe('InquiryAdvancedSearchService', () => {
     sortField: 'applicant',
     sortDirection: 'ASC',
     portalStatusCodes: [],
+    legacyId: 'legacyId',
   };
 
   let mockQuery: any = {};
@@ -112,7 +113,7 @@ describe('InquiryAdvancedSearchService', () => {
     const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockInquiryRepository.find).toHaveBeenCalledTimes(3);
+    expect(mockInquiryRepository.find).toHaveBeenCalledTimes(4);
     expect(mockInquiryRepository.createQueryBuilder).toHaveBeenCalledTimes(4);
     expect(mockQuery.andWhere).toHaveBeenCalledTimes(4);
   });

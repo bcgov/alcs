@@ -385,8 +385,7 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      searchDto.portalStatusCodes.length === 0 &&
-      !isStringSetAndNotEmpty(searchDto.legacyId);
+      searchDto.portalStatusCodes.length === 0;
 
     return {
       searchApplications,
