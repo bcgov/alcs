@@ -50,3 +50,5 @@ exclude_patterns:
   - "**/commands/"
   - "**/import/"
   - "**/*.entity.ts"
+  - "ora2pg/"
+  - "openshift/"
