@@ -45,6 +45,7 @@ describe('InquiryDialogComponent', () => {
       isActive: true,
     },
     fileNumber: 'file-number',
+    legacyId: null,
     dateSubmittedToAlc: 0,
     summary: '',
     localGovernmentUuid: '',

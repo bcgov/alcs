@@ -98,6 +98,9 @@ export class InquiryDto {
   @AutoMap()
   fileNumber: string;
 
+  @AutoMap(() => String)
+  legacyId: string | null;
+
   @AutoMap()
   summary: string;
 
