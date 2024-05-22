@@ -1,5 +1,3 @@
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import {
   BadRequestException,
   Body,
@@ -12,11 +10,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
 import * as path from 'path';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
+import {
+  DOCUMENT_TYPE,
+  DocumentCode,
+} from '../../../document/document-code.entity';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -24,16 +28,18 @@ import {
 } from '../../../document/document.dto';
 import { ApplicationOwnerService } from '../../../portal/application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
-import {
-  DocumentCode,
-  DOCUMENT_TYPE,
-} from '../../../document/document-code.entity';
 import { ApplicationDocumentDto } from './application-document.dto';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
 } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
+
+const TYPES_REQUIRING_DESCRIPTION = [
+  DOCUMENT_TYPE.PHOTOGRAPH,
+  DOCUMENT_TYPE.OTHER,
+  DOCUMENT_TYPE.PROFESSIONAL_REPORT,
+];
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -291,6 +297,16 @@ export class ApplicationDocumentController {
     const documentSource = req.body.source.value as DOCUMENT_SOURCE;
     const visibilityFlags = req.body.visibilityFlags.value.split(', ');
 
+    //Set Default description to prevent issues when returning to Government
+    let description: string | undefined;
+    if (
+      documentSource === DOCUMENT_SOURCE.APPLICANT &&
+      documentType &&
+      TYPES_REQUIRING_DESCRIPTION.includes(documentType)
+    ) {
+      description = 'Added on behalf of applicant';
+    }
+
     return await this.applicationDocumentService.attachDocument({
       fileNumber,
       fileName,
@@ -300,6 +316,7 @@ export class ApplicationDocumentController {
       source: documentSource,
       visibilityFlags,
       system: DOCUMENT_SYSTEM.ALCS,
+      description,
     });
   }
 }
