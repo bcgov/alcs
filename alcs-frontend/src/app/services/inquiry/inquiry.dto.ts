@@ -28,6 +28,7 @@ export interface CreateInquiryDto {
 export interface InquiryDto {
   uuid: string;
   fileNumber: string;
+  legacyId: string | null;
   summary: string;
   open: boolean;
   dateSubmittedToAlc: number;
