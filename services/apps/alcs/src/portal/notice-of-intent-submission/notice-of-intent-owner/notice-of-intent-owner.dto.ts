@@ -8,8 +8,8 @@ import {
 } from 'class-validator';
 import { NoticeOfIntentDocumentDto } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.dto';
 import {
-  OwnerTypeDto,
   OWNER_TYPE,
+  OwnerTypeDto,
 } from '../../../common/owner-type/owner-type.entity';
 import { emailRegex } from '../../../utils/email.helper';
 import { NoticeOfIntentParcelDto } from '../notice-of-intent-parcel/notice-of-intent-parcel.dto';
@@ -66,7 +66,7 @@ export class NoticeOfIntentOwnerUpdateDto {
 
   @IsString()
   @IsOptional()
-  organizationName?: string;
+  organizationName?: string | null;
 
   @IsString()
   @IsOptional()
@@ -75,7 +75,7 @@ export class NoticeOfIntentOwnerUpdateDto {
   @Matches(emailRegex)
   @IsOptional()
   email?: string;
-  
+
   @IsString()
   @IsOptional()
   crownLandOwnerType?: string;
@@ -86,7 +86,7 @@ export class NoticeOfIntentOwnerUpdateDto {
 
   @IsUUID()
   @IsOptional()
-  corporateSummaryUuid?: string;
+  corporateSummaryUuid?: string | null;
 }
 
 export class NoticeOfIntentOwnerCreateDto extends NoticeOfIntentOwnerUpdateDto {
@@ -125,7 +125,7 @@ export class SetPrimaryContactDto {
 
   @IsString()
   noticeOfIntentSubmissionUuid: string;
-  
+
   @IsString()
   @IsOptional()
   crownLandOwnerType?: string;

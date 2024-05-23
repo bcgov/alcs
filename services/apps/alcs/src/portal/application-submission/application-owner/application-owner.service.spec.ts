@@ -170,9 +170,11 @@ describe('ApplicationOwnerService', () => {
       corporateSummaryUuid: 'oldUuid',
       corporateSummary: new ApplicationDocument(),
     });
+    const mockDocument = new ApplicationDocument();
     mockRepo.findOneOrFail.mockResolvedValue(owner);
     mockRepo.save.mockResolvedValue(new ApplicationOwner());
     mockAppDocumentService.delete.mockResolvedValue({} as any);
+    mockAppDocumentService.get.mockResolvedValue(mockDocument);
 
     await service.update('', {
       organizationName: '',
@@ -182,10 +184,10 @@ describe('ApplicationOwnerService', () => {
       corporateSummaryUuid: 'newUuid',
     });
 
-    expect(owner.corporateSummaryUuid).toEqual('newUuid');
+    expect(owner.corporateSummary).toBe(mockDocument);
     expect(mockAppDocumentService.delete).toHaveBeenCalledTimes(1);
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepo.save).toHaveBeenCalledTimes(2);
+    expect(mockRepo.save).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {

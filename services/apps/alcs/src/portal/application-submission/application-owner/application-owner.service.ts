@@ -138,22 +138,30 @@ export class ApplicationOwnerService {
       });
     }
 
-    //If attaching new document and old one was defined, delete it
+    //If null or new document, delete old one
     if (
-      updateDto.corporateSummaryUuid &&
+      updateDto.corporateSummaryUuid !== undefined &&
       existingOwner.corporateSummaryUuid !== updateDto.corporateSummaryUuid &&
       existingOwner.corporateSummary
     ) {
-      const oldSummary = existingOwner.corporateSummary;
+      await this.applicationDocumentService.delete(
+        existingOwner.corporateSummary,
+      );
       existingOwner.corporateSummary = null;
-      await this.repository.save(existingOwner);
-      await this.applicationDocumentService.delete(oldSummary);
+      existingOwner.corporateSummaryUuid = null;
     }
 
-    existingOwner.corporateSummaryUuid =
-      updateDto.corporateSummaryUuid !== undefined
-        ? updateDto.corporateSummaryUuid
-        : existingOwner.corporateSummaryUuid;
+    //Attach new one
+    if (
+      updateDto.corporateSummaryUuid &&
+      updateDto.corporateSummaryUuid !== existingOwner.corporateSummaryUuid
+    ) {
+      const newSummary = await this.applicationDocumentService.get(
+        updateDto.corporateSummaryUuid,
+      );
+      existingOwner.corporateSummary = newSummary;
+      existingOwner.corporateSummaryUuid = newSummary.uuid;
+    }
 
     existingOwner.organizationName =
       updateDto.organizationName !== undefined
