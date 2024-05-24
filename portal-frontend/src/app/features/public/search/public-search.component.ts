@@ -209,6 +209,9 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     // push tab activation to next render cycle, after the tabGroup is rendered
     setTimeout(() => {
       this.setActiveTab();
+      setTimeout(() => {
+        scrollToElement({ id: `results`, center: false });
+      });
     });
   }
 
