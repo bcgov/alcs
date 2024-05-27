@@ -105,7 +105,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         localGovernmentUuid: $event,
       });
       if (update) {
-        this.toastService.showSuccessToast('Notice of Intent updated');
+        this.toastService.showSuccessToast('Planning Review updated');
       }
     }
   }
@@ -116,7 +116,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         regionCode: $event,
       });
       if (update) {
-        this.toastService.showSuccessToast('Notice of Intent updated');
+        this.toastService.showSuccessToast('Planning Review updated');
       }
     }
   }
