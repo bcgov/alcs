@@ -1,9 +1,9 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { IConfig } from 'config';
 import { FindOptionsRelations, Not, Repository } from 'typeorm';
 import { User } from '../../user/user.entity';
@@ -66,6 +66,11 @@ export class CardService {
           assignee: true,
         },
       },
+      order: {
+        subtasks: {
+          createdAt: 'ASC',
+        },
+      },
     });
   }
 
@@ -78,6 +83,11 @@ export class CardService {
         subtasks: {
           type: true,
           assignee: true,
+        },
+      },
+      order: {
+        subtasks: {
+          createdAt: 'ASC',
         },
       },
     });

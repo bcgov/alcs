@@ -404,6 +404,7 @@ export class ApplicationSubmissionService {
         order: {
           auditUpdatedAt: 'DESC',
           owners: {
+            firstName: 'ASC',
             parcels: {
               purchasedDate: 'ASC',
             },
@@ -478,6 +479,7 @@ export class ApplicationSubmissionService {
         order: {
           auditUpdatedAt: 'DESC',
           owners: {
+            firstName: 'ASC',
             parcels: {
               purchasedDate: 'ASC',
             },
