@@ -20,6 +20,7 @@ describe('InboxNoticeOfIntentService', () => {
   let mockRedisService: DeepMocked<RedisService>;
 
   const mockSearchDto: InboxRequestDto = {
+    fileNumber: '100000',
     portalStatusCodes: ['A'],
     governmentFileNumber: 'B',
     name: 'D',
@@ -88,7 +89,7 @@ describe('InboxNoticeOfIntentService', () => {
     );
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockNOIRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockNOIRepository.find).toHaveBeenCalledTimes(2);
     expect(mockNOISubRepository.createQueryBuilder).toHaveBeenCalledTimes(3);
     expect(mockQuery.andWhere).toHaveBeenCalledTimes(3);
   });

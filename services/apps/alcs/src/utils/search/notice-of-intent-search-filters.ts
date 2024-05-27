@@ -10,7 +10,7 @@ import { formatStringToPostgresSearchStringArrayWithWildCard } from '../search-h
 
 export const NOI_SEARCH_FILTERS = {
   addFileNumberResults: (
-    searchDto: SearchRequestDto,
+    searchDto: SearchRequestDto | InboxRequestDto,
     noiRepository: Repository<NoticeOfIntent>,
   ) => {
     return noiRepository.find({

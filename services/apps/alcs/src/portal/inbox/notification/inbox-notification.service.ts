@@ -123,6 +123,15 @@ export class InboxNotificationService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
     let didSearch = false;
 
+    if (searchDto.fileNumber) {
+      didSearch = true;
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.notificationRepository,
+      );
+      promises.push(promise);
+    }
+
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       didSearch = true;
       const promise = NOTIFICATION_SEARCH_FILTERS.addPortalStatusResults(

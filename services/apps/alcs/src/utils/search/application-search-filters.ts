@@ -12,7 +12,7 @@ import { formatStringToPostgresSearchStringArrayWithWildCard } from '../search-h
 
 export const APP_SEARCH_FILTERS = {
   addFileNumberResults: (
-    searchDto: SearchRequestDto,
+    searchDto: SearchRequestDto | InboxRequestDto,
     applicationRepository: Repository<Application>,
   ) => {
     return applicationRepository.find({

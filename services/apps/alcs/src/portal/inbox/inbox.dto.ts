@@ -53,6 +53,10 @@ export class InboxRequestDto {
 
   @IsString()
   @IsOptional()
+  fileNumber?: string;
+
+  @IsString()
+  @IsOptional()
   governmentFileNumber?: string;
 
   @IsString()

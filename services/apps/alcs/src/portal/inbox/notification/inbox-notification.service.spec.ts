@@ -22,6 +22,7 @@ describe('InboxNotificationService', () => {
   let mockRedisService: DeepMocked<RedisService>;
 
   const mockSearchDto: InboxRequestDto = {
+    fileNumber: '100000',
     portalStatusCodes: ['A'],
     governmentFileNumber: 'B',
     name: 'D',
@@ -85,7 +86,7 @@ describe('InboxNotificationService', () => {
     const result = await service.search(mockSearchDto, '', '', '');
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockNotificationRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockNotificationRepository.find).toHaveBeenCalledTimes(2);
     expect(
       mockNotificationSubmissionRepository.createQueryBuilder,
     ).toHaveBeenCalledTimes(3);

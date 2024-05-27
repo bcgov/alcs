@@ -26,6 +26,7 @@ describe('InboxApplicationService', () => {
   >;
 
   const mockSearchRequestDto: InboxRequestDto = {
+    fileNumber: '100000',
     portalStatusCodes: ['A'],
     name: 'D',
     pid: 'E',
@@ -85,6 +86,7 @@ describe('InboxApplicationService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
+    mockApplicationRepository.find.mockResolvedValue([]);
     mockApplicationRepository.createQueryBuilder.mockReturnValue(mockQuery);
     mockApplicationSubmissionRepository.createQueryBuilder.mockReturnValue(
       mockQuery,
@@ -98,6 +100,7 @@ describe('InboxApplicationService', () => {
     );
 
     expect(result).toEqual({ data: [], total: 0 });
+    expect(mockApplicationRepository.find).toHaveBeenCalledTimes(1);
     expect(mockApplicationRepository.createQueryBuilder).toHaveBeenCalledTimes(
       1,
     );
