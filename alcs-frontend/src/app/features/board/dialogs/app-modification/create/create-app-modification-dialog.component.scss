@@ -1,9 +1,5 @@
 @use '../../../../../../styles/colors';
 
-.content {
-  padding: 0 16px;
-}
-
 .two-item-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -65,4 +61,14 @@ mat-dialog-actions {
     color: colors.$secondary-color-dark;
     margin-right: 16px;
   }
+}
+
+mat-dialog-content {
+  padding-top: 6px !important; /* Prevent labels being cut off */
+  padding-bottom: 0 !important;
+}
+
+mat-dialog-actions {
+  padding-inline: 24px;
+  padding-bottom: 24px;
 }
