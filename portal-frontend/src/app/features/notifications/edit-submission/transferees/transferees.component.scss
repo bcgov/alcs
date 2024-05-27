@@ -7,6 +7,10 @@
   padding: rem(8);
 }
 
+.no-data-text {
+  color: colors.$grey-dark;
+}
+
 .actions-cell {
   button:not(:last-child) {
     margin-right: rem(12) !important;

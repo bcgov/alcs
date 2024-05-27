@@ -156,7 +156,7 @@
           </div>
           <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-organization'">
             <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
-            <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
+            <div *ngIf="!owner.organizationName" class="no-data-text">Not Applicable</div>
           </div>
           <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-phone-number'">
             {{ owner.phoneNumber ?? '' | mask: '(000) 000-0000' }}
@@ -166,8 +166,8 @@
           </div>
           <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-corporate-summary'">
             <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary)">{{
-              owner.corporateSummary.fileName
-            }}</a>
+                owner.corporateSummary.fileName
+              }}</a>
             <div class="no-data" *ngIf="!owner.corporateSummary">
               <div class="no-data-text">Not Applicable</div>
             </div>
