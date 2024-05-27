@@ -221,7 +221,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onReset() {
-    this.searchForm.reset();
+    this.searchForm.reset({
+      portalStatus: [],
+    });
 
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();

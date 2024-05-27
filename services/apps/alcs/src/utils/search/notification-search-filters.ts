@@ -10,7 +10,7 @@ import { formatStringToPostgresSearchStringArrayWithWildCard } from '../search-h
 
 export const NOTIFICATION_SEARCH_FILTERS = {
   addFileNumberResults: (
-    searchDto: SearchRequestDto,
+    searchDto: SearchRequestDto | InboxRequestDto,
     notificationRepository: Repository<Notification>,
   ) => {
     return notificationRepository.find({

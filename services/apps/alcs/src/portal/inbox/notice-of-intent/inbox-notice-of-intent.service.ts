@@ -119,6 +119,15 @@ export class InboxNoticeOfIntentService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
     let didSearch = false;
 
+    if (searchDto.fileNumber) {
+      didSearch = true;
+      const promise = NOI_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.noiRepository,
+      );
+      promises.push(promise);
+    }
+
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       didSearch = true;
       const promise = NOI_SEARCH_FILTERS.addPortalStatusResults(
