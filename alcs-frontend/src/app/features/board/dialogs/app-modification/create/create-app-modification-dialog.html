@@ -37,12 +37,6 @@
             (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
           "
         />
-        <mat-error
-          class="text-danger"
-          *ngIf="createForm.get('applicant')!.touched && createForm.get('applicant')!.hasError('required')"
-        >
-          This field is required.
-        </mat-error>
       </mat-form-field>
       <div>
         <ng-select
