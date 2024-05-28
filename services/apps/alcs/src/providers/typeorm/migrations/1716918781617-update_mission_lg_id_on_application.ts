@@ -47,7 +47,6 @@ export class UpdateMissionLgIdOnApplication1716918781617
             WHERE 
                 a.local_government_uuid IS NULL 
                 AND as2.local_government_uuid IS NOT NULL 
-                AND a.audit_updated_by IS NULL
         )`;
 
     await queryRunner.query(`
