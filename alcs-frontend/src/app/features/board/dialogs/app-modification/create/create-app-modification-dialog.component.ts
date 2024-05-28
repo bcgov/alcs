@@ -20,7 +20,6 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
   applicationTypes: ApplicationTypeDto[] = [];
   isLoading = false;
   isDecisionDateEmpty = false;
-  currentBoardCode: string = '';
 
   decisions: { uuid: string; resolution: string }[] = [];
 
@@ -58,8 +57,6 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentBoardCode = this.data.currentBoardCode;
-
     this.createForm.patchValue({
       fileNumber: this.data.fileNumber,
       applicant: this.data.applicant,
