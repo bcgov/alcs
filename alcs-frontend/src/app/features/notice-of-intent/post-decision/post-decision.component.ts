@@ -55,18 +55,25 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   }
 
   onCreateModification() {
-    this.dialog.open(CreateNoiModificationDialogComponent, {
-      minWidth: '600px',
-      maxWidth: '1100px',
-      maxHeight: '80vh',
-      width: '90%',
-      data: {
-        fileNumber: this.fileNumber,
-        applicant: this.applicant,
-        localGovernment: this.localGovernment,
-        region: this.region,
-      },
-    });
+    this.dialog
+      .open(CreateNoiModificationDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '1100px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: {
+          fileNumber: this.fileNumber,
+          applicant: this.applicant,
+          localGovernment: this.localGovernment,
+          region: this.region,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (answer) => {
+        if (answer) {
+          await this.modificationService.fetchByFileNumber(this.fileNumber);
+        }
+      });
   }
 
   onEditModification(modification: NoticeOfIntentModificationDto) {

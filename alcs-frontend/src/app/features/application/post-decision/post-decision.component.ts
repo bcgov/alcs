@@ -111,33 +111,47 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   }
 
   onCreateReconsideration() {
-    const dialog = this.dialog.open(CreateReconsiderationDialogComponent, {
-      minWidth: '600px',
-      maxWidth: '1100px',
-      maxHeight: '80vh',
-      width: '90%',
-      data: {
-        fileNumber: this.fileNumber,
-        applicant: this.applicant,
-        localGovernment: this.localGovernment,
-        region: this.region,
-      },
-    });
+    this.dialog
+      .open(CreateReconsiderationDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '1100px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: {
+          fileNumber: this.fileNumber,
+          applicant: this.applicant,
+          localGovernment: this.localGovernment,
+          region: this.region,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (answer) => {
+        if (answer) {
+          await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
+        }
+      });
   }
 
   onCreateModification() {
-    const dialog = this.dialog.open(CreateAppModificationDialogComponent, {
-      minWidth: '600px',
-      maxWidth: '1100px',
-      maxHeight: '80vh',
-      width: '90%',
-      data: {
-        fileNumber: this.fileNumber,
-        applicant: this.applicant,
-        localGovernment: this.localGovernment,
-        region: this.region,
-      },
-    });
+    this.dialog
+      .open(CreateAppModificationDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '1100px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: {
+          fileNumber: this.fileNumber,
+          applicant: this.applicant,
+          localGovernment: this.localGovernment,
+          region: this.region,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (answer) => {
+        if (answer) {
+          await this.modificationService.fetchByApplication(this.fileNumber);
+        }
+      });
   }
 
   onEditModification(modification: ApplicationModificationDto) {
