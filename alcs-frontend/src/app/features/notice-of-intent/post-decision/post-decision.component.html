@@ -1,6 +1,9 @@
 <h3>Post-Decision</h3>
 
-<h5 id="modifications" class="post-decision-header">Modification Requests</h5>
+<h5 id="modifications" class="post-decision-header">
+  Modification Requests
+  <button mat-flat-button color="primary" (click)="onCreateModification()">+ Modification</button>
+</h5>
 
 <section class="no-decisions" *ngIf="!modifications.length">
   <div>No Requests</div>

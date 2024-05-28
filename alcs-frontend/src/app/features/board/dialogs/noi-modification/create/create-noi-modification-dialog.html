@@ -9,9 +9,7 @@
         <input
           id="fileNumber"
           matInput
-          placeholder="791262"
           formControlName="fileNumber"
-          [matAutocomplete]="auto"
           [class.valid]="
             createForm.get('fileNumber')!.valid &&
             (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
@@ -21,23 +19,6 @@
             (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
           "
         />
-
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="autocompleteDisplay">
-          <mat-option
-            *ngFor="let option of filteredNOIs | async"
-            [value]="option"
-            (onSelectionChange)="onNOISelected($event)"
-          >
-            {{ option.fileNumber }}
-          </mat-option>
-        </mat-autocomplete>
-
-        <mat-error
-          class="text-danger"
-          *ngIf="createForm.get('fileNumber')!.touched && createForm.get('fileNumber')!.hasError('required')"
-        >
-          This field is required.
-        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Applicant Name</mat-label>
@@ -55,45 +36,38 @@
             (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
           "
         />
-        <mat-error
-          class="text-danger"
-          *ngIf="createForm.get('applicant')!.touched && createForm.get('applicant')!.hasError('required')"
-        >
-          This field is required.
-        </mat-error>
       </mat-form-field>
-      <div>
-        <ng-select
-          appearance="outline"
-          class="card-local-government"
-          [items]="localGovernments"
-          appendTo="body"
-          placeholder="Local Government *"
-          bindLabel="name"
-          bindValue="uuid"
-          [clearable]="false"
+      <mat-form-field appearance="outline">
+        <mat-label>Local/First Nation Government</mat-label>
+        <input
+          id="localGovernment"
+          matInput
           formControlName="localGovernment"
-          (change)="onSelectGovernment($event)"
-        >
-          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
-            <div [ngOptionHighlight]="search">{{ item.name }}</div>
-          </ng-template>
-        </ng-select>
-      </div>
-      <div>
-        <ng-select
-          appearance="outline"
-          class="card-region"
-          [items]="regions"
-          appendTo="body"
-          placeholder="Region *"
-          bindLabel="label"
-          bindValue="code"
-          [clearable]="false"
+          [class.valid]="
+            createForm.get('localGovernment')!.valid &&
+            (createForm.get('localGovernment')!.dirty || createForm.get('localGovernment')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('localGovernment')!.invalid &&
+            (createForm.get('localGovernment')!.dirty || createForm.get('localGovernment')!.touched)
+          "
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Region</mat-label>
+        <input
+          matInput
           formControlName="region"
-        >
-        </ng-select>
-      </div>
+          [class.valid]="
+            createForm.get('region')!.valid &&
+            (createForm.get('region')!.dirty || createForm.get('region')!.touched)
+          "
+          [class.invalid]="
+            createForm.get('region')!.invalid &&
+            (createForm.get('region')!.dirty || createForm.get('region')!.touched)
+          "
+        />
+      </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Resolutions to be Modified</mat-label>
         <mat-select [formControl]="modifiesDecisions" multiple>
@@ -150,7 +124,7 @@
 
   <mat-dialog-actions>
     <div>
-      <button type="reset" class="button-container" (click)="onReset()" mat-stroked-button color="primary">
+      <button type="reset" class="button-container" (click)="onReset($event)" mat-stroked-button color="primary">
         Reset
       </button>
     </div>
