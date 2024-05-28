@@ -10,7 +10,9 @@ export interface BaseInboxResultDto {
 }
 
 export interface ApplicationInboxResultDto extends BaseInboxResultDto {}
+
 export interface NoticeOfIntentInboxResultDto extends BaseInboxResultDto {}
+
 export interface NotificationInboxResultDto extends BaseInboxResultDto {}
 
 export interface InboxSearchResponseDto {
@@ -41,4 +43,5 @@ export interface InboxRequestDto extends PagingRequestDto {
   governmentFileNumber?: string;
   fileTypes: string[];
   filterBy?: string;
+  createdByMe: boolean;
 }

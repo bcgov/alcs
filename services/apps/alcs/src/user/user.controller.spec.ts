@@ -1,15 +1,15 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
-import { LocalGovernment } from '../alcs/local-government/local-government.entity';
-import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
   initMockUserDto,
   initUserMockEntity,
 } from '../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../test/mocks/mockTypes';
+import { LocalGovernment } from '../alcs/local-government/local-government.entity';
+import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { UserController } from './user.controller';
 import { UserDto } from './user.dto';
 import { User } from './user.entity';
@@ -80,6 +80,7 @@ describe('UserController', () => {
       },
       isFirstNationGovernment: false,
       isLocalGovernment: false,
+      isBusiness: false,
     };
 
     controller = module.get<UserController>(UserController);
