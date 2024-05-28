@@ -1,23 +1,21 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
+import { Subject, takeUntil } from 'rxjs';
+import { ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import {
   CreateApplicationReconsiderationDto,
   ReconsiderationTypeDto,
 } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { CardService } from '../../../../../services/card/card.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
+import { MinimalBoardDto } from 'src/app/services/board/board.dto';
+import { BoardService } from 'src/app/services/board/board.service';
 
 @Component({
   selector: 'app-create',
@@ -27,23 +25,21 @@ import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper
 export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
-  regions: ApplicationRegionDto[] = [];
+  boards: MinimalBoardDto[] = [];
   reconTypes: ReconsiderationTypeDto[] = [];
-  localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading = false;
   isDecisionDateEmpty = false;
-  currentBoardCode: string = '';
 
   decisions: { uuid: string; resolution: string }[] = [];
-  filteredApplications: Observable<ApplicationDto[]> | undefined;
 
-  fileNumberControl = new FormControl<string | any>('', [Validators.required]);
-  applicantControl = new FormControl('', [Validators.required]);
+  fileNumberControl = new FormControl<string | any>({ value: '', disabled: true }, [Validators.required]);
+  applicantControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
   applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
-  regionControl = new FormControl<string | null>(null, [Validators.required]);
+  boardControl = new FormControl<string | null>(null, [Validators.required]);
+  regionControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   reconTypeControl = new FormControl<string | null>(null, [Validators.required]);
-  localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
+  localGovernmentControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   reconsidersDecisions = new FormControl<string[]>([], [Validators.required]);
   descriptionControl = new FormControl<string | null>('', [Validators.required]);
   isNewProposalControl = new FormControl<string | undefined>(undefined, [Validators.required]);
@@ -51,11 +47,12 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   isNewEvidenceControl = new FormControl<string | undefined>(undefined, [Validators.required]);
 
   createForm: FormGroup = new FormGroup({
-    applicationType: this.applicationTypeControl,
     fileNumber: this.fileNumberControl,
     applicant: this.applicantControl,
     region: this.regionControl,
     localGovernment: this.localGovernmentControl,
+    applicationType: this.applicationTypeControl,
+    board: this.boardControl,
     submittedDate: this.submittedDateControl,
     reconType: this.reconTypeControl,
     reconsidersDecisions: this.reconsidersDecisions,
@@ -69,9 +66,9 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<CreateReconsiderationDialogComponent>,
     private applicationService: ApplicationService,
+    private boardService: BoardService,
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
     private toastService: ToastService,
     private decisionService: ApplicationDecisionV2Service,
     private router: Router,
@@ -79,70 +76,37 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentBoardCode = this.data.currentBoardCode;
-    this.cardService.fetchCodes();
+    this.createForm.patchValue({
+      fileNumber: this.data.fileNumber,
+      applicant: this.data.applicant,
+      localGovernment: this.data.localGovernment.name,
+      region: this.data.region.label,
+    });
+
+    this.applicationService.fetchApplication(this.data.fileNumber).then((application) => {
+      if (!application.decisionDate) {
+        this.isDecisionDateEmpty = true;
+      }
+    });
+
     this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
       this.applicationTypes = types;
     });
 
-    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
-      this.regions = regions;
+    this.boardService.$boards.subscribe((boards) => {
+      this.boards = boards.sort((a, b) => (a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1));
     });
 
+    this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
+      this.applicationTypes = types;
+    });
+
+    this.cardService.fetchCodes();
     this.cardService.$cardReconTypes.pipe(takeUntil(this.$destroy)).subscribe((reconTypes) => {
       this.reconTypes = reconTypes;
     });
 
-    this.localGovernmentService.list().then((res) => {
-      this.localGovernments = res;
-    });
-
-    this.initApplicationFileNumberAutocomplete();
-  }
-
-  initApplicationFileNumberAutocomplete() {
-    this.filteredApplications = this.fileNumberControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((val) => {
-        if (val && val.length > 1) {
-          return this.applicationService.searchApplicationsByNumber(val);
-        }
-        return [];
-      }),
-    );
-  }
-
-  autocompleteDisplay(application: ApplicationDto): string {
-    return application?.fileNumber ?? '';
-  }
-
-  async onApplicationSelected($event: MatOptionSelectionChange) {
-    if (!$event?.source?.value) {
-      return;
-    }
-
-    const application = $event.source.value as ApplicationDto;
-
-    this.fileNumberControl.disable();
-    this.applicantControl.disable();
-    this.regionControl.disable();
-    this.applicationTypeControl.disable();
-    this.localGovernmentControl.disable();
-
-    await this.loadDecisions(application.fileNumber);
-
-    this.createForm.patchValue({
-      applicant: application.applicant,
-      region: application.region?.code,
-      applicationType: application.type.code,
-      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment?.uuid)?.uuid ?? null,
-    });
-
-    if (!application.decisionDate) {
-      this.isDecisionDateEmpty = true;
-    }
+    this.loadDecisions(this.data.fileNumber);
   }
 
   async onSubmit() {
@@ -160,7 +124,7 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
         submittedDate: formValues.submittedDate!,
         reconTypeCode: formValues.reconType!,
         // card details
-        boardCode: this.currentBoardCode,
+        boardCode: formValues.board,
         reconsideredDecisionUuids: formValues.reconsidersDecisions!,
         description: formValues.description,
         isNewProposal: parseStringToBoolean(formValues.isNewProposal),
@@ -187,11 +151,11 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  onReset() {
-    this.fileNumberControl.reset();
-    this.applicantControl.reset();
-    this.regionControl.reset();
+  onReset(event: MouseEvent) {
+    event.preventDefault();
+
     this.applicationTypeControl.reset();
+    this.boardControl.reset();
     this.submittedDateControl.reset();
     this.reconTypeControl.reset();
     this.reconsidersDecisions.reset();
@@ -199,22 +163,6 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     this.isIncorrectFalseInfoControl.reset();
     this.isNewEvidenceControl.reset();
     this.isNewProposalControl.reset();
-
-    this.fileNumberControl.enable();
-    this.applicantControl.enable();
-    this.regionControl.enable();
-    this.applicationTypeControl.enable();
-    this.localGovernmentControl.enable();
-    this.reconsidersDecisions.disable();
-
-    // clear warnings
-    this.isDecisionDateEmpty = false;
-  }
-
-  onSelectGovernment(value: ApplicationLocalGovernmentDto) {
-    this.createForm.patchValue({
-      region: value.preferredRegionCode,
-    });
   }
 
   async loadDecisions(fileNumber: string) {

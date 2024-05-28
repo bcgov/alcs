@@ -5,7 +5,10 @@
   <a (click)="goToRecons()">Reconsideration Requests</a> | <a (click)="goToModifications()">Modification Requests</a>
 </div>
 
-<h5 id="recons" class="post-decision-header">Reconsideration Requests</h5>
+<h5 id="recons" class="post-decision-header">
+  Reconsideration Requests
+  <button mat-flat-button color="primary" (click)="onCreateReconsideration()">+ Reconsideration</button>
+</h5>
 
 <section class="no-decisions" *ngIf="!reconsiderations.length">
   <div>No Reconsiderations</div>

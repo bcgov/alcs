@@ -15,6 +15,7 @@ import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialo
 import { CreateAppModificationDialogComponent } from '../../board/dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationLocalGovernmentDto } from 'src/app/services/application/application-local-government/application-local-government.dto';
 import { ApplicationRegionDto } from 'src/app/services/application/application-code.dto';
+import { CreateReconsiderationDialogComponent } from '../../board/dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 
 type LoadingReconsiderations = ApplicationReconsiderationDetailedDto & {
   reconsidersDecisionsNumbers: string[];
@@ -107,6 +108,21 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
           this.applicationDetailService.loadApplication(this.fileNumber);
         }
       });
+  }
+
+  onCreateReconsideration() {
+    const dialog = this.dialog.open(CreateReconsiderationDialogComponent, {
+      minWidth: '600px',
+      maxWidth: '1100px',
+      maxHeight: '80vh',
+      width: '90%',
+      data: {
+        fileNumber: this.fileNumber,
+        applicant: this.applicant,
+        localGovernment: this.localGovernment,
+        region: this.region,
+      },
+    });
   }
 
   onCreateModification() {
