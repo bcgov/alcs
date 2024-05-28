@@ -6,7 +6,6 @@ import {
   ViewColumn,
   ViewEntity,
 } from 'typeorm';
-import { LocalGovernment } from '../../../alcs/local-government/local-government.entity';
 import { NotificationType } from '../../../alcs/notification/notification-type/notification-type.entity';
 import { Notification } from '../../../alcs/notification/notification.entity';
 import { User } from '../../../user/user.entity';
@@ -42,11 +41,6 @@ import { LinkedStatusType } from '../inbox.dto';
         NotificationType,
         'notificationType',
         'noti_sub.type_code = notificationType.code',
-      )
-      .leftJoin(
-        LocalGovernment,
-        'localGovernment',
-        'noti.local_government_uuid = localGovernment.uuid',
       ),
 })
 export class InboxNotificationSubmissionView {

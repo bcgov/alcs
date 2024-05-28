@@ -151,6 +151,7 @@ export class ApplicationSubmissionController {
         parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: true,
+        ccEmails: [],
       });
     }
 

@@ -55,6 +55,7 @@ describe('NotificationDialogComponent', () => {
       name: 'Local Government',
       preferredRegionCode: 'FAKE_CODE',
       isFirstNation: false,
+      isActive: true,
     },
     summary: 'MOCK SUMMARY',
     dateSubmittedToAlc: Date.now(),

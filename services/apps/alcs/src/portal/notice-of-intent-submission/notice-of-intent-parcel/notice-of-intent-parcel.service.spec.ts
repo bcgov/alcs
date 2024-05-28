@@ -70,7 +70,12 @@ describe('NoticeOfIntentParcelService', () => {
           isDraft: false,
         },
       },
-      order: { auditCreatedAt: 'ASC' },
+      order: {
+        auditCreatedAt: 'ASC',
+        owners: {
+          firstName: 'ASC',
+        },
+      },
       relations: {
         certificateOfTitle: { document: true },
         owners: {

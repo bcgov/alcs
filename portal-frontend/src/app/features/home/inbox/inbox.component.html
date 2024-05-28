@@ -13,28 +13,58 @@
 
     <mat-expansion-panel #panel>
       <mat-expansion-panel-header class="search-toggle">
-        <mat-panel-title>{{ panel.expanded ? 'Less' : 'More' }} Search Options </mat-panel-title>
+        <mat-panel-title>{{ panel.expanded ? 'Less' : 'More' }} Search Options</mat-panel-title>
       </mat-expansion-panel-header>
       <div class="search-form">
         <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
           <mat-label for="filterBy">Filter By</mat-label>
           <mat-form-field appearance="outline">
-            <mat-select id="filterBy" formControlName="filterBy">
+            <mat-select id="filterBy" [formControl]="filterBy">
               <mat-option value="created">Created By {{ profile.government }}</mat-option>
               <mat-option value="submitted">Submitted To {{ profile.government }}</mat-option>
             </mat-select>
+            <button
+              class="clear-button"
+              *ngIf="filterBy.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="filterBy.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
         </div>
         <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
           <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
           <mat-form-field appearance="outline">
-            <input id="governmentFileNumber" matInput formControlName="governmentFileNumber" />
+            <input id="governmentFileNumber" matInput [formControl]="governmentFileNumber" />
+            <button
+              class="clear-button"
+              *ngIf="governmentFileNumber.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="governmentFileNumber.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
         </div>
         <div>
           <label for="name">Name</label>
           <mat-form-field appearance="outline">
-            <input id="name" matInput formControlName="name" minlength="3" />
+            <input id="name" matInput [formControl]="nameControl" minlength="3" />
+            <button
+              class="clear-button"
+              *ngIf="nameControl.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="nameControl.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
           <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
             <mat-icon>warning</mat-icon>
@@ -44,7 +74,17 @@
         <div>
           <label for="pid">PID</label>
           <mat-form-field appearance="outline">
-            <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
+            <input id="pid" matInput [formControl]="pidControl" minlength="9" maxlength="12" mask="000-000-000" />
+            <button
+              class="clear-button"
+              *ngIf="pidControl.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="pidControl.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
           <div *ngIf="pidInvalid" class="field-error">
             <mat-icon>warning</mat-icon>
@@ -58,7 +98,17 @@
         >
           <label for="civicAddress">Civic Address</label>
           <mat-form-field appearance="outline">
-            <input id="civicAddress" matInput formControlName="civicAddress" minlength="3" />
+            <input id="civicAddress" matInput [formControl]="civicAddressControl" minlength="3" />
+            <button
+              class="clear-button"
+              *ngIf="civicAddressControl.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="civicAddressControl.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
           <div *ngIf="civicAddressInvalid" class="field-error">
             <mat-icon>warning</mat-icon>
@@ -81,12 +131,32 @@
                 {{ status.label }}
               </mat-option>
             </mat-select>
+            <button
+              class="clear-button"
+              *ngIf="portalStatusControl.value?.length"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="portalStatusControl.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
         </div>
         <div *ngIf="profile && !profile.isFirstNationGovernment && !profile.isLocalGovernment">
           <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
           <mat-form-field appearance="outline">
-            <input id="governmentFileNumber" matInput formControlName="governmentFileNumber" />
+            <input id="governmentFileNumber" matInput [formControl]="governmentFileNumber" />
+            <button
+              class="clear-button"
+              *ngIf="governmentFileNumber.value"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="governmentFileNumber.reset()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </mat-form-field>
         </div>
       </div>
@@ -102,9 +172,15 @@
     <div *ngIf="isLoading" class="center">
       <mat-spinner></mat-spinner>
     </div>
-    <mat-tab-group [selectedIndex]="tabIndex" *ngIf="!isLoading" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
+    <mat-tab-group
+      [selectedIndex]="tabIndex"
+      *ngIf="!isLoading"
+      mat-align-tabs="start"
+      mat-stretch-tabs
+      #searchResultTabs
+    >
       <mat-tab label="applications">
-        <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
+        <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
         <app-inbox-list
           *ngIf="isMobile"
           [items]="applications"
@@ -124,7 +200,7 @@
       </mat-tab>
 
       <mat-tab label="notices-of-intent">
-        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
+        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
         <app-inbox-list
           *ngIf="isMobile"
           [items]="noticeOfIntents"
@@ -143,7 +219,7 @@
       </mat-tab>
 
       <mat-tab label="notifications">
-        <ng-template mat-tab-label> Notification of SRW: {{ notificationTotal }} </ng-template>
+        <ng-template mat-tab-label> Notification of SRW: {{ notificationTotal }}</ng-template>
         <app-inbox-list
           *ngIf="isMobile"
           [items]="notifications"

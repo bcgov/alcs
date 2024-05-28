@@ -56,22 +56,22 @@
   <div class="subheading2 grid-1">Volume</div>
   <div class="grid-double">
     {{ _noiSubmission.soilAlreadyPlacedVolume }}
-    <span *ngIf="_noiSubmission.soilAlreadyPlacedVolume">m<sup>3</sup></span>
+    <span *ngIf="_noiSubmission.soilAlreadyPlacedVolume !== null">m<sup>3</sup></span>
   </div>
   <div class="subheading2 grid-1">Area</div>
   <div class="grid-double">
     {{ _noiSubmission.soilAlreadyPlacedArea }}
-    <span *ngIf="_noiSubmission.soilAlreadyPlacedArea">m<sup>2</sup></span>
+    <span *ngIf="_noiSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
   </div>
   <div class="subheading2 grid-1">Maximum Depth</div>
   <div class="grid-double">
     {{ _noiSubmission.soilAlreadyPlacedMaximumDepth }}
-    <span *ngIf="_noiSubmission.soilAlreadyPlacedMaximumDepth">m</span>
+    <span *ngIf="_noiSubmission.soilAlreadyPlacedMaximumDepth !== null">m</span>
   </div>
   <div class="subheading2 grid-1">Average Depth</div>
   <div class="grid-double">
     {{ _noiSubmission.soilAlreadyPlacedAverageDepth }}
-    <span *ngIf="_noiSubmission.soilAlreadyPlacedAverageDepth">m</span>
+    <span *ngIf="_noiSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
   </div>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>

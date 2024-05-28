@@ -45,7 +45,7 @@
     </ng-container>
 
     <ng-container matColumnDef="lastUpdate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Update</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status Date</th>
       <td mat-cell *matCellDef="let element">
         {{ element.lastUpdate | momentFormat | emptyColumn }}
       </td>

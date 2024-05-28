@@ -15,7 +15,7 @@
         <div>{{ transferee.displayName }}</div>
         <div>
           {{ transferee.organizationName }}
-          <app-no-data *ngIf="!transferee.organizationName"></app-no-data>
+          <div *ngIf="!transferee.organizationName" class="no-data-text">Not Applicable</div>
         </div>
         <div>
           <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
@@ -71,6 +71,7 @@
     <div class="subheading2 grid-1">Total area of the SRW</div>
     <div class="grid-double">
       {{ submission.totalArea }}
+      <span *ngIf="submission.totalArea"> ha</span>
       <app-no-data *ngIf="!submission.totalArea"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Upload Terms of the SRW</div>

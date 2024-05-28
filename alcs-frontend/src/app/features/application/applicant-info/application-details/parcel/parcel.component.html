@@ -9,56 +9,61 @@
 
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
-      <h4 [id]="parcel.uuid">Parcel #{{ parcelInd + 1 }}: Parcel and Owner Information</h4>
+      <h4 [id]="parcel.uuid">Parcel #{{ parcelInd + 1 }}</h4>
     </div>
     <div class="subheading2 grid-1">Ownership Type</div>
-    <div class="grid-double">
+    <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-type'">
       {{ parcel.ownershipType?.label }}
       <app-no-data *ngIf="!parcel.ownershipType?.label"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Legal Description</div>
-    <div class="grid-double">
+    <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-legal-description'">
       {{ parcel.legalDescription }}
       <app-no-data *ngIf="!parcel.legalDescription"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Area (Hectares)</div>
-    <div class="grid-double">
+    <div class="subheading2 grid-1">Approx. Map Area</div>
+    <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-map-area'">
       {{ parcel.mapAreaHectares }}
       <app-no-data *ngIf="!parcel.mapAreaHectares"></app-no-data>
+      <span *ngIf="parcel.mapAreaHectares"> ha</span>
     </div>
     <div class="subheading2 grid-1">
       PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
     </div>
-    <div class="grid-double">
+    <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-pid'">
       <span *ngIf="parcel.pid">{{ parcel.pid | mask: '000-000-000' }}</span>
       <app-no-data *ngIf="!parcel.pid"></app-no-data>
     </div>
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
       <div class="subheading2 grid-1">PIN (optional)</div>
-      <div class="grid-double">
+      <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-pin'">
         {{ parcel.pin }}
         <app-no-data *ngIf="!parcel.pin"></app-no-data>
       </div>
     </ng-container>
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE">
       <div class="subheading2 grid-1">Purchase Date</div>
-      <div class="grid-double">
+      <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-purchase-date'">
         {{ parcel.purchasedDate | date }}
         <app-no-data *ngIf="!parcel.purchasedDate"></app-no-data>
       </div>
     </ng-container>
     <div class="subheading2 grid-1">Farm Classification</div>
-    <div class="grid-double">
+    <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-is-farm'">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
       <app-no-data *ngIf="parcel.isFarm === null"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Civic Address</div>
-    <div class="grid-double">
+    <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-civic-address'">
       {{ parcel.civicAddress }}
       <app-no-data *ngIf="!parcel.civicAddress"></app-no-data>
     </div>
     <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
-    <div *ngIf="showCertificateOfTitle" class="grid-double">
+    <div
+      *ngIf="showCertificateOfTitle"
+      class="grid-double"
+      [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-certificate-of-title'"
+    >
       <div *ngIf="parcel.certificateOfTitle">
         <a (click)="openFile(parcel.certificateOfTitle)">{{ parcel.certificateOfTitle.fileName }}</a>
       </div>
@@ -108,18 +113,30 @@
       <div class="subheading2">Email</div>
       <div class="subheading2">Corporate Summary</div>
       <ng-container *ngFor="let owner of parcel.owners">
-        <div>{{ owner.displayName }}</div>
-        <div>
-          {{ owner.organizationName }}
-          <app-no-data *ngIf="!owner.organizationName"></app-no-data>
+        <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-name'">
+          {{ owner.displayName }}
         </div>
-        <div>{{ owner.phoneNumber }}</div>
-        <div>{{ owner.email }}</div>
-        <div>
-          <a *ngIf="owner.corporateSummary" (click)="openFile(owner.corporateSummary)">{{
-              owner.corporateSummary.fileName
-            }}</a>
-          <app-no-data *ngIf="!owner.corporateSummary"></app-no-data>
+        <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-organization'">
+          {{ owner.organizationName }}
+          <div class="no-data" *ngIf="!owner.organizationName">
+            <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
+            <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>
+          </div>
+        </div>
+        <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-phone-number'">
+          {{ owner.phoneNumber }}
+        </div>
+        <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-email'">
+          {{ owner.email }}
+        </div>
+        <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-corporate-summary'">
+          <a *ngIf="owner.corporateSummary" (click)="openFile(owner.corporateSummary)">
+            {{ owner.corporateSummary.fileName }}
+          </a>
+          <div class="no-data" *ngIf="!owner.corporateSummary">
+            <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
+            <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>
+          </div>
         </div>
       </ng-container>
       <app-no-data *ngIf="parcel.owners.length === 0"></app-no-data>

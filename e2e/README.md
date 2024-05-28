@@ -4,7 +4,8 @@
 - [Running Tests](#running-tests)
 - [Local Setup](#local-setup)
   - [Installation](#installation)
-  - [Configure secrets](#configure-secrets)
+  - [Configure Secrets](#configure-secrets)
+- [Known Issues](#known-issues)
 
 E2E test automation is implemented using the [Playwright](https://playwright.dev/).
 
@@ -81,7 +82,12 @@ Install browsers:
 $ npx playwright install
 ```
 
-### Configure secrets
+### Configure Secrets
 
 1. Copy `template.env` --> `.env`
 2. Fill in details
+
+## Known Issues
+
+- When signed in, navigation via URL always redirects to login page
+- Parcel entry step UI is not fully functional, stick to single parcel for now

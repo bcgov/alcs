@@ -5,7 +5,6 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { PagingRequestDto } from '../public/search/public-search.dto';
 
 export type SearchEntityClass = 'APP' | 'NOI' | 'NOTI';
 
@@ -22,7 +21,9 @@ export class BaseInboxResultDto {
 }
 
 export class ApplicationInboxResultDto extends BaseInboxResultDto {}
+
 export class NoticeOfIntentInboxResultDto extends BaseInboxResultDto {}
+
 export class NotificationInboxResultDto extends BaseInboxResultDto {}
 
 export class InboxResponseDto {
@@ -48,11 +49,11 @@ export class InboxRequestDto {
 
   @IsString()
   @IsOptional()
-  fileNumber?: string;
+  filterBy?: string;
 
   @IsString()
   @IsOptional()
-  filterBy?: string;
+  fileNumber?: string;
 
   @IsString()
   @IsOptional()

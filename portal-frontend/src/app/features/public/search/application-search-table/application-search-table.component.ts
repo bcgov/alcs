@@ -16,17 +16,22 @@ export class ApplicationSearchTableComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
-  _applications: ApplicationSearchResultDto[] = [];
   @Input() pageIndex: number = 0;
+  @Input() totalCount: number | undefined;
 
+  _applications!: ApplicationSearchResultDto[];
   @Input() set applications(applications: ApplicationSearchResultDto[]) {
     this._applications = applications;
     this.isLoading = false;
-    this.dataSource = new MatTableDataSource<SearchResult>(this.mapApplications(applications));
+    this.mapApplications();
   }
 
-  @Input() totalCount: number | undefined;
-  @Input() statuses: ApplicationStatusDto[] = [];
+  _statuses!: ApplicationStatusDto[];
+  @Input() set statuses(statuses: ApplicationStatusDto[]) {
+    this._statuses = statuses;
+    this.mapApplications();
+  }
+
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = displayedColumns;
@@ -70,14 +75,18 @@ export class ApplicationSearchTableComponent {
     await this.router.navigateByUrl(`/public/application/${record.referenceId}`);
   }
 
-  private mapApplications(applications: ApplicationSearchResultDto[]): SearchResult[] {
-    return applications.map((e) => {
-      const status = this.statuses.find((st) => st.code === e.status);
+  private mapApplications() {
+    if (!this._applications || !this._statuses) {
+      return;
+    }
+    const results = this._applications.map((e) => {
+      const status = this._statuses.find((st) => st.code === e.status);
 
       return {
         ...e,
         status,
       };
     });
+    this.dataSource = new MatTableDataSource<SearchResult>(results);
   }
 }

@@ -1,10 +1,13 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
+import * as hash from 'object-hash';
+import { In, Repository } from 'typeorm';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../../utils/search-helper';
-import { NotificationParcel } from '../../../notification-submission/notification-parcel/notification-parcel.entity';
-import { NotificationTransferee } from '../../../notification-submission/notification-transferee/notification-transferee.entity';
+import { Notification } from '../../../../alcs/notification/notification.entity';
+import { NOTIFICATION_SEARCH_FILTERS } from '../../../../utils/search/notification-search-filters';
+import { processSearchPromises } from '../../../../utils/search/search-intersection';
+import { NotificationSubmission } from '../../../notification-submission/notification-submission.entity';
 import {
   AdvancedSearchResultDto,
   SearchRequestDto,
@@ -17,9 +20,14 @@ export class PublicNotificationSearchService {
 
   constructor(
     @InjectRepository(PublicNotificationSubmissionSearchView)
-    private notificationSearchViewRepo: Repository<PublicNotificationSubmissionSearchView>,
+    private notificationSearchRepo: Repository<PublicNotificationSubmissionSearchView>,
     @InjectRepository(LocalGovernment)
     private governmentRepository: Repository<LocalGovernment>,
+    @InjectRepository(Notification)
+    private notificationRepository: Repository<Notification>,
+    @InjectRepository(NotificationSubmission)
+    private notificationSubRepository: Repository<NotificationSubmission>,
+    private redisService: RedisService,
   ) {}
 
   async search(
@@ -27,9 +35,37 @@ export class PublicNotificationSearchService {
   ): Promise<
     AdvancedSearchResultDto<PublicNotificationSubmissionSearchView[]>
   > {
-    let query = await this.compileNotificationSearchQuery(searchDto);
+    const searchHash = hash(searchDto);
+    const searchKey = `search_public_notification_${searchHash}`;
 
-    query = this.compileGroupBySearchQuery(query);
+    const client = this.redisService.getClient();
+    const cachedSearch = await client.get(searchKey);
+
+    let fileNumbers = new Set<string>();
+    if (cachedSearch) {
+      const cachedNumbers = JSON.parse(cachedSearch) as string[];
+      fileNumbers = new Set<string>(cachedNumbers);
+    } else {
+      fileNumbers = await this.searchForFileNumbers(searchDto);
+      await client.setEx(
+        searchKey,
+        180,
+        JSON.stringify([...fileNumbers.values()]),
+      );
+    }
+
+    if (fileNumbers.size === 0) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
+
+    let query = this.notificationSearchRepo
+      .createQueryBuilder('notificationSearch')
+      .andWhere('notificationSearch.fileNumber IN(:...fileNumbers)', {
+        fileNumbers: [...fileNumbers.values()],
+      });
 
     const sortQuery = this.compileSortQuery(searchDto);
 
@@ -39,14 +75,15 @@ export class PublicNotificationSearchService {
       .limit(searchDto.pageSize);
 
     const t0 = performance.now();
-    const result = await query.getManyAndCount();
+    const results = await Promise.all([query.getMany(), query.getCount()]);
     const t1 = performance.now();
     this.logger.debug(
       `Notification public search took ${t1 - t0} milliseconds.`,
     );
+
     return {
-      data: result[0],
-      total: result[1],
+      data: results[0],
+      total: results[1],
     };
   }
 
@@ -73,156 +110,83 @@ export class PublicNotificationSearchService {
     }
   }
 
-  private compileGroupBySearchQuery(query) {
-    query = query
-      // FIXME: This is a quick fix for the search performance issues. It temporarily allows
-      //        submissions with deleted notification types to be shown. For now, there are no
-      //        deleted application types, so this should be fine, but should be fixed soon.
-      .withDeleted()
-      .innerJoinAndMapOne(
-        'notificationSearch.notificationType',
-        'notificationSearch.notificationType',
-        'notificationType',
-      )
-      .groupBy(
-        `
-          "notificationSearch"."uuid"
-        , "notificationSearch"."notification_uuid"
-        , "notificationSearch"."notification_region_code" 
-        , "notificationSearch"."file_number"
-        , "notificationSearch"."applicant"
-        , "notificationSearch"."local_government_uuid"
-        , "notificationSearch"."local_government_name"
-        , "notificationSearch"."notification_type_code"
-        , "notificationSearch"."status"
-        , "notificationSearch"."date_submitted_to_alc"
-        , "notificationType"."audit_deleted_date_at"
-        , "notificationType"."audit_created_at"
-        , "notificationType"."audit_updated_by"
-        , "notificationType"."audit_updated_at"
-        , "notificationType"."audit_created_by"
-        , "notificationType"."short_label"
-        , "notificationType"."label"
-        , "notificationType"."code"
-        , "notificationType"."html_description"
-        , "notificationType"."portal_label"
-        `,
-      );
-    return query;
-  }
-
-  private async compileNotificationSearchQuery(searchDto: SearchRequestDto) {
-    let query =
-      this.notificationSearchViewRepo.createQueryBuilder('notificationSearch');
+  private async searchForFileNumbers(searchDto: SearchRequestDto) {
+    const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      query = query
-        .andWhere('notificationSearch.file_number = :fileNumber')
-        .setParameters({ fileNumber: searchDto.fileNumber ?? null });
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.notificationRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      query = query.andWhere(
-        "alcs.get_current_status_for_notification_submission_by_uuid(notificationSearch.uuid) ->> 'status_type_code' IN(:...statuses)",
-        {
-          statuses: searchDto.portalStatusCodes,
-        },
+      const promise = NOTIFICATION_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.notificationSubRepository,
       );
+      promises.push(promise);
     }
 
     if (searchDto.governmentName) {
-      const government = await this.governmentRepository.findOneByOrFail({
-        name: searchDto.governmentName,
-      });
-
-      query = query.andWhere(
-        'notificationSearch.local_government_uuid = :local_government_uuid',
-        {
-          local_government_uuid: government.uuid,
-        },
+      const promise = NOTIFICATION_SEARCH_FILTERS.addGovernmentResults(
+        searchDto,
+        this.notificationRepository,
+        this.governmentRepository,
       );
+      promises.push(promise);
+    }
+
+    if (searchDto.fileTypes.includes('SRW')) {
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.notificationRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
-      query = query.andWhere(
-        'notificationSearch.notification_region_code IN(:...regions)',
-        {
-          regions: searchDto.regionCodes,
-        },
-      );
+      this.addRegionResults(searchDto, promises);
     }
 
-    query = this.compileSearchByNameQuery(searchDto, query);
-    query = this.compileParcelSearchQuery(searchDto, query);
-
-    return query;
-  }
-
-  private compileParcelSearchQuery(searchDto: SearchRequestDto, query) {
-    if (searchDto.pid || searchDto.civicAddress) {
-      query = query.leftJoin(
-        NotificationParcel,
-        'parcel',
-        'parcel.notification_submission_uuid = notificationSearch.uuid',
-      );
-    }
-
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
-    }
-    return query;
-  }
-
-  private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
     if (searchDto.name) {
-      const formattedSearchString =
-        formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-
-      query = query
-        .leftJoin(
-          NotificationTransferee,
-          'notification_transferee',
-          'notification_transferee.notification_submission_uuid = notificationSearch.uuid',
-        )
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where(
-                "LOWER(notification_transferee.first_name || ' ' || notification_transferee.last_name) LIKE ANY (:names)",
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notification_transferee.first_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notification_transferee.last_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notification_transferee.organization_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              ),
-          ),
-        );
+      const promise = NOTIFICATION_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
     }
-    return query;
+
+    if (searchDto.pid || searchDto.civicAddress) {
+      const promise = NOTIFICATION_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.notificationSubRepository,
+      );
+      promises.push(promise);
+    }
+
+    const t0 = performance.now();
+    const finalResult = await processSearchPromises(promises);
+    const t1 = performance.now();
+    this.logger.debug(
+      `Notification pre-search search took ${t1 - t0} milliseconds.`,
+    );
+    return finalResult;
+  }
+
+  private addRegionResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.notificationRepository.find({
+      where: {
+        regionCode: In(searchDto.regionCodes!),
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    promises.push(promise);
   }
 }

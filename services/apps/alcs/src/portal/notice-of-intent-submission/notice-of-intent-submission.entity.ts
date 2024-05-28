@@ -3,6 +3,7 @@ import {
   AfterLoad,
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -42,6 +43,7 @@ export class NoticeOfIntentSubmission extends Base {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
+  @Index()
   @AutoMap({})
   @Column({
     comment: 'File Number of attached application',

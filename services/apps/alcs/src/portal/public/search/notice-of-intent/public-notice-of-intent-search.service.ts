@@ -1,11 +1,14 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
+import * as hash from 'object-hash';
+import { In, Repository } from 'typeorm';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { NoticeOfIntentDecision } from '../../../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../../utils/search-helper';
-import { NoticeOfIntentOwner } from '../../../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentParcel } from '../../../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
+import { NoticeOfIntent } from '../../../../alcs/notice-of-intent/notice-of-intent.entity';
+import { NOI_SEARCH_FILTERS } from '../../../../utils/search/notice-of-intent-search-filters';
+import { processSearchPromises } from '../../../../utils/search/search-intersection';
+import { NoticeOfIntentSubmission } from '../../../notice-of-intent-submission/notice-of-intent-submission.entity';
 import {
   AdvancedSearchResultDto,
   SearchRequestDto,
@@ -19,8 +22,13 @@ export class PublicNoticeOfIntentSearchService {
   constructor(
     @InjectRepository(PublicNoticeOfIntentSubmissionSearchView)
     private noiSearchRepository: Repository<PublicNoticeOfIntentSubmissionSearchView>,
+    @InjectRepository(NoticeOfIntentSubmission)
+    private noiSubmissionRepository: Repository<NoticeOfIntentSubmission>,
+    @InjectRepository(NoticeOfIntent)
+    private noiRepository: Repository<NoticeOfIntent>,
     @InjectRepository(LocalGovernment)
     private governmentRepository: Repository<LocalGovernment>,
+    private redisService: RedisService,
   ) {}
 
   async searchNoticeOfIntents(
@@ -28,24 +36,53 @@ export class PublicNoticeOfIntentSearchService {
   ): Promise<
     AdvancedSearchResultDto<PublicNoticeOfIntentSubmissionSearchView[]>
   > {
-    const query = await this.compileNoticeOfIntentSearchQuery(searchDto);
+    const searchHash = hash(searchDto);
+    const searchKey = `search_public_noi_${searchHash}`;
 
-    this.compileGroupBySearchQuery(query);
+    const client = this.redisService.getClient();
+    const cachedSearch = await client.get(searchKey);
+
+    let fileNumbers = new Set<string>();
+    if (cachedSearch) {
+      const cachedNumbers = JSON.parse(cachedSearch) as string[];
+      fileNumbers = new Set<string>(cachedNumbers);
+    } else {
+      fileNumbers = await this.searchForFileNumbers(searchDto);
+      await client.setEx(
+        searchKey,
+        180,
+        JSON.stringify([...fileNumbers.values()]),
+      );
+    }
+
+    if (fileNumbers.size === 0) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
+
+    let query = this.noiSearchRepository
+      .createQueryBuilder('noiSearch')
+      .andWhere('noiSearch.fileNumber IN(:...fileNumbers)', {
+        fileNumbers: [...fileNumbers.values()],
+      });
 
     const sortQuery = this.compileSortQuery(searchDto);
 
-    query
+    query = query
       .orderBy(sortQuery, searchDto.sortDirection)
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
     const t0 = performance.now();
-    const result = await query.getManyAndCount();
+    const results = await Promise.all([query.getMany(), query.getCount()]);
     const t1 = performance.now();
     this.logger.debug(`NOI public search took ${t1 - t0} milliseconds.`);
+
     return {
-      data: result[0],
-      total: result[1],
+      data: results[0],
+      total: results[1],
     };
   }
 
@@ -72,199 +109,140 @@ export class PublicNoticeOfIntentSearchService {
     }
   }
 
-  private compileGroupBySearchQuery(query) {
-    query = query
-      // FIXME: This is a quick fix for the search performance issues. It temporarily allows
-      //        submissions with deleted NOI types to be shown. For now, there are no
-      //        deleted application types, so this should be fine, but should be fixed soon.
-      .withDeleted()
-      .innerJoinAndMapOne(
-        'noiSearch.noticeOfIntentType',
-        'noiSearch.noticeOfIntentType',
-        'noticeOfIntentType',
-      )
-      .groupBy(
-        `
-          "noiSearch"."uuid"
-        , "noiSearch"."notice_of_intent_uuid"
-        , "noiSearch"."notice_of_intent_region_code" 
-        , "noiSearch"."file_number"
-        , "noiSearch"."applicant"
-        , "noiSearch"."local_government_uuid"
-        , "noiSearch"."local_government_name"
-        , "noiSearch"."notice_of_intent_type_code"
-        , "noiSearch"."status"
-        , "noiSearch"."date_submitted_to_alc"
-        , "noiSearch"."decision_date"
-        , "noiSearch"."outcome"
-        , "noiSearch"."dest_rank"
-        , "noiSearch"."last_update"      
-        , "noticeOfIntentType"."audit_deleted_date_at"
-        , "noticeOfIntentType"."audit_created_at"
-        , "noticeOfIntentType"."audit_updated_by"
-        , "noticeOfIntentType"."audit_updated_at"
-        , "noticeOfIntentType"."audit_created_by"
-        , "noticeOfIntentType"."short_label"
-        , "noticeOfIntentType"."label"
-        , "noticeOfIntentType"."code"
-        , "noticeOfIntentType"."html_description"
-        , "noticeOfIntentType"."portal_label"
-        `,
-      );
-    return query;
-  }
-
-  private async compileNoticeOfIntentSearchQuery(searchDto: SearchRequestDto) {
-    const query = this.noiSearchRepository.createQueryBuilder('noiSearch');
+  private async searchForFileNumbers(searchDto: SearchRequestDto) {
+    const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      query
-        .andWhere('noiSearch.file_number = :fileNumber')
-        .setParameters({ fileNumber: searchDto.fileNumber ?? null });
+      const promise = NOI_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.noiRepository,
+      );
+      promises.push(promise);
+    }
+
+    if (searchDto.fileTypes.includes('NOI')) {
+      const promise = NOI_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.noiRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      query.andWhere(
-        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSearch.uuid) ->> 'status_type_code' IN(:...statuses)",
-        {
-          statuses: searchDto.portalStatusCodes,
-        },
+      const promise = NOI_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.noiSubmissionRepository,
       );
+      promises.push(promise);
     }
 
     if (searchDto.governmentName) {
-      const government = await this.governmentRepository.findOneByOrFail({
-        name: searchDto.governmentName,
-      });
-
-      query.andWhere(
-        'noiSearch.local_government_uuid = :local_government_uuid',
-        {
-          local_government_uuid: government.uuid,
-        },
+      const promise = NOI_SEARCH_FILTERS.addGovernmentResults(
+        searchDto,
+        this.noiRepository,
+        this.governmentRepository,
       );
+      promises.push(promise);
     }
 
     if (searchDto.decisionOutcome && searchDto.decisionOutcome.length > 0) {
-      query.andWhere('noiSearch.outcome IN(:...outcomes)', {
-        outcomes: searchDto.decisionOutcome,
-      });
+      this.addDecisionOutcomeResults(searchDto, promises);
     }
 
     if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
-      query.andWhere('noiSearch.notice_of_intent_region_code IN(:...regions)', {
-        regions: searchDto.regionCodes,
-      });
+      this.addRegionResults(searchDto, promises);
     }
 
-    this.compileSearchByNameQuery(searchDto, query);
-    this.compileParcelSearchQuery(searchDto, query);
-    this.compileDecisionSearchQuery(searchDto, query);
+    if (searchDto.name) {
+      const promise = NOI_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.noiSubmissionRepository,
+      );
+      promises.push(promise);
+    }
 
-    return query;
-  }
+    if (searchDto.pid || searchDto.civicAddress) {
+      const promise = NOI_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.noiSubmissionRepository,
+      );
+      promises.push(promise);
+    }
 
-  private compileDecisionSearchQuery(searchDto: SearchRequestDto, query) {
     if (
       searchDto.dateDecidedTo !== undefined ||
       searchDto.dateDecidedFrom !== undefined ||
       searchDto.decisionMakerCode !== undefined
     ) {
-      query = this.joinDecision(query);
-
-      if (searchDto.dateDecidedFrom !== undefined) {
-        query = query.andWhere('decision.date >= :dateDecidedFrom', {
-          dateDecidedFrom: new Date(searchDto.dateDecidedFrom),
-        });
-      }
-
-      if (searchDto.dateDecidedTo !== undefined) {
-        query = query.andWhere('decision.date <= :dateDecidedTo', {
-          dateDecidedTo: new Date(searchDto.dateDecidedTo),
-        });
-      }
-
-      if (searchDto.decisionMakerCode !== undefined) {
-        query = query.andWhere('decision.decision_maker IS NOT NULL');
-      }
+      this.addDecisionResults(searchDto, promises);
     }
-    return query;
+
+    const t0 = performance.now();
+    const finalResult = await processSearchPromises(promises);
+    const t1 = performance.now();
+    this.logger.debug(`NOI pre-search search took ${t1 - t0} milliseconds.`);
+    return finalResult;
   }
 
-  private joinDecision(query: any) {
-    query = query.leftJoin(
-      NoticeOfIntentDecision,
-      'decision',
-      'decision.notice_of_intent_uuid = "noiSearch"."notice_of_intent_uuid" AND decision.is_draft = FALSE',
-    );
-    return query;
-  }
-
-  private compileParcelSearchQuery(searchDto: SearchRequestDto, query) {
-    if (searchDto.pid || searchDto.civicAddress) {
-      query = query.leftJoin(
-        NoticeOfIntentParcel,
-        'parcel',
-        'parcel.notice_of_intent_submission_uuid = noiSearch.uuid',
+  private addDecisionResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    let query = this.noiRepository
+      .createQueryBuilder('noi')
+      .select('noi.fileNumber')
+      .innerJoin(
+        NoticeOfIntentDecision,
+        'decision',
+        'decision.notice_of_intent_uuid = "noi"."uuid" AND decision.is_draft = FALSE',
       );
+
+    if (searchDto.dateDecidedFrom !== undefined) {
+      query = query.andWhere('decision.date >= :dateDecidedFrom', {
+        dateDecidedFrom: new Date(searchDto.dateDecidedFrom),
+      });
     }
 
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
+    if (searchDto.dateDecidedTo !== undefined) {
+      query = query.andWhere('decision.date <= :dateDecidedTo', {
+        dateDecidedTo: new Date(searchDto.dateDecidedTo),
+      });
     }
 
-    if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
+    if (searchDto.decisionMakerCode !== undefined) {
+      query = query.andWhere('decision.decision_maker IS NOT NULL');
     }
-    return query;
+    promises.push(query.getMany());
   }
 
-  private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
-    if (searchDto.name) {
-      const formattedSearchString =
-        formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+  private addDecisionOutcomeResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.noiSearchRepository.find({
+      where: {
+        outcome: In(searchDto.decisionOutcome!),
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
 
-      query = query
-        .leftJoin(
-          NoticeOfIntentOwner,
-          'notice_of_intent_owner',
-          'notice_of_intent_owner.notice_of_intent_submission_uuid = noiSearch.uuid',
-        )
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where(
-                "LOWER(notice_of_intent_owner.first_name || ' ' || notice_of_intent_owner.last_name) LIKE ANY (:names)",
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notice_of_intent_owner.first_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notice_of_intent_owner.last_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notice_of_intent_owner.organization_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              ),
-          ),
-        );
-    }
-    return query;
+    promises.push(promise);
+  }
+
+  private addRegionResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.noiRepository.find({
+      where: {
+        regionCode: In(searchDto.regionCodes!),
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    promises.push(promise);
   }
 }

@@ -26,6 +26,7 @@ describe('ApplicationService', () => {
       name: '',
       preferredRegionCode: '',
       isFirstNation: false,
+      isActive: true,
     },
     paused: false,
     pausedDays: 0,

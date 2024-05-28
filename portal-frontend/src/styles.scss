@@ -126,3 +126,7 @@ a {
 .mdc-checkbox {
   --mdc-checkbox-selected-checkmark-color: #fff;
 }
+
+.cdk-overlay-backdrop {
+  cursor: not-allowed;
+}

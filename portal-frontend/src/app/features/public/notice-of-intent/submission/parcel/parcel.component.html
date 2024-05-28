@@ -91,7 +91,7 @@
         <div>{{ owner.displayName }}</div>
         <div>
           <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
-          <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
+          <div *ngIf="!owner.organizationName" class="no-data-text">Not Applicable</div>
         </div>
       </ng-container>
       <div class="full-width">

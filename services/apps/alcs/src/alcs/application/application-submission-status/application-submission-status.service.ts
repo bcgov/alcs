@@ -152,10 +152,7 @@ export class ApplicationSubmissionStatusService {
   async getSubmissionToSubmissionStatusForSendingEmails(date: Date) {
     return await this.statusesRepository.find({
       where: {
-        statusTypeCode: In([
-          SUBMISSION_STATUS.ALC_DECISION,
-          SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
-        ]),
+        statusTypeCode: In([SUBMISSION_STATUS.IN_REVIEW_BY_ALC]),
         emailSentDate: IsNull(),
         effectiveDate: And(Not(IsNull()), LessThan(date)), // this will get only statuses < tomorrow start of day since the status service converts all days to .startOf('day')
       },

@@ -6,7 +6,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
-import { Observable, Subject, combineLatestWith, map, startWith, takeUntil } from 'rxjs';
+import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
@@ -16,6 +16,8 @@ import { NoticeOfIntentStatusDto } from '../../services/notice-of-intent/notice-
 import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationSubmissionStatusDto } from '../../services/notification/notification.dto';
+import { FileTypeDataSourceService } from '../../services/search/file-type/file-type-data-source.service';
+import { PortalStatusDataSourceService } from '../../services/search/portal-status/portal-status-data-source.service';
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
@@ -46,6 +48,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort?: MatSort;
   @ViewChild('searchResultTabs') tabGroup!: MatTabGroup;
   @ViewChild('fileTypeDropDown') fileTypeFilterDropDownComponent!: FileTypeFilterDropDownComponent;
+  @ViewChild('statusTypeDropDown') portalStatusFilterDropDownComponent!: FileTypeFilterDropDownComponent;
 
   applications: ApplicationSearchResultDto[] = [];
   applicationTotal = 0;
@@ -62,14 +65,13 @@ export class SearchComponent implements OnInit, OnDestroy {
   inquiries: InquirySearchResultDto[] = [];
   inquiriesTotal = 0;
 
-  isSearchExpanded = false;
   pageIndex = 0;
   itemsPerPage = 20;
   sortDirection: SortDirection = 'desc';
   sortField = 'dateSubmitted';
 
   localGovernmentControl = new FormControl<string | undefined>(undefined);
-  portalStatusControl = new FormControl<string | undefined>(undefined);
+  portalStatusControl = new FormControl<string[]>([]);
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   pidControl = new FormControl<string | undefined>(undefined);
   nameControl = new FormControl<string | undefined>(undefined);
@@ -105,6 +107,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   notificationStatuses: NotificationSubmissionStatusDto[] = [];
   noiStatuses: NoticeOfIntentStatusDto[] = [];
   isLoading = false;
+  today = new Date();
 
   constructor(
     private searchService: SearchService,
@@ -115,6 +118,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private toastService: ToastService,
     private titleService: Title,
+    public fileTypeService: FileTypeDataSourceService,
+    public portalStatusDataService: PortalStatusDataSourceService,
   ) {
     this.titleService.setTitle('ALCS | Search');
   }
@@ -208,22 +213,24 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'center',
+          block: 'start',
           inline: 'center',
         });
       }
     });
   }
 
-  expandSearchClicked() {
-    this.isSearchExpanded = !this.isSearchExpanded;
-  }
-
   onReset() {
-    this.searchForm.reset();
+    this.searchForm.reset({
+      portalStatus: [],
+    });
 
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();
+    }
+
+    if (this.portalStatusFilterDropDownComponent) {
+      this.portalStatusFilterDropDownComponent.reset();
     }
   }
 
@@ -244,7 +251,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       pid: this.formatStringSearchParam(this.searchForm.controls.pid.value),
       resolutionNumber: resolutionNumberString ? parseInt(resolutionNumberString) : undefined,
       resolutionYear: this.searchForm.controls.resolutionYear.value ?? undefined,
-      portalStatusCode: this.searchForm.controls.portalStatus.value ?? undefined,
+      portalStatusCodes: this.portalStatusControl.value !== null ? this.portalStatusControl.value : undefined,
       governmentName: this.formatStringSearchParam(this.searchForm.controls.government.value),
       regionCode: this.searchForm.controls.region.value ?? undefined,
       dateSubmittedFrom: this.searchForm.controls.dateSubmittedFrom.value
@@ -332,6 +339,10 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   onFileTypeChange(fileTypes: string[]) {
     this.componentTypeControl.setValue(fileTypes);
+  }
+
+  onPortalStatusChange(statusCodes: string[]) {
+    this.portalStatusControl.setValue(statusCodes);
   }
 
   private async loadGovernments() {

@@ -17,6 +17,7 @@ export const getTypeOrmModuleOptions = (
     namingStrategy: new SnakeNamingStrategy(),
     uuidExtension: 'pgcrypto',
     applicationName: 'alcs',
+    maxQueryExecutionTime: 5000,
     replication: {
       defaultMode: 'master',
       master: {

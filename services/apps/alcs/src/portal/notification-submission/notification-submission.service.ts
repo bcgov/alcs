@@ -1,8 +1,8 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import * as dayjs from 'dayjs';
 import {
   FindOptionsRelations,
@@ -69,6 +69,11 @@ export class NotificationSubmissionService {
         fileNumber,
       },
       relations: this.DEFAULT_RELATIONS,
+      order: {
+        transferees: {
+          firstName: 'ASC',
+        },
+      },
     });
   }
 
@@ -212,6 +217,9 @@ export class NotificationSubmissionService {
       where: whereClauses,
       order: {
         auditUpdatedAt: 'DESC',
+        transferees: {
+          firstName: 'ASC',
+        },
       },
       relations: this.DEFAULT_RELATIONS,
     });
@@ -225,6 +233,11 @@ export class NotificationSubmissionService {
       return await this.notificationSubmissionRepository.findOneOrFail({
         where: {
           uuid,
+        },
+        order: {
+          transferees: {
+            firstName: 'ASC',
+          },
         },
         relations: {
           ...this.DEFAULT_RELATIONS,
@@ -245,6 +258,9 @@ export class NotificationSubmissionService {
         ...this.DEFAULT_RELATIONS,
       },
       order: {
+        transferees: {
+          firstName: 'ASC',
+        },
         auditUpdatedAt: 'DESC',
       },
     });
@@ -391,15 +407,6 @@ export class NotificationSubmissionService {
       submission.uuid,
       NOTIFICATION_STATUS.CANCELLED,
     );
-  }
-
-  private loadBarebonesSubmission(uuid: string) {
-    //Load submission without relations to prevent save from crazy cascading
-    return this.notificationSubmissionRepository.findOneOrFail({
-      where: {
-        uuid,
-      },
-    });
   }
 
   async sendAndRecordLTSAPackage(

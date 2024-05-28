@@ -1,10 +1,9 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { User } from '../../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission.service';
 import {
   CovenantTransfereeCreateDto,
   CovenantTransfereeUpdateDto,
@@ -18,8 +17,6 @@ export class CovenantTransfereeService {
     private repository: Repository<CovenantTransferee>,
     @InjectRepository(OwnerType)
     private typeRepository: Repository<OwnerType>,
-    @Inject(forwardRef(() => ApplicationSubmissionService))
-    private applicationSubmissionService: ApplicationSubmissionService,
   ) {}
 
   async fetchBySubmissionUuid(uuid: string) {
@@ -29,6 +26,9 @@ export class CovenantTransfereeService {
       },
       relations: {
         type: true,
+      },
+      order: {
+        firstName: 'ASC',
       },
     });
   }
@@ -40,6 +40,9 @@ export class CovenantTransfereeService {
           fileNumber: fileNumber,
           isDraft: false,
         },
+      },
+      order: {
+        firstName: 'ASC',
       },
       relations: {
         type: true,

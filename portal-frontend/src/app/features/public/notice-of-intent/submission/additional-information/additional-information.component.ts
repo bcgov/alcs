@@ -1,14 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { PublicNoticeOfIntentSubmissionDto } from '../../../../../services/public/public-notice-of-intent.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { openFileInline } from '../../../../../shared/utils/file';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
 } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
-import { openFileInline } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-additional-information',
@@ -32,24 +31,36 @@ export class AdditionalInformationComponent implements OnInit {
   isSoilStructureResidentialAccessoryUseReasonVisible = false;
   isSoilOtherStructureVisible = false;
 
-  constructor(private router: Router, private publicService: PublicService) {}
+  constructor(private publicService: PublicService) {}
 
   ngOnInit(): void {
     this.setVisibilityForResidentialFields();
     this.setValidatorsForAccessoryFields();
     this.setVisibilityForFarmFields();
     this.setVisibilityForOtherFields();
+
+    switch (this.noiSubmission.typeCode) {
+      case 'ROSO':
+        this.firstQuestion = 'Are you placing fill in order to build a structure?';
+        break;
+      case 'POFO':
+        this.firstQuestion = 'Are you placing fill in order to build a structure?';
+        break;
+      case 'PFRS':
+        this.firstQuestion = 'Are you removing soil and placing fill in order to build a structure?';
+        break;
+    }
   }
 
   private setVisibilityForResidentialFields() {
     this.isSoilStructureResidentialUseReasonVisible = !!this.noiSubmission?.soilProposedStructures.some(
-      (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type)
+      (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type),
     );
   }
 
   private setValidatorsForAccessoryFields() {
     this.isSoilStructureResidentialAccessoryUseReasonVisible = !!this.noiSubmission?.soilProposedStructures.some(
-      (structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE
+      (structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
     );
   }
 
@@ -67,7 +78,7 @@ export class AdditionalInformationComponent implements OnInit {
 
   private setVisibilityForOtherFields() {
     this.isSoilOtherStructureVisible = !!this.noiSubmission?.soilProposedStructures.some(
-      (structure) => structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE
+      (structure) => structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE,
     );
   }
 

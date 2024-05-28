@@ -6,7 +6,6 @@ import {
   ViewColumn,
   ViewEntity,
 } from 'typeorm';
-import { LocalGovernment } from '../../../alcs/local-government/local-government.entity';
 import { NoticeOfIntentDecision } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentType } from '../../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
@@ -50,11 +49,6 @@ import { LinkedStatusType } from '../inbox.dto';
         'noi_sub.type_code = noticeOfIntentType.code',
       )
       .leftJoin(
-        LocalGovernment,
-        'localGovernment',
-        'noi_sub.local_government_uuid = localGovernment.uuid',
-      )
-      .leftJoin(
         (qb) =>
           qb
             .from(NoticeOfIntentSubmissionToSubmissionStatus, 'status_link')
@@ -82,34 +76,34 @@ export class InboxNoticeOfIntentSubmissionView {
   uuid: string;
 
   @ViewColumn()
-  noticeOfIntentUuid: string;
-
-  @ViewColumn()
-  dateSubmittedToAlc: Date | null;
-
-  @ViewColumn()
-  createdAt: Date;
-
-  @ViewColumn()
-  lastUpdate: Date;
-
-  @ViewColumn()
   fileNumber: string;
 
   @ViewColumn()
   applicant?: string;
 
   @ViewColumn()
-  createdByUuid: string;
+  createdAt: Date;
 
   @ViewColumn()
-  bceidBusinessGuid?: string;
+  createdByUuid: string;
 
   @ViewColumn()
   localGovernmentUuid?: string;
 
   @ViewColumn()
+  bceidBusinessGuid?: string;
+
+  @ViewColumn()
   noticeOfIntentTypeCode: string;
+
+  @ViewColumn()
+  noticeOfIntentUuid: string;
+
+  @ViewColumn()
+  dateSubmittedToAlc: Date | null;
+
+  @ViewColumn()
+  lastUpdate: Date;
 
   @ViewColumn()
   status: LinkedStatusType;

@@ -1,7 +1,9 @@
 @use '../../../../styles/colors';
 
-.inline-number-wrapper {
+.inline-textarea-wrapper {
   padding-top: 4px;
+  white-space: pre-line;
+  overflow-wrap: break-word;
 }
 
 .editing {
@@ -16,7 +18,7 @@
 .edit-button {
   height: 24px;
   width: 24px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
 }
 
@@ -64,9 +66,9 @@
   padding: 8px;
   border-radius: 2px;
   font-size: 16px;
-  width: 100%;
   min-height: 96px;
   margin-left: -8px;
   margin-right: -8px;
   background: none;
+  resize: vertical;
 }

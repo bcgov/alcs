@@ -197,6 +197,7 @@ export class NoticeOfIntentSubmissionController {
           government: submissionGovernment,
           parentType: PARENT_TYPE.NOTICE_OF_INTENT,
           primaryContact,
+          ccEmails: [],
         });
       }
 
@@ -207,6 +208,7 @@ export class NoticeOfIntentSubmissionController {
           noticeOfIntentSubmission,
           government: submissionGovernment,
           parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+          ccEmails: [],
         });
       }
 

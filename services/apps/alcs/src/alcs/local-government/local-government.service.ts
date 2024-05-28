@@ -30,9 +30,7 @@ export class LocalGovernmentService {
 
   async listActive() {
     return await this.repository.find({
-      where: {
-        isActive: true,
-      },
+      where: { isActive: true },
       order: {
         name: 'ASC',
       },

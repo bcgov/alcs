@@ -146,26 +146,35 @@ export class SearchController {
         noticeOfIntentSearchService =
           await this.noticeOfIntentSearchService.searchNoticeOfIntents(
             searchDto,
+            queryRunner,
           );
       }
       let notifications: AdvancedSearchResultDto<
         NotificationSubmissionSearchView[]
       > | null = null;
       if (searchNotifications) {
-        notifications = await this.notificationSearchService.search(searchDto);
+        notifications = await this.notificationSearchService.search(
+          searchDto,
+          queryRunner,
+        );
       }
 
       let planningReviews: AdvancedSearchResultDto<
         PlanningReviewSearchView[]
       > | null = null;
       if (searchPlanningReviews) {
-        planningReviews =
-          await this.planningReviewSearchService.search(searchDto);
+        planningReviews = await this.planningReviewSearchService.search(
+          searchDto,
+          queryRunner,
+        );
       }
 
       let inquiries: AdvancedSearchResultDto<InquirySearchView[]> | null = null;
       if (searchInquiries) {
-        inquiries = await this.inquirySearchService.search(searchDto);
+        inquiries = await this.inquirySearchService.search(
+          searchDto,
+          queryRunner,
+        );
       }
 
       return await this.mapAdvancedSearchResults(
@@ -216,8 +225,13 @@ export class SearchController {
   async advancedSearchNoticeOfIntents(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NoticeOfIntentSearchResultDto[]>> {
+    const queryRunner = this.dataSource.createQueryRunner('slave');
+
     const noticeOfIntents =
-      await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
+      await this.noticeOfIntentSearchService.searchNoticeOfIntents(
+        searchDto,
+        queryRunner,
+      );
 
     const mappedSearchResult = await this.mapAdvancedSearchResults(
       null,
@@ -238,8 +252,12 @@ export class SearchController {
   async advancedSearchNotifications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NotificationSearchResultDto[]>> {
-    const notifications =
-      await this.notificationSearchService.search(searchDto);
+    const queryRunner = this.dataSource.createQueryRunner('slave');
+
+    const notifications = await this.notificationSearchService.search(
+      searchDto,
+      queryRunner,
+    );
 
     const mappedSearchResult = await this.mapAdvancedSearchResults(
       null,
@@ -260,8 +278,12 @@ export class SearchController {
   async advancedSearchPlanningReviews(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<PlanningReviewSearchResultDto[]>> {
-    const planningReviews =
-      await this.planningReviewSearchService.search(searchDto);
+    const queryRunner = this.dataSource.createQueryRunner('slave');
+
+    const planningReviews = await this.planningReviewSearchService.search(
+      searchDto,
+      queryRunner,
+    );
 
     const mappedSearchResult = await this.mapAdvancedSearchResults(
       null,
@@ -282,7 +304,12 @@ export class SearchController {
   async advancedSearchInquiries(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<InquirySearchResultDto[]>> {
-    const inquiries = await this.inquirySearchService.search(searchDto);
+    const queryRunner = this.dataSource.createQueryRunner('slave');
+
+    const inquiries = await this.inquirySearchService.search(
+      searchDto,
+      queryRunner,
+    );
 
     const mappedSearchResult = await this.mapAdvancedSearchResults(
       null,
@@ -340,7 +367,7 @@ export class SearchController {
 
     const searchPlanningReviews =
       (searchDto.fileTypes.length > 0 ? planningReviewTypeSpecified : true) &&
-      !searchDto.portalStatusCode &&
+      searchDto.portalStatusCodes.length === 0 &&
       !searchDto.pid &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
 
@@ -358,7 +385,7 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      !isStringSetAndNotEmpty(searchDto.legacyId);
+      searchDto.portalStatusCodes.length === 0;
 
     return {
       searchApplications,

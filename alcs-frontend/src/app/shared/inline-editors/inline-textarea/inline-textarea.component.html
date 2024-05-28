@@ -1,12 +1,12 @@
-<div class="inline-number-wrapper">
-  <span class="left" *ngIf="!isEditing">
+<div class="inline-textarea-wrapper">
+  <span *ngIf="!isEditing">
     <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
     <span *ngIf="value">
       {{ value }}
+      <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
+        <mat-icon class="edit-icon">edit</mat-icon>
+      </button>
     </span>
-    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
   </span>
   <div
     class="editing"
@@ -25,6 +25,7 @@
       [(ngModel)]="pendingValue"
       (keydown.enter)="confirmEdit()"
       (keydown.escape)="cancelEdit()"
+      [required]="required"
     ></textarea>
 
     <div class="button-container">

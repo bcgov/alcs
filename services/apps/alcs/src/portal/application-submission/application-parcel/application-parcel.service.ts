@@ -21,7 +21,12 @@ export class ApplicationParcelService {
   async fetchByApplicationFileId(fileId: string) {
     return this.parcelRepository.find({
       where: { applicationSubmission: { fileNumber: fileId, isDraft: false } },
-      order: { auditCreatedAt: 'ASC' },
+      order: {
+        auditCreatedAt: 'ASC',
+        owners: {
+          firstName: 'ASC',
+        },
+      },
       relations: {
         ownershipType: true,
         certificateOfTitle: { document: true },
@@ -38,7 +43,12 @@ export class ApplicationParcelService {
   async fetchByApplicationSubmissionUuid(uuid: string) {
     return this.parcelRepository.find({
       where: { applicationSubmission: { uuid } },
-      order: { auditCreatedAt: 'ASC' },
+      order: {
+        auditCreatedAt: 'ASC',
+        owners: {
+          firstName: 'ASC',
+        },
+      },
       relations: {
         ownershipType: true,
         certificateOfTitle: { document: true },

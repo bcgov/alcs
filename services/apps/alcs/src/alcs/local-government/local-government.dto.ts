@@ -3,4 +3,5 @@ export class LocalGovernmentDto {
   name: string;
   preferredRegionCode: string;
   isFirstNation: boolean;
+  isActive: boolean;
 }

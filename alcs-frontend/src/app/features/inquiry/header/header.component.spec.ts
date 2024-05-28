@@ -26,11 +26,13 @@ describe('HeaderComponent', () => {
       summary: '',
       typeCode: '',
       fileNumber: '',
+      legacyId: null,
       localGovernment: {
         uuid: '',
         name: '',
         isFirstNation: false,
         preferredRegionCode: '',
+        isActive: true,
       },
       open: false,
       region: {

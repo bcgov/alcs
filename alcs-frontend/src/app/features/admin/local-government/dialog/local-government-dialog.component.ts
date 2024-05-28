@@ -1,4 +1,6 @@
+import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { LocalGovernmentDto } from '../../../../services/admin-local-government/admin-local-government.dto';
@@ -12,6 +14,8 @@ import { ApplicationService } from '../../../../services/application/application
   styleUrls: ['./local-government-dialog.component.scss'],
 })
 export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
+  readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
+
   $destroy = new Subject<void>();
   title: string = 'Create';
   model: {
@@ -21,7 +25,7 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
     name: string;
     bceidBusinessGuid: string | null;
     uuid?: string;
-    emails: string;
+    emails: string[];
   };
   regions: ApplicationRegionDto[] = [];
 
@@ -31,10 +35,10 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: LocalGovernmentDto,
     private dialogRef: MatDialogRef<LocalGovernmentDialogComponent>,
     private localGovernmentService: AdminLocalGovernmentService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
   ) {
     this.model = {
-      emails: '',
+      emails: [],
       isActive: '',
       name: '',
       isFirstNation: 'false',
@@ -49,7 +53,7 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
         ...this.data,
         isFirstNation: this.data.isFirstNation ? 'true' : 'false',
         isActive: this.data.isActive ? 'true' : 'false',
-        emails: this.data.emails ? this.data.emails.join(', ') : '',
+        emails: this.data.emails,
       };
       this.title = this.model.uuid ? 'Edit' : 'Create';
     }
@@ -74,7 +78,7 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
         isFirstNation: this.model.isFirstNation === 'true',
         isActive: this.model.isActive === 'true',
         preferredRegionCode: this.model.preferredRegionCode,
-        emails: this.model.emails.split(', '),
+        emails: this.model.emails,
       };
 
       if (this.model.uuid) {
@@ -84,6 +88,34 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
       }
       this.isLoading = false;
       this.dialogRef.close(true);
+    }
+  }
+
+  onRemoveEmail(email: string) {
+    const index = this.model.emails.indexOf(email);
+
+    if (index >= 0) {
+      this.model.emails.splice(index, 1);
+    }
+  }
+
+  addEmail(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.model.emails.push(value);
+    }
+    event.chipInput!.clear();
+  }
+
+  editEmail(email: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+    if (!value) {
+      this.onRemoveEmail(email);
+      return;
+    }
+    const index = this.model.emails.indexOf(email);
+    if (index >= 0) {
+      this.model.emails[index] = value;
     }
   }
 }

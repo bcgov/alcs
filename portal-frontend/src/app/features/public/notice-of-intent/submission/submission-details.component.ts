@@ -7,7 +7,7 @@ import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../../
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
-  selector: 'app-public-app-submission-details',
+  selector: 'app-public-noi-submission-details',
   templateUrl: './submission-details.component.html',
   styleUrls: ['./submission-details.component.scss'],
 })
@@ -30,7 +30,7 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
     this.loadGovernments();
     if (this.submission) {
       this.primaryContact = this.submission.owners.find(
-        (owner) => owner.uuid === this.submission.primaryContactOwnerUuid
+        (owner) => owner.uuid === this.submission.primaryContactOwnerUuid,
       );
       this.populateLocalGovernment(this.submission.localGovernmentUuid);
     }

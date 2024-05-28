@@ -268,11 +268,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
+  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true, ccEmails: string[] = []) {
     this.isLoading = true;
 
     try {
-      await this.saveDecision(isDraft);
+      await this.saveDecision(isDraft, ccEmails);
     } finally {
       if (!isStayOnPage) {
         this.onCancel();
@@ -284,8 +284,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  async saveDecision(isDraft: boolean = true) {
-    const data = this.mapDecisionDataForSave(isDraft);
+  async saveDecision(isDraft: boolean = true, ccEmails: string[]) {
+    const data = this.mapDecisionDataForSave(isDraft, ccEmails);
 
     if (this.uuid) {
       await this.decisionService.update(this.uuid, data);
@@ -298,7 +298,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  private mapDecisionDataForSave(isDraft: boolean) {
+  private mapDecisionDataForSave(isDraft: boolean, ccEmails: string[]) {
     const {
       date,
       outcome,
@@ -331,6 +331,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       decisionComponents: this.components,
       conditions: this.conditionUpdates,
       decisionMaker: decisionMaker ?? undefined,
+      ccEmails,
     };
 
     return data;
@@ -427,9 +428,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           },
         })
         .afterClosed()
-        .subscribe(async (didAccept) => {
-          if (didAccept) {
-            await this.onSubmit(false, false);
+        .subscribe(async (res: { confirmed: boolean; ccEmails: string[] }) => {
+          if (res.confirmed) {
+            await this.onSubmit(false, false, res.ccEmails);
             await this.noticeOfIntentDetailService.load(this.fileNumber);
           }
         });

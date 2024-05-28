@@ -235,11 +235,6 @@ export class NoticeOfIntentService {
         (code) => subtypes.find((subtype) => subtype.code === code)!,
       );
 
-      await this.validatePrepopulatedSubtypes(
-        noticeOfIntent,
-        updateDto.subtype,
-      );
-
       noticeOfIntent.subtype = selectedSubtypes;
     }
 
@@ -352,50 +347,6 @@ export class NoticeOfIntentService {
     await this.updateStatus(updateDto, noticeOfIntent);
 
     return this.getByFileNumber(noticeOfIntent.fileNumber);
-  }
-
-  private async validatePrepopulatedSubtypes(
-    noticeOfIntent: NoticeOfIntent,
-    subtypes: string[],
-  ) {
-    const errors: string[] = [];
-    const noticeOfIntentSubmission =
-      await this.noticeOfIntentSubmissionService.loadBarebonesSubmission(
-        noticeOfIntent.fileNumber,
-      );
-
-    const structureTypes =
-      noticeOfIntentSubmission.soilProposedStructures.reduce((map, value) => {
-        if (value.type) {
-          map.add(value.type);
-        }
-        return map;
-      }, new Set<string>());
-
-    for (const requiredSubtype of structureTypes.values()) {
-      const mappedCode = PORTAL_TO_ALCS_STRUCTURE_MAP[requiredSubtype];
-      if (!subtypes.includes(mappedCode)) {
-        errors.push(`"${requiredSubtype}" must be selected`);
-      }
-    }
-
-    if (
-      noticeOfIntentSubmission.soilIsAreaWideFilling &&
-      !subtypes.some((subtype) => subtype === 'ARWF')
-    ) {
-      errors.push('"Area-Wide Filling" must be selected');
-    }
-
-    if (
-      noticeOfIntentSubmission.soilIsExtractionOrMining &&
-      !subtypes.some((subtype) => subtype === 'AEPM')
-    ) {
-      errors.push('"Aggregate Extraction or Placer Mining" must be selected');
-    }
-
-    if (errors.length > 0) {
-      throw new ServiceValidationException(errors.join('; '));
-    }
   }
 
   private async updateStatus(

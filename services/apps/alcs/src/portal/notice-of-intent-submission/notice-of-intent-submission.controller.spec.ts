@@ -1,10 +1,9 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
-import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBMNoiApplicantHtml,
   generateSUBMNoiGovernmentHtml,
@@ -398,6 +397,7 @@ describe('NoticeOfIntentSubmissionController', () => {
       government: mockGovernment,
       parentType: 'notice-of-intent',
       primaryContact: mockOwner,
+      ccEmails: [],
     });
     expect(
       mockStatusEmailService.sendNoticeOfIntentStatusEmail,
@@ -407,6 +407,7 @@ describe('NoticeOfIntentSubmissionController', () => {
       noticeOfIntentSubmission: mockSubmission,
       government: mockGovernment,
       parentType: 'notice-of-intent',
+      ccEmails: [],
     });
   });
 });

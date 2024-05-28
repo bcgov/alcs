@@ -2,14 +2,16 @@
   width: 100%;
 }
 
-.clear-button {
-  background: transparent;
-  padding: 0;
-  position: absolute;
-  right: 0;
-  border: none;
+#type {
+  text-overflow: ellipsis;
+}
+
+.dropdown-arrow {
+  color: rgba(0, 0, 0, 0.54);
   cursor: pointer;
-  font-size: 20px !important;
-  font-weight: 400 !important;
-  color: #313132;
+  padding: 0 !important;
+
+  &:last-child {
+    padding-right: 8px !important;
+  }
 }

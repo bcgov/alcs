@@ -44,7 +44,7 @@ export class TransfereeDialogComponent {
     public data: {
       submissionUuid: string;
       existingTransferee?: NotificationTransfereeDto;
-    }
+    },
   ) {
     if (data && data.existingTransferee) {
       this.onChangeType({
@@ -66,7 +66,7 @@ export class TransfereeDialogComponent {
       this.organizationName.setValidators([Validators.required]);
     } else {
       this.organizationName.setValidators([]);
-      this.organizationName.reset();
+      this.organizationName.updateValueAndValidity();
     }
   }
 
@@ -78,8 +78,10 @@ export class TransfereeDialogComponent {
       }
       this.isLoading = true;
 
+      const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;
+
       const createDto: NotificationTransfereeCreateDto = {
-        organizationName: this.organizationName.getRawValue() || undefined,
+        organizationName: orgName,
         firstName: this.firstName.getRawValue() || undefined,
         lastName: this.lastName.getRawValue() || undefined,
         email: this.email.getRawValue()!,
@@ -91,7 +93,7 @@ export class TransfereeDialogComponent {
       await this.transfereeService.create(createDto);
       this.dialogRef.close(true);
     } else {
-      this.form.markAllAsTouched()
+      this.form.markAllAsTouched();
     }
   }
 
@@ -101,8 +103,9 @@ export class TransfereeDialogComponent {
 
   async onSave() {
     if (this.form.valid) {
+      const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;
       const updateDto: NotificationTransfereeUpdateDto = {
-        organizationName: this.organizationName.getRawValue(),
+        organizationName: orgName,
         firstName: this.firstName.getRawValue(),
         lastName: this.lastName.getRawValue(),
         email: this.email.getRawValue()!,
@@ -115,7 +118,7 @@ export class TransfereeDialogComponent {
         this.dialogRef.close(true);
       }
     } else {
-      this.form.markAllAsTouched()
+      this.form.markAllAsTouched();
     }
   }
 }

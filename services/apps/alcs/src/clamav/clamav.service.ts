@@ -8,13 +8,13 @@ import { firstValueFrom } from 'rxjs';
 export class ClamAVService {
   private logger = new Logger(ClamAVService.name);
   private scanner: NodeClam;
-  private readonly isEnabled = false;
+  private isEnabled = false;
 
   constructor(
     @Inject(CONFIG_TOKEN) private config: IConfig,
     private httpService: HttpService,
   ) {
-    this.isEnabled = this.config.get('CLAMAV.ENABLED');
+    this.isEnabled = this.config.get<boolean>('CLAMAV.ENABLED');
     if (this.isEnabled) {
       this.initClam();
     }
@@ -31,7 +31,7 @@ export class ClamAVService {
 
   async scanFile(fileUrl: string) {
     if (!this.isEnabled) {
-      return true;
+      return false;
     }
 
     const response = await this.downloadFileAsStream(fileUrl);

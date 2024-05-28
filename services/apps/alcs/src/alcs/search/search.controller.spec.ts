@@ -156,18 +156,17 @@ describe('SearchController', () => {
   });
 
   it('should call advanced search to retrieve Applications, NOIs, PlanningReviews, Covenants, Notifications, Inquiries', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
       name: 'test',
       fileTypes: [],
+      portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearch(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.advancedSearch(mockSearchRequestDto);
 
     expect(
       mockApplicationAdvancedSearchService.searchApplications,
@@ -183,30 +182,31 @@ describe('SearchController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toHaveBeenCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
 
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
       mockSearchRequestDto,
+      {},
     );
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
 
   it('should call applications advanced search to retrieve Applications', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: [],
+      portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearchApplications(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result =
+      await controller.advancedSearchApplications(mockSearchRequestDto);
 
     expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
     expect(
@@ -221,40 +221,39 @@ describe('SearchController', () => {
   });
 
   it('should call NOI advanced search to retrieve NOIs', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: [],
+      portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearchNoticeOfIntents(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result =
+      await controller.advancedSearchNoticeOfIntents(mockSearchRequestDto);
 
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
     ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toHaveBeenCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
 
   it('should call advanced search to retrieve Applications only when application file type selected', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['NFUP'],
+      portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearch(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.advancedSearch(mockSearchRequestDto);
 
     expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
     expect(
@@ -269,67 +268,66 @@ describe('SearchController', () => {
   });
 
   it('should call advanced search to retrieve NOIs only when NOI file type selected', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['NOI'],
+      portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearch(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.advancedSearch(mockSearchRequestDto);
 
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
     ).toHaveBeenCalledTimes(1);
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toHaveBeenCalledWith(mockSearchRequestDto);
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
 
   it('should call advanced search to retrieve Inquiries only when Inquiry file type selected', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['GENC'],
+      portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearch(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.advancedSearch(mockSearchRequestDto);
 
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
       mockSearchRequestDto,
+      {},
     );
     expect(result.inquiries).toBeDefined();
     expect(result.totalInquiries).toBe(0);
   });
 
   it('should call advanced search to retrieve Planning Review only when Planning Review file type selected', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
       fileTypes: ['MISC'],
+      portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearch(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.advancedSearch(mockSearchRequestDto);
 
     expect(
       mockPlanningReviewAdvancedSearchService.search,
     ).toHaveBeenCalledTimes(1);
     expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledWith(
       mockSearchRequestDto,
+      {},
     );
     expect(result.inquiries).toBeDefined();
     expect(result.totalInquiries).toBe(0);

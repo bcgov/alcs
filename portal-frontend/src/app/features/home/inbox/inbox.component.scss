@@ -45,6 +45,42 @@ a {
       color: colors.$link-color;
     }
   }
+
+  .mat-mdc-form-field-icon-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clear-button {
+    padding: 0 !important;
+    width: rem(24) !important;
+    height: rem(24) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:last-child {
+      margin-right: 4px !important;
+    }
+
+    & > *[role=img] {
+      width: rem(16);
+      height: rem(16);
+      font-size: rem(16);
+
+      svg {
+        width: rem(16);
+        height: rem(16);
+      }
+    }
+
+    .mat-mdc-button-touch-target {
+      width: rem(24) !important;
+      height: rem(24) !important;
+    }
+  }
+
 }
 
 .search-form {

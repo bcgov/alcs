@@ -12,10 +12,10 @@ import * as config from 'config';
 import { ClsMiddleware } from 'nestjs-cls';
 import { S3StreamLogger } from 's3-streamlogger';
 import { install } from 'source-map-support';
+import { SPLAT } from 'triple-beam';
 import * as winston from 'winston';
 import { createLogger } from 'winston';
 import { generateModuleGraph } from './commands/graph';
-import { importApplications } from './commands/import';
 import { MainModule } from './main.module';
 
 const registerSwagger = (app: NestFastifyApplication) => {
@@ -117,7 +117,7 @@ function setupLogger() {
   });
 
   const messageFormat = winston.format.printf((info) => {
-    return `${info.timestamp} [${info.level.toUpperCase()}]${info.context ? ` [${info.context}]` : ''} ${info.message}`;
+    return `${info.timestamp} [${info.level.toUpperCase()}]${info.context ? ` [${info.context}]` : ''} ${info.message} ${info[SPLAT] ? `\n${info[SPLAT]}` : ''}`;
   });
 
   const colorFormat = winston.format.colorize({
@@ -133,11 +133,20 @@ function setupLogger() {
   const s3Transport = new winston.transports.Stream({
     level: config.get('LOG_LEVEL'),
     stream: s3Stream,
-    format: winston.format.combine(timeStampFormat, messageFormat),
+    format: winston.format.combine(
+      winston.format.errors({ stack: true }),
+      timeStampFormat,
+      messageFormat,
+    ),
   });
   const consoleTransport = new winston.transports.Console({
     level: config.get('LOG_LEVEL'),
-    format: winston.format.combine(timeStampFormat, messageFormat, colorFormat),
+    format: winston.format.combine(
+      winston.format.errors({ stack: true }),
+      timeStampFormat,
+      messageFormat,
+      colorFormat,
+    ),
   });
 
   return createLogger({
@@ -175,9 +184,6 @@ async function bootstrap() {
   const extraArg = process.argv[2];
   if (extraArg === 'graph') {
     await generateModuleGraph(app);
-  }
-  if (extraArg == 'import') {
-    await importApplications(logger);
   }
 
   // config variables

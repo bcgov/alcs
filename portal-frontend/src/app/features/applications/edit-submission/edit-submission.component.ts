@@ -95,7 +95,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     private router: Router,
     private pdfGenerationService: PdfGenerationService,
     private applicationReviewService: ApplicationSubmissionReviewService,
-    private codeService: CodeService
+    private codeService: CodeService,
   ) {}
 
   ngOnInit(): void {
@@ -106,7 +106,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
       if (
         submission?.status.code &&
         ![SUBMISSION_STATUS.IN_PROGRESS, SUBMISSION_STATUS.WRONG_GOV, SUBMISSION_STATUS.INCOMPLETE].includes(
-          submission?.status.code
+          submission?.status.code,
         )
       ) {
         this.toastService.showErrorToast('Editing is not allowed. Please contact ALC for more details');
@@ -174,7 +174,6 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
       this.dialog
         .open(ChangeApplicationTypeDialogComponent, {
           panelClass: 'no-padding',
-          disableClose: true,
           autoFocus: false,
           data: {
             submissionUuid: this.applicationSubmission.uuid,

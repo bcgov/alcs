@@ -1,7 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Repository } from 'typeorm';
+import { In, IsNull, LessThan, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import {
   ServiceNotFoundException,
@@ -15,6 +15,7 @@ import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
+import { filterUndefined } from '../../../../utils/undefined';
 import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { Application } from '../../../application/application.entity';
@@ -290,6 +291,11 @@ export class ApplicationDecisionV2Service {
       existingDecision.wasReleased || !updateDto.isDraft;
     existingDecision.linkedResolutionOutcomeCode =
       updateDto.linkedResolutionOutcomeCode;
+    existingDecision.emailSent = updateDto.emailSent;
+    existingDecision.ccEmails = filterUndefined(
+      updateDto.ccEmails,
+      existingDecision.ccEmails,
+    );
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -813,6 +819,19 @@ export class ApplicationDecisionV2Service {
     await this.documentService.update(document.document, {
       fileName,
       source: DOCUMENT_SOURCE.ALC,
+    });
+  }
+
+  async getDecisionsPendingEmail(tomorrow: Date) {
+    return this.appDecisionRepository.find({
+      where: {
+        emailSent: IsNull(),
+        date: LessThan(tomorrow),
+        isDraft: false,
+      },
+      relations: {
+        application: true,
+      },
     });
   }
 }

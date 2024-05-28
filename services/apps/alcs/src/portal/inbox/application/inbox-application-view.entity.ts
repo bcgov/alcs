@@ -10,9 +10,7 @@ import { ApplicationDecision } from '../../../alcs/application-decision/applicat
 import { ApplicationSubmissionToSubmissionStatus } from '../../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../../alcs/application/application.entity';
 import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
-import { LocalGovernment } from '../../../alcs/local-government/local-government.entity';
 import { User } from '../../../user/user.entity';
-import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
 import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 import { LinkedStatusType } from '../inbox.dto';
 
@@ -26,15 +24,10 @@ import { LinkedStatusType } from '../inbox.dto';
       .addSelect('app_sub.created_by_uuid', 'created_by_uuid')
       .addSelect('app_sub.local_government_uuid', 'local_government_uuid')
       .addSelect('app_sub.audit_created_at', 'created_at')
-      .addSelect('localGovernment.name', 'local_government_name')
       .addSelect('user.bceid_business_guid', 'bceid_business_guid')
       .addSelect('app_sub.type_code', 'application_type_code')
-      .addSelect('app.uuid', 'application_uuid')
       .addSelect('app.date_submitted_to_alc', 'date_submitted_to_alc')
-      .addSelect(
-        'app_rev.local_government_file_number',
-        'local_government_file_number',
-      )
+      .addSelect('app.uuid', 'application_uuid')
       .addSelect(
         'GREATEST(status_link.effective_date,  decision_date.date)',
         'last_update',
@@ -50,20 +43,10 @@ import { LinkedStatusType } from '../inbox.dto';
         'app.file_number = app_sub.file_number AND app.hide_from_portal = FALSE',
       )
       .leftJoin(User, 'user', 'user.uuid = app_sub.created_by_uuid')
-      .leftJoin(
-        ApplicationSubmissionReview,
-        'app_rev',
-        'app.file_number = app_rev.application_file_number',
-      )
       .innerJoinAndSelect(
         ApplicationType,
         'applicationType',
         'app_sub.type_code = applicationType.code',
-      )
-      .leftJoin(
-        LocalGovernment,
-        'localGovernment',
-        'app_sub.local_government_uuid = localGovernment.uuid',
       )
       .leftJoin(
         (qb) =>
@@ -99,9 +82,6 @@ export class InboxApplicationSubmissionView {
   lastUpdate: Date;
 
   @ViewColumn()
-  dateSubmittedToAlc: Date | null;
-
-  @ViewColumn()
   createdAt: Date;
 
   @ViewColumn()
@@ -118,9 +98,6 @@ export class InboxApplicationSubmissionView {
 
   @ViewColumn()
   localGovernmentUuid?: string;
-
-  @ViewColumn()
-  localGovernmentFileNumber?: string;
 
   @ViewColumn()
   applicationTypeCode: string;

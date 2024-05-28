@@ -151,9 +151,8 @@ export class SearchRequestDto extends PagingRequestDto {
   @IsOptional()
   resolutionYear?: number;
 
-  @IsString()
-  @IsOptional()
-  portalStatusCode?: string;
+  @IsArray()
+  portalStatusCodes: string[];
 
   @IsString()
   @IsOptional()

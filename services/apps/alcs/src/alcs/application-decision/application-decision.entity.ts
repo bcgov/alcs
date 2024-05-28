@@ -173,6 +173,21 @@ export class ApplicationDecision extends Base {
   })
   applicationUuid: string;
 
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+    comment: 'Used to track if/when the email was sent for this decision',
+  })
+  emailSent: Date | null;
+
+  @Column({
+    default: [],
+    array: true,
+    type: 'text',
+    comment: 'Tracks extra emails to send the decision email to',
+  })
+  ccEmails: string[];
+
   @AutoMap(() => [ApplicationDecisionDocument])
   @OneToMany(() => ApplicationDecisionDocument, (document) => document.decision)
   documents: ApplicationDecisionDocument[];

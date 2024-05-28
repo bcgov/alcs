@@ -231,6 +231,7 @@ export class ApplicationSubmissionController {
         parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: !!submissionGovernment,
+        ccEmails: [],
       });
     }
 
@@ -296,6 +297,7 @@ export class ApplicationSubmissionController {
           government: submissionGovernment,
           parentType: PARENT_TYPE.APPLICATION,
           primaryContact,
+          ccEmails: [],
         });
       }
 
@@ -306,6 +308,7 @@ export class ApplicationSubmissionController {
           applicationSubmission: validatedSubmission,
           government: submissionGovernment,
           parentType: PARENT_TYPE.APPLICATION,
+          ccEmails: [],
         });
       }
 
@@ -335,6 +338,7 @@ export class ApplicationSubmissionController {
             government: submissionGovernment,
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
+            ccEmails: [],
           });
         }
 
@@ -345,6 +349,7 @@ export class ApplicationSubmissionController {
             applicationSubmission: validatedSubmission,
             government: submissionGovernment,
             parentType: PARENT_TYPE.APPLICATION,
+            ccEmails: [],
           });
         }
 

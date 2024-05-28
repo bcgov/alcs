@@ -1,12 +1,14 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
-import { ApplicationDecisionComponent } from '../../../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
+import * as hash from 'object-hash';
+import { In, Repository } from 'typeorm';
 import { ApplicationDecision } from '../../../../alcs/application-decision/application-decision.entity';
+import { Application } from '../../../../alcs/application/application.entity';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../../utils/search-helper';
-import { ApplicationOwner } from '../../../application-submission/application-owner/application-owner.entity';
-import { ApplicationParcel } from '../../../application-submission/application-parcel/application-parcel.entity';
+import { APP_SEARCH_FILTERS } from '../../../../utils/search/application-search-filters';
+import { processSearchPromises } from '../../../../utils/search/search-intersection';
+import { ApplicationSubmission } from '../../../application-submission/application-submission.entity';
 import {
   AdvancedSearchResultDto,
   SearchRequestDto,
@@ -22,13 +24,47 @@ export class PublicApplicationSearchService {
     private applicationSearchRepository: Repository<PublicApplicationSubmissionSearchView>,
     @InjectRepository(LocalGovernment)
     private governmentRepository: Repository<LocalGovernment>,
+    @InjectRepository(ApplicationSubmission)
+    private applicationSubmissionRepository: Repository<ApplicationSubmission>,
+    @InjectRepository(Application)
+    private applicationRepository: Repository<Application>,
+    private redisService: RedisService,
   ) {}
 
   async searchApplications(
     searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<PublicApplicationSubmissionSearchView[]>> {
-    let query = await this.compileApplicationSearchQuery(searchDto);
-    query = this.compileApplicationGroupBySearchQuery(query);
+    const searchHash = hash(searchDto);
+    const searchKey = `search_public_application_${searchHash}`;
+
+    const client = this.redisService.getClient();
+    const cachedSearch = await client.get(searchKey);
+
+    let fileNumbers = new Set<string>();
+    if (cachedSearch) {
+      const cachedNumbers = JSON.parse(cachedSearch) as string[];
+      fileNumbers = new Set<string>(cachedNumbers);
+    } else {
+      fileNumbers = await this.searchForFileNumbers(searchDto);
+      await client.setEx(
+        searchKey,
+        180,
+        JSON.stringify([...fileNumbers.values()]),
+      );
+    }
+
+    if (fileNumbers.size === 0) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
+
+    let query = this.applicationSearchRepository
+      .createQueryBuilder('appSearch')
+      .andWhere('appSearch.fileNumber IN(:...fileNumbers)', {
+        fileNumbers: [...fileNumbers.values()],
+      });
 
     const sortQuery = this.compileSortQuery(searchDto);
 
@@ -73,222 +109,147 @@ export class PublicApplicationSearchService {
     }
   }
 
-  private compileApplicationGroupBySearchQuery(query) {
-    query = query
-      // FIXME: This is a quick fix for the search performance issues. It temporarily allows
-      //        submissions with deleted application types to be shown. For now, there are no
-      //        deleted application types, so this should be fine, but should be fixed soon.
-      .withDeleted()
-      .groupBy(
-        `
-              "appSearch"."uuid"
-            , "appSearch"."application_uuid"
-            , "appSearch"."application_region_code" 
-            , "appSearch"."file_number"
-            , "appSearch"."applicant"
-            , "appSearch"."local_government_uuid"
-            , "appSearch"."local_government_name"
-            , "appSearch"."application_type_code"
-            , "appSearch"."status"
-            , "appSearch"."outcome"
-            , "appSearch"."dest_rank"
-            , "appSearch"."date_submitted_to_alc"
-            , "appSearch"."decision_date"
-            , "appSearch"."last_update"
-            `,
-      );
-    return query;
-  }
-
-  private async compileApplicationSearchQuery(searchDto: SearchRequestDto) {
-    const query =
-      this.applicationSearchRepository.createQueryBuilder('appSearch');
+  private async searchForFileNumbers(searchDto: SearchRequestDto) {
+    const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      query
-        .andWhere('appSearch.file_number = :fileNumber')
-        .setParameters({ fileNumber: searchDto.fileNumber ?? null });
+      const promise = APP_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.applicationRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      query.andWhere(
-        "alcs.get_current_status_for_application_submission_by_uuid(appSearch.uuid) ->> 'status_type_code' IN(:...statuses)",
-        {
-          statuses: searchDto.portalStatusCodes,
-        },
+      const promise = APP_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.applicationSubmissionRepository,
       );
-    }
-
-    if (searchDto.decisionOutcome && searchDto.decisionOutcome.length > 0) {
-      query.andWhere('appSearch.outcome IN(:...outcomes)', {
-        outcomes: searchDto.decisionOutcome,
-      });
+      promises.push(promise);
     }
 
     if (searchDto.governmentName) {
-      const government = await this.governmentRepository.findOneByOrFail({
-        name: searchDto.governmentName,
-      });
-
-      query.andWhere(
-        'appSearch.local_government_uuid = :local_government_uuid',
-        {
-          local_government_uuid: government.uuid,
-        },
+      const promise = APP_SEARCH_FILTERS.addGovernmentResults(
+        searchDto,
+        this.applicationRepository,
+        this.governmentRepository,
       );
+      promises.push(promise);
     }
 
     if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
-      query.andWhere('appSearch.application_region_code IN(:...regions)', {
-        regions: searchDto.regionCodes,
-      });
+      this.addRegionResults(searchDto, promises);
     }
 
-    this.compileSearchByNameQuery(searchDto, query);
-    this.compileParcelSearchQuery(searchDto, query);
-    this.compileDecisionSearchQuery(searchDto, query);
-    this.compileFileTypeSearchQuery(searchDto, query);
+    if (searchDto.name) {
+      const promise = APP_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
+    }
 
-    return query;
-  }
+    if (searchDto.pid || searchDto.civicAddress) {
+      const promise = APP_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.applicationSubmissionRepository,
+      );
+      promises.push(promise);
+    }
 
-  private compileDecisionSearchQuery(searchDto: SearchRequestDto, query) {
     if (
       searchDto.dateDecidedTo !== undefined ||
       searchDto.dateDecidedFrom !== undefined ||
       searchDto.decisionMakerCode !== undefined
     ) {
-      query = this.joinApplicationDecision(query);
-
-      if (searchDto.dateDecidedFrom !== undefined) {
-        query = query.andWhere('decision.date >= :dateDecidedFrom', {
-          dateDecidedFrom: new Date(searchDto.dateDecidedFrom),
-        });
-      }
-
-      if (searchDto.dateDecidedTo !== undefined) {
-        query = query.andWhere('decision.date <= :dateDecidedTo', {
-          dateDecidedTo: new Date(searchDto.dateDecidedTo),
-        });
-      }
-
-      if (searchDto.decisionMakerCode !== undefined) {
-        query = query.andWhere(
-          'decision.decision_maker_code = :decisionMakerCode',
-          {
-            decisionMakerCode: searchDto.decisionMakerCode,
-          },
-        );
-      }
-    }
-    return query;
-  }
-
-  private joinApplicationDecision(query: any) {
-    query = query.innerJoin(
-      ApplicationDecision,
-      'decision',
-      'decision.application_uuid = "appSearch"."application_uuid" AND decision.is_draft = FALSE',
-    );
-    return query;
-  }
-
-  private compileParcelSearchQuery(searchDto: SearchRequestDto, query) {
-    query = query.leftJoin(
-      ApplicationParcel,
-      'parcel',
-      'parcel.application_submission_uuid = appSearch.uuid',
-    );
-
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
+      this.addDecisionResults(searchDto, promises);
     }
 
-    if (searchDto.civicAddress) {
+    if (searchDto.decisionOutcome && searchDto.decisionOutcome.length > 0) {
+      this.addDecisionOutcomeResults(searchDto, promises);
+    }
+
+    if (searchDto.fileTypes.length > 0) {
+      const promise = APP_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.applicationRepository,
+      );
+      promises.push(promise);
+    }
+
+    const t0 = performance.now();
+    const finalResult = await processSearchPromises(promises);
+    const t1 = performance.now();
+    this.logger.debug(
+      `Public Application pre-search search took ${t1 - t0} milliseconds.`,
+    );
+    return finalResult;
+  }
+
+  private addDecisionOutcomeResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.applicationSearchRepository.find({
+      where: {
+        outcome: In(searchDto.decisionOutcome!),
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+
+    promises.push(promise);
+  }
+
+  private addRegionResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.applicationRepository.find({
+      where: {
+        regionCode: In(searchDto.regionCodes!),
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    promises.push(promise);
+  }
+
+  private addDecisionResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    let query = this.applicationRepository
+      .createQueryBuilder('app')
+      .select('app.fileNumber')
+      .innerJoin(
+        ApplicationDecision,
+        'decision',
+        'decision.application_uuid = "app"."uuid" AND decision.is_draft = FALSE',
+      );
+
+    if (searchDto.dateDecidedFrom !== undefined) {
+      query = query.andWhere('decision.date >= :dateDecidedFrom', {
+        dateDecidedFrom: new Date(searchDto.dateDecidedFrom),
+      });
+    }
+
+    if (searchDto.dateDecidedTo !== undefined) {
+      query = query.andWhere('decision.date <= :dateDecidedTo', {
+        dateDecidedTo: new Date(searchDto.dateDecidedTo),
+      });
+    }
+
+    if (searchDto.decisionMakerCode !== undefined) {
       query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
+        'decision.decision_maker_code = :decisionMakerCode',
         {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+          decisionMakerCode: searchDto.decisionMakerCode,
         },
       );
     }
-    return query;
-  }
-
-  private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
-    if (searchDto.name) {
-      const formattedSearchString =
-        formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-
-      query = query
-        .leftJoin(
-          ApplicationOwner,
-          'application_owner',
-          'application_owner.application_submission_uuid = appSearch.uuid',
-        )
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where(
-                "LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)",
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(application_owner.first_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
-                names: formattedSearchString,
-              })
-              .orWhere(
-                'LOWER(application_owner.organization_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              ),
-          ),
-        );
-    }
-    return query;
-  }
-
-  private compileFileTypeSearchQuery(searchDto: SearchRequestDto, query) {
-    if (searchDto.fileTypes.length > 0) {
-      // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
-      if (
-        searchDto.dateDecidedFrom === undefined &&
-        searchDto.dateDecidedTo === undefined &&
-        searchDto.decisionMakerCode === undefined
-      ) {
-        query = this.joinApplicationDecision(query);
-      }
-
-      query = query.leftJoin(
-        ApplicationDecisionComponent,
-        'decisionComponent',
-        'decisionComponent.application_decision_uuid = decision.uuid',
-      );
-
-      query = query.andWhere(
-        new Brackets((qb) =>
-          qb
-            .where('appSearch.application_type_code IN (:...typeCodes)', {
-              typeCodes: searchDto.fileTypes,
-            })
-            .orWhere(
-              'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
-              {
-                typeCodes: searchDto.fileTypes,
-              },
-            ),
-        ),
-      );
-    }
-
-    return query;
+    promises.push(query.getMany());
   }
 }

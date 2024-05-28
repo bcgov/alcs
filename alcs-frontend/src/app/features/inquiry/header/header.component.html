@@ -5,6 +5,10 @@
   <div class="first-row">
     <div class="title">
       <h5>{{ inquiry.fileNumber }} ({{ inquiry.inquirerLastName ?? 'Unknown' }})</h5>
+      <app-application-legacy-id
+        *ngIf="inquiry.legacyId"
+        [legacyId]="inquiry.legacyId"
+      ></app-application-legacy-id>
       <div class="labels">
         <app-application-type-pill [type]="inquiry.type"></app-application-type-pill>
       </div>

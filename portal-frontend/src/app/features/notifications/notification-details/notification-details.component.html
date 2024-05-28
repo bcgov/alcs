@@ -20,7 +20,7 @@
         <div>{{ transferee.displayName }}</div>
         <div>
           {{ transferee.organizationName }}
-          <app-no-data *ngIf="!transferee.organizationName" [showRequired]="false"></app-no-data>
+          <div *ngIf="!transferee.organizationName" class="no-data-text">Not Applicable</div>
         </div>
         <div>
           <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>

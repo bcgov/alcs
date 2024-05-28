@@ -5,9 +5,7 @@ import { NoticeOfIntentDetailService } from '../../../../services/notice-of-inte
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import {
   NoticeOfIntentDto,
-  NoticeOfIntentSubmissionDto,
   NoticeOfIntentSubtypeDto,
-  STRUCTURE_TYPES,
   UpdateNoticeOfIntentDto,
 } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
@@ -20,7 +18,7 @@ import { ToastService } from '../../../../services/toast/toast.service';
 })
 export class PreparationComponent implements OnInit {
   dateSubmittedToAlc?: string;
-  selectableTypes: { label: string; value: string; disabled: boolean }[] = [];
+  selectableTypes: { label: string; value: string }[] = [];
   selectedSubtypes: string[] = [];
   private subtypes: NoticeOfIntentSubtypeDto[] = [];
 
@@ -38,7 +36,7 @@ export class PreparationComponent implements OnInit {
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -59,75 +57,23 @@ export class PreparationComponent implements OnInit {
 
   private async loadSubtypes() {
     if (this._noticeOfIntent) {
-      const submission = await this.noticeOfIntentSubmissionService.fetchSubmission(this._noticeOfIntent.fileNumber);
-
       const subtypes = await this.noticeOfIntentService.listSubtypes();
       this.subtypes = subtypes;
 
       this.selectableTypes = subtypes.map((subtype) => {
-        let disabled = false;
-
-        disabled = this.isSubtypeDisabled(submission, subtype);
-
         return {
           label: subtype.label,
           value: subtype.label,
-          disabled,
         };
       });
     }
   }
 
-  private isSubtypeDisabled(submission: NoticeOfIntentSubmissionDto, subtype: NoticeOfIntentSubtypeDto) {
-    const isResidentialAccessory =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE) &&
-      subtype.code === 'RACS';
-    if (isResidentialAccessory) {
-      return true;
-    }
-
-    const isPrincipalResidence =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE) &&
-      subtype.code === 'RPRI';
-    if (isPrincipalResidence) {
-      return true;
-    }
-
-    const isAdditionalResidence =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE) &&
-      subtype.code === 'RADD';
-    if (isAdditionalResidence) {
-      return true;
-    }
-
-    const isFarmStructure =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.FARM_STRUCTURE) &&
-      subtype.code === 'FRST';
-    if (isFarmStructure) {
-      return true;
-    }
-
-    const isOther =
-      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.OTHER) &&
-      subtype.code === 'OTHR';
-    if (isOther) {
-      return true;
-    }
-
-    if (submission.soilIsAreaWideFilling && subtype.code === 'ARWF') {
-      return true;
-    }
-
-    if (submission.soilIsExtractionOrMining && subtype.code === 'AEPM') {
-      return true;
-    }
-
-    return false;
-  }
-
-  async saveSubtypes($event: string | string[] | null) {
-    if (this._noticeOfIntent && $event instanceof Array) {
-      const selectedCodes = $event.map((label) => this.subtypes.find((subtype) => subtype.label === label)!.code);
+  async saveSubtypes(selectedLabels: string | string[] | null) {
+    if (this._noticeOfIntent && selectedLabels instanceof Array) {
+      const selectedCodes = selectedLabels.map(
+        (selectedLabel) => this.subtypes.find((subtype) => subtype.label === selectedLabel)!.code,
+      );
       await this.noticeOfIntentDetailService.update(this._noticeOfIntent?.fileNumber, {
         subtype: selectedCodes,
       });

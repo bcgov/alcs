@@ -69,7 +69,7 @@ export class OwnerDialogComponent {
       existingOwner?: ApplicationOwnerDto;
       documentService: ApplicationDocumentService | NoticeOfIntentDocumentService;
       ownerService: ApplicationOwnerService | NoticeOfIntentOwnerService;
-    }
+    },
   ) {
     if (data && data.existingOwner) {
       this.onChangeType({
@@ -98,9 +98,10 @@ export class OwnerDialogComponent {
     } else {
       this.organizationName.setValidators([]);
       this.corporateSummary.setValidators([]);
-      this.organizationName.reset();
       this.corporateSummary.reset();
     }
+    this.corporateSummary.updateValueAndValidity();
+    this.organizationName.updateValueAndValidity();
   }
 
   async onCreate() {
@@ -118,11 +119,13 @@ export class OwnerDialogComponent {
           return;
         }
       }
+
+      const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;
       const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
-        organizationName: this.organizationName.getRawValue() || undefined,
+        organizationName: orgName,
         firstName: this.firstName.getRawValue() || undefined,
         lastName: this.lastName.getRawValue() || undefined,
-        corporateSummaryUuid: documentUuid?.uuid,
+        corporateSummaryUuid: documentUuid?.uuid ?? null,
         email: this.email.getRawValue()!,
         phoneNumber: this.phoneNumber.getRawValue()!,
         typeCode: this.type.getRawValue()!,
@@ -171,11 +174,12 @@ export class OwnerDialogComponent {
         document = await this.uploadPendingFile(this.pendingFile);
       }
 
+      const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;
       const updateDto: ApplicationOwnerUpdateDto = {
-        organizationName: this.organizationName.getRawValue(),
+        organizationName: orgName,
         firstName: this.firstName.getRawValue(),
         lastName: this.lastName.getRawValue(),
-        corporateSummaryUuid: document?.uuid,
+        corporateSummaryUuid: document?.uuid ?? null,
         email: this.email.getRawValue()!,
         phoneNumber: this.phoneNumber.getRawValue()!,
         typeCode: this.type.getRawValue()!,
@@ -190,6 +194,7 @@ export class OwnerDialogComponent {
       this.isLoading = false;
     } else {
       this.form.markAllAsTouched();
+      this.showFileErrors = true;
     }
   }
 

@@ -1,5 +1,4 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { LocalGovernmentDto } from '../admin-local-government/admin-local-government.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
@@ -31,6 +30,7 @@ export interface UpdateNotificationDto {
   summary?: string;
   staffObservations?: string;
   proposalEndDate?: number;
+  regionCode?: string;
 }
 
 export interface NotificationTypeDto extends BaseCodeDto {

@@ -1,7 +1,11 @@
+import { RedisService } from '@app/common/redis/redis.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { createMockQuery } from '../../../../test/mocks/mockTypes';
+import { NoticeOfIntent } from '../../../alcs/notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentSubmission } from '../../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { InboxRequestDto } from '../inbox.dto';
 import { InboxNoticeOfIntentSubmissionView } from './inbox-notice-of-intent-view.entity';
 import { InboxNoticeOfIntentService } from './inbox-notice-of-intent.service';
@@ -11,15 +15,18 @@ describe('InboxNoticeOfIntentService', () => {
   let mockNoticeOfIntentSubmissionSearchViewRepository: DeepMocked<
     Repository<InboxNoticeOfIntentSubmissionView>
   >;
+  let mockNOIRepository: DeepMocked<Repository<NoticeOfIntent>>;
+  let mockNOISubRepository: DeepMocked<Repository<NoticeOfIntentSubmission>>;
+  let mockRedisService: DeepMocked<RedisService>;
 
   const mockSearchDto: InboxRequestDto = {
-    fileNumber: '123',
+    fileNumber: '100000',
     portalStatusCodes: ['A'],
     governmentFileNumber: 'B',
     name: 'D',
     pid: 'E',
     civicAddress: 'F',
-    fileTypes: ['type1', 'type2'],
+    fileTypes: ['NOI'],
     page: 1,
     pageSize: 10,
   };
@@ -28,20 +35,16 @@ describe('InboxNoticeOfIntentService', () => {
 
   beforeEach(async () => {
     mockNoticeOfIntentSubmissionSearchViewRepository = createMock();
+    mockNOIRepository = createMock();
+    mockNOISubRepository = createMock();
+    mockRedisService = createMock();
 
-    mockQuery = {
-      getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
-      orderBy: jest.fn().mockReturnThis(),
-      offset: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      innerJoinAndMapOne: jest.fn().mockReturnThis(),
-      groupBy: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      andWhere: jest.fn().mockReturnThis(),
-      setParameters: jest.fn().mockReturnThis(),
-      leftJoin: jest.fn().mockReturnThis(),
-      withDeleted: jest.fn().mockReturnThis(),
-    };
+    mockQuery = createMockQuery();
+
+    mockRedisService.getClient.mockReturnValue({
+      get: async () => null,
+      setEx: async () => null,
+    } as any);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -49,6 +52,18 @@ describe('InboxNoticeOfIntentService', () => {
         {
           provide: getRepositoryToken(InboxNoticeOfIntentSubmissionView),
           useValue: mockNoticeOfIntentSubmissionSearchViewRepository,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntent),
+          useValue: mockNOIRepository,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntentSubmission),
+          useValue: mockNOISubRepository,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
         },
       ],
     }).compile();
@@ -63,9 +78,8 @@ describe('InboxNoticeOfIntentService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
-    mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
-      mockQuery as any,
-    );
+    mockNOIRepository.find.mockResolvedValue([]);
+    mockNOISubRepository.createQueryBuilder.mockReturnValue(mockQuery);
 
     const result = await service.searchNoticeOfIntents(
       mockSearchDto,
@@ -75,16 +89,22 @@ describe('InboxNoticeOfIntentService', () => {
     );
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(
-      mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder,
-    ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(6);
+    expect(mockNOIRepository.find).toHaveBeenCalledTimes(2);
+    expect(mockNOISubRepository.createQueryBuilder).toHaveBeenCalledTimes(3);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(3);
   });
 
-  it('should call compileNoticeOfIntentSearchQuery method correctly', async () => {
+  it('should call searchForFileNumbers method correctly', async () => {
+    mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder.mockReturnValue(
+      mockQuery,
+    );
+
     const compileApplicationSearchQuerySpy = jest
-      .spyOn(service as any, 'compileNoticeOfIntentSearchQuery')
-      .mockResolvedValue(mockQuery);
+      .spyOn(service as any, 'searchForFileNumbers')
+      .mockResolvedValue({
+        didSearch: true,
+        finalResult: new Set(['100000']),
+      });
 
     const result = await service.searchNoticeOfIntents(
       mockSearchDto,
@@ -94,11 +114,8 @@ describe('InboxNoticeOfIntentService', () => {
     );
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileApplicationSearchQuerySpy).toBeCalledWith(
+    expect(compileApplicationSearchQuerySpy).toHaveBeenCalledWith(
       mockSearchDto,
-      '',
-      '',
-      '',
     );
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);

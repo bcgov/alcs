@@ -2,12 +2,9 @@
   <h1>Advanced Search</h1>
 </div>
 
-<div class="subtitle">
-  <h6 class="subheading">Provide one or more of the following criteria:</h6>
-</div>
-
 <form class="content" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
   <div class="search-fields-wrapper">
+    <h4>File Details</h4>
     <div class="row">
       <div class="column">
         <mat-form-field appearance="outline">
@@ -16,79 +13,43 @@
         </mat-form-field>
       </div>
       <div class="column">
-        <mat-form-field appearance="outline">
+        <mat-form-field
+          matTooltip="Search by Primary Contact, Parcel Owner, Organization, Ministry or Department, Inquirer, SRW Transferee, PR
+          Document Name"
+          appearance="outline"
+        >
           <mat-label>Name</mat-label>
           <input id="name" matInput formControlName="name" minlength="3" />
+          <mat-icon matSuffix>info</mat-icon>
         </mat-form-field>
-        <div class="subtext">
-          Search by Primary Contact, Parcel Owner, Organization, Ministry or Department, Inquirer, SRW Transferee, PR Document
-          Name
-        </div>
+        <div class="subtext"></div>
         <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="address-search-fields-wrapper">
     <div class="row">
       <div class="column">
-        <mat-form-field class="address-field" appearance="outline">
-          <mat-label>PID</mat-label>
-          <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
-        </mat-form-field>
-        <div *ngIf="pidInvalid" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
-        </div>
+        <app-file-type-filter-drop-down
+          label="Current Portal Status"
+          #statusTypeDropDown
+          [fileTypeData]="portalStatusDataService"
+          (fileTypeChange)="onPortalStatusChange($event)"
+          [preExpanded]="['With ALC']"
+        />
       </div>
+
       <div class="column">
-        <mat-form-field appearance="outline" class="address-field">
-          <mat-label>Civic Address</mat-label>
-          <input id="civicAddress" matInput placeholder="Civic Address" formControlName="civicAddress" minlength="3" />
-        </mat-form-field>
-        <div *ngIf="civicAddressInvalid" class="field-error column">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="civicAddressControl.errors?.['minlength']">Enter 3 or more characters to search</div>
-        </div>
+        <app-file-type-filter-drop-down
+          label="File Type"
+          tooltip="Note: This field searches both proposal and decision component type"
+          #fileTypeDropDown
+          [fileTypeData]="fileTypeService"
+          (fileTypeChange)="onFileTypeChange($event)"
+        />
       </div>
     </div>
-
-    <div class="info-banner">
-      <div class="icon">
-        <mat-icon>info</mat-icon>
-      </div>
-      <div class="info-description">
-        Property details change over time. Use both ALCS and
-        <a href="https://arcmaps.gov.bc.ca/ess/hm/alc/" target="_blank">iMap</a> to confirm ALC history on a property
-      </div>
-    </div>
-  </div>
-  <div class="expand-search search-fields-wrapper">
-    <div
-      *ngIf="!isSearchExpanded"
-      class="expand-search-btn"
-      (click)="expandSearchClicked()"
-      (keyup)="expandSearchClicked()"
-    >
-      <span>More Criteria</span>
-      <mat-icon>keyboard_arrow_down</mat-icon>
-    </div>
-
-    <div
-      *ngIf="isSearchExpanded"
-      class="expand-search-btn"
-      (click)="expandSearchClicked()"
-      (keyup)="expandSearchClicked()"
-    >
-      <span>Less Criteria</span>
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </div>
-  </div>
-
-  <div *ngIf="isSearchExpanded" class="search-fields-wrapper">
     <div class="row">
       <div class="column">
         <div class="row resolution-wrapper">
@@ -118,25 +79,41 @@
         </mat-form-field>
       </div>
     </div>
+  </div>
+
+  <div class="search-fields-wrapper">
+    <h4>Location</h4>
     <div class="row">
       <div class="column">
-        <ng-select
-          appearance="outline"
-          placeholder="Current Portal Status"
-          [items]="allStatuses"
-          bindLabel="label"
-          bindValue="code"
-          [formControl]="portalStatusControl"
-        >
-        </ng-select>
+        <mat-form-field class="address-field" appearance="outline">
+          <mat-label>PID</mat-label>
+          <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
+        </mat-form-field>
+        <div *ngIf="pidInvalid" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
+        </div>
       </div>
-
       <div class="column">
-        <app-file-type-filter-drop-down #fileTypeDropDown (fileTypeChange)="onFileTypeChange($event)" />
-        <div class="subtext">Note: This field searches both proposal and decision component type</div>
+        <mat-form-field appearance="outline" class="address-field">
+          <mat-label>Civic Address</mat-label>
+          <input id="civicAddress" matInput placeholder="Civic Address" formControlName="civicAddress" minlength="3" />
+        </mat-form-field>
+        <div *ngIf="civicAddressInvalid" class="field-error column">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="civicAddressControl.errors?.['minlength']">Enter 3 or more characters to search</div>
+        </div>
+      </div>
+      <div class="info-banner">
+        <div class="icon">
+          <mat-icon>info</mat-icon>
+        </div>
+        <div class="info-description">
+          Property details change over time. Use both ALCS and
+          <a href="https://arcmaps.gov.bc.ca/ess/hm/alc/" target="_blank">iMap</a> to confirm ALC history on a property
+        </div>
       </div>
     </div>
-
     <div class="row">
       <div class="column">
         <ng-select
@@ -166,65 +143,115 @@
         </ng-select>
       </div>
     </div>
-    <div class="row date-row-label">Date Submitted to ALC</div>
-    <div class="row date-row">
+  </div>
+
+  <div class="search-fields-wrapper">
+    <h4>Date Range</h4>
+    <div class="row">
       <div class="column">
-        <mat-form-field appearance="outline" class="date-picker">
-          <mat-label>From</mat-label>
+        <mat-form-field (click)="dateSubmittedFromPicker.open()" appearance="outline" class="date-picker">
+          <mat-label>Submitted to ALC - Start Date</mat-label>
           <input
             matInput
-            (click)="dateSubmittedFromPicker.open()"
+            readonly
             [matDatepicker]="dateSubmittedFromPicker"
             formControlName="dateSubmittedFrom"
             name="dateSubmittedFrom"
+            min="1970"
+            [max]="today | date: 'yyyy-MM-dd'"
           />
+          <button
+            class="clear-button"
+            *ngIf="searchForm.controls.dateSubmittedFrom.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="$event.stopPropagation(); searchForm.controls.dateSubmittedFrom.reset()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
           <mat-datepicker-toggle matSuffix [for]="dateSubmittedFromPicker"></mat-datepicker-toggle>
           <mat-datepicker #dateSubmittedFromPicker type="date"></mat-datepicker>
         </mat-form-field>
       </div>
 
       <div class="column">
-        <mat-form-field appearance="outline" class="date-picker">
-          <mat-label>To</mat-label>
+        <mat-form-field (click)="dateSubmittedToPicker.open()" appearance="outline" class="date-picker">
+          <mat-label>Submitted to ALC - End Date</mat-label>
           <input
             matInput
-            (click)="dateSubmittedToPicker.open()"
+            readonly
             [matDatepicker]="dateSubmittedToPicker"
             formControlName="dateSubmittedTo"
             name="dateSubmittedTo"
+            min="1970"
+            [max]="today | date: 'yyyy-MM-dd'"
           />
+          <button
+            class="clear-button"
+            *ngIf="searchForm.controls.dateSubmittedTo.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="$event.stopPropagation(); searchForm.controls.dateSubmittedTo.reset()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
           <mat-datepicker-toggle matSuffix [for]="dateSubmittedToPicker"></mat-datepicker-toggle>
           <mat-datepicker #dateSubmittedToPicker type="date"></mat-datepicker>
         </mat-form-field>
       </div>
     </div>
-    <div class="row date-row-label">Date Decided</div>
-    <div class="row date-row">
+    <div class="row">
       <div class="column">
-        <mat-form-field appearance="outline" class="date-picker">
-          <mat-label>From</mat-label>
+        <mat-form-field (click)="dateDecidedFromPicker.open()" appearance="outline" class="date-picker">
+          <mat-label>Decision - Start Date</mat-label>
           <input
             matInput
-            (click)="dateDecidedFromPicker.open()"
+            readonly
             [matDatepicker]="dateDecidedFromPicker"
             formControlName="dateDecidedFrom"
             name="dateDecidedFrom"
+            min="1970"
+            [max]="today | date: 'yyyy-MM-dd'"
           />
+          <button
+            class="clear-button"
+            *ngIf="searchForm.controls.dateDecidedFrom.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="$event.stopPropagation(); searchForm.controls.dateDecidedFrom.reset()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
           <mat-datepicker-toggle matSuffix [for]="dateDecidedFromPicker"></mat-datepicker-toggle>
           <mat-datepicker #dateDecidedFromPicker type="date"></mat-datepicker>
         </mat-form-field>
       </div>
 
       <div class="column">
-        <mat-form-field appearance="outline" class="date-picker">
-          <mat-label>To</mat-label>
+        <mat-form-field (click)="dateDecidedToPicker.open()" appearance="outline" class="date-picker">
+          <mat-label>Decision - End Date</mat-label>
           <input
             matInput
-            (click)="dateDecidedToPicker.open()"
+            readonly
             [matDatepicker]="dateDecidedToPicker"
             formControlName="dateDecidedTo"
             name="dateDecidedTo"
+            min="1970"
+            [max]="today | date: 'yyyy-MM-dd'"
           />
+          <button
+            class="clear-button"
+            *ngIf="searchForm.controls.dateDecidedTo.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="$event.stopPropagation(); searchForm.controls.dateDecidedTo.reset()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
           <mat-datepicker-toggle matSuffix [for]="dateDecidedToPicker"></mat-datepicker-toggle>
           <mat-datepicker #dateDecidedToPicker type="date"></mat-datepicker>
         </mat-form-field>
@@ -249,7 +276,7 @@
   <h2 class="search-title">Search Results:</h2>
   <mat-tab-group id="results" mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>
     <mat-tab>
-      <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
+      <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
       <app-application-search-table
         *ngIf="!isLoading"
         [applications]="applications"
@@ -265,7 +292,7 @@
     </mat-tab>
 
     <mat-tab>
-      <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
+      <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
       <app-notice-of-intent-search-table
         *ngIf="!isLoading"
         [noticeOfIntents]="noticeOfIntents"
@@ -281,7 +308,7 @@
     </mat-tab>
 
     <mat-tab>
-      <ng-template mat-tab-label> Planning Reviews: {{ planningReviewsTotal }} </ng-template>
+      <ng-template mat-tab-label> Planning Reviews: {{ planningReviewsTotal }}</ng-template>
       <app-planning-review-search-table
         *ngIf="!isLoading"
         [planningReviews]="planningReviews"
@@ -296,7 +323,7 @@
     </mat-tab>
 
     <mat-tab>
-      <ng-template mat-tab-label> Notifications: {{ notificationTotal }} </ng-template>
+      <ng-template mat-tab-label> Notifications: {{ notificationTotal }}</ng-template>
       <app-notification-search-table
         [statuses]="notificationStatuses"
         [notifications]="notifications"
@@ -311,7 +338,7 @@
     </mat-tab>
 
     <mat-tab>
-      <ng-template mat-tab-label> Inquiries: {{ inquiriesTotal }} </ng-template>
+      <ng-template mat-tab-label> Inquiries: {{ inquiriesTotal }}</ng-template>
       <app-inquiry-search-table
         *ngIf="!isLoading"
         [inquiries]="inquiries"

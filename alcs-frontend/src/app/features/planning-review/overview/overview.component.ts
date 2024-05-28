@@ -37,6 +37,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       this.planningReview = review;
       if (review) {
         this.loadEvents(review.fileNumber);
+        this.loadGovernments();
       }
     });
 
@@ -47,7 +48,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
       }));
     });
     this.loadTypes();
-    this.loadGovernments();
   }
 
   private async loadTypes() {
@@ -61,12 +61,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   private async loadGovernments() {
-    const governments = await this.localGovernmentService.list();
+    const governments = await this.localGovernmentService.listAll();
+
     if (governments) {
-      this.localGovernments = governments.map((government) => ({
-        label: government.name,
-        value: government.uuid,
-      }));
+      this.localGovernments = governments
+        .filter((gov) => gov.isActive || gov.uuid === this.planningReview?.localGovernment?.uuid)
+        .map((government) => ({
+          label: government.name,
+          value: government.uuid,
+          disabled: !government.isActive,
+        }));
     }
   }
 
@@ -101,7 +105,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         localGovernmentUuid: $event,
       });
       if (update) {
-        this.toastService.showSuccessToast('Notice of Intent updated');
+        this.toastService.showSuccessToast('Planning Review updated');
       }
     }
   }
@@ -112,7 +116,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         regionCode: $event,
       });
       if (update) {
-        this.toastService.showSuccessToast('Notice of Intent updated');
+        this.toastService.showSuccessToast('Planning Review updated');
       }
     }
   }
