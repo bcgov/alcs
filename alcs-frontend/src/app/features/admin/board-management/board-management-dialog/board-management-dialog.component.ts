@@ -11,7 +11,16 @@ import { CardStatusService } from '../../../../services/card/card-status/card-st
 import { CardType } from '../../../../shared/card/card.component';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 
-const DISABLED_CREATE_CARD_TYPES = [CardType.APP, CardType.NOI, CardType.NOTIFICATION];
+const DISABLED_CREATE_CARD_TYPES = [
+  CardType.APP,
+  // Has been removed from `CardType`, but still exists in DB
+  'COV',
+  CardType.MODI,
+  CardType.NOI,
+  CardType.NOI_MODI,
+  CardType.NOTIFICATION,
+  CardType.RECON,
+];
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
