@@ -82,17 +82,17 @@ export class InboxApplicationService {
     //User Permissions
     let where = '"appSearch".created_by_uuid = :userUuid';
     if (!searchDto.filterBy) {
-      if (bceidBusinessGuid) {
+      if (bceidBusinessGuid && !searchDto.createdByMe) {
         where += ' OR "appSearch".bceid_business_guid = :bceidBusinessGuid';
       }
-      if (governmentUuid) {
+      if (governmentUuid && !searchDto.createdByMe) {
         where += ` OR ("appSearch".local_government_uuid = :governmentUuid AND ("appSearch".date_submitted_to_alc IS NOT NULL OR appSearch.status ->> 'status_type_code' IN ('REVG', 'SUBG', 'INCG')))`;
       }
       //Prevent someone without governmentUuid from using filterBy
     } else if (governmentUuid && bceidBusinessGuid) {
       if (searchDto.filterBy === 'submitted') {
         where = `"appSearch".local_government_uuid = :governmentUuid AND ("appSearch".date_submitted_to_alc IS NOT NULL OR appSearch.status ->> 'status_type_code' IN ('REVG', 'SUBG', 'INCG'))`;
-      } else {
+      } else if (!searchDto.createdByMe) {
         where =
           '("appSearch".created_by_uuid = :userUuid OR "appSearch".bceid_business_guid = :bceidBusinessGuid)';
       }

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
+import { InboxRequestDto } from './inbox.dto';
 import { InboxService } from './inbox.service';
 
 describe('InboxService', () => {
@@ -24,12 +25,11 @@ describe('InboxService', () => {
     totalNonApplications: 0,
   };
 
-  const mockSearchRequestDto = {
+  const mockSearchRequestDto: InboxRequestDto = {
     pageSize: 1,
     page: 1,
-    sortField: '1',
-    sortDirection: 'ASC',
     fileTypes: [],
+    createdByMe: false,
   };
 
   beforeEach(() => {
@@ -72,7 +72,7 @@ describe('InboxService', () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.search(mockSearchRequestDto);
@@ -97,7 +97,7 @@ describe('InboxService', () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.searchApplications(mockSearchRequestDto);
@@ -122,7 +122,7 @@ describe('InboxService', () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.searchNoticeOfIntents(mockSearchRequestDto);
@@ -147,7 +147,7 @@ describe('InboxService', () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.searchNotifications(mockSearchRequestDto);
@@ -170,7 +170,7 @@ describe('InboxService', () => {
     mockHttpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.listStatuses();

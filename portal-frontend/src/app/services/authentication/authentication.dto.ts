@@ -9,5 +9,6 @@ export interface UserDto {
   government?: string;
   isLocalGovernment: boolean;
   isFirstNationGovernment: boolean;
+  isBusiness: boolean;
   businessName?: string | null;
 }

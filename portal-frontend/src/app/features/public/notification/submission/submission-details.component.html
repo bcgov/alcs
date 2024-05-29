@@ -11,7 +11,9 @@
         <div>{{ transferee.displayName }}</div>
         <div>
           {{ transferee.organizationName }}
-          <app-no-data *ngIf="!transferee.organizationName"></app-no-data>
+          <div class="no-data" *ngIf="!transferee.organizationName">
+            <div class="no-data-text">Not Applicable</div>
+          </div>
         </div>
       </ng-container>
     </div>

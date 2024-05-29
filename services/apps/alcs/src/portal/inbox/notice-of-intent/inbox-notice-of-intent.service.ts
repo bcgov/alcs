@@ -77,10 +77,10 @@ export class InboxNoticeOfIntentService {
     //User Permissions
     let where = 'noiSearch.created_by_uuid = :userUuid';
     if (!searchDto.filterBy) {
-      if (bceidBusinessGuid) {
+      if (bceidBusinessGuid && !searchDto.createdByMe) {
         where += ' OR noiSearch.bceid_business_guid = :bceidBusinessGuid';
       }
-      if (governmentUuid) {
+      if (governmentUuid && !searchDto.createdByMe) {
         where +=
           ' OR (noiSearch.local_government_uuid = :governmentUuid AND noiSearch.date_submitted_to_alc IS NOT NULL)';
       }
@@ -88,7 +88,7 @@ export class InboxNoticeOfIntentService {
       if (searchDto.filterBy === 'submitted') {
         where =
           'noiSearch.local_government_uuid = :governmentUuid AND noiSearch.date_submitted_to_alc IS NOT NULL';
-      } else {
+      } else if (!searchDto.createdByMe) {
         where =
           '(noiSearch.created_by_uuid = :userUuid OR noiSearch.bceid_business_guid = :bceidBusinessGuid)';
       }

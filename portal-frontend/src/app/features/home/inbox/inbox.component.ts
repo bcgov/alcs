@@ -1,9 +1,10 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild, Input, SimpleChanges } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import {
   ApplicationStatusDto,
@@ -17,7 +18,6 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { FileTypeFilterDropDownComponent } from '../../public/search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from '../../public/search/search.interface';
-import { ActivatedRoute, Router } from '@angular/router';
 
 export interface InboxResultDto extends BaseInboxResultDto {
   statusType: ApplicationStatusDto;
@@ -48,6 +48,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
+
   @ViewChild(MatTabGroup)
   set tab(tabGroup: MatTabGroup) {
     if (tabGroup) {
@@ -58,6 +59,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     }
     this.tabGroup = tabGroup;
   }
+
   @ViewChild('fileTypeDropDown') fileTypeFilterDropDownComponent!: FileTypeFilterDropDownComponent;
 
   @Input() currentTabName: string = '';
@@ -82,6 +84,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   nameControl = new FormControl<string | undefined>(undefined);
   civicAddressControl = new FormControl<string | undefined>(undefined);
   filterBy = new FormControl<string | undefined>(undefined);
+  createdByMe = new FormControl<boolean>(false);
   searchForm = new FormGroup({
     fileNumber: new FormControl<string | undefined>(undefined),
     name: this.nameControl,
@@ -91,6 +94,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     componentType: this.componentTypeControl,
     governmentFileNumber: this.governmentFileNumber,
     filterBy: this.filterBy,
+    createdByMe: this.createdByMe,
   });
   previousFileTypes: string[] = [];
 
@@ -130,7 +134,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.titleService.setTitle('ALC Portal | Inbox');
   }
@@ -230,6 +234,7 @@ export class InboxComponent implements OnInit, OnDestroy {
       governmentFileNumber: this.formatStringSearchParam(searchControls.governmentFileNumber.value),
       fileTypes: searchControls.componentType.value ? searchControls.componentType.value : [],
       filterBy: searchControls.filterBy.value ?? undefined,
+      createdByMe: searchControls.createdByMe.value ?? false,
     };
   }
 
