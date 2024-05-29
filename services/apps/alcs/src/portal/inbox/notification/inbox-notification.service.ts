@@ -64,11 +64,6 @@ export class InboxNotificationService {
 
     const query = this.notificationSearchViewRepo
       .createQueryBuilder('notificationSearch')
-      .innerJoinAndMapOne(
-        'notificationSearch.notificationType',
-        'notificationSearch.notificationType',
-        'notificationType',
-      )
       .orderBy(`("notificationSearch"."status" ->> 'effective_date')`, 'DESC')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
