@@ -177,7 +177,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
                 minDate = decision.date;
               }
 
-              if (minDate && decision.date && decision.date > minDate) {
+              if (minDate && decision.date && decision.date < minDate) {
                 minDate = decision.date;
               }
 
