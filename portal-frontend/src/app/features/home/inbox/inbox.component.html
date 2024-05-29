@@ -11,6 +11,10 @@
       />
     </mat-form-field>
 
+    <div *ngIf="profile && profile.isBusiness">
+      <mat-checkbox [formControl]="createdByMe">Only show created by me</mat-checkbox>
+    </div>
+
     <mat-expansion-panel #panel>
       <mat-expansion-panel-header class="search-toggle">
         <mat-panel-title>{{ panel.expanded ? 'Less' : 'More' }} Search Options</mat-panel-title>

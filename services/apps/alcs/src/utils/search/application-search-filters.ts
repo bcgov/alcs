@@ -123,7 +123,7 @@ export const APP_SEARCH_FILTERS = {
     return query.getMany();
   },
   addFileTypeResults: (
-    searchDto: InboxRequestDto,
+    searchDto: SearchRequestDto | InboxRequestDto,
     applicationRepository: Repository<Application>,
   ) => {
     const query = applicationRepository

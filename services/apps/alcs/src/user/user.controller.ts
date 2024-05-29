@@ -1,5 +1,3 @@
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -13,6 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
 import { ANY_AUTH_ROLE, AUTH_ROLE } from '../common/authorization/roles';
 import { RolesGuard } from '../common/authorization/roles-guard.service';
@@ -40,6 +40,7 @@ export class UserController {
     mappedUser.isLocalGovernment = !!government && !government.isFirstNation;
     mappedUser.isFirstNationGovernment =
       !!government && government.isFirstNation;
+    mappedUser.isBusiness = !!user.bceidBusinessGuid;
     return mappedUser;
   }
 

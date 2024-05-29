@@ -34,6 +34,7 @@ describe('InboxApplicationService', () => {
     fileTypes: ['type1', 'type2'],
     page: 1,
     pageSize: 10,
+    createdByMe: false,
   };
 
   let mockQuery: any = {};

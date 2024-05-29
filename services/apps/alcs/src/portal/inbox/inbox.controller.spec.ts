@@ -1,7 +1,7 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
@@ -10,10 +10,10 @@ import { NotificationSubmissionStatusService } from '../../alcs/notification/not
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { InboxApplicationService } from './application/inbox-application.service';
-import { InboxNoticeOfIntentService } from './notice-of-intent/inbox-notice-of-intent.service';
-import { InboxNotificationService } from './notification/inbox-notification.service';
 import { InboxController } from './inbox.controller';
 import { InboxRequestDto } from './inbox.dto';
+import { InboxNoticeOfIntentService } from './notice-of-intent/inbox-notice-of-intent.service';
+import { InboxNotificationService } from './notification/inbox-notification.service';
 
 describe('InboxController', () => {
   let controller: InboxController;
@@ -26,6 +26,7 @@ describe('InboxController', () => {
   let mockUserService: DeepMocked<UserService>;
 
   let mockRequest;
+  let mockSearchRequest;
   const mockUserId = 'fake-user-uuid';
 
   beforeEach(async () => {
@@ -108,6 +109,12 @@ describe('InboxController', () => {
         }),
       },
     };
+
+    mockSearchRequest = {
+      pageSize: 1,
+      page: 1,
+      fileTypes: [],
+    };
   });
 
   it('should be defined', () => {
@@ -116,10 +123,8 @@ describe('InboxController', () => {
 
   it('should call search to retrieve Applications, NOIs, Notifications', async () => {
     const mockSearchRequestDto: InboxRequestDto = {
-      pageSize: 1,
-      page: 1,
       name: 'test',
-      fileTypes: [],
+      ...mockSearchRequest,
     };
 
     const result = await controller.search(mockSearchRequestDto, mockRequest);
@@ -146,20 +151,14 @@ describe('InboxController', () => {
   });
 
   it('should call applications advanced search to retrieve Applications', async () => {
-    const mockSearchRequestDto: InboxRequestDto = {
-      pageSize: 1,
-      page: 1,
-      fileTypes: [],
-    };
-
     const result = await controller.searchApplications(
-      mockSearchRequestDto,
+      mockSearchRequest,
       mockRequest,
     );
 
     expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
     expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
-      mockSearchRequestDto,
+      mockSearchRequest,
       mockUserId,
       null,
       null,
@@ -169,20 +168,14 @@ describe('InboxController', () => {
   });
 
   it('should call NOI advanced search to retrieve NOIs', async () => {
-    const mockSearchRequestDto: InboxRequestDto = {
-      pageSize: 1,
-      page: 1,
-      fileTypes: [],
-    };
-
     const result = await controller.searchNoticeOfIntents(
-      mockSearchRequestDto,
+      mockSearchRequest,
       mockRequest,
     );
 
     expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
     expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
-      mockSearchRequestDto,
+      mockSearchRequest,
       mockUserId,
       null,
       null,
@@ -193,8 +186,7 @@ describe('InboxController', () => {
 
   it('should call search to retrieve Applications only when application file type selected', async () => {
     const mockSearchRequestDto: InboxRequestDto = {
-      pageSize: 1,
-      page: 1,
+      ...mockSearchRequest,
       fileTypes: ['NFUP'],
     };
 
@@ -213,8 +205,7 @@ describe('InboxController', () => {
 
   it('should call search to retrieve NOIs only when NOI file type selected', async () => {
     const mockSearchRequestDto: InboxRequestDto = {
-      pageSize: 1,
-      page: 1,
+      ...mockSearchRequest,
       fileTypes: ['NOI'],
     };
 
@@ -233,8 +224,7 @@ describe('InboxController', () => {
 
   it('should NOT call NOI search to retrieve if file type app specified', async () => {
     const mockSearchRequestDto: InboxRequestDto = {
-      pageSize: 1,
-      page: 1,
+      ...mockSearchRequest,
       fileTypes: ['NFUP'],
     };
 

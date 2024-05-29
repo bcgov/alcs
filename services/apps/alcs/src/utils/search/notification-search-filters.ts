@@ -130,7 +130,7 @@ export const NOTIFICATION_SEARCH_FILTERS = {
     return query.getMany();
   },
   addFileTypeResults: (
-    searchDto: InboxRequestDto,
+    searchDto: SearchRequestDto | InboxRequestDto,
     notificationRepository: Repository<Notification>,
   ) => {
     return notificationRepository.find({
