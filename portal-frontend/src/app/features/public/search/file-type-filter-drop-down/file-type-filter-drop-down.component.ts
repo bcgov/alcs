@@ -184,6 +184,7 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
   reset() {
     this.componentTypeControl.reset();
     this.checklistSelection.selected.forEach((selectedItem) => this.checklistSelection.deselect(selectedItem));
+    this.onChange();
   }
 
   ngAfterViewInit(): void {
