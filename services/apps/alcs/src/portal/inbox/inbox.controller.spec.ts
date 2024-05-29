@@ -1,12 +1,17 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
+import { Repository } from 'typeorm';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
+import { NotificationType } from '../../alcs/notification/notification-type/notification-type.entity';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { InboxApplicationService } from './application/inbox-application.service';
@@ -24,6 +29,9 @@ describe('InboxController', () => {
   let mockNoiSubStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
   let mockNotiSubStatusService: DeepMocked<NotificationSubmissionStatusService>;
   let mockUserService: DeepMocked<UserService>;
+  let mockAppTypeRepo: DeepMocked<Repository<ApplicationType>>;
+  let mockNOITypeRepo: DeepMocked<Repository<NoticeOfIntentType>>;
+  let mockNotificationTypeRepo: DeepMocked<Repository<NotificationType>>;
 
   let mockRequest;
   let mockSearchRequest;
@@ -37,6 +45,9 @@ describe('InboxController', () => {
     mockNoiSubStatusService = createMock();
     mockNotiSubStatusService = createMock();
     mockUserService = createMock();
+    mockAppTypeRepo = createMock();
+    mockNOITypeRepo = createMock();
+    mockNotificationTypeRepo = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -68,6 +79,18 @@ describe('InboxController', () => {
         {
           provide: NotificationSubmissionStatusService,
           useValue: mockNotiSubStatusService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationType),
+          useValue: mockAppTypeRepo,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntentType),
+          useValue: mockNOITypeRepo,
+        },
+        {
+          provide: getRepositoryToken(NotificationType),
+          useValue: mockNotificationTypeRepo,
         },
         {
           provide: ClsService,

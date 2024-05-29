@@ -1,20 +1,26 @@
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { ApplicationStatusDto } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { NotificationSubmissionStatusType } from '../../alcs/notification/notification-submission-status/notification-status-type.entity';
 import { NotificationStatusDto } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
+import { NotificationType } from '../../alcs/notification/notification-type/notification-type.entity';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { isStringSetAndNotEmpty } from '../../utils/string-helper';
 import { APPLICATION_SUBMISSION_TYPES } from '../pdf-generation/generate-submission-document.service';
+import { ApplicationSearchResultDto } from '../public/search/public-search.dto';
 import { InboxApplicationSubmissionView } from './application/inbox-application-view.entity';
 import { InboxApplicationService } from './application/inbox-application.service';
 import {
@@ -42,6 +48,12 @@ export class InboxController {
     private noiSubStatusService: NoticeOfIntentSubmissionStatusService,
     private notiSubStatusService: NotificationSubmissionStatusService,
     private userService: UserService,
+    @InjectRepository(ApplicationType)
+    private appTypeRepo: Repository<ApplicationType>,
+    @InjectRepository(NoticeOfIntentType)
+    private noiTypeRepo: Repository<NoticeOfIntentType>,
+    @InjectRepository(NotificationType)
+    private notificationTypeRepo: Repository<NotificationType>,
   ) {}
 
   @Get('/')
@@ -118,7 +130,7 @@ export class InboxController {
       );
     }
 
-    return this.mapSearchResults(
+    return await this.mapSearchResults(
       applicationSearchResult,
       noticeOfIntentResults,
       notifications,
@@ -142,7 +154,11 @@ export class InboxController {
       government?.uuid ?? null,
     );
 
-    const mappedSearchResult = this.mapSearchResults(applications, null, null);
+    const mappedSearchResult = await this.mapSearchResults(
+      applications,
+      null,
+      null,
+    );
 
     return {
       total: mappedSearchResult.totalApplications,
@@ -168,7 +184,7 @@ export class InboxController {
         government?.uuid ?? null,
       );
 
-    const mappedSearchResult = this.mapSearchResults(
+    const mappedSearchResult = await this.mapSearchResults(
       null,
       noticeOfIntents,
       null,
@@ -197,7 +213,11 @@ export class InboxController {
       government?.uuid ?? null,
     );
 
-    const mappedSearchResult = this.mapSearchResults(null, null, notifications);
+    const mappedSearchResult = await this.mapSearchResults(
+      null,
+      null,
+      notifications,
+    );
 
     return {
       total: mappedSearchResult.totalNotifications,
@@ -239,7 +259,7 @@ export class InboxController {
     };
   }
 
-  private mapSearchResults(
+  private async mapSearchResults(
     applications: AdvancedSearchResultDto<
       InboxApplicationSubmissionView[]
     > | null,
@@ -252,29 +272,61 @@ export class InboxController {
   ) {
     const response = new InboxResponseDto();
 
-    const mappedApplications: ApplicationInboxResultDto[] = [];
+    const mappedApplications: ApplicationSearchResultDto[] = [];
     if (applications && applications.data.length > 0) {
+      const appTypes = await this.appTypeRepo.find({
+        select: {
+          code: true,
+          label: true,
+        },
+      });
+      const appTypeMap = new Map<string, ApplicationType>();
+      for (const type of appTypes) {
+        appTypeMap.set(type.code, type);
+      }
       mappedApplications.push(
         ...applications.data.map((app) =>
-          this.mapApplicationToSearchResult(app),
+          this.mapApplicationToSearchResult(app, appTypeMap),
         ),
       );
     }
 
     const mappedNoticeOfIntents: NoticeOfIntentInboxResultDto[] = [];
     if (noticeOfIntents && noticeOfIntents.data.length > 0) {
+      const noiTypes = await this.noiTypeRepo.find({
+        select: {
+          code: true,
+          label: true,
+        },
+      });
+      const noiTypeMap = new Map<string, NoticeOfIntentType>();
+      for (const type of noiTypes) {
+        noiTypeMap.set(type.code, type);
+      }
+
       mappedNoticeOfIntents.push(
         ...noticeOfIntents.data.map((noi) =>
-          this.mapNoticeOfIntentToSearchResult(noi),
+          this.mapNoticeOfIntentToSearchResult(noi, noiTypeMap),
         ),
       );
     }
 
     const mappedNotifications: NotificationInboxResultDto[] = [];
     if (notifications && notifications.data && notifications.data.length > 0) {
+      const notificationTypes = await this.notificationTypeRepo.find({
+        select: {
+          code: true,
+          label: true,
+        },
+      });
+      const notificationTypeMap = new Map<string, NoticeOfIntentType>();
+      for (const type of notificationTypes) {
+        notificationTypeMap.set(type.code, type);
+      }
+
       mappedNotifications.push(
         ...notifications.data.map((notification) =>
-          this.mapNotificationToSearchResult(notification),
+          this.mapNotificationToSearchResult(notification, notificationTypeMap),
         ),
       );
     }
@@ -291,11 +343,12 @@ export class InboxController {
 
   private mapApplicationToSearchResult(
     application: InboxApplicationSubmissionView,
+    appTypeMap: Map<string, ApplicationType>,
   ): ApplicationInboxResultDto {
     return {
       referenceId: application.fileNumber,
       fileNumber: application.fileNumber,
-      type: application.applicationType.label,
+      type: appTypeMap.get(application.applicationTypeCode)!.label,
       createdAt: application.createdAt.getTime(),
       lastUpdate: application.lastUpdate?.getTime(),
       ownerName: application.applicant,
@@ -306,13 +359,14 @@ export class InboxController {
 
   private mapNoticeOfIntentToSearchResult(
     noi: InboxNoticeOfIntentSubmissionView,
+    noiTypeMap: Map<string, NoticeOfIntentType>,
   ): NoticeOfIntentInboxResultDto {
     return {
       referenceId: noi.fileNumber,
       fileNumber: noi.fileNumber,
       createdAt: noi.createdAt.getTime(),
       lastUpdate: noi.lastUpdate?.getTime(),
-      type: noi.noticeOfIntentType.label,
+      type: noiTypeMap.get(noi.noticeOfIntentTypeCode)!.label,
       ownerName: noi.applicant,
       class: 'NOI',
       status: noi.status.status_type_code,
@@ -321,13 +375,14 @@ export class InboxController {
 
   private mapNotificationToSearchResult(
     notification: InboxNotificationSubmissionView,
+    notificationTypeMap: Map<string, NotificationType>,
   ): NotificationInboxResultDto {
     return {
       referenceId: notification.fileNumber,
       fileNumber: notification.fileNumber,
       createdAt: notification.createdAt.getTime(),
       lastUpdate: notification.status.effective_date,
-      type: notification.notificationType.label,
+      type: notificationTypeMap.get(notification.notificationTypeCode)!.label,
       ownerName: notification.applicant,
       class: 'NOTI',
       status: notification.status.status_type_code,

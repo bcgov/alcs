@@ -69,11 +69,6 @@ export class InboxApplicationService {
 
     const query = this.applicationInboxRepository
       .createQueryBuilder('appSearch')
-      .innerJoinAndMapOne(
-        'appSearch.applicationType',
-        'appSearch.applicationType',
-        'applicationType',
-      )
       .orderBy('appSearch.last_update', 'DESC')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);

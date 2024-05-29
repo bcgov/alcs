@@ -39,7 +39,7 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     this.populateSelectedItems();
   }
 
-  constructor(private fileTypeData: FileTypeDataSourceService) {
+  constructor(fileTypeData: FileTypeDataSourceService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<FlatTreeNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -161,18 +161,6 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     this.componentTypeControl.setValue(selectedItems);
   }
 
-  filterChanged($event: any) {
-    const filterText = $event.target.value;
-    // FileTypeTreeComponent.filter method which actually filters the tree and gives back a tree structure
-
-    this.fileTypeData.filter(filterText);
-    if (filterText) {
-      this.treeControl.expandAll();
-    } else {
-      this.treeControl.collapseAll();
-    }
-  }
-
   onChange() {
     this.fileTypeChange.emit(
       this.checklistSelection.selected
@@ -184,14 +172,10 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
   reset() {
     this.componentTypeControl.reset();
     this.checklistSelection.selected.forEach((selectedItem) => this.checklistSelection.deselect(selectedItem));
+    this.onChange();
   }
 
   ngAfterViewInit(): void {
     this.treeControl.expandAll();
-  }
-
-  onBlur() {
-    this.populateSelectedItems();
-    this.fileTypeData.filter('');
   }
 }

@@ -3,10 +3,9 @@
     id="type"
     type="text"
     matInput
-    (input)="filterChanged($event)"
     [matAutocomplete]="auto"
     [formControl]="componentTypeControl"
-    (blur)="onBlur()"
+    onkeydown="return false;"
   />
   <mat-icon class="dropdown-arrow" matSuffix>arrow_drop_down</mat-icon>
   <button class="clear-button" *ngIf="componentTypeControl.value?.length" matSuffix mat-icon-button

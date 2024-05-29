@@ -90,6 +90,7 @@ describe('ApplicationOwnerService', () => {
 
   it('should load the type and then call save for create', async () => {
     mockRepo.save.mockResolvedValue(new ApplicationOwner());
+    mockRepo.findOneOrFail.mockResolvedValue(new ApplicationOwner());
     mockTypeRepo.findOneOrFail.mockResolvedValue(new OwnerType());
 
     await service.create(
@@ -103,6 +104,7 @@ describe('ApplicationOwnerService', () => {
     );
 
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
+    expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockTypeRepo.findOneOrFail).toHaveBeenCalledTimes(1);
   });
 
@@ -159,7 +161,7 @@ describe('ApplicationOwnerService', () => {
 
     expect(owner.firstName).toEqual('I Am');
     expect(owner.lastName).toEqual('Batman');
-    expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(2);
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
   });
 
@@ -186,7 +188,7 @@ describe('ApplicationOwnerService', () => {
 
     expect(owner.corporateSummary).toBe(mockDocument);
     expect(mockAppDocumentService.delete).toHaveBeenCalledTimes(1);
-    expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(2);
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
   });
 

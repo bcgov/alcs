@@ -1,11 +1,4 @@
-import {
-  DataSource,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
+import { DataSource, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
 import { ApplicationSubmissionToSubmissionStatus } from '../../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../../alcs/application/application.entity';
@@ -43,11 +36,6 @@ import { LinkedStatusType } from '../inbox.dto';
         'app.file_number = app_sub.file_number AND app.hide_from_portal = FALSE',
       )
       .leftJoin(User, 'user', 'user.uuid = app_sub.created_by_uuid')
-      .innerJoinAndSelect(
-        ApplicationType,
-        'applicationType',
-        'app_sub.type_code = applicationType.code',
-      )
       .leftJoin(
         (qb) =>
           qb
@@ -105,9 +93,6 @@ export class InboxApplicationSubmissionView {
   @ViewColumn()
   status: LinkedStatusType;
 
-  @ManyToOne(() => ApplicationType, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'application_type_code' })
+  //Manually Joined
   applicationType: ApplicationType;
 }
