@@ -14,8 +14,8 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 import { CardService } from '../../../../../services/card/card.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
-import { MinimalBoardDto } from 'src/app/services/board/board.dto';
-import { BoardService } from 'src/app/services/board/board.service';
+import { MinimalBoardDto } from '../../../../../services/board/board.dto';
+import { BoardService } from '../../../../../services/board/board.service';
 
 @Component({
   selector: 'app-create',
@@ -79,8 +79,8 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     this.createForm.patchValue({
       fileNumber: this.data.fileNumber,
       applicant: this.data.applicant,
-      localGovernment: this.data.localGovernment.name,
-      region: this.data.region.label,
+      localGovernment: this.data.localGovernment?.name,
+      region: this.data.region?.label,
     });
 
     this.applicationService.fetchApplication(this.data.fileNumber).then((application) => {

@@ -7,8 +7,8 @@ import { NoticeOfIntentModificationService } from '../../../services/notice-of-i
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { EditModificationDialogComponent } from './edit-modification-dialog/edit-modification-dialog.component';
 import { CreateNoiModificationDialogComponent } from '../../board/dialogs/noi-modification/create/create-noi-modification-dialog.component';
-import { ApplicationLocalGovernmentDto } from 'src/app/services/application/application-local-government/application-local-government.dto';
-import { ApplicationRegionDto } from 'src/app/services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
 
 type LoadingModifications = NoticeOfIntentModificationDto & {
   modifiesDecisionsNumbers: string[];

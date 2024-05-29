@@ -13,8 +13,8 @@ import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { EditModificationDialogComponent } from './edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 import { CreateAppModificationDialogComponent } from '../../board/dialogs/app-modification/create/create-app-modification-dialog.component';
-import { ApplicationLocalGovernmentDto } from 'src/app/services/application/application-local-government/application-local-government.dto';
-import { ApplicationRegionDto } from 'src/app/services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
 import { CreateReconsiderationDialogComponent } from '../../board/dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 
 type LoadingReconsiderations = ApplicationReconsiderationDetailedDto & {

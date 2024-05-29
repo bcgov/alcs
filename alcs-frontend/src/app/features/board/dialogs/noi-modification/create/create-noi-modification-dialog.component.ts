@@ -56,8 +56,8 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
     this.createForm.patchValue({
       fileNumber: this.data.fileNumber,
       applicant: this.data.applicant,
-      region: this.data.region.label,
-      localGovernment: this.data.localGovernment.name,
+      region: this.data.region?.label,
+      localGovernment: this.data.localGovernment?.name,
     });
 
     this.noticeOfIntentService.fetchByFileNumber(this.data.fileNumber).then((noi) => {
