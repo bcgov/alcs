@@ -64,11 +64,6 @@ export class InboxNoticeOfIntentService {
 
     const query = this.noiSearchRepository
       .createQueryBuilder('noiSearch')
-      .innerJoinAndMapOne(
-        'noiSearch.noticeOfIntentType',
-        'noiSearch.noticeOfIntentType',
-        'noticeOfIntentType',
-      )
       .orderBy('"noiSearch"."last_update"', 'DESC')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);

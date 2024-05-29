@@ -1,11 +1,4 @@
-import {
-  DataSource,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
+import { DataSource, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { NotificationType } from '../../../alcs/notification/notification-type/notification-type.entity';
 import { Notification } from '../../../alcs/notification/notification.entity';
 import { User } from '../../../user/user.entity';
@@ -36,11 +29,6 @@ import { LinkedStatusType } from '../inbox.dto';
         Notification,
         'noti',
         'noti.file_number = noti_sub.file_number',
-      )
-      .innerJoinAndSelect(
-        NotificationType,
-        'notificationType',
-        'noti_sub.type_code = notificationType.code',
       ),
 })
 export class InboxNotificationSubmissionView {
@@ -78,9 +66,6 @@ export class InboxNotificationSubmissionView {
   @ViewColumn()
   status: LinkedStatusType;
 
-  @ManyToOne(() => NotificationType, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'notification_type_code' })
+  //Manually Joined
   notificationType: NotificationType;
 }

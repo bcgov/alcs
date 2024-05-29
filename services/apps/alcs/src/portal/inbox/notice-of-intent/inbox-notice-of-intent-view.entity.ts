@@ -1,11 +1,4 @@
-import {
-  DataSource,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
+import { DataSource, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { NoticeOfIntentDecision } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentType } from '../../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
@@ -43,11 +36,6 @@ import { LinkedStatusType } from '../inbox.dto';
         'noi.file_number = noi_sub.file_number AND noi.hide_from_portal = false',
       )
       .leftJoin(User, 'user', 'user.uuid = noi_sub.created_by_uuid')
-      .innerJoinAndSelect(
-        NoticeOfIntentType,
-        'noticeOfIntentType',
-        'noi_sub.type_code = noticeOfIntentType.code',
-      )
       .leftJoin(
         (qb) =>
           qb
@@ -108,9 +96,6 @@ export class InboxNoticeOfIntentSubmissionView {
   @ViewColumn()
   status: LinkedStatusType;
 
-  @ManyToOne(() => NoticeOfIntentType, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'notice_of_intent_type_code' })
+  //Manually Joined
   noticeOfIntentType: NoticeOfIntentType;
 }
