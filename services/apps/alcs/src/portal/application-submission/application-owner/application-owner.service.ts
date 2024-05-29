@@ -70,7 +70,8 @@ export class ApplicationOwnerService {
       type,
     });
 
-    return await this.repository.save(newOwner);
+    const res = await this.repository.save(newOwner);
+    return this.getOwner(res.uuid);
   }
 
   async attachToParcel(uuid: string, parcelUuid: string) {
@@ -198,7 +199,7 @@ export class ApplicationOwnerService {
       existingOwner.applicationSubmissionUuid,
     );
 
-    return result;
+    return this.getOwner(result.uuid);
   }
 
   async delete(owner: ApplicationOwner) {
