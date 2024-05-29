@@ -5,11 +5,11 @@ import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
 import {
   AdvancedSearchEntityResponseDto,
-  SearchResponseDto,
   BaseSearchResultDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
   SearchRequestDto,
+  SearchResponseDto,
 } from './search.dto';
 
 @Injectable({
@@ -18,14 +18,17 @@ import {
 export class SearchService {
   private baseUrl = `${environment.authUrl}/public/search`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async search(searchDto: SearchRequestDto) {
     try {
       return await firstValueFrom(this.http.post<SearchResponseDto>(`${this.baseUrl}`, searchDto));
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      this.toastService.showErrorToast(`Search failed. Please add more criteria to narrow your search and try again.`);
       return undefined;
     }
   }
@@ -33,11 +36,11 @@ export class SearchService {
   async searchApplications(searchDto: SearchRequestDto) {
     try {
       return await firstValueFrom(
-        this.http.post<AdvancedSearchEntityResponseDto<BaseSearchResultDto>>(`${this.baseUrl}/application`, searchDto)
+        this.http.post<AdvancedSearchEntityResponseDto<BaseSearchResultDto>>(`${this.baseUrl}/application`, searchDto),
       );
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      this.toastService.showErrorToast(`Search failed. Please add more criteria to narrow your search and try again.`);
       return undefined;
     }
   }
@@ -47,12 +50,12 @@ export class SearchService {
       return await firstValueFrom(
         this.http.post<AdvancedSearchEntityResponseDto<NoticeOfIntentSearchResultDto>>(
           `${this.baseUrl}/notice-of-intent`,
-          searchDto
-        )
+          searchDto,
+        ),
       );
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      this.toastService.showErrorToast(`Search failed. Please add more criteria to narrow your search and try again.`);
       return undefined;
     }
   }
@@ -62,12 +65,12 @@ export class SearchService {
       return await firstValueFrom(
         this.http.post<AdvancedSearchEntityResponseDto<NotificationSearchResultDto>>(
           `${this.baseUrl}/notifications`,
-          searchDto
-        )
+          searchDto,
+        ),
       );
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      this.toastService.showErrorToast(`Search failed. Please add more criteria to narrow your search and try again.`);
       return undefined;
     }
   }
