@@ -61,7 +61,7 @@
           <span *ngIf="element.organizationName">
             {{ element.organizationName }}
           </span>
-          <span class="no-data" *ngIf="!element.organizationName"> No Data </span>
+          <span class="no-data" *ngIf="!element.organizationName"> Not Applicable </span>
         </td>
       </ng-container>
 
@@ -175,7 +175,7 @@
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
-        <mat-label for="hasDraftCopy"> Do you have a draft copy of the covenant? </mat-label>
+        <mat-label for="hasDraftCopy"> Do you have a draft copy of the covenant?</mat-label>
         <div class="subtext">If yes, please attach the Draft in the section below.</div>
         <div>
           <mat-button-toggle-group
@@ -190,7 +190,7 @@
                 'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
               }"
               value="true"
-              >Yes
+            >Yes
             </mat-button-toggle>
             <mat-button-toggle
               class="toggle-button"
@@ -198,7 +198,7 @@
                 'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
               }"
               value="false"
-              >No
+            >No
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
