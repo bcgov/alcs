@@ -40,14 +40,14 @@
           <span *ngIf="element.organizationName">
             {{ element.organizationName }}
           </span>
-          <span class="no-data" *ngIf="!element.organizationName"> No Data </span>
+          <span class="no-data-text" *ngIf="!element.organizationName"> Not Applicable </span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="phone">
         <th mat-header-cell *matHeaderCellDef>Phone</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.phoneNumber | mask : '(000) 000-0000' }}
+          {{ element.phoneNumber | mask: '(000) 000-0000' }}
         </td>
       </ng-container>
 

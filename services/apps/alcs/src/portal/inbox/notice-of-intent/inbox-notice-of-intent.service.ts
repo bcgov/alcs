@@ -1,18 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { RedisService } from '@app/common/redis/redis.service';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
-import { NoticeOfIntentDecision } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
-import { NoticeOfIntentOwner } from '../../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentParcel } from '../../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
+import * as hash from 'object-hash';
+import { Repository } from 'typeorm';
+import { NoticeOfIntent } from '../../../alcs/notice-of-intent/notice-of-intent.entity';
+import { SEARCH_CACHE_TIME } from '../../../alcs/search/search.config';
+import { NOI_SEARCH_FILTERS } from '../../../utils/search/notice-of-intent-search-filters';
+import { processSearchPromises } from '../../../utils/search/search-intersection';
+import { NoticeOfIntentSubmission } from '../../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { AdvancedSearchResultDto, InboxRequestDto } from '../inbox.dto';
 import { InboxNoticeOfIntentSubmissionView } from './inbox-notice-of-intent-view.entity';
 
 @Injectable()
 export class InboxNoticeOfIntentService {
+  private logger: Logger = new Logger(InboxNoticeOfIntentService.name);
+
   constructor(
     @InjectRepository(InboxNoticeOfIntentSubmissionView)
     private noiSearchRepository: Repository<InboxNoticeOfIntentSubmissionView>,
+    @InjectRepository(NoticeOfIntent)
+    private noiRepository: Repository<NoticeOfIntent>,
+    @InjectRepository(NoticeOfIntentSubmission)
+    private noiSubmissionRepository: Repository<NoticeOfIntentSubmission>,
+    private redisService: RedisService,
   ) {}
 
   async searchNoticeOfIntents(
@@ -21,72 +31,53 @@ export class InboxNoticeOfIntentService {
     bceidBusinessGuid: string | null,
     governmentUuid: string | null,
   ): Promise<AdvancedSearchResultDto<InboxNoticeOfIntentSubmissionView[]>> {
-    const query = await this.compileNoticeOfIntentSearchQuery(
-      searchDto,
-      userUuid,
-      bceidBusinessGuid,
-      governmentUuid,
-    );
+    const searchHash = hash(searchDto);
+    const searchKey = `search_inbox_noi_${userUuid}_${searchHash}`;
 
-    this.compileGroupBySearchQuery(query);
+    const client = this.redisService.getClient();
+    const cachedSearch = await client.get(searchKey);
 
-    query
-      .orderBy('"noiSearch"."last_update"', 'DESC')
-      .offset((searchDto.page - 1) * searchDto.pageSize)
-      .limit(searchDto.pageSize);
+    let fileNumbers = new Set<string>();
+    let didSearch = false;
+    if (cachedSearch) {
+      const cachedNumbers = JSON.parse(cachedSearch) as string[];
+      fileNumbers = new Set<string>(cachedNumbers);
+      didSearch = true;
+    } else {
+      const res = await this.searchForFileNumbers(searchDto);
+      fileNumbers = res.finalResult;
+      didSearch = res.didSearch;
+      if (didSearch) {
+        await client.setEx(
+          searchKey,
+          SEARCH_CACHE_TIME,
+          JSON.stringify([...fileNumbers.values()]),
+        );
+      }
+    }
+    if (didSearch && fileNumbers.size === 0) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
 
-    const result = await query.getManyAndCount();
-
-    return {
-      data: result[0],
-      total: result[1],
-    };
-  }
-
-  private compileGroupBySearchQuery(query) {
-    query = query
-      .withDeleted()
+    const query = this.noiSearchRepository
+      .createQueryBuilder('noiSearch')
       .innerJoinAndMapOne(
         'noiSearch.noticeOfIntentType',
         'noiSearch.noticeOfIntentType',
         'noticeOfIntentType',
       )
-      .groupBy(
-        `
-          "noiSearch"."uuid"
-        , "noiSearch"."notice_of_intent_uuid"
-        , "noiSearch"."file_number"
-        , "noiSearch"."applicant"
-        , "noiSearch"."local_government_uuid"
-        , "noiSearch"."notice_of_intent_type_code"
-        , "noiSearch"."status"
-        , "noiSearch"."created_at"
-        , "noiSearch"."last_update"
-        , "noiSearch"."date_submitted_to_alc"
-        , "noiSearch"."created_by_uuid"
-        , "noiSearch"."bceid_business_guid"      
-        , "noticeOfIntentType"."audit_deleted_date_at"
-        , "noticeOfIntentType"."audit_created_at"
-        , "noticeOfIntentType"."audit_updated_by"
-        , "noticeOfIntentType"."audit_updated_at"
-        , "noticeOfIntentType"."audit_created_by"
-        , "noticeOfIntentType"."short_label"
-        , "noticeOfIntentType"."label"
-        , "noticeOfIntentType"."code"
-        , "noticeOfIntentType"."html_description"
-        , "noticeOfIntentType"."portal_label"
-        `,
-      );
-    return query;
-  }
+      .orderBy('"noiSearch"."last_update"', 'DESC')
+      .offset((searchDto.page - 1) * searchDto.pageSize)
+      .limit(searchDto.pageSize);
 
-  private async compileNoticeOfIntentSearchQuery(
-    searchDto: InboxRequestDto,
-    userUuid: string,
-    bceidBusinessGuid: string | null,
-    governmentUuid: string | null,
-  ) {
-    const query = this.noiSearchRepository.createQueryBuilder('noiSearch');
+    if (fileNumbers.size > 0) {
+      query.andWhere('"noiSearch"."file_number" IN(:...fileNumbers)', {
+        fileNumbers: [...fileNumbers.values()],
+      });
+    }
 
     //User Permissions
     let where = 'noiSearch.created_by_uuid = :userUuid';
@@ -113,101 +104,72 @@ export class InboxNoticeOfIntentService {
       governmentUuid,
     });
 
+    const t0 = performance.now();
+    const results = await Promise.all([query.getMany(), query.getCount()]);
+    const t1 = performance.now();
+    this.logger.debug(`Inbox NOI search took ${t1 - t0} milliseconds.`);
+
+    return {
+      data: results[0],
+      total: results[1],
+    };
+  }
+
+  private async searchForFileNumbers(searchDto: InboxRequestDto) {
+    const promises: Promise<{ fileNumber: string }[]>[] = [];
+    let didSearch = false;
+
     if (searchDto.fileNumber) {
-      query
-        .andWhere('noiSearch.file_number = :fileNumber')
-        .setParameters({ fileNumber: searchDto.fileNumber ?? null });
+      didSearch = true;
+      const promise = NOI_SEARCH_FILTERS.addFileNumberResults(
+        searchDto,
+        this.noiRepository,
+      );
+      promises.push(promise);
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      query.andWhere(
-        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSearch.uuid) ->> 'status_type_code' IN(:...statuses)",
-        {
-          statuses: searchDto.portalStatusCodes,
-        },
+      didSearch = true;
+      const promise = NOI_SEARCH_FILTERS.addPortalStatusResults(
+        searchDto,
+        this.noiSubmissionRepository,
       );
+      promises.push(promise);
     }
 
-    this.compileSearchByNameQuery(searchDto, query);
-    this.compileParcelSearchQuery(searchDto, query);
-
-    return query;
-  }
-
-  private joinDecision(query: any) {
-    query = query.leftJoin(
-      NoticeOfIntentDecision,
-      'decision',
-      'decision.notice_of_intent_uuid = "noiSearch"."notice_of_intent_uuid"',
-    );
-    return query;
-  }
-
-  private compileParcelSearchQuery(searchDto: InboxRequestDto, query) {
-    if (searchDto.pid || searchDto.civicAddress) {
-      query = query.leftJoin(
-        NoticeOfIntentParcel,
-        'parcel',
-        'parcel.notice_of_intent_submission_uuid = noiSearch.uuid',
-      );
-    }
-
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
-    }
-    return query;
-  }
-
-  private compileSearchByNameQuery(searchDto: InboxRequestDto, query) {
     if (searchDto.name) {
-      const formattedSearchString =
-        formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-
-      query = query
-        .leftJoin(
-          NoticeOfIntentOwner,
-          'notice_of_intent_owner',
-          'notice_of_intent_owner.notice_of_intent_submission_uuid = noiSearch.uuid',
-        )
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where(
-                "LOWER(notice_of_intent_owner.first_name || ' ' || notice_of_intent_owner.last_name) LIKE ANY (:names)",
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notice_of_intent_owner.first_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notice_of_intent_owner.last_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(notice_of_intent_owner.organization_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              ),
-          ),
-        );
+      didSearch = true;
+      const promise = NOI_SEARCH_FILTERS.addNameResults(
+        searchDto,
+        this.noiSubmissionRepository,
+      );
+      promises.push(promise);
     }
-    return query;
+
+    if (searchDto.pid || searchDto.civicAddress) {
+      didSearch = true;
+      const promise = NOI_SEARCH_FILTERS.addParcelResults(
+        searchDto,
+        this.noiSubmissionRepository,
+      );
+      promises.push(promise);
+    }
+
+    if (searchDto.fileTypes.includes('NOI')) {
+      didSearch = true;
+      const promise = NOI_SEARCH_FILTERS.addFileTypeResults(
+        searchDto,
+        this.noiRepository,
+      );
+      promises.push(promise);
+    }
+
+    const t0 = performance.now();
+    const finalResult = await processSearchPromises(promises);
+    const t1 = performance.now();
+    this.logger.debug(
+      `Inbox NOI pre-search search took ${t1 - t0} milliseconds.`,
+    );
+    return { didSearch, finalResult };
   }
 }

@@ -181,6 +181,8 @@ describe('NoticeOfIntentOwnerService', () => {
     mockRepo.findOneOrFail.mockResolvedValue(owner);
     mockRepo.save.mockResolvedValue(new NoticeOfIntentOwner());
     mockAppDocumentService.delete.mockResolvedValue({} as any);
+    const mockDocument = new NoticeOfIntentDocument();
+    mockAppDocumentService.get.mockResolvedValue(mockDocument);
 
     await service.update(
       '',
@@ -194,10 +196,11 @@ describe('NoticeOfIntentOwnerService', () => {
       new User(),
     );
 
-    expect(owner.corporateSummaryUuid).toEqual('newUuid');
+    expect(owner.corporateSummary).toBe(mockDocument);
     expect(mockAppDocumentService.delete).toHaveBeenCalledTimes(1);
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepo.save).toHaveBeenCalledTimes(2);
+    expect(mockRepo.save).toHaveBeenCalledTimes(1);
+    expect(mockAppDocumentService.get).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {

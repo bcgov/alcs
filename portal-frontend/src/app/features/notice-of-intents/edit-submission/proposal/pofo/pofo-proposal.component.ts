@@ -61,7 +61,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(noticeOfIntentDocumentService, dialog, toastService);
   }

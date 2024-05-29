@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
 import { QueryRunner, Repository } from 'typeorm';
 import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
-import { intersectSets } from '../../../utils/set-helper';
+import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { InquiryParcel } from '../../inquiry/inquiry-parcel/inquiry-parcel.entity';
 import { Inquiry } from '../../inquiry/inquiry.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -143,21 +143,12 @@ export class InquiryAdvancedSearchService {
       this.addFileTypeResults(searchDto, promises);
     }
 
-    //Intersect Sets
-    const t0 = performance.now();
-    const queryResults = await Promise.all(promises);
-
-    const allIds: Set<string>[] = [];
-    for (const result of queryResults) {
-      const fileNumbers = new Set<string>();
-      result.forEach((currentValue) => {
-        fileNumbers.add(currentValue.fileNumber);
-      });
-      allIds.push(fileNumbers);
+    if (searchDto.legacyId) {
+      this.addLegacyIDResults(searchDto, promises);
     }
 
-    const finalResult = intersectSets(allIds);
-
+    const t0 = performance.now();
+    const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
     this.logger.debug(
       `ALCS Inquiry pre-search search took ${t1 - t0} milliseconds.`,
@@ -307,5 +298,20 @@ export class InquiryAdvancedSearchService {
       );
     }
     promises.push(query.getMany());
+  }
+
+  private addLegacyIDResults(
+    searchDto: SearchRequestDto,
+    promises: Promise<{ fileNumber: string }[]>[],
+  ) {
+    const promise = this.inquiryRepository.find({
+      where: {
+        legacyId: searchDto.legacyId,
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    promises.push(promise);
   }
 }

@@ -108,8 +108,8 @@ describe('PublicNotificationSearchService', () => {
     expect(mockNotificationRepository.find).toHaveBeenCalledTimes(3);
     expect(
       mockNotificationSubmissionRepository.createQueryBuilder,
-    ).toHaveBeenCalledTimes(4);
-    expect(mockQuery.andWhere).toHaveBeenCalledTimes(5);
+    ).toHaveBeenCalledTimes(3);
+    expect(mockQuery.andWhere).toHaveBeenCalledTimes(3);
   });
 
   it('should call searchForFileNumbers method correctly', async () => {

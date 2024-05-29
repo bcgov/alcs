@@ -150,15 +150,21 @@
           <div>{{ owner.displayName }}</div>
           <div>
             <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
-            <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
+            <div class="no-data" *ngIf="!owner.organizationName">
+              <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
+              <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>
+            </div>
           </div>
           <div>{{ owner.phoneNumber ?? '' | mask : '(000) 000-0000' }}</div>
           <div>{{ owner.email }}</div>
           <div>
             <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary)">{{
-              owner.corporateSummary.fileName
-            }}</a>
-            <app-no-data [showRequired]="false" *ngIf="!owner.corporateSummary"></app-no-data>
+                owner.corporateSummary.fileName
+              }}</a>
+            <div class="no-data" *ngIf="!owner.corporateSummary">
+              <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
+              <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>
+            </div>
           </div>
         </ng-container>
         <div class="full-width">

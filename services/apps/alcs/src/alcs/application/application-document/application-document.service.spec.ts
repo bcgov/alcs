@@ -6,6 +6,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
 import {
+  DOCUMENT_TYPE,
+  DocumentCode,
+} from '../../../document/document-code.entity';
+import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
 } from '../../../document/document.dto';
@@ -14,10 +18,6 @@ import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
 import { UserService } from '../../../user/user.service';
 import { ApplicationService } from '../application.service';
-import {
-  DocumentCode,
-  DOCUMENT_TYPE,
-} from '../../../document/document-code.entity';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
@@ -233,7 +233,7 @@ describe('ApplicationDocumentService', () => {
     mockDocumentService.softRemove.mockResolvedValue();
     mockRepository.remove.mockResolvedValue({} as any);
 
-    const res = await service.deleteByType(DOCUMENT_TYPE.STAFF_REPORT, '');
+    await service.deleteByType(DOCUMENT_TYPE.STAFF_REPORT, '');
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.softRemove).toHaveBeenCalledTimes(2);
@@ -324,7 +324,7 @@ describe('ApplicationDocumentService', () => {
     mockDocumentService.create.mockResolvedValue(new Document());
     mockDocumentService.softRemove.mockResolvedValue();
 
-    const res = await service.update({
+    await service.update({
       source: DOCUMENT_SOURCE.APPLICANT,
       fileName: 'fileName',
       user: new User(),

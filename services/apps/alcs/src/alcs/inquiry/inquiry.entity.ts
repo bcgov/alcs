@@ -37,6 +37,15 @@ export class Inquiry extends Base {
   })
   fileNumber: string;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Id that is applicable only to paper version applications from 70s - 80s',
+    nullable: true,
+  })
+  legacyId?: string | null;
+
   @Column({ type: 'text' })
   summary: string;
 

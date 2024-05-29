@@ -45,6 +45,7 @@ describe('PlanningReviewAdvancedSearchService', () => {
     pageSize: 10,
     sortField: 'ownerName',
     sortDirection: 'ASC',
+    legacyId: 'legacyId',
   };
 
   let mockQuery: any = {};
@@ -107,7 +108,7 @@ describe('PlanningReviewAdvancedSearchService', () => {
     const result = await service.search(mockSearchDto, mockQueryRunner);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockPlanningReviewRepository.find).toHaveBeenCalledTimes(3);
+    expect(mockPlanningReviewRepository.find).toHaveBeenCalledTimes(4);
     expect(
       mockPlanningReviewRepository.createQueryBuilder,
     ).toHaveBeenCalledTimes(5);

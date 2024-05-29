@@ -14,7 +14,9 @@
       </ng-container>
 
       <td mat-cell *matCellDef="let element">
-        <app-no-data [showRequired]="false" *ngIf="!element.organizationName"></app-no-data>
+        <div class="no-data" *ngIf="!element.organizationName">
+          <div class="no-data-text">Not Applicable</div>
+        </div>
         <span>{{ element.organizationName }}</span>
       </td>
     </ng-container>
@@ -39,8 +41,8 @@
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
           <a *ngIf="element.corporateSummary" (click)="onOpenFile(element.corporateSummary)">{{
-            element.corporateSummary.fileName
-          }}</a>
+              element.corporateSummary.fileName
+            }}</a>
           <div class="no-data" *ngIf="!element.corporateSummary">
             <div class="no-data-text">Not Applicable</div>
           </div>

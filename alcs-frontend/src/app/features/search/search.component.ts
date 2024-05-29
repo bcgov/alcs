@@ -213,7 +213,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'center',
+          block: 'start',
           inline: 'center',
         });
       }
@@ -221,7 +221,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onReset() {
-    this.searchForm.reset();
+    this.searchForm.reset({
+      portalStatus: [],
+    });
 
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();

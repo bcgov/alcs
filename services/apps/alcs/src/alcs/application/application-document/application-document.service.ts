@@ -13,6 +13,10 @@ import {
   Repository,
 } from 'typeorm';
 import {
+  DOCUMENT_TYPE,
+  DocumentCode,
+} from '../../../document/document-code.entity';
+import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
 } from '../../../document/document.dto';
@@ -20,10 +24,6 @@ import { DocumentService } from '../../../document/document.service';
 import { PortalApplicationDocumentUpdateDto } from '../../../portal/application-document/application-document.dto';
 import { User } from '../../../user/user.entity';
 import { ApplicationService } from '../application.service';
-import {
-  DocumentCode,
-  DOCUMENT_TYPE,
-} from '../../../document/document-code.entity';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
@@ -54,6 +54,7 @@ export class ApplicationDocumentService {
     system,
     source = DOCUMENT_SOURCE.ALC,
     visibilityFlags,
+    description,
   }: {
     fileNumber: string;
     fileName: string;
@@ -63,6 +64,7 @@ export class ApplicationDocumentService {
     source?: DOCUMENT_SOURCE;
     system: DOCUMENT_SYSTEM;
     visibilityFlags: VISIBILITY_FLAG[];
+    description?: string;
   }) {
     const application = await this.applicationService.getOrFail(fileNumber);
     const document = await this.documentService.create(
@@ -78,6 +80,7 @@ export class ApplicationDocumentService {
       application,
       document,
       visibilityFlags,
+      description,
     });
 
     return this.applicationDocumentRepository.save(appDocument);
@@ -192,9 +195,8 @@ export class ApplicationDocumentService {
       visibilityFlags,
     });
 
-    const savedDocument = await this.applicationDocumentRepository.save(
-      document,
-    );
+    const savedDocument =
+      await this.applicationDocumentRepository.save(document);
     return this.get(savedDocument.uuid);
   }
 
