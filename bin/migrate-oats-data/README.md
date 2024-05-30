@@ -49,7 +49,7 @@ Pre-launch ETL command has been changed to:
 
 `python migrate_1.py [action]`
 
-Post-launch ETL command is `migrate_2.py` and imports everything post launch inclusive of SRWs
+Post-launch ETL command is `migrate_2.py` and imports everything post launch inclusive of SRWs but not past SRW
 
 ETLs post SRWs take over migrate.py command and is used as before
 
@@ -57,9 +57,20 @@ Commands for post-launch are stored in:
 
 `menu/post_launch_commands`
 
+Actions are contained within the migrate file, not all actions are available for each version of `migrate.py`. `import` and `clean` are shared for all
+
 ETLs created post launch are to be located in the post-launch folder of their directory i.e.
 
 `applications/post_launch` or `noi/post-launch`
+
+`migrate_2.py` now contains the 2nd batch of ETL done 
+
+`migrate.py` contains the latest and final ETL migration which includes Planning Reviews and Inquiries.
+
+### Future ETL
+The rest of ETL / data fixes have been done with migrations, these can be found in `services/apps/alcs/src/providers/typeorm/migrations`. Going forward data fixes and other minor changes should be done with migrations.
+
+If a new major ETL is required it is advisable to create a new updated migrate.py file and perform the required updates. Ensure obfuscation keeps up with the new changes. Depending on the scope the ETL can be run on openshift or run on a secure machine locally then restore the database from there.
 
 
 ## Prod data obfuscation
