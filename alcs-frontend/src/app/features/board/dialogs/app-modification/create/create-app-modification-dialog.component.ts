@@ -1,15 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
+import { Subject, takeUntil } from 'rxjs';
+import { ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationModificationCreateDto } from '../../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
@@ -22,22 +18,18 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
-  regions: ApplicationRegionDto[] = [];
-  localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading = false;
   isDecisionDateEmpty = false;
-  currentBoardCode: string = '';
 
   decisions: { uuid: string; resolution: string }[] = [];
-  filteredApplications: Observable<ApplicationDto[]> | undefined;
 
-  fileNumberControl = new FormControl<string | any>('', [Validators.required]);
-  applicantControl = new FormControl('', [Validators.required]);
+  fileNumberControl = new FormControl<string | any>({ value: '', disabled: true }, [Validators.required]);
+  applicantControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
   descriptionControl = new FormControl<string | null>(null, [Validators.required]);
   applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
-  regionControl = new FormControl<string | null>(null, [Validators.required]);
+  regionControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
-  localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
+  localGovernmentControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   isTimeExtensionControl = new FormControl<string>('true', [Validators.required]);
   modifiesDecisions = new FormControl<string[]>([], [Validators.required]);
 
@@ -58,7 +50,6 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<CreateAppModificationDialogComponent>,
     private applicationService: ApplicationService,
     private modificationService: ApplicationModificationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
     private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
     private router: Router,
@@ -66,65 +57,24 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentBoardCode = this.data.currentBoardCode;
+    this.createForm.patchValue({
+      fileNumber: this.data.fileNumber,
+      applicant: this.data.applicant,
+      localGovernment: this.data.localGovernment?.name,
+      region: this.data.region?.label,
+    });
+
+    this.applicationService.fetchApplication(this.data.fileNumber).then((application) => {
+      if (!application.decisionDate) {
+        this.isDecisionDateEmpty = true;
+      }
+    });
+
     this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
       this.applicationTypes = types;
     });
 
-    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
-      this.regions = regions;
-    });
-
-    this.localGovernmentService.list().then((res) => {
-      this.localGovernments = res;
-    });
-
-    this.initApplicationFileNumberAutocomplete();
-  }
-
-  initApplicationFileNumberAutocomplete() {
-    this.filteredApplications = this.fileNumberControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((val) => {
-        if (val && val.length > 1) {
-          return this.applicationService.searchApplicationsByNumber(val);
-        }
-        return [];
-      }),
-    );
-  }
-
-  autocompleteDisplay(application: ApplicationDto): string {
-    return application?.fileNumber ?? '';
-  }
-
-  async onApplicationSelected($event: MatOptionSelectionChange) {
-    if (!$event?.source?.value) {
-      return;
-    }
-
-    const application = $event.source.value as ApplicationDto;
-
-    this.fileNumberControl.disable();
-    this.applicantControl.disable();
-    this.regionControl.disable();
-    this.applicationTypeControl.disable();
-    this.localGovernmentControl.disable();
-
-    this.loadDecisions(application.fileNumber);
-
-    this.createForm.patchValue({
-      applicant: application.applicant,
-      region: application.region?.code,
-      applicationType: application.type.code,
-      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment?.uuid)?.uuid ?? null,
-    });
-
-    if (!application.decisionDate) {
-      this.isDecisionDateEmpty = true;
-    }
+    this.loadDecisions(this.data.fileNumber);
   }
 
   async onSubmit() {
@@ -140,7 +90,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
         localGovernmentUuid: formValues.localGovernment!,
         // modification details
         submittedDate: formValues.submittedDate!.valueOf(),
-        boardCode: this.currentBoardCode,
+        boardCode: 'ceo',
         isTimeExtension: formValues.isTimeExtension === 'true',
         modifiesDecisionUuids: formValues.modifiesDecisions!,
         description: formValues.description!,
@@ -165,30 +115,13 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  onReset() {
-    this.fileNumberControl.reset();
-    this.applicantControl.reset();
-    this.regionControl.reset();
+  onReset(event: MouseEvent) {
+    event.preventDefault();
+
     this.applicationTypeControl.reset();
     this.submittedDateControl.reset();
     this.modifiesDecisions.reset();
     this.descriptionControl.reset();
-
-    this.fileNumberControl.enable();
-    this.applicantControl.enable();
-    this.regionControl.enable();
-    this.applicationTypeControl.enable();
-    this.localGovernmentControl.enable();
-    this.modifiesDecisions.disable();
-
-    // clear warnings
-    this.isDecisionDateEmpty = false;
-  }
-
-  onSelectGovernment(value: ApplicationLocalGovernmentDto) {
-    this.createForm.patchValue({
-      region: value.preferredRegionCode,
-    });
   }
 
   async loadDecisions(fileNumber: string) {

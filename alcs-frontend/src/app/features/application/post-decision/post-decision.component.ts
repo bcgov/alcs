@@ -12,6 +12,10 @@ import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { EditModificationDialogComponent } from './edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog/edit-reconsideration-dialog.component';
+import { CreateAppModificationDialogComponent } from '../../board/dialogs/app-modification/create/create-app-modification-dialog.component';
+import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
+import { CreateReconsiderationDialogComponent } from '../../board/dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 
 type LoadingReconsiderations = ApplicationReconsiderationDetailedDto & {
   reconsidersDecisionsNumbers: string[];
@@ -28,6 +32,9 @@ type LoadingModifications = ApplicationModificationDto & {
 export class PostDecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   fileNumber: string = '';
+  applicant: string = '';
+  localGovernment: ApplicationLocalGovernmentDto | undefined = undefined;
+  region: ApplicationRegionDto | undefined = undefined;
   reconsiderations: LoadingReconsiderations[] = [];
   modifications: LoadingModifications[] = [];
   reconCodes: BaseCodeDto[] = [];
@@ -38,7 +45,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
     private applicationReconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     private toastService: ToastService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -46,24 +53,27 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
       .pipe(
         tap(() => {
           this.applicationReconsiderationService.fetchCodes();
-        })
+        }),
       )
       .pipe(
         combineLatestWith(
           this.applicationReconsiderationService.$reconsiderations,
           this.applicationReconsiderationService.$codes,
-          this.modificationService.$modifications
-        )
+          this.modificationService.$modifications,
+        ),
       )
       .pipe(takeUntil(this.$destroy))
       .subscribe(([application, reconsiderations, reconCodes, modifications]) => {
         if (application) {
           this.fileNumber = application.fileNumber;
+          this.applicant = application.applicant;
+          this.localGovernment = application.localGovernment;
+          this.region = application.region;
           this.reconsiderations =
             reconsiderations?.map((r) => ({
               ...r,
               reconsidersDecisionsNumbers: r.reconsidersDecisions.flatMap(
-                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`
+                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
               ),
             })) ?? [];
           this.reconCodes = reconCodes;
@@ -71,7 +81,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
             modifications?.map((m) => ({
               ...m,
               modifiesDecisionsNumbers: m.modifiesDecisions.flatMap(
-                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`
+                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
               ),
             })) ?? [];
         }
@@ -96,6 +106,50 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
       .subscribe((wasModified) => {
         if (wasModified) {
           this.applicationDetailService.loadApplication(this.fileNumber);
+        }
+      });
+  }
+
+  onCreateReconsideration() {
+    this.dialog
+      .open(CreateReconsiderationDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '1100px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: {
+          fileNumber: this.fileNumber,
+          applicant: this.applicant,
+          localGovernment: this.localGovernment,
+          region: this.region,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (answer) => {
+        if (answer) {
+          await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
+        }
+      });
+  }
+
+  onCreateModification() {
+    this.dialog
+      .open(CreateAppModificationDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '1100px',
+        maxHeight: '80vh',
+        width: '90%',
+        data: {
+          fileNumber: this.fileNumber,
+          applicant: this.applicant,
+          localGovernment: this.localGovernment,
+          region: this.region,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (answer) => {
+        if (answer) {
+          await this.modificationService.fetchByApplication(this.fileNumber);
         }
       });
   }
