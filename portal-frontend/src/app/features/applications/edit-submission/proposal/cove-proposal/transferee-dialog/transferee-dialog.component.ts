@@ -67,7 +67,7 @@ export class CovenantTransfereeDialogComponent {
       this.organizationName.setValidators([Validators.required]);
     } else {
       this.organizationName.setValidators([]);
-      this.organizationName.reset();
+      this.organizationName.updateValueAndValidity();
     }
   }
 
@@ -78,8 +78,9 @@ export class CovenantTransfereeDialogComponent {
     }
     this.isLoading = true;
 
+    const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;
     const createDto: CovenantTransfereeCreateDto = {
-      organizationName: this.organizationName.getRawValue() || undefined,
+      organizationName: orgName,
       firstName: this.firstName.getRawValue() || undefined,
       lastName: this.lastName.getRawValue() || undefined,
       email: this.email.getRawValue()!,
@@ -97,8 +98,9 @@ export class CovenantTransfereeDialogComponent {
   }
 
   async onSave() {
+    const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;
     const updateDto: CovenantTransfereeUpdateDto = {
-      organizationName: this.organizationName.getRawValue(),
+      organizationName: orgName,
       firstName: this.firstName.getRawValue(),
       lastName: this.lastName.getRawValue(),
       email: this.email.getRawValue()!,
