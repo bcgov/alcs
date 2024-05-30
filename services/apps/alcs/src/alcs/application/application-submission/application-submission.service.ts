@@ -66,6 +66,9 @@ export class ApplicationSubmissionService {
       relations: {
         type: true,
       },
+      order: {
+        firstName: 'ASC',
+      },
     });
   }
 
