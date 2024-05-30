@@ -99,6 +99,7 @@ export class OwnerDialogComponent {
       this.organizationName.setValidators([]);
       this.corporateSummary.setValidators([]);
       this.corporateSummary.reset();
+      this.files = [];
     }
     this.corporateSummary.updateValueAndValidity();
     this.organizationName.updateValueAndValidity();
