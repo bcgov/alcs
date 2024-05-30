@@ -9,7 +9,7 @@ export class UpdateNoticeOfIntentDecisionComponentDto {
   uuid: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   alrArea?: number;
 
   @IsOptional()
