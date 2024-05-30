@@ -8,7 +8,7 @@ We receive the parcel data in a GDB from PMBC, this data changes and needs to be
 1. Setup Portforwading as necessary to get access to Postgres
 1. Truncate the existing parcel_lookup table
 1. Run the following command replacing username and password as
-   necessary: `ogr2ogr -f "PostgreSQL" PG:"host=localhost port=5432 dbname=app user=postgres password=postgres active_schema=alcs" PMBC_export.gdb -nln parcel_lookup`
+   necessary: `ogr2ogr -f "PostgreSQL" PG:"host=localhost port=5432 dbname=app user=postgres password=postgres active_schema=alcs" PMBC_export.gdb -nln parcel_lookup -gt 10000 --config PG_USE_COPY YES`
 1. Be patient, this will import ~2 million rows and will take ~10 minutes
 
 ## Running Jobs in Openshift
