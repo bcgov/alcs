@@ -1,6 +1,5 @@
 # End-to-End Testing
 
-- [Writing Tests](#writing-tests)
 - [Running Tests](#running-tests)
 - [Local Setup](#local-setup)
   - [Installation](#installation)
@@ -9,12 +8,11 @@
 
 E2E test automation is implemented using the [Playwright](https://playwright.dev/).
 
+> [!NOTE]
+> All instructions contained in this document assume `<alcs_repo_dir>/e2e` is the current working directory.
+
 > [!WARNING]
-> When writing tests, make sure they do not contain any credentials _before_ committing to the repo.
-
-## Writing Tests
-
-- Write tests for a given project, i.e., tests for the portal go in `/e2e/tests/portal`.
+> When writing tests, make sure they do not contain any secrets _before_ committing to the repo. All secrets should be defined in the ignored `.env` file (see [Configure Secrets](#configure-secrets)).
 
 ## Running Tests
 
@@ -24,34 +22,12 @@ To run tests:
 $ npx playwright test
 ```
 
+This will just run the tests in the background and show results in the console. This is the main way to run tests.
+
 To run tests just for a specific browser:
 
 ```bash
 $ npx playwright test --project=[chromium]
-```
-
-To run tests just for a specific frontend, specify by directory:
-
-```bash
-$ npx playwright test portal/
-```
-
-These can be combined:
-
-````bash
-$ npx playwright test --project=chromium portal/
-```
-
-To run headed:
-
-```bash
-$ npx playwright test --headed
-````
-
-To run in UI mode:
-
-```bash
-$ npx playwright test --ui
 ```
 
 To run in debug mode:
@@ -60,11 +36,23 @@ To run in debug mode:
 $ npx playwright test --debug
 ```
 
+This opens the tests in a browser and lets you visually step through the actions and see what each command is doing. It also has a locator tool that lets you test out locators.
+
+To run in UI mode:
+
+```bash
+$ npx playwright test --ui
+```
+
+This is a cool way to explore tests and see the results in realtime.
+
 To show a report:
 
 ```bash
-$ npx playwright show-report REPORT_DIR
+$ npx playwright show-report [REPORT_DIR]
 ```
+
+If `REPORT_DIR` is blank, it'll show the report of the most recently run test.
 
 ## Local Setup
 
@@ -90,4 +78,4 @@ $ npx playwright install
 ## Known Issues
 
 - When signed in, navigation via URL always redirects to login page
-- Parcel entry step UI is not fully functional, stick to single parcel for now
+- Parcel entry step UI is not fully functional; stick to single parcel for now
