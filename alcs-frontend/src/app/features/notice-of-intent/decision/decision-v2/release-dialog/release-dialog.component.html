@@ -22,7 +22,7 @@
       <span *ngIf="wasReleased">No auto-emails will be sent</span>
     </div>
   </div>
-  <div style="margin-top: 24px">
+  <div *ngIf="!wasReleased" style="margin-top: 24px">
     <div style="margin-bottom: 4px">
       <mat-label>CC additional recipients on decision release email (optional):</mat-label>
     </div>
