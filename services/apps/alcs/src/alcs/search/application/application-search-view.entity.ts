@@ -37,7 +37,8 @@ export class SearchApplicationSubmissionStatusType {
         LocalGovernment,
         'localGovernment',
         'app_sub.local_government_uuid = localGovernment.uuid',
-      ),
+      )
+      .where(`app_sub.is_draft IS NOT TRUE`),
 })
 export class ApplicationSubmissionSearchView {
   @ViewColumn()
