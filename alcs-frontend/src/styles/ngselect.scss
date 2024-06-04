@@ -6,10 +6,6 @@
   font-size: 16px;
 }
 
-.ng-select.ng-select-focused .ng-placeholder {
-  color: colors.$primary-color !important;
-}
-
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after,
 .ng-select.ng-select-focused .ng-select-container:after {
@@ -17,6 +13,10 @@
 }
 
 .ng-select .ng-arrow {
+  color: colors.$primary-color !important;
+}
+
+.ng-select.ng-select-focused .ng-placeholder {
   color: colors.$primary-color !important;
 }
 
