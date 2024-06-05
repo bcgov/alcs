@@ -130,6 +130,9 @@ export class NoticeOfIntentDecisionDto {
   decisionMakerName: string | null;
 
   @AutoMap(() => Boolean)
+  wasReleased: boolean;
+
+  @AutoMap(() => Boolean)
   isSubjectToConditions: boolean | null;
 
   @AutoMap(() => Boolean)
