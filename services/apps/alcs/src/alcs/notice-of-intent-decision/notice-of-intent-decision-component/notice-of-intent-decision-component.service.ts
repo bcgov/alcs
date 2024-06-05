@@ -2,9 +2,11 @@ import { ServiceValidationException } from '@app/common/exceptions/base.exceptio
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import { filterUndefined } from '../../../utils/undefined';
 import {
-  NOI_DECISION_COMPONENT_TYPE,
   CreateNoticeOfIntentDecisionComponentDto,
+  NOI_DECISION_COMPONENT_TYPE,
 } from './notice-of-intent-decision-component.dto';
 import { NoticeOfIntentDecisionComponent } from './notice-of-intent-decision-component.entity';
 
@@ -38,17 +40,29 @@ export class NoticeOfIntentDecisionComponentService {
           updateDto.noticeOfIntentDecisionComponentTypeCode;
       }
 
-      component.alrArea = updateDto.alrArea;
-      component.agCap = updateDto.agCap;
-      component.agCapSource = updateDto.agCapSource;
-      component.agCapMap = updateDto.agCapMap;
-      component.agCapConsultant = updateDto.agCapConsultant;
-      component.endDate = updateDto.endDate
-        ? new Date(updateDto.endDate)
-        : null;
-      component.endDate2 = updateDto.endDate2
-        ? new Date(updateDto.endDate2)
-        : null;
+      component.alrArea = filterUndefined(updateDto.alrArea, component.alrArea);
+      component.agCap = filterUndefined(updateDto.agCap, component.agCap);
+      component.agCapSource = filterUndefined(
+        updateDto.agCapSource,
+        component.agCapSource,
+      );
+      component.agCapMap = filterUndefined(
+        updateDto.agCapMap,
+        component.agCapMap,
+      );
+      component.agCapConsultant = filterUndefined(
+        updateDto.agCapConsultant,
+        component.agCapConsultant,
+      );
+      component.endDate = filterUndefined(
+        formatIncomingDate(updateDto.endDate),
+        component.endDate,
+      );
+
+      component.endDate2 = filterUndefined(
+        formatIncomingDate(updateDto.endDate2),
+        component.endDate2,
+      );
 
       this.patchPofoFields(component, updateDto);
       this.patchRosoFields(component, updateDto);
@@ -67,26 +81,52 @@ export class NoticeOfIntentDecisionComponentService {
     component: NoticeOfIntentDecisionComponent,
     updateDto: CreateNoticeOfIntentDecisionComponentDto,
   ) {
-    component.soilFillTypeToPlace = updateDto.soilFillTypeToPlace ?? null;
-    component.soilToPlaceArea = updateDto.soilToPlaceArea ?? null;
-    component.soilToPlaceVolume = updateDto.soilToPlaceVolume ?? null;
-    component.soilToPlaceMaximumDepth =
-      updateDto.soilToPlaceMaximumDepth ?? null;
-    component.soilToPlaceAverageDepth =
-      updateDto.soilToPlaceAverageDepth ?? null;
+    component.soilFillTypeToPlace = filterUndefined(
+      updateDto.soilFillTypeToPlace,
+      component.soilFillTypeToPlace,
+    );
+    component.soilToPlaceArea = filterUndefined(
+      updateDto.soilToPlaceArea,
+      component.soilToPlaceArea,
+    );
+    component.soilToPlaceVolume = filterUndefined(
+      updateDto.soilToPlaceVolume,
+      component.soilToPlaceVolume,
+    );
+    component.soilToPlaceMaximumDepth = filterUndefined(
+      updateDto.soilToPlaceMaximumDepth,
+      component.soilToPlaceMaximumDepth,
+    );
+    component.soilToPlaceAverageDepth = filterUndefined(
+      updateDto.soilToPlaceAverageDepth,
+      component.soilToPlaceAverageDepth,
+    );
   }
 
   private patchRosoFields(
     component: NoticeOfIntentDecisionComponent,
     updateDto: CreateNoticeOfIntentDecisionComponentDto,
   ) {
-    component.soilTypeRemoved = updateDto.soilTypeRemoved ?? null;
-    component.soilToRemoveVolume = updateDto.soilToRemoveVolume ?? null;
-    component.soilToRemoveArea = updateDto.soilToRemoveArea ?? null;
-    component.soilToRemoveMaximumDepth =
-      updateDto.soilToRemoveMaximumDepth ?? null;
-    component.soilToRemoveAverageDepth =
-      updateDto.soilToRemoveAverageDepth ?? null;
+    component.soilTypeRemoved = filterUndefined(
+      updateDto.soilTypeRemoved,
+      component.soilTypeRemoved,
+    );
+    component.soilToRemoveVolume = filterUndefined(
+      updateDto.soilToRemoveVolume,
+      component.soilToRemoveVolume,
+    );
+    component.soilToRemoveArea = filterUndefined(
+      updateDto.soilToRemoveArea,
+      component.soilToRemoveArea,
+    );
+    component.soilToRemoveMaximumDepth = filterUndefined(
+      updateDto.soilToRemoveMaximumDepth,
+      component.soilToRemoveMaximumDepth,
+    );
+    component.soilToRemoveAverageDepth = filterUndefined(
+      updateDto.soilToRemoveAverageDepth,
+      component.soilToRemoveAverageDepth,
+    );
   }
 
   validate(

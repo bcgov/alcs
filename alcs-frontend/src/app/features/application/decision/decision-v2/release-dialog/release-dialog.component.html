@@ -22,8 +22,8 @@
       <span *ngIf="wasReleased">No auto-emails will be sent</span>
     </div>
   </div>
-  <div style="margin-top: 24px;">
-    <div style="margin-bottom: 4px;">
+  <div *ngIf="!wasReleased" style="margin-top: 24px">
+    <div style="margin-bottom: 4px">
       <mat-label>CC additional recipients on decision release email (optional):</mat-label>
     </div>
     <mat-form-field style="width: 100%" appearance="outline">
@@ -54,7 +54,7 @@
 
 <mat-dialog-actions align="end">
   <div class="button-container">
-    <button mat-stroked-button color="primary" [mat-dialog-close]="{confirmed: false}">Cancel</button>
+    <button mat-stroked-button color="primary" [mat-dialog-close]="{ confirmed: false }">Cancel</button>
     <button mat-flat-button color="primary" type="button" (click)="onRelease()">Release decision</button>
   </div>
 </mat-dialog-actions>

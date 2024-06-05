@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -80,6 +81,9 @@ export class InboxRequestDto {
 
   @IsArray()
   fileTypes: string[];
+
+  @IsBoolean()
+  createdByMe: boolean;
 }
 
 // typeorm does not transform property names for the status

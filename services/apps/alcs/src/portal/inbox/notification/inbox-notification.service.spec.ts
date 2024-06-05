@@ -31,6 +31,7 @@ describe('InboxNotificationService', () => {
     fileTypes: ['SRW'],
     page: 1,
     pageSize: 10,
+    createdByMe: false,
   };
 
   let mockQuery: any = {};

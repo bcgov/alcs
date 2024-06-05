@@ -1,17 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationService } from '../../../../../services/application/application.service';
+import { Subject } from 'rxjs';
+import { ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentModificationCreateDto } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
-import { NoticeOfIntentDto } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 
@@ -23,21 +18,17 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
-  regions: ApplicationRegionDto[] = [];
-  localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading = false;
   isDecisionDateEmpty = false;
-  currentBoardCode: string = '';
 
   decisions: { uuid: string; resolution: string }[] = [];
-  filteredNOIs: Observable<NoticeOfIntentDto[]> | undefined;
 
-  fileNumberControl = new FormControl<string | any>('', [Validators.required]);
-  applicantControl = new FormControl('', [Validators.required]);
+  fileNumberControl = new FormControl<string | any>({ value: '', disabled: true }, [Validators.required]);
+  applicantControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
   descriptionControl = new FormControl('', [Validators.required]);
-  regionControl = new FormControl<string | null>(null, [Validators.required]);
+  regionControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
-  localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
+  localGovernmentControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   modifiesDecisions = new FormControl<string[]>([], [Validators.required]);
 
   createForm = new FormGroup({
@@ -54,9 +45,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<CreateNoiModificationDialogComponent>,
     private noticeOfIntentService: NoticeOfIntentService,
-    private applicationService: ApplicationService,
     private modificationService: NoticeOfIntentModificationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
     private decisionService: NoticeOfIntentDecisionV2Service,
     private toastService: ToastService,
     private router: Router,
@@ -64,59 +53,20 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentBoardCode = this.data.currentBoardCode;
-
-    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
-      this.regions = regions;
-    });
-
-    this.localGovernmentService.list().then((res) => {
-      this.localGovernments = res;
-    });
-
-    this.initFileNumberAutocomplete();
-  }
-
-  initFileNumberAutocomplete() {
-    this.filteredNOIs = this.fileNumberControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((val) => {
-        if (val && val.length > 1) {
-          return this.noticeOfIntentService.searchByFileNumber(val);
-        }
-        return [];
-      }),
-    );
-  }
-
-  autocompleteDisplay(application: NoticeOfIntentDto): string {
-    return application?.fileNumber ?? '';
-  }
-
-  async onNOISelected($event: MatOptionSelectionChange) {
-    if (!$event?.source?.value) {
-      return;
-    }
-
-    const noticeOfIntent = $event.source.value as NoticeOfIntentDto;
-    this.fileNumberControl.disable();
-    this.applicantControl.disable();
-    this.regionControl.disable();
-    this.localGovernmentControl.disable();
-
-    this.loadDecisions(noticeOfIntent.fileNumber);
-
     this.createForm.patchValue({
-      applicant: noticeOfIntent.applicant,
-      region: noticeOfIntent.region.code,
-      localGovernment: this.localGovernments.find((g) => g.uuid === noticeOfIntent.localGovernment.uuid)?.uuid ?? null,
+      fileNumber: this.data.fileNumber,
+      applicant: this.data.applicant,
+      region: this.data.region?.label,
+      localGovernment: this.data.localGovernment?.name,
     });
 
-    if (!noticeOfIntent.decisionDate) {
-      this.isDecisionDateEmpty = true;
-    }
+    this.noticeOfIntentService.fetchByFileNumber(this.data.fileNumber).then((noi) => {
+      if (!noi?.decisionDate) {
+        this.isDecisionDateEmpty = true;
+      }
+    });
+
+    this.loadDecisions(this.data.fileNumber);
   }
 
   async onSubmit() {
@@ -129,7 +79,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
         submittedDate: formValues.submittedDate!.valueOf(),
-        boardCode: this.currentBoardCode,
+        boardCode: 'ceo',
         modifiesDecisionUuids: formValues.modifiesDecisions!,
         description: formValues.description!,
       };
@@ -154,28 +104,12 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  onReset() {
-    this.fileNumberControl.reset();
-    this.applicantControl.reset();
-    this.regionControl.reset();
+  onReset(event: MouseEvent) {
+    event.preventDefault();
+
     this.submittedDateControl.reset();
     this.modifiesDecisions.reset();
     this.descriptionControl.reset();
-
-    this.fileNumberControl.enable();
-    this.applicantControl.enable();
-    this.regionControl.enable();
-    this.localGovernmentControl.enable();
-    this.modifiesDecisions.disable();
-
-    // clear warnings
-    this.isDecisionDateEmpty = false;
-  }
-
-  onSelectGovernment(value: ApplicationLocalGovernmentDto) {
-    this.createForm.patchValue({
-      region: value.preferredRegionCode,
-    });
   }
 
   async loadDecisions(fileNumber: string) {

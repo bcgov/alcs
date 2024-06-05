@@ -29,7 +29,7 @@ export class NoticeOfIntentDecisionComponent extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the decision component',
   })

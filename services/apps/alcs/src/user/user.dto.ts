@@ -45,6 +45,7 @@ export class UserDto extends UpdateUserDto {
   government?: string;
   isLocalGovernment: boolean;
   isFirstNationGovernment: boolean;
+  isBusiness: boolean;
 }
 
 export class CreateUserDto {

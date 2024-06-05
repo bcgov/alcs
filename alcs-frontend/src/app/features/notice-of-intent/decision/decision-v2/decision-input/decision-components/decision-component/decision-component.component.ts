@@ -13,7 +13,7 @@ import { ToastService } from '../../../../../../../services/toast/toast.service'
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 
-const MIN_SOIL_FIELDS = 0.01;
+const MIN_SOIL_FIELDS = 0.00001;
 
 @Component({
   selector: 'app-decision-component',

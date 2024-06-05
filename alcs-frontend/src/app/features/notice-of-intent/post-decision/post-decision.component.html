@@ -2,7 +2,7 @@
 
 <h5 id="modifications" class="post-decision-header">
   Modification Requests
-  <mat-icon class="icon" matTooltip="Create new Modification Requests from NOI tracking board">info_outline </mat-icon>
+  <button mat-flat-button color="primary" (click)="onCreateModification()">+ Modification</button>
 </h5>
 
 <section class="no-decisions" *ngIf="!modifications.length">

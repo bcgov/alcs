@@ -126,7 +126,7 @@ export const NOI_SEARCH_FILTERS = {
     return query.getMany();
   },
   addFileTypeResults: (
-    searchDto: InboxRequestDto,
+    searchDto: SearchRequestDto | InboxRequestDto,
     noiRepository: Repository<NoticeOfIntent>,
   ) => {
     return noiRepository.find({

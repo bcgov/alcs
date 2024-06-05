@@ -7,8 +7,17 @@
 }
 
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
-.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after {
-  border-color: colors.$primary-color;
+.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after,
+.ng-select.ng-select-focused .ng-select-container:after {
+  border-color: colors.$primary-color !important;
+}
+
+.ng-select .ng-arrow {
+  color: colors.$primary-color !important;
+}
+
+.ng-select.ng-select-focused .ng-placeholder {
+  color: colors.$primary-color !important;
 }
 
 .ng-select .ng-select-container.ng-appearance-outline {
@@ -17,7 +26,7 @@
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
   background-color: colors.$grey-light !important;
-  color: colors.$primary-color;
+  color: colors.$primary-color !important;
 
   &:hover {
     background-color: colors.$grey-light !important;
