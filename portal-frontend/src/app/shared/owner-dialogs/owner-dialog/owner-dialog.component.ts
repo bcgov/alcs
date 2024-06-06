@@ -180,6 +180,8 @@ export class OwnerDialogComponent {
       let document;
       if (this.pendingFile) {
         document = await this.uploadPendingFile(this.pendingFile);
+      } else {
+        document = this.data.existingOwner?.corporateSummary;
       }
 
       const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;
