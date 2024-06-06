@@ -294,7 +294,7 @@ export class NoticeOfIntentAdvancedSearchService {
 
     if (searchDto.dateSubmittedTo !== undefined) {
       query = query.andWhere(
-        'noi.date_submitted_to_alc <= :date_submitted_to',
+        'noi.date_submitted_to_alc < :date_submitted_to',
         {
           date_submitted_to: getNextDayToPacific(
             searchDto.dateSubmittedTo,
