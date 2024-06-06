@@ -173,6 +173,10 @@ export class OwnerDialogComponent {
     if (this.form.valid) {
       this.isLoading = true;
 
+      if (this.type.value === OWNER_TYPE.INDIVIDUAL) {
+        this.removeCorporateSummary();
+      }
+
       let document;
       if (this.pendingFile) {
         document = await this.uploadPendingFile(this.pendingFile);
