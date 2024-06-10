@@ -16,6 +16,9 @@
   <ng-container matColumnDef="type">
     <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell class="type-cell" *matCellDef="let element">
+      <ng-container *ngIf="!element.appType" class="center">
+        -
+      </ng-container>
       <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType">
       </app-application-type-pill>
       <app-application-type-pill
