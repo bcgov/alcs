@@ -97,9 +97,7 @@ export class OwnerDialogComponent {
       this.corporateSummary.setValidators([Validators.required]);
     } else {
       this.organizationName.setValidators([]);
-      this.corporateSummary.setValidators([]);
-      this.corporateSummary.reset();
-      this.files = [];
+      this.corporateSummary.setValidators([]); 
     }
     this.corporateSummary.updateValueAndValidity();
     this.organizationName.updateValueAndValidity();
@@ -113,6 +111,11 @@ export class OwnerDialogComponent {
       }
 
       this.isLoading = true;
+
+      if (this.type.value === OWNER_TYPE.INDIVIDUAL) {
+        this.removeCorporateSummary();
+      }
+
       let documentUuid;
       if (this.pendingFile) {
         documentUuid = await this.uploadPendingFile(this.pendingFile);
@@ -170,9 +173,15 @@ export class OwnerDialogComponent {
     if (this.form.valid) {
       this.isLoading = true;
 
+      if (this.type.value === OWNER_TYPE.INDIVIDUAL) {
+        this.removeCorporateSummary();
+      }
+
       let document;
       if (this.pendingFile) {
         document = await this.uploadPendingFile(this.pendingFile);
+      } else { 
+        document = this.type.value === OWNER_TYPE.ORGANIZATION ? this.data.existingOwner?.corporateSummary : null;
       }
 
       const orgName = this.type.value === OWNER_TYPE.ORGANIZATION ? this.organizationName.getRawValue() : null;

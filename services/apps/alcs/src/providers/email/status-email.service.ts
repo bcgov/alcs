@@ -266,13 +266,12 @@ export class StatusEmailService {
     const toEmails: string[] = [];
     if (data.primaryContact && data.primaryContact.email) {
       toEmails.push(data.primaryContact.email);
+
       if (data.ccGovernment && data.government?.emails) {
         ccEmails.push(...data.government.emails);
       }
-    } else {
-      if (data.ccGovernment && data.government?.emails) {
-        toEmails.push(...data.government.emails);
-      }
+    } else if (data.government?.emails) {
+      toEmails.push(...data.government.emails);
     }
     ccEmails.push(...data.ccEmails);
 

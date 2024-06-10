@@ -79,7 +79,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
         submittedDate: formValues.submittedDate!.valueOf(),
-        boardCode: 'ceo',
+        boardCode: 'noi',
         modifiesDecisionUuids: formValues.modifiesDecisions!,
         description: formValues.description!,
       };
