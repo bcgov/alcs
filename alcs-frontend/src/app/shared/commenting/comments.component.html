@@ -4,17 +4,18 @@
     <mat-form-field *ngIf="!isEditing" class="placeholder-input" appearance="outline" (click)="onEdit()">
       <input matInput placeholder="Add a comment..." />
     </mat-form-field>
+
+    <app-mention-textarea
+      *ngIf="isEditing"
+      (create)="onSave($event)"
+      [comment]="comment"
+      (cancel)="onCancel()"
+      [isNewComment]="true"
+      [notificationTitle]="notificationTitle"
+      labelText="Add a comment"
+    >
+    </app-mention-textarea>
   </div>
-  <app-mention-textarea
-    *ngIf="isEditing"
-    (create)="onSave($event)"
-    [comment]="comment"
-    (cancel)="onCancel()"
-    [isNewComment]="true"
-    [notificationTitle]='notificationTitle'
-    labelText="Add a comment"
-  >
-  </app-mention-textarea>
   <app-comment
     *ngFor="let comment of comments"
     [comment]="comment"
