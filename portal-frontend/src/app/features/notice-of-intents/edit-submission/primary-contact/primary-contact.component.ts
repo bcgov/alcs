@@ -242,10 +242,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     // onSelectOwner only not called on first load of page
     if (selectedOwner) {
       this.onSelectOwner(selectedOwner.uuid);
-    } else if (parcelOwners.length === 1) {
-      this.onSelectOwner(parcelOwners[0].uuid);
     } else if (this.isGovernmentUser) {
       this.onSelectGovernment();
+    } else if (parcelOwners.length === 1) {
+      this.onSelectOwner(parcelOwners[0].uuid);
     }
 
     if (this.selectedLocalGovernment) {
