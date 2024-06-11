@@ -250,6 +250,12 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     }
   }
 
+  onEnter(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  }
+
   getSearchParams(): SearchRequestDto {
     const searchControls = this.searchForm.controls;
 
