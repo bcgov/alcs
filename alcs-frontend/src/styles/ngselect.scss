@@ -15,21 +15,6 @@
   border-color: transparent !important;
 }
 
-.ng-select .ng-select-container {
-  margin: 0.2em 0;
-  padding: 0 0 0 0.1em;
-  .ng-input {
-    padding: 0 0 0 0.1em;
-  }
-  &:hover {
-    background-color: colors.$grey-light !important;
-  }
-}
-
-.ng-select .ng-select-container.ng-select-container.ng-appearance-outline {
-  background-color: #ffff !important;
-}
-
 .ng-select .ng-arrow {
   color: colors.$primary-color !important;
 }
