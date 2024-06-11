@@ -35,7 +35,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   files: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
 
   needsAuthorizationLetter = false;
-  selectedThirdPartyAgent = false;
+  selectedThirdPartyAgent: boolean | null = false;
   selectedLocalGovernment = false;
   _selectedOwnerUuid: string | undefined = undefined;
   isCrownOwner = false;
@@ -266,8 +266,11 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async onSelectPrimaryContactType(event: MatButtonToggleChange) {
-    const isExistingOwner = event.value;
+    const isExistingOwner: boolean = event.value;
     const hasValues = Object.values(this.form.value).some((value) => value);
+
+    // This is necessary to keep toggle and variable in sync
+    this.selectedThirdPartyAgent = !isExistingOwner;
 
     if (hasValues) {
       await this.dialog
@@ -279,10 +282,12 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           },
         })
         .beforeClosed()
-        .subscribe(async (confirmed) => {
+        .subscribe(async (confirmed: boolean) => {
           if (confirmed) {
             this.form.reset();
             this.switchPrimaryContactType(isExistingOwner);
+          } else {
+            this.selectedThirdPartyAgent = isExistingOwner;
           }
         });
     } else {
