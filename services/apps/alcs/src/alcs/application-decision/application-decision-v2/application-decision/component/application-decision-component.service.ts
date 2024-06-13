@@ -44,14 +44,15 @@ export class ApplicationDecisionComponentService {
           updateDto.applicationDecisionComponentTypeCode;
       }
 
-      component.alrArea = updateDto.alrArea;
-      component.agCap = updateDto.agCap;
-      component.agCapSource = updateDto.agCapSource;
-      component.agCapMap = updateDto.agCapMap;
-      component.agCapConsultant = updateDto.agCapConsultant;
+      component.alrArea = updateDto.alrArea ?? component.alrArea;
+      component.agCap = updateDto.agCap ?? component.agCap;
+      component.agCapSource = updateDto.agCapSource ?? component.agCapSource;
+      component.agCapMap = updateDto.agCapMap ?? component.agCapMap;
+      component.agCapConsultant =
+        updateDto.agCapConsultant ?? component.agCapConsultant;
       component.endDate2 = updateDto.endDate2
         ? new Date(updateDto.endDate2)
-        : null;
+        : component.endDate2;
 
       this.patchNfuFields(component, updateDto);
       this.patchTurpFields(component, updateDto);
@@ -67,7 +68,7 @@ export class ApplicationDecisionComponentService {
         component.inclExclApplicantType = updateDto.inclExclApplicantType;
         component.expiryDate = updateDto.expiryDate
           ? new Date(updateDto.expiryDate)
-          : null;
+          : component.expiryDate;
       }
 
       updatedComponents.push(component);
@@ -138,9 +139,11 @@ export class ApplicationDecisionComponentService {
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
-    component.nfuSubType = updateDto.nfuSubType;
-    component.nfuType = updateDto.nfuType;
+    component.endDate = updateDto.endDate
+      ? new Date(updateDto.endDate)
+      : component.endDate;
+    component.nfuSubType = updateDto.nfuSubType ?? component.nfuSubType;
+    component.nfuType = updateDto.nfuType ?? component.nfuType;
   }
 
   private patchTurpFields(
@@ -149,45 +152,57 @@ export class ApplicationDecisionComponentService {
   ) {
     component.expiryDate = updateDto.expiryDate
       ? new Date(updateDto.expiryDate)
-      : null;
+      : component.expiryDate;
   }
 
   private patchPofoFields(
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
-    component.soilFillTypeToPlace = updateDto.soilFillTypeToPlace ?? null;
-    component.soilToPlaceArea = updateDto.soilToPlaceArea ?? null;
-    component.soilToPlaceVolume = updateDto.soilToPlaceVolume ?? null;
+    component.endDate = updateDto.endDate
+      ? new Date(updateDto.endDate)
+      : component.endDate;
+    component.soilFillTypeToPlace =
+      updateDto.soilFillTypeToPlace ?? component.soilFillTypeToPlace;
+    component.soilToPlaceArea =
+      updateDto.soilToPlaceArea ?? component.soilToPlaceArea;
+    component.soilToPlaceVolume =
+      updateDto.soilToPlaceVolume ?? component.soilToPlaceVolume;
     component.soilToPlaceMaximumDepth =
-      updateDto.soilToPlaceMaximumDepth ?? null;
+      updateDto.soilToPlaceMaximumDepth ?? component.soilToPlaceMaximumDepth;
     component.soilToPlaceAverageDepth =
-      updateDto.soilToPlaceAverageDepth ?? null;
+      updateDto.soilToPlaceAverageDepth ?? component.soilToPlaceAverageDepth;
   }
 
   private patchRosoFields(
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
-    component.soilTypeRemoved = updateDto.soilTypeRemoved ?? null;
-    component.soilToRemoveVolume = updateDto.soilToRemoveVolume ?? null;
-    component.soilToRemoveArea = updateDto.soilToRemoveArea ?? null;
+    component.endDate = updateDto.endDate
+      ? new Date(updateDto.endDate)
+      : component.endDate;
+    component.soilTypeRemoved =
+      updateDto.soilTypeRemoved ?? component.soilTypeRemoved;
+    component.soilToRemoveVolume =
+      updateDto.soilToRemoveVolume ?? component.soilToRemoveVolume;
+    component.soilToRemoveArea =
+      updateDto.soilToRemoveArea ?? component.soilToRemoveArea;
     component.soilToRemoveMaximumDepth =
-      updateDto.soilToRemoveMaximumDepth ?? null;
+      updateDto.soilToRemoveMaximumDepth ?? component.soilToRemoveMaximumDepth;
     component.soilToRemoveAverageDepth =
-      updateDto.soilToRemoveAverageDepth ?? null;
+      updateDto.soilToRemoveAverageDepth ?? component.soilToRemoveAverageDepth;
   }
 
   private patchNaruFields(
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.endDate = updateDto.endDate
+      ? new Date(updateDto.endDate)
+      : component.endDate;
     component.expiryDate = updateDto.expiryDate
       ? new Date(updateDto.expiryDate)
-      : null;
+      : component.expiryDate;
     component.naruSubtypeCode = updateDto.naruSubtypeCode;
   }
 
