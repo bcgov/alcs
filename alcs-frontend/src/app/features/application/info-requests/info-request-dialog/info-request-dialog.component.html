@@ -57,15 +57,15 @@
             Other:
           </mat-radio-button>
           <input
-          class="other-text"
-          #customReasonText
-          matInput
-          type="text"
-          [required]='model.reason === REASON_TYPE.CUSTOM'
-          [(ngModel)]="model.reasonText"
-          name="reasonText"
-          (click)="onReasonInputClick()"
-        />
+            class="other-text"
+            #customReasonText
+            matInput
+            type="text"
+            [required]='model.reason === REASON_TYPE.CUSTOM'
+            [(ngModel)]="model.reasonText"
+            name="reasonText"
+            (click)="onReasonInputClick()"
+          />
         </mat-radio-group>
       </mat-form-field>
     </div>
