@@ -48,10 +48,16 @@ label {
   }
 }
 
+.other-radio-button {
+  display: inline-block !important;
+}
+
 .other-text {
-  border-bottom: 1px solid colors.$black;
-  padding-bottom: 4px;
+  border-bottom: 1px solid colors.$black !important;
   margin-bottom: -5px;
+  margin-left: 10px;
+  width: 80%;
+  max-width: 90%;
 }
 
 :host::ng-deep {

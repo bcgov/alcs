@@ -41,7 +41,7 @@
     </div>
 
     <div>
-      <mat-form-field class="reason-wrapper flex-container">
+      <mat-form-field class="reason-wrapper flex-container" appearance="outline">
         <label class="radio-group-label" for="reason">Reason <span color="red">*</span></label>
         <mat-radio-group
           id="reason"
@@ -52,20 +52,20 @@
         >
           <mat-radio-button value="Waiting for additional information from applicant"
             >Waiting for additional information from applicant</mat-radio-button
-          >
-          <mat-radio-button value="custom">
+            >
+          <mat-radio-button class="other-radio-button" value="custom">
             Other:
-            <input
-              class="other-text"
-              #customReasonText
-              matInput
-              type="text"
-              [required]='model.reason === REASON_TYPE.CUSTOM'
-              [(ngModel)]="model.reasonText"
-              name="reasonText"
-              (click)="onReasonInputClick()"
-            />
           </mat-radio-button>
+          <input
+            class="other-text"
+            #customReasonText
+            matInput
+            type="text"
+            [required]='model.reason === REASON_TYPE.CUSTOM'
+            [(ngModel)]="model.reasonText"
+            name="reasonText"
+            (click)="onReasonInputClick()"
+          />
         </mat-radio-group>
       </mat-form-field>
     </div>
