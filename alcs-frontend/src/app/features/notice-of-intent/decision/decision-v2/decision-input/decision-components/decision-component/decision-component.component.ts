@@ -186,21 +186,21 @@ export class DecisionComponentComponent implements OnInit {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
       soilFillTypeToPlace: this.fillTypeToPlace.value ?? null,
-      soilToPlaceArea: this.areaToPlace.value ?? null,
-      soilToPlaceVolume: this.volumeToPlace.value ?? null,
-      soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ?? null,
-      soilToPlaceAverageDepth: this.averageDepthToPlace.value ?? null,
+      soilToPlaceArea: this.areaToPlace.value ? this.areaToPlace.value : null,
+      soilToPlaceVolume: this.volumeToPlace.value ? this.volumeToPlace.value: null,
+      soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ? this.maximumDepthToPlace.value : null,
+      soilToPlaceAverageDepth: this.averageDepthToPlace.value ? this.averageDepthToPlace.value : null,
     };
   }
 
   private getRosoDataChange(): RosoDecisionComponentDto {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
-      soilTypeRemoved: this.soilTypeRemoved.value ?? null,
-      soilToRemoveArea: this.areaToRemove.value ?? null,
-      soilToRemoveVolume: this.volumeToRemove.value ?? null,
-      soilToRemoveMaximumDepth: this.maximumDepthToRemove.value ?? null,
-      soilToRemoveAverageDepth: this.averageDepthToRemove.value ?? null,
+      soilTypeRemoved: this.soilTypeRemoved.value ? this.soilTypeRemoved.value : null,
+      soilToRemoveArea: this.areaToRemove.value ? this.areaToRemove.value : null,
+      soilToRemoveVolume: this.volumeToRemove.value ? this.volumeToRemove.value : null,
+      soilToRemoveMaximumDepth: this.maximumDepthToRemove.value ? this.maximumDepthToRemove.value : null,
+      soilToRemoveAverageDepth: this.averageDepthToRemove.value ? this.averageDepthToRemove.value : null,
     };
   }
 
@@ -208,16 +208,16 @@ export class DecisionComponentComponent implements OnInit {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
       endDate2: this.endDate2.value ? formatDateForApi(this.endDate2.value) : null,
-      soilTypeRemoved: this.soilTypeRemoved.value ?? null,
-      soilToRemoveArea: this.areaToRemove.value ?? null,
-      soilToRemoveVolume: this.volumeToRemove.value ?? null,
-      soilToRemoveMaximumDepth: this.maximumDepthToRemove.value ?? null,
-      soilToRemoveAverageDepth: this.averageDepthToRemove.value ?? null,
-      soilFillTypeToPlace: this.fillTypeToPlace.value ?? null,
-      soilToPlaceArea: this.areaToPlace.value ?? null,
-      soilToPlaceVolume: this.volumeToPlace.value ?? null,
-      soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ?? null,
-      soilToPlaceAverageDepth: this.averageDepthToPlace.value ?? null,
+      soilTypeRemoved: this.soilTypeRemoved.value ? this.soilTypeRemoved.value : null,
+      soilToRemoveArea: this.areaToRemove.value ? this.areaToRemove.value : null,
+      soilToRemoveVolume: this.volumeToRemove.value ? this.volumeToRemove.value : null,
+      soilToRemoveMaximumDepth: this.maximumDepthToRemove.value ? this.maximumDepthToRemove.value : null,
+      soilToRemoveAverageDepth: this.averageDepthToRemove.value ? this.averageDepthToRemove.value : null,
+      soilFillTypeToPlace: this.fillTypeToPlace.value ? this.fillTypeToPlace.value : null,
+      soilToPlaceArea: this.areaToPlace.value ? this.areaToPlace.value : null,
+      soilToPlaceVolume: this.volumeToPlace.value ? this.volumeToPlace.value : null,
+      soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ? this.maximumDepthToPlace.value : null,
+      soilToPlaceAverageDepth: this.averageDepthToPlace.value ? this.averageDepthToPlace.value : null,
     };
   }
 
