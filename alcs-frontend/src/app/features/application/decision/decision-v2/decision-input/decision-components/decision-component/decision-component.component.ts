@@ -19,7 +19,7 @@ import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shar
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 import { SubdInputComponent } from './subd-input/subd-input.component';
 
-const MIN_SOIL_FIELDS = 0.01;
+const MIN_SOIL_FIELDS = 0.00001;
 
 @Component({
   selector: 'app-decision-component',
