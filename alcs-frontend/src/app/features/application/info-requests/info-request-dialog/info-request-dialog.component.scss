@@ -52,7 +52,7 @@ label {
   display: inline-block !important;
 }
 
-.other-text {
+.other-text.mat-mdc-input-element {
   border-bottom: 1px solid colors.$black !important;
   margin-bottom: -5px;
   margin-left: 10px;
