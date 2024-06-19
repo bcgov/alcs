@@ -194,6 +194,46 @@ describe('ApplicationDecisionComponentService', () => {
     expect(result[0].applicationDecisionComponentTypeCode).toEqual('fake_code');
   });
 
+  it('should update only changed fields in DTO for a given UID', async() => {
+    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({
+      uuid: 'fake',
+      applicationDecisionComponentTypeCode: 'fake_code',
+      alrArea: 1,
+      agCap: '2',
+      agCapSource: '3',
+      agCapMap: '4',
+      agCapConsultant: '5',
+      endDate: new Date(0),
+    } as ApplicationDecisionComponent);
+
+    const mockDto = new CreateApplicationDecisionComponentDto();
+    mockDto.uuid = 'fake';
+    mockDto.alrArea = 10;
+    mockDto.applicationDecisionComponentTypeCode = 'should_not_beUpdated';
+
+    const result = await service.createOrUpdate([mockDto], false);
+    expect(result).toBeDefined();
+    expect(result.length).toBe(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail)
+      .toHaveBeenCalledWith({
+        where: { uuid: 'fake' },
+        relations: {
+          lots: true,
+        },
+      });
+
+      expect(result[0].uuid).toEqual(mockDto.uuid);
+      expect(result[0].alrArea).toEqual(mockDto.alrArea);
+      expect(result[0].agCap).toEqual('2');
+      expect(result[0].agCapSource).toEqual('3');
+      expect(result[0].agCapMap).toEqual('4');
+      expect(result[0].agCapConsultant).toEqual('5');
+      expect(result[0].endDate).toEqual(new Date(0));
+      expect(result[0].applicationDecisionComponentTypeCode).toEqual('fake_code');
+
+  });
+
   it('should persist entity if persist flag is true', async () => {
     mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue(
       {} as ApplicationDecisionComponent,
