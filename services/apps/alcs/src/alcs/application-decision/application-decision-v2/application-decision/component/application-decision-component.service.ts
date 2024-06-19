@@ -9,8 +9,8 @@ import {
   CreateApplicationDecisionComponentDto,
 } from './application-decision-component.dto';
 import { ApplicationDecisionComponent } from './application-decision-component.entity';
-import { filterUndefined } from 'apps/alcs/src/utils/undefined';
-import { formatIncomingDate } from 'apps/alcs/src/utils/incoming-date.formatter';
+import { filterUndefined } from '../../../../../utils/undefined';
+import { formatIncomingDate } from '../../../../../utils/incoming-date.formatter';
 
 @Injectable()
 export class ApplicationDecisionComponentService {
