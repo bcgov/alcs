@@ -38,9 +38,7 @@
   --border-color: #e0e0e0;
 
   background: color-mix(in srgb, colors.$secondary-color-light, transparent 80%) !important;
-  border-top: 1px solid var(--border-color) !important;
-  border-right: 1px solid var(--border-color) !important;
-  border-bottom: 1px solid var(--border-color) !important;
+  border: 1px solid var(--border-color) !important;
 
   &:hover {
     background: color-mix(in srgb, colors.$black, transparent 88%) !important;
@@ -54,11 +52,19 @@
   & .mdc-tab__ripple::before {
     background-color: white !important;
   }
+
+  &:not(:first-child) {
+    border-left: none !important;
+  }
 }
 
 ::ng-deep .mdc-tab--active {
   background: white !important;
   border-bottom: none !important;
+
+  &:first-child {
+    border-left-color: white !important;
+  }
 
   &:last-child {
     border-right-color: white !important;
