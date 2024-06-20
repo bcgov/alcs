@@ -1,4 +1,5 @@
 @use 'colors';
+@use 'functions' as *;
 
 .mdc-tab {
   --border-color: #e0e0e0;
@@ -8,6 +9,15 @@
 
   &:hover {
     background: color-mix(in srgb, colors.$black, transparent 88%) !important;
+  }
+
+  & .mdc-tab__text-label {
+    font-size: rem(15) !important;
+    font-weight: bold !important;
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      font-size: rem(18) !important;
+    }
   }
 
   & .mat-ripple-element {
