@@ -185,7 +185,7 @@ export class ParcelsPage {
   // Month uses 3-letter abbreviation (e.g., 'Apr')
   async setDate(parcelNumber: number, year: string, month: string, day: string) {
     const calendarButton = await this.parcelBody(parcelNumber).getByRole('button', { name: 'Open calendar' });
-    await calendarButton.evaluate( (e) => {
+    await calendarButton.evaluate((e) => {
       e.scrollIntoView({ block: 'center', inline: 'center' });
     });
     await this.page.waitForTimeout(500);
