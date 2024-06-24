@@ -184,7 +184,12 @@ export class ParcelsPage {
 
   // Month uses 3-letter abbreviation (e.g., 'Apr')
   async setDate(parcelNumber: number, year: string, month: string, day: string) {
-    await this.parcelBody(parcelNumber).getByRole('button', { name: 'Open calendar' }).click();
+    const calendarButton = await this.parcelBody(parcelNumber).getByRole('button', { name: 'Open calendar' });
+    await calendarButton.evaluate( (e) => {
+      e.scrollIntoView({ block: 'center', inline: 'center' });
+    });
+    await this.page.waitForTimeout(500);
+    await calendarButton.click();
     // Can't have more than one datepicker open at once
     // We just have to trust the correct one is still open
     await this.page.getByRole('button', { name: year }).click();
