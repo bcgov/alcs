@@ -193,7 +193,7 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
   test('submission data should appear in ALCS applicant info', async ({ page }) => {
     const alcsLoginPage = new ALCSLoginPage(page, process.env.ALCS_BASE_URL);
     await alcsLoginPage.goto();
-    await alcsLoginPage.login(process.env.IDIR_USERNAME, process.env.IDIR_PASSWORD);
+    await alcsLoginPage.login(process.env.BCEID_BASIC_USERNAME, process.env.BCEID_BASIC_PASSWORD);
 
     const alcsMainNavidation = new ALCSMainNavigation(page);
 
