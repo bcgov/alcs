@@ -8,6 +8,12 @@ on:
         options:
           - https://alcs-dev-portal.apps.silver.devops.gov.bc.ca
           - https://alcs-test-portal.apps.silver.devops.gov.bc.ca
+      alcsBaseUrl:
+        type: choice
+        description: ALCS Base URL
+        options:
+          - https://alcs-dev.apps.silver.devops.gov.bc.ca
+          - https://alcs-test.apps.silver.devops.gov.bc.ca
   schedule:
     # 5:23 am daily
     - cron: "23 5 * * *"
@@ -32,6 +38,7 @@ jobs:
         env:
           # Default to dev
           PORTAL_BASE_URL: ${{ inputs.portalBaseUrl || 'https://alcs-dev-portal.apps.silver.devops.gov.bc.ca' }}
+          ALCS_BASE_URL: ${{ inputs.alcsBaseUrl || 'https://alcs-dev.apps.silver.devops.gov.bc.ca' }}
           BCEID_BASIC_USERNAME: ${{ secrets.BCEID_BASIC_USERNAME }}
           BCEID_BASIC_PASSWORD: ${{ secrets.BCEID_BASIC_PASSWORD }}
         run: npx playwright test
