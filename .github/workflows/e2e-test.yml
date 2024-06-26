@@ -14,6 +14,10 @@ on:
         options:
           - https://alcs-dev.apps.silver.devops.gov.bc.ca
           - https://alcs-test.apps.silver.devops.gov.bc.ca
+      branch:
+        type: string
+        description: 'Branch to checkout'
+        default: 'develop'
   schedule:
     # 5:23 am daily
     - cron: "23 5 * * *"
@@ -25,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           # This does not need to align with URL
-          ref: develop
+          ref: ${{ inputs.branch || 'develop' }}
       - uses: actions/setup-node@v4
       - name: Install dependencies
         working-directory: ./e2e
