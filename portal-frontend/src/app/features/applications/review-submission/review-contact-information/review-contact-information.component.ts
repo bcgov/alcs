@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
 import { ReviewApplicationSteps } from '../review-submission.component';
+import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
 
 @Component({
   selector: 'app-review-contact-information',
@@ -22,7 +23,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   position = new FormControl<string | null>('', [Validators.required]);
   department = new FormControl<string | null>('', [Validators.required]);
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
   isFirstNationGovernment = false;
   governmentName = '';
 

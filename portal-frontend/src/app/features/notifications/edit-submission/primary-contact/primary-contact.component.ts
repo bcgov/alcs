@@ -4,6 +4,7 @@ import { takeUntil } from 'rxjs';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
+import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
 
 @Component({
   selector: 'app-primary-contact',
@@ -17,8 +18,8 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
-  confirmEmail = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
+  confirmEmail = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
 
   form = new FormGroup({
     firstName: this.firstName,

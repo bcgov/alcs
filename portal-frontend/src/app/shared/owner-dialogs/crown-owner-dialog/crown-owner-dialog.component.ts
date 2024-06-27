@@ -15,6 +15,7 @@ import {
 import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
 import { OWNER_TYPE } from '../../dto/owner.dto';
 import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
+import { strictEmailValidator } from '../../validators/email-validator';
 
 @Component({
   selector: 'app-crown-owner-dialog',
@@ -26,7 +27,7 @@ export class CrownOwnerDialogComponent {
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
   crownLandOwnerType = new FormControl<string | null>('', [Validators.required]);
 
   isEdit = false;
@@ -52,7 +53,7 @@ export class CrownOwnerDialogComponent {
       parcelUuid?: string;
       ownerService: ApplicationOwnerService | NoticeOfIntentOwnerService;
       existingOwner?: ApplicationOwnerDto | NoticeOfIntentOwnerDto;
-    }
+    },
   ) {
     if (data && data.existingOwner) {
       this.isEdit = true;

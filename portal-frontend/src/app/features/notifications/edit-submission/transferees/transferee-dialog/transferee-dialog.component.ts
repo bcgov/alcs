@@ -9,6 +9,7 @@ import {
 } from '../../../../../services/notification-transferee/notification-transferee.dto';
 import { NotificationTransfereeService } from '../../../../../services/notification-transferee/notification-transferee.service';
 import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
+import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
 
 @Component({
   selector: 'app-transferee-dialog',
@@ -22,7 +23,7 @@ export class TransfereeDialogComponent {
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
 
   isEdit = false;
   isLoading = false;
