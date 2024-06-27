@@ -16,7 +16,7 @@ import { strictEmailValidator } from '../../validators/email-validator';
   templateUrl: './inline-text.component.html',
   styleUrls: ['./inline-text.component.scss'],
 })
-export class InlineTextComponent implements AfterContentChecked {
+export class InlineTextComponent implements AfterContentChecked, OnInit {
   @Input() updateOnSave: boolean = true;
   @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
