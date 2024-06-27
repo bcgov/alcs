@@ -7,7 +7,7 @@
   </ng-container>
 
   <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef>Cards</th>
+    <th class="cards-cell" mat-header-cell *matHeaderCellDef>Cards</th>
     <td mat-cell *matCellDef="let element">
       {{ element.title }}
     </td>
@@ -16,6 +16,9 @@
   <ng-container matColumnDef="type">
     <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell class="type-cell" *matCellDef="let element">
+      <ng-container *ngIf="!element.appType" class="center">
+        -
+      </ng-container>
       <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType">
       </app-application-type-pill>
       <app-application-type-pill
@@ -34,7 +37,7 @@
   </ng-container>
 
   <ng-container matColumnDef="activeDays">
-    <th mat-header-cell *matHeaderCellDef>Active Days</th>
+    <th class="active-days-cell" mat-header-cell *matHeaderCellDef>Active Days</th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.card.type !== CardType.NOI || element.activeDays < maxActiveDays" class="center">
         {{ element.activeDays ?? '-' }}
@@ -46,12 +49,12 @@
   </ng-container>
 
   <ng-container matColumnDef="stage">
-    <th mat-header-cell *matHeaderCellDef>Workflow Stage</th>
+    <th class="stage-cell" mat-header-cell *matHeaderCellDef>Workflow Stage</th>
     <td mat-cell *matCellDef="let element" [innerHTML]="element.card.status.label"></td>
   </ng-container>
 
   <ng-container matColumnDef="assignee">
-    <th mat-header-cell *matHeaderCellDef>Assignee</th>
+    <th class="assignee-header" mat-header-cell *matHeaderCellDef>Assignee</th>
     <td class="assignee-column" mat-cell *matCellDef="let element">
       <ng-select
         #assigneeSelect

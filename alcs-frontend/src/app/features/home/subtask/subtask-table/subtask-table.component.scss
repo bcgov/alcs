@@ -11,7 +11,10 @@
   td,
   th {
     font-size: 16px;
-    width: 25%;
+  }
+
+  .cards-cell {
+    width: 20%;
   }
 
   .high-priority-cell {
@@ -19,7 +22,20 @@
   }
 
   .type-cell {
-    width: 110px;
+    width: 15%;
+  }
+
+  .active-days-cell {
+    width: 10%;
+    min-width: fit-content;
+  }
+
+  .stage-cell {
+    width: 25%;
+  }
+
+  .assignee-header {
+    padding: 0px 26px !important;
   }
 
   .paused {
@@ -59,7 +75,7 @@
 
 .assignee-column {
   padding-right: 12px;
-  min-width: 170px;
+  width: 20%;
   overflow: inherit;
 
   .assignee-card-body {
@@ -70,5 +86,19 @@
 :host::ng-deep .ng-select .ng-select-container {
   .ng-value-container .ng-input > input {
     margin-bottom: 8px;
+  }
+  padding: 0 0 0 10px;
+  .ng-input {
+    padding: 0 0 0 10px;
+  }
+  &:hover {
+    background-color: colors.$grey-light !important;
+  }
+}
+
+::ng-deep ng-dropdown-panel {
+  padding: 8px 0 !important;
+  .ng-dropdown-panel-items .ng-option {
+    padding: 4px 16px !important;
   }
 }

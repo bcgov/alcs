@@ -190,7 +190,7 @@
           [items]="applications"
           [totalCount]="applicationTotal"
           (loadMore)="onLoadMore('APP')"
-          type="Applications"
+          type="Application"
         >
         </app-inbox-list>
         <app-inbox-table
@@ -199,7 +199,7 @@
           [totalCount]="applicationTotal"
           (tableChange)="onTableChange($event)"
           [pageIndex]="pageIndex"
-          type="Applications"
+          type="Application"
         ></app-inbox-table>
       </mat-tab>
 
@@ -210,7 +210,7 @@
           [items]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
           (loadMore)="onLoadMore('NOI')"
-          type="Notices of Intent"
+          type="Notice of Intent"
         >
         </app-inbox-list>
         <app-inbox-table
@@ -218,7 +218,7 @@
           [items]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
           (tableChange)="onTableChange($event)"
-          type="Notices of Intent"
+          type="Notice of Intent"
         ></app-inbox-table>
       </mat-tab>
 
@@ -229,13 +229,13 @@
           [items]="notifications"
           [totalCount]="notificationTotal"
           (loadMore)="onLoadMore('NOTI')"
-          type="Notifications"
+          type="Notification"
         >
         </app-inbox-list>
         <app-inbox-table
           *ngIf="!isMobile"
           [items]="notifications"
-          type="Notifications"
+          type="Notification"
           [totalCount]="notificationTotal"
           (tableChange)="onTableChange($event)"
         >

@@ -422,6 +422,7 @@ export class NotificationSubmissionService {
       subject: `Agricultural Land Commission SRW${submission.fileNumber} (${submission.applicant})`,
       parentType: PARENT_TYPE.NOTIFICATION,
       parentId: templateData.parentId,
+      triggerStatus: NOTIFICATION_STATUS.SUBMITTED_TO_ALC,
       cc: templateData.cc,
       attachments: [document.document],
     });

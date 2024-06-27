@@ -20,7 +20,7 @@ export class ParcelsSection {
   async expectParcelDetails(parcelNumber: number, parcel: ParcelDetails) {
     await expect(this.typeText(parcelNumber)).toHaveText(parcel.type);
     await expect(this.legalDescriptionText(parcelNumber)).toHaveText(parcel.legalDescription);
-    await expect(this.mapAreaText(parcelNumber)).toHaveText(parcel.mapArea);
+    await expect(this.mapAreaText(parcelNumber)).toHaveText(`${parcel.mapArea} ha`);
     if (parcel.pid !== undefined) {
       await expect(this.pidText(parcelNumber)).toHaveText(parcel.pid);
     }

@@ -7,9 +7,12 @@
 }
 
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
-.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after,
-.ng-select.ng-select-focused .ng-select-container:after {
+.ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after {
   border-color: colors.$primary-color !important;
+}
+
+.ng-select .ng-select-container:after {
+  border-color: transparent !important;
 }
 
 .ng-select .ng-arrow {

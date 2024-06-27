@@ -2,9 +2,7 @@
 @use '../../../../styles/colors';
 
 .navigation {
-  ::ng-deep .mdc-tab__text-label {
-    font-weight: bold;
-  }
+  margin-top: rem(18);
 }
 
 .content {

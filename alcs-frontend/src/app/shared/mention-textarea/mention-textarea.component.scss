@@ -1,5 +1,7 @@
 .container {
-  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .comment-input {
@@ -8,4 +10,8 @@
 
 ::ng-deep .mdc-text-field {
   overflow: visible;
+}
+
+::ng-deep .mention-item {
+  text-decoration: none;
 }

@@ -54,7 +54,8 @@ export class SearchNoticeOfIntentSubmissionStatusType {
         LocalGovernment,
         'localGovernment',
         'nois.local_government_uuid = localGovernment.uuid',
-      ),
+      )
+      .where(`nois.is_draft IS NOT TRUE`),
 })
 export class NoticeOfIntentSubmissionSearchView {
   @ViewColumn()

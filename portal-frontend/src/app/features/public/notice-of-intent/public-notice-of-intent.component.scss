@@ -1,12 +1,6 @@
 @use '../../../../styles/functions' as *;
 @use '../../../../styles/colors';
 
-.navigation {
-  ::ng-deep .mdc-tab__text-label {
-    font-weight: bold;
-  }
-}
-
 .content {
   margin: rem(24) 0;
 }

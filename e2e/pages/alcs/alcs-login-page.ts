@@ -11,7 +11,7 @@ export class ALCSLoginPage {
   constructor(page: Page, baseUrl: string) {
     this.page = page;
     this.baseUrl = baseUrl;
-    this.idirLink = page.getByRole('link', { name: 'IDIR' });
+    this.idirLink = page.getByRole('link', { name: 'Basic or Business BCeID' });
     // There is an error with the username label on BCeID page
     this.userIdTextbox = page.getByRole('textbox').nth(0);
     this.passwordTextbox = page.getByLabel('Password');
