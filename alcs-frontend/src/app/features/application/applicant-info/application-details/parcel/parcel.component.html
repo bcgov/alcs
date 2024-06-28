@@ -1,6 +1,6 @@
-<h3 class="flex-item">
+<h4 class="flex-item">
   {{ pageTitle }}
-</h3>
+</h4>
 
 <div class="review-table">
   <div *ngIf="!parcels" class="center full-width">
@@ -9,7 +9,7 @@
 
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
-      <h4 [id]="parcel.uuid">Parcel #{{ parcelInd + 1 }}</h4>
+      <h5 [id]="parcel.uuid">Parcel #{{ parcelInd + 1 }}</h5>
     </div>
     <div class="subheading2 grid-1">Ownership Type</div>
     <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-type'">
