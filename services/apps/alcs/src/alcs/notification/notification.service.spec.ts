@@ -285,12 +285,5 @@ describe('NotificationService', () => {
       undefined,
       'noti',
     );
-    expect(mockSubtaskService.create).toHaveBeenCalledTimes(1);
-    expect(mockSubtaskService.create).toHaveBeenCalledWith(
-      new Card({
-        typeCode: CARD_TYPE.NOTIFICATION,
-      }),
-      CARD_SUBTASK_TYPE.GIS,
-    );
   });
 });

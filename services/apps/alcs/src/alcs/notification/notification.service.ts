@@ -329,11 +329,6 @@ export class NotificationService {
 
     const finalNotification = await this.getByFileNumber(createDto.fileNumber);
 
-    await this.subtaskService.create(
-      finalNotification.card!,
-      CARD_SUBTASK_TYPE.GIS,
-    );
-
     return finalNotification;
   }
 
