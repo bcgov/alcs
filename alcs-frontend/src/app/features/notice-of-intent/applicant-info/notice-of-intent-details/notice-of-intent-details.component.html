@@ -1,3 +1,6 @@
+<div class="split header">
+  <h3>Applicant Info</h3>  
+</div>
 <section>
   <app-parcel *ngIf="files && submission" [files]="files" [noticeOfIntent]="submission"></app-parcel>
   <div class="review-table edit-section">
@@ -9,7 +12,7 @@
   </div>
 </section>
 <section>
-  <h3>Primary Contact Information</h3>
+  <h4>Primary Contact Information</h4>
   <div *ngIf="submission" class="review-table">
     <div class="subheading2 grid-1">Type</div>
     <div class="grid-double">
@@ -63,10 +66,10 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Land Use</h3>
+  <h4>Land Use</h4>
   <div *ngIf="submission" class="review-table">
     <div class="full-width">
-      <h4>Land Use of Parcel(s) under Notice of Intent</h4>
+      <h5>Land Use of Parcel(s) under Notice of Intent</h5>
     </div>
     <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
     <div class="grid-double">
@@ -81,7 +84,7 @@
       {{ submission.parcelsNonAgricultureUseDescription }}
     </div>
     <div class="full-width">
-      <h4>Land Use of Adjacent Parcels</h4>
+      <h5>Land Use of Adjacent Parcels</h5>
     </div>
     <div class="adjacent-parcels full-width">
       <div class="grid-1 subheading2"></div>
@@ -124,7 +127,7 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Proposal</h3>
+  <h4>Proposal</h4>
   <app-roso-details
     *ngIf="submission && noiType === 'ROSO'"
     [noiSubmission]="submission"
@@ -164,7 +167,7 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Optional Documents</h3>
+  <h4>Optional Documents</h4>
   <div *ngIf="submission" class="review-table">
     <div class="other-attachments full-width">
       <div class="grid-1 subheading2">Type</div>
