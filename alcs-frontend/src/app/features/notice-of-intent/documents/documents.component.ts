@@ -17,6 +17,7 @@ import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
+import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 
 @Component({
   selector: 'app-noi-documents',
@@ -35,6 +36,8 @@ export class NoiDocumentsComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<NoticeOfIntentDocumentDto> = new MatTableDataSource<NoticeOfIntentDocumentDto>();
+
+  readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
 
   constructor(
     private noiDocumentService: NoiDocumentService,

@@ -12,6 +12,7 @@ import { ApplicationDocumentService } from '../../../services/application/applic
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
+import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 
 @Component({
   selector: 'app-documents',
@@ -31,6 +32,8 @@ export class DocumentsComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<ApplicationDocumentDto> = new MatTableDataSource<ApplicationDocumentDto>();
+
+  readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
 
   constructor(
     private applicationDocumentService: ApplicationDocumentService,

@@ -11,6 +11,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
+import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 
 @Component({
   selector: 'app-notification-documents',
@@ -26,6 +27,8 @@ export class NotificationDocumentsComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<NotificationDocumentDto> = new MatTableDataSource<NotificationDocumentDto>();
+
+  readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
 
   constructor(
     private notificationDocumentService: NotificationDocumentService,

@@ -32,7 +32,16 @@ export const openFileInline = (url: string, fileName: string) => {
 
 export const splitExtension = (documentName: string) => {
   const lastPeriod = documentName.lastIndexOf('.');
-  const extension = documentName.substring(lastPeriod);
-  const fileName = documentName.substring(0, lastPeriod);
-  return { fileName, extension };
+
+  if (lastPeriod <= 0  || lastPeriod === documentName.length - 1) {
+    return {
+      fileName: documentName,
+      extension: '',
+    };
+  }
+  
+  return {
+    fileName: documentName.substring(0, lastPeriod),
+    extension: documentName.substring(lastPeriod),
+  };
 };
