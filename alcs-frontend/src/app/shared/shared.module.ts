@@ -73,6 +73,7 @@ import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 import { DragDropDirective } from './drag-drop-file/drag-drop-file.directive';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { DragDropDirective } from './drag-drop-file/drag-drop-file.directive';
     TableColumnNoDataPipe,
     InlineChairReviewOutcomeComponent,
     InlineButtonToggleComponent,
-    DragDropDirective
+    DragDropDirective,
+    TruncatePipe,
   ],
   imports: [
     CommonModule,
@@ -210,7 +212,8 @@ import { DragDropDirective } from './drag-drop-file/drag-drop-file.directive';
     InlineChairReviewOutcomeComponent,
     MatSlideToggleModule,
     InlineButtonToggleComponent,
-    DragDropDirective
+    DragDropDirective,
+    TruncatePipe,
   ],
 })
 export class SharedModule {
