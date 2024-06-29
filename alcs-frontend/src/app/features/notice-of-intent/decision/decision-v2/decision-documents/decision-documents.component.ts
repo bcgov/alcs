@@ -11,6 +11,7 @@ import {
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionDocumentUploadDialogComponent } from '../decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
+import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../../shared/constants';
 
 @Component({
   selector: 'app-decision-documents',
@@ -35,6 +36,8 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<NoticeOfIntentDecisionDocumentDto>();
 
+  readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
+  
   constructor(
     private decisionService: NoticeOfIntentDecisionV2Service,
     private dialog: MatDialog,
