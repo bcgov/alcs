@@ -39,7 +39,7 @@
     <td *matCellDef="let element" mat-cell>
       <a
         (click)="onOpen(element.uuid, element.fileName)" 
-        [matTooltip]="element.fileName.length > fileNameTruncLen ? element.fileName: ''"
+        [matTooltip]="element.fileName"
         [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen">
         {{ element.fileName | truncate: fileNameTruncLen}}
       </a>
