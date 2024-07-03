@@ -55,7 +55,6 @@ export class ApplicationDecisionComponentService {
         updateDto.alrArea,
         component.alrArea
       );
-
       component.agCap = filterUndefined(
         updateDto.agCap,
         component.agCap
