@@ -37,6 +37,7 @@ export class ApplicationDecisionComponentService {
 
     for (const updateDto of updateDtos) {
       let component: ApplicationDecisionComponent | null = null;
+      let isInline = filterUndefined(updateDto.isInline, false);
 
       if (updateDto.uuid) {
         component = await this.getOneOrFail(updateDto.uuid);
@@ -46,10 +47,15 @@ export class ApplicationDecisionComponentService {
           updateDto.applicationDecisionComponentTypeCode;
       }
 
+      if (isInline && !updateDto.alrArea) {
+        throw new ServiceValidationException('ALR Area Cannot be Empty When Editing Inline.',);
+      }
+      
       component.alrArea = filterUndefined(
         updateDto.alrArea,
         component.alrArea
       );
+
       component.agCap = filterUndefined(
         updateDto.agCap,
         component.agCap

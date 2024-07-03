@@ -375,4 +375,30 @@ describe('ApplicationDecisionComponentService', () => {
     ).toBeCalledTimes(1);
     expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(1);
   });
+
+  it('should throw exception when isInline is true and alrArea is undefined', async () => {
+    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({
+      uuid: 'fake',
+      applicationDecisionComponentTypeCode: 'fake_code',
+      alrArea: 1,
+      agCap: '2',
+      agCapSource: '3',
+      agCapMap: '4',
+      agCapConsultant: '5',
+      endDate: new Date(0),
+    } as ApplicationDecisionComponent);
+
+    const mockDto = new CreateApplicationDecisionComponentDto();
+    mockDto.uuid = 'fake';
+    mockDto.alrArea = undefined;
+    mockDto.isInline = true;
+    mockDto.applicationDecisionComponentTypeCode = 'should_not_beUpdated';
+
+    try {
+      await service.createOrUpdate([mockDto], false);
+    } catch(e) {
+      expect(e).toBeInstanceOf(ServiceValidationException);
+      expect(e.message).toBe('ALR Area Cannot be Empty When Editing Inline.');
+    }
+  }); 
 });

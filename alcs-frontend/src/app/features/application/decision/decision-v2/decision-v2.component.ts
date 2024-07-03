@@ -229,12 +229,15 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   async onSaveAlrArea(decisionUuid: string, componentUuid: string | undefined, value?: any) {
     const decision = this.decisions.find((e) => e.uuid === decisionUuid);
     const component = decision?.components.find((e) => e.uuid === componentUuid);
-    if (componentUuid && component) {
+    if (componentUuid && component && value) {
       await this.applicationDecisionComponentService.update(componentUuid, {
         uuid: componentUuid,
         applicationDecisionComponentTypeCode: component.applicationDecisionComponentTypeCode,
         alrArea: value ? value : null,
+        isInline: true,
       });
+    } else if (!value) {
+      this.toastService.showErrorToast('ALR Area Cannot be Empty When Editing Inline');
     } else {
       this.toastService.showErrorToast('Unable to update the Alr Area. Please reload the page and try again.');
     }

@@ -184,6 +184,7 @@ export interface ApplicationDecisionComponentDto
     PfrsDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
+  isInline?: boolean;
   agCap?: string | null;
   agCapSource?: string | null;
   agCapMap?: string | null;
