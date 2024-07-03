@@ -9,7 +9,7 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 import { NOI_SUBMISSION_STATUS } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { ApplicationSubmissionStatusPill } from '../../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { FormControl } from '@angular/forms';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-release-dialog',

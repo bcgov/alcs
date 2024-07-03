@@ -8,7 +8,7 @@ import { AdminLocalGovernmentService } from '../../../../services/admin-local-go
 import { ApplicationRegionDto } from '../../../../services/application/application-code.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { FormControl } from '@angular/forms';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-admin-local-government-dialog',

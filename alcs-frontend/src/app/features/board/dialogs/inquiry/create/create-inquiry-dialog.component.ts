@@ -14,7 +14,7 @@ import { CardService } from '../../../../../services/card/card.service';
 import { InquiryParcelCreateDto } from '../../../../../services/inquiry/inquiry-parcel/inquiry-parcel.dto';
 import { CreateInquiryDto, InquiryTypeDto } from '../../../../../services/inquiry/inquiry.dto';
 import { InquiryService } from '../../../../../services/inquiry/inquiry.service';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-create-inquiry',
