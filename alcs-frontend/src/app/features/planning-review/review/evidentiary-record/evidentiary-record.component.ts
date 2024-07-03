@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
 import { PlanningReviewDocumentDto } from '../../../../services/planning-review/planning-review-document/planning-review-document.dto';
 import { PlanningReviewDocumentService } from '../../../../services/planning-review/planning-review-document/planning-review-document.service';
-
+import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../shared/constants';
 @Component({
   selector: 'app-evidentiary-record[tableTitle][fileNumber][visibilityFlags]',
   templateUrl: './evidentiary-record.component.html',
@@ -25,6 +25,8 @@ export class EvidentiaryRecordComponent implements OnChanges {
   dataSource = new MatTableDataSource<PlanningReviewDocumentDto>([]);
   overlayRef: OverlayRef | null = null;
   selectedRecord: string | undefined;
+
+  readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
 
   constructor(
     private planningReviewDocumentService: PlanningReviewDocumentService,

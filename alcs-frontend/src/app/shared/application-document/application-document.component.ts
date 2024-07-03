@@ -5,7 +5,7 @@ import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, Vie
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentDto } from '../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
-
+import { FILE_NAME_TRUNCATE_LENGTH } from '../constants';
 @Component({
   selector: 'app-document[tableTitle][fileNumber][visibilityFlags]',
   templateUrl: './application-document.component.html',
@@ -24,6 +24,8 @@ export class ApplicationDocumentComponent implements OnChanges {
   dataSource = new MatTableDataSource<ApplicationDocumentDto>([]);
   overlayRef: OverlayRef | null = null;
   selectedRecord: string | undefined;
+
+  readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
 
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
