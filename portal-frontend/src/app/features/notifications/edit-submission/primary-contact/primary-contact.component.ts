@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-primary-contact',

@@ -10,7 +10,7 @@ import {
 import { CovenantTransfereeService } from '../../../../../../services/covenant-transferee/covenant-transferee.service';
 import { OWNER_TYPE } from '../../../../../../shared/dto/owner.dto';
 import { TransfereeDialogComponent } from '../../../../../notifications/edit-submission/transferees/transferee-dialog/transferee-dialog.component';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-transferee-dialog',

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
 import { ReviewApplicationSteps } from '../review-submission.component';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-review-contact-information',

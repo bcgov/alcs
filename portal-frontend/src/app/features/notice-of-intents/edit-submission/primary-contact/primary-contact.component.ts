@@ -22,7 +22,7 @@ import { PrimaryContactConfirmationDialogComponent } from './primary-contact-con
 import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { scrollToElement } from '../../../../shared/utils/scroll-helper';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-primary-contact',

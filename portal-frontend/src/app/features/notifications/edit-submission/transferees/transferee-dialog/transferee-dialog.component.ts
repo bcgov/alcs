@@ -9,7 +9,7 @@ import {
 } from '../../../../../services/notification-transferee/notification-transferee.dto';
 import { NotificationTransfereeService } from '../../../../../services/notification-transferee/notification-transferee.service';
 import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
-import { strictEmailValidator } from 'src/app/shared/validators/email-validator';
+import { strictEmailValidator } from '../../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-transferee-dialog',
