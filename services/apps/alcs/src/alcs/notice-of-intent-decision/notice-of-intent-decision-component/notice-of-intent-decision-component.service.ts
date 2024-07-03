@@ -31,6 +31,7 @@ export class NoticeOfIntentDecisionComponentService {
 
     for (const updateDto of updateDtos) {
       let component: NoticeOfIntentDecisionComponent | null = null;
+      let isInline = filterUndefined(updateDto.isInline, false);
 
       if (updateDto.uuid) {
         component = await this.getOneOrFail(updateDto.uuid);
@@ -38,6 +39,10 @@ export class NoticeOfIntentDecisionComponentService {
         component = new NoticeOfIntentDecisionComponent();
         component.noticeOfIntentDecisionComponentTypeCode =
           updateDto.noticeOfIntentDecisionComponentTypeCode;
+      }
+
+      if (isInline && !updateDto.alrArea) {
+        throw new ServiceValidationException('ALR Area Cannot be Empty When Editing Inline.')
       }
 
       component.alrArea = filterUndefined(updateDto.alrArea, component.alrArea);

@@ -105,6 +105,7 @@ export interface NoticeOfIntentDecisionComponentTypeDto extends BaseCodeDto {}
 export interface UpdateNoticeOfIntentDecisionComponentDto {
   uuid?: string;
   alrArea?: number;
+  isInline?: boolean;
   agCap?: string;
   agCapSource?: string;
   agCapMap?: string;

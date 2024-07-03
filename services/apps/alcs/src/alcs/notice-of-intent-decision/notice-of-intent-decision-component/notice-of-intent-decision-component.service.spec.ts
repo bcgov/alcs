@@ -217,4 +217,25 @@ describe('NoticeOfIntentDecisionComponentService', () => {
 
     expect(mockValidationWrapper).toThrow(ServiceValidationException);
   });
+
+  it('should throw exception when isInline is true and alrArea is undefined', async () => {
+    mockDecisionComponentRepository.findOneOrFail.mockResolvedValue({
+      uuid: 'fake',
+      noticeOfIntentDecisionComponentTypeCode: 'fake_code',
+      alrArea: 1,
+    } as NoticeOfIntentDecisionComponent);
+
+    const mockDto = new CreateNoticeOfIntentDecisionComponentDto();
+    mockDto.uuid = 'fake';
+    mockDto.alrArea = undefined;
+    mockDto.isInline = true;
+    mockDto.noticeOfIntentDecisionComponentTypeCode = 'should_not_beUpdated';
+
+    try {
+      await service.createOrUpdate([mockDto], false);
+    } catch(e) {
+      expect(e).toBeInstanceOf(ServiceValidationException);
+      expect(e.message).toBe('ALR Area Cannot be Empty When Editing Inline.');
+    }
+  }); 
 });

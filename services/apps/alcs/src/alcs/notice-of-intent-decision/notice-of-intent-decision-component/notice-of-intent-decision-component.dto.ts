@@ -1,5 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 
 export class NoticeOfIntentDecisionComponentTypeDto extends BaseCodeDto {}
@@ -82,6 +82,10 @@ export class UpdateNoticeOfIntentDecisionComponentDto {
   @IsNumber()
   @IsOptional()
   soilToRemoveAverageDepth?: number | null;
+
+  @IsBoolean()
+  @IsOptional()
+  isInline?: boolean;
 }
 
 export class CreateNoticeOfIntentDecisionComponentDto extends UpdateNoticeOfIntentDecisionComponentDto {
