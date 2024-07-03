@@ -14,6 +14,7 @@ import { CardService } from '../../../../../services/card/card.service';
 import { InquiryParcelCreateDto } from '../../../../../services/inquiry/inquiry-parcel/inquiry-parcel.dto';
 import { CreateInquiryDto, InquiryTypeDto } from '../../../../../services/inquiry/inquiry.dto';
 import { InquiryService } from '../../../../../services/inquiry/inquiry.service';
+import { strictEmailValidator } from '../../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-create-inquiry',
@@ -38,7 +39,7 @@ export class CreateInquiryDialogComponent implements OnInit, OnDestroy {
   lastName = new FormControl<string | null>(null, []);
   organization = new FormControl<string | null>(null, []);
   phone = new FormControl<string | null>(null, []);
-  email = new FormControl<string | null>(null, [Validators.email]);
+  email = new FormControl<string | null>(null, [strictEmailValidator]);
 
   displayedColumns = ['index', 'address', 'pid', 'pin', 'actions'];
   parcels: InquiryParcelCreateDto[] = [];

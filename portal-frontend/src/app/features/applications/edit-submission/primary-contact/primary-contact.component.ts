@@ -21,6 +21,7 @@ import { OwnerDialogComponent } from '../../../../shared/owner-dialogs/owner-dia
 import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { scrollToElement } from '../../../../shared/utils/scroll-helper';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-primary-contact',
@@ -50,7 +51,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
 
   form = new FormGroup({
     firstName: this.firstName,

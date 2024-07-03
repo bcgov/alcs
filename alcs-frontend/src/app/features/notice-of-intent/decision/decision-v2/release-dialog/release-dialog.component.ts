@@ -7,6 +7,8 @@ import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-
 import { NoticeOfIntentSubmissionStatusService } from '../../../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NOI_SUBMISSION_STATUS } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { ApplicationSubmissionStatusPill } from '../../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
+import { strictEmailValidator } from '../../../../../shared/validators/email-validator';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-release-dialog',
@@ -23,6 +25,8 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
   emails: string[] = [];
+
+  email = new FormControl<string | null>(null, [strictEmailValidator]);
 
   constructor(
     private decisionService: NoticeOfIntentDecisionV2Service,
@@ -95,6 +99,10 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
   }
 
   addEmail(event: MatChipInputEvent): void {
+    if (this.email.invalid) {
+      return;
+    }
+
     const value = (event.value || '').trim();
     if (value) {
       this.emails.push(value);

@@ -72,7 +72,11 @@
 
     <div>
       <div class="subheading2">Email</div>
-      <app-inline-text (save)="onSaveTextField($event, 'inquirerEmail')" [value]="inquiry.inquirerEmail" />
+      <app-inline-text
+        (save)="onSaveTextField($event, 'inquirerEmail')"
+        [value]="inquiry.inquirerEmail"
+        [isEmail]="true"
+      />
     </div>
   </div>
 </section>
