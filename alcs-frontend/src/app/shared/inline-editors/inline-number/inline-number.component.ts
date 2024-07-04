@@ -40,7 +40,6 @@ export class InlineNumberComponent implements AfterContentChecked {
   }
 
   confirmEdit() {
-    console.log(this.valueControl.value);
     if (this.valueControl.value !== this.value) {
       this.save.emit(this.valueControl.value?.toString() ?? null);
       this.value = this.valueControl.value;
