@@ -41,6 +41,10 @@
   color: colors.$primary-color;
 }
 
+.disabled {
+  color: colors.$grey;
+}
+
 :host::ng-deep {
   .mat-form-field-wrapper {
     padding: 0 !important;

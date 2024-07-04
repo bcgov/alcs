@@ -3,8 +3,7 @@
   <app-inline-number
     [value]="component.alrArea?.toString()"
     (save)="onSaveAlrArea($event)"
-    [disableSaveOnEmpty]="true"
-    [disableSaveOnZero]="true"
+    [nonZeroEmptyValidation]="inlineValidation"
     [decimals]="5"
   ></app-inline-number>
 </div>

@@ -25,21 +25,22 @@
           name="value"
           [placeholder]="placeholder"
           #editInput
-          [(ngModel)]="pendingValue"
           (keydown.enter)="confirmEdit()"
           (keydown.escape)="cancelEdit()"
+          [formControl]="valueControl"
         />
       </mat-form-field>
-      <mat-error *ngIf="isSaveDisabledOnZero"><mat-icon>warning</mat-icon>&nbsp;Value cannot be 0</mat-error>
-      <mat-error *ngIf="isSaveDisabledOnEmpty"><mat-icon>warning</mat-icon>&nbsp;Value cannot be empty</mat-error>
+      <mat-error *ngIf="valueControl.errors?.['nonZero']"><mat-icon>warning</mat-icon>&nbsp;Value cannot be 0</mat-error>
+      <mat-error *ngIf="valueControl.errors?.['required']"><mat-icon>warning</mat-icon>&nbsp;Value cannot be Empty</mat-error>
     </form>
     <div class="button-container">
       <button mat-button (click)="cancelEdit()">CANCEL</button>
       <button 
         mat-button 
-        class="save" 
+        [class.disabled] = "valueControl.invalid"
+        [class.save] = "!valueControl.invalid"
         (click)="confirmEdit()"
-        [disabled]="isSaveDisabledOnEmpty || isSaveDisabledOnZero">
+        [disabled]="valueControl.invalid">
         SAVE
       </button>
       
