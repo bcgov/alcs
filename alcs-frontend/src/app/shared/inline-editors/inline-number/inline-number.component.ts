@@ -9,6 +9,8 @@ export class InlineNumberComponent implements AfterContentChecked {
   @Input() value?: string | null;
   @Input() placeholder: string = 'Enter a value';
   @Input() decimals = 2;
+  @Input() disableSaveOnZero: boolean = false;
+  @Input() disableSaveOnEmpty: boolean = false;
   @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
@@ -41,5 +43,14 @@ export class InlineNumberComponent implements AfterContentChecked {
   cancelEdit() {
     this.isEditing = false;
     this.pendingValue = this.value;
+  }
+
+  get isSaveDisabledOnZero(): boolean {
+    const valueAsNumber = this.pendingValue !== '' ? parseFloat(this.pendingValue!) : null;
+    return this.disableSaveOnZero && valueAsNumber === 0;
+  }
+
+  get isSaveDisabledOnEmpty(): boolean {
+    return this.disableSaveOnEmpty && this.pendingValue === '';
   }
 }
