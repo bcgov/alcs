@@ -175,7 +175,7 @@
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [inlineValidation]="decision.wasReleased"
+                  [nonZeroEmptyValidation]="decision.wasReleased"
                 ></app-noi-basic>
               </app-noi-pofo>
 
@@ -188,7 +188,7 @@
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [inlineValidation]="decision.wasReleased"
+                  [nonZeroEmptyValidation]="decision.wasReleased"
                 ></app-noi-basic>
               </app-noi-roso>
 
@@ -201,7 +201,7 @@
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [inlineValidation]="decision.wasReleased"
+                  [nonZeroEmptyValidation]="decision.wasReleased"
                 ></app-noi-basic>
               </app-noi-pfrs>
 
