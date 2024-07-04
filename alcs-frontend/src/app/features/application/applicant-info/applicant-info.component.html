@@ -1,20 +1,17 @@
-<div class="applicant-info">
-  <div *ngIf="application && submission">
-    <div *ngIf="submission.returnedComment" class="comment-container">
-      <div><strong>Comment for Applicant</strong></div>
-      {{ submission.returnedComment }}
-    </div>
-
-    <app-application-details
-      [submission]="submission"
-      [fileNumber]="fileNumber"
-      [applicationType]="application.type.code"
-      [isSubmittedToAlc]="isSubmittedToAlc"
-      [wasSubmittedToLfng]="wasSubmittedToLfng"
-      [showEdit]="true"
-    ></app-application-details>
+<div *ngIf="application && submission">
+  <div *ngIf="submission.returnedComment" class="comment-container">
+    <div><strong>Comment for Applicant</strong></div>
+    {{ submission.returnedComment }}
   </div>
-  <div class="center">
-    <mat-spinner *ngIf="!application || !submission"></mat-spinner>
-  </div>
+  <app-application-details
+    [submission]="submission"
+    [fileNumber]="fileNumber"
+    [applicationType]="application.type.code"
+    [isSubmittedToAlc]="isSubmittedToAlc"
+    [wasSubmittedToLfng]="wasSubmittedToLfng"
+    [showEdit]="true"
+  ></app-application-details>
+</div>
+<div class="center">
+  <mat-spinner *ngIf="!application || !submission"></mat-spinner>
 </div>
