@@ -52,4 +52,9 @@ export class InlineNumberComponent implements AfterContentChecked {
     this.isEditing = false;
     this.valueControl.setValue(this.value);
   }
+
+  preventKeydown(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    keyboardEvent.preventDefault();
+  }
 }

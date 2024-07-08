@@ -25,7 +25,7 @@
           name="value"
           [placeholder]="placeholder"
           #editInput
-          (keydown.enter)="confirmEdit()"
+          (keydown.enter)="!valueControl.invalid ? confirmEdit(): preventKeydown($event)"
           (keydown.escape)="cancelEdit()"
           [formControl]="valueControl"
         />
