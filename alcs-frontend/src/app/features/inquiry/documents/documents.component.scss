@@ -30,6 +30,10 @@ table {
     position: relative; 
   }
 
+  .actions-column {
+    min-width: 200px;
+  }
+  
   .subheading {
     font-size: 11px;
     line-height: 16px;
