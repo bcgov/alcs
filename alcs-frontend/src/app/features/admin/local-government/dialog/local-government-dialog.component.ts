@@ -52,7 +52,7 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.data) {
+    if (Object.keys(this.data).length !== 0) {
       this.model = {
         ...this.data,
         isFirstNation: this.data.isFirstNation ? 'true' : 'false',
