@@ -42,7 +42,8 @@ export class AdminLocalGovernmentService {
 
   async create(dto: LocalGovernmentCreateDto) {
     try {
-      return await firstValueFrom(this.http.post<void>(`${this.url}`, dto));
+      await firstValueFrom(this.http.post<void>(`${this.url}`, dto));
+      this.toastService.showSuccessToast('Local government was created successfuly');
     } catch (e) {
       this.toastService.showErrorToast('Failed to create local government');
       console.log(e);
@@ -52,7 +53,8 @@ export class AdminLocalGovernmentService {
 
   async update(uuid: string, dto: LocalGovernmentUpdateDto) {
     try {
-      return await firstValueFrom(this.http.put<void>(`${this.url}/${uuid}`, dto));
+      await firstValueFrom(this.http.put<void>(`${this.url}/${uuid}`, dto));
+      this.toastService.showSuccessToast('Local government was updated successfuly');
     } catch (e) {
       this.toastService.showErrorToast('Failed to update local government');
       console.log(e);
