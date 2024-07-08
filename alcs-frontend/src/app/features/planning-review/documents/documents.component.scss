@@ -38,6 +38,10 @@ table {
     top: 100%; /* Position it below the header text */
     left: 0; /* Align it to the left edge of the header cell */
   }
+
+  .actions-column {
+    min-width: 200px;
+  }
 }
 
 

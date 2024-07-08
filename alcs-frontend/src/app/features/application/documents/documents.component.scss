@@ -26,6 +26,10 @@ a {
 table {
   position: relative; 
 
+  .actions-column {
+    min-width: 200px;
+  }
+  
   th mat-header-cell {
     position: relative; 
   }
