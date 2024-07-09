@@ -188,7 +188,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   showSubmittedToLfngMenuItems = false;
 
   constructor(
-    private applicationDetailService: ApplicationDetailService,
+    public applicationDetailService: ApplicationDetailService,
     private applicationSubmissionService: ApplicationSubmissionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,

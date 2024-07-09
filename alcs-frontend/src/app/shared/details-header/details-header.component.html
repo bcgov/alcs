@@ -4,7 +4,15 @@
   </div>
   <div *ngIf="_application" class="first-row">
     <div class="title">
-      <h5>{{ _application.fileNumber }} ({{ applicant }})</h5>
+      <h5>
+        {{ _application.fileNumber }} (<app-inline-text
+          *ngIf="applicationDetailService"
+          (save)="onSaveApplicant($event ?? undefined)"
+          [value]="_application.applicant"
+          [required]="true"
+        /><ng-container *ngIf="!applicationDetailService">{{ _application.applicant }}</ng-container
+        >)
+      </h5>
       <app-application-legacy-id [legacyId]="legacyId"></app-application-legacy-id>
       <div class="labels">
         <app-application-type-pill *ngFor="let type of types" [type]="type"></app-application-type-pill>
