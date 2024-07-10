@@ -22,6 +22,7 @@ import {
 } from '../application-type-pill/application-type-pill.constants';
 import { TimeTrackable } from '../time-tracker/time-tracker.component';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
+import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -40,6 +41,7 @@ export class DetailsHeaderComponent {
     | NotificationSubmissionStatusService;
 
   @Input() applicationDetailService?: ApplicationDetailService;
+  @Input() applicationSubmissionService?: ApplicationSubmissionService;
 
   legacyId?: string;
 
@@ -160,9 +162,10 @@ export class DetailsHeaderComponent {
     this.linkedCards = result;
   }
 
-  onSaveApplicant(applicant: string | undefined) {
+  async onSaveApplicant(applicant: string | undefined) {
     if (this._application?.fileNumber) {
-      this.applicationDetailService?.updateApplication(this._application?.fileNumber, { applicant });
+      await this.applicationDetailService?.updateApplication(this._application?.fileNumber, { applicant });
+      await this.applicationSubmissionService?.update(this._application?.fileNumber, { applicant });
     }
   }
 }

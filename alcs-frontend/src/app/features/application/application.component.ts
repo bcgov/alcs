@@ -189,7 +189,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
   constructor(
     public applicationDetailService: ApplicationDetailService,
-    private applicationSubmissionService: ApplicationSubmissionService,
+    public applicationSubmissionService: ApplicationSubmissionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     private route: ActivatedRoute,
