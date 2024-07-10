@@ -22,6 +22,7 @@ export class InlineTextComponent implements AfterContentChecked, OnInit {
   @Input() placeholder: string = 'Enter a value';
   @Input() required = false;
   @Input() isEmail = false;
+  @Input() isFixedHeight = false;
   @Output() save = new EventEmitter<string | null>();
   @Input() mask?: string | undefined;
   @Input() maxLength: number | null = null;

@@ -2,14 +2,33 @@
 
 .inline-number-wrapper {
   padding-top: 4px;
+
+  &.fixed-height {
+    padding-top: 0;
+
+    .editing {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  .editing.hidden {
+    display: none;
+  }
 }
 
-.editing {
-  display: inline-block;
-}
+::ng-deep {
+  .inline-number-wrapper .editing {
+    .mat-mdc-form-field-infix {
+      padding: 0 !important;
+      min-height: 0 !important;
+    }
 
-.editing.hidden {
-  display: none;
+    .mdc-text-field {
+      padding-inline: 8px;
+    }
+  }
 }
 
 .edit-button {
