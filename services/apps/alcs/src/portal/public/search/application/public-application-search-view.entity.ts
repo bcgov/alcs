@@ -43,6 +43,7 @@ import { LinkedStatusType } from '../public-search.dto';
             .from(ApplicationSubmissionToSubmissionStatus, 'status_link')
             .select('MAX("effective_date")', 'effective_date')
             .addSelect('submission_uuid', 'submission_uuid')
+            .where('effective_date <= NOW()')
             .groupBy('submission_uuid'),
         'status_link',
         'status_link."submission_uuid" = app_sub.uuid',
@@ -66,6 +67,7 @@ import { LinkedStatusType } from '../public-search.dto';
                   'dest_rank',
                 )
                 .where('is_draft = FALSE')
+                .andWhere('date <= NOW()')
                 .from(ApplicationDecision, 'decision')
                 .getQuery(),
               'decisions',
