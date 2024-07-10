@@ -42,6 +42,7 @@ import { LinkedStatusType } from '../inbox.dto';
             .from(NoticeOfIntentSubmissionToSubmissionStatus, 'status_link')
             .select('MAX("effective_date")', 'effective_date')
             .addSelect('submission_uuid', 'submission_uuid')
+            .where('effective_date <= NOW()')
             .groupBy('submission_uuid'),
         'status_link',
         'status_link."submission_uuid" = noi_sub.uuid',
@@ -52,6 +53,7 @@ import { LinkedStatusType } from '../inbox.dto';
             .from(NoticeOfIntentDecision, 'decision_date')
             .select('MAX("date")', 'date')
             .addSelect('notice_of_intent_uuid', 'notice_of_intent_uuid')
+            .where('date <= NOW()')
             .groupBy('notice_of_intent_uuid'),
         'decision_date',
         'decision_date."notice_of_intent_uuid" = noi.uuid',
