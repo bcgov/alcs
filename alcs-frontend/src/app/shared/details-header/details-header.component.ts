@@ -21,6 +21,8 @@ import {
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
 import { TimeTrackable } from '../time-tracker/time-tracker.component';
+import { ApplicationDetailService } from '../../services/application/application-detail.service';
+import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -38,22 +40,20 @@ export class DetailsHeaderComponent {
     | NoticeOfIntentSubmissionStatusService
     | NotificationSubmissionStatusService;
 
+  @Input() applicationDetailService?: ApplicationDetailService;
+  @Input() applicationSubmissionService?: ApplicationSubmissionService;
+
   legacyId?: string;
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
   types: ApplicationTypeDto[] | NoticeOfIntentTypeDto[] = [];
   timeTrackable?: TimeTrackable;
-  applicant?: string;
 
   @Input() set application(
     application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined,
   ) {
     if (application) {
       this._application = application;
-
-      if ('applicant' in application) {
-        this.applicant = application.applicant;
-      }
 
       if ('retroactive' in application) {
         this.isNOI = true;
@@ -160,5 +160,12 @@ export class DetailsHeaderComponent {
     result.push(...mappedReconCards);
 
     this.linkedCards = result;
+  }
+
+  async onSaveApplicant(applicant: string | undefined) {
+    if (this._application?.fileNumber) {
+      await this.applicationDetailService?.updateApplication(this._application?.fileNumber, { applicant });
+      await this.applicationSubmissionService?.update(this._application?.fileNumber, { applicant });
+    }
   }
 }

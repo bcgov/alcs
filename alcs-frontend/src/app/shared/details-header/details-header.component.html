@@ -4,7 +4,19 @@
   </div>
   <div *ngIf="_application" class="first-row">
     <div class="title">
-      <h5>{{ _application.fileNumber }} ({{ applicant }})</h5>
+      <h5 class="detail-heading">
+        <div class="file-number">{{ _application.fileNumber }}</div>
+        <div class="open-paren">(</div>
+        <app-inline-text
+          *ngIf="applicationDetailService"
+          (save)="onSaveApplicant($event ?? undefined)"
+          [value]="_application.applicant"
+          [required]="true"
+          [isFixedHeight]="true"
+          class="applicant-inline-field"
+        /><ng-container *ngIf="!applicationDetailService">{{ _application.applicant }}</ng-container>
+        <div class="close-paren">)</div>
+      </h5>
       <app-application-legacy-id [legacyId]="legacyId"></app-application-legacy-id>
       <div class="labels">
         <app-application-type-pill *ngFor="let type of types" [type]="type"></app-application-type-pill>

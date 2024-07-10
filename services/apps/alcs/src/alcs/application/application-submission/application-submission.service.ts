@@ -121,6 +121,10 @@ export class ApplicationSubmissionService {
       updateDto.returnComment,
       submission.returnedToLfngComment,
     );
+    submission.applicant = filterUndefined(
+      updateDto.applicant,
+      submission.applicant,
+    );
 
     await this.applicationSubmissionRepository.save(submission);
   }

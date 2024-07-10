@@ -96,6 +96,7 @@ export interface ApplicationParcelDto {
 
 export interface UpdateApplicationSubmissionDto {
   subProposedLots?: ProposedLot[];
+  applicant?: string;
 }
 
 export interface ApplicationSubmissionDto {

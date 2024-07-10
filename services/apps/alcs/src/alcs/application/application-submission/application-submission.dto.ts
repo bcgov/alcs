@@ -9,4 +9,8 @@ export class AlcsApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   returnComment?: string;
+
+  @IsString()
+  @IsOptional()
+  applicant?: string;
 }
