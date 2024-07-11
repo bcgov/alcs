@@ -20,6 +20,7 @@ import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../dto/docum
 import { OWNER_TYPE } from '../../dto/owner.dto';
 import { FileHandle } from '../../file-drag-drop/drag-drop.directive';
 import { openFileInline } from '../../utils/file';
+import { strictEmailValidator } from '../../validators/email-validator';
 
 @Component({
   selector: 'app-owner-dialog',
@@ -33,7 +34,7 @@ export class OwnerDialogComponent {
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
   corporateSummary = new FormControl<string | null>(null);
 
   isEdit = false;

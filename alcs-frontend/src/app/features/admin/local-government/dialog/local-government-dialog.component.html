@@ -60,8 +60,10 @@
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           [matChipInputAddOnBlur]="true"
           (matChipInputTokenEnd)="addEmail($event)"
+          [formControl]="email"
         />
       </mat-form-field>
+      <mat-error *ngIf="email.invalid"><mat-icon>warning</mat-icon>&nbsp;Please type a valid email address</mat-error>
     </div>
 
     <div>

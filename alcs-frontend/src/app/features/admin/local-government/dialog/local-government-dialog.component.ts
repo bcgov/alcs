@@ -7,6 +7,8 @@ import { LocalGovernmentDto } from '../../../../services/admin-local-government/
 import { AdminLocalGovernmentService } from '../../../../services/admin-local-government/admin-local-government.service';
 import { ApplicationRegionDto } from '../../../../services/application/application-code.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
+import { FormControl } from '@angular/forms';
+import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-admin-local-government-dialog',
@@ -29,6 +31,8 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
   };
   regions: ApplicationRegionDto[] = [];
 
+  email = new FormControl<string | null>(null, [strictEmailValidator]);
+
   isLoading = false;
 
   constructor(
@@ -48,7 +52,7 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.data) {
+    if (Object.keys(this.data).length !== 0) {
       this.model = {
         ...this.data,
         isFirstNation: this.data.isFirstNation ? 'true' : 'false',
@@ -100,6 +104,10 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
   }
 
   addEmail(event: MatChipInputEvent): void {
+    if (this.email.invalid) {
+      return;
+    }
+
     const value = (event.value || '').trim();
     if (value) {
       this.model.emails.push(value);

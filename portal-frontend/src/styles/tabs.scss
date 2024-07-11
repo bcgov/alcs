@@ -1,0 +1,60 @@
+@use 'colors';
+@use 'functions' as *;
+
+.mdc-tab {
+  --border-color: #e0e0e0;
+
+  background: color-mix(in srgb, colors.$secondary-color-light, transparent 80%) !important;
+  border: 1px solid var(--border-color) !important;
+
+  &:hover {
+    background: color-mix(in srgb, colors.$black, transparent 88%) !important;
+  }
+
+  & .mdc-tab__text-label {
+    font-size: rem(15) !important;
+    font-weight: bold !important;
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      font-size: rem(18) !important;
+    }
+  }
+
+  & .mat-ripple-element {
+    background-color: colors.$secondary-color !important;
+  }
+
+  // Hack needed to prevent lingering green cast
+  & .mdc-tab__ripple::before {
+    background-color: white !important;
+  }
+
+  &:not(:first-child) {
+    border-left: none !important;
+  }
+}
+
+.mdc-tab--active {
+  background: white !important;
+  border-bottom: none !important;
+
+  &:first-child {
+    border-left-color: white !important;
+  }
+
+  &:last-child {
+    border-right-color: white !important;
+  }
+
+  & .mdc-tab__text-label {
+    color: colors.$secondary-color !important;
+  }
+}
+
+.mdc-tab-indicator__content--underline {
+  border: 0 !important;
+}
+
+.mat-mdc-tab-body {
+  padding-top: rem(24) !important;
+}

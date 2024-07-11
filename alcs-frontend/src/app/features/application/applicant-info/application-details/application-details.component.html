@@ -1,3 +1,6 @@
+<div class="split header">
+  <h3>Applicant Info</h3>  
+</div>
 <section>
   <app-parcel *ngIf="submission" [application]="submission"></app-parcel>
   <div class="review-table edit-section">
@@ -9,7 +12,7 @@
   </div>
 </section>
 <section>
-  <h3>Other Owned Parcels</h3>
+  <h4>Other Owned Parcels</h4>
   <div *ngIf="submission" class="review-table">
     <div class="subheading2 grid-1">
       Do any of the land owners added previously own or lease other parcels that might inform this application process?
@@ -39,7 +42,7 @@
   </div>
 </section>
 <section>
-  <h3>Primary Contact Information</h3>
+  <h4>Primary Contact Information</h4>
   <div *ngIf="submission" class="review-table">
     <div class="subheading2 grid-1">Type</div>
     <div class="grid-double" data-testid="primary-contact-type">
@@ -93,10 +96,10 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Land Use</h3>
+  <h4>Land Use</h4>
   <div *ngIf="submission" class="review-table">
     <div class="full-width">
-      <h4>Land Use of Parcel(s) under Application</h4>
+      <h5>Land Use of Parcel(s) under Application</h5>
     </div>
     <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
     <div class="grid-double" data-testid="parcels-agriculture-description">
@@ -111,7 +114,7 @@
       {{ submission.parcelsNonAgricultureUseDescription }}
     </div>
     <div class="full-width">
-      <h4>Land Use of Adjacent Parcels</h4>
+      <h5>Land Use of Adjacent Parcels</h5>
     </div>
     <div class="adjacent-parcels full-width">
       <div class="grid-1 subheading2"></div>
@@ -154,7 +157,7 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Proposal</h3>
+  <h4>Proposal</h4>
   <app-nfu-details
     *ngIf="submission && applicationType === 'NFUP'"
     [applicationSubmission]="submission"
@@ -217,7 +220,7 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Optional Documents</h3>
+  <h4>Optional Documents</h4>
   <div *ngIf="submission" class="review-table">
     <div class="other-attachments full-width">
       <div class="grid-1 subheading2">File Name</div>

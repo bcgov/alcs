@@ -21,6 +21,7 @@ import { OwnerDialogComponent } from '../../../../shared/owner-dialogs/owner-dia
 import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { scrollToElement } from '../../../../shared/utils/scroll-helper';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-primary-contact',
@@ -35,7 +36,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   files: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
 
   needsAuthorizationLetter = false;
-  selectedThirdPartyAgent = false;
+  selectedThirdPartyAgent: boolean | null = false;
   selectedLocalGovernment = false;
   _selectedOwnerUuid: string | undefined = undefined;
   isCrownOwner = false;
@@ -50,7 +51,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
 
   form = new FormGroup({
     firstName: this.firstName,
@@ -266,8 +267,11 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async onSelectPrimaryContactType(event: MatButtonToggleChange) {
-    const isExistingOwner = event.value;
+    const isExistingOwner: boolean = event.value;
     const hasValues = Object.values(this.form.value).some((value) => value);
+
+    // This is necessary to keep toggle and variable in sync
+    this.selectedThirdPartyAgent = !isExistingOwner;
 
     if (hasValues) {
       await this.dialog
@@ -279,10 +283,12 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           },
         })
         .beforeClosed()
-        .subscribe(async (confirmed) => {
+        .subscribe(async (confirmed: boolean) => {
           if (confirmed) {
             this.form.reset();
             this.switchPrimaryContactType(isExistingOwner);
+          } else {
+            this.selectedThirdPartyAgent = isExistingOwner;
           }
         });
     } else {

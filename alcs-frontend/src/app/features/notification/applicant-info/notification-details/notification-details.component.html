@@ -1,8 +1,11 @@
+<div class="split header">
+  <h3>Applicant Info</h3>  
+</div>
 <section>
   <app-parcel *ngIf="files && submission" [notificationSubmission]="submission"></app-parcel>
 </section>
 <section>
-  <h3>Transferee(s)</h3>
+  <h4>Transferee(s)</h4>
   <div *ngIf="submission" class="review-table">
     <div class="transferee-table full-width">
       <div class="subheading2">Type</div>
@@ -26,7 +29,7 @@
   </div>
 </section>
 <section>
-  <h3>Primary Contact Information</h3>
+  <h4>Primary Contact Information</h4>
   <div *ngIf="submission" class="review-table">
     <div class="subheading2 grid-1">First Name</div>
     <div class="grid-double">
@@ -56,7 +59,7 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Purpose of SRW</h3>
+  <h4>Purpose of SRW</h4>
   <div *ngIf="submission" class="review-table">
     <div class="subheading2 grid-1">Submitter’s File Number</div>
     <div class="grid-double">
@@ -107,7 +110,7 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Optional Documents</h3>
+  <h4>Optional Documents</h4>
   <div *ngIf="submission" class="review-table">
     <div class="other-attachments full-width">
       <div class="subheading2">File Name</div>

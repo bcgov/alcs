@@ -210,7 +210,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.setActiveTab();
       setTimeout(() => {
-        scrollToElement({ id: `results`, center: false });
+        scrollToElement({ id: `searchResultsWrapper`, center: false });
       });
     });
   }
@@ -247,6 +247,12 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();
+    }
+  }
+
+  onEnter(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
     }
   }
 

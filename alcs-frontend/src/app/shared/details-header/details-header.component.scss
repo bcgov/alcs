@@ -64,3 +64,12 @@
   flex-direction: row-reverse;
   align-items: flex-end;
 }
+
+.detail-heading {
+  display: flex;
+  align-items: center;
+
+  .file-number {
+    margin-right: 8px;
+  }
+}

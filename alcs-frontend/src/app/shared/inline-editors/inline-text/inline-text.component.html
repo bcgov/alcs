@@ -1,4 +1,4 @@
-<div class="inline-number-wrapper">
+<div class="inline-number-wrapper" [ngClass]="{ 'fixed-height': isFixedHeight }">
   <span class="left" *ngIf="!isEditing">
     <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
     <span *ngIf="value && !mask">
@@ -18,11 +18,12 @@
     }"
   >
     <form>
-      <mat-form-field appearance="outline">
+      <mat-form-field [appearance]="isFixedHeight ? 'fill' : 'outline'">
         <input
           matInput
           class="editable"
           name="value"
+          [formControl]="textInputControl"
           [required]="required"
           [placeholder]="placeholder"
           #editInput
@@ -39,7 +40,13 @@
         >{{ editInput?.value?.length || 0 }}/{{ maxLength }}</mat-hint
       >
       <button mat-button (click)="cancelEdit()">CANCEL</button>
-      <button mat-button color="primary" class="save" [disabled]="required && !pendingValue" (click)="confirmEdit()">
+      <button
+        mat-button
+        color="primary"
+        class="save"
+        [disabled]="(required && !pendingValue) || textInputControl.invalid"
+        (click)="confirmEdit()"
+      >
         SAVE
       </button>
     </div>

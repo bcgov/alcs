@@ -10,7 +10,7 @@
 
   <h3>Search by one or more of the following fields:</h3>
 
-  <form class="content" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+  <form class="content" [formGroup]="searchForm" (ngSubmit)="onSubmit()" (keydown)="onEnter($event)">
     <div class="search-form">
       <div>
         <label for="fileNumber">ALC ID</label>

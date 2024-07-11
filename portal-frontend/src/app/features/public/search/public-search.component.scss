@@ -1,6 +1,14 @@
 @use '../../../../styles/colors';
 @use '../../../../styles/functions' as *;
 
+h3 {
+  margin-bottom: rem(20) !important;
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    margin-bottom: rem(24) !important;
+  }
+}
+
 :host::ng-deep {
   .label {
     display: inline-block;

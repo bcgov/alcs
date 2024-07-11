@@ -14,7 +14,8 @@
       <mat-icon
         class="icon"
         matTooltip='Portal status updated to "ALC Response Sent" when auto-email is successfully sent.'
-      >info_outline
+      >
+        info_outline
       </mat-icon>
     </div>
     <ng-container *ngIf="responseSent && responseDate">
@@ -39,6 +40,7 @@
     <app-inline-text
       [updateOnSave]="false"
       [value]="contactEmail"
+      [isEmail]="true"
       [required]="true"
       (save)="updateSubmissionEmail($event)"
     ></app-inline-text>

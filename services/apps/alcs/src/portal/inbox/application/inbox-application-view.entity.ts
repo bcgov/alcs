@@ -42,6 +42,7 @@ import { LinkedStatusType } from '../inbox.dto';
             .from(ApplicationSubmissionToSubmissionStatus, 'status_link')
             .select('MAX("effective_date")', 'effective_date')
             .addSelect('submission_uuid', 'submission_uuid')
+            .where('effective_date <= NOW()')
             .groupBy('submission_uuid'),
         'status_link',
         'status_link."submission_uuid" = app_sub.uuid',
@@ -52,6 +53,7 @@ import { LinkedStatusType } from '../inbox.dto';
             .from(ApplicationDecision, 'decision_date')
             .select('MAX("date")', 'date')
             .addSelect('application_uuid', 'application_uuid')
+            .where('date <= NOW()')
             .groupBy('application_uuid'),
         'decision_date',
         'decision_date."application_uuid" = app.uuid',

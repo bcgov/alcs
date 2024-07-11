@@ -9,6 +9,7 @@ import { ApplicationDecisionComponentDto } from '../../../../../../services/appl
 export class BasicComponent {
   @Input() component!: ApplicationDecisionComponentDto;
   @Input() fillRow = false;
+  @Input() nonZeroEmptyValidation = false;
   @Output() saveAlrArea = new EventEmitter<string | null>();
 
   constructor() {}

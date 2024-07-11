@@ -1,4 +1,6 @@
 import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { NonZeroValidator } from '../../validators/value-validator';
 
 @Component({
   selector: 'app-inline-number[value]',
@@ -9,18 +11,26 @@ export class InlineNumberComponent implements AfterContentChecked {
   @Input() value?: string | null;
   @Input() placeholder: string = 'Enter a value';
   @Input() decimals = 2;
+  @Input() nonZeroEmptyValidation: boolean = false;
   @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
 
   isEditing = false;
-  pendingValue: null | string | undefined;
+
+  valueControl = new FormControl<string | null | undefined>(null, []);
 
   constructor() {}
 
+  ngOnInit() {
+    if (this.nonZeroEmptyValidation) {
+      this.valueControl.setValidators([NonZeroValidator, Validators.required]);
+    }
+  }
+
   startEdit() {
     this.isEditing = true;
-    this.pendingValue = this.value;
+    this.valueControl.setValue(this.value);
   }
 
   ngAfterContentChecked(): void {
@@ -30,9 +40,9 @@ export class InlineNumberComponent implements AfterContentChecked {
   }
 
   confirmEdit() {
-    if (this.pendingValue !== this.value) {
-      this.save.emit(this.pendingValue?.toString() ?? null);
-      this.value = this.pendingValue;
+    if (this.valueControl.value !== this.value) {
+      this.save.emit(this.valueControl.value?.toString() ?? null);
+      this.value = this.valueControl.value;
     }
 
     this.isEditing = false;
@@ -40,6 +50,11 @@ export class InlineNumberComponent implements AfterContentChecked {
 
   cancelEdit() {
     this.isEditing = false;
-    this.pendingValue = this.value;
+    this.valueControl.setValue(this.value);
+  }
+
+  preventKeydown(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    keyboardEvent.preventDefault();
   }
 }

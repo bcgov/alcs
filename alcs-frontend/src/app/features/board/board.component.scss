@@ -9,11 +9,14 @@
 
 .board-header {
   display: flex;
+  background-color: white;
   justify-content: space-between;
   align-items: center;
   padding: 24px 80px 12px 76px;
   position: sticky;
   left: 0;
+  top: 0;
+  z-index: 1000;
 }
 
 .board-content {

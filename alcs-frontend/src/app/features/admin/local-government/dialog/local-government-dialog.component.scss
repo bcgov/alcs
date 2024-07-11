@@ -18,4 +18,10 @@
   .mat-mdc-form-field-infix {
     display: flex;
   }
+
+  mat-error {
+    display: flex;
+    font-size: 15px;
+    font-weight: bold;
+  }
 }

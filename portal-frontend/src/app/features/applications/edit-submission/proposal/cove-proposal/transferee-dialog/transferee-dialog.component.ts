@@ -10,6 +10,7 @@ import {
 import { CovenantTransfereeService } from '../../../../../../services/covenant-transferee/covenant-transferee.service';
 import { OWNER_TYPE } from '../../../../../../shared/dto/owner.dto';
 import { TransfereeDialogComponent } from '../../../../../notifications/edit-submission/transferees/transferee-dialog/transferee-dialog.component';
+import { strictEmailValidator } from '../../../../../../shared/validators/email-validator';
 
 @Component({
   selector: 'app-transferee-dialog',
@@ -23,7 +24,7 @@ export class CovenantTransfereeDialogComponent {
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
-  email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  email = new FormControl<string | null>('', [Validators.required, strictEmailValidator]);
 
   isEdit = false;
   isLoading = false;
@@ -45,7 +46,7 @@ export class CovenantTransfereeDialogComponent {
     public data: {
       submissionUuid: string;
       existingTransferee?: CovenantTransfereeDto;
-    }
+    },
   ) {
     if (data && data.existingTransferee) {
       this.onChangeType({
