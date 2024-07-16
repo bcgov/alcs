@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -15,6 +15,8 @@ import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../sha
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
+import { OtherAttachmentsUploadDialogComponent } from './other-attachments-upload-dialog/other-attachments-upload-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
@@ -32,6 +34,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   private isDirty = false;
   showVirusError = false;
+  isMobile = false;
 
   form = new FormGroup({} as any);
   private documentCodes: DocumentTypeDto[] = [];
@@ -126,5 +129,24 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
     const codes = await this.codeService.loadCodes();
     this.documentCodes = codes.documentTypes;
     this.selectableTypes = this.documentCodes.filter((code) => USER_CONTROLLED_TYPES.includes(code.code));
+  }
+
+  onAddEditAttachment(attachment: ApplicationDocumentDto | undefined) {
+    this.dialog
+      .open(OtherAttachmentsUploadDialogComponent, {
+        width: this.isMobile? '90%' : '50%',
+        data: {
+          fileId: this.fileId,
+          otherAttachmentsComponent: this,
+          existingDocument: attachment,
+        }
+    }).afterClosed().subscribe(async res => {
+      await this.refreshFiles();
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
