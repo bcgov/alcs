@@ -49,7 +49,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
             existingDocument?: NoticeOfIntentDocumentDto,
             fileId: string,
         },
-        private applicationDcoumentService: NoticeOfIntentDocumentService,
+        private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
         private codeService: CodeService,
         private toastService: ToastService
     ) {}
@@ -122,7 +122,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
             const res = await this.data.otherAttachmentsComponent.attachFile(this.pendingFile!, null);
             this.showVirusError = !res;
             if (res) {
-                const documents = await this.applicationDcoumentService.getByFileId(this.data.fileId);
+                const documents = await this.noticeOfIntentDocumentService.getByFileId(this.data.fileId);
                 if (documents) {
                     const sortedDocuments = documents.sort((a, b) => {return b.uploadedAt - a.uploadedAt});
                     const updateDtos: NoticeOfIntentDocumentUpdateDto[] = sortedDocuments.map((file) => ({
@@ -135,7 +135,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
                         description: this.currentDescription,
                         type: this.currentType?.code ?? null,
                     }
-                    await this.applicationDcoumentService.update(this.data.fileId, updateDtos);
+                    await this.noticeOfIntentDocumentService.update(this.data.fileId, updateDtos);
                     this.toastService.showSuccessToast('Attachment added successfully');
                     this.dialogRef.close();
                 } else {
@@ -154,7 +154,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
             await this.add();
         } else {
             if (this.isDirty) {
-                const documents = await this.applicationDcoumentService.getByFileId(this.data.fileId);
+                const documents = await this.noticeOfIntentDocumentService.getByFileId(this.data.fileId);
                 if (documents) {
                     const updateDtos: NoticeOfIntentDocumentUpdateDto[] = documents.map((file) => ({
                         uuid: file.uuid,
@@ -170,7 +170,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
                             }
                         }
                     }
-                    await this.applicationDcoumentService.update(this.data.fileId, updateDtos);
+                    await this.noticeOfIntentDocumentService.update(this.data.fileId, updateDtos);
                     this.toastService.showSuccessToast('Attachment updated successully');
                     this.dialogRef.close();
                 } else {

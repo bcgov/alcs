@@ -34,13 +34,11 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   private isDirty = false;
   showVirusError = false;
-  isMobile = false;
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
-    private router: Router,
-    private applicationService: NotificationSubmissionService,
     private codeService: CodeService,
     toastService: ToastService,
     notificationDocumentService: NotificationDocumentService,

@@ -34,7 +34,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   private isDirty = false;
   showVirusError = false;
-  isMobile = false;
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   form = new FormGroup({} as any);
   private documentCodes: DocumentTypeDto[] = [];
@@ -66,15 +66,6 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
         .sort((a, b) => {
           return a.uploadedAt - b.uploadedAt;
         });
-      const newForm = new FormGroup({});
-      for (const file of this.otherFiles) {
-        newForm.addControl(`${file.uuid}-type`, new FormControl(file.type?.code, [Validators.required]));
-        newForm.addControl(`${file.uuid}-description`, new FormControl(file.description, [Validators.required]));
-      }
-      this.form = newForm;
-      if (this.showErrors) {
-        this.form.markAllAsTouched();
-      }
     });
   }
 
@@ -96,33 +87,6 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
       }));
       await this.applicationDocumentService.update(this.fileId, updateDtos);
     }
-  }
-
-  onChangeDescription(uuid: string, event: Event) {
-    this.isDirty = true;
-    const input = event.target as HTMLInputElement;
-    const description = input.value;
-    this.otherFiles = this.otherFiles.map((file) => {
-      if (uuid === file.uuid) {
-        file.description = description;
-      }
-      return file;
-    });
-  }
-
-  onChangeType(uuid: string, selectedValue: DOCUMENT_TYPE) {
-    this.isDirty = true;
-    this.otherFiles = this.otherFiles.map((file) => {
-      if (uuid === file.uuid) {
-        const newType = this.documentCodes.find((code) => code.code === selectedValue);
-        if (newType) {
-          file.type = newType;
-        } else {
-          console.error('Failed to find matching document type');
-        }
-      }
-      return file;
-    });
   }
 
   private async loadDocumentCodes() {

@@ -99,8 +99,6 @@ import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
     LandUseComponent,
     OtherParcelsComponent,
     OtherAttachmentsComponent,
-    OtherAttachmentsUploadDialogComponent,
-    OtherAttachmentsCardComponent,
     PrimaryContactComponent,
     PrimaryContactConfirmationDialogComponent,
     ReviewAndSubmitComponent,

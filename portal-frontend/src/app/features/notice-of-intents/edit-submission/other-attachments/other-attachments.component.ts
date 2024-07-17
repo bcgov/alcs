@@ -34,7 +34,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   private documentCodes: DocumentTypeDto[] = [];
   showVirusError = false;
-  isMobile = false;
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   constructor(
     private codeService: CodeService,

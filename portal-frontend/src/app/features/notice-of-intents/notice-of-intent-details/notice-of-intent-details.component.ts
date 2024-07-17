@@ -20,7 +20,7 @@ import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 })
 export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  isMobile = false;
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   @Input() $noticeOfIntentSubmission!: BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>;
   @Input() $noiDocuments!: BehaviorSubject<NoticeOfIntentDocumentDto[]>;

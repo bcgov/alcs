@@ -21,6 +21,7 @@ const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIO
 export class OtherAttachmentsUploadDialogComponent implements OnInit {
     isDirty = false;
     isFileDirty = false;
+    isSaving = false;
     showVirusError = false;
     title: string = '';
     isEditing = false;
