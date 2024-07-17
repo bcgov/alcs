@@ -11,7 +11,7 @@ import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
 import { openFileInline } from '../../../shared/utils/file';
-import { MOBILE_BREAKPOINT } from 'src/app/shared/utils/breakpoints';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-noi-details',
