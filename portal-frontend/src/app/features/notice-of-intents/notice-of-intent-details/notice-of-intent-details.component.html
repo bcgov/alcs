@@ -209,7 +209,7 @@
 <section>
   <h3>7. Optional Documents</h3>
   <div *ngIf="noiSubmission" class="review-table">
-    <div class="other-attachments full-width">
+    <div *ngIf="!isMobile" class="other-attachments full-width">
       <div class="grid-1 subheading2">File Name</div>
       <div class="grid-2 subheading2">Type</div>
       <div class="grid-3 subheading2">Description</div>
@@ -230,6 +230,14 @@
       <div class="full-width">
         <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
       </div>
+    </div>
+    <div *ngIf="isMobile">
+      <app-optional-attachments-mobile-card 
+        *ngFor="let file of otherFiles" 
+        [file]="file" 
+        (fileClicked)="openFile(file)">
+      </app-optional-attachments-mobile-card>
+      <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="showErrors"></app-no-data>
     </div>
     <div *ngIf="showEdit" class="edit-button">
       <button (click)="onNavigateToStep(6)" color="accent" mat-flat-button>Edit Section</button>

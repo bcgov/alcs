@@ -154,6 +154,7 @@ import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-m
     TableColumnNoDataPipe,
     FileTypeFilterDropDownComponent,
     CommissionPurposesPanelComponent,
+    OptionalAttachmentsMobileCardComponent,
   ],
 })
 export class SharedModule {
