@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -15,6 +15,8 @@ import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../sha
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
+import { OtherAttachmentsUploadDialogComponent } from './other-attachments-upload-dialog/other-attachments-upload-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
@@ -32,8 +34,8 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   private isDirty = false;
   showVirusError = false;
+  isMobile = false;
 
-  form = new FormGroup({} as any);
   private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
@@ -63,15 +65,6 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
         .sort((a, b) => {
           return a.uploadedAt - b.uploadedAt;
         });
-      const newForm = new FormGroup({});
-      for (const file of this.otherFiles) {
-        newForm.addControl(`${file.uuid}-type`, new FormControl(file.type?.code, [Validators.required]));
-        newForm.addControl(`${file.uuid}-description`, new FormControl(file.description, [Validators.required]));
-      }
-      this.form = newForm;
-      if (this.showErrors) {
-        this.form.markAllAsTouched();
-      }
     });
   }
 
@@ -95,36 +88,28 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
     }
   }
 
-  onChangeDescription(uuid: string, event: Event) {
-    this.isDirty = true;
-    const input = event.target as HTMLInputElement;
-    const description = input.value;
-    this.otherFiles = this.otherFiles.map((file) => {
-      if (uuid === file.uuid) {
-        file.description = description;
-      }
-      return file;
-    });
-  }
-
-  onChangeType(uuid: string, selectedValue: DOCUMENT_TYPE) {
-    this.isDirty = true;
-    this.otherFiles = this.otherFiles.map((file) => {
-      if (uuid === file.uuid) {
-        const newType = this.documentCodes.find((code) => code.code === selectedValue);
-        if (newType) {
-          file.type = newType;
-        } else {
-          console.error('Failed to find matching document type');
-        }
-      }
-      return file;
-    });
-  }
-
   private async loadDocumentCodes() {
     const codes = await this.codeService.loadCodes();
     this.documentCodes = codes.documentTypes;
     this.selectableTypes = this.documentCodes.filter((code) => USER_CONTROLLED_TYPES.includes(code.code));
+  }
+
+  onAddEditAttachment(attachment: NotificationDocumentDto | undefined) {
+    this.dialog
+      .open(OtherAttachmentsUploadDialogComponent, {
+        width: this.isMobile? '90%' : '50%',
+        data: {
+          fileId: this.fileId,
+          otherAttachmentsComponent: this,
+          existingDocument: attachment,
+        }
+    }).afterClosed().subscribe(async res => {
+      await this.refreshFiles();
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
