@@ -24,6 +24,9 @@ import { StepComponent } from './step.partial';
 import { SuccessComponent } from './success/success.component';
 import { TransfereeDialogComponent } from './transferees/transferee-dialog/transferee-dialog.component';
 import { TransfereesComponent } from './transferees/transferees.component';
+import { OtherAttachmentsUploadDialogComponent } from './other-attachments/other-attachments-upload-dialog/other-attachments-upload-dialog.component';
+import { OtherAttachmentsCardComponent } from './other-attachments/other-attachments-card/other-attachments-card.component';
+import { MatCardModule } from '@angular/material/card';
 
 const routes: Routes = [
   {
@@ -56,6 +59,8 @@ const routes: Routes = [
     SelectGovernmentComponent,
     ProposalComponent,
     OtherAttachmentsComponent,
+    OtherAttachmentsUploadDialogComponent,
+    OtherAttachmentsCardComponent,
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
     ChangeSurveyPlanConfirmationDialogComponent,
@@ -70,6 +75,7 @@ const routes: Routes = [
     MatTableModule,
     NgxMaskPipe,
     NotificationDetailsModule,
+    MatCardModule,
   ],
 })
 export class EditSubmissionModule {}

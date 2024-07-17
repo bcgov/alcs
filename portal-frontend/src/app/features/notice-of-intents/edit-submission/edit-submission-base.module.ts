@@ -30,6 +30,9 @@ import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-co
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { SuccessComponent } from './success/success.component';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact/primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
+import { OtherAttachmentsCardComponent } from './other-attachments/other-attachments-card/other-attachments-card.component';
+import { OtherAttachmentsUploadDialogComponent } from './other-attachments/other-attachments-upload-dialog/other-attachments-upload-dialog.component';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   imports: [
@@ -45,6 +48,7 @@ import { PrimaryContactConfirmationDialogComponent } from './primary-contact/pri
     MatTableModule,
     NoticeOfIntentDetailsModule,
     RouterLink,
+    MatCardModule,
   ],
   declarations: [
     EditSubmissionComponent,
@@ -57,6 +61,8 @@ import { PrimaryContactConfirmationDialogComponent } from './primary-contact/pri
     SelectGovernmentComponent,
     LandUseComponent,
     OtherAttachmentsComponent,
+    OtherAttachmentsCardComponent,
+    OtherAttachmentsUploadDialogComponent,
     RosoProposalComponent,
     PofoProposalComponent,
     PfrsProposalComponent,

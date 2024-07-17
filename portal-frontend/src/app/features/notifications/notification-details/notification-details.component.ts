@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
@@ -9,6 +9,7 @@ import { NotificationSubmissionDetailedDto } from '../../../services/notificatio
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
 import { openFileInline } from '../../../shared/utils/file';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-notification-details',
@@ -17,6 +18,7 @@ import { openFileInline } from '../../../shared/utils/file';
 })
 export class NotificationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   @Input() $notificationSubmission!: BehaviorSubject<NotificationSubmissionDetailedDto | undefined>;
   @Input() $notificationDocuments!: BehaviorSubject<NotificationDocumentDto[]>;
@@ -89,4 +91,10 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
       this.localGovernment = lg;
     }
   }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
 }
