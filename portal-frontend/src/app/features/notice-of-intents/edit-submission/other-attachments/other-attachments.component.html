@@ -58,13 +58,13 @@
       </tr>
     </table>
     <div *ngIf="isMobile">
-      <app-other-attachments-card 
+      <app-other-attachment-mobile-card
         *ngFor="let otherFile of otherFiles" 
         [file]="otherFile"
         (removeClicked)="onDeleteFile(otherFile)"
         (editClicked)="onAddEditAttachment(otherFile)"
         (fileClicked)="openFile(otherFile)">
-      </app-other-attachments-card>
+      </app-other-attachment-mobile-card>
       <div *ngIf="otherFiles.length === 0" class="no-data-text">No attachments added.</div>
     </div>
   </div>

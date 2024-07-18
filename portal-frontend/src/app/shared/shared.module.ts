@@ -50,6 +50,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
 import { CommissionPurposesPanelComponent } from './commission-purposes-panel/commission-purposes-panel.component';
 import { MatCardModule } from '@angular/material/card';
 import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-mobile-card/optional-attachments-mobile-card.component';
+import { OtherAttachmentMobileCardComponent } from './other-attachment-mobile-card/other-attachment-mobile-card.component';
 
 @NgModule({
   providers: [
@@ -83,6 +84,7 @@ import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-m
     MatProgressSpinnerModule,
     MatExpansionModule,
     MatCardModule,
+    MatMenuModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -106,6 +108,7 @@ import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-m
     FileOverlaySpinnerComponent,
     CommissionPurposesPanelComponent,
     OptionalAttachmentsMobileCardComponent,
+    OtherAttachmentMobileCardComponent,
   ],
   exports: [
     CommonModule,
@@ -155,6 +158,7 @@ import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-m
     FileTypeFilterDropDownComponent,
     CommissionPurposesPanelComponent,
     OptionalAttachmentsMobileCardComponent,
+    OtherAttachmentMobileCardComponent,
   ],
 })
 export class SharedModule {
