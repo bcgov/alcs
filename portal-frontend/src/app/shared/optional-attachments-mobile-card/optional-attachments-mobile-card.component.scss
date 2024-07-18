@@ -3,7 +3,10 @@ mat-card {
   box-shadow: none;
   border: none;
   border-bottom: 1px solid #AAAAAA;
+  border-radius: 0;
   background-color: transparent;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 mat-card-header {

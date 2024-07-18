@@ -38,7 +38,6 @@ import { SelectGovernmentComponent } from './select-government/select-government
 import { SuccessComponent } from './success/success.component';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact/primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 import { OtherAttachmentsUploadDialogComponent } from './other-attachments/other-attachments-upload-dialog/other-attachments-upload-dialog.component';
-import { OtherAttachmentsCardComponent } from './other-attachments/other-attachments-card/other-attachments-card.component';
 import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
 
 @NgModule({
@@ -54,7 +53,6 @@ import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
     OtherParcelsComponent,
     OtherAttachmentsComponent,
     OtherAttachmentsUploadDialogComponent,
-    OtherAttachmentsCardComponent,
     PrimaryContactComponent,
     PrimaryContactConfirmationDialogComponent,
     ReviewAndSubmitComponent,
