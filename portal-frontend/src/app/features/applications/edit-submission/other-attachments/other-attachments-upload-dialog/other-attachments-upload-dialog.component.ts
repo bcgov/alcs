@@ -6,7 +6,6 @@ import { ToastService } from "../../../../../services/toast/toast.service";
 import { ApplicationDocumentService } from "../../../../../services/application-document/application-document.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { OtherAttachmentsComponent } from "../other-attachments.component";
-import { ApplicationSubmissionService } from "../../../../../services/application-submission/application-submission.service";
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from "../../../../../shared/dto/document.dto";
 import { CodeService } from "../../../../../services/code/code.service";
 import { FileHandle } from "../../../../../shared/file-drag-drop/drag-drop.directive";
@@ -23,6 +22,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
     isFileDirty = false;
     isSaving = false;
     showVirusError = false;
+    showFileRequiredError = false;
     title: string = '';
     isEditing = false;
 
@@ -81,6 +81,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
             source: DOCUMENT_SOURCE.APPLICANT,
         }];
         this.isFileDirty = true;
+        this.showFileRequiredError = false;
     }
 
     openFile() {
@@ -113,12 +114,30 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
         this.currentType = newType !== undefined ? newType : null;
     }
 
+    validateForm() {
+        if (this.form.valid && this.attachment.length !== 0) {
+            return true;
+        }
+
+        if (this.form.invalid) {
+            this.form.markAllAsTouched();
+        }
+
+        if (this.attachment.length == 0) {
+            this.showFileRequiredError = true;
+        }
+        return false;
+    }
+    
     async onAdd() {
-        await this.add();
+        if (this.validateForm()) {
+            await this.add();
+        }
     }
 
     protected async add() {
         if (this.isFileDirty) {
+            this.isSaving = true;
             const res = await this.data.otherAttachmentsComponent.attachFile(this.pendingFile!, null);
             this.showVirusError = !res;
             if (res) {
@@ -142,17 +161,22 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
                     this.toastService.showErrorToast("Could not read attached documents");
                 }
             }
-            this.isDirty = false;
-            this.isFileDirty = true;
         }
     }
 
     async onEdit() {
+        if (this.validateForm()) {
+            this.edit();
+        }
+    }
+
+    protected async edit() {
         if (this.isFileDirty) {
             this.data.otherAttachmentsComponent.onDeleteFile(this.attachmentForDelete[0]);
             await this.add();
         } else {
             if (this.isDirty) {
+                this.isSaving = true;
                 const documents = await this.applicationDcoumentService.getByFileId(this.data.fileId);
                 if (documents) {
                     const updateDtos: ApplicationDocumentUpdateDto[] = documents.map((file) => ({
@@ -171,16 +195,12 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
                     }
                     await this.applicationDcoumentService.update(this.data.fileId, updateDtos);
                     this.toastService.showSuccessToast('Attachment updated successully');
-                    this.dialogRef.close();
                 } else {
                     this.toastService.showErrorToast("Could not read attached documents");
                 }
             }
+            this.dialogRef.close();
         }
-    }
-
-    protected async edit(){
-
     }
 
     private async loadDocumentCodes() {

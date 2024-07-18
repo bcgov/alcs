@@ -5,14 +5,14 @@
     <div class="uploader">
         <app-file-drag-drop 
             (uploadFiles)="attachDocument($event)"
-            [uploadedFiles]="attachment"
             (openFile)="openFile()"
-            (deleteFile)="deleteFile()">
+            (deleteFile)="deleteFile()"
+            [uploadedFiles]="attachment"
+            [showErrors]="showFileRequiredError"
+            [isRequired]="true"
+            [showVirusError]="showVirusError">
         </app-file-drag-drop>
     </div>
-    <mat-error *ngIf="showVirusError" class="left" style="display: flex">
-        <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
-      </mat-error>
     <form [formGroup]="form">
         <div class="form-container">
             <div class="form-field">
@@ -68,12 +68,10 @@
 </div>
 <mat-dialog-actions align="end">
     <div class="button-container">
-        <button *ngIf="!this.data.existingDocument" mat-flat-button color="primary" (click)="onAdd()" 
-            [disabled]="form.invalid || pendingFile === undefined || !isDirty || !isFileDirty || isSaving">
+        <button *ngIf="!this.data.existingDocument" mat-flat-button color="primary" (click)="onAdd()" [disabled]="isSaving">
             ADD
         </button>
-        <button *ngIf="this.data.existingDocument" mat-flat-button color="primary" (click)="onEdit()" 
-            [disabled]="form.invalid || (!isFileDirty && !isDirty) || isSaving">
+        <button *ngIf="this.data.existingDocument" mat-flat-button color="primary" (click)="onEdit()" [disabled]="isSaving">
             SAVE
         </button>
         <button mat-stroked-button color="primary" [mat-dialog-close]="false">CANCEL</button>
