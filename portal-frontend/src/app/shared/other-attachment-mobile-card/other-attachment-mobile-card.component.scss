@@ -2,6 +2,8 @@ mat-card {
   width: 100%;
   border-bottom: 1px solid #EFEFEF;
   border-radius: 0;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 mat-card-header {

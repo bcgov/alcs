@@ -170,4 +170,24 @@
       }
     }
   }
+
+  .review-list {
+    padding: rem(8);
+    margin: rem(12) 0 rem(20) 0;
+    background-color: colors.$grey-light;
+
+    .edit-button {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+
+      button {
+        width: 100%;
+
+        @media screen and (min-width: $tabletBreakpoint) {
+          width: unset;
+        }
+      }
+    }
+  }
 }
