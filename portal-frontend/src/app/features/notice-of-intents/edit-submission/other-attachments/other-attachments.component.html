@@ -59,8 +59,9 @@
     </table>
     <div *ngIf="isMobile">
       <app-other-attachment-mobile-card
-        *ngFor="let otherFile of otherFiles" 
+        *ngFor="let otherFile of otherFiles; let last = last"
         [file]="otherFile"
+        [isLast]="last"
         (removeClicked)="onDeleteFile(otherFile)"
         (editClicked)="onAddEditAttachment(otherFile)"
         (fileClicked)="openFile(otherFile)">

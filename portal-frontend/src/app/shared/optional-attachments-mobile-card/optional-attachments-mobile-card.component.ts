@@ -11,6 +11,7 @@ import { NotificationDocumentDto } from "../../services/notification-document/no
 })
 export class OptionalAttachmentsMobileCardComponent {
     @Input() file!: ApplicationDocumentDto | NoticeOfIntentDocumentDto | NotificationDocumentDto;
+    @Input() isLast: boolean = false;
     @Output() fileClicked = new EventEmitter<ApplicationDocumentDto | NoticeOfIntentDocumentDto | NoticeOfIntentDocumentDto>();
     onClick() {
         this.fileClicked.emit(this.file);
