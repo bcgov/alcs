@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card [ngClass]="{'last-card': isLast}">
     <mat-card-header>
         <mat-card-title>{{file.type?.label}}</mat-card-title>
         <button mat-icon-button [mat-menu-trigger-for]="menu">

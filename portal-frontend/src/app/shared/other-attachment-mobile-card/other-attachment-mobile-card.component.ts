@@ -11,6 +11,7 @@ import { NotificationDocumentDto } from "src/app/services/notification-document/
 })
 export class OtherAttachmentMobileCardComponent implements OnInit {
     @Input() file!: ApplicationDocumentDto | NoticeOfIntentDocumentDto | NotificationDocumentDto;
+    @Input() isLast: boolean = false;
     @Output() editClicked = new EventEmitter<ApplicationDocumentDto | NoticeOfIntentDocumentDto | NotificationDocumentDto>();
     @Output() removeClicked = new EventEmitter<ApplicationDocumentDto | NoticeOfIntentDocumentDto | NotificationDocumentDto>();
     @Output() fileClicked = new EventEmitter<ApplicationDocumentDto | NoticeOfIntentDocumentDto | NotificationDocumentDto>();
