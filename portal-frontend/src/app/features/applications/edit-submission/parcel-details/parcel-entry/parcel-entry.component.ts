@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,6 +22,7 @@ import { formatBooleanToString } from '../../../../../shared/utils/boolean-helpe
 import { openFileInline } from '../../../../../shared/utils/file';
 import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -71,6 +72,7 @@ export class ParcelEntryComponent implements OnInit {
   searchBy = new FormControl<string | null>(null);
   isCrownLand: boolean | null = null;
   isCertificateOfTitleRequired = true;
+  isMobile = false;
 
   parcelType = new FormControl<string | null>(null, [Validators.required]);
   pidPin = new FormControl<string>({
@@ -176,6 +178,7 @@ export class ParcelEntryComponent implements OnInit {
 
       this.selectedOwner = selectedOwner;
     });
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   async onSearch() {
@@ -619,5 +622,10 @@ export class ParcelEntryComponent implements OnInit {
     } else {
       this.pidPinPlaceholder = 'Type PIN';
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
