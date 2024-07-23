@@ -9,6 +9,11 @@
 
 .new-owner {
   margin: rem(8) 0 !important;
+
+  @media screen and (max-width: $tabletBreakpoint) {
+    width: 100%;
+    padding: 20px;
+  }
 }
 
 .owner-search-option {
