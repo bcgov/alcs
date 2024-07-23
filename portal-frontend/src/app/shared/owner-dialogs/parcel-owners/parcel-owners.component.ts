@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
@@ -14,13 +14,14 @@ import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
 import { openFileInline } from '../../utils/file';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
+import { MOBILE_BREAKPOINT } from '../../utils/breakpoints';
 
 @Component({
   selector: 'app-parcel-owners[owners][fileId][submissionUuid][ownerService]',
   templateUrl: './parcel-owners.component.html',
   styleUrls: ['./parcel-owners.component.scss'],
 })
-export class ParcelOwnersComponent {
+export class ParcelOwnersComponent implements OnInit{
   @Output() saveParcel = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<ApplicationOwnerDto>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
@@ -31,12 +32,14 @@ export class ParcelOwnersComponent {
   @Input() ownerService!: ApplicationOwnerService | NoticeOfIntentOwnerService;
   @Input() documentService!: ApplicationDocumentService | NoticeOfIntentDocumentService;
   dataSource = new MatTableDataSource([]);
+  sortedOwners: any[] = [];
 
   @Input()
   public set owners(owners: ApplicationOwnerDto[] | NoticeOfIntentOwnerDto[]) {
     const sorted = owners.sort(this.sortOwners);
     // @ts-ignore
     this.dataSource = new MatTableDataSource(sorted);
+    this.sortedOwners = sorted;
   }
 
   sortOwners(a: ApplicationOwnerDto | NoticeOfIntentOwnerDto, b: ApplicationOwnerDto | NoticeOfIntentOwnerDto) {
@@ -63,8 +66,15 @@ export class ParcelOwnersComponent {
 
   _disabled = false;
   displayedColumns = ['displayName', 'organizationName', 'phone', 'email', 'corporateSummary', 'actions'];
+  isMobile = false;
+  VISIBLE_COUNT = 5;
+  visibleCount = this.VISIBLE_COUNT;
 
   constructor(private dialog: MatDialog) {}
+
+  ngOnInit(): void {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
 
   onEdit(owner: ApplicationOwnerDto) {
     let dialog;
@@ -112,5 +122,18 @@ export class ParcelOwnersComponent {
     if (res) {
       openFileInline(res.url, file.fileName);
     }
+  }
+
+  async increaseVisibleCount() {
+    if (this.sortedOwners.length - this.visibleCount >= this.VISIBLE_COUNT) {
+      this.visibleCount += this.VISIBLE_COUNT;
+    } else {
+      this.visibleCount += this.sortedOwners.length - this.visibleCount;
+    }
+  }
+  
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }

@@ -51,6 +51,7 @@ import { CommissionPurposesPanelComponent } from './commission-purposes-panel/co
 import { MatCardModule } from '@angular/material/card';
 import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-mobile-card/optional-attachments-mobile-card.component';
 import { OtherAttachmentMobileCardComponent } from './other-attachment-mobile-card/other-attachment-mobile-card.component';
+import { ParcelOwnerMobileCardComponent } from './mobile/parcel-owner-mobile-card/parcel-owner-mobile-card.component';
 
 @NgModule({
   providers: [
@@ -109,6 +110,7 @@ import { OtherAttachmentMobileCardComponent } from './other-attachment-mobile-ca
     CommissionPurposesPanelComponent,
     OptionalAttachmentsMobileCardComponent,
     OtherAttachmentMobileCardComponent,
+    ParcelOwnerMobileCardComponent,
   ],
   exports: [
     CommonModule,
@@ -159,6 +161,7 @@ import { OtherAttachmentMobileCardComponent } from './other-attachment-mobile-ca
     CommissionPurposesPanelComponent,
     OptionalAttachmentsMobileCardComponent,
     OtherAttachmentMobileCardComponent,
+    ParcelOwnerMobileCardComponent,
   ],
 })
 export class SharedModule {

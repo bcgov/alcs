@@ -1,0 +1,43 @@
+mat-card {
+  width: 100%;
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid #EFEFEF;
+  border-radius: 0;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  padding: 0 !important;
+  font-size: 0.9rem;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 0 10px 0 !important;
+  font-size: 0.85rem;
+}
+
+span {
+  font-weight: normal;
+}
+
+.last-card {
+  border-bottom: none !important;
+}
+
+.review-step {
+  border-bottom: 1px solid #AAAAAA;
+  background-color: transparent;
+
+  mat-card-header {
+    padding: 5px 0 10px 0 !important;
+  }
+}

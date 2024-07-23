@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
@@ -14,6 +14,7 @@ import { ApplicationSubmissionDetailedDto } from '../../../../services/applicati
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
 import { openFileInline } from '../../../../shared/utils/file';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -57,6 +58,7 @@ export class ParcelComponent {
 
   showCertificateOfTitle: boolean = true;
   navigationStepInd = 0;
+  isMobile = false;
 
   fileId = '';
   submissionUuid = '';
@@ -78,6 +80,7 @@ export class ParcelComponent {
         this.loadParcels().then(async () => await this.validateParcelDetails());
       }
     });
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   ngOnDestroy(): void {
@@ -186,5 +189,10 @@ export class ParcelComponent {
         `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
       );
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
