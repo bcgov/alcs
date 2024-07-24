@@ -147,7 +147,7 @@
         [isLast]="last"
         (fileClicked)="openFile(file)">
       </app-optional-attachments-mobile-card>
-      <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="showErrors"></app-no-data>
+      <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
     </div>
 
     <div *ngIf="showEdit" class="edit-button">
