@@ -253,12 +253,13 @@ export class GenerateSubmissionDocumentService {
 
     const otherDocuments = documents.filter(
       (e) =>
-        !e.typeCode ||
+        (!e.typeCode ||
         [
           DOCUMENT_TYPE.PHOTOGRAPH,
           DOCUMENT_TYPE.PROFESSIONAL_REPORT,
           DOCUMENT_TYPE.OTHER,
-        ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE),
+        ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE)) &&
+        e.document.source === DOCUMENT_SOURCE.APPLICANT,
     );
 
     const proposalMap = documents.filter(
