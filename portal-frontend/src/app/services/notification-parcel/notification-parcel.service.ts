@@ -51,7 +51,7 @@ export class NotificationParcelService {
       this.overlayService.showSpinner();
       const formattedDtos = updateDtos.map((e) => ({
         ...e,
-        mapAreaHectares: e.mapAreaHectares ? parseFloat(e.mapAreaHectares) : e.mapAreaHectares,
+        mapAreaHectares: e.mapAreaHectares ? parseFloat(e.mapAreaHectares) : null,
       }));
 
       const result = await firstValueFrom(
