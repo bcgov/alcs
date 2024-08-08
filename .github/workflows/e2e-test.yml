@@ -19,8 +19,8 @@ on:
         description: 'Branch to checkout'
         default: 'develop'
   schedule:
-    # 5:23 am daily
-    - cron: "23 5 * * *"
+    # 12:23 UTC (i.e., 5:23 am daily pacific time)
+    - cron: "23 12 * * *"
 jobs:
   test:
     timeout-minutes: 60

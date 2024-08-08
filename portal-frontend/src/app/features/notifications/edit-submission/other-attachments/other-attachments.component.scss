@@ -36,3 +36,48 @@ h4 {
   color: colors.$grey-dark;
   padding-top: rem(12);
 }
+
+.actions-column {
+  width: 15%;
+}
+
+.action-buttons-wrapper {
+  display: flex;
+  gap: 5px;
+  justify-content: space-evenly;
+  align-items: center;
+  height: rem(75);
+}
+
+.table-header {
+  margin: rem(24) 0;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+
+  .add-attachment-button-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: rem(16);
+    margin-left: 0;
+    width: 100%;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .add-attachment-button-wrapper {
+      margin-top: 0;
+      width: auto;
+      display: flex;
+      align-items: center;
+
+      button {
+        width: auto;
+      }
+    }
+  }
+}

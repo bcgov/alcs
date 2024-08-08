@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
@@ -15,6 +15,7 @@ import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
 import { openFileInline } from '../../../../shared/utils/file';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 export class NoticeOfIntentParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -61,6 +62,8 @@ export class ParcelComponent {
   parcels: NoticeOfIntentParcelExtended[] = [];
   noticeOfIntentSubmission!: NoticeOfIntentSubmissionDetailedDto;
 
+  isMobile = false;
+
   constructor(
     private noticeOfIntentParcelService: NoticeOfIntentParcelService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
@@ -77,6 +80,7 @@ export class ParcelComponent {
         this.loadParcels().then(async () => await this.validateParcelDetails());
       }
     });
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   ngOnDestroy(): void {
@@ -182,4 +186,10 @@ export class ParcelComponent {
       await this.router.navigateByUrl(`notice-of-intent/${this.fileId}/edit/0?parcelUuid=${uuid}&errors=t`);
     }
   }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
 }

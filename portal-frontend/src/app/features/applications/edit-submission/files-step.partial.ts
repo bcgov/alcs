@@ -89,4 +89,11 @@ export abstract class FilesStepComponent extends StepComponent {
       openFileInline(res.url, file.fileName);
     }
   }
+
+  async refreshFiles() {
+    const documents = await this.applicationDocumentService.getByFileId(this.fileId);
+    if (documents) {
+      this.$applicationDocuments.next(documents);
+    }
+  }
 }

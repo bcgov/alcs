@@ -1,4 +1,4 @@
-<div class="owner-table-wrapper">
+<div class="owner-table-wrapper" *ngIf="!isMobile">
   <table class="owner-table" mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="displayName">
       <th mat-header-cell *matHeaderCellDef>Land Owners</th>
@@ -77,3 +77,17 @@
     </tr>
   </table>
 </div>
+<ng-container *ngIf="isMobile">
+  <app-parcel-owner-mobile-card 
+    *ngFor="let owner of sortedOwners.slice(0, visibleCount); let last = last"
+    [owner]="owner"
+    [isLast]="last"
+    [isReviewStep]="false"
+    (editClicked)="onEdit(owner)"
+    (removeClicked)="onRemove(owner.uuid)"
+    (openFileClicked)="onOpenFile(owner.corporateSummary)">
+  </app-parcel-owner-mobile-card>
+  <div class="visible-count-container" *ngIf="visibleCount < sortedOwners.length">
+    <a (click)="increaseVisibleCount()">See more owners</a>
+  </div>
+</ng-container>

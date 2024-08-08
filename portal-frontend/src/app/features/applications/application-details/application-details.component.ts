@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -14,6 +14,7 @@ import { CodeService } from '../../../services/code/code.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
 import { openFileInline } from '../../../shared/utils/file';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-application-details',
@@ -22,6 +23,7 @@ import { openFileInline } from '../../../shared/utils/file';
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
@@ -130,5 +132,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
       const isGovernmentContact = this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT;
       this.needsAuthorizationLetter = isGovernmentContact || !isSelfApplicant;
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }

@@ -1,0 +1,9 @@
+<mat-card [ngClass]="{'last-card': isLast}">
+    <mat-card-header>
+        <mat-card-title>{{file.type?.label}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <a (click)="onClick()">{{file.fileName}}</a>
+        <p>{{file.description}}</p>
+    </mat-card-content>
+</mat-card>
