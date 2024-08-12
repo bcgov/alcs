@@ -269,7 +269,7 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query.andWhere('app.date_submitted_to_alc <= :date_submitted_to', {
+      query.andWhere('app.date_submitted_to_alc < :date_submitted_to', {
         date_submitted_to: getNextDayToPacific(
           searchDto.dateSubmittedTo,
         ).toISOString(),
@@ -300,7 +300,7 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.dateDecidedTo) {
-      query.andWhere('decision.date <= :decision_date_to', {
+      query.andWhere('decision.date < :decision_date_to', {
         decision_date_to: getNextDayToPacific(
           searchDto.dateDecidedTo,
         ).toISOString(),
