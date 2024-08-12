@@ -284,13 +284,17 @@ export class PlanningReviewAdvancedSearchService {
 
     if (searchDto.dateSubmittedFrom !== undefined) {
       query.andWhere('referral.submission_date >= :date_submitted_from', {
-        date_submitted_from: new Date(searchDto.dateSubmittedFrom),
+        date_submitted_from: getStartOfDayToPacific(
+          searchDto.dateSubmittedFrom
+        ).toISOString(),
       });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query.andWhere('referral.submission_date <= :date_submitted_to', {
-        date_submitted_to: new Date(searchDto.dateSubmittedTo),
+      query.andWhere('referral.submission_date < :date_submitted_to', {
+        date_submitted_to: getNextDayToPacific(
+          searchDto.dateSubmittedTo
+        ).toISOString(),
       });
     }
     promises.push(query.getMany());
@@ -318,7 +322,7 @@ export class PlanningReviewAdvancedSearchService {
     }
 
     if (searchDto.dateDecidedTo) {
-      query.andWhere('decision.date <= :decision_date_to', {
+      query.andWhere('decision.date < :decision_date_to', {
         decision_date_to: getNextDayToPacific(
           searchDto.dateDecidedTo,
         ).toISOString(),
