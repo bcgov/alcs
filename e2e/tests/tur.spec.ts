@@ -39,7 +39,7 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
           firstName: 'John',
           lastName: 'Doe',
           phoneNumber: '(111) 111-1111',
-          email: '1@1',
+          email: '1@1.com',
         },
         {
           type: OwnerType.Organization,
@@ -48,7 +48,7 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
           firstName: 'Jane',
           lastName: 'Doe',
           phoneNumber: '(222) 222-2222',
-          email: '2@2',
+          email: '2@2.com',
         },
       ],
     },
@@ -60,7 +60,7 @@ test.describe.serial('Portal TUR submission and ALCS applicant info flow', () =>
     firstName: 'Person',
     lastName: 'Human',
     phoneNumber: '(555) 555-5555',
-    email: '1@1',
+    email: process.env.PRIMARY_CONTACT_EMAIL!,
   };
   const authorizationLetterPaths = ['data/temp.txt', 'data/temp2.txt'];
   const government = 'Peace River Regional District';
