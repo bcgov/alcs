@@ -1,4 +1,4 @@
-name: E2E Testing w/ Playwright
+name: E2E
 on:
   workflow_dispatch:
     inputs:
@@ -21,8 +21,12 @@ on:
   schedule:
     # 12:23 UTC (i.e., 5:23 am daily pacific time)
     - cron: "23 12 * * *"
+  pull_request:
+    branches:
+      - main
 jobs:
   test:
+    name: Playwright Tests - ${{ matrix.node }}/${{ matrix.platform }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
