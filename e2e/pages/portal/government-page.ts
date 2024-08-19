@@ -11,7 +11,7 @@ export class GovernmentPage {
 
   async fill(name: string) {
     // Type half the name
-    await this.textbox.fill(name.slice(0, Math.floor(name.length / 2)));
+    await this.textbox.pressSequentially(name.slice(0, Math.floor(name.length / 2)), {delay: 50});
     // Find in autocomplete list
     await this.page.getByText(name).click();
   }
