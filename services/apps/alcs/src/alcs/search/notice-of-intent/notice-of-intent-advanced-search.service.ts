@@ -287,7 +287,7 @@ export class NoticeOfIntentAdvancedSearchService {
         {
           date_submitted_from: getStartOfDayToPacific(
             searchDto.dateSubmittedFrom,
-          ),
+          ).toISOString(),
         },
       );
     }
@@ -298,7 +298,7 @@ export class NoticeOfIntentAdvancedSearchService {
         {
           date_submitted_to: getNextDayToPacific(
             searchDto.dateSubmittedTo,
-          ),
+          ).toISOString(),
         },
       );
     }
@@ -327,7 +327,7 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     if (searchDto.dateDecidedTo) {
-      query = query.andWhere('decision.date <= :decision_date_to', {
+      query = query.andWhere('decision.date < :decision_date_to', {
         decision_date_to: getNextDayToPacific(
           searchDto.dateDecidedTo,
         ).toISOString(),

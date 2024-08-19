@@ -11,6 +11,7 @@ import { Notification } from '../../notification/notification.entity';
 import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NotificationSubmissionSearchView } from './notification-search-view.entity';
+import { getNextDayToPacific, getStartOfDayToPacific } from '../../../utils/pacific-date-time-helper';
 
 @Injectable()
 export class NotificationAdvancedSearchService {
@@ -210,16 +211,20 @@ export class NotificationAdvancedSearchService {
       query = query.andWhere(
         'notification.date_submitted_to_alc >= :date_submitted_from',
         {
-          date_submitted_from: new Date(searchDto.dateSubmittedFrom),
+          date_submitted_from: getStartOfDayToPacific(
+            searchDto.dateSubmittedFrom
+          ).toISOString(),
         },
       );
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
       query = query.andWhere(
-        'notification.date_submitted_to_alc <= :date_submitted_to',
+        'notification.date_submitted_to_alc < :date_submitted_to',
         {
-          date_submitted_to: new Date(searchDto.dateSubmittedTo),
+          date_submitted_to: getNextDayToPacific(
+            searchDto.dateSubmittedTo
+          ).toISOString(),
         },
       );
     }
