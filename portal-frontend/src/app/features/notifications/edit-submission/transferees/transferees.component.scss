@@ -21,6 +21,12 @@
   margin-bottom: rem(16);
 }
 
+.visible-count-container {
+  text-align: center;
+  margin: 12px 0;
+  font-size: 1.1rem;
+}
+
 @media screen and (max-width: $desktopBreakpoint) {
   .table {
     overflow-x: auto;
@@ -40,5 +46,11 @@
       margin-top: rem(4);
       width: 100%;
     }
+  }
+}
+
+@media screen and (max-width: $tabletBreakpoint) {
+  .add-btn {
+    padding: 20px 0 !important;
   }
 }

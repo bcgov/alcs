@@ -49,6 +49,10 @@
       gap: rem(16);
     }
   }
+
+  .transferee-mobile-title {
+    padding: 10px 0 15px;
+  }
 }
 
 :host::ng-deep {
