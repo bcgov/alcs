@@ -1,6 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 full-width">Provide the name and contact information for all transferees</div>
-  <div class="full-width transferee-table">
+  <div class="full-width transferee-table" *ngIf="!isMobile">
     <div class="subheading2">Type</div>
     <div class="subheading2">Full Name</div>
     <div class="subheading2">Organization Name</div>
@@ -14,10 +14,19 @@
         <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
       </div>
       <div>
-        <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
+        <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
       </div>
       <div>{{ transferee.email }}</div>
     </ng-container>
+  </div>
+  <div class="transferee-mobile-list" *ngIf="isMobile">
+    <app-transferee-mobile-card
+      *ngFor="let transferee of transferees; let last = last"
+      [transferee]="transferee"
+      [isLast]="last"
+      [isReviewStep]="true"
+    >
+    </app-transferee-mobile-card>
   </div>
   <app-no-data class="full-width" [showRequired]="showErrors" *ngIf="transferees.length === 0"></app-no-data>
 

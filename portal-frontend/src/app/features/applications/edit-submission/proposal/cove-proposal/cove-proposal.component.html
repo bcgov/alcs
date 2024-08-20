@@ -43,7 +43,7 @@
       </app-validation-error>
     </div>
   </div>
-  <div class="table">
+  <div class="table" *ngIf="!isMobile">
     <table mat-table [dataSource]="transferees">
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef>Type</th>
@@ -68,7 +68,7 @@
       <ng-container matColumnDef="phone">
         <th mat-header-cell *matHeaderCellDef>Phone</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.phoneNumber | mask : '(000) 000-0000' }}
+          {{ element.phoneNumber | mask: '(000) 000-0000' }}
         </td>
       </ng-container>
 
@@ -96,6 +96,20 @@
       </tr>
     </table>
   </div>
+  <ng-container *ngIf="isMobile">
+    <app-transferee-mobile-card
+      *ngFor="let transferee of transferees.slice(0, visibleCount); let last = last"
+      [transferee]="transferee"
+      [isLast]="last"
+      [isReviewStep]="false"
+      (editClicked)="onEdit(transferee.uuid)"
+      (removeClicked)="onDelete(transferee.uuid)"
+    >
+    </app-transferee-mobile-card>
+    <div class="visible-count-container" *ngIf="visibleCount < transferees.length">
+      <a (click)="increaseVisibleCount()">See more transferees</a>
+    </div>
+  </ng-container>
   <form [formGroup]="form">
     <div class="form-row">
       <div>
@@ -190,7 +204,7 @@
                 'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
               }"
               value="true"
-            >Yes
+              >Yes
             </mat-button-toggle>
             <mat-button-toggle
               class="toggle-button"
@@ -198,7 +212,7 @@
                 'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
               }"
               value="false"
-            >No
+              >No
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
