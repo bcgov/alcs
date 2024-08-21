@@ -9,6 +9,7 @@ import { EditNotificationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 import { TransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { VISIBLE_COUNT_INCREMENT } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-transferees',
@@ -24,8 +25,7 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
 
   private submissionUuid = '';
   isMobile = false;
-  VISIBLE_COUNT = 5;
-  visibleCount = this.VISIBLE_COUNT;
+  visibleCount = VISIBLE_COUNT_INCREMENT;
 
   constructor(
     private notificationTransfereeService: NotificationTransfereeService,
@@ -106,8 +106,8 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
   }
 
   async increaseVisibleCount() {
-    if (this.transferees.length - this.visibleCount >= this.VISIBLE_COUNT) {
-      this.visibleCount += this.VISIBLE_COUNT;
+    if (this.transferees.length - this.visibleCount >= VISIBLE_COUNT_INCREMENT) {
+      this.visibleCount += VISIBLE_COUNT_INCREMENT;
     } else {
       this.visibleCount += this.transferees.length - this.visibleCount;
     }

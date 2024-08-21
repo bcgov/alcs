@@ -19,6 +19,7 @@ import { FilesStepComponent } from '../../files-step.partial';
 import { CovenantTransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+import { VISIBLE_COUNT_INCREMENT } from '../../../../../shared/constants';
 
 @Component({
   selector: 'app-cove-proposal',
@@ -52,8 +53,7 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
   draftCovenant: ApplicationDocumentDto[] = [];
   showDraftCovenantVirus = false;
   isMobile = false;
-  VISIBLE_COUNT = 5;
-  visibleCount = this.VISIBLE_COUNT;
+  visibleCount = VISIBLE_COUNT_INCREMENT;
 
   constructor(
     private covenantTransfereeService: CovenantTransfereeService,
@@ -187,8 +187,8 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   async increaseVisibleCount() {
-    if (this.transferees.length - this.visibleCount >= this.VISIBLE_COUNT) {
-      this.visibleCount += this.VISIBLE_COUNT;
+    if (this.transferees.length - this.visibleCount >= VISIBLE_COUNT_INCREMENT) {
+      this.visibleCount += VISIBLE_COUNT_INCREMENT;
     } else {
       this.visibleCount += this.transferees.length - this.visibleCount;
     }
