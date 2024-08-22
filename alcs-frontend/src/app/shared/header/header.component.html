@@ -13,7 +13,7 @@
             <button class="menu-item subheading1">Home</button>
           </a>
         </div>
-        <div *ngIf="hasRoles && !isCommissioner">
+        <div *ngIf="hasRoles && !isCommissioner && !isSoilOfficer">
           <a routerLink="/schedule">
             <button class="menu-item subheading1">Schedule</button>
           </a>

@@ -25,6 +25,7 @@ export class HeaderComponent implements OnInit {
   sortedBoards: BoardWithFavourite[] = [];
   notifications: MessageDto[] = [];
   isCommissioner = false;
+  isSoilOfficer = false;
   isAdmin = false;
   showMaintenanceBanner = true;
   maintenanceBannerMessage = '';
@@ -47,6 +48,11 @@ export class HeaderComponent implements OnInit {
         this.isCommissioner =
           currentUser.client_roles && currentUser.client_roles.length === 1
             ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
+
+        this.isSoilOfficer =
+          currentUser.client_roles && currentUser.client_roles.length == 1
+            ? currentUser.client_roles.includes(ROLES.SOIL_OFFICER)
             : false;
 
         this.isAdmin = currentUser.client_roles ? currentUser.client_roles.includes(ROLES.ADMIN) : false;
