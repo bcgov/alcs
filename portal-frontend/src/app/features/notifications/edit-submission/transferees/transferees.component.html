@@ -13,6 +13,7 @@
         [ngClass]="{
           'error-outline': transferees.length === 0 && showErrors
         }"
+        class="add-btn"
         (click)="onAdd()"
       >
         Add New Transferee
@@ -22,7 +23,7 @@
       </app-validation-error>
     </div>
   </div>
-  <div class="table">
+  <div class="table" *ngIf="!isMobile">
     <table mat-table [dataSource]="transferees">
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef>Type</th>
@@ -75,6 +76,20 @@
       </tr>
     </table>
   </div>
+  <ng-container *ngIf="isMobile">
+    <app-transferee-mobile-card
+      *ngFor="let transferee of transferees.slice(0, visibleCount); let last = last"
+      [transferee]="transferee"
+      [isLast]="last"
+      [isReviewStep]="false"
+      (editClicked)="onEdit(transferee.uuid)"
+      (removeClicked)="onDelete(transferee.uuid)"
+    >
+    </app-transferee-mobile-card>
+    <div class="visible-count-container" *ngIf="visibleCount < transferees.length">
+      <a (click)="increaseVisibleCount()">See more transferees</a>
+    </div>
+  </ng-container>
 </section>
 <div class="button-container">
   <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>

@@ -1,0 +1,1 @@
+export const VISIBLE_COUNT_INCREMENT = 5;

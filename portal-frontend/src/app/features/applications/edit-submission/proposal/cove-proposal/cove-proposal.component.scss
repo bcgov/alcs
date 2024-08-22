@@ -20,6 +20,12 @@
   margin-bottom: rem(16);
 }
 
+.visible-count-container {
+  text-align: center;
+  margin: 12px 0;
+  font-size: 1.1rem;
+}
+
 @media screen and (max-width: $desktopBreakpoint) {
   .table {
     overflow-x: auto;

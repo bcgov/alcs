@@ -52,6 +52,7 @@ import { MatCardModule } from '@angular/material/card';
 import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-mobile-card/optional-attachments-mobile-card.component';
 import { OtherAttachmentMobileCardComponent } from './other-attachment-mobile-card/other-attachment-mobile-card.component';
 import { ParcelOwnerMobileCardComponent } from './mobile/parcel-owner-mobile-card/parcel-owner-mobile-card.component';
+import { TransfereeMobileCardComponent } from './mobile/transferee-mobile-card/transferee-mobile-card.component';
 
 @NgModule({
   providers: [
@@ -111,6 +112,7 @@ import { ParcelOwnerMobileCardComponent } from './mobile/parcel-owner-mobile-car
     OptionalAttachmentsMobileCardComponent,
     OtherAttachmentMobileCardComponent,
     ParcelOwnerMobileCardComponent,
+    TransfereeMobileCardComponent,
   ],
   exports: [
     CommonModule,
@@ -162,6 +164,7 @@ import { ParcelOwnerMobileCardComponent } from './mobile/parcel-owner-mobile-car
     OptionalAttachmentsMobileCardComponent,
     OtherAttachmentMobileCardComponent,
     ParcelOwnerMobileCardComponent,
+    TransfereeMobileCardComponent,
   ],
 })
 export class SharedModule {
