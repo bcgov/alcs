@@ -38,15 +38,15 @@
       >
         <div class="main-panel-date center" *ngIf="boardMeeting.nextMeeting?.meetingDate">
           <mat-icon>event</mat-icon>
-          <h4>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat : customDateFormat }}</h4>
+          <h4>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}</h4>
         </div>
-        <h4 class="main-panel-no-meetings center" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None Scheduled</h4>
+        <h4 class="main-panel-no-meetings center" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None</h4>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="meetings-container">
       <div class="previous-meetings">
-        <h4>Previous Meetings</h4>
-        <h5 *ngIf="!boardMeeting.pastMeetings.length" class="no-meetings">No Meetings</h5>
+        <h4>Previous</h4>
+        <h5 *ngIf="!boardMeeting.pastMeetings.length" class="no-meetings">None</h5>
         <mat-expansion-panel
           class="meeting-panel"
           hideToggle="true"
@@ -59,7 +59,7 @@
             class="meeting-header meeting-header-previous"
           >
             <mat-panel-title class="center">
-              <h5>{{ pastMeeting.meetingDate | momentFormat : customDateFormat }}</h5>
+              <h5>{{ pastMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <ng-container *ngFor="let meeting of pastMeeting.meetings">
@@ -67,25 +67,25 @@
           </ng-container>
         </mat-expansion-panel>
       </div>
-      <div class="next-meeting">
-        <h4>Next Meeting</h4>
-        <h5 *ngIf="!boardMeeting.nextMeeting" class="no-meetings">No Meetings</h5>
+      <div class="for-discussion">
+        <h4>For Discussion</h4>
+        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">None Scheduled</h5>
         <mat-expansion-panel
-          [(expanded)]="boardMeeting.nextMeeting.isExpanded"
           class="meeting-panel"
           hideToggle="true"
-          *ngIf="boardMeeting.nextMeeting"
+          [(expanded)]="upcomingMeeting.isExpanded"
+          *ngFor="let upcomingMeeting of boardMeeting.upcomingMeetings"
         >
           <mat-expansion-panel-header
             expandedHeight="54px"
             collapsedHeight="54px"
-            class="meeting-header meeting-header-next"
+            class="meeting-header meeting-header-for-discussion"
           >
             <mat-panel-title class="center">
-              <h5>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat : customDateFormat }}</h5>
+              <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <ng-container *ngFor="let meeting of boardMeeting.nextMeeting!.meetings">
+          <ng-container *ngFor="let meeting of upcomingMeeting.meetings">
             <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
           </ng-container>
         </mat-expansion-panel>
@@ -105,7 +105,7 @@
             class="meeting-header meeting-header-upcoming"
           >
             <mat-panel-title class="center">
-              <h5>{{ upcomingMeeting.meetingDate | momentFormat : customDateFormat }}</h5>
+              <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <ng-container *ngFor="let meeting of upcomingMeeting.meetings">
