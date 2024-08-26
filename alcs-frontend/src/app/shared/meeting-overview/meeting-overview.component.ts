@@ -91,7 +91,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
           upcomingMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
           pastMeetings.sort((a, b) => a.meetingDate - b.meetingDate);
 
-          const nextMeeting = upcomingMeetings.shift();
+          const nextMeeting = upcomingMeetings[0];
           if (nextMeeting) {
             nextMeeting.isExpanded = true; //Start with next meeting expanded
           }

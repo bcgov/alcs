@@ -155,10 +155,10 @@ mat-panel-description {
     }
   }
 
-  .next-meeting {
+  .for-discussion {
     background-color: rgba(colors.$primary-color-light, 0.5);
 
-    .meeting-header-next.mat-expansion-panel-header:hover {
+    .meeting-header-for-discussion.mat-expansion-panel-header:hover {
       border: 2px solid colors.$primary-color;
       background-color: colors.$white;
 
@@ -167,7 +167,7 @@ mat-panel-description {
       }
     }
 
-    .meeting-header-next.mat-expansion-panel-header.mat-expanded {
+    .meeting-header-for-discussion.mat-expansion-panel-header.mat-expanded {
       background-color: colors.$primary-color-dark;
 
       &:hover {
@@ -296,7 +296,7 @@ mat-panel-description {
 }
 
 .previous-meetings,
-.next-meeting,
+.for-discussion,
 .upcoming-meetings {
   min-width: 100%;
   width: 100%;
