@@ -22,7 +22,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          Agricultural Land Commission <b>{{ applicationType }}</b> Application ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been reviewed by the <b>{{ governmentName }}</b> and submitted to the Agricultural Land Commission for further review.
+          Agricultural Land Commission <b>{{ childType }}</b> Application ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been reviewed by the <b>{{ governmentName }}</b> and submitted to the Agricultural Land Commission for further review.
         </mj-text>
         <mj-text font-size='16px'>
           APPLICATION FEES - Payable to the Minister of Finance c/o the ALC
