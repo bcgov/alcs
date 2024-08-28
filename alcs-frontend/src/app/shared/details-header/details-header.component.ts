@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
@@ -24,6 +24,9 @@ import { TimeTrackable } from '../time-tracker/time-tracker.component';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
 import { AuthenticationService, ROLES } from 'src/app/services/authentication/authentication.service';
+import { BoardService } from 'src/app/services/board/board.service';
+import { DecisionMeetingService } from 'src/app/services/decision-meeting/decision-meeting.service';
+import { UpcomingMeetingBoardMapDto } from 'src/app/services/decision-meeting/decision-meeting.dto';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -97,6 +100,8 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
             this.currentStatus = DEFAULT_NO_STATUS;
           });
       }
+
+      this.$application.next(application);
     }
   }
 
@@ -125,21 +130,23 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
   linkedCards: (CardDto & { displayName: string })[] = [];
   isNOI = false;
   currentStatus?: ApplicationSubmissionStatusPill;
+
   isCommissioner: boolean = false;
+  hasMeetings: boolean = false;
+
+  $meetingsByBoard = new Subject<UpcomingMeetingBoardMapDto>();
+  $application = new Subject<ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto>();
 
   constructor(
     private router: Router,
     private authService: AuthenticationService,
+    private boardService: BoardService,
+    private meetingService: DecisionMeetingService,
   ) {}
 
-  async onGoToCard(card: CardDto) {
-    const boardCode = card.boardCode;
-    const cardUuid = card.uuid;
-    const cardTypeCode = card.type;
-    await this.router.navigateByUrl(`/board/${boardCode}?card=${cardUuid}&type=${cardTypeCode}`);
-  }
-
   ngOnInit(): void {
+    this.loadMeetings();
+
     this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
       this.isCommissioner =
         !!currentUser &&
@@ -147,6 +154,38 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
         currentUser.client_roles.length === 1 &&
         currentUser.client_roles.includes(ROLES.COMMISSIONER);
     });
+
+    this.boardService.$boards
+      .pipe(combineLatestWith(this.$meetingsByBoard, this.$application))
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(([boards, meetingsByBoard, application]) => {
+        if (boards && meetingsByBoard && application) {
+          const visibleBoardCodes = boards.filter((board) => board.showOnSchedule).map((board) => board.code);
+
+          const visibleBoardCodeMeetingPairs = Object.entries(meetingsByBoard).filter(([code, _]) =>
+            visibleBoardCodes.includes(code),
+          );
+
+          this.hasMeetings = visibleBoardCodeMeetingPairs.some(([_, meetings]) =>
+            meetings.some((meeting) => meeting.fileNumber === application?.fileNumber),
+          );
+        }
+      });
+  }
+
+  async loadMeetings() {
+    const meetingsByBoards = await this.meetingService.fetch();
+
+    if (meetingsByBoards !== undefined) {
+      this.$meetingsByBoard.next(meetingsByBoards);
+    }
+  }
+
+  async onGoToCard(card: CardDto) {
+    const boardCode = card.boardCode;
+    const cardUuid = card.uuid;
+    const cardTypeCode = card.type;
+    await this.router.navigateByUrl(`/board/${boardCode}?card=${cardUuid}&type=${cardTypeCode}`);
   }
 
   async onGoToSchedule(fileNumber: string) {
