@@ -8,7 +8,7 @@ import { DecisionMeetingService } from '../../services/decision-meeting/decision
 import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
 import { CardType } from '../card/card.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 type MeetingCollection = {
   meetingDate: number;
@@ -47,6 +47,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private userService: UserService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -256,10 +257,10 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     return el ? el.offsetWidth < el.scrollWidth : false;
   }
 
-  openMeetings(fileNumber: string, type: CardType) {
+  async openMeetings(fileNumber: string, type: CardType) {
     this.clearHighlight();
     const target = type === CardType.PLAN ? 'planning-review' : 'application';
     const url = this.isCommissioner ? `/commissioner/${target}/${fileNumber}` : `/${target}/${fileNumber}/review`;
-    window.open(url, '_blank');
+    await this.router.navigateByUrl(url);
   }
 }
