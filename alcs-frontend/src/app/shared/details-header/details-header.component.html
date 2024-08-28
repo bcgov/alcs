@@ -38,6 +38,18 @@
           <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
         </div>
       </button>
+      <button
+        *ngIf="isCommissioner"
+        class="menu-item"
+        mat-flat-button
+        color="accent"
+        (click)="onGoToSchedule(_application.fileNumber)"
+      >
+        <div class="center">
+          Go to card
+          <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+        </div>
+      </button>
       <ng-container *ngIf="linkedCards.length > 1">
         <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾
