@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { Subject, takeUntil } from 'rxjs';
+import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { UpcomingMeetingBoardMapDto, UpcomingMeetingDto } from '../../services/decision-meeting/decision-meeting.dto';
@@ -8,6 +8,7 @@ import { DecisionMeetingService } from '../../services/decision-meeting/decision
 import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
 import { CardType } from '../card/card.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 type MeetingCollection = {
   meetingDate: number;
@@ -45,13 +46,22 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     private boardService: BoardService,
     private toastService: ToastService,
     private userService: UserService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.boardService.$boards.pipe(takeUntil(this.destroy)).subscribe((boards) => {
-      this.boards = boards;
-      this.loadMeetings();
-    });
+    this.boardService.$boards
+      .pipe(combineLatestWith(this.route.queryParams))
+      .pipe(takeUntil(this.destroy))
+      .subscribe(async ([boards, params]) => {
+        this.boards = boards;
+        await this.loadMeetings();
+
+        if (this.viewData.length > 0 && params['file_number'] !== undefined) {
+          this.findAndExpandAll(params['file_number']);
+        }
+      });
 
     this.userService.$userProfile.pipe(takeUntil(this.destroy)).subscribe((currentUser) => {
       if (currentUser) {
@@ -72,11 +82,11 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     const meetings = await this.meetingService.fetch();
     if (meetings) {
       this.meetings = meetings;
-      this.populateViewData();
+      await this.populateViewData();
     }
   }
 
-  private populateViewData() {
+  private async populateViewData() {
     if (this.meetings && this.boards.length > 0) {
       this.viewData = this.boards
         .filter((board) => board.showOnSchedule)
@@ -146,11 +156,15 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   }
 
   onSearch() {
+    this.findAndExpandAll(this.searchText);
+  }
+
+  findAndExpandAll(fileNumber: string) {
     let foundResult = false;
     this.viewData = this.viewData.map((board) => {
       board.isExpanded = false;
       board.pastMeetings = board.pastMeetings.map((meeting) => {
-        const res = this.findAndExpand(meeting, board);
+        const res = this.findAndExpand(meeting, board, fileNumber);
         if (res.isExpanded) {
           foundResult = true;
         }
@@ -158,14 +172,14 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
       });
 
       if (board.nextMeeting) {
-        const res = this.findAndExpand(board.nextMeeting, board);
+        const res = this.findAndExpand(board.nextMeeting, board, fileNumber);
         if (res.isExpanded) {
           foundResult = true;
         }
       }
 
       board.upcomingMeetings = board.upcomingMeetings.map((meeting) => {
-        const res = this.findAndExpand(meeting, board);
+        const res = this.findAndExpand(meeting, board, fileNumber);
         if (res.isExpanded) {
           foundResult = true;
         }
@@ -182,11 +196,11 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private findAndExpand(meeting: MeetingCollection, board: BoardWithDecisionMeetings) {
+  private findAndExpand(meeting: MeetingCollection, board: BoardWithDecisionMeetings, fileNumber: string) {
     meeting.isExpanded = false;
     meeting.meetings = meeting.meetings.map((application) => {
       application.isHighlighted = false;
-      if (application.fileNumber === this.searchText) {
+      if (application.fileNumber === fileNumber) {
         meeting.isExpanded = true;
         board.isExpanded = true;
         application.isHighlighted = true;
@@ -243,10 +257,10 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     return el ? el.offsetWidth < el.scrollWidth : false;
   }
 
-  openMeetings(fileNumber: string, type: CardType) {
+  async openMeetings(fileNumber: string, type: CardType) {
     this.clearHighlight();
     const target = type === CardType.PLAN ? 'planning-review' : 'application';
     const url = this.isCommissioner ? `/commissioner/${target}/${fileNumber}` : `/${target}/${fileNumber}/review`;
-    window.open(url, '_blank');
+    await this.router.navigateByUrl(url);
   }
 }
