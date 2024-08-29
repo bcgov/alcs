@@ -8,6 +8,8 @@ import { DecisionMeetingService } from '../../services/decision-meeting/decision
 import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
 import { CardType } from '../card/card.component';
+import { IncomingFileService } from 'src/app/services/incoming-file/incoming-file.service';
+import { IncomingFileBoardMapDto, IncomingFileDto } from 'src/app/services/incoming-file/incomig-file.dto';
 
 type MeetingCollection = {
   meetingDate: number;
@@ -22,6 +24,7 @@ type BoardWithDecisionMeetings = {
   pastMeetings: MeetingCollection[];
   upcomingMeetings: MeetingCollection[];
   nextMeeting: MeetingCollection | undefined;
+  incomingFiles: IncomingFileDto[];
   isExpanded: boolean;
 };
 
@@ -34,6 +37,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   private boards: BoardWithFavourite[] = [];
   private meetings: UpcomingMeetingBoardMapDto | undefined;
+  private incomingFiles: IncomingFileBoardMapDto | undefined;
   customDateFormat = 'ddd YYYY-MM-DD';
   searchText = '';
   isCommissioner = false;
@@ -42,6 +46,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
 
   constructor(
     private meetingService: DecisionMeetingService,
+    private incomingFileService: IncomingFileService,
     private boardService: BoardService,
     private toastService: ToastService,
     private userService: UserService,
@@ -70,19 +75,23 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
 
   async loadMeetings() {
     const meetings = await this.meetingService.fetch();
-    if (meetings) {
+    const incomingFiles = await this.incomingFileService.fetch();
+
+    if (meetings && incomingFiles) {
       this.meetings = meetings;
+      this.incomingFiles = incomingFiles;
       this.populateViewData();
     }
   }
 
   private populateViewData() {
-    if (this.meetings && this.boards.length > 0) {
+    if (this.meetings && this.incomingFiles && this.boards.length > 0) {
       this.viewData = this.boards
         .filter((board) => board.showOnSchedule)
         .map((board): BoardWithDecisionMeetings => {
           let upcomingMeetings: MeetingCollection[] = [];
           let pastMeetings: MeetingCollection[] = [];
+          const incomingFiles = this.incomingFiles![board.code];
           const meetings = this.meetings![board.code];
           if (meetings) {
             this.sortMeetings(meetings, pastMeetings, upcomingMeetings);
@@ -102,6 +111,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
             pastMeetings,
             upcomingMeetings,
             nextMeeting,
+            incomingFiles,
             isExpanded: false,
           };
         });
