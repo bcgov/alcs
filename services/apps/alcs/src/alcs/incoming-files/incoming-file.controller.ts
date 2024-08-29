@@ -41,9 +41,11 @@ export class IncomingFileController {
       await this.applicationService.getIncomingApplicationFiles();
     return incomingApplications.map((incomingFile): IncomingFileDto => {
       const user = new User();
-      user.name = incomingFile.applicant;
+      user.name = incomingFile.name;
+      user.givenName = incomingFile.given_name;
+      user.familyName = incomingFile.family_name;
       return {
-        fileNumber: incomingFile.fileNumber,
+        fileNumber: incomingFile.file_number,
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,

@@ -473,10 +473,12 @@ export class ApplicationService {
 
   async getIncomingApplicationFiles(): Promise<
     {
-      fileNumber: string;
+      file_number: string;
       applicant: string;
       code: string;
-      assignee: string;
+      name: string;
+      given_name: string;
+      family_name: string;
     }[]
   > {
     const excludeStatuses = [
@@ -501,7 +503,7 @@ export class ApplicationService {
         SELECT * 
         FROM alcs.calculate_active_days(ARRAY(SELECT fa."uuid" FROM filtered_applications fa))
       )
-      SELECT a.file_number, a.applicant, board.code, u.name from alcs.application a 
+      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name from alcs.application a 
       INNER JOIN alcs.card c ON c."uuid" = a.card_uuid 
       INNER JOIN calculated calc ON a."uuid" = calc.application_uuid
       INNER JOIN alcs.board board on c.board_uuid = board.uuid
