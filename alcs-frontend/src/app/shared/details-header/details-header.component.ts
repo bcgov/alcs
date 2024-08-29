@@ -23,10 +23,10 @@ import {
 import { TimeTrackable } from '../time-tracker/time-tracker.component';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
-import { AuthenticationService, ROLES } from 'src/app/services/authentication/authentication.service';
-import { BoardService } from 'src/app/services/board/board.service';
-import { DecisionMeetingService } from 'src/app/services/decision-meeting/decision-meeting.service';
-import { UpcomingMeetingBoardMapDto } from 'src/app/services/decision-meeting/decision-meeting.dto';
+import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
+import { BoardService } from '../../services/board/board.service';
+import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
+import { UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
 
 @Component({
   selector: 'app-details-header[application]',
