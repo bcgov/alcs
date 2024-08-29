@@ -10,6 +10,7 @@ import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { IncomingFileBoardMapDto, IncomingFileDto } from './incoming-file.dto';
 import { UserDto } from '../../user/user.dto';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
+import { User } from '../../user/user.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('incoming-files')
@@ -39,14 +40,14 @@ export class IncomingFileController {
     const incomingApplications =
       await this.applicationService.getIncomingApplicationFiles();
     return incomingApplications.map((incomingFile): IncomingFileDto => {
-      const userDto = new UserDto();
-      userDto.name = incomingFile.applicant;
+      const user = new User();
+      user.name = incomingFile.applicant;
       return {
         fileNumber: incomingFile.fileNumber,
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,
-        assignee: userDto,
+        assignee: this.mapper.map(user, User, UserDto),
       };
     });
   }
