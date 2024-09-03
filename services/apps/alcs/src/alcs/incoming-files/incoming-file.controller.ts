@@ -25,9 +25,11 @@ export class IncomingFileController {
   @UserRoles(...ANY_AUTH_ROLE)
   async getIncomingFiles(): Promise<IncomingFileBoardMapDto> {
     const mappedApps = await this.getMappedIncomingApplications();
+    const mappedReconsiderations =
+      await this.getMappedIncomingReconsiderations();
 
     const boardCodeToFiles: IncomingFileBoardMapDto = {};
-    [...mappedApps].forEach((mappedFile) => {
+    [...mappedApps, ...mappedReconsiderations].forEach((mappedFile) => {
       const boardFiles = boardCodeToFiles[mappedFile.boardCode] || [];
       boardFiles.push(mappedFile);
       boardCodeToFiles[mappedFile.boardCode] = boardFiles;
@@ -40,6 +42,24 @@ export class IncomingFileController {
     const incomingApplications =
       await this.applicationService.getIncomingApplicationFiles();
     return incomingApplications.map((incomingFile): IncomingFileDto => {
+      const user = new User();
+      user.name = incomingFile.name;
+      user.givenName = incomingFile.given_name;
+      user.familyName = incomingFile.family_name;
+      return {
+        fileNumber: incomingFile.file_number,
+        applicant: incomingFile.applicant,
+        boardCode: incomingFile.code,
+        type: CARD_TYPE.APP,
+        assignee: this.mapper.map(user, User, UserDto),
+      };
+    });
+  }
+
+  private async getMappedIncomingReconsiderations() {
+    const incomingReconsiderations =
+      await this.applicationService.getIncomingReconsiderationFiles();
+    return incomingReconsiderations.map((incomingFile): IncomingFileDto => {
       const user = new User();
       user.name = incomingFile.name;
       user.givenName = incomingFile.given_name;

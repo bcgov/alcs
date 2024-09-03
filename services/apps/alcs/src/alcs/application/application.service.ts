@@ -76,6 +76,14 @@ export class ApplicationService {
   };
   private logger = new Logger(ApplicationService.name);
 
+  private excludeStatuses = [
+    CARD_STATUS.INCOMING,
+    CARD_STATUS.INCOMING_PRELIM_REVIEW,
+    CARD_STATUS.DECISION_RELEASED,
+    CARD_STATUS.CANCELLED,
+    CARD_STATUS.PRELIM_DONE,
+  ];
+
   constructor(
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
@@ -481,20 +489,12 @@ export class ApplicationService {
       family_name: string;
     }[]
   > {
-    const excludeStatuses = [
-      CARD_STATUS.INCOMING,
-      CARD_STATUS.INCOMING_PRELIM_REVIEW,
-      CARD_STATUS.DECISION_RELEASED,
-      CARD_STATUS.CANCELLED,
-      CARD_STATUS.PRELIM_DONE,
-    ];
-
     const query = `
       WITH filtered_applications AS (
         SELECT a.uuid FROM alcs.application a 
         LEFT JOIN alcs.application_decision_meeting adm ON adm.application_uuid = a."uuid"
         INNER JOIN alcs.card c ON c."uuid" = a.card_uuid
-        WHERE c.status_code NOT IN (${excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
+        WHERE c.status_code NOT IN (${this.excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
         GROUP BY a.uuid
         HAVING COUNT(adm.uuid) = 0
         OR COUNT(CASE WHEN adm.audit_deleted_date_at IS NULL THEN 1 END) = 0
@@ -511,6 +511,42 @@ export class ApplicationService {
       WHERE a.uuid IN (SELECT uuid FROM filtered_applications)
       ORDER BY c.high_priority DESC, calc.active_days DESC;
     `;
-    return await this.applicationRepository.query(query, excludeStatuses);
+    return await this.applicationRepository.query(query, this.excludeStatuses);
+  }
+
+  async getIncomingReconsiderationFiles(): Promise<
+    {
+      file_number: string;
+      applicant: string;
+      code: string;
+      name: string;
+      given_name: string;
+      family_name: string;
+    }[]
+  > {
+    const query = `
+      WITH filtered_applications AS (
+        SELECT ar.application_uuid FROM alcs.application_reconsideration ar
+        INNER JOIN alcs.application a on a.uuid = ar.application_uuid
+        LEFT JOIN alcs.application_decision_meeting adm ON adm.application_uuid = ar.application_uuid
+        INNER JOIN alcs.card c ON c."uuid" = ar.card_uuid
+        WHERE c.status_code NOT IN (${this.excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
+        GROUP BY ar.application_uuid
+        HAVING COUNT(adm.uuid) = 0
+        OR COUNT(CASE WHEN adm.audit_deleted_date_at IS NULL THEN 1 END) = 0
+      ),
+      calculated AS (
+        SELECT * 
+        FROM alcs.calculate_active_days(ARRAY(SELECT fa."application_uuid" FROM filtered_applications fa))
+      )
+      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name from alcs.application a 
+      INNER JOIN alcs.card c ON c."uuid" = a.card_uuid 
+      INNER JOIN calculated calc ON a."uuid" = calc.application_uuid
+      INNER JOIN alcs.board board on c.board_uuid = board.uuid
+      LEFT JOIN alcs.user u on u.uuid = c.assignee_uuid
+      WHERE a.uuid IN (SELECT application_uuid FROM filtered_applications)
+      ORDER BY c.high_priority DESC, calc.active_days DESC;
+    `;
+    return await this.applicationRepository.query(query, this.excludeStatuses);
   }
 }
