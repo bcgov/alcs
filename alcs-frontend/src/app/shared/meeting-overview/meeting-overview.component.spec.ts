@@ -10,6 +10,7 @@ import { ToastService } from '../../services/toast/toast.service';
 import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 import { CardType } from '../card/card.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { MeetingOverviewComponent } from './meeting-overview.component';
 import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
@@ -37,6 +38,7 @@ describe('MeetingOverviewComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       providers: [
         {
           provide: DecisionMeetingService,

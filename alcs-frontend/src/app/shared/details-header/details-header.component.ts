@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
@@ -23,14 +23,18 @@ import {
 import { TimeTrackable } from '../time-tracker/time-tracker.component';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
+import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
+import { BoardService } from '../../services/board/board.service';
+import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
+import { UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
 
 @Component({
   selector: 'app-details-header[application]',
   templateUrl: './details-header.component.html',
   styleUrls: ['./details-header.component.scss'],
 })
-export class DetailsHeaderComponent {
-  destroy = new Subject<void>();
+export class DetailsHeaderComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
 
   @Input() heading = 'Title Here';
   @Input() days = 'Calendar Days';
@@ -96,6 +100,8 @@ export class DetailsHeaderComponent {
             this.currentStatus = DEFAULT_NO_STATUS;
           });
       }
+
+      this.$application.next(application);
     }
   }
 
@@ -125,13 +131,67 @@ export class DetailsHeaderComponent {
   isNOI = false;
   currentStatus?: ApplicationSubmissionStatusPill;
 
-  constructor(private router: Router) {}
+  isCommissioner: boolean = false;
+  hasMeetings: boolean = false;
+
+  $meetingsByBoard = new Subject<UpcomingMeetingBoardMapDto>();
+  $application = new Subject<ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto>();
+
+  constructor(
+    private router: Router,
+    private authService: AuthenticationService,
+    private boardService: BoardService,
+    private meetingService: DecisionMeetingService,
+  ) {}
+
+  ngOnInit(): void {
+    this.loadMeetings();
+
+    this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
+      this.isCommissioner =
+        !!currentUser &&
+        !!currentUser.client_roles &&
+        currentUser.client_roles.length === 1 &&
+        currentUser.client_roles.includes(ROLES.COMMISSIONER);
+    });
+
+    this.boardService.$boards
+      .pipe(combineLatestWith(this.$meetingsByBoard, this.$application))
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(([boards, meetingsByBoard, application]) => {
+        if (boards && meetingsByBoard && application) {
+          const visibleBoardCodes = boards.filter((board) => board.showOnSchedule).map((board) => board.code);
+
+          const visibleBoardCodeMeetingPairs = Object.entries(meetingsByBoard).filter(([code, _]) =>
+            visibleBoardCodes.includes(code),
+          );
+
+          this.hasMeetings = visibleBoardCodeMeetingPairs.some(([_, meetings]) =>
+            meetings.some((meeting) => meeting.fileNumber === application?.fileNumber),
+          );
+        }
+      });
+  }
+
+  async loadMeetings() {
+    const meetingsByBoards = await this.meetingService.fetch();
+
+    if (meetingsByBoards !== undefined) {
+      this.$meetingsByBoard.next(meetingsByBoards);
+    }
+  }
 
   async onGoToCard(card: CardDto) {
     const boardCode = card.boardCode;
     const cardUuid = card.uuid;
     const cardTypeCode = card.type;
     await this.router.navigateByUrl(`/board/${boardCode}?card=${cardUuid}&type=${cardTypeCode}`);
+  }
+
+  async onGoToSchedule(fileNumber: string) {
+    if (this.isCommissioner) {
+      await this.router.navigateByUrl(`/home?file_number=${fileNumber}`);
+    }
   }
 
   async setupLinkedCards() {
@@ -167,5 +227,10 @@ export class DetailsHeaderComponent {
       await this.applicationDetailService?.updateApplication(this._application?.fileNumber, { applicant });
       await this.applicationSubmissionService?.update(this._application?.fileNumber, { applicant });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }
