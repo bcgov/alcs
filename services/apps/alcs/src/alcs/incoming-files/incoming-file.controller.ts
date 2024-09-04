@@ -41,7 +41,6 @@ export class IncomingFileController {
       boardFiles.push(mappedFile);
       boardCodeToFiles[mappedFile.boardCode] = boardFiles;
     });
-
     return boardCodeToFiles;
   }
 
