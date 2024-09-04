@@ -92,7 +92,7 @@
       </div>
       <div class="upcoming-meetings">
         <h4>Incoming</h4>
-        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">None</h5>
+        <h5 *ngIf="!boardMeeting.incomingFiles" class="no-meetings">None</h5>
         <div class="incoming-files-panel">
           <ng-container *ngFor="let incomingFile of boardMeeting.incomingFiles">
             <ng-template *ngTemplateOutlet="incomingFilePanel; context: { $implicit: incomingFile }"></ng-template>
