@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { UpcomingMeetingBoardMapDto } from './decision-meeting.dto';
+import { UpcomingMeetingBoardMapDto, UpcomingMeetingDto } from './decision-meeting.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,16 @@ export class DecisionMeetingService {
     private toastService: ToastService,
   ) {}
 
-  async fetch() {
+  async fetch(fileNumber?: string) {
+    if (fileNumber !== undefined) {
+      try {
+        const meetings = await firstValueFrom(this.http.get<UpcomingMeetingDto[]>(`${this.url}/${fileNumber}`));
+        const record: UpcomingMeetingBoardMapDto = { all: meetings };
+        return record;
+      } catch (err) {
+        this.toastService.showErrorToast('Failed to fetch scheduled discussions');
+      }
+    }
     try {
       return await firstValueFrom(this.http.get<UpcomingMeetingBoardMapDto>(`${this.url}/overview/meetings`));
     } catch (err) {

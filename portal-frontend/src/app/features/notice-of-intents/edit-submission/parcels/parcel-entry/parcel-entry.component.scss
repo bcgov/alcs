@@ -9,6 +9,11 @@
 
 .new-owner {
   margin: rem(8) 0 !important;
+
+  @media screen and (max-width: $tabletBreakpoint) {
+    width: 100%;
+    padding: 20px;
+  }
 }
 
 .owner-search-option {
@@ -109,11 +114,15 @@ mat-button-toggle-group#isFarm {
 .warning-banner {
   margin-top: rem(8);
   background-color: rgba(colors.$accent-color-light, 0.5);
-  padding: rem(16);
 
   .owner-details {
     display: flex;
     flex-direction: column;
+    padding: rem(16);
+  }
+
+  .owner-details-mobile {
+    padding: 0 0 0 10px;
   }
   
   .row {

@@ -138,3 +138,10 @@ a {
     }
   }
 }
+
+@media screen and (max-width: $tabletBreakpoint) {
+  .file-name {
+    word-break: break-all !important;
+    white-space: normal !important;
+  }
+}

@@ -48,6 +48,11 @@ import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 import { CommissionPurposesPanelComponent } from './commission-purposes-panel/commission-purposes-panel.component';
+import { MatCardModule } from '@angular/material/card';
+import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-mobile-card/optional-attachments-mobile-card.component';
+import { OtherAttachmentMobileCardComponent } from './other-attachment-mobile-card/other-attachment-mobile-card.component';
+import { ParcelOwnerMobileCardComponent } from './mobile/parcel-owner-mobile-card/parcel-owner-mobile-card.component';
+import { TransfereeMobileCardComponent } from './mobile/transferee-mobile-card/transferee-mobile-card.component';
 
 @NgModule({
   providers: [
@@ -80,6 +85,8 @@ import { CommissionPurposesPanelComponent } from './commission-purposes-panel/co
     MatTreeModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
+    MatCardModule,
+    MatMenuModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -102,6 +109,10 @@ import { CommissionPurposesPanelComponent } from './commission-purposes-panel/co
     FileTypeFilterDropDownComponent,
     FileOverlaySpinnerComponent,
     CommissionPurposesPanelComponent,
+    OptionalAttachmentsMobileCardComponent,
+    OtherAttachmentMobileCardComponent,
+    ParcelOwnerMobileCardComponent,
+    TransfereeMobileCardComponent,
   ],
   exports: [
     CommonModule,
@@ -150,6 +161,10 @@ import { CommissionPurposesPanelComponent } from './commission-purposes-panel/co
     TableColumnNoDataPipe,
     FileTypeFilterDropDownComponent,
     CommissionPurposesPanelComponent,
+    OptionalAttachmentsMobileCardComponent,
+    OtherAttachmentMobileCardComponent,
+    ParcelOwnerMobileCardComponent,
+    TransfereeMobileCardComponent,
   ],
 })
 export class SharedModule {

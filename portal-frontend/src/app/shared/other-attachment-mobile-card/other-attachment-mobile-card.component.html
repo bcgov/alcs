@@ -1,0 +1,20 @@
+<mat-card [ngClass]="{'last-card': isLast}">
+    <mat-card-header>
+        <mat-card-title>{{file.type?.label}}</mat-card-title>
+        <button mat-icon-button [mat-menu-trigger-for]="menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onEdit()">
+                <span>Edit</span>
+            </button>
+            <button mat-menu-item (click)="onRemove()">
+                <span>Remove</span>
+            </button>
+        </mat-menu>
+    </mat-card-header>
+    <mat-card-content>
+        <a (click)="onClick()">{{file.fileName}}</a>
+        <p>{{file.description}}</p>
+    </mat-card-content>
+</mat-card>

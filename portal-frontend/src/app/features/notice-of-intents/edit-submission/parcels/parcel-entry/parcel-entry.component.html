@@ -309,6 +309,49 @@
     </ng-container>
     <ng-container *ngIf="isCrownLand">
       <p>Add the contact information of an employee who works in the department or ministry for the Crown parcel</p>
+      <div id="owner-info" class="warning-banner" *ngIf="selectedOwner">
+        <div class="owner-details" *ngIf="!isMobile">
+          <div class="row">
+            <div class="key"><strong>First Name:</strong></div>
+            <div class="value">{{ selectedOwner.firstName }}</div>
+          </div>
+          <div class="row">
+            <div class="key"><strong>Last Name:</strong></div>
+            <div class="value">{{ selectedOwner.lastName }}</div>
+          </div>
+          <div class="row">
+            <div class="key"><strong>Ministry or Department:</strong></div>
+            <div class="value">{{ selectedOwner.organizationName }}</div>
+          </div>
+          <div class="row">
+            <div class="key"><strong>Phone Number:</strong></div>
+            <div class="value">{{ selectedOwner.phoneNumber ?? '' | mask: '(000) 000-0000' }}</div>
+          </div>
+          <div class="row">
+            <div class="key"><strong>Email:</strong></div>
+            <div class="value">{{ selectedOwner.email }}</div>
+          </div>
+          <div class="row">
+            <div class="key"><strong>Crown Type:</strong></div>
+            <div class="value">
+              {{ selectedOwner.crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
+              {{ selectedOwner.crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
+            </div>
+          </div>
+          <div class="row">
+            <button type="button" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
+          </div>
+        </div>
+        <div class="owner-details-mobile" *ngIf="isMobile">
+          <app-parcel-owner-mobile-card
+            [owner]="selectedOwner" 
+            [isLast]="true" 
+            [isReviewStep]="false" 
+            [isCrown]="true"
+            (editClicked)="onEditCrownOwner(selectedOwner)">
+          </app-parcel-owner-mobile-card>
+        </div>
+      </div>
       <button
         type="button"
         class="new-owner"
@@ -322,62 +365,28 @@
       </button>
       <h6 class="owner-search-option" *ngIf="filteredOwners.length">OR</h6>
       <label for="owner-search" *ngIf="filteredOwners.length">Select from Existing Government Contacts</label>
-      <div>
-        <mat-radio-group
-          color="primary"
-          [value]="selectedOwner?.uuid"
-          [required]="true"
-          [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
-        >
-          <mat-radio-button
-            *ngFor="let owner of filteredOwners"
-            [value]="owner.uuid"
-            class="radio-option"
-            (click)="onCrownOwnerSelected($event, owner, owner.isSelected)"
-            required
-          >
-            {{ owner.firstName + ' ' + owner.lastName }}
-          </mat-radio-button>
-        </mat-radio-group>
-
-        <div id="owner-info" class="warning-banner" *ngIf="selectedOwner">
-          <div class="owner-details">
-            <div class="row">
-              <div class="key"><strong>First Name:</strong></div>
-              <div class="value">{{ selectedOwner.firstName }}</div>
-            </div>
-            <div class="row">
-              <div class="key"><strong>Last Name:</strong></div>
-              <div class="value">{{ selectedOwner.lastName }}</div>
-            </div>
-            <div class="row">
-              <div class="key"><strong>Ministry or Department:</strong></div>
-              <div class="value">{{ selectedOwner.organizationName }}</div>
-            </div>
-            <div class="row">
-              <div class="key"><strong>Phone Number:</strong></div>
-              <div class="value">{{ selectedOwner.phoneNumber ?? '' | mask: '(000) 000-0000' }}</div>
-            </div>
-            <div class="row">
-              <div class="key"><strong>Email:</strong></div>
-              <div class="value">{{ selectedOwner.email }}</div>
-            </div>
-            <div class="row">
-              <div class="key"><strong>Crown Type:</strong></div>
-              <div class="value">
-                {{ selectedOwner.crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
-                {{ selectedOwner.crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
+      <ng-container *ngIf="filteredOwners.length">
+        <mat-form-field class="full-width-input" appearance="outline">
+          <mat-select 
+            [value]="selectedOwner?.uuid" 
+            [required]="true"
+            [ngClass]="{ 'error': ownerInput.errors && ownerInput.errors['required'] }">
+            <mat-option 
+              *ngFor="let owner of filteredOwners" 
+              [value]="owner.uuid" 
+              (click)="onCrownOwnerSelected($event, owner, owner.isSelected)" 
+              class="option" 
+              required>
+              <div class="owner-option">
+                {{owner.firstName + ' ' + owner.lastName}}
               </div>
-            </div>
-            <div class="row">
-              <button type="button" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="ownerInput.errors && ownerInput.errors['required']" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="ownerInput.errors?.['required']">This field is required</div>
-        </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+      <div *ngIf="ownerInput.errors && ownerInput.errors['required']" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="ownerInput.errors?.['required']">This field is required</div>
       </div>
     </ng-container>
   </section>

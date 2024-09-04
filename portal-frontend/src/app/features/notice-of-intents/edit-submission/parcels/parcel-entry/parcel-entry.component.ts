@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +21,7 @@ import { openFileInline } from '../../../../../shared/utils/file';
 import { scrollToElement } from '../../../../../shared/utils/scroll-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -66,6 +67,7 @@ export class ParcelEntryComponent implements OnInit {
   isCrownLand: boolean | null = null;
   isCertificateOfTitleRequired = true;
   showVirusError = false;
+  isMobile = false;
 
   parcelType = new FormControl<string | null>(null, [Validators.required]);
   pidPin = new FormControl<string>({
@@ -180,6 +182,7 @@ export class ParcelEntryComponent implements OnInit {
         return updatedOwner;
       });
     });
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   async onSearch() {
@@ -613,5 +616,10 @@ export class ParcelEntryComponent implements OnInit {
     } else {
       this.pidPinPlaceholder = 'Type PIN';
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }

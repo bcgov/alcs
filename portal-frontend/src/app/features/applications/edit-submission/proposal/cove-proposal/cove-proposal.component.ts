@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -18,6 +18,8 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { CovenantTransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+import { VISIBLE_COUNT_INCREMENT } from '../../../../../shared/constants';
 
 @Component({
   selector: 'app-cove-proposal',
@@ -50,6 +52,8 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
   showProposalMapVirus = false;
   draftCovenant: ApplicationDocumentDto[] = [];
   showDraftCovenantVirus = false;
+  isMobile = false;
+  visibleCount = VISIBLE_COUNT_INCREMENT;
 
   constructor(
     private covenantTransfereeService: CovenantTransfereeService,
@@ -57,7 +61,7 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
     private applicationSubmissionService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
@@ -88,6 +92,8 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
       this.draftCovenant = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.SRW_TERMS);
     });
+
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   async onSave() {
@@ -178,5 +184,18 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
   onChangeHasDraftCopy(value: string) {
     const isTrue = parseStringToBoolean(value);
     this.canUploadDraft = !!isTrue;
+  }
+
+  async increaseVisibleCount() {
+    if (this.transferees.length - this.visibleCount >= VISIBLE_COUNT_INCREMENT) {
+      this.visibleCount += VISIBLE_COUNT_INCREMENT;
+    } else {
+      this.visibleCount += this.transferees.length - this.visibleCount;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
@@ -8,6 +8,8 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { EditNotificationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 import { TransfereeDialogComponent } from './transferee-dialog/transferee-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { VISIBLE_COUNT_INCREMENT } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-transferees',
@@ -22,12 +24,14 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
   displayedColumns: string[] = ['type', 'fullName', 'organizationName', 'phone', 'email', 'actions'];
 
   private submissionUuid = '';
+  isMobile = false;
+  visibleCount = VISIBLE_COUNT_INCREMENT;
 
   constructor(
     private notificationTransfereeService: NotificationTransfereeService,
     private notificationSubmissionService: NotificationSubmissionService,
     private confDialogService: ConfirmationDialogService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
     super();
   }
@@ -39,6 +43,7 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
         this.transferees = submission.transferees;
       }
     });
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
   protected async save() {
@@ -98,5 +103,18 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
           await this.loadTransferees(this.submissionUuid);
         }
       });
+  }
+
+  async increaseVisibleCount() {
+    if (this.transferees.length - this.visibleCount >= VISIBLE_COUNT_INCREMENT) {
+      this.visibleCount += VISIBLE_COUNT_INCREMENT;
+    } else {
+      this.visibleCount += this.transferees.length - this.visibleCount;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
