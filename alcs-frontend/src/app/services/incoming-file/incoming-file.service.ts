@@ -24,4 +24,23 @@ export class IncomingFileService {
     }
     return;
   }
+
+  async fetchAndSort() {
+    const incomingFiles = await this.fetch();
+
+    if (incomingFiles) {
+      Object.keys(incomingFiles!).forEach((board) => {
+        incomingFiles![board].sort((fileOne, fileTwo) => {
+          if (fileOne.highPriority !== fileTwo.highPriority) {
+            return fileOne.highPriority ? -1 : 1;
+          }
+          return fileTwo.activeDays - fileOne.activeDays;
+        });
+      });
+
+      return incomingFiles;
+    }
+
+    return;
+  }
 }

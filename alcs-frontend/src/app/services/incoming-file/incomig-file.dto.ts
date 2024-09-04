@@ -5,8 +5,10 @@ export type IncomingFileDto = {
   fileNumber: string;
   applicant: string;
   boardCode: string;
-  assignee: AssigneeDto;
+  assignee: AssigneeDto | null;
   type: CardType;
+  highPriority: boolean;
+  activeDays: number;
 };
 
 export type IncomingFileBoardMapDto = Record<string, IncomingFileDto[]>;

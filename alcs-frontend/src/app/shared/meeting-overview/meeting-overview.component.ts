@@ -8,8 +8,8 @@ import { DecisionMeetingService } from '../../services/decision-meeting/decision
 import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
 import { CardType } from '../card/card.component';
-import { IncomingFileService } from 'src/app/services/incoming-file/incoming-file.service';
-import { IncomingFileBoardMapDto, IncomingFileDto } from 'src/app/services/incoming-file/incomig-file.dto';
+import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
+import { IncomingFileBoardMapDto, IncomingFileDto } from '../../services/incoming-file/incomig-file.dto';
 
 type MeetingCollection = {
   meetingDate: number;
@@ -75,7 +75,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
 
   async loadMeetings() {
     const meetings = await this.meetingService.fetch();
-    const incomingFiles = await this.incomingFileService.fetch();
+    const incomingFiles = await this.incomingFileService.fetchAndSort();
 
     if (meetings && incomingFiles) {
       this.meetings = meetings;
