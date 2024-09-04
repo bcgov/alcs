@@ -487,6 +487,8 @@ export class ApplicationService {
       name: string;
       given_name: string;
       family_name: string;
+      high_priority: boolean;
+      active_days: number;
     }[]
   > {
     const query = `
@@ -503,7 +505,7 @@ export class ApplicationService {
         SELECT * 
         FROM alcs.calculate_active_days(ARRAY(SELECT fa."uuid" FROM filtered_applications fa))
       )
-      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name from alcs.application a 
+      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a 
       INNER JOIN alcs.card c ON c."uuid" = a.card_uuid 
       INNER JOIN calculated calc ON a."uuid" = calc.application_uuid
       INNER JOIN alcs.board board on c.board_uuid = board.uuid
@@ -522,6 +524,8 @@ export class ApplicationService {
       name: string;
       given_name: string;
       family_name: string;
+      high_priority: boolean;
+      active_days: number;
     }[]
   > {
     const query = `
@@ -539,7 +543,7 @@ export class ApplicationService {
         SELECT * 
         FROM alcs.calculate_active_days(ARRAY(SELECT fa."application_uuid" FROM filtered_applications fa))
       )
-      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name from alcs.application a 
+      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a 
       INNER JOIN alcs.card c ON c."uuid" = a.card_uuid 
       INNER JOIN calculated calc ON a."uuid" = calc.application_uuid
       INNER JOIN alcs.board board on c.board_uuid = board.uuid

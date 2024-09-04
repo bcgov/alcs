@@ -6,6 +6,8 @@ export type IncomingFileDto = {
   boardCode: string;
   type: string;
   assignee: UserDto;
+  highPriority: boolean;
+  activeDays: number;
 };
 
 export type IncomingFileBoardMapDto = Record<string, IncomingFileDto[]>;

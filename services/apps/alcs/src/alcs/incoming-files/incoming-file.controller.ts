@@ -11,6 +11,7 @@ import { IncomingFileBoardMapDto, IncomingFileDto } from './incoming-file.dto';
 import { UserDto } from '../../user/user.dto';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { User } from '../../user/user.entity';
+import { PlanningReviewService } from '../planning-review/planning-review.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('incoming-files')
@@ -18,6 +19,7 @@ import { User } from '../../user/user.entity';
 export class IncomingFileController {
   constructor(
     private applicationService: ApplicationService,
+    private planningReviewService: PlanningReviewService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -27,9 +29,14 @@ export class IncomingFileController {
     const mappedApps = await this.getMappedIncomingApplications();
     const mappedReconsiderations =
       await this.getMappedIncomingReconsiderations();
+    const mappedPlanningReviews = await this.getMappedIncomingPlanningReviews();
 
     const boardCodeToFiles: IncomingFileBoardMapDto = {};
-    [...mappedApps, ...mappedReconsiderations].forEach((mappedFile) => {
+    [
+      ...mappedApps,
+      ...mappedReconsiderations,
+      ...mappedPlanningReviews,
+    ].forEach((mappedFile) => {
       const boardFiles = boardCodeToFiles[mappedFile.boardCode] || [];
       boardFiles.push(mappedFile);
       boardCodeToFiles[mappedFile.boardCode] = boardFiles;
@@ -52,6 +59,8 @@ export class IncomingFileController {
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,
         assignee: this.mapper.map(user, User, UserDto),
+        highPriority: incomingFile.high_priority,
+        activeDays: incomingFile.active_days,
       };
     });
   }
@@ -70,6 +79,28 @@ export class IncomingFileController {
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,
         assignee: this.mapper.map(user, User, UserDto),
+        highPriority: incomingFile.high_priority,
+        activeDays: incomingFile.active_days,
+      };
+    });
+  }
+
+  private async getMappedIncomingPlanningReviews() {
+    const incomingPlanningReviews =
+      await this.planningReviewService.getIncomingPlanningReviewFiles();
+    return incomingPlanningReviews.map((incomingFile): IncomingFileDto => {
+      const user = new User();
+      user.name = incomingFile.name;
+      user.givenName = incomingFile.given_name;
+      user.familyName = incomingFile.family_name;
+      return {
+        fileNumber: incomingFile.file_number,
+        applicant: incomingFile.applicant,
+        boardCode: incomingFile.code,
+        type: CARD_TYPE.PLAN,
+        assignee: this.mapper.map(user, User, UserDto),
+        highPriority: incomingFile.high_priority,
+        activeDays: incomingFile.active_days,
       };
     });
   }
