@@ -80,11 +80,11 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     if (meetings && incomingFiles) {
       this.meetings = meetings;
       this.incomingFiles = incomingFiles;
-      this.populateViewData();
+      await this.populateViewData();
     }
   }
 
-  private populateViewData() {
+  private async populateViewData() {
     if (this.meetings && this.incomingFiles && this.boards.length > 0) {
       this.viewData = this.boards
         .filter((board) => board.showOnSchedule)
