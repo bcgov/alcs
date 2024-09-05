@@ -28,6 +28,7 @@ import { PlanningReviewTimelineModule } from './planning-review/planning-review-
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
+import { IncomingFileModule } from './incoming-files/incoming-file.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     MeetingModule,
     PlanningReviewTimelineModule,
     MaintenanceModule,
+    IncomingFileModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -85,6 +87,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: MeetingModule },
       { path: 'alcs', module: PlanningReviewTimelineModule },
       { path: 'alcs', module: MaintenanceModule },
+      { path: 'alcs', module: IncomingFileModule },
     ]),
   ],
   controllers: [],

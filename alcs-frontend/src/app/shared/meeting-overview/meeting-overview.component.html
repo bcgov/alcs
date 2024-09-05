@@ -91,27 +91,13 @@
         </mat-expansion-panel>
       </div>
       <div class="upcoming-meetings">
-        <h4>Scheduled Meetings</h4>
-        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">None Scheduled</h5>
-        <mat-expansion-panel
-          class="meeting-panel"
-          hideToggle="true"
-          [(expanded)]="upcomingMeeting.isExpanded"
-          *ngFor="let upcomingMeeting of boardMeeting.upcomingMeetings"
-        >
-          <mat-expansion-panel-header
-            expandedHeight="54px"
-            collapsedHeight="54px"
-            class="meeting-header meeting-header-upcoming"
-          >
-            <mat-panel-title class="center">
-              <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-container *ngFor="let meeting of upcomingMeeting.meetings">
-            <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
+        <h4>Incoming</h4>
+        <h5 *ngIf="!boardMeeting.incomingFiles" class="no-meetings">None</h5>
+        <div class="incoming-files-panel">
+          <ng-container *ngFor="let incomingFile of boardMeeting.incomingFiles">
+            <ng-template *ngTemplateOutlet="incomingFilePanel; context: { $implicit: incomingFile }"></ng-template>
           </ng-container>
-        </mat-expansion-panel>
+        </div>
       </div>
     </div>
   </mat-expansion-panel>
@@ -140,6 +126,35 @@
           *ngIf="meeting.assignee"
           [initials]="meeting.assignee.initials"
           [name]="meeting.assignee.prettyName"
+        ></app-avatar-circle>
+      </div>
+    </div>
+  </mat-card>
+</ng-template>
+
+<ng-template #incomingFilePanel let-incomingFile>
+  <mat-card
+    (click)="openMeetings(incomingFile.fileNumber, incomingFile.type)"
+    class="meeting-card"
+    [ngClass]="{
+      'meeting-highlighted': incomingFile.isHighlighted
+    }"
+  >
+    <div class="split">
+      <div
+        class="ellipsis"
+        [id]="incomingFile.fileNumber"
+        matTooltipClass="no-wrap-tooltip"
+        [matTooltip]="incomingFile.fileNumber + ' (' + incomingFile.applicant + ')'"
+        [matTooltipDisabled]="!isEllipsisActive(incomingFile.fileNumber)"
+      >
+        {{ incomingFile.fileNumber }} ({{ incomingFile.applicant }})
+      </div>
+      <div>
+        <app-avatar-circle
+          *ngIf="incomingFile.assignee"
+          [initials]="incomingFile.assignee.initials"
+          [name]="incomingFile.assignee.prettyName"
         ></app-avatar-circle>
       </div>
     </div>
