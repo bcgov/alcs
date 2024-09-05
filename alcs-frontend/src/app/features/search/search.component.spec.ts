@@ -13,6 +13,7 @@ import { SearchService } from '../../services/search/search.service';
 import { ToastService } from '../../services/toast/toast.service';
 
 import { SearchComponent } from './search.component';
+import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -23,6 +24,8 @@ describe('SearchComponent', () => {
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockNotificationStatusService: DeepMocked<NotificationSubmissionStatusService>;
   let mockNOIStatusService: DeepMocked<NotificationSubmissionStatusService>;
+  let mockAuthService: DeepMocked<AuthenticationService>;
+  let currentUser: BehaviorSubject<ICurrentUser | undefined>;
 
   beforeEach(async () => {
     mockSearchService = createMock();
@@ -31,8 +34,9 @@ describe('SearchComponent', () => {
     mockApplicationService = createMock();
     mockNotificationStatusService = createMock();
     mockNOIStatusService = createMock();
-
+    mockAuthService = createMock();
     mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
+    currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [
@@ -66,12 +70,17 @@ describe('SearchComponent', () => {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNOIStatusService,
         },
+        {
+          provide: AuthenticationService,
+          useValue: mockAuthService,
+        },
       ],
       declarations: [SearchComponent],
       imports: [MatAutocompleteModule],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
+    mockAuthService.$currentUser = currentUser;
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
