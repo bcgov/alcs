@@ -65,7 +65,7 @@ export class MissedChaseInquiriesEtl1724368028724
                 left join 	oats.oats_persons filer_person 				on  filer_person.person_id = filer_pog.person_id
                 left join 	oats.oats_organizations filer_org 			on  filer_org.organization_id = filer_pog.organization_id
                 where   	gov.organization_name = 'VILLAGE OF CHASE'
-                and 		oi.issu_type = 'INQ'
+                and 		oi.issu_type = 'INQ';
             END IF;
         END $$;
     `);
@@ -126,7 +126,7 @@ export class MissedChaseInquiriesEtl1724368028724
                 join 		alcs.document_code dc 				on dc.oats_code = od.document_code 
                 join 		alcs.inquiry i 						on i.file_number = oi.issue_id::varchar
                 where		oo.organization_name = 'VILLAGE OF CHASE'
-                and			oi.issu_type = 'INQ'
+                and			oi.issu_type = 'INQ';
             END IF;
         END $$;
     `);
@@ -159,7 +159,7 @@ export class MissedChaseInquiriesEtl1724368028724
                 join 		alcs.inquiry i 						on i.file_number = oi.issue_id::varchar
                 join		alcs."document" d 					on d.oats_document_id = od.document_id::varchar 
                 where		oo.organization_name = 'VILLAGE OF CHASE'
-                and			oi.issu_type = 'INQ'
+                and			oi.issu_type = 'INQ';
              END IF;
         END $$;
     `);
@@ -197,7 +197,7 @@ export class MissedChaseInquiriesEtl1724368028724
                 join 		oats.oats_properties op 			on op.property_id = osp.property_id 
                 join		alcs.inquiry i 						on oi.issue_id::varchar = i.file_number 
                 where		oo.organization_name = 'VILLAGE OF CHASE'
-                and			oi.issu_type = 'INQ'
+                and			oi.issu_type = 'INQ';
             END IF;
         END $$;
     `);
