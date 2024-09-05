@@ -274,7 +274,7 @@
 
 <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
   <h2 class="search-title">Search Results:</h2>
-  <mat-tab-group id="results" mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>
+  <mat-tab-group id="results" mat-align-tabs="start" [mat-stretch-tabs]="isCommissioner" #searchResultTabs>
     <mat-tab>
       <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
       <app-application-search-table
@@ -284,6 +284,7 @@
         [statuses]="applicationStatuses"
         [pageIndex]="pageIndex"
         [regions]="regions"
+        [isCommissioner]="isCommissioner"
         (tableChange)="onTableChange($event)"
       ></app-application-search-table>
       <div class="center">
@@ -291,7 +292,7 @@
       </div>
     </mat-tab>
 
-    <mat-tab>
+    <mat-tab *ngIf="!isCommissioner">
       <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
       <app-notice-of-intent-search-table
         *ngIf="!isLoading"
@@ -307,7 +308,7 @@
       </div>
     </mat-tab>
 
-    <mat-tab>
+    <mat-tab *ngIf="!isCommissioner">
       <ng-template mat-tab-label> Planning Reviews: {{ planningReviewsTotal }}</ng-template>
       <app-planning-review-search-table
         *ngIf="!isLoading"
@@ -322,7 +323,7 @@
       </div>
     </mat-tab>
 
-    <mat-tab>
+    <mat-tab *ngIf="!isCommissioner">
       <ng-template mat-tab-label> Notifications: {{ notificationTotal }}</ng-template>
       <app-notification-search-table
         [statuses]="notificationStatuses"
@@ -337,7 +338,7 @@
       </div>
     </mat-tab>
 
-    <mat-tab>
+    <mat-tab *ngIf="!isCommissioner">
       <ng-template mat-tab-label> Inquiries: {{ inquiriesTotal }}</ng-template>
       <app-inquiry-search-table
         *ngIf="!isLoading"
