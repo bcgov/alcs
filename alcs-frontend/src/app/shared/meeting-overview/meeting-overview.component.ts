@@ -134,7 +134,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     upcomingMeetings: MeetingCollection[],
   ) {
     meetings.forEach((app) => {
-      const yesterday = moment.utc().startOf('day').add(-1, 'day');
+      const yesterday = moment.tz('America/Vancouver').endOf('day').add(-1, 'day');
 
       if (yesterday.isAfter(app.meetingDate)) {
         this.sortMeetingsIntoCollections(pastMeetings, app);
