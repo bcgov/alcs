@@ -131,7 +131,17 @@ export class ApplicationDecisionMeetingService {
   > {
     return await this.appDecisionMeetingRepository
       .createQueryBuilder('meeting')
-      .select('reconsideration.uuid, MAX(meeting.date) as next_meeting')
+      .select('reconsideration.uuid', 'uuid')
+      .addSelect(
+        `
+        CASE
+          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END) is NOT NULL
+          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END)
+        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE) THEN meeting.date END)
+        END
+        `,
+        'next_meeting',
+      )
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.reconsiderations', 'reconsideration')
       .innerJoin('reconsideration.card', 'card')
@@ -145,7 +155,17 @@ export class ApplicationDecisionMeetingService {
   > {
     return await this.appDecisionMeetingRepository
       .createQueryBuilder('meeting')
-      .select('application.uuid, MAX(meeting.date) as next_meeting')
+      .select('application.uuid', 'uuid')
+      .addSelect(
+        `
+        CASE
+          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END) is NOT NULL
+          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END)
+        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE) THEN meeting.date END)
+        END
+        `,
+        'next_meeting',
+      )
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.card', 'card')
       .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
