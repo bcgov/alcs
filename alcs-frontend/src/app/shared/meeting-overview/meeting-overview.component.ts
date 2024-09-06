@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
