@@ -26,35 +26,35 @@ export class MissedChaseInquiriesEtl1724368028724
                     file_number
                 )
                 select
-                    --null											audit_deleted_date_at
-                    --auto											audit_created_at
-                    --auto											audit_updated_at
-                    'oats_etl'::varchar 							as audit_created_by,
-                    --null											audit_updated_by
-                    --auto											uuid
-                    oi.description::text 							as summary,
+                    --null											    audit_deleted_date_at
+                    --auto											    audit_created_at
+                    --auto											    audit_updated_at
+                    'oats_etl'::varchar 							    as audit_created_by,
+                    --null											    audit_updated_by
+                    --auto											    uuid
+                    oi.description::text 							    as summary,
                     oi.received_date at time zone 'America/Vancouver'   as date_submitted_to_alc,
-                    filer_person.first_name::varchar				as inquirer_first_name,
-                    filer_person.last_name::text 					as inquirer_last_name,
+                    filer_person.first_name::varchar				    as inquirer_first_name,
+                    filer_person.last_name::text 					    as inquirer_last_name,
                     coalesce(
                         filer_org.organization_name,
                         filer_org.alias_name
-                    )::text 										as inquirer_organization,
-                    filer_pog.phone_number::text 					as inquirer_phone,
-                    filer_pog.email_address::text 					as inquirer_email,
-                    false											as "open",
-                    '0001-01-01 00:00:00.000 -0800'::timestamptz	as closed_date,
-                    lg."uuid"										as local_government_uuid,
-                    lg.preferred_region_code						as region_code,
+                    )::text 										    as inquirer_organization,
+                    filer_pog.phone_number::text 					    as inquirer_phone,
+                    filer_pog.email_address::text 					    as inquirer_email,
+                    false											    as "open",
+                    '0001-01-01 00:00:00.000 -0800'::timestamptz	    as closed_date,
+                    lg."uuid"										    as local_government_uuid,
+                    lg.preferred_region_code						    as region_code,
                     case
                         when oi.inquiry_code = 'INQINV' then 'INVN'
                         when oi.inquiry_code in ('GENERAL', 'AREAOI') then 'GENC'
                         when oi.inquiry_code = 'COMPLAN' then'REFR'
-                    end												as type_code,
-                    --null											card_uuid
-                    'ca8e91dc-cfb0-45c3-a443-8e47e44591df'::uuid 	as closed_by_uuid,
-                    oi.issue_id::varchar 							as file_number
-                    --null											legacy_id
+                    end												    as type_code,
+                    --null											    card_uuid
+                    'ca8e91dc-cfb0-45c3-a443-8e47e44591df'::uuid 	    as closed_by_uuid,
+                    oi.issue_id::varchar 							    as file_number
+                    --null											    legacy_id
                 from		oats.oats_issues oi
                 --Gov
                 join		oats.oats_person_organizations gov_pog		on	gov_pog.person_organization_id = oi.local_gov_pog_id
@@ -94,11 +94,8 @@ export class MissedChaseInquiriesEtl1724368028724
                     --null																				audit_updated_by
                     od.file_name,
                     case
-                        when od.file_name like '%.%' then case
-                            when substring(od.file_name from '\.([^\.]*)$') = 'pdf' then 'application/pdf'
-                            else 'application/octet-stream'
-                        end
-                        else null
+                        when substring(od.file_name from '\.([^\.]*)$') = 'pdf' then 'application/pdf'
+                        else 'application/octet-stream'
                     end::varchar																		as mime_type,
                     --audogen																			uploaded_at
                     --null																				uploaded_by_uuid
