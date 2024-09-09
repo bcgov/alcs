@@ -32,6 +32,7 @@ import { ToastService } from '../../services/toast/toast.service';
 import { formatDateForApi } from '../../shared/utils/api-date-formatter';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
+import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
@@ -108,6 +109,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   noiStatuses: NoticeOfIntentStatusDto[] = [];
   isLoading = false;
   today = new Date();
+  isCommissioner = false;
 
   constructor(
     private searchService: SearchService,
@@ -118,6 +120,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private toastService: ToastService,
     private titleService: Title,
+    private authService: AuthenticationService,
     public fileTypeService: FileTypeDataSourceService,
     public portalStatusDataService: PortalStatusDataSourceService,
   ) {
@@ -162,6 +165,15 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.pidControl.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
       this.pidInvalid = this.pidControl.invalid && (this.pidControl.dirty || this.pidControl.touched);
+    });
+
+    this.authService.$currentUser.subscribe((currentUser) => {
+      if (currentUser) {
+        this.isCommissioner =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
+      }
     });
   }
 
@@ -238,6 +250,14 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   getSearchParams(): SearchRequestDto {
     const resolutionNumberString = this.formatStringSearchParam(this.searchForm.controls.resolutionNumber.value);
+    let fileTypes: string[];
+
+    if (this.searchForm.controls.componentType.value === null) {
+      fileTypes = this.isCommissioner ? this.fileTypeService.getCommissionerListData() : [];
+    } else {
+      fileTypes = this.searchForm.controls.componentType.value!;
+    }
+
     return {
       // pagination
       pageSize: this.itemsPerPage,
@@ -268,7 +288,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       dateDecidedTo: this.searchForm.controls.dateDecidedTo.value
         ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
         : undefined,
-      fileTypes: this.searchForm.controls.componentType.value ? this.searchForm.controls.componentType.value : [],
+      fileTypes: fileTypes,
     };
   }
 

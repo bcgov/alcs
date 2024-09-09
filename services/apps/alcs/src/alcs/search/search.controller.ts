@@ -5,7 +5,10 @@ import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
 import { DataSource, Repository } from 'typeorm';
-import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import {
+  ROLES_ALLOWED_APPLICATIONS,
+  ROLES_ALLOWED_SEARCH,
+} from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { APPLICATION_SUBMISSION_TYPES } from '../../portal/pdf-generation/generate-submission-document.service';
@@ -61,7 +64,7 @@ export class SearchController {
     private dataSource: DataSource,
   ) {}
 
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  @UserRoles(...ROLES_ALLOWED_SEARCH)
   @Get('/:searchTerm')
   async search(@Param('searchTerm') searchTerm) {
     const application = await this.searchService.getApplication(searchTerm);
@@ -115,7 +118,7 @@ export class SearchController {
   }
 
   @Post('/advanced')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  @UserRoles(...ROLES_ALLOWED_SEARCH)
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
     const {
       searchApplications,
