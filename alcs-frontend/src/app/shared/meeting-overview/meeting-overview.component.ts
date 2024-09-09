@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
@@ -134,7 +134,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     upcomingMeetings: MeetingCollection[],
   ) {
     meetings.forEach((app) => {
-      const yesterday = moment.utc().startOf('day').add(-1, 'day');
+      const yesterday = moment.tz('America/Vancouver').endOf('day').add(-1, 'day');
 
       if (yesterday.isAfter(app.meetingDate)) {
         this.sortMeetingsIntoCollections(pastMeetings, app);
