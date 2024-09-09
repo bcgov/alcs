@@ -29,6 +29,7 @@
         (uploadFiles)="attachStaffReport($event)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
+        [isRequired]="true"
         [showErrors]="showErrors"
         [showVirusError]="showStaffReportVirusError"
       ></app-file-drag-drop>
