@@ -12,7 +12,7 @@ import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { generateINCGApplicationHtml } from '../../../../../../templates/emails/return-to-lfng';
+import { template } from '../../../../../../templates/emails/return-to-lfng/application.template';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
@@ -144,7 +144,7 @@ export class ApplicationSubmissionController {
     //Send Email
     if (primaryContact && submissionGovernment) {
       await this.statusEmailService.sendApplicationStatusEmail({
-        generateStatusHtml: generateINCGApplicationHtml,
+        template,
         status: SUBMISSION_STATUS.RETURNED_TO_LG,
         applicationSubmission: submission,
         government: submissionGovernment,

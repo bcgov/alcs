@@ -11,7 +11,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
-import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
+import { template } from '../../../../../templates/emails/cancelled/notice-of-intent.template';
 import {
   ROLES_ALLOWED_APPLICATIONS,
   ROLES_ALLOWED_BOARDS,
@@ -111,7 +111,7 @@ export class NoticeOfIntentController {
         NOI_SUBMISSION_STATUS.IN_PROGRESS
     ) {
       await this.statusEmailService.sendNoticeOfIntentStatusEmail({
-        generateStatusHtml: generateCANCNoticeOfIntentHtml,
+        template,
         status: NOI_SUBMISSION_STATUS.CANCELLED,
         noticeOfIntentSubmission,
         government: submissionGovernment,

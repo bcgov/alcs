@@ -12,11 +12,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
-import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
-import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
-import { generateREVGHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
-import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
+import { template as rffgTemplate } from '../../../../../templates/emails/refused-to-forward.template';
+import { template as incmTemplate } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { template as submApplicationTemplate } from '../../../../../templates/emails/submitted-to-alc/application.template';
+import { template as revgTemplate } from '../../../../../templates/emails/under-review-by-lfng.template';
+import { template as wrngTemplate } from '../../../../../templates/emails/wrong-lfng.template';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
@@ -193,7 +193,7 @@ export class ApplicationSubmissionReviewController {
 
     if (primaryContact) {
       await this.statusEmailService.sendApplicationStatusEmail({
-        generateStatusHtml: generateREVGHtml,
+        template: revgTemplate,
         status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
         government: userLocalGovernment,
@@ -302,7 +302,7 @@ export class ApplicationSubmissionReviewController {
 
         if (primaryContact) {
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateSUBMApplicationHtml,
+            template: submApplicationTemplate,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: submission,
             government: userLocalGovernment,
@@ -320,7 +320,7 @@ export class ApplicationSubmissionReviewController {
 
         if (primaryContact) {
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateRFFGHtml,
+            template: rffgTemplate,
             status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
             applicationSubmission: submission,
             government: userLocalGovernment,
@@ -412,7 +412,7 @@ export class ApplicationSubmissionReviewController {
       if (primaryContact) {
         if (returnDto.reasonForReturn === 'wrongGovernment') {
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateWRNGHtml,
+            template: wrngTemplate,
             status: SUBMISSION_STATUS.WRONG_GOV,
             applicationSubmission,
             government: userLocalGovernment,
@@ -424,7 +424,7 @@ export class ApplicationSubmissionReviewController {
 
         if (returnDto.reasonForReturn === 'incomplete') {
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateINCMHtml,
+            template: incmTemplate,
             status: SUBMISSION_STATUS.INCOMPLETE,
             applicationSubmission,
             government: userLocalGovernment,

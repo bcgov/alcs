@@ -1,53 +1,21 @@
-import { MJMLParseResults } from 'mjml-core';
-import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/status-email.service';
-import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
-import { header, footer, notificationOnly, portalButton } from '../partials';
+import { build } from '..';
+import { notificationOnly } from '../partials/notification-only.template';
 
-const template = `<mjml>
-  <mj-head>
-    <mj-style>
-      .line-height div {
-        line-height: 24px !important;
-      }
-
-      .align-left {
-        float: left !important;
-      }
-    </mj-style>
-  </mj-head>
-  <mj-body width="600px">
-    ${header}
-
-    <mj-section background-color="white" padding="48px 0px 48px 0px">
-      <mj-column width="600px" css-class='line-height'>
-        <mj-text font-size='16px'>
-          This email is to acknowledge that the Agricultural Land Commission (ALC) is in receipt of the above noted <b>{{ childType }}</b> application. Please refer to the ALC Application ID in all future correspondence with this office. A copy of this application has been forwarded to the <b>{{ governmentName }}</b> for information purposes.
-        </mj-text>
-        <mj-text font-size='16px'>
-         There is no application fee associated with registering a Restrictive Covenant.
-        </mj-text>
-        <mj-text font-size='16px'>
-          Please be advised that the status of the application in the ALC Portal will update and a notification email will be sent out as the application moves through each stage of the application review process. Should the ALC Land Use Planner require any additional information or clarification regarding the application, they will contact you. Further information about the application process can be obtained from the ALC website.
-        </mj-text>
-        <mj-text font-size='16px'>
-          If you are an agent acting on behalf of the applicant(s) / landowner(s), it is your responsibility to advise them of this, and any future, correspondence.
-        </mj-text>
-        <mj-text font-size='16px'>
-          Please log into the ALC Portal for further updates on the application as it progresses.
-        </mj-text>
-        ${notificationOnly}
-      </mj-column>
-    </mj-section>
-
-   ${portalButton}
-
-   ${footer()}
-  </mj-body>
-</mjml>
-`;
-
-export const generateSUBGCoveApplicantHtml = (
-  data: StatusUpdateEmail,
-): MJMLParseResults => {
-  return new EmailTemplateService().generateEmailBase(template, data);
-};
+export const template = build(
+  `<p>
+      This email is to acknowledge that the Agricultural Land Commission (ALC) is in receipt of the above noted <b>{{ childType }}</b> application. Please refer to the ALC Application ID in all future correspondence with this office. A copy of this application has been forwarded to the <b>{{ governmentName }}</b> for information purposes.
+    </p>
+    <p>
+      There is no application fee associated with registering a Restrictive Covenant.
+    </p>
+    <p>
+      Please be advised that the status of the application in the ALC Portal will update and a notification email will be sent out as the application moves through each stage of the application review process. Should the ALC Land Use Planner require any additional information or clarification regarding the application, they will contact you. Further information about the application process can be obtained from the ALC website.
+    </p>
+    <p>
+      If you are an agent acting on behalf of the applicant(s) / landowner(s), it is your responsibility to advise them of this, and any future, correspondence.
+    </p>
+    <p>
+      Please log into the ALC Portal for further updates on the application as it progresses.
+    </p>
+    ${notificationOnly}`,
+);

@@ -3,7 +3,7 @@ import { Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { generateALCDNoticeOfIntentHtml } from '../../../../../../templates/emails/decision-released';
+import { template } from '../../../../../../templates/emails/decision-released/notice-of-intent.template';
 import { PARENT_TYPE } from '../../../alcs/card/card-subtask/card-subtask.dto';
 import { NoticeOfIntentDecisionV2Service } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
 import { NOI_SUBMISSION_STATUS } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
@@ -55,7 +55,7 @@ export class NoticeOfIntentDecisionEmailsConsumer extends WorkerHost {
 
           if (primaryContact) {
             await this.statusEmailService.sendNoticeOfIntentStatusEmail({
-              generateStatusHtml: generateALCDNoticeOfIntentHtml,
+              template,
               status: NOI_SUBMISSION_STATUS.ALC_DECISION,
               noticeOfIntentSubmission: submission,
               government: submissionGovernment,
