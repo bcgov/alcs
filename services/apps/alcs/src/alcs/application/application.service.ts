@@ -497,6 +497,7 @@ export class ApplicationService {
         LEFT JOIN alcs.application_decision_meeting adm ON adm.application_uuid = a."uuid"
         INNER JOIN alcs.card c ON c."uuid" = a.card_uuid
         WHERE c.status_code NOT IN (${this.excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
+        AND c.archived != TRUE
         GROUP BY a.uuid
         HAVING COUNT(adm.uuid) = 0
         OR COUNT(CASE WHEN adm.audit_deleted_date_at IS NULL THEN 1 END) = 0
@@ -535,6 +536,7 @@ export class ApplicationService {
         LEFT JOIN alcs.application_decision_meeting adm ON adm.application_uuid = ar.application_uuid
         INNER JOIN alcs.card c ON c."uuid" = ar.card_uuid
         WHERE c.status_code NOT IN (${this.excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
+        AND c.archived != TRUE
         GROUP BY ar.application_uuid
         HAVING COUNT(adm.uuid) = 0
         OR COUNT(CASE WHEN adm.audit_deleted_date_at IS NULL THEN 1 END) = 0

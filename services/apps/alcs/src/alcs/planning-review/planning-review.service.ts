@@ -226,6 +226,7 @@ export class PlanningReviewService {
         LEFT JOIN alcs.planning_review_meeting prm ON prm.planning_review_uuid = pr."uuid" 
         INNER JOIN alcs.card c ON c."uuid" = prf.card_uuid
         WHERE c.status_code NOT IN (${this.excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
+        AND c.archived != TRUE
         GROUP BY pr.uuid
         HAVING COUNT(prm.uuid) = 0
         OR COUNT(CASE WHEN prm.audit_deleted_date_at IS NULL THEN 1 END) = 0
