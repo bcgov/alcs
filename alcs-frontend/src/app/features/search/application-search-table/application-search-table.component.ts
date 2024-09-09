@@ -38,6 +38,7 @@ export class ApplicationSearchTableComponent {
   @Input() totalCount: number | undefined;
   @Input() statuses: ApplicationStatusDto[] = [];
   @Input() regions: ApplicationRegionDto[] = [];
+  @Input() isCommissioner: boolean = false;
 
   @Output() tableChange = new EventEmitter<TableChange>();
 
@@ -70,7 +71,9 @@ export class ApplicationSearchTableComponent {
   }
 
   onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/application/${record.referenceId}`]));
+    const url = this.isCommissioner
+      ? this.router.serializeUrl(this.router.createUrlTree([`/commissioner/application/${record.referenceId}`]))
+      : this.router.serializeUrl(this.router.createUrlTree([`/application/${record.referenceId}`]));
 
     window.open(url, '_blank');
   }

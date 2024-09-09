@@ -1,9 +1,19 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { AuthenticationService, ROLES } from '../../../services/authentication/authentication.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -13,17 +23,31 @@ import { ToastService } from '../../../services/toast/toast.service';
     trigger('inAnimation', [transition(':enter', [style({ height: 0, opacity: 0 }), animate('100ms ease-out')])]),
   ],
 })
-export class SearchBarComponent implements AfterViewInit {
+export class SearchBarComponent implements AfterViewInit, OnInit {
   searchText = '';
   showInput = false;
   wasInside = false;
   @ViewChildren('searchInput') input!: QueryList<ElementRef>;
 
+  isCommissioner = false;
+
   constructor(
     private toastService: ToastService,
     private router: Router,
     private searchService: SearchService,
+    private authService: AuthenticationService,
   ) {}
+
+  ngOnInit(): void {
+    this.authService.$currentUser.subscribe((currentUser) => {
+      if (currentUser) {
+        this.isCommissioner =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
+      }
+    });
+  }
 
   @HostListener('click')
   clickInside() {
@@ -75,7 +99,11 @@ export class SearchBarComponent implements AfterViewInit {
     try {
       const searchResult = await this.searchService.fetch(this.searchText);
       if (!searchResult || searchResult.length < 1) {
-        this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
+        this.isCommissioner
+          ? this.toastService.showWarningToast(
+              `File ID ${this.searchText} not found. Enter an application ID and try again`,
+            )
+          : this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
         this.selectInput();
         return;
       }
@@ -84,7 +112,9 @@ export class SearchBarComponent implements AfterViewInit {
         const result = searchResult[0];
         switch (result.type) {
           case 'APP':
-            await this.router.navigate(['application', result.referenceId]);
+            this.isCommissioner
+              ? await this.router.navigate(['commissioner/application', result.referenceId])
+              : await this.router.navigate(['application', result.referenceId]);
             break;
           case 'NOI':
             await this.router.navigate(['notice-of-intent', result.referenceId]);
@@ -111,7 +141,11 @@ export class SearchBarComponent implements AfterViewInit {
       this.resetInput();
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {
-        this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
+        this.isCommissioner
+          ? this.toastService.showWarningToast(
+              `File ID ${this.searchText} not found. Enter an application ID and try again`,
+            )
+          : this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
         this.selectInput();
       }
     }

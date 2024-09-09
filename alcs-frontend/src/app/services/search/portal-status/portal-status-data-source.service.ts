@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { AuthenticationService, ROLES } from '../../authentication/authentication.service';
 
 export interface TreeNodeItem {
   label: string;
@@ -68,22 +69,50 @@ const TREE_DATA: TreeNode[] = [
   },
 ];
 
+const COMMISSIONER_TREE_DATA: TreeNode[] = [
+  {
+    item: { label: 'With ALC', value: null },
+    children: [
+      {
+        item: { label: 'Received by ALC', value: 'RECA' },
+      },
+      {
+        item: { label: 'Under Review by ALC', value: 'REVA' },
+      },
+      {
+        item: { label: 'Decision Released', value: 'ALCD' },
+      },
+    ],
+  },
+];
+
+const COMMISSIONER_LIST_DATA = ['RECA', 'REVA', 'ALCD'];
+
 @Injectable({ providedIn: 'root' })
 export class PortalStatusDataSourceService {
   dataChange = new BehaviorSubject<TreeNode[]>([]);
   treeData: TreeNode[] = [];
+  isCommissioner = false;
 
   get data(): TreeNode[] {
     return this.dataChange.value;
   }
 
-  constructor() {
+  constructor(public authService: AuthenticationService) {
+    this.authService.$currentUser.subscribe((currentUser) => {
+      if (currentUser) {
+        this.isCommissioner =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
+      }
+    });
     this.initialize();
   }
 
   initialize() {
-    this.treeData = TREE_DATA;
-    this.dataChange.next(TREE_DATA);
+    this.treeData = this.isCommissioner ? COMMISSIONER_TREE_DATA : TREE_DATA;
+    this.isCommissioner ? this.dataChange.next(COMMISSIONER_TREE_DATA) : this.dataChange.next(TREE_DATA);
   }
 
   public filter(filterText: string) {
@@ -112,5 +141,9 @@ export class PortalStatusDataSourceService {
       filteredTreeData = this.treeData;
     }
     this.dataChange.next(filteredTreeData);
+  }
+
+  public getCommissionerListData() {
+    return COMMISSIONER_LIST_DATA;
   }
 }

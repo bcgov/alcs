@@ -21,6 +21,7 @@ import {
   UpdatePlanningReviewDto,
 } from './planning-review.dto';
 import { PlanningReview } from './planning-review.entity';
+import { CARD_STATUS } from '../card/card-status/card-status.entity';
 
 @Injectable()
 export class PlanningReviewService {
@@ -43,6 +44,14 @@ export class PlanningReviewService {
     region: true,
     type: true,
   };
+
+  private excludeStatuses = [
+    CARD_STATUS.INCOMING,
+    CARD_STATUS.INCOMING_PRELIM_REVIEW,
+    CARD_STATUS.DECISION_RELEASED,
+    CARD_STATUS.CANCELLED,
+    CARD_STATUS.PRELIM_DONE,
+  ];
 
   async create(data: CreatePlanningReviewDto, board: Board) {
     const fileNumber = await this.fileNumberService.generateNextFileNumber();
@@ -196,5 +205,41 @@ export class PlanningReviewService {
       },
       select: ['fileNumber'],
     });
+  }
+
+  async getIncomingPlanningReviewFiles(): Promise<
+    {
+      file_number: string;
+      applicant: string;
+      code: string;
+      name: string;
+      given_name: string;
+      family_name: string;
+      high_priority: boolean;
+      active_days: number;
+    }[]
+  > {
+    const query = `
+      WITH filtered_planning_reviews AS (
+        SELECT pr.uuid FROM alcs.planning_review pr
+        INNER JOIN alcs.planning_referral prf ON prf.planning_review_uuid = pr.uuid
+        LEFT JOIN alcs.planning_review_meeting prm ON prm.planning_review_uuid = pr."uuid" 
+        INNER JOIN alcs.card c ON c."uuid" = prf.card_uuid
+        WHERE c.status_code NOT IN (${this.excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
+        AND c.archived != TRUE
+        GROUP BY pr.uuid
+        HAVING COUNT(prm.uuid) = 0
+        OR COUNT(CASE WHEN prm.audit_deleted_date_at IS NULL THEN 1 END) = 0
+      )
+      SELECT pr.file_number, pr.document_name as applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, 0 as active_days from alcs.planning_review pr 
+      INNER JOIN filtered_planning_reviews fpr on fpr.uuid = pr.uuid
+      INNER JOIN alcs.planning_referral prf on prf.planning_review_uuid = pr.uuid
+      INNER JOIN alcs.card c ON c."uuid" = prf.card_uuid
+      INNER JOIN alcs.board board on c.board_uuid = board.uuid
+      LEFT JOIN alcs.user u on u.uuid = c.assignee_uuid
+      WHERE board.code = 'exec'
+      ORDER BY c.high_priority desc;
+    `;
+    return await this.reviewRepository.query(query, this.excludeStatuses);
   }
 }

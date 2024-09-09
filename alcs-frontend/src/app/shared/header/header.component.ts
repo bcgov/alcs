@@ -65,7 +65,7 @@ export class HeaderComponent implements OnInit {
           const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
             currentUser.client_roles!.includes(value),
           );
-          this.allowedSearch = overlappingRoles.length > 0;
+          this.allowedSearch = overlappingRoles.length > 0 || this.isCommissioner;
         }
       }
     });

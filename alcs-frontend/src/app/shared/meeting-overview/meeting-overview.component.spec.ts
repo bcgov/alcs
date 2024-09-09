@@ -13,11 +13,13 @@ import { CardType } from '../card/card.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { MeetingOverviewComponent } from './meeting-overview.component';
+import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
 
 describe('MeetingOverviewComponent', () => {
   let component: MeetingOverviewComponent;
   let fixture: ComponentFixture<MeetingOverviewComponent>;
   let mockBoardService: DeepMocked<BoardService>;
+  let mockIncomingFileService: DeepMocked<IncomingFileService>;
   let boardEmitter: BehaviorSubject<BoardWithFavourite[]>;
   let mockUserService: DeepMocked<UserService>;
   let mockMeetingService: DeepMocked<DecisionMeetingService>;
@@ -25,6 +27,7 @@ describe('MeetingOverviewComponent', () => {
 
   beforeEach(async () => {
     mockBoardService = createMock();
+    mockIncomingFileService = createMock();
     boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
     mockBoardService.$boards = boardEmitter;
 
@@ -56,6 +59,10 @@ describe('MeetingOverviewComponent', () => {
         {
           provide: UserService,
           useValue: mockUserService,
+        },
+        {
+          provide: IncomingFileService,
+          useValue: mockIncomingFileService,
         },
       ],
       declarations: [MeetingOverviewComponent],

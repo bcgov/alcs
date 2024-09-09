@@ -1,23 +1,4 @@
 <div>
-  <div class="search-bar">
-    <mat-form-field class="search-form-field" appearance="outline">
-      <mat-label>Search by File ID</mat-label>
-      <input
-        class="search-input"
-        #searchInput
-        (keyup.enter)="onSearch()"
-        (focus)="searchInput.select()"
-        [(ngModel)]="searchText"
-        matInput
-        type="text"
-        placeholder="61251231"
-      />
-    </mat-form-field>
-    <button class="search-button" (click)="onSearch()" mat-flat-button color="accent">
-      <mat-icon>search</mat-icon>
-      Search
-    </button>
-  </div>
   <mat-expansion-panel [(expanded)]="boardMeeting.isExpanded" class="main-panel" *ngFor="let boardMeeting of viewData">
     <mat-expansion-panel-header expandedHeight="80px" collapsedHeight="80px" class="main-panel-header">
       <mat-panel-title>
@@ -33,7 +14,7 @@
       <mat-panel-description
         class="main-panel-description"
         [ngClass]="{
-          'panel-favourite': boardMeeting.isFavourite
+          'panel-favourite': boardMeeting.isFavourite,
         }"
       >
         <div class="main-panel-date center" *ngIf="boardMeeting.nextMeeting?.meetingDate">
@@ -91,27 +72,13 @@
         </mat-expansion-panel>
       </div>
       <div class="upcoming-meetings">
-        <h4>Scheduled Meetings</h4>
-        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">None Scheduled</h5>
-        <mat-expansion-panel
-          class="meeting-panel"
-          hideToggle="true"
-          [(expanded)]="upcomingMeeting.isExpanded"
-          *ngFor="let upcomingMeeting of boardMeeting.upcomingMeetings"
-        >
-          <mat-expansion-panel-header
-            expandedHeight="54px"
-            collapsedHeight="54px"
-            class="meeting-header meeting-header-upcoming"
-          >
-            <mat-panel-title class="center">
-              <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-container *ngFor="let meeting of upcomingMeeting.meetings">
-            <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
+        <h4>Incoming</h4>
+        <h5 *ngIf="!boardMeeting.incomingFiles" class="no-meetings">None</h5>
+        <div class="incoming-files-panel">
+          <ng-container *ngFor="let incomingFile of boardMeeting.incomingFiles">
+            <ng-template *ngTemplateOutlet="incomingFilePanel; context: { $implicit: incomingFile }"></ng-template>
           </ng-container>
-        </mat-expansion-panel>
+        </div>
       </div>
     </div>
   </mat-expansion-panel>
@@ -122,7 +89,7 @@
     (click)="openMeetings(meeting.fileNumber, meeting.type)"
     class="meeting-card"
     [ngClass]="{
-      'meeting-highlighted': meeting.isHighlighted
+      'meeting-highlighted': meeting.isHighlighted,
     }"
   >
     <div class="split">
@@ -140,6 +107,35 @@
           *ngIf="meeting.assignee"
           [initials]="meeting.assignee.initials"
           [name]="meeting.assignee.prettyName"
+        ></app-avatar-circle>
+      </div>
+    </div>
+  </mat-card>
+</ng-template>
+
+<ng-template #incomingFilePanel let-incomingFile>
+  <mat-card
+    (click)="openMeetings(incomingFile.fileNumber, incomingFile.type)"
+    class="meeting-card"
+    [ngClass]="{
+      'meeting-highlighted': incomingFile.isHighlighted
+    }"
+  >
+    <div class="split">
+      <div
+        class="ellipsis"
+        [id]="incomingFile.fileNumber"
+        matTooltipClass="no-wrap-tooltip"
+        [matTooltip]="incomingFile.fileNumber + ' (' + incomingFile.applicant + ')'"
+        [matTooltipDisabled]="!isEllipsisActive(incomingFile.fileNumber)"
+      >
+        {{ incomingFile.fileNumber }} ({{ incomingFile.applicant }})
+      </div>
+      <div>
+        <app-avatar-circle
+          *ngIf="incomingFile.assignee"
+          [initials]="incomingFile.assignee.initials"
+          [name]="incomingFile.assignee.prettyName"
         ></app-avatar-circle>
       </div>
     </div>
