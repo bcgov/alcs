@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { HolidayCreateDto, HolidayUpdateDto } from './holiday.dto';
 import { HolidayEntity } from './holiday.entity';
+import { getStartOfDayToPacific } from '../../../utils/pacific-date-time-helper';
 
 @Injectable()
 export class HolidayService {
@@ -105,8 +106,10 @@ export class HolidayService {
     };
 
     const differenceInDays = (startDate: Date, endDate: Date): number => {
-      const timeDiff = endDate.getTime() - startDate.getTime();
-      return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const timeDiff =
+        getStartOfDayToPacific(endDate.getTime()).getTime() -
+        getStartOfDayToPacific(startDate.getTime()).getTime();
+      return Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     };
 
     const totalDays = differenceInDays(fromDate, toDate) + 1;
