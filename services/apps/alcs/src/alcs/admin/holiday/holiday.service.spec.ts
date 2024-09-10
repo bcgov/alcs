@@ -17,8 +17,6 @@ describe('HolidayService', () => {
     uuid: 'mock',
   });
 
-  const RealDate = global.Date;
-
   beforeEach(async () => {
     mockRepository = createMock();
 
