@@ -63,6 +63,7 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
   parentType: PARENT_TYPE;
   activeDays?: number;
   paused: boolean;
+  subtaskDays?: number;
 }
 
 export enum CARD_SUBTASK_TYPE {

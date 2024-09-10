@@ -143,4 +143,25 @@ describe('HolidayService', () => {
     expect(result[0]).toEqual('2020');
     expect(mockRepository.query).toBeCalledTimes(1);
   });
+
+  it('should calculate business days of a given date without holidays', () => {
+    const res = service.calculateBusinessDays(
+      new Date('2024-09-09'),
+      new Date('2024-09-16'),
+      [],
+    );
+    expect(res).toEqual(6);
+  });
+
+  it('should calculate business days of a given date with holidays', () => {
+    const holiday: HolidayEntity = new HolidayEntity({
+      day: new Date('2024-09-09'),
+    });
+    const res = service.calculateBusinessDays(
+      new Date('2024-09-09'),
+      new Date('2024-09-16'),
+      [holiday],
+    );
+    expect(res).toEqual(5);
+  });
 });

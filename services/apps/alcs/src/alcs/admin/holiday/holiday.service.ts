@@ -66,4 +66,59 @@ export class HolidayService {
     )) as { year: string }[];
     return res.map((res) => res.year);
   }
+
+  async fetchAllHolidays() {
+    return await this.holidayRepository
+      .createQueryBuilder('holiday')
+      .select('holiday.day')
+      .getMany();
+  }
+
+  calculateBusinessDays(
+    fromDate: Date,
+    toDate: Date,
+    holidays: HolidayEntity[],
+  ): number {
+    const formatDate = (date: Date): string => {
+      return date.toISOString().split('T')[0];
+    };
+
+    const holidaysSet = new Set<string>(
+      holidays.map((holiday) => formatDate(new Date(holiday.day))),
+    );
+
+    const isWeekend = (date: Date): boolean => {
+      const day = date.getDay();
+      return day === 0 || day === 6;
+    };
+
+    const isBusinessDay = (date: Date): boolean => {
+      return isWeekend(date) || holidaysSet.has(formatDate(date))
+        ? false
+        : true;
+    };
+
+    const addDays = (date: Date, days: number): Date => {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    };
+
+    const differenceInDays = (startDate: Date, endDate: Date): number => {
+      const timeDiff = endDate.getTime() - startDate.getTime();
+      return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    };
+
+    const totalDays = differenceInDays(fromDate, toDate) + 1;
+    let businessDaysCount = 0;
+
+    for (let i = 0; i < totalDays; i++) {
+      const currentDate = addDays(fromDate, i);
+      if (isBusinessDay(currentDate)) {
+        businessDaysCount++;
+      }
+    }
+
+    return businessDaysCount;
+  }
 }
