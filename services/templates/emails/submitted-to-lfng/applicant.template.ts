@@ -12,7 +12,7 @@ export const appFees = [
 
 export const template = build(`
 <p>This email is to acknowledge that you have submitted the above noted <b>{{ childType }}</b> application to the <b>{{ governmentName }}</b>.
-<table>
+<table cellpadding="0" cellspacing="0" width="100%" border="0" style="color: #000000; font-family: Helvetica, Arial, sans-serif; font-size:13px; line-height: 22px; table-layout: auto; width: 100%; border: none; border-collapse: collapse;">
   <tr style="text-align: left; font-size: 16px; border: 1px solid black;">
     <th style="padding-left: 8px; border-right: 1px solid black;">Application Type</th>
     <th style="padding-left: 8px">{{ governmentName }} Portion of Fee</th>

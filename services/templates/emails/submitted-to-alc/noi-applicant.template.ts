@@ -14,7 +14,7 @@ export const template = build(
     <p>
       NOTICE OF INTENT FEES - Payable to the Minister of Finance c/o the ALC
     </p>
-    <table>
+    <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color: #000000; font-family: Helvetica, Arial, sans-serif; font-size:13px; line-height: 22px; table-layout: auto; width: 100%; border: none; border-collapse: collapse;">
       <tr style="text-align: left; font-size: 16px; border: 1px solid black;">
         <th style="padding-left: 8px; border-right: 1px solid black;">NOI Type</th>
         <th style="padding-left: 8px">ALC Portion of Fee</th>
