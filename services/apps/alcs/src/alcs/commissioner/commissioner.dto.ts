@@ -4,6 +4,11 @@ import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { PlanningReviewTypeDto } from '../planning-review/planning-review.dto';
+import {
+  ApplicationDecisionOutcomeCodeDto,
+  DecisionDocumentDto,
+} from '../application-decision/application-decision-v2/application-decision/application-decision.dto';
+import { LinkedResolutionDto } from '../notice-of-intent-decision/notice-of-intent-decision.dto';
 
 export class CommissionerApplicationDto {
   @AutoMap()
@@ -35,6 +40,9 @@ export class CommissionerApplicationDto {
 
   hasRecons: boolean;
   hasModifications: boolean;
+
+  @AutoMap()
+  decisions?: CommissionerDecisionDto[];
 }
 
 export class CommissionerPlanningReviewDto {
@@ -58,4 +66,29 @@ export class CommissionerPlanningReviewDto {
 
   @AutoMap()
   legacyId?: string;
+}
+
+export class CommissionerDecisionDto {
+  @AutoMap()
+  uuid: string;
+
+  date: number;
+
+  @AutoMap(() => ApplicationDecisionOutcomeCodeDto)
+  outcome: ApplicationDecisionOutcomeCodeDto;
+
+  @AutoMap(() => String)
+  decisionDescription: string;
+
+  @AutoMap(() => String)
+  resolutionNumber: number;
+
+  @AutoMap(() => String)
+  resolutionYear: number;
+
+  @AutoMap(() => [DecisionDocumentDto])
+  documents: DecisionDocumentDto[];
+
+  @AutoMap(() => Boolean)
+  isSubjectToConditions: boolean;
 }

@@ -15,6 +15,7 @@ import { ApplicationReconsiderationService } from '../application-decision/appli
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { CommissionerController } from './commissioner.controller';
+import { ApplicationDecisionV2Service } from '../application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 
 describe('CommissionerController', () => {
   let controller: CommissionerController;
@@ -23,6 +24,7 @@ describe('CommissionerController', () => {
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockTrackingService: DeepMocked<TrackingService>;
   let mockPlanningReviewService: DeepMocked<PlanningReview>;
+  let mockDecisionService: DeepMocked<ApplicationDecisionV2Service>;
   let mockRequest;
 
   const fileNumber = 'fake-file';
@@ -33,6 +35,7 @@ describe('CommissionerController', () => {
     mockModificationService = createMock();
     mockTrackingService = createMock();
     mockPlanningReviewService = createMock();
+    mockDecisionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -61,6 +64,10 @@ describe('CommissionerController', () => {
         {
           provide: PlanningReviewService,
           useValue: mockPlanningReviewService,
+        },
+        {
+          provide: ApplicationDecisionV2Service,
+          useValue: mockDecisionService,
         },
         {
           provide: ClsService,

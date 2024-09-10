@@ -84,6 +84,10 @@ export class ApplicationDecisionV2Service {
     });
   }
 
+  async getForCommissioner(fileNumber: string) {
+    return await this.getForPortal(fileNumber);
+  }
+
   async getByAppFileNumber(number: string) {
     const application = await this.applicationService.getOrFail(number);
 

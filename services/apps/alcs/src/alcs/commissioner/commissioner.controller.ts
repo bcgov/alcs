@@ -15,8 +15,11 @@ import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import {
   CommissionerApplicationDto,
+  CommissionerDecisionDto,
   CommissionerPlanningReviewDto,
 } from './commissioner.dto';
+import { ApplicationDecisionV2Service } from '../application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { ApplicationDecision } from '../application-decision/application-decision.entity';
 
 @Controller('commissioner')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -28,6 +31,7 @@ export class CommissionerController {
     private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
     private trackingService: TrackingService,
+    private decisionService: ApplicationDecisionV2Service,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -50,6 +54,16 @@ export class CommissionerController {
       ApplicationDto,
       CommissionerApplicationDto,
     );
+
+    if (application.decisionDate) {
+      const decisions =
+        await this.decisionService.getForCommissioner(fileNumber);
+      finalMap[0].decisions = this.mapper.mapArray(
+        decisions,
+        ApplicationDecision,
+        CommissionerDecisionDto,
+      );
+    }
     const hasApprovedOrPendingModification = modifications.reduce(
       (showLabel, modification) => {
         return modification.reviewOutcome.code !== 'REF';
