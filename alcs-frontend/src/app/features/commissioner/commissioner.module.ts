@@ -5,6 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { CommissionerApplicationComponent } from './application/commissioner-application.component';
 import { CommissionerPlanningReviewComponent } from './planning-review/commissioner-planning-review.component';
+import { CommissionerDecisionsComponent } from './application/commissioner-decisions/commissioner-decisions.component';
 
 const routes: Routes = [
   {
@@ -18,7 +19,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CommissionerApplicationComponent, CommissionerPlanningReviewComponent],
-  imports: [CommonModule, SharedModule, PlanningReviewModule, RouterModule.forChild(routes)],
+  declarations: [CommissionerApplicationComponent, CommissionerPlanningReviewComponent, CommissionerDecisionsComponent],
+  imports: [CommonModule, SharedModule, PlanningReviewModule, RouterModule.forChild(routes), SharedModule],
 })
 export class CommissionerModule {}

@@ -16,6 +16,7 @@ export interface CommissionerApplicationDto {
   hasRecons: boolean;
   hasModifications: boolean;
   legacyId?: string;
+  decisions?: CommissionerDecisionDto[];
 }
 
 export interface CommissionerPlanningReviewDto {
