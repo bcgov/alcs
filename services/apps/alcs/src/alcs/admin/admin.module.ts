@@ -76,5 +76,6 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     ApplicationDecisionConditionTypesService,
     ConfigurationService,
   ],
+  exports: [HolidayService],
 })
 export class AdminModule {}
