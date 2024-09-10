@@ -112,14 +112,7 @@ export class HolidayService {
       return Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     };
 
-    console.log(fromDate);
-    console.log(toDate);
-
-    console.log(getStartOfDayToPacific(fromDate.getTime()));
-
     const totalDays = differenceInDays(fromDate, toDate) + 1;
-    console.log(totalDays);
-    console.log('=======');
     let businessDaysCount = 0;
 
     for (let i = 0; i < totalDays; i++) {
