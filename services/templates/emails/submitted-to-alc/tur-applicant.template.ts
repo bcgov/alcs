@@ -1,5 +1,10 @@
 import { build } from '..';
+import { feesTable } from '../partials/fees-table.template';
 import { notificationOnly } from '../partials/notification-only.template';
+
+const turFees = [
+  { type: 'Transportation, Utility, and Recreational Trail Uses', fee: 1500 },
+];
 
 export const template = build(
   `<p>
@@ -8,16 +13,7 @@ export const template = build(
   <p>
     APPLICATION FEES - Payable to the Minister of Finance c/o the ALC
   </p>
-  <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color: #000000; font-family: Helvetica, Arial, sans-serif; font-size:13px; line-height: 22px; table-layout: auto; width: 100%; border: none; border-collapse: collapse;">
-    <tr style="text-align: left; font-size: 16px; border: 1px solid black;">
-      <th style="padding-left: 8px; border-right: 1px solid black;">Application Type</th>
-      <th style="padding-left: 8px">Application Fee</th>
-    </tr>
-    <tr style="font-size: 16px; border: 1px solid black;">
-      <td style="padding-left: 8px; border-right: 1px solid black;">Transportation, Utility, and Recreational Trail Uses</td>
-      <td style="padding-left: 8px">$1500</td>
-    </tr>
-  </table>
+  ${feesTable('Application Type', 'Application Fee', turFees)}
   <p>
     This fee can be paid:
     <ol style="list-style-position: inside; padding: 0; margin: 0;">
