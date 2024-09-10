@@ -464,6 +464,7 @@ export class NotificationSubmissionService {
     );
 
     const html = compile(template)({
+      parentTypeLabel: 'Notification',
       fileNumber: submission.fileNumber,
       contactName: `${submission.contactFirstName} ${submission.contactLastName}`,
       status: 'ALC Response Sent',
