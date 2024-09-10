@@ -1,6 +1,8 @@
+import { BaseCodeDto } from 'src/app/shared/dto/base.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { PlanningReviewTypeDto } from '../planning-review/planning-review.dto';
+import { ApplicationDocumentDto } from '../application/application-document/application-document.dto';
 
 export interface CommissionerApplicationDto {
   fileNumber: string;
@@ -24,4 +26,15 @@ export interface CommissionerPlanningReviewDto {
   region: ApplicationRegionDto;
   localGovernment: ApplicationLocalGovernmentDto;
   legacyId?: string;
+}
+
+export interface CommissionerDecisionDto {
+  uuid: string;
+  date: number;
+  outcome: BaseCodeDto;
+  decisionDescription: string;
+  resolutionNumber: number;
+  resolutionYear: number;
+  documents: ApplicationDocumentDto[];
+  isSubjectToConditions: boolean;
 }
