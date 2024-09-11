@@ -27,6 +27,8 @@ import { AuthenticationService, ROLES } from '../../services/authentication/auth
 import { BoardService } from '../../services/board/board.service';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
+import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
+import { IncomingFileBoardMapDto } from 'src/app/services/incoming-file/incomig-file.dto';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -133,19 +135,25 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
 
   isCommissioner: boolean = false;
   hasMeetings: boolean = false;
+  isIncoming: boolean = false;
 
   $meetingsByBoard = new Subject<UpcomingMeetingBoardMapDto>();
+  $incomingFilesByBoard = new Subject<IncomingFileBoardMapDto>();
   $application = new Subject<ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto>();
+
+  private incomingFiles: IncomingFileBoardMapDto | undefined;
 
   constructor(
     private router: Router,
     private authService: AuthenticationService,
     private boardService: BoardService,
     private meetingService: DecisionMeetingService,
+    private incomingFileService: IncomingFileService,
   ) {}
 
   ngOnInit(): void {
     this.loadMeetings();
+    this.loadIncomingFiles();
 
     this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
       this.isCommissioner =
@@ -156,9 +164,9 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
     });
 
     this.boardService.$boards
-      .pipe(combineLatestWith(this.$meetingsByBoard, this.$application))
+      .pipe(combineLatestWith(this.$meetingsByBoard, this.$incomingFilesByBoard, this.$application))
       .pipe(takeUntil(this.$destroy))
-      .subscribe(([boards, meetingsByBoard, application]) => {
+      .subscribe(([boards, meetingsByBoard, incomingFilesByBoard, application]) => {
         if (boards && meetingsByBoard && application) {
           const visibleBoardCodes = boards.filter((board) => board.showOnSchedule).map((board) => board.code);
 
@@ -166,8 +174,16 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
             visibleBoardCodes.includes(code),
           );
 
+          const visibleBoardCodeIncomingFilePairs = Object.entries(incomingFilesByBoard!).filter(([code, _]) =>
+            visibleBoardCodes.includes(code),
+          );
+
           this.hasMeetings = visibleBoardCodeMeetingPairs.some(([_, meetings]) =>
             meetings.some((meeting) => meeting.fileNumber === application?.fileNumber),
+          );
+
+          this.isIncoming = visibleBoardCodeIncomingFilePairs.some(([_, incomingFiles]) =>
+            incomingFiles.some((file) => file.fileNumber === application?.fileNumber),
           );
         }
       });
@@ -178,6 +194,14 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
 
     if (meetingsByBoards !== undefined) {
       this.$meetingsByBoard.next(meetingsByBoards);
+    }
+  }
+
+  async loadIncomingFiles() {
+    const incomingFilesByBoard = await this.incomingFileService.fetchAndSort();
+
+    if (incomingFilesByBoard !== undefined) {
+      this.$incomingFilesByBoard.next(incomingFilesByBoard);
     }
   }
 
