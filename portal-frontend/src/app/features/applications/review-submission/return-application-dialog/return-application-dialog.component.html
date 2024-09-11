@@ -60,16 +60,23 @@
       <h6><label for="comment">Comment for Applicant</label></h6>
       <div>
         <textarea
+          [ngClass]="{
+            'comment-input': true,
+            'error-outline': showError,
+          }"
           [(ngModel)]="applicantComment"
           #comment
           maxlength="4000"
           id="comment"
           matInput
-          class="comment-input"
           placeholder="Type comment"
         ></textarea>
       </div>
       <span class="subtext">Characters left: {{ 4000 - comment.textLength }}</span>
+      <div *ngIf="showError" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div>This field is required</div>
+      </div>
     </div>
 
     <div class="step-controls">

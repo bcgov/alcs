@@ -77,3 +77,9 @@
   height: rem(120);
   width: 100%;
 }
+
+.field-error {
+  color: colors.$error-color;
+  display: flex;
+  align-items: center;
+}

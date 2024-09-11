@@ -25,6 +25,8 @@ export class ReturnApplicationDialogComponent implements OnInit {
   stepIdx = 0;
   applicantComment = '';
 
+  showError: boolean = false;
+
   constructor(
     private dialogRef: MatDialogRef<ReturnApplicationDialogComponent>,
     private applicationReviewService: ApplicationSubmissionReviewService,
@@ -53,6 +55,11 @@ export class ReturnApplicationDialogComponent implements OnInit {
   }
 
   async next() {
+    if (this.stepIdx === 1 && this.applicantComment === '') {
+      this.showError = true;
+      return;
+    }
+
     this.stepIdx += 1;
   }
 
