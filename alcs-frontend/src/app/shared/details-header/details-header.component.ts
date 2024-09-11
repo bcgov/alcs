@@ -28,7 +28,7 @@ import { BoardService } from '../../services/board/board.service';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
 import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
-import { IncomingFileBoardMapDto } from 'src/app/services/incoming-file/incomig-file.dto';
+import { IncomingFileBoardMapDto } from 'src/app/services/incoming-file/incoming-file.dto';
 
 @Component({
   selector: 'app-details-header[application]',
