@@ -1,6 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
+import { template } from '../../../../../../../templates/emails/under-review-by-alc.template';
 import { ApplicationSubmissionStatusService } from '../../../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../../../alcs/application/application-submission-status/submission-status.entity';
@@ -102,7 +102,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       parentType: PARENT_TYPE.APPLICATION,
       primaryContact: mockPrimaryContact,
       ccGovernment: true,
-      generateStatusHtml: generateREVAHtml,
+      template,
       status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       documents: [],
       ccEmails: [],

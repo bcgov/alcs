@@ -2,10 +2,10 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
-import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
-import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
-import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
+import { template as rffgTemplate } from '../../../../../templates/emails/refused-to-forward.template';
+import { template as incmTemplate } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { template as submApplicationTemplate } from '../../../../../templates/emails/submitted-to-alc/application.template';
+import { template as wrngTemplate } from '../../../../../templates/emails/wrong-lfng.template';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -381,7 +381,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBMApplicationHtml,
+      template: submApplicationTemplate,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockSubmission,
       government: mockLG,
@@ -456,7 +456,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateRFFGHtml,
+      template: rffgTemplate,
       status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       applicationSubmission: mockSubmission,
       government: mockLG,
@@ -559,7 +559,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateINCMHtml,
+      template: incmTemplate,
       status: SUBMISSION_STATUS.INCOMPLETE,
       applicationSubmission: mockSubmission,
       government: mockLG,
@@ -638,7 +638,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateWRNGHtml,
+      template: wrngTemplate,
       status: SUBMISSION_STATUS.WRONG_GOV,
       applicationSubmission: mockSubmission,
       government: mockLG,

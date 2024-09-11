@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
+import { template } from '../../../../../templates/emails/cancelled/application.template';
 import {
   initApplicationMockEntity,
   initMockAssigneeDto,
@@ -426,7 +426,7 @@ describe('ApplicationController', () => {
       1,
     );
     expect(statusEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
-      generateStatusHtml: generateCANCApplicationHtml,
+      template,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,

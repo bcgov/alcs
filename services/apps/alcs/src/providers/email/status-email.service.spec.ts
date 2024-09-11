@@ -2,7 +2,6 @@ import { CONFIG_TOKEN, ConfigModule } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
-import { MJMLParseResults } from 'mjml-core';
 import { ApplicationDecisionDocument } from '../../alcs/application-decision/application-decision-document/application-decision-document.entity';
 import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
@@ -225,7 +224,7 @@ describe('StatusEmailService', () => {
 
   it('should call through services to set application email template', async () => {
     const mockData: ApplicationEmailData = {
-      generateStatusHtml: () => ({}) as MJMLParseResults,
+      template: 'test',
       status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
       applicationSubmission: new ApplicationSubmission({ typeCode: 'TURP' }),
       parentType: 'application' as PARENT_TYPE,
@@ -251,7 +250,7 @@ describe('StatusEmailService', () => {
 
   it('should call through services to set notice of intent email template', async () => {
     const mockData: NoticeOfIntentEmailData = {
-      generateStatusHtml: () => ({}) as MJMLParseResults,
+      template: 'test',
       status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       noticeOfIntentSubmission: new NoticeOfIntentSubmission(),
       parentType: 'notice-of-intent' as PARENT_TYPE,
@@ -280,7 +279,7 @@ describe('StatusEmailService', () => {
   it('should add CC emails to the send call', async () => {
     const ccEmails = ['bruce.wayne@fakeemail.com', 'iam.batman@fakeemail.com'];
     const mockData: NoticeOfIntentEmailData = {
-      generateStatusHtml: () => ({}) as MJMLParseResults,
+      template: 'test',
       status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       noticeOfIntentSubmission: new NoticeOfIntentSubmission(),
       parentType: 'notice-of-intent' as PARENT_TYPE,

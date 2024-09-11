@@ -18,7 +18,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
+import { template } from '../../../../../templates/emails/cancelled/application.template';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
@@ -144,7 +144,7 @@ export class ApplicationController {
         SUBMISSION_STATUS.IN_PROGRESS
     ) {
       await this.statusEmailService.sendApplicationStatusEmail({
-        generateStatusHtml: generateCANCApplicationHtml,
+        template,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission,
         government: submissionGovernment,

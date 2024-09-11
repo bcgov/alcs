@@ -10,10 +10,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import {
-  generateSUBMNoiApplicantHtml,
-  generateSUBMNoiGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-alc';
+import { template as submNoiApplicantTemplate } from '../../../../../templates/emails/submitted-to-alc/noi-applicant.template';
+import { template as submNoiGovernmentTemplate } from '../../../../../templates/emails/submitted-to-alc/noi-government.template';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
@@ -191,7 +189,7 @@ export class NoticeOfIntentSubmissionController {
 
       if (primaryContact) {
         await this.statusEmailService.sendNoticeOfIntentStatusEmail({
-          generateStatusHtml: generateSUBMNoiApplicantHtml,
+          template: submNoiApplicantTemplate,
           status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           noticeOfIntentSubmission,
           government: submissionGovernment,
@@ -203,7 +201,7 @@ export class NoticeOfIntentSubmissionController {
 
       if (submissionGovernment) {
         await this.statusEmailService.sendNoticeOfIntentStatusEmail({
-          generateStatusHtml: generateSUBMNoiGovernmentHtml,
+          template: submNoiGovernmentTemplate,
           status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           noticeOfIntentSubmission,
           government: submissionGovernment,

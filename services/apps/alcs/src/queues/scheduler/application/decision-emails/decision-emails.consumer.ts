@@ -3,8 +3,8 @@ import { Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
-import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
+import { template as alcdApplicationTemplate } from '../../../../../../../templates/emails/decision-released/application.template';
+import { template as revaTemplate } from '../../../../../../../templates/emails/under-review-by-alc.template';
 import { ApplicationDecisionV2Service } from '../../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationSubmissionStatusService } from '../../../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../../alcs/application/application-submission-status/submission-status.dto';
@@ -107,10 +107,10 @@ export class ApplicationDecisionEmailConsumer extends WorkerHost {
       applicationSubmission.status.statusTypeCode ===
         submissionStatus.statusTypeCode
     ) {
-      const generateStatusHtml =
+      const template =
         submissionStatus.statusTypeCode === SUBMISSION_STATUS.ALC_DECISION
-          ? generateALCDApplicationHtml
-          : generateREVAHtml;
+          ? alcdApplicationTemplate
+          : revaTemplate;
 
       const documents =
         await this.statusEmailService.getApplicationDecisionDocuments(
@@ -123,7 +123,7 @@ export class ApplicationDecisionEmailConsumer extends WorkerHost {
         parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: true,
-        generateStatusHtml,
+        template,
         status: <SUBMISSION_STATUS>submissionStatus.statusTypeCode,
         documents,
         ccEmails,

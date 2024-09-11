@@ -1,6 +1,5 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { MJMLParseResults } from 'mjml-core';
 import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
@@ -20,6 +19,7 @@ import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submissi
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { EmailService } from './email.service';
+import { compile } from 'handlebars';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -36,7 +36,7 @@ export type DocumentEmailData = {
 };
 
 type BaseStatusEmailData = {
-  generateStatusHtml: MJMLParseResults;
+  template: string;
   government: LocalGovernment | null;
   parentType: PARENT_TYPE;
   ccGovernment?: boolean;
@@ -182,7 +182,7 @@ export class StatusEmailService {
     const applicantName =
       data.applicationSubmission.applicant || FALLBACK_APPLICANT_NAME;
 
-    const emailTemplate = data.generateStatusHtml({
+    const html = compile(data.template)({
       fileNumber,
       applicantName,
       childType:
@@ -198,7 +198,7 @@ export class StatusEmailService {
     const parentId = await this.applicationService.getUuid(fileNumber);
 
     return {
-      body: emailTemplate.html,
+      body: html,
       subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
       parentType: data.parentType,
       parentId,
@@ -222,7 +222,7 @@ export class StatusEmailService {
     const applicantName =
       data.noticeOfIntentSubmission.applicant || FALLBACK_APPLICANT_NAME;
 
-    const emailTemplate = data.generateStatusHtml({
+    const html = compile(data.template)({
       fileNumber,
       applicantName,
       childType:
@@ -238,7 +238,7 @@ export class StatusEmailService {
     const parentId = await this.noticeOfIntentService.getUuid(fileNumber);
 
     return {
-      body: emailTemplate.html,
+      body: html,
       subject: `Agricultural Land Commission NOI ID: ${fileNumber} (${applicantName})`,
       parentType: data.parentType,
       parentId,

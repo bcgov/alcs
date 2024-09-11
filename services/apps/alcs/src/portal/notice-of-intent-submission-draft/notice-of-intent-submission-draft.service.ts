@@ -2,7 +2,7 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { generateSUBMNoiGovernmentHtml } from '../../../../../templates/emails/submitted-to-alc/noi-government.template';
+import { template } from '../../../../../templates/emails/submitted-to-alc/noi-government.template';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
@@ -250,7 +250,7 @@ export class NoticeOfIntentSubmissionDraftService {
 
     if (submissionGovernment) {
       await this.statusEmailService.sendNoticeOfIntentStatusEmail({
-        generateStatusHtml: generateSUBMNoiGovernmentHtml,
+        template,
         status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         noticeOfIntentSubmission: savedDraft,
         government: submissionGovernment,
