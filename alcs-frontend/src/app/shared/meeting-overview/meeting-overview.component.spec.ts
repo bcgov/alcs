@@ -106,13 +106,4 @@ describe('MeetingOverviewComponent', () => {
     await component.loadMeetings();
     expect(component.viewData.length).toEqual(1);
   });
-
-  it('should show an error toast if searched application is not found', async () => {
-    await sleep(1);
-
-    component.searchText = '5555';
-    component.onSearch();
-
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
 });

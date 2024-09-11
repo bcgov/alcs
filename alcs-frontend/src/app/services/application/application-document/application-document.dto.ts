@@ -18,6 +18,7 @@ export interface ApplicationDocumentDto {
   uploadedBy: string;
   uploadedAt: number;
   evidentiaryRecordSorting?: number;
+  fileSize?: number;
 }
 
 export interface UpdateDocumentDto {

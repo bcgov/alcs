@@ -5,15 +5,11 @@ import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
-import {
-  generateSUBGNoReviewGovernmentTemplateEmail,
-  generateSUBGTurApplicantHtml,
-} from '../../../../../templates/emails/submitted-to-alc';
-import {
-  generateSUBGApplicantHtml,
-  generateSUBGGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-lfng';
+import { template as cancApplicationTemplate } from '../../../../../templates/emails/cancelled/application.template';
+import { template as subgNoReviewGovernmentTemplate } from '../../../../../templates/emails/submitted-to-alc/no-review-government.template';
+import { template as subgTurApplicantTemplate } from '../../../../../templates/emails/submitted-to-alc/tur-applicant.template';
+import { template as subgApplicantTemplate } from '../../../../../templates/emails/submitted-to-lfng/applicant.template';
+import { template as subgGovernmentTemplate } from '../../../../../templates/emails/submitted-to-lfng/government.template';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
@@ -289,7 +285,7 @@ describe('ApplicationSubmissionController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateCANCApplicationHtml,
+      template: cancApplicationTemplate,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplication,
       government: mockGovernment,
@@ -531,7 +527,7 @@ describe('ApplicationSubmissionController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBGTurApplicantHtml,
+      template: subgTurApplicantTemplate,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
@@ -542,7 +538,7 @@ describe('ApplicationSubmissionController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBGNoReviewGovernmentTemplateEmail,
+      template: subgNoReviewGovernmentTemplate,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
@@ -595,7 +591,7 @@ describe('ApplicationSubmissionController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBGApplicantHtml,
+      template: subgApplicantTemplate,
       status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
@@ -606,7 +602,7 @@ describe('ApplicationSubmissionController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBGGovernmentHtml,
+      template: subgGovernmentTemplate,
       status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,

@@ -1,21 +1,18 @@
-import * as config from 'config';
+import { masthead } from './masthead.template';
 
 export const header = `
-  <mj-section background-color="white" padding="40px 0px 0px 0px">
-    <mj-column width="400px">
-      <mj-text font-size="21px"><b>{{ parentTypeLabel }} ID #{{fileNumber}}</b></mj-text>
-      <mj-text font-size="15px">Name: <b>{{applicantName}}</b></mj-text>
-      <mj-text font-size="15px">Status: <b>{{status}}</b></mj-text>
-    </mj-column>
-    <mj-column width="200px">
-      <mj-image
-        align="right"
-        width="86px"
-        height="56px"
-        src="${config.get<string>(
-          'PORTAL.FRONTEND_ROOT',
-        )}/assets/email/alc_logo.png"
-      ></mj-image>
-    </mj-column>
-  </mj-section>
-  `;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+<body style="padding: 0; margin: 0;">
+  <!--[if mso]>
+  <table width="600" align="center" cellpadding="0" cellspacing="0" border="0" role="presentation"><tr><td>
+  <![endif]-->
+
+  <div style="max-width: 600px; margin: 0 auto; padding-top: 40px; font-family: Helvetica, Arial, sans-serif;">
+    ${masthead}
+`;

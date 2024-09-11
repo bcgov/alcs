@@ -39,7 +39,7 @@
         </div>
       </button>
       <button
-        *ngIf="isCommissioner && hasMeetings"
+        *ngIf="isCommissioner && (hasMeetings || isIncoming)"
         class="menu-item"
         mat-flat-button
         color="accent"

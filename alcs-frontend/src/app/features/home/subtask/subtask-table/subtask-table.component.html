@@ -16,9 +16,7 @@
   <ng-container matColumnDef="type">
     <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell class="type-cell" *matCellDef="let element">
-      <ng-container *ngIf="!element.appType" class="center">
-        -
-      </ng-container>
+      <ng-container *ngIf="!element.appType" class="center"> - </ng-container>
       <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType">
       </app-application-type-pill>
       <app-application-type-pill
@@ -51,6 +49,11 @@
   <ng-container matColumnDef="stage">
     <th class="stage-cell" mat-header-cell *matHeaderCellDef>Workflow Stage</th>
     <td mat-cell *matCellDef="let element" [innerHTML]="element.card.status.label"></td>
+  </ng-container>
+
+  <ng-container matColumnDef="subtaskDays">
+    <th class="subtask-days-cell" mat-header-cell *matHeaderCellDef>Subtask Days</th>
+    <td mat-cell *matCellDef="let element" [innerHTML]="element.subtaskDays"></td>
   </ng-container>
 
   <ng-container matColumnDef="assignee">
@@ -91,7 +94,7 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr
     [ngClass]="{
-      paused: row.paused
+      paused: row.paused,
     }"
     mat-row
     *matRowDef="let row; columns: displayedColumns"

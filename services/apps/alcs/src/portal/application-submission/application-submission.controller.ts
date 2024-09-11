@@ -14,16 +14,12 @@ import {
   BaseServiceException,
   ServiceValidationException,
 } from '../../../../../libs/common/src/exceptions/base.exception';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
-import {
-  generateSUBGNoReviewGovernmentTemplateEmail,
-  generateSUBGTurApplicantHtml,
-} from '../../../../../templates/emails/submitted-to-alc';
-import { generateSUBGCoveApplicantHtml } from '../../../../../templates/emails/submitted-to-alc/cove-applicant.template';
-import {
-  generateSUBGApplicantHtml,
-  generateSUBGGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-lfng';
+import { template as cancApplicationTemplate } from '../../../../../templates/emails/cancelled/application.template';
+import { template as subgNoReviewGovernmentTemplate } from '../../../../../templates/emails/submitted-to-alc/no-review-government.template';
+import { template as subgTurApplicantTemplate } from '../../../../../templates/emails/submitted-to-alc/tur-applicant.template';
+import { template as subgCoveApplicantTemplate } from '../../../../../templates/emails/submitted-to-alc/cove-applicant.template';
+import { template as subgApplicantTemplate } from '../../../../../templates/emails/submitted-to-lfng/applicant.template';
+import { template as subgGovernmentTemplate } from '../../../../../templates/emails/submitted-to-lfng/government.template';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
@@ -224,7 +220,7 @@ export class ApplicationSubmissionController {
       application.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS
     ) {
       await this.statusEmailService.sendApplicationStatusEmail({
-        generateStatusHtml: generateCANCApplicationHtml,
+        template: cancApplicationTemplate,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission: application,
         government: submissionGovernment,
@@ -291,7 +287,7 @@ export class ApplicationSubmissionController {
     if (matchingType.requiresGovernmentReview) {
       if (primaryContact) {
         await this.statusEmailService.sendApplicationStatusEmail({
-          generateStatusHtml: generateSUBGApplicantHtml,
+          template: subgApplicantTemplate,
           status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
           applicationSubmission: validatedSubmission,
           government: submissionGovernment,
@@ -303,7 +299,7 @@ export class ApplicationSubmissionController {
 
       if (submissionGovernment) {
         await this.statusEmailService.sendApplicationStatusEmail({
-          generateStatusHtml: generateSUBGGovernmentHtml,
+          template: subgGovernmentTemplate,
           status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
           applicationSubmission: validatedSubmission,
           government: submissionGovernment,
@@ -326,13 +322,13 @@ export class ApplicationSubmissionController {
           matchingType.code === APPLICATION_SUBMISSION_TYPES.TURP ||
           matchingType.code === APPLICATION_SUBMISSION_TYPES.COVE
         ) {
-          const generateTemplateFunction =
+          const template =
             matchingType.code === APPLICATION_SUBMISSION_TYPES.TURP
-              ? generateSUBGTurApplicantHtml
-              : generateSUBGCoveApplicantHtml;
+              ? subgTurApplicantTemplate
+              : subgCoveApplicantTemplate;
 
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateTemplateFunction,
+            template: template,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: validatedSubmission,
             government: submissionGovernment,
@@ -344,7 +340,7 @@ export class ApplicationSubmissionController {
 
         if (submissionGovernment) {
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateSUBGNoReviewGovernmentTemplateEmail,
+            template: subgNoReviewGovernmentTemplate,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: validatedSubmission,
             government: submissionGovernment,

@@ -1,6 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
+import { template } from '../../../../../../../templates/emails/decision-released/application.template';
 import { ApplicationDecisionV2Service } from '../../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../../../alcs/application-decision/application-decision.entity';
 import { ApplicationSubmissionStatusService } from '../../../../alcs/application/application-submission-status/application-submission-status.service';
@@ -121,7 +121,7 @@ describe('ApplicationDecisionEmailConsumer', () => {
       parentType: PARENT_TYPE.APPLICATION,
       primaryContact: mockPrimaryContact,
       ccGovernment: true,
-      generateStatusHtml: generateALCDApplicationHtml,
+      template,
       status: SUBMISSION_STATUS.ALC_DECISION,
       documents: mockDocuments,
     });

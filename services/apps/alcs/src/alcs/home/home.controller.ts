@@ -42,6 +42,7 @@ import { NotificationService } from '../notification/notification.service';
 import { PlanningReferral } from '../planning-review/planning-referral/planning-referral.entity';
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { PlanningReferralDto } from '../planning-review/planning-review.dto';
+import { HolidayService } from '../admin/holiday/holiday.service';
 
 const HIDDEN_CARD_STATUSES = [
   CARD_STATUS.CANCELLED,
@@ -63,6 +64,7 @@ export class HomeController {
     private notificationService: NotificationService,
     private planningReferralService: PlanningReferralService,
     private inquiryService: InquiryService,
+    private holidayService: HolidayService,
   ) {}
 
   @Get('/assigned')
@@ -155,13 +157,13 @@ export class HomeController {
       await this.reconsiderationService.getWithIncompleteSubtaskByType(
         subtaskType,
       );
-    const reconSubtasks = this.mapReconToDto(reconsiderationWithSubtasks);
+    const reconSubtasks = await this.mapReconToDto(reconsiderationWithSubtasks);
 
     const planningReferralsWithSubtasks =
       await this.planningReferralService.getWithIncompleteSubtaskByType(
         subtaskType,
       );
-    const planningReferralSubtasks = this.mapPlanningReferralsToDtos(
+    const planningReferralSubtasks = await this.mapPlanningReferralsToDtos(
       planningReferralsWithSubtasks,
     );
 
@@ -169,7 +171,7 @@ export class HomeController {
       await this.modificationService.getWithIncompleteSubtaskByType(
         subtaskType,
       );
-    const modificationSubtasks = this.mapModificationsToDtos(
+    const modificationSubtasks = await this.mapModificationsToDtos(
       modificationsWithSubtasks,
     );
 
@@ -184,7 +186,7 @@ export class HomeController {
       await this.noticeOfIntentModificationService.getWithIncompleteSubtaskByType(
         subtaskType,
       );
-    const noiModificationsSubtasks = this.mapNoiModificationsToDtos(
+    const noiModificationsSubtasks = await this.mapNoiModificationsToDtos(
       noiModificationsWithSubtasks,
     );
 
@@ -193,14 +195,16 @@ export class HomeController {
         subtaskType,
       );
 
-    const notificationSubtasks = this.mapNotificationsToDtos(
+    const notificationSubtasks = await this.mapNotificationsToDtos(
       notificationsWithSubtasks,
     );
 
     const inquiriesWIthSubtasks =
       await this.inquiryService.getWithIncompleteSubtaskByType(subtaskType);
 
-    const inquirySubtasks = this.mapInquiriesToDtos(inquiriesWIthSubtasks);
+    const inquirySubtasks = await this.mapInquiriesToDtos(
+      inquiriesWIthSubtasks,
+    );
 
     return [
       ...noticeOfIntentSubtasks,
@@ -214,8 +218,9 @@ export class HomeController {
     ];
   }
 
-  private mapReconToDto(recons: ApplicationReconsideration[]) {
+  private async mapReconToDto(recons: ApplicationReconsideration[]) {
     const result: HomepageSubtaskDTO[] = [];
+    const holidays = await this.holidayService.fetchAllHolidays();
     for (const recon of recons) {
       if (!recon.card) {
         continue;
@@ -233,6 +238,14 @@ export class HomeController {
           title: `${recon.application.fileNumber} (${recon.application.applicant})`,
           appType: recon.application.type,
           parentType: PARENT_TYPE.RECONSIDERATION,
+          subtaskDays:
+            subtask.type.code === CARD_SUBTASK_TYPE.GIS
+              ? this.holidayService.calculateBusinessDays(
+                  subtask.createdAt,
+                  new Date(),
+                  holidays,
+                )
+              : 0,
         });
       }
     }
@@ -244,6 +257,7 @@ export class HomeController {
       await this.timeService.fetchActiveTimes(applications);
 
     const appPausedMap = await this.timeService.getPausedStatus(applications);
+    const holidays = await this.holidayService.fetchAllHolidays();
     const result: HomepageSubtaskDTO[] = [];
     for (const application of applications) {
       if (!application.card) {
@@ -264,14 +278,25 @@ export class HomeController {
           title: `${application.fileNumber} (${application.applicant})`,
           appType: application.type,
           parentType: PARENT_TYPE.APPLICATION,
+          subtaskDays:
+            subtask.type.code === CARD_SUBTASK_TYPE.GIS
+              ? this.holidayService.calculateBusinessDays(
+                  subtask.createdAt,
+                  new Date(),
+                  holidays,
+                )
+              : 0,
         });
       }
     }
     return result;
   }
 
-  private mapPlanningReferralsToDtos(planningReferrals: PlanningReferral[]) {
+  private async mapPlanningReferralsToDtos(
+    planningReferrals: PlanningReferral[],
+  ) {
     const result: HomepageSubtaskDTO[] = [];
+    const holidays = await this.holidayService.fetchAllHolidays();
     for (const planningReferral of planningReferrals) {
       for (const subtask of planningReferral.card.subtasks) {
         result.push({
@@ -285,6 +310,14 @@ export class HomeController {
           title: `${planningReferral.planningReview.fileNumber} (${planningReferral.planningReview.documentName})`,
           parentType: PARENT_TYPE.PLANNING_REVIEW,
           appType: planningReferral.planningReview.type,
+          subtaskDays:
+            subtask.type.code === CARD_SUBTASK_TYPE.GIS
+              ? this.holidayService.calculateBusinessDays(
+                  subtask.createdAt,
+                  new Date(),
+                  holidays,
+                )
+              : 0,
         });
       }
     }
@@ -294,6 +327,7 @@ export class HomeController {
   private async mapNoticeOfIntentToDtos(noticeOfIntents: NoticeOfIntent[]) {
     const uuids = noticeOfIntents.map((noi) => noi.uuid);
     const timeMap = await this.noticeOfIntentService.getTimes(uuids);
+    const holidays = await this.holidayService.fetchAllHolidays();
 
     const result: HomepageSubtaskDTO[] = [];
     for (const noticeOfIntent of noticeOfIntents) {
@@ -312,6 +346,14 @@ export class HomeController {
             paused: false,
             title: `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
             parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+            subtaskDays:
+              subtask.type.code === CARD_SUBTASK_TYPE.GIS
+                ? this.holidayService.calculateBusinessDays(
+                    subtask.createdAt,
+                    new Date(),
+                    holidays,
+                  )
+                : 0,
           });
         }
       }
@@ -319,8 +361,11 @@ export class HomeController {
     return result;
   }
 
-  private mapModificationsToDtos(modifications: ApplicationModification[]) {
+  private async mapModificationsToDtos(
+    modifications: ApplicationModification[],
+  ) {
     const result: HomepageSubtaskDTO[] = [];
+    const holidays = await this.holidayService.fetchAllHolidays();
     for (const modification of modifications) {
       if (!modification.card) {
         continue;
@@ -337,16 +382,25 @@ export class HomeController {
           title: `${modification.application.fileNumber} (${modification.application.applicant})`,
           appType: modification.application.type,
           parentType: PARENT_TYPE.MODIFICATION,
+          subtaskDays:
+            subtask.type.code === CARD_SUBTASK_TYPE.GIS
+              ? this.holidayService.calculateBusinessDays(
+                  subtask.createdAt,
+                  new Date(),
+                  holidays,
+                )
+              : 0,
         });
       }
     }
     return result;
   }
 
-  private mapNoiModificationsToDtos(
+  private async mapNoiModificationsToDtos(
     modifications: NoticeOfIntentModification[],
   ) {
     const result: HomepageSubtaskDTO[] = [];
+    const holidays = await this.holidayService.fetchAllHolidays();
     for (const modification of modifications) {
       if (!modification.card) {
         continue;
@@ -362,14 +416,23 @@ export class HomeController {
           paused: false,
           title: `${modification.noticeOfIntent.fileNumber} (${modification.noticeOfIntent.applicant})`,
           parentType: PARENT_TYPE.MODIFICATION,
+          subtaskDays:
+            subtask.type.code === CARD_SUBTASK_TYPE.GIS
+              ? this.holidayService.calculateBusinessDays(
+                  subtask.createdAt,
+                  new Date(),
+                  holidays,
+                )
+              : 0,
         });
       }
     }
     return result;
   }
 
-  private mapNotificationsToDtos(notifications: Notification[]) {
+  private async mapNotificationsToDtos(notifications: Notification[]) {
     const result: HomepageSubtaskDTO[] = [];
+    const holidays = await this.holidayService.fetchAllHolidays();
     for (const notification of notifications) {
       if (notification.card) {
         for (const subtask of notification.card.subtasks) {
@@ -384,6 +447,14 @@ export class HomeController {
             title: `${notification.fileNumber} (${notification.applicant})`,
             parentType: PARENT_TYPE.NOTIFICATION,
             appType: notification.type,
+            subtaskDays:
+              subtask.type.code === CARD_SUBTASK_TYPE.GIS
+                ? this.holidayService.calculateBusinessDays(
+                    subtask.createdAt,
+                    new Date(),
+                    holidays,
+                  )
+                : 0,
           });
         }
       }
@@ -391,8 +462,9 @@ export class HomeController {
     return result;
   }
 
-  private mapInquiriesToDtos(inquiries: Inquiry[]) {
+  private async mapInquiriesToDtos(inquiries: Inquiry[]) {
     const result: HomepageSubtaskDTO[] = [];
+    const holidays = await this.holidayService.fetchAllHolidays();
     for (const inquiry of inquiries) {
       if (inquiry.card) {
         for (const subtask of inquiry.card.subtasks) {
@@ -409,6 +481,14 @@ export class HomeController {
             })`,
             parentType: PARENT_TYPE.INQUIRY,
             appType: inquiry.type,
+            subtaskDays:
+              subtask.type.code === CARD_SUBTASK_TYPE.GIS
+                ? this.holidayService.calculateBusinessDays(
+                    subtask.createdAt,
+                    new Date(),
+                    holidays,
+                  )
+                : 0,
           });
         }
       }

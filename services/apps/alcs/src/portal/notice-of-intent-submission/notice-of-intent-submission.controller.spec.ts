@@ -4,10 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
-import {
-  generateSUBMNoiApplicantHtml,
-  generateSUBMNoiGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-alc';
+import { template as submNoiApplicantTemplate } from '../../../../../templates/emails/submitted-to-alc/noi-applicant.template';
+import { template as submNoiGovernmentTemplate } from '../../../../../templates/emails/submitted-to-alc/noi-government.template';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
@@ -391,7 +389,7 @@ describe('NoticeOfIntentSubmissionController', () => {
     expect(
       mockStatusEmailService.sendNoticeOfIntentStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBMNoiApplicantHtml,
+      template: submNoiApplicantTemplate,
       status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       noticeOfIntentSubmission: mockSubmission,
       government: mockGovernment,
@@ -402,7 +400,7 @@ describe('NoticeOfIntentSubmissionController', () => {
     expect(
       mockStatusEmailService.sendNoticeOfIntentStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBMNoiGovernmentHtml,
+      template: submNoiGovernmentTemplate,
       status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       noticeOfIntentSubmission: mockSubmission,
       government: mockGovernment,

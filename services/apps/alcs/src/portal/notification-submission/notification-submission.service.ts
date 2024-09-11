@@ -11,7 +11,7 @@ import {
   Not,
   Repository,
 } from 'typeorm';
-import { generateSRWTemplate } from '../../../../../templates/emails/notifications/srw-notice.template';
+import { template } from '../../../../../templates/emails/notifications/srw-notice.template';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
@@ -38,6 +38,7 @@ import {
   NotificationSubmissionUpdateDto,
 } from './notification-submission.dto';
 import { NotificationSubmission } from './notification-submission.entity';
+import { compile } from 'handlebars';
 
 @Injectable()
 export class NotificationSubmissionService {
@@ -462,7 +463,8 @@ export class NotificationSubmissionService {
       submission.fileNumber,
     );
 
-    const emailTemplate = generateSRWTemplate({
+    const html = compile(template)({
+      parentTypeLabel: 'Notification',
       fileNumber: submission.fileNumber,
       contactName: `${submission.contactFirstName} ${submission.contactLastName}`,
       status: 'ALC Response Sent',
@@ -485,7 +487,7 @@ export class NotificationSubmissionService {
     }
 
     return {
-      html: emailTemplate.html,
+      html: html,
       cc: ccEmails,
       to: submission.contactEmail!,
       parentId: notification.uuid,

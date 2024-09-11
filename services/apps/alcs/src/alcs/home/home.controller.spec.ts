@@ -8,6 +8,7 @@ import {
   initApplicationMockEntity,
   initApplicationModificationMockEntity,
   initApplicationReconsiderationMockEntity,
+  initCardGISSubtaskMockEntity,
   initCardMockEntity,
 } from '../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
@@ -35,6 +36,7 @@ import { Notification } from '../notification/notification.entity';
 import { NotificationService } from '../notification/notification.service';
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { HomeController } from './home.controller';
+import { HolidayService } from '../admin/holiday/holiday.service';
 
 describe('HomeController', () => {
   let controller: HomeController;
@@ -48,6 +50,7 @@ describe('HomeController', () => {
   let mockNotificationService: DeepMocked<NotificationService>;
   let mockPlanningReferralService: DeepMocked<PlanningReferralService>;
   let mockInquiryService: DeepMocked<InquiryService>;
+  let mockHolidayService: DeepMocked<HolidayService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -60,6 +63,7 @@ describe('HomeController', () => {
     mockNotificationService = createMock();
     mockPlanningReferralService = createMock();
     mockInquiryService = createMock();
+    mockHolidayService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -116,6 +120,10 @@ describe('HomeController', () => {
         {
           provide: InquiryService,
           useValue: mockInquiryService,
+        },
+        {
+          provide: HolidayService,
+          useValue: mockHolidayService,
         },
         ApplicationProfile,
         ApplicationSubtaskProfile,
@@ -253,6 +261,7 @@ describe('HomeController', () => {
         ]),
       );
 
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
       const res = await controller.getIncompleteSubtasksByType(
         CARD_SUBTASK_TYPE.GIS,
       );
@@ -265,6 +274,49 @@ describe('HomeController', () => {
       expect(res[0].title).toContain(mockApplication.applicant);
       expect(res[0].activeDays).toBe(activeDays);
       expect(res[0].paused).toBeTruthy();
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
+    });
+
+    it('should call ApplicationService and map an Application and calculate GIS subtask days', async () => {
+      const mockApplication = initApplicationMockEntity();
+      mockApplication.card!.subtasks = [
+        initCardGISSubtaskMockEntity(mockApplication.card!),
+      ];
+      const activeDays = 5;
+      mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([
+        mockApplication,
+      ]);
+      mockApplicationTimeTrackingService.getPausedStatus.mockResolvedValue(
+        new Map([[mockApplication.uuid, true]]),
+      );
+      mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
+        new Map([
+          [
+            mockApplication.uuid,
+            {
+              activeDays,
+              pausedDays: 0,
+            },
+          ],
+        ]),
+      );
+
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
+      mockHolidayService.calculateBusinessDays.mockReturnValue(0);
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.GIS,
+      );
+
+      expect(res.length).toEqual(1);
+      expect(
+        mockApplicationService.getWithIncompleteSubtaskByType,
+      ).toBeCalledTimes(1);
+      expect(res[0].title).toContain(mockApplication.fileNumber);
+      expect(res[0].title).toContain(mockApplication.applicant);
+      expect(res[0].activeDays).toBe(activeDays);
+      expect(res[0].paused).toBeTruthy();
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
+      expect(mockHolidayService.calculateBusinessDays).toHaveBeenCalled();
     });
 
     it('should call Reconsideration Service and map it', async () => {
@@ -273,6 +325,7 @@ describe('HomeController', () => {
         [mockReconsideration],
       );
 
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
       const res = await controller.getIncompleteSubtasksByType(
         CARD_SUBTASK_TYPE.GIS,
       );
@@ -287,6 +340,7 @@ describe('HomeController', () => {
       expect(res[0].title).toContain(mockReconsideration.application.applicant);
       expect(res[0].activeDays).toBeUndefined();
       expect(res[0].paused).toBeFalsy();
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
     });
 
     // TODO: Fix when finishing planning reviews
@@ -320,6 +374,7 @@ describe('HomeController', () => {
       mockApplicationModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
         [mockModification],
       );
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
 
       const res = await controller.getIncompleteSubtasksByType(
         CARD_SUBTASK_TYPE.GIS,
@@ -334,6 +389,7 @@ describe('HomeController', () => {
       expect(res[0].title).toContain(mockModification.application.applicant);
       expect(res[0].activeDays).toBeUndefined();
       expect(res[0].paused).toBeFalsy();
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
     });
 
     it('should call NOI Service and map it', async () => {
@@ -357,6 +413,7 @@ describe('HomeController', () => {
           ],
         ]),
       );
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
 
       const res = await controller.getIncompleteSubtasksByType(
         CARD_SUBTASK_TYPE.PEER_REVIEW,
@@ -370,6 +427,7 @@ describe('HomeController', () => {
       expect(res[0].title).toContain(mockNoi.fileNumber);
       expect(res[0].title).toContain(mockNoi.applicant);
       expect(res[0].activeDays).toBe(activeDays);
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
     });
 
     it('should call NOI Modification Service and map it', async () => {
@@ -383,6 +441,7 @@ describe('HomeController', () => {
       mockNoticeOfIntentModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
         [mockNoiModification],
       );
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
 
       const res = await controller.getIncompleteSubtasksByType(
         CARD_SUBTASK_TYPE.PEER_REVIEW,
@@ -399,6 +458,7 @@ describe('HomeController', () => {
       expect(res[0].title).toContain(
         mockNoiModification.noticeOfIntent.applicant,
       );
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
     });
 
     it('should call Notification Service and map it', async () => {
@@ -410,6 +470,7 @@ describe('HomeController', () => {
       mockNotificationService.getWithIncompleteSubtaskByType.mockResolvedValue([
         mockNotification,
       ]);
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
 
       const res = await controller.getIncompleteSubtasksByType(
         CARD_SUBTASK_TYPE.PEER_REVIEW,
@@ -422,6 +483,7 @@ describe('HomeController', () => {
 
       expect(res[0].title).toContain(mockNotification.fileNumber);
       expect(res[0].title).toContain(mockNotification.applicant);
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
     });
 
     it('should call Inquiry Service and map it', async () => {
@@ -434,6 +496,8 @@ describe('HomeController', () => {
         mockInquiry,
       ]);
 
+      mockHolidayService.fetchAllHolidays.mockResolvedValue([]);
+
       const res = await controller.getIncompleteSubtasksByType(
         CARD_SUBTASK_TYPE.PEER_REVIEW,
       );
@@ -445,6 +509,7 @@ describe('HomeController', () => {
 
       expect(res[0].title).toContain(mockInquiry.fileNumber);
       expect(res[0].title).toContain(mockInquiry.inquirerLastName);
+      expect(mockHolidayService.fetchAllHolidays).toHaveBeenCalled();
     });
   });
 });

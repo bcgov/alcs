@@ -1,6 +1,6 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { generateALCDNoticeOfIntentHtml } from '../../../../../../templates/emails/decision-released';
+import { template } from '../../../../../../templates/emails/decision-released/notice-of-intent.template';
 import { PARENT_TYPE } from '../../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernment } from '../../../alcs/local-government/local-government.entity';
 import { NoticeOfIntentDecisionV2Service } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
@@ -108,7 +108,7 @@ describe('NoticeOfIntentDecisionEmailsConsumer', () => {
       parentType: PARENT_TYPE.NOTICE_OF_INTENT,
       primaryContact: mockPrimaryContact,
       ccGovernment: true,
-      generateStatusHtml: generateALCDNoticeOfIntentHtml,
+      template,
       status: NOI_SUBMISSION_STATUS.ALC_DECISION,
       documents: mockDocuments,
     });

@@ -52,6 +52,26 @@ const initCardSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   return subtask;
 };
 
+const initCardGISSubtaskMockEntity = (
+  card: Card,
+  uuid?: string,
+): CardSubtask => {
+  const subtask = new CardSubtask();
+  subtask.assignee = initUserMockEntity();
+  subtask.uuid = uuid ?? '11111';
+  subtask.assigneeUuid = subtask.assignee.uuid;
+  subtask.createdAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  subtask.card = card;
+  subtask.type = new CardSubtaskType();
+  subtask.type.backgroundColor = 'fake-bg-color';
+  subtask.type.textColor = 'fake-color';
+  subtask.type.code = 'GIS';
+  return subtask;
+};
+
 const initBoardMockEntity = (): Board => {
   const board = new Board();
   board.uuid = 'fake-uuid';
@@ -334,6 +354,7 @@ export {
   initApplicationMeetingMock,
   initCardMockEntity,
   initCardSubtaskMockEntity,
+  initCardGISSubtaskMockEntity,
   initBoardMockEntity,
   initCardTypeMockEntity,
   initApplicationDecisionMock,

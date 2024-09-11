@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { HomepageSubtaskDto } from '../../../../services/card/card-subtask/card-subtask.dto';
+import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../../services/card/card-subtask/card-subtask.service';
 import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import {
@@ -45,6 +45,11 @@ export class SubtaskTableComponent {
       }
     }
 
+    const isGIS = this.subtasks.some((task) => task.type.code === CARD_SUBTASK_TYPE.GIS);
+    if (isGIS) {
+      const index = columns.indexOf('stage');
+      columns.splice(index + 1, 0, 'subtaskDays');
+    }
     return columns;
   }
 

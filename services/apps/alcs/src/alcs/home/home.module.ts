@@ -9,6 +9,7 @@ import { NoticeOfIntentModule } from '../notice-of-intent/notice-of-intent.modul
 import { NotificationModule } from '../notification/notification.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { HomeController } from './home.controller';
+import { AdminModule } from '../admin/admin.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { HomeController } from './home.controller';
     NoticeOfIntentDecisionModule,
     NotificationModule,
     InquiryModule,
+    AdminModule,
   ],
   providers: [ApplicationSubtaskProfile],
   controllers: [HomeController],
