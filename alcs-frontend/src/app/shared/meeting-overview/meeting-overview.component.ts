@@ -25,7 +25,7 @@ type BoardWithDecisionMeetings = {
   pastMeetings: MeetingCollection[];
   upcomingMeetings: MeetingCollection[];
   nextMeeting: MeetingCollection | undefined;
-  incomingFiles: IncomingFileDto[];
+  incomingFiles: (IncomingFileDto & { isHighlighted?: boolean })[];
   isExpanded: boolean;
 };
 
@@ -182,6 +182,17 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
         if (res.isExpanded) {
           foundResult = true;
         }
+      }
+
+      if (board.incomingFiles) {
+        board.incomingFiles.forEach((file) => {
+          if (file.fileNumber === fileNumber) {
+            board.isExpanded = true;
+            file.isHighlighted = true;
+            foundResult = true;
+            this.scrollToApplication(fileNumber);
+          }
+        });
       }
 
       board.upcomingMeetings = board.upcomingMeetings.map((meeting) => {
