@@ -9,7 +9,7 @@ import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
 import { CardType } from '../card/card.component';
 import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
-import { IncomingFileBoardMapDto, IncomingFileDto } from '../../services/incoming-file/incomig-file.dto';
+import { IncomingFileBoardMapDto, IncomingFileDto } from '../../services/incoming-file/incoming-file.dto';
 import { ActivatedRoute, Router } from '@angular/router';
 
 type MeetingCollection = {
