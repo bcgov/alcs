@@ -9,7 +9,7 @@ import { ToastService } from '../../services/toast/toast.service';
 import { UserService } from '../../services/user/user.service';
 import { CardType } from '../card/card.component';
 import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
-import { IncomingFileBoardMapDto, IncomingFileDto } from '../../services/incoming-file/incomig-file.dto';
+import { IncomingFileBoardMapDto, IncomingFileDto } from '../../services/incoming-file/incoming-file.dto';
 import { ActivatedRoute, Router } from '@angular/router';
 
 type MeetingCollection = {
@@ -25,7 +25,7 @@ type BoardWithDecisionMeetings = {
   pastMeetings: MeetingCollection[];
   upcomingMeetings: MeetingCollection[];
   nextMeeting: MeetingCollection | undefined;
-  incomingFiles: IncomingFileDto[];
+  incomingFiles: (IncomingFileDto & { isHighlighted?: boolean })[];
   isExpanded: boolean;
 };
 
@@ -165,10 +165,6 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSearch() {
-    this.findAndExpandAll(this.searchText);
-  }
-
   findAndExpandAll(fileNumber: string) {
     let foundResult = false;
     this.viewData = this.viewData.map((board) => {
@@ -186,6 +182,17 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
         if (res.isExpanded) {
           foundResult = true;
         }
+      }
+
+      if (board.incomingFiles) {
+        board.incomingFiles.forEach((file) => {
+          if (file.fileNumber === fileNumber) {
+            board.isExpanded = true;
+            file.isHighlighted = true;
+            foundResult = true;
+            this.scrollToApplication(fileNumber);
+          }
+        });
       }
 
       board.upcomingMeetings = board.upcomingMeetings.map((meeting) => {

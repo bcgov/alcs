@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '../toast/toast.service';
 import { firstValueFrom } from 'rxjs';
-import { IncomingFileBoardMapDto } from './incomig-file.dto';
+import { IncomingFileBoardMapDto } from './incoming-file.dto';
 
 @Injectable({
   providedIn: 'root',
