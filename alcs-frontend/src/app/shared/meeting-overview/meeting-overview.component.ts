@@ -165,10 +165,6 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSearch() {
-    this.findAndExpandAll(this.searchText);
-  }
-
   findAndExpandAll(fileNumber: string) {
     let foundResult = false;
     this.viewData = this.viewData.map((board) => {
