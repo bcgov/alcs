@@ -183,7 +183,7 @@
 
   <ng-container *ngIf="noiSubmission.soilIsExtractionOrMining || noiSubmission.soilIsAreaWideFilling">
     <div class="subheading2 grid-1">Cross Sections</div>
-    <div class="grid-double">
+    <div class="grid-double multiple-documents">
       <a *ngFor="let file of crossSections" (click)="openFile(file)">
         {{ file.fileName }}
       </a>
