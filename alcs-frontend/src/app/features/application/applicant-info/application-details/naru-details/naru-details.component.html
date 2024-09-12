@@ -1,96 +1,85 @@
 <div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">Selected Subtype:</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruSubtype?.label }}
-  </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
   </div>
-  <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'ARFU'">
-    <div class="subheading2 grid-1">
-      What is the total floor area (m<sup>2</sup>) of the proposed additional residence?
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
-    </div>
-    <div class="subheading2 grid-1">
-      Describe the necessity for an additional residence for farm use and how it will support agriculture in the short
-      or long term.
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruResidenceNecessity }}
-    </div>
-    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the additional residence.</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruLocationRationale }}
-    </div>
-    <div class="subheading2 grid-1">
-      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
-      residence.
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruInfrastructure }}
-    </div>
-  </ng-container>
-  <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'PRIN'">
-    <div class="subheading2 grid-1">
-      What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
-    </div>
-    <div class="subheading2 grid-1">
-      Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
-      short or long term.
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruResidenceNecessity }}
-    </div>
-    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the principal residence.</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruLocationRationale }}
-    </div>
-    <div class="subheading2 grid-1">
-      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the principal
-      residence.
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruInfrastructure }}
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'TOUR'">
-    <div class="subheading2 grid-1">What is the total floor area (m<sup>2</sup>) of the proposed accommodation?</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
-    </div>
-    <div class="subheading2 grid-1">How many "sleeping units" in total are proposed?</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruSleepingUnits }}
-    </div>
-    <div class="subheading2 grid-1">
-      Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruResidenceNecessity }}
-    </div>
-    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the tourism accommodation.</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruLocationRationale }}
-    </div>
-    <div class="subheading2 grid-1">
-      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
-      accommodation.
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruInfrastructure }}
-    </div>
-    <div class="subheading2 grid-1">Describe any agri-tourism that is currently taking place on the property.</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruAgriTourism }}
-    </div>
-  </ng-container>
+  <div class="subheading2 grid-1">
+    What is the total floor area (m<sup>2</sup>) of the proposed additional residence?
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
+  </div>
+  <div class="subheading2 grid-1">
+    Describe the necessity for an additional residence for farm use and how it will support agriculture in the short or
+    long term.
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruResidenceNecessity }}
+  </div>
+  <div class="subheading2 grid-1">Describe the rationale for the proposed location of the additional residence.</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruLocationRationale }}
+  </div>
+  <div class="subheading2 grid-1">
+    Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
+    residence.
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruInfrastructure }}
+  </div>
+  <div class="subheading2 grid-1">
+    What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
+  </div>
+  <div class="subheading2 grid-1">
+    Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
+    short or long term.
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruResidenceNecessity }}
+  </div>
+  <div class="subheading2 grid-1">Describe the rationale for the proposed location of the principal residence.</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruLocationRationale }}
+  </div>
+  <div class="subheading2 grid-1">
+    Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the principal
+    residence.
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruInfrastructure }}
+  </div>
+  <div class="subheading2 grid-1">What is the total floor area (m<sup>2</sup>) of the proposed accommodation?</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
+  </div>
+  <div class="subheading2 grid-1">How many "sleeping units" in total are proposed?</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruSleepingUnits }}
+  </div>
+  <div class="subheading2 grid-1">
+    Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruResidenceNecessity }}
+  </div>
+  <div class="subheading2 grid-1">Describe the rationale for the proposed location of the tourism accommodation.</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruLocationRationale }}
+  </div>
+  <div class="subheading2 grid-1">
+    Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
+    accommodation.
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruInfrastructure }}
+  </div>
+  <div class="subheading2 grid-1">Describe any agri-tourism that is currently taking place on the property.</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.naruAgriTourism }}
+  </div>
 
   <div class="subheading2 grid-1">
     Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures currently
