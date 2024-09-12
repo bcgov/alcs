@@ -69,6 +69,7 @@
 }
 
 .comment-input {
+  font-size: rem(16);
   resize: none;
   margin-top: rem(4);
   border: 1px solid rgba(0, 0, 0, 0.42);
@@ -76,4 +77,10 @@
   padding: rem(4) rem(8);
   height: rem(120);
   width: 100%;
+}
+
+.field-error {
+  color: colors.$error-color;
+  display: flex;
+  align-items: center;
 }
