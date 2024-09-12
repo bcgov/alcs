@@ -6,10 +6,7 @@ import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
-import {
-  ApplicationSubmissionUpdateDto,
-  NaruSubtypeDto,
-} from '../../../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../../services/code/code.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
@@ -18,7 +15,6 @@ import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.direc
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
-import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
@@ -31,8 +27,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   showProposalMapVirus = false;
 
-  previousSubtype: string | null = null;
-  subtype = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   floorArea = new FormControl<string | null>(null, [Validators.required]);
   residenceNecessity = new FormControl<string | null>(null, [Validators.required]);
@@ -47,21 +41,21 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   fillOrigin = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   projectDuration = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
 
   proposalMap: ApplicationDocumentDto[] = [];
@@ -69,7 +63,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   fillTableDisabled = true;
 
   form = new FormGroup({
-    subtype: this.subtype,
     purpose: this.purpose,
     floorArea: this.floorArea,
     residenceNecessity: this.residenceNecessity,
@@ -85,7 +78,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   });
 
   private submissionUuid = '';
-  naruSubtypes: NaruSubtypeDto[] = [];
 
   constructor(
     private router: Router,
@@ -94,20 +86,18 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
-    this.loadNaruSubtypes();
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          subtype: applicationSubmission.naruSubtype?.code,
           existingStructures: applicationSubmission.naruExistingStructures,
           willImportFill: applicationSubmission.naruWillImportFill,
           fillType: applicationSubmission.naruFillType,
@@ -123,7 +113,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
             ? applicationSubmission.naruSleepingUnits.toString()
             : null,
         });
-        this.previousSubtype = applicationSubmission.naruSubtype?.code ?? null;
 
         if (applicationSubmission.naruWillImportFill !== null) {
           this.onChangeFill(applicationSubmission.naruWillImportFill);
@@ -157,23 +146,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   async attachProposalMap(file: FileHandle) {
     const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
     this.showProposalMapVirus = !res;
-  }
-
-  onChangeSubtype($event: MatRadioChange) {
-    if (this.previousSubtype) {
-      this.dialog
-        .open(ChangeSubtypeConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe((didConfirm) => {
-          if (didConfirm) {
-            this.previousSubtype = $event.value;
-          } else {
-            this.subtype.setValue(this.previousSubtype);
-          }
-        });
-    } else {
-      this.previousSubtype = $event.value;
-    }
   }
 
   onChangeFill(willImportFill: boolean) {
@@ -232,7 +204,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         projectDuration,
         purpose,
         residenceNecessity,
-        subtype,
         sleepingUnits,
         agriTourism,
       } = this.form.getRawValue();
@@ -252,7 +223,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruProjectDuration: projectDuration,
         purpose: purpose,
         naruResidenceNecessity: residenceNecessity,
-        naruSubtypeCode: subtype,
         naruSleepingUnits: sleepingUnits ? parseFloat(sleepingUnits) : null,
         naruAgriTourism: agriTourism,
       };
@@ -260,11 +230,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
     }
-  }
-
-  private async loadNaruSubtypes() {
-    const subtypes = await this.codeService.loadCodes();
-    this.naruSubtypes = subtypes.naruSubtypes;
   }
 
   markDirty() {
