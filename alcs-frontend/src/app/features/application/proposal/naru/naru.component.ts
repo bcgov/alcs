@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
-import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
 import { ApplicationDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -19,21 +18,16 @@ interface InlineSelect {
 export class NaruProposalComponent implements OnDestroy, OnInit {
   $destroy = new Subject<void>();
   application: ApplicationDto | undefined;
-  naruSubtype: string = '';
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private toastService: ToastService,
-    private applicationSubmissionService: ApplicationSubmissionService,
   ) {}
 
   ngOnInit(): void {
     this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.application = application;
-        this.applicationSubmissionService
-          .fetchSubmission(application.fileNumber)
-          .then((e) => (this.naruSubtype = e.naruSubtype?.label ?? ''));
       }
     });
   }
