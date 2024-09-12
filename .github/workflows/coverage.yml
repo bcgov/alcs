@@ -23,7 +23,7 @@ jobs:
       - run: npm run build
       - run: npm run test:cov
       - if: matrix.node == '20'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-alcs-frontend
           path: ${{ github.workspace }}/alcs-frontend/coverage
@@ -48,7 +48,7 @@ jobs:
       - run: npm run build
       - run: npm run test:cov
       - if: matrix.node == '20'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-portal-frontend
           path: ${{ github.workspace }}/portal-frontend/coverage
@@ -73,7 +73,7 @@ jobs:
       - run: npm run build
       - run: npm run test:cov
       - if: matrix.node == '20'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-api
           path: ${{ github.workspace }}/services/coverage
