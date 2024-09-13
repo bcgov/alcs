@@ -28,13 +28,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   showProposalMapVirus = false;
 
   purpose = new FormControl<string | null>(null, [Validators.required]);
-  floorArea = new FormControl<string | null>(null, [Validators.required]);
-  residenceNecessity = new FormControl<string | null>(null, [Validators.required]);
   locationRationale = new FormControl<string | null>(null, [Validators.required]);
   infrastructure = new FormControl<string | null>(null, [Validators.required]);
-  existingStructures = new FormControl<string | null>(null, [Validators.required]);
-  sleepingUnits = new FormControl<string | null>(null, [Validators.required]);
-  agriTourism = new FormControl<string | null>(null, [Validators.required]);
   willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   fillType = new FormControl<string | null>(
     {
@@ -64,17 +59,12 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   form = new FormGroup({
     purpose: this.purpose,
-    floorArea: this.floorArea,
-    residenceNecessity: this.residenceNecessity,
     locationRationale: this.locationRationale,
     infrastructure: this.infrastructure,
-    existingStructures: this.existingStructures,
     willImportFill: this.willImportFill,
     fillType: this.fillType,
     fillOrigin: this.fillOrigin,
     projectDuration: this.projectDuration,
-    sleepingUnits: this.sleepingUnits,
-    agriTourism: this.agriTourism,
   });
 
   private submissionUuid = '';
@@ -98,20 +88,13 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          existingStructures: applicationSubmission.naruExistingStructures,
           willImportFill: applicationSubmission.naruWillImportFill,
           fillType: applicationSubmission.naruFillType,
           fillOrigin: applicationSubmission.naruFillOrigin,
-          floorArea: applicationSubmission.naruFloorArea ? applicationSubmission.naruFloorArea.toString() : null,
           infrastructure: applicationSubmission.naruInfrastructure,
           locationRationale: applicationSubmission.naruLocationRationale,
           projectDuration: applicationSubmission.naruProjectDuration,
           purpose: applicationSubmission.purpose,
-          residenceNecessity: applicationSubmission.naruResidenceNecessity,
-          agriTourism: applicationSubmission.naruAgriTourism,
-          sleepingUnits: applicationSubmission.naruSleepingUnits
-            ? applicationSubmission.naruSleepingUnits.toString()
-            : null,
         });
 
         if (applicationSubmission.naruWillImportFill !== null) {
@@ -193,23 +176,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   protected async save() {
     if (this.fileId && this.form.dirty) {
-      const {
-        existingStructures,
-        willImportFill,
-        fillType,
-        fillOrigin,
-        floorArea,
-        infrastructure,
-        locationRationale,
-        projectDuration,
-        purpose,
-        residenceNecessity,
-        sleepingUnits,
-        agriTourism,
-      } = this.form.getRawValue();
+      const { willImportFill, fillType, fillOrigin, infrastructure, locationRationale, projectDuration, purpose } =
+        this.form.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
-        naruExistingStructures: existingStructures,
         naruWillImportFill: willImportFill,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
@@ -217,14 +187,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruToPlaceMaximumDepth: this.fillTableData.maximumDepth ?? null,
         naruToPlaceArea: this.fillTableData.area ?? null,
         naruToPlaceVolume: this.fillTableData.volume ?? null,
-        naruFloorArea: floorArea ? parseFloat(floorArea) : null,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
         naruProjectDuration: projectDuration,
         purpose: purpose,
-        naruResidenceNecessity: residenceNecessity,
-        naruSleepingUnits: sleepingUnits ? parseFloat(sleepingUnits) : null,
-        naruAgriTourism: agriTourism,
       };
 
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
