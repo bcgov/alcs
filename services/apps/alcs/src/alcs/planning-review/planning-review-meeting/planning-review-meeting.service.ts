@@ -106,9 +106,9 @@ export class PlanningReviewMeetingService {
       .addSelect(
         `
         CASE
-          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END) is NOT NULL
-          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END)
-        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE) THEN meeting.date END)
+          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END) is NOT NULL
+          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END)
+        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END)
         END
         `,
         'next_meeting',
