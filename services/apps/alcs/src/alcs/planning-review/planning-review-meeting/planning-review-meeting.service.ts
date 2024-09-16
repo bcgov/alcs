@@ -116,7 +116,9 @@ export class PlanningReviewMeetingService {
       .innerJoin('meeting.planningReview', 'planningReview')
       .innerJoin('planningReview.referrals', 'referrals')
       .innerJoin('referrals.card', 'card')
-      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
+      .where('card.status_code NOT IN (:...values)', {
+        values: [CARD_STATUS.DECISION_RELEASED, CARD_STATUS.CANCELLED],
+      })
       .groupBy('planningReview.uuid')
       .getRawMany();
   }
