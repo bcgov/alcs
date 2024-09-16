@@ -251,11 +251,18 @@ export class SearchComponent implements OnInit, OnDestroy {
   getSearchParams(): SearchRequestDto {
     const resolutionNumberString = this.formatStringSearchParam(this.searchForm.controls.resolutionNumber.value);
     let fileTypes: string[];
+    let portalStatusCodes;
 
     if (this.searchForm.controls.componentType.value === null) {
       fileTypes = this.isCommissioner ? this.fileTypeService.getCommissionerListData() : [];
     } else {
       fileTypes = this.searchForm.controls.componentType.value!;
+    }
+
+    if (this.searchForm.controls.portalStatus.value?.length === 0) {
+      portalStatusCodes = this.isCommissioner ? this.portalStatusDataService.getCommissionerListData() : [];
+    } else {
+      portalStatusCodes = this.searchForm.controls.portalStatus.value!;
     }
 
     return {
@@ -273,7 +280,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       pid: this.formatStringSearchParam(this.searchForm.controls.pid.value),
       resolutionNumber: resolutionNumberString ? parseInt(resolutionNumberString) : undefined,
       resolutionYear: this.searchForm.controls.resolutionYear.value ?? undefined,
-      portalStatusCodes: this.portalStatusControl.value !== null ? this.portalStatusControl.value : undefined,
+      portalStatusCodes: portalStatusCodes,
       governmentName: this.formatStringSearchParam(this.searchForm.controls.government.value),
       regionCode: this.searchForm.controls.region.value ?? undefined,
       dateSubmittedFrom: this.searchForm.controls.dateSubmittedFrom.value
