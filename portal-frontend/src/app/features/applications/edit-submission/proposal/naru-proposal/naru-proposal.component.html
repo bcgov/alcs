@@ -27,6 +27,151 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
+      <mat-label for="will-be-over-five-hundred-m2">
+        Is your proposal for a principal residence with a total floor area greater than 500 m<sup>2</sup>
+      </mat-label>
+      <div class="subtext">Total floor area includes the basement and any attached garage</div>
+      <mat-button-toggle-group
+        class="input"
+        id="will-be-over-five-hundred-m2"
+        formControlName="willBeOverFiveHundredM2"
+      >
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline':
+              willBeOverFiveHundredM2.invalid && (willBeOverFiveHundredM2.dirty || willBeOverFiveHundredM2.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline':
+              willBeOverFiveHundredM2.invalid && (willBeOverFiveHundredM2.dirty || willBeOverFiveHundredM2.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="willBeOverFiveHundredM2.invalid && (willBeOverFiveHundredM2.dirty || willBeOverFiveHundredM2.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willBeOverFiveHundredM2.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <mat-label for="will-retain-residence">
+        Is your proposal to retain an existing residence while building a new residence?
+      </mat-label>
+      <mat-button-toggle-group class="input" id="will-retain-residence" formControlName="willRetainResidence">
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline': willRetainResidence.invalid && (willRetainResidence.dirty || willRetainResidence.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline': willRetainResidence.invalid && (willRetainResidence.dirty || willRetainResidence.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="willRetainResidence.invalid && (willRetainResidence.dirty || willRetainResidence.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willRetainResidence.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <mat-label for="will-have-additional-residence"> Is your proposal for an additional residence? </mat-label>
+      <mat-button-toggle-group
+        class="input"
+        id="will-have-additional-residence"
+        formControlName="willHaveAdditionalResidence"
+      >
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline':
+              willHaveAdditionalResidence.invalid &&
+              (willHaveAdditionalResidence.dirty || willHaveAdditionalResidence.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline':
+              willHaveAdditionalResidence.invalid &&
+              (willHaveAdditionalResidence.dirty || willHaveAdditionalResidence.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="
+          willHaveAdditionalResidence.invalid &&
+          (willHaveAdditionalResidence.dirty || willHaveAdditionalResidence.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willHaveAdditionalResidence.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <mat-label for="will-have-temporary-foreign-worker-housing">
+        Is your proposal for temporary foreign worker housing?
+      </mat-label>
+      <div class="subtext">For registration in a federal temporary worker program</div>
+      <mat-button-toggle-group
+        (change)="onChangeFill($event.value)"
+        class="input"
+        id="will-have-temporary-foreign-worker-housing"
+        formControlName="willHaveTemporaryForeignWorkerHousing"
+      >
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline':
+              willHaveTemporaryForeignWorkerHousing.invalid &&
+              (willHaveTemporaryForeignWorkerHousing.dirty || willHaveTemporaryForeignWorkerHousing.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline':
+              willHaveTemporaryForeignWorkerHousing.invalid &&
+              (willHaveTemporaryForeignWorkerHousing.dirty || willHaveTemporaryForeignWorkerHousing.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="
+          willHaveTemporaryForeignWorkerHousing.invalid &&
+          (willHaveTemporaryForeignWorkerHousing.dirty || willHaveTemporaryForeignWorkerHousing.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willHaveTemporaryForeignWorkerHousing.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
       <mat-label for="will-import-fill">
         Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
       </mat-label>
@@ -68,6 +213,34 @@
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
+      <label for="clustered"
+        >Will the proposed residence(s) be clustered with existing residential structures? Please explain.</label
+      >
+      <mat-form-field appearance="outline">
+        <textarea formControlName="clustered" #clusteredText maxlength="4000" id="clustered" matInput></textarea>
+      </mat-form-field>
+      <div *ngIf="clustered.invalid && (clustered.dirty || clustered.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="clustered.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - clusteredText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
+      <label for="setback"
+        >Will the proposed residence(s) be located within a 60 m setback from the front lot line? Please explain.</label
+      >
+      <mat-form-field appearance="outline">
+        <textarea formControlName="setback" #setbackText maxlength="4000" id="setback" matInput></textarea>
+      </mat-form-field>
+      <div *ngIf="setback.invalid && (setback.dirty || setback.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="setback.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - setbackText.textLength }}</div>
     </div>
 
     <div class="full-row">

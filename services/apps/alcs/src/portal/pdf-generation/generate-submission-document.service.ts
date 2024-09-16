@@ -372,13 +372,27 @@ export class GenerateSubmissionDocumentService {
   private populateNaruData(pdfData: any, submission: ApplicationSubmission) {
     return {
       ...pdfData,
-      showImportFill: submission.naruWillImportFill,
+      naruWillBeOverFiveHundredM2: formatBooleanToYesNoString(
+        submission.naruWillBeOverFiveHundredM2,
+      ),
+      naruWillRetainResidence: formatBooleanToYesNoString(
+        submission.naruWillRetainResidence,
+      ),
+      naruWillHaveAdditionalResidence: formatBooleanToYesNoString(
+        submission.naruWillHaveAdditionalResidence,
+      ),
+      naruWillHaveTemporaryForeignWorkerHousing: formatBooleanToYesNoString(
+        submission.naruWillHaveTemporaryForeignWorkerHousing,
+      ),
       naruWillImportFill: formatBooleanToYesNoString(
         submission.naruWillImportFill,
       ),
+      naruClustered: submission.naruClustered,
+      naruSetback: submission.naruSetback,
       naruLocationRationale: submission.naruLocationRationale,
       naruInfrastructure: submission.naruInfrastructure,
 
+      showImportFill: submission.naruWillImportFill,
       // NFU Proposal => Soil and Fill
       naruFillType: submission.naruFillType,
       naruFillOrigin: submission.naruFillOrigin,

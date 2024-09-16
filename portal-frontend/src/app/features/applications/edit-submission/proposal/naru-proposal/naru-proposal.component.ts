@@ -27,10 +27,16 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   showProposalMapVirus = false;
 
+  willBeOverFiveHundredM2 = new FormControl<boolean | null>(null, [Validators.required]);
+  willRetainResidence = new FormControl<boolean | null>(null, [Validators.required]);
+  willHaveAdditionalResidence = new FormControl<boolean | null>(null, [Validators.required]);
+  willHaveTemporaryForeignWorkerHousing = new FormControl<boolean | null>(null, [Validators.required]);
+  willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
+  clustered = new FormControl<string | null>(null, [Validators.required]);
+  setback = new FormControl<string | null>(null, [Validators.required]);
   locationRationale = new FormControl<string | null>(null, [Validators.required]);
   infrastructure = new FormControl<string | null>(null, [Validators.required]);
-  willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   fillType = new FormControl<string | null>(
     {
       disabled: true,
@@ -58,10 +64,16 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   fillTableDisabled = true;
 
   form = new FormGroup({
+    willBeOverFiveHundredM2: this.willBeOverFiveHundredM2,
+    willRetainResidence: this.willRetainResidence,
+    willHaveAdditionalResidence: this.willHaveAdditionalResidence,
+    willHaveTemporaryForeignWorkerHousing: this.willHaveTemporaryForeignWorkerHousing,
+    willImportFill: this.willImportFill,
     purpose: this.purpose,
+    clustered: this.clustered,
+    setback: this.setback,
     locationRationale: this.locationRationale,
     infrastructure: this.infrastructure,
-    willImportFill: this.willImportFill,
     fillType: this.fillType,
     fillOrigin: this.fillOrigin,
     projectDuration: this.projectDuration,
@@ -88,13 +100,19 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
+          willBeOverFiveHundredM2: applicationSubmission.naruWillBeOverFiveHundredM2,
+          willRetainResidence: applicationSubmission.naruWillRetainResidence,
+          willHaveAdditionalResidence: applicationSubmission.naruWillHaveAdditionalResidence,
+          willHaveTemporaryForeignWorkerHousing: applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing,
           willImportFill: applicationSubmission.naruWillImportFill,
+          purpose: applicationSubmission.purpose,
+          clustered: applicationSubmission.naruClustered,
+          setback: applicationSubmission.naruSetback,
           fillType: applicationSubmission.naruFillType,
           fillOrigin: applicationSubmission.naruFillOrigin,
           infrastructure: applicationSubmission.naruInfrastructure,
           locationRationale: applicationSubmission.naruLocationRationale,
           projectDuration: applicationSubmission.naruProjectDuration,
-          purpose: applicationSubmission.purpose,
         });
 
         if (applicationSubmission.naruWillImportFill !== null) {
@@ -176,11 +194,30 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   protected async save() {
     if (this.fileId && this.form.dirty) {
-      const { willImportFill, fillType, fillOrigin, infrastructure, locationRationale, projectDuration, purpose } =
-        this.form.getRawValue();
+      const {
+        willBeOverFiveHundredM2,
+        willRetainResidence,
+        willHaveAdditionalResidence,
+        willHaveTemporaryForeignWorkerHousing,
+        willImportFill,
+        purpose,
+        clustered,
+        setback,
+        fillType,
+        fillOrigin,
+        infrastructure,
+        locationRationale,
+        projectDuration,
+      } = this.form.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
+        naruWillBeOverFiveHundredM2: willBeOverFiveHundredM2,
+        naruWillRetainResidence: willRetainResidence,
+        naruWillHaveAdditionalResidence: willHaveAdditionalResidence,
+        naruWillHaveTemporaryForeignWorkerHousing: willHaveTemporaryForeignWorkerHousing,
         naruWillImportFill: willImportFill,
+        naruClustered: clustered,
+        naruSetback: setback,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,

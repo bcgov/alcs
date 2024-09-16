@@ -238,6 +238,27 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
 
+  @AutoMap(() => Boolean)
+  naruWillBeOverFiveHundredM2: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillRetainResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveAdditionalResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  naruClustered: string | null;
+
+  @AutoMap(() => String)
+  naruSetback: string | null;
+
   //NARU Fields
   @AutoMap(() => [NaruSubtypeDto])
   naruSubtype: NaruSubtypeDto | null;
@@ -256,9 +277,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruExistingStructures: string | null;
-
-  @AutoMap(() => Boolean)
-  naruWillImportFill: boolean | null;
 
   @AutoMap(() => String)
   naruFillType: string | null;
@@ -618,6 +636,34 @@ export class ApplicationSubmissionUpdateDto {
   soilHasSubmittedNotice?: boolean;
 
   //NARU Fields
+  @IsBoolean()
+  @IsOptional()
+  naruWillBeOverFiveHundredM2?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillRetainResidence?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillHaveAdditionalResidence?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillHaveTemporaryForeignWorkerHousing?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillImportFill?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  naruClustered?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruSetback?: string | null;
+
   @IsString()
   @IsOptional()
   naruSubtypeCode?: string | null;
@@ -641,10 +687,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruExistingStructures?: string | null;
-
-  @IsBoolean()
-  @IsOptional()
-  naruWillImportFill?: boolean | null;
 
   @IsString()
   @IsOptional()
