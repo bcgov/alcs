@@ -193,7 +193,7 @@ export class SearchController {
   }
 
   @Post('/advanced/application')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  @UserRoles(...ROLES_ALLOWED_SEARCH)
   async advancedSearchApplications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<ApplicationSearchResultDto[]>> {
