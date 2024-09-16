@@ -145,7 +145,9 @@ export class ApplicationDecisionMeetingService {
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.reconsiderations', 'reconsideration')
       .innerJoin('reconsideration.card', 'card')
-      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
+      .where('card.status_code NOT IN (:...values)', {
+        values: [CARD_STATUS.DECISION_RELEASED, CARD_STATUS.CANCELLED],
+      })
       .groupBy('reconsideration.uuid')
       .getRawMany();
   }
@@ -168,7 +170,9 @@ export class ApplicationDecisionMeetingService {
       )
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.card', 'card')
-      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
+      .where('card.status_code NOT IN (:...values)', {
+        values: [CARD_STATUS.DECISION_RELEASED, CARD_STATUS.CANCELLED],
+      })
       .groupBy('application.uuid')
       .getRawMany();
   }
