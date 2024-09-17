@@ -26,16 +26,21 @@ export class NaruDetailsComponent {
 
   @Input() set applicationDocuments(documents: ApplicationDocumentDto[]) {
     this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
   }
 
   proposalMap: ApplicationDocumentDto[] = [];
+  buildingPlans: ApplicationDocumentDto[] = [];
 
-  constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private router: Router,
+    private applicationDocumentService: ApplicationDocumentService,
+  ) {}
 
   async onEditSection(step: number) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`
+        `/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`,
       );
     } else {
       await this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);

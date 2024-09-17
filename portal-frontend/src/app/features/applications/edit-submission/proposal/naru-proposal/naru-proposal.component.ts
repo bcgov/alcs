@@ -26,6 +26,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   currentStep = EditApplicationSteps.Proposal;
 
   showProposalMapVirus = false;
+  showBuildingPlanVirus = false;
 
   willBeOverFiveHundredM2 = new FormControl<boolean | null>(null, [Validators.required]);
   willRetainResidence = new FormControl<boolean | null>(null, [Validators.required]);
@@ -61,6 +62,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   );
 
   proposalMap: ApplicationDocumentDto[] = [];
+  buildingPlans: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
 
@@ -140,6 +142,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
     });
   }
 
@@ -150,6 +153,11 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   async attachProposalMap(file: FileHandle) {
     const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
     this.showProposalMapVirus = !res;
+  }
+
+  async attachBuildingPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+    this.showBuildingPlanVirus = !res;
   }
 
   onChangeFill(willImportFill: boolean) {

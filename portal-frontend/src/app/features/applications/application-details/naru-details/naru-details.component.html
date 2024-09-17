@@ -120,6 +120,14 @@
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
+  <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
+  <div class="grid-double">
+    <a *ngFor="let plan of buildingPlans" (click)="openFile(plan)">
+      {{ plan.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="buildingPlans.length === 0"></app-no-data>
+  </div>
+
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
     <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
     <div class="grid-double">
