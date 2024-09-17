@@ -33,6 +33,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   willHaveTemporaryForeignWorkerHousing = new FormControl<boolean | null>(null, [Validators.required]);
   willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
+  residenceNecessity = new FormControl<string | null>(null, [Validators.required]);
   clustered = new FormControl<string | null>(null, [Validators.required]);
   setback = new FormControl<string | null>(null, [Validators.required]);
   locationRationale = new FormControl<string | null>(null, [Validators.required]);
@@ -70,6 +71,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     willHaveTemporaryForeignWorkerHousing: this.willHaveTemporaryForeignWorkerHousing,
     willImportFill: this.willImportFill,
     purpose: this.purpose,
+    residenceNecessity: this.residenceNecessity,
     clustered: this.clustered,
     setback: this.setback,
     locationRationale: this.locationRationale,
@@ -106,6 +108,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           willHaveTemporaryForeignWorkerHousing: applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing,
           willImportFill: applicationSubmission.naruWillImportFill,
           purpose: applicationSubmission.purpose,
+          residenceNecessity: applicationSubmission.naruResidenceNecessity,
           clustered: applicationSubmission.naruClustered,
           setback: applicationSubmission.naruSetback,
           fillType: applicationSubmission.naruFillType,
@@ -201,6 +204,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         willHaveTemporaryForeignWorkerHousing,
         willImportFill,
         purpose,
+        residenceNecessity,
         clustered,
         setback,
         fillType,
@@ -216,6 +220,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruWillHaveAdditionalResidence: willHaveAdditionalResidence,
         naruWillHaveTemporaryForeignWorkerHousing: willHaveTemporaryForeignWorkerHousing,
         naruWillImportFill: willImportFill,
+        purpose: purpose,
+        naruResidenceNecessity: residenceNecessity,
         naruClustered: clustered,
         naruSetback: setback,
         naruFillType: fillType,
@@ -227,7 +233,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
         naruProjectDuration: projectDuration,
-        purpose: purpose,
       };
 
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);

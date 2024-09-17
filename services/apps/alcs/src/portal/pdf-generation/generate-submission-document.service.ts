@@ -387,6 +387,7 @@ export class GenerateSubmissionDocumentService {
       naruWillImportFill: formatBooleanToYesNoString(
         submission.naruWillImportFill,
       ),
+      naruResidenceNecessity: submission.naruResidenceNecessity,
       naruClustered: submission.naruClustered,
       naruSetback: submission.naruSetback,
       naruLocationRationale: submission.naruLocationRationale,

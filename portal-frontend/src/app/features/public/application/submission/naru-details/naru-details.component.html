@@ -50,6 +50,24 @@
   </div>
 
   <div class="subheading2 grid-1">
+    Describe the necessity for an additional residence for farm use and how it will support agriculture in the short or
+    long term.
+  </div>
+  <div class="grid-double">
+    {{ applicationSubmission.naruResidenceNecessity }}
+    <app-no-data *ngIf="!applicationSubmission.naruResidenceNecessity"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
+    short or long term.
+  </div>
+  <div class="grid-double">
+    {{ applicationSubmission.naruResidenceNecessity }}
+    <app-no-data *ngIf="!applicationSubmission.naruResidenceNecessity"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
     Will the proposed residence(s) be clustered with existing residential structures? Please explain.
   </div>
   <div class="grid-double">
