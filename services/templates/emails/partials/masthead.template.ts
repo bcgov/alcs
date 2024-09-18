@@ -1,12 +1,24 @@
 import * as config from 'config';
 
-export const masthead = `
+const defaultDetails = `
+  <p style="font-size: 21px;"><b>{{ parentTypeLabel }} ID #{{ fileNumber }}</b></p>
+  <p>Name: <b>{{ applicantName }}</b></p>
+  <p>Status: <b>{{ status }}</b></p>
+`;
+
+const notificationDetails = `
+  <p style="font-size: 21px;"><b>{{ parentTypeLabel }} ID #SRW{{ fileNumber }}</b></p>
+  <p>Primary Contact: <b>{{ contactName }}</b></p>
+  <p>Status: <b>{{ status }}</b></p>
+  <p>{{ dateSubmitted }}</p>
+  <p>Submitter's File Number: {{ submittersFileNumber }}</p>
+`;
+
+export const masthead = (isNotification: boolean = false) => `
 <table border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td style="width: 400px; vertical-align: top;" align="left" vertical-align:top>
-      <p style="font-size: 21px;"><b>{{ parentTypeLabel }} ID #{{ fileNumber }}</b></p>
-      <p>Name: <b>{{ applicantName }}</b></p>
-      <p>Status: <b>{{ status }}</b></p>
+      ${isNotification ? notificationDetails : defaultDetails}
     </td>
     <td style="width: 200px; vertical-align: top;" align="right">
       <table border="0" cellpadding="0" cellspacing="0">
