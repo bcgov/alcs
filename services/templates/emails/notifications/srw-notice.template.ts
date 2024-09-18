@@ -26,4 +26,5 @@ export const template = build(
     Attachment: {{fileName}}
   </p>`,
   false,
+  true,
 );
