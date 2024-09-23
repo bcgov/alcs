@@ -354,23 +354,23 @@
         [showVirusError]="showProposalMapVirus"
       ></app-file-drag-drop>
     </div>
-  </div>
 
-  <div class="full-row">
-    <mat-label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</mat-label>
-    <div class="subtext">
-      Building plans must be the most up to date, current version and should include (1) the total floor area of all
-      levels and intended use; and (2) interior and exterior views
+    <div class="full-row">
+      <mat-label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</mat-label>
+      <div class="subtext">
+        Building plans must be the most up to date, current version and should include (1) the total floor area of all
+        levels and intended use; and (2) interior and exterior views
+      </div>
+      <app-file-drag-drop
+        id="detailed-building-plans"
+        [uploadedFiles]="buildingPlans"
+        (uploadFiles)="attachBuildingPlan($event)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [showVirusError]="showBuildingPlanVirus"
+      ></app-file-drag-drop>
     </div>
-    <app-file-drag-drop
-      id="detailed-building-plans"
-      [uploadedFiles]="buildingPlans"
-      (uploadFiles)="attachBuildingPlan($event)"
-      (deleteFile)="onDeleteFile($event)"
-      (openFile)="openFile($event)"
-      [showErrors]="showErrors"
-      [showVirusError]="showBuildingPlanVirus"
-    ></app-file-drag-drop>
   </div>
 
   <section>
