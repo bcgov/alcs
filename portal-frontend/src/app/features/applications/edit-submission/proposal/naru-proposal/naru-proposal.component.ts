@@ -316,6 +316,19 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       });
   }
 
+  onDeleteExistingResidence(existingResidence: FormExisingResidence) {
+    const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
+    console.log(index);
+    if (index > -1) {
+      this.existingResidences.splice(index, 1);
+      this.existingResidencesSource.data = this.existingResidences;
+      this.isExistingResidencesDirty = true;
+      this.existingResidences.forEach((item, index) => {
+        item.id = index + 1;
+      });
+    }
+  }
+
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
