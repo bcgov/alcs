@@ -280,18 +280,28 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     this.form.markAsDirty();
   }
 
-  onAddEditExistingResidence(existingResidence: FormExisingResidence | undefined) {
+  onAddEditExistingResidence(existingResidence: FormExisingResidence | undefined, isEdit: boolean) {
     const dialog = this.dialog
       .open(ExistingResidenceDialogComponent, {
         width: this.isMobile ? '90%' : '75%',
         data: {
-          isEdit: false,
+          isEdit: isEdit,
           existingResidenceData: existingResidence,
         },
       })
       .afterClosed()
       .subscribe(async (res) => {
-        console.log(res);
+        if (!res.isCancel) {
+          if (res.isEdit) {
+            const index = this.existingResidences.findIndex((e) => e.id === res.existingResidence.id);
+            if (index > -1) {
+              this.existingResidences[index] = res.existingResidence;
+            }
+          } else {
+            this.existingResidences.push({ ...res.existingResidence, id: this.existingResidences.length + 1 });
+          }
+          this.existingResidencesSource.data = this.existingResidences;
+        }
       });
   }
 

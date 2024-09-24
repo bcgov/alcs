@@ -34,19 +34,17 @@ export class ExistingResidenceDialogComponent implements OnInit {
       this.description.setValue(this.data.existingResidenceData.description!);
       this.existingResidence = { ...this.data.existingResidenceData };
     }
-
-    console.log(this.existingResidence);
   }
 
   onSaveAdd() {
     if (this.form.valid) {
       this.existingResidence.description = this.description.value!;
       this.existingResidence.floorArea = this.floorArea.value!;
-      this.dialogRef.close({ isEdit: this.data.isEdit, existingResidence: this.existingResidence });
+      this.dialogRef.close({ isCancel: false, isEdit: this.data.isEdit, existingResidence: this.existingResidence });
     }
   }
 
   onCancel() {
-    this.dialogRef.close();
+    this.dialogRef.close({ isCancel: true });
   }
 }

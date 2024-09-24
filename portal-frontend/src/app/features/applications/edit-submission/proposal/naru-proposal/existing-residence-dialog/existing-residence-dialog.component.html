@@ -15,9 +15,8 @@
             min="0.01"
             mask="separator.5"
             separatorLimit="9999999999"
+            thousandSeparator=","
             matInput
-            type="number"
-            placeholder=""
             id="floorAreaId"
             formControlName="floorArea"
           />
@@ -83,6 +82,6 @@
     >
       SAVE
     </button>
-    <button mat-stroked-button color="primary" [mat-dialog-close]="false">CANCEL</button>
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false" (click)="onCancel()">CANCEL</button>
   </div>
 </mat-dialog-actions>
