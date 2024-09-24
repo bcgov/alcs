@@ -24,7 +24,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ExistingResidenceDialogComponent } from './existing-residence-dialog/existing-residence-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 
-export type FormExisingResidence = { id?: number; floorArea: string; description: string };
+export type FormExisingResidence = { id?: number; floorArea: number; description: string };
 
 @Component({
   selector: 'app-naru-proposal',
@@ -264,10 +264,12 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruSubtypeCode: subtype,
         naruSleepingUnits: sleepingUnits ? parseFloat(sleepingUnits) : null,
         naruAgriTourism: agriTourism,
+        naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
       };
 
-      const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
-      this.$applicationSubmission.next(updatedApp);
+      console.log(updateDto);
+      // const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
+      // this.$applicationSubmission.next(updatedApp);
     }
   }
 
@@ -302,6 +304,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           }
           this.existingResidencesSource.data = this.existingResidences;
         }
+        console.log(this.existingResidences);
       });
   }
 
