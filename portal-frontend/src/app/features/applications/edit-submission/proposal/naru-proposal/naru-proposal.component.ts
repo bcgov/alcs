@@ -75,6 +75,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  isExistingResidencesDirty = false;
 
   form = new FormGroup({
     subtype: this.subtype,
@@ -147,6 +148,15 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           maximumDepth: applicationSubmission.naruToPlaceMaximumDepth ?? undefined,
           averageDepth: applicationSubmission.naruToPlaceAverageDepth ?? undefined,
         };
+
+        if (applicationSubmission.naruExistingResidences) {
+          this.existingResidences = applicationSubmission.naruExistingResidences?.map((item, index) => ({
+            id: index + 1,
+            floorArea: item.floorArea,
+            description: item.description,
+          }));
+          this.existingResidencesSource = new MatTableDataSource(this.existingResidences);
+        }
 
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -229,7 +239,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && this.form.dirty) {
+    if (this.fileId && (this.form.dirty || this.isExistingResidencesDirty)) {
       const {
         existingStructures,
         willImportFill,
@@ -266,10 +276,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruAgriTourism: agriTourism,
         naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
       };
-
-      console.log(updateDto);
-      // const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
-      // this.$applicationSubmission.next(updatedApp);
+      const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
+      this.$applicationSubmission.next(updatedApp);
     }
   }
 
@@ -294,6 +302,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       .afterClosed()
       .subscribe(async (res) => {
         if (!res.isCancel) {
+          this.isExistingResidencesDirty = true;
           if (res.isEdit) {
             const index = this.existingResidences.findIndex((e) => e.id === res.existingResidence.id);
             if (index > -1) {
@@ -304,7 +313,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           }
           this.existingResidencesSource.data = this.existingResidences;
         }
-        console.log(this.existingResidences);
       });
   }
 

@@ -25,6 +25,11 @@ export class ProposedLot {
   planNumbers: string | null;
 }
 
+export class ExistingResidence {
+  floorArea: number;
+  description: string;
+}
+
 @Entity({
   comment: 'Portal intake form fields for applications',
 })
@@ -661,6 +666,15 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   naruAgriTourism: string | null;
+
+  @AutoMap(() => [ExistingResidence])
+  @Column({
+    comment: 'JSONB column containing NARU existing residence',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  naruExistingResidences: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
 
