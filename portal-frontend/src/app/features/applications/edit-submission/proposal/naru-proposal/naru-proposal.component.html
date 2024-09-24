@@ -32,6 +32,7 @@
       </mat-label>
       <div class="subtext">Total floor area includes the basement and any attached garage</div>
       <mat-button-toggle-group
+        (change)="onChangeOver500m2($event.value)"
         class="input"
         id="will-be-over-five-hundred-m2"
         formControlName="willBeOverFiveHundredM2"
@@ -66,7 +67,12 @@
       <mat-label for="will-retain-residence">
         Is your proposal to retain an existing residence while building a new residence?
       </mat-label>
-      <mat-button-toggle-group class="input" id="will-retain-residence" formControlName="willRetainResidence">
+      <mat-button-toggle-group
+        (change)="onChangeRetain($event.value)"
+        class="input"
+        id="will-retain-residence"
+        formControlName="willRetainResidence"
+      >
         <mat-button-toggle
           [value]="true"
           [ngClass]="{
@@ -92,8 +98,9 @@
     </div>
 
     <div class="full-row">
-      <mat-label for="will-have-additional-residence"> Is your proposal for an additional residence? </mat-label>
+      <mat-label for="will-have-additional-residence">Is your proposal for an additional residence?</mat-label>
       <mat-button-toggle-group
+        (change)="onChangeAdditional($event.value)"
         class="input"
         id="will-have-additional-residence"
         formControlName="willHaveAdditionalResidence"
@@ -135,7 +142,7 @@
       </mat-label>
       <div class="subtext">For registration in a federal temporary worker program</div>
       <mat-button-toggle-group
-        (change)="onChangeFill($event.value)"
+        (change)="onChangeTemporaryHousing($event.value)"
         class="input"
         id="will-have-temporary-foreign-worker-housing"
         formControlName="willHaveTemporaryForeignWorkerHousing"

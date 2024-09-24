@@ -160,6 +160,90 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     this.showBuildingPlanVirus = !res;
   }
 
+  onChangeOver500m2(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willBeOverFiveHundredM2.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal for a principal residence with a total floor area greater than 500 m²?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willBeOverFiveHundredM2.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
+          }
+        });
+    }
+  }
+
+  onChangeRetain(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willRetainResidence.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal to retain an existing residence while building a new residence?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willRetainResidence.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
+          }
+        });
+    }
+  }
+
+  onChangeAdditional(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willHaveAdditionalResidence.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal for an additional residence?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willHaveAdditionalResidence.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
+          }
+        });
+    }
+  }
+
+  onChangeTemporaryHousing(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willHaveTemporaryForeignWorkerHousing.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal for temporary foreign worker housing?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willHaveTemporaryForeignWorkerHousing.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
+          }
+        });
+    }
+  }
+
   onChangeFill(willImportFill: boolean) {
     const hasValues =
       this.projectDuration.value ||
