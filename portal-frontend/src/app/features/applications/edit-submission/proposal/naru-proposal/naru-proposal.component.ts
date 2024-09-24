@@ -23,8 +23,10 @@ import { ConfirmationDialogService } from '../../../../../shared/confirmation-di
 import { MatTableDataSource } from '@angular/material/table';
 import { ExistingResidenceDialogComponent } from './existing-residence-dialog/existing-residence-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+import { isTruncated, truncate } from '../../../../../shared/utils/string-helper';
+import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT } from '../../../../../shared/constants';
 
-export type FormExisingResidence = { id?: number; floorArea: number; description: string };
+export type FormExisingResidence = { id?: number; floorArea: number; description: string; isExpanded: boolean };
 
 @Component({
   selector: 'app-naru-proposal',
@@ -154,6 +156,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
             id: index + 1,
             floorArea: item.floorArea,
             description: item.description,
+            isExpanded: false,
           }));
           this.existingResidencesSource = new MatTableDataSource(this.existingResidences);
         }
@@ -318,7 +321,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   onDeleteExistingResidence(existingResidence: FormExisingResidence) {
     const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
-    console.log(index);
     if (index > -1) {
       this.existingResidences.splice(index, 1);
       this.existingResidencesSource.data = this.existingResidences;
@@ -326,6 +328,21 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       this.existingResidences.forEach((item, index) => {
         item.id = index + 1;
       });
+    }
+  }
+
+  getTruncatedDescription(description: string): string {
+    return truncate(description, EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT);
+  }
+
+  isDescriptionTruncated(description: string): boolean {
+    return isTruncated(description, EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT);
+  }
+
+  toggleReadMore(existingResidence: FormExisingResidence) {
+    const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
+    if (index > -1) {
+      this.existingResidences[index].isExpanded = !this.existingResidences[index].isExpanded;
     }
   }
 

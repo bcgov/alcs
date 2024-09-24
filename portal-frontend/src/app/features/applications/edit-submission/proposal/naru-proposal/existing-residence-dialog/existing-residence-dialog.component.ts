@@ -17,7 +17,7 @@ export class ExistingResidenceDialogComponent implements OnInit {
   });
 
   isSaving: boolean = false;
-  existingResidence: FormExisingResidence = { floorArea: 0, description: '' };
+  existingResidence: FormExisingResidence = { floorArea: 0, description: '', isExpanded: false };
 
   constructor(
     private dialogRef: MatDialogRef<ExistingResidenceDialogComponent>,

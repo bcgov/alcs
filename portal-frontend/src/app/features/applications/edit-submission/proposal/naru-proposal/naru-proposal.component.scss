@@ -46,3 +46,18 @@ section {
   justify-content: center;
   margin: 10px;
 }
+
+td {
+  vertical-align: top;
+}
+
+.description-column {
+  width: 40%;
+}
+
+.description-data {
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-width: 40%;
+}

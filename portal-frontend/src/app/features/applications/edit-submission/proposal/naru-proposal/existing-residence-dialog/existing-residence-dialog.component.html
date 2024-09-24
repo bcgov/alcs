@@ -48,6 +48,7 @@
             matInput
           ></textarea>
         </mat-form-field>
+        <div class="subtext">Characters left: {{ 4000 - description.value?.length! }}</div>
         <div
           *ngIf="
             form.controls['description']!.invalid &&
