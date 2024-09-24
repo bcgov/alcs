@@ -442,6 +442,49 @@
       </div>
 
       <div class="full-row">
+        <mat-label>Total Floor Area of Existing Residence(s) - If Applicable</mat-label>
+        <div class="scrollable">
+          <table mat-table [dataSource]="existingResidencesSource">
+            <ng-container matColumnDef="index">
+              <th mat-header-cell *matHeaderCellDef>Existing Residence</th>
+              <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="floorArea">
+              <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+              <td mat-cell *matCellDef="let element">{{ element.floorAlrea }} m²</td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>Description</th>
+              <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell class="actions" *matCellDef="let element">
+                <button type="button" mat-stroked-button color="primary" (click)="onAddEditExistingResidence(element)">
+                  Edit
+                </button>
+                <button type="button" mat-stroked-button color="accent">Remove</button>
+              </td></ng-container
+            >
+
+            <tr mat-header-row *matHeaderRowDef="existingResidencesDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: existingResidencesDisplayedColumns"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <div class class="no-data-container">
+                <td class="no-data-text" colspan="6">Use the button below to add any existing residence(s)</td>
+              </div>
+            </tr>
+          </table>
+        </div>
+        <button mat-stroked-button color="primary" (click)="onAddEditExistingResidence(undefined)">
+          + Add Existing Residence
+        </button>
+      </div>
+      <div class="full-row">
         <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
         <div class="subtext">A visual representation of your proposal.</div>
         <app-file-drag-drop

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
@@ -20,6 +20,11 @@ import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { ExistingResidenceDialogComponent } from './existing-residence-dialog/existing-residence-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+
+export type FormExisingResidence = { id?: number; floorArea: string; description: string };
 
 @Component({
   selector: 'app-naru-proposal',
@@ -47,26 +52,29 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   fillOrigin = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
   projectDuration = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
+    [Validators.required],
   );
 
+  existingResidences: FormExisingResidence[] = [];
+  existingResidencesSource = new MatTableDataSource(this.existingResidences);
   proposalMap: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   form = new FormGroup({
     subtype: this.subtype,
@@ -86,6 +94,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   private submissionUuid = '';
   naruSubtypes: NaruSubtypeDto[] = [];
+  existingResidencesDisplayedColumns: string[] = ['index', 'floorArea', 'description', 'action'];
 
   constructor(
     private router: Router,
@@ -94,7 +103,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
@@ -269,5 +278,25 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   markDirty() {
     this.form.markAsDirty();
+  }
+
+  onAddEditExistingResidence(existingResidence: FormExisingResidence | undefined) {
+    const dialog = this.dialog
+      .open(ExistingResidenceDialogComponent, {
+        width: this.isMobile ? '90%' : '75%',
+        data: {
+          isEdit: false,
+          existingResidenceData: existingResidence,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (res) => {
+        console.log(res);
+      });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
