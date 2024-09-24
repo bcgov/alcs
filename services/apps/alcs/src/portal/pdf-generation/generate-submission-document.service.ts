@@ -180,7 +180,7 @@ export class GenerateSubmissionDocumentService {
         payload = this.populateNfuData(payload, submission);
         return { payload, templateName: 'nfu-submission-template.docx' };
       case APPLICATION_SUBMISSION_TYPES.NARU:
-        payload = this.populateNaruData(payload, submission);
+        payload = this.populateNaruData(payload, submission, documents);
         return { payload, templateName: 'naru-submission-template.docx' };
       case APPLICATION_SUBMISSION_TYPES.TURP:
         payload = this.populateTurData(payload, submission, documents);
@@ -369,7 +369,11 @@ export class GenerateSubmissionDocumentService {
     };
   }
 
-  private populateNaruData(pdfData: any, submission: ApplicationSubmission) {
+  private populateNaruData(
+    pdfData: any,
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+  ) {
     return {
       ...pdfData,
       naruWillBeOverFiveHundredM2: formatBooleanToYesNoString(
@@ -392,6 +396,12 @@ export class GenerateSubmissionDocumentService {
       naruSetback: submission.naruSetback,
       naruLocationRationale: submission.naruLocationRationale,
       naruInfrastructure: submission.naruInfrastructure,
+
+      buildingPlans: documents
+        .filter(
+          (document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN,
+        )
+        .find((d) => d)?.document.fileName,
 
       showImportFill: submission.naruWillImportFill,
       // NFU Proposal => Soil and Fill
