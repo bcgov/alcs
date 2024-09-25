@@ -26,7 +26,7 @@ import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { isTruncated, truncate } from '../../../../../shared/utils/string-helper';
 import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT } from '../../../../../shared/constants';
 
-export type FormExisingResidence = { id?: number; floorArea: number; description: string; isExpanded: boolean };
+export type FormExisingResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
 
 @Component({
   selector: 'app-naru-proposal',

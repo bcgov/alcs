@@ -67,7 +67,7 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  gap: 5px;
+  gap: 25px;
 
   .form-field-floor-area {
     flex: 1 1 50%;
@@ -87,6 +87,7 @@
   }
 
   @media screen and (max-width: $tabletBreakpoint) {
+    gap: 10px;
     .form-field-floor-area {
       width: 100%;
       flex: 1 1 100%;
@@ -116,7 +117,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: rem(-14);
 
   @media screen and (min-width: $tabletBreakpoint) {
     margin-bottom: 0;

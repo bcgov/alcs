@@ -443,9 +443,9 @@
 
       <div class="full-row">
         <mat-label>Total Floor Area of Existing Residence(s) - If Applicable</mat-label>
-        <div class="scrollable">
+        <div class="scrollable" *ngIf="!isMobile">
           <table mat-table [dataSource]="existingResidencesSource">
-            <ng-container matColumnDef="index">
+            <ng-container class="sample" matColumnDef="index">
               <th mat-header-cell *matHeaderCellDef>Existing Residence</th>
               <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
             </ng-container>
@@ -494,6 +494,17 @@
             </tr>
           </table>
         </div>
+        <ng-container *ngIf="isMobile">
+          <app-naru-residence-mobile-card
+            *ngFor="let existingResidence of existingResidences; let last = last"
+            [existingResidence]="existingResidence"
+            [isLast]="last"
+            [isReviewStep]="false"
+            (editClicked)="onAddEditExistingResidence(existingResidence, true)"
+            (removeClicked)="onDeleteExistingResidence(existingResidence)"
+          >
+          </app-naru-residence-mobile-card>
+        </ng-container>
         <button mat-stroked-button color="primary" (click)="onAddEditExistingResidence(undefined, false)">
           + Add Existing Residence
         </button>

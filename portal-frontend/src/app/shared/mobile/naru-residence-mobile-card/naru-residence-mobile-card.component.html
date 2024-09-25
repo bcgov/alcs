@@ -1,0 +1,31 @@
+<mat-card [ngClass]="{ 'last-card': isLast, 'review-step': isReviewStep }">
+  <mat-card-header>
+    <mat-card-title>
+      #{{ existingResidence.id }} Total Floor Area: {{ existingResidence.floorArea }}
+      <span matTextSuffix>m<sup>2</sup></span>
+    </mat-card-title>
+    <ng-container *ngIf="!isReviewStep">
+      <button mat-icon-button [mat-menu-trigger-for]="menu">
+        <mat-icon>more_horiz</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onEdit()">
+          <span class="span-action">Edit</span>
+        </button>
+        <button mat-menu-item (click)="onRemove()">
+          <span class="span-action">Remove</span>
+        </button>
+      </mat-menu>
+    </ng-container>
+  </mat-card-header>
+  <mat-card-content>
+    {{
+      existingResidence.isExpanded
+        ? existingResidence.description
+        : getTruncatedDescription(existingResidence.description)
+    }}
+    <a *ngIf="isDescriptionTruncated(existingResidence.description)" (click)="toggleReadMore(existingResidence)">
+      {{ existingResidence.isExpanded ? 'Read Less' : 'Read More' }}
+    </a>
+  </mat-card-content>
+</mat-card>
