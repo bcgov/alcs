@@ -180,7 +180,7 @@ export class GenerateSubmissionDocumentService {
         payload = this.populateNfuData(payload, submission);
         return { payload, templateName: 'nfu-submission-template.docx' };
       case APPLICATION_SUBMISSION_TYPES.NARU:
-        payload = this.populateNaruData(payload, submission);
+        payload = this.populateNaruData(payload, submission, documents);
         return { payload, templateName: 'naru-submission-template.docx' };
       case APPLICATION_SUBMISSION_TYPES.TURP:
         payload = this.populateTurData(payload, submission, documents);
@@ -254,11 +254,11 @@ export class GenerateSubmissionDocumentService {
     const otherDocuments = documents.filter(
       (e) =>
         (!e.typeCode ||
-        [
-          DOCUMENT_TYPE.PHOTOGRAPH,
-          DOCUMENT_TYPE.PROFESSIONAL_REPORT,
-          DOCUMENT_TYPE.OTHER,
-        ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE)) &&
+          [
+            DOCUMENT_TYPE.PHOTOGRAPH,
+            DOCUMENT_TYPE.PROFESSIONAL_REPORT,
+            DOCUMENT_TYPE.OTHER,
+          ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE)) &&
         e.document.source === DOCUMENT_SOURCE.APPLICANT,
     );
 
@@ -369,23 +369,41 @@ export class GenerateSubmissionDocumentService {
     };
   }
 
-  private populateNaruData(pdfData: any, submission: ApplicationSubmission) {
+  private populateNaruData(
+    pdfData: any,
+    submission: ApplicationSubmission,
+    documents: ApplicationDocument[],
+  ) {
     return {
       ...pdfData,
-      naruSubtypeLabel: submission.naruSubtype?.label,
-      naruSubtypeCode: submission.naruSubtypeCode,
-      naruFloorArea: submission.naruFloorArea,
-      naruResidenceNecessity: submission.naruResidenceNecessity,
-      naruLocationRationale: submission.naruLocationRationale,
-      naruInfrastructure: submission.naruInfrastructure,
-      naruExistingStructures: submission.naruExistingStructures,
-      naruSleepingUnits: submission.naruSleepingUnits,
-      naruAgriTourism: submission.naruAgriTourism,
-      showImportFill: submission.naruWillImportFill,
+      naruWillBeOverFiveHundredM2: formatBooleanToYesNoString(
+        submission.naruWillBeOverFiveHundredM2,
+      ),
+      naruWillRetainResidence: formatBooleanToYesNoString(
+        submission.naruWillRetainResidence,
+      ),
+      naruWillHaveAdditionalResidence: formatBooleanToYesNoString(
+        submission.naruWillHaveAdditionalResidence,
+      ),
+      naruWillHaveTemporaryForeignWorkerHousing: formatBooleanToYesNoString(
+        submission.naruWillHaveTemporaryForeignWorkerHousing,
+      ),
       naruWillImportFill: formatBooleanToYesNoString(
         submission.naruWillImportFill,
       ),
+      naruResidenceNecessity: submission.naruResidenceNecessity,
+      naruClustered: submission.naruClustered,
+      naruSetback: submission.naruSetback,
+      naruLocationRationale: submission.naruLocationRationale,
+      naruInfrastructure: submission.naruInfrastructure,
 
+      buildingPlans: documents
+        .filter(
+          (document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN,
+        )
+        .find((d) => d)?.document.fileName,
+
+      showImportFill: submission.naruWillImportFill,
       // NFU Proposal => Soil and Fill
       naruFillType: submission.naruFillType,
       naruFillOrigin: submission.naruFillOrigin,

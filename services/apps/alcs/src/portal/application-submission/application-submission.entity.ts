@@ -557,6 +557,30 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'boolean', nullable: true })
   soilHasSubmittedNotice: boolean | null;
 
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillBeOverFiveHundredM2: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillRetainResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillHaveAdditionalResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruClustered: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruSetback: string | null;
+
   //NARU
   @AutoMap(() => NaruSubtype)
   @ManyToOne(() => NaruSubtype)

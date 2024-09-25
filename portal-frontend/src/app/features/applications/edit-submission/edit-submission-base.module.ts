@@ -24,7 +24,6 @@ import { CoveProposalComponent } from './proposal/cove-proposal/cove-proposal.co
 import { CovenantTransfereeDialogComponent } from './proposal/cove-proposal/transferee-dialog/transferee-dialog.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
 import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
-import { ChangeSubtypeConfirmationDialogComponent } from './proposal/naru-proposal/change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
@@ -64,7 +63,6 @@ import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
     PofoProposalComponent,
     PfrsProposalComponent,
     NaruProposalComponent,
-    ChangeSubtypeConfirmationDialogComponent,
     ExclProposalComponent,
     InclProposalComponent,
     CoveProposalComponent,
