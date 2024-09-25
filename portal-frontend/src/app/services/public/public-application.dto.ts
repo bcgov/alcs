@@ -6,6 +6,11 @@ import {
 } from '../application-submission/application-submission.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from './public.dto';
 
+export interface ExistingResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface GetPublicApplicationResponseDto {
   submission: PublicApplicationSubmissionDto;
   parcels: PublicParcelDto[];
@@ -112,6 +117,7 @@ export interface PublicApplicationSubmissionDto {
   naruToPlaceAverageDepth: number | null;
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
+  naruExistingResidences?: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;

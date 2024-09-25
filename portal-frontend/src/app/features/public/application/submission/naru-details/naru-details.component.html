@@ -133,6 +133,23 @@
     <app-no-data *ngIf="!applicationSubmission.naruExistingStructures"></app-no-data>
   </div>
 
+  <ng-container *ngIf="applicationSubmission.naruExistingResidences">
+    <div class="full-width existing-residences">
+      <div class="subheading2">Existing Residence</div>
+      <div class="subheading2">Total Floor Area</div>
+      <div class="subheading2">Description</div>
+      <ng-container *ngFor="let existingResidence of applicationSubmission.naruExistingResidences; let i = index">
+        <div>
+          {{ i + 1 }}
+        </div>
+        <div>
+          {{ existingResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+        </div>
+        <div>{{ existingResidence.description }}</div>
+      </ng-container>
+    </div>
+  </ng-container>
+
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
     <a *ngFor="let map of proposalMap" (click)="openFile(map)">

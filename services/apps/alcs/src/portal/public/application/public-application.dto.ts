@@ -1,7 +1,10 @@
 import { AutoMap } from 'automapper-classes';
 import { ApplicationStatusDto } from '../../../alcs/application/application-submission-status/submission-status.dto';
 import { NaruSubtypeDto } from '../../application-submission/application-submission.dto';
-import { ProposedLot } from '../../application-submission/application-submission.entity';
+import {
+  ExistingResidence,
+  ProposedLot,
+} from '../../application-submission/application-submission.entity';
 import { PublicOwnerDto } from '../public.dto';
 
 export class PublicApplicationSubmissionDto {
@@ -267,6 +270,9 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruAgriTourism: string | null;
+
+  @AutoMap(() => ExistingResidence)
+  naruExistingResidences?: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
   @AutoMap(() => String)
