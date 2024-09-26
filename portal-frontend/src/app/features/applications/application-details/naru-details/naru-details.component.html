@@ -112,6 +112,33 @@
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruInfrastructure"></app-no-data>
   </div>
 
+  <ng-container *ngIf="_applicationSubmission.naruExistingResidences">
+    <div class="full-width existing-residences" *ngIf="!isMobile">
+      <div class="subheading2">Existing Residence</div>
+      <div class="subheading2">Total Floor Area</div>
+      <div class="subheading2">Description</div>
+      <ng-container *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let i = index">
+        <div>
+          {{ i + 1 }}
+        </div>
+        <div>
+          {{ existingResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+        </div>
+        <div>{{ existingResidence.description }}</div>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="isMobile">
+      <div class="subheading2 grid-1">Total Floor Area of Existing Residence(s) - If Applicable</div>
+      <app-naru-residence-mobile-card
+        *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let last = last"
+        [existingResidence]="existingResidence"
+        [isLast]="last"
+        [isReviewStep]="true"
+      >
+      </app-naru-residence-mobile-card>
+    </ng-container>
+  </ng-container>
+
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
     <a *ngFor="let map of proposalMap" (click)="openFile(map)">

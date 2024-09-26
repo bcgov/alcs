@@ -1,0 +1,88 @@
+<div mat-dialog-title>
+  <h2 *ngIf="!data.isEdit">Add New Owner</h2>
+  <h2 *ngIf="data.isEdit">Edit Owner</h2>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="form-container">
+      <div class="form-field-floor-area">
+        <div class="label">
+          <label for="floorAreaId">Total Floor Area (m2)</label>
+        </div>
+        <div class="subtext">Include the basement and any attached garage</div>
+        <mat-form-field appearance="outline">
+          <input
+            min="0.01"
+            mask="separator.5"
+            separatorLimit="9999999999"
+            thousandSeparator=","
+            matInput
+            id="floorAreaId"
+            formControlName="floorArea"
+          />
+          <span matTextSuffix>m<sup>2</sup></span>
+        </mat-form-field>
+        <div
+          *ngIf="
+            form.controls['floorArea']!.invalid &&
+            (form.controls['floorArea']!.dirty || form.controls['floorArea']!.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="form.controls['floorArea']!.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="form-field-description">
+        <div class="label">
+          <label for="descirptionId">Description of the Residence</label>
+        </div>
+        <div class="subtext">Include if it has an attached garage or basement</div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="description"
+            #descriptionText
+            maxlength="4000"
+            id="descriptionId"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <div class="subtext">Characters left: {{ 4000 - description.value?.length! }}</div>
+        <div
+          *ngIf="
+            form.controls['description']!.invalid &&
+            (form.controls['description']!.dirty || form.controls['description']!.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="form.controls['description']!.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<mat-dialog-actions align="end">
+  <div class="button-container">
+    <button
+      *ngIf="!this.data.existingResidenceData"
+      mat-flat-button
+      color="primary"
+      (click)="onSaveAdd()"
+      [disabled]="isSaving"
+    >
+      ADD
+    </button>
+    <button
+      *ngIf="this.data.existingResidenceData"
+      mat-flat-button
+      color="primary"
+      (click)="onSaveAdd()"
+      [disabled]="isSaving"
+    >
+      SAVE
+    </button>
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false" (click)="onCancel()">CANCEL</button>
+  </div>
+</mat-dialog-actions>

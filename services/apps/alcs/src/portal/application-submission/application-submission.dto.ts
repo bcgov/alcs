@@ -15,7 +15,10 @@ import {
 } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
-import { ProposedLot } from './application-submission.entity';
+import {
+  ExistingResidence,
+  ProposedLot,
+} from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 export const MAX_LANDUSE_FIELD_LENGTH = 500;
@@ -304,6 +307,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruAgriTourism: string | null;
+
+  @AutoMap(() => ExistingResidence)
+  naruExistingResidences?: ExistingResidence[];
 
   @AutoMap(() => ApplicationSubmissionToSubmissionStatusDto)
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
@@ -724,6 +730,10 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruAgriTourism?: string | null;
+
+  @IsArray()
+  @IsOptional()
+  naruExistingResidences?: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
   @IsString()

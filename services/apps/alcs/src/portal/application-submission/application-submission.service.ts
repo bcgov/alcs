@@ -1040,6 +1040,10 @@ export class ApplicationSubmissionService {
       updateDto.naruAgriTourism,
       applicationSubmission.naruAgriTourism,
     );
+    applicationSubmission.naruExistingResidences = filterUndefined(
+      updateDto.naruExistingResidences,
+      applicationSubmission.naruExistingResidences,
+    );
   }
 
   private setInclusionExclusionFields(

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
@@ -16,6 +16,13 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { ExistingResidenceDialogComponent } from './existing-residence-dialog/existing-residence-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+import { isTruncated, truncate } from '../../../../../shared/utils/string-helper';
+import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT } from '../../../../../shared/constants';
+
+export type FormExisingResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
 
 @Component({
   selector: 'app-naru-proposal',
@@ -61,10 +68,14 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     [Validators.required],
   );
 
+  existingResidences: FormExisingResidence[] = [];
+  existingResidencesSource = new MatTableDataSource(this.existingResidences);
   proposalMap: ApplicationDocumentDto[] = [];
   buildingPlans: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  isExistingResidencesDirty = false;
 
   form = new FormGroup({
     willBeOverFiveHundredM2: this.willBeOverFiveHundredM2,
@@ -84,6 +95,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   });
 
   private submissionUuid = '';
+  existingResidencesDisplayedColumns: string[] = ['index', 'floorArea', 'description', 'action'];
 
   constructor(
     private router: Router,
@@ -133,6 +145,16 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           maximumDepth: applicationSubmission.naruToPlaceMaximumDepth ?? undefined,
           averageDepth: applicationSubmission.naruToPlaceAverageDepth ?? undefined,
         };
+
+        if (applicationSubmission.naruExistingResidences) {
+          this.existingResidences = applicationSubmission.naruExistingResidences?.map((item, index) => ({
+            id: index + 1,
+            floorArea: item.floorArea,
+            description: item.description,
+            isExpanded: false,
+          }));
+          this.existingResidencesSource = new MatTableDataSource(this.existingResidences);
+        }
 
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -288,7 +310,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && this.form.dirty) {
+    if (this.fileId && (this.form.dirty || this.isExistingResidencesDirty)) {
       const {
         willBeOverFiveHundredM2,
         willRetainResidence,
@@ -325,8 +347,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
         naruProjectDuration: projectDuration,
+        naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
       };
-
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
     }
@@ -334,5 +356,63 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   markDirty() {
     this.form.markAsDirty();
+  }
+
+  onAddEditExistingResidence(existingResidence: FormExisingResidence | undefined, isEdit: boolean) {
+    const dialog = this.dialog
+      .open(ExistingResidenceDialogComponent, {
+        width: this.isMobile ? '90%' : '75%',
+        data: {
+          isEdit: isEdit,
+          existingResidenceData: existingResidence,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (res) => {
+        if (!res.isCancel) {
+          this.isExistingResidencesDirty = true;
+          if (res.isEdit) {
+            const index = this.existingResidences.findIndex((e) => e.id === res.existingResidence.id);
+            if (index > -1) {
+              this.existingResidences[index] = res.existingResidence;
+            }
+          } else {
+            this.existingResidences.push({ ...res.existingResidence, id: this.existingResidences.length + 1 });
+          }
+          this.existingResidencesSource.data = this.existingResidences;
+        }
+      });
+  }
+
+  onDeleteExistingResidence(existingResidence: FormExisingResidence) {
+    const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
+    if (index > -1) {
+      this.existingResidences.splice(index, 1);
+      this.existingResidencesSource.data = this.existingResidences;
+      this.isExistingResidencesDirty = true;
+      this.existingResidences.forEach((item, index) => {
+        item.id = index + 1;
+      });
+    }
+  }
+
+  getTruncatedDescription(description: string): string {
+    return truncate(description, EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT);
+  }
+
+  isDescriptionTruncated(description: string): boolean {
+    return isTruncated(description, EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT);
+  }
+
+  toggleReadMore(existingResidence: FormExisingResidence) {
+    const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
+    if (index > -1) {
+      this.existingResidences[index].isExpanded = !this.existingResidences[index].isExpanded;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
