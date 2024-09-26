@@ -254,11 +254,11 @@ export class GenerateSubmissionDocumentService {
     const otherDocuments = documents.filter(
       (e) =>
         (!e.typeCode ||
-        [
-          DOCUMENT_TYPE.PHOTOGRAPH,
-          DOCUMENT_TYPE.PROFESSIONAL_REPORT,
-          DOCUMENT_TYPE.OTHER,
-        ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE)) &&
+          [
+            DOCUMENT_TYPE.PHOTOGRAPH,
+            DOCUMENT_TYPE.PROFESSIONAL_REPORT,
+            DOCUMENT_TYPE.OTHER,
+          ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE)) &&
         e.document.source === DOCUMENT_SOURCE.APPLICANT,
     );
 
@@ -370,6 +370,11 @@ export class GenerateSubmissionDocumentService {
   }
 
   private populateNaruData(pdfData: any, submission: ApplicationSubmission) {
+    const naruExistingResidences = submission.naruExistingResidences.map(
+      (item, index) => {
+        return { ...item, cnt: index + 1 };
+      },
+    );
     return {
       ...pdfData,
       naruSubtypeLabel: submission.naruSubtype?.label,
@@ -385,6 +390,7 @@ export class GenerateSubmissionDocumentService {
       naruWillImportFill: formatBooleanToYesNoString(
         submission.naruWillImportFill,
       ),
+      naruExistingResidences: naruExistingResidences,
 
       // NFU Proposal => Soil and Fill
       naruFillType: submission.naruFillType,
