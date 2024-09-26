@@ -106,7 +106,7 @@
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruClustered }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruClustered"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
@@ -114,7 +114,7 @@
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruSetback }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruSetback"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
