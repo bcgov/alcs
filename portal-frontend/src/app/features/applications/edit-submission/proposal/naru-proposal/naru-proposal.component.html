@@ -248,6 +248,70 @@
     </div>
 
     <div class="full-row">
+      <label for="tfwh-count">How many temporary foreign workers will be housed by the proposal?</label>
+      <mat-form-field appearance="outline">
+        <textarea formControlName="tfwhCount" #tfwhCountText maxlength="4000" id="tfwh-count" matInput></textarea>
+      </mat-form-field>
+      <div *ngIf="tfwhCount.invalid && (tfwhCount.dirty || tfwhCount.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="tfwhCount.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - tfwhCountText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
+      <mat-label for="tfwh-design">
+        Will the temporary foreign worker housing be designed to move from one place to another?
+      </mat-label>
+      <div class="subtext">Examples: modular trailers, manufactured homes</div>
+      <mat-button-toggle-group class="input" id="tfwh-design" formControlName="tfwhDesign">
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline': tfwhDesign.invalid && (tfwhDesign.dirty || tfwhDesign.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline': tfwhDesign.invalid && (tfwhDesign.dirty || tfwhDesign.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div *ngIf="tfwhDesign.invalid && (tfwhDesign.dirty || tfwhDesign.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="tfwhDesign.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label for="tfwh-farm-size"
+        >What is the size (in hectares) of the farm operation that the temporary foreign workers will be
+        supporting?</label
+      >
+      <div class="subtext">
+        The farm may include multiple parcels (leased, rented or owned) that are not adjacent but are managed as a
+        single operation.
+      </div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="tfwhFarmSize"
+          #tfwhFarmSizeText
+          maxlength="4000"
+          id="tfwh-farm-size"
+          matInput
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="tfwhFarmSize.invalid && (tfwhFarmSize.dirty || tfwhFarmSize.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="tfwhFarmSize.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - tfwhFarmSizeText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
       <label for="clustered"
         >Will the proposed residence(s) be clustered with existing residential structures? Please explain.</label
       >

@@ -67,6 +67,28 @@
     <app-no-data *ngIf="!applicationSubmission.naruResidenceNecessity"></app-no-data>
   </div>
 
+  <div class="subheading2 grid-1">How many temporary foreign workers will be housed by the proposal?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.tfwhCount }}
+    <app-no-data *ngIf="!applicationSubmission.tfwhCount"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Will the temporary foreign worker housing be designed to move from one place to another?
+  </div>
+  <div class="grid-double">
+    {{ applicationSubmission.tfwhDesign }}
+    <app-no-data *ngIf="!applicationSubmission.tfwhDesign"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    What is the size (in hectares) of the farm operation that the temporary foreign workers will be supporting?
+  </div>
+  <div class="grid-double">
+    {{ applicationSubmission.tfwhFarmSize }}
+    <app-no-data *ngIf="!applicationSubmission.tfwhFarmSize"></app-no-data>
+  </div>
+
   <div class="subheading2 grid-1">
     Will the proposed residence(s) be clustered with existing residential structures? Please explain.
   </div>
