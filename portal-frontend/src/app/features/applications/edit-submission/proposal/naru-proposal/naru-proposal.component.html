@@ -223,13 +223,11 @@
     </div>
 
     <div class="full-row">
-      <label for="residenceNecessity"
-        >Describe the necessity for an additional residence for farm use and how it will support agriculture in the
-        short or long term.</label
-      >
-      <div class="subtext">
-        Include a description of the scale, intensity, and labour capacity of the farm operation
-      </div>
+      <label for="residenceNecessity">
+        Is your proposal necessary for farm use? If so, please explain<ng-container>
+          what the temporary foreign workers will be doing on the farm</ng-container
+        >.
+      </label>
       <mat-form-field appearance="outline">
         <textarea
           formControlName="residenceNecessity"
