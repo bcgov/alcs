@@ -4,6 +4,7 @@ import { NaruSubtypeDto } from '../../application-submission/application-submiss
 import {
   ExistingResidence,
   ProposedLot,
+  ProposedResidence,
 } from '../../application-submission/application-submission.entity';
 import { PublicOwnerDto } from '../public.dto';
 
@@ -291,6 +292,9 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => ExistingResidence)
   naruExistingResidences?: ExistingResidence[];
+
+  @AutoMap(() => ProposedResidence)
+  naruProposedResidences: ProposedResidence[] | null;
 
   //Inclusion / Exclusion Fields
   @AutoMap(() => String)
