@@ -6,10 +6,7 @@ import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
-import {
-  ApplicationSubmissionUpdateDto,
-  NaruSubtypeDto,
-} from '../../../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../../services/code/code.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
@@ -18,7 +15,6 @@ import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.direc
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
-import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExistingResidenceDialogComponent } from './existing-residence-dialog/existing-residence-dialog.component';
@@ -37,18 +33,19 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   currentStep = EditApplicationSteps.Proposal;
 
   showProposalMapVirus = false;
+  showBuildingPlanVirus = false;
 
-  previousSubtype: string | null = null;
-  subtype = new FormControl<string | null>(null, [Validators.required]);
+  willBeOverFiveHundredM2 = new FormControl<boolean | null>(null, [Validators.required]);
+  willRetainResidence = new FormControl<boolean | null>(null, [Validators.required]);
+  willHaveAdditionalResidence = new FormControl<boolean | null>(null, [Validators.required]);
+  willHaveTemporaryForeignWorkerHousing = new FormControl<boolean | null>(null, [Validators.required]);
+  willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
-  floorArea = new FormControl<string | null>(null, [Validators.required]);
   residenceNecessity = new FormControl<string | null>(null, [Validators.required]);
+  clustered = new FormControl<string | null>(null, [Validators.required]);
+  setback = new FormControl<string | null>(null, [Validators.required]);
   locationRationale = new FormControl<string | null>(null, [Validators.required]);
   infrastructure = new FormControl<string | null>(null, [Validators.required]);
-  existingStructures = new FormControl<string | null>(null, [Validators.required]);
-  sleepingUnits = new FormControl<string | null>(null, [Validators.required]);
-  agriTourism = new FormControl<string | null>(null, [Validators.required]);
-  willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   fillType = new FormControl<string | null>(
     {
       disabled: true,
@@ -74,29 +71,30 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   existingResidences: FormExisingResidence[] = [];
   existingResidencesSource = new MatTableDataSource(this.existingResidences);
   proposalMap: ApplicationDocumentDto[] = [];
+  buildingPlans: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   isExistingResidencesDirty = false;
 
   form = new FormGroup({
-    subtype: this.subtype,
+    willBeOverFiveHundredM2: this.willBeOverFiveHundredM2,
+    willRetainResidence: this.willRetainResidence,
+    willHaveAdditionalResidence: this.willHaveAdditionalResidence,
+    willHaveTemporaryForeignWorkerHousing: this.willHaveTemporaryForeignWorkerHousing,
+    willImportFill: this.willImportFill,
     purpose: this.purpose,
-    floorArea: this.floorArea,
     residenceNecessity: this.residenceNecessity,
+    clustered: this.clustered,
+    setback: this.setback,
     locationRationale: this.locationRationale,
     infrastructure: this.infrastructure,
-    existingStructures: this.existingStructures,
-    willImportFill: this.willImportFill,
     fillType: this.fillType,
     fillOrigin: this.fillOrigin,
     projectDuration: this.projectDuration,
-    sleepingUnits: this.sleepingUnits,
-    agriTourism: this.agriTourism,
   });
 
   private submissionUuid = '';
-  naruSubtypes: NaruSubtypeDto[] = [];
   existingResidencesDisplayedColumns: string[] = ['index', 'floorArea', 'description', 'action'];
 
   constructor(
@@ -112,30 +110,27 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   ngOnInit(): void {
-    this.loadNaruSubtypes();
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          subtype: applicationSubmission.naruSubtype?.code,
-          existingStructures: applicationSubmission.naruExistingStructures,
+          willBeOverFiveHundredM2: applicationSubmission.naruWillBeOverFiveHundredM2,
+          willRetainResidence: applicationSubmission.naruWillRetainResidence,
+          willHaveAdditionalResidence: applicationSubmission.naruWillHaveAdditionalResidence,
+          willHaveTemporaryForeignWorkerHousing: applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing,
           willImportFill: applicationSubmission.naruWillImportFill,
+          purpose: applicationSubmission.purpose,
+          residenceNecessity: applicationSubmission.naruResidenceNecessity,
+          clustered: applicationSubmission.naruClustered,
+          setback: applicationSubmission.naruSetback,
           fillType: applicationSubmission.naruFillType,
           fillOrigin: applicationSubmission.naruFillOrigin,
-          floorArea: applicationSubmission.naruFloorArea ? applicationSubmission.naruFloorArea.toString() : null,
           infrastructure: applicationSubmission.naruInfrastructure,
           locationRationale: applicationSubmission.naruLocationRationale,
           projectDuration: applicationSubmission.naruProjectDuration,
-          purpose: applicationSubmission.purpose,
-          residenceNecessity: applicationSubmission.naruResidenceNecessity,
-          agriTourism: applicationSubmission.naruAgriTourism,
-          sleepingUnits: applicationSubmission.naruSleepingUnits
-            ? applicationSubmission.naruSleepingUnits.toString()
-            : null,
         });
-        this.previousSubtype = applicationSubmission.naruSubtype?.code ?? null;
 
         if (applicationSubmission.naruWillImportFill !== null) {
           this.onChangeFill(applicationSubmission.naruWillImportFill);
@@ -169,6 +164,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
     });
   }
 
@@ -181,20 +177,92 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     this.showProposalMapVirus = !res;
   }
 
-  onChangeSubtype($event: MatRadioChange) {
-    if (this.previousSubtype) {
-      this.dialog
-        .open(ChangeSubtypeConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe((didConfirm) => {
-          if (didConfirm) {
-            this.previousSubtype = $event.value;
-          } else {
-            this.subtype.setValue(this.previousSubtype);
+  async attachBuildingPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+    this.showBuildingPlanVirus = !res;
+  }
+
+  onChangeOver500m2(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willBeOverFiveHundredM2.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal for a principal residence with a total floor area greater than 500 m²?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willBeOverFiveHundredM2.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
           }
         });
-    } else {
-      this.previousSubtype = $event.value;
+    }
+  }
+
+  onChangeRetain(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willRetainResidence.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal to retain an existing residence while building a new residence?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willRetainResidence.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
+          }
+        });
+    }
+  }
+
+  onChangeAdditional(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willHaveAdditionalResidence.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal for an additional residence?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willHaveAdditionalResidence.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
+          }
+        });
+    }
+  }
+
+  onChangeTemporaryHousing(answerIsYes: boolean) {
+    // TODO: check for values of any fields that will be removed
+    //       if a user answers 'no'
+    const hasValues = true;
+
+    if (this.willHaveTemporaryForeignWorkerHousing.value !== null && !answerIsYes && hasValues) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Is your proposal for temporary foreign worker housing?',
+          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
+        })
+        .subscribe((confirmed) => {
+          this.willHaveTemporaryForeignWorkerHousing.setValue(!confirmed);
+
+          if (confirmed) {
+            // TODO: wipe same fields as above
+          }
+        });
     }
   }
 
@@ -244,49 +312,46 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   protected async save() {
     if (this.fileId && (this.form.dirty || this.isExistingResidencesDirty)) {
       const {
-        existingStructures,
+        willBeOverFiveHundredM2,
+        willRetainResidence,
+        willHaveAdditionalResidence,
+        willHaveTemporaryForeignWorkerHousing,
         willImportFill,
+        purpose,
+        residenceNecessity,
+        clustered,
+        setback,
         fillType,
         fillOrigin,
-        floorArea,
         infrastructure,
         locationRationale,
         projectDuration,
-        purpose,
-        residenceNecessity,
-        subtype,
-        sleepingUnits,
-        agriTourism,
       } = this.form.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
-        naruExistingStructures: existingStructures,
+        naruWillBeOverFiveHundredM2: willBeOverFiveHundredM2,
+        naruWillRetainResidence: willRetainResidence,
+        naruWillHaveAdditionalResidence: willHaveAdditionalResidence,
+        naruWillHaveTemporaryForeignWorkerHousing: willHaveTemporaryForeignWorkerHousing,
         naruWillImportFill: willImportFill,
+        purpose: purpose,
+        naruResidenceNecessity: residenceNecessity,
+        naruClustered: clustered,
+        naruSetback: setback,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,
         naruToPlaceMaximumDepth: this.fillTableData.maximumDepth ?? null,
         naruToPlaceArea: this.fillTableData.area ?? null,
         naruToPlaceVolume: this.fillTableData.volume ?? null,
-        naruFloorArea: floorArea ? parseFloat(floorArea) : null,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
         naruProjectDuration: projectDuration,
-        purpose: purpose,
-        naruResidenceNecessity: residenceNecessity,
-        naruSubtypeCode: subtype,
-        naruSleepingUnits: sleepingUnits ? parseFloat(sleepingUnits) : null,
-        naruAgriTourism: agriTourism,
         naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
       };
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
     }
-  }
-
-  private async loadNaruSubtypes() {
-    const subtypes = await this.codeService.loadCodes();
-    this.naruSubtypes = subtypes.naruSubtypes;
   }
 
   markDirty() {

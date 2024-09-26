@@ -101,13 +101,19 @@ export interface PublicApplicationSubmissionDto {
   soilHasSubmittedNotice?: boolean;
 
   //NARU Fields
+  naruWillBeOverFiveHundredM2: boolean | null;
+  naruWillRetainResidence: boolean | null;
+  naruWillHaveAdditionalResidence: boolean | null;
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+  naruWillImportFill: boolean | null;
+  naruClustered: string | null;
+  naruSetback: string | null;
   naruSubtype: NaruSubtypeDto | null;
   naruFloorArea: number | null;
   naruResidenceNecessity: string | null;
   naruLocationRationale: string | null;
   naruInfrastructure: string | null;
   naruExistingStructures: string | null;
-  naruWillImportFill: boolean | null;
   naruFillType: string | null;
   naruFillOrigin: string | null;
   naruProjectDuration: string | null;

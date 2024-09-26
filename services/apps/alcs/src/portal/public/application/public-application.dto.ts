@@ -223,6 +223,27 @@ export class PublicApplicationSubmissionDto {
   soilHasSubmittedNotice?: boolean;
 
   //NARU Fields
+  @AutoMap(() => Boolean)
+  naruWillBeOverFiveHundredM2: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillRetainResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveAdditionalResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  naruClustered: string | null;
+
+  @AutoMap(() => String)
+  naruSetback: string | null;
+
   @AutoMap(() => [NaruSubtypeDto])
   naruSubtype: NaruSubtypeDto | null;
 
@@ -240,9 +261,6 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruExistingStructures: string | null;
-
-  @AutoMap(() => Boolean)
-  naruWillImportFill: boolean | null;
 
   @AutoMap(() => String)
   naruFillType: string | null;

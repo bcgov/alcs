@@ -950,6 +950,35 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
+    applicationSubmission.naruWillBeOverFiveHundredM2 = filterUndefined(
+      updateDto.naruWillBeOverFiveHundredM2,
+      applicationSubmission.naruWillBeOverFiveHundredM2,
+    );
+    applicationSubmission.naruWillRetainResidence = filterUndefined(
+      updateDto.naruWillRetainResidence,
+      applicationSubmission.naruWillRetainResidence,
+    );
+    applicationSubmission.naruWillHaveAdditionalResidence = filterUndefined(
+      updateDto.naruWillHaveAdditionalResidence,
+      applicationSubmission.naruWillHaveAdditionalResidence,
+    );
+    applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing =
+      filterUndefined(
+        updateDto.naruWillHaveTemporaryForeignWorkerHousing,
+        applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing,
+      );
+    applicationSubmission.naruWillImportFill = filterUndefined(
+      updateDto.naruWillImportFill,
+      applicationSubmission.naruWillImportFill,
+    );
+    applicationSubmission.naruClustered = filterUndefined(
+      updateDto.naruClustered,
+      applicationSubmission.naruClustered,
+    );
+    applicationSubmission.naruSetback = filterUndefined(
+      updateDto.naruSetback,
+      applicationSubmission.naruSetback,
+    );
     applicationSubmission.naruSubtype = undefined;
     applicationSubmission.naruSubtypeCode = filterUndefined(
       updateDto.naruSubtypeCode,
@@ -974,10 +1003,6 @@ export class ApplicationSubmissionService {
     applicationSubmission.naruExistingStructures = filterUndefined(
       updateDto.naruExistingStructures,
       applicationSubmission.naruExistingStructures,
-    );
-    applicationSubmission.naruWillImportFill = filterUndefined(
-      updateDto.naruWillImportFill,
-      applicationSubmission.naruWillImportFill,
     );
     applicationSubmission.naruFillType = filterUndefined(
       updateDto.naruFillType,

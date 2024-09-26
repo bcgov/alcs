@@ -29,9 +29,11 @@ export class NaruDetailsComponent {
 
   @Input() set applicationDocuments(documents: ApplicationDocumentDto[]) {
     this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
   }
 
   proposalMap: ApplicationDocumentDto[] = [];
+  buildingPlans: ApplicationDocumentDto[] = [];
 
   constructor(
     private router: Router,
