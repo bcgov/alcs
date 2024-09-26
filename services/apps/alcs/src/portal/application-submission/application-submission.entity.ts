@@ -32,7 +32,7 @@ export class ExistingResidence {
 
 export class ProposedResidence {
   floorArea: number;
-  description;
+  description: string;
 }
 
 @Entity({

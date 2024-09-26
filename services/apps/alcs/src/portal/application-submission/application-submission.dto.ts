@@ -313,7 +313,7 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   naruExistingResidences?: ExistingResidence[];
 
   @AutoMap(() => ProposedResidence)
-  naruProposedResidences: ProposedResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   @AutoMap(() => ApplicationSubmissionToSubmissionStatusDto)
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
@@ -741,7 +741,7 @@ export class ApplicationSubmissionUpdateDto {
 
   @IsArray()
   @IsOptional()
-  naruProposedResidences: ExistingResidence[] | null;
+  naruProposedResidences?: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
   @IsString()
