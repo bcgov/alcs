@@ -250,30 +250,6 @@
     </div>
 
     <div class="full-row">
-      <label for="residenceNecessity"
-        >Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
-        short or long term.</label
-      >
-      <mat-form-field appearance="outline">
-        <textarea
-          formControlName="residenceNecessity"
-          #residenceNecessityText
-          maxlength="4000"
-          id="residenceNecessity"
-          matInput
-        ></textarea>
-      </mat-form-field>
-      <div
-        *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
-      </div>
-      <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
-    </div>
-
-    <div class="full-row">
       <label for="clustered"
         >Will the proposed residence(s) be clustered with existing residential structures? Please explain.</label
       >
