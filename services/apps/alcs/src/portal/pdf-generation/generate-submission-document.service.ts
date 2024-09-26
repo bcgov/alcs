@@ -379,6 +379,13 @@ export class GenerateSubmissionDocumentService {
         return { ...item, cnt: index + 1 };
       },
     );
+
+    const naruProposedResidences = submission.naruProposedResidences.map(
+      (item, index) => {
+        return { ...item, cnt: index + 1 };
+      },
+    );
+
     return {
       ...pdfData,
       naruWillBeOverFiveHundredM2: formatBooleanToYesNoString(
@@ -402,6 +409,7 @@ export class GenerateSubmissionDocumentService {
       naruLocationRationale: submission.naruLocationRationale,
       naruInfrastructure: submission.naruInfrastructure,
       naruExistingResidences: naruExistingResidences,
+      naruProposedResidences: naruProposedResidences,
 
       buildingPlans: documents
         .filter(
