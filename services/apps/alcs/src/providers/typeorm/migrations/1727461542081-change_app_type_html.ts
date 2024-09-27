@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class changeAppTypeHtml1727461542081 implements MigrationInterface {
+export class ChangeAppTypeHtml1727461542081 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `UPDATE "alcs"."application_type" SET 
