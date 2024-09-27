@@ -33,40 +33,45 @@
     {{ _applicationSubmission.purpose }}
   </div>
 
-  <div class="subheading2 grid-1">
-    Describe the necessity for an additional residence for farm use and how it will support agriculture in the short or
-    long term.
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruResidenceNecessity }}
-  </div>
+  <ng-container
+    *ngIf="
+      _applicationSubmission.naruWillBeOverFiveHundredM2 ||
+      _applicationSubmission.naruWillHaveAdditionalResidence ||
+      _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing
+    "
+  >
+    <div class="subheading2 grid-1">
+      Is your proposal necessary for farm use? If so, please explain<ng-container
+        *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing"
+      >
+        what the temporary foreign workers will be doing on the farm</ng-container
+      >.
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruResidenceNecessity }}
+    </div>
+  </ng-container>
 
-  <div class="subheading2 grid-1">
-    Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
-    short or long term.
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruResidenceNecessity }}
-  </div>
+  <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing">
+    <div class="subheading2 grid-1">How many temporary foreign workers will be housed by the proposal?</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.tfwhCount }}
+    </div>
 
-  <div class="subheading2 grid-1">How many temporary foreign workers will be housed by the proposal?</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.tfwhCount }}
-  </div>
+    <div class="subheading2 grid-1">
+      Will the temporary foreign worker housing be designed to move from one place to another?
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.tfwhDesign }}
+    </div>
 
-  <div class="subheading2 grid-1">
-    Will the temporary foreign worker housing be designed to move from one place to another?
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.tfwhDesign }}
-  </div>
-
-  <div class="subheading2 grid-1">
-    What is the size (in hectares) of the farm operation that the temporary foreign workers will be supporting?
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.tfwhFarmSize }}
-  </div>
+    <div class="subheading2 grid-1">
+      What is the size (in hectares) of the farm operation that the temporary foreign workers will be supporting?
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.tfwhFarmSize }}
+    </div>
+  </ng-container>
 
   <div class="subheading2 grid-1">
     Will the proposed residence(s) be clustered with existing residential structures? Please explain.
