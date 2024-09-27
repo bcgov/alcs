@@ -214,10 +214,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   onChangeTemporaryHousing(answerIsYes: boolean) {
-    console.log(this.tfwhCount.value);
-    console.log(this.tfwhDesign.value);
-    console.log(this.tfwhFarmSize.value);
-    console.log(this.tfwhCount.value || this.tfwhDesign.value !== null || this.tfwhFarmSize.value);
     if (
       !answerIsYes &&
       (this.tfwhCount.value ||
