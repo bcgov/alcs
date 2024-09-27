@@ -170,11 +170,12 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   onChangeOver500m2(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willBeOverFiveHundredM2.value !== null && !answerIsYes && hasValues) {
+    if (
+      !answerIsYes &&
+      this.residenceNecessity.value !== null &&
+      this.willHaveAdditionalResidence.value !== true &&
+      this.willHaveTemporaryForeignWorkerHousing.value !== true
+    ) {
       this.confirmationDialogService
         .openDialog({
           title: 'Is your proposal for a principal residence with a total floor area greater than 500 m²?',
@@ -184,39 +185,19 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           this.willBeOverFiveHundredM2.setValue(!confirmed);
 
           if (confirmed) {
-            // TODO: wipe same fields as above
-          }
-        });
-    }
-  }
-
-  onChangeRetain(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willRetainResidence.value !== null && !answerIsYes && hasValues) {
-      this.confirmationDialogService
-        .openDialog({
-          title: 'Is your proposal to retain an existing residence while building a new residence?',
-          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
-        })
-        .subscribe((confirmed) => {
-          this.willRetainResidence.setValue(!confirmed);
-
-          if (confirmed) {
-            // TODO: wipe same fields as above
+            this.residenceNecessity.setValue(null);
           }
         });
     }
   }
 
   onChangeAdditional(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willHaveAdditionalResidence.value !== null && !answerIsYes && hasValues) {
+    if (
+      !answerIsYes &&
+      this.residenceNecessity.value !== null &&
+      this.willBeOverFiveHundredM2.value !== true &&
+      this.willHaveTemporaryForeignWorkerHousing.value !== true
+    ) {
       this.confirmationDialogService
         .openDialog({
           title: 'Is your proposal for an additional residence?',
@@ -226,18 +207,22 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           this.willHaveAdditionalResidence.setValue(!confirmed);
 
           if (confirmed) {
-            // TODO: wipe same fields as above
+            this.residenceNecessity.setValue(null);
           }
         });
     }
   }
 
   onChangeTemporaryHousing(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willHaveTemporaryForeignWorkerHousing.value !== null && !answerIsYes && hasValues) {
+    if (
+      !answerIsYes &&
+      (this.tfwhCount.value !== null ||
+        this.tfwhDesign.value !== null ||
+        this.tfwhFarmSize.value !== null ||
+        (this.residenceNecessity.value !== null &&
+          this.willBeOverFiveHundredM2.value !== true &&
+          this.willHaveAdditionalResidence.value !== true))
+    ) {
       this.confirmationDialogService
         .openDialog({
           title: 'Is your proposal for temporary foreign worker housing?',
@@ -247,7 +232,13 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           this.willHaveTemporaryForeignWorkerHousing.setValue(!confirmed);
 
           if (confirmed) {
-            // TODO: wipe same fields as above
+            this.tfwhCount.setValue(null);
+            this.tfwhDesign.setValue(null);
+            this.tfwhFarmSize.setValue(null);
+
+            if (this.willBeOverFiveHundredM2.value !== true && this.willHaveAdditionalResidence.value !== true) {
+              this.residenceNecessity.setValue(null);
+            }
           }
         });
     }

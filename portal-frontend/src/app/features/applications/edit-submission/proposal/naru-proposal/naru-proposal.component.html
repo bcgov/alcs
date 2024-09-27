@@ -67,12 +67,7 @@
       <mat-label for="will-retain-residence">
         Is your proposal to retain an existing residence while building a new residence?
       </mat-label>
-      <mat-button-toggle-group
-        (change)="onChangeRetain($event.value)"
-        class="input"
-        id="will-retain-residence"
-        formControlName="willRetainResidence"
-      >
+      <mat-button-toggle-group class="input" id="will-retain-residence" formControlName="willRetainResidence">
         <mat-button-toggle
           [value]="true"
           [ngClass]="{
@@ -222,9 +217,18 @@
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
 
-    <div class="full-row">
+    <div
+      class="full-row"
+      *ngIf="
+        willBeOverFiveHundredM2.value ||
+        willHaveAdditionalResidence.value ||
+        willHaveTemporaryForeignWorkerHousing.value
+      "
+    >
       <label for="residenceNecessity">
-        Is your proposal necessary for farm use? If so, please explain<ng-container>
+        Is your proposal necessary for farm use? If so, please explain<ng-container
+          *ngIf="willHaveTemporaryForeignWorkerHousing.value"
+        >
           what the temporary foreign workers will be doing on the farm</ng-container
         >.
       </label>
@@ -247,7 +251,7 @@
       <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
     </div>
 
-    <div class="full-row">
+    <div class="full-row" *ngIf="willHaveTemporaryForeignWorkerHousing.value">
       <label for="tfwh-count">How many temporary foreign workers will be housed by the proposal?</label>
       <mat-form-field appearance="outline">
         <textarea formControlName="tfwhCount" #tfwhCountText maxlength="4000" id="tfwh-count" matInput></textarea>
@@ -259,7 +263,7 @@
       <div class="subtext">Characters left: {{ 4000 - tfwhCountText.textLength }}</div>
     </div>
 
-    <div class="full-row">
+    <div class="full-row" *ngIf="willHaveTemporaryForeignWorkerHousing.value">
       <mat-label for="tfwh-design">
         Will the temporary foreign worker housing be designed to move from one place to another?
       </mat-label>
@@ -286,7 +290,7 @@
       </div>
     </div>
 
-    <div class="full-row">
+    <div class="full-row" *ngIf="willHaveTemporaryForeignWorkerHousing.value">
       <label for="tfwh-farm-size"
         >What is the size (in hectares) of the farm operation that the temporary foreign workers will be
         supporting?</label
