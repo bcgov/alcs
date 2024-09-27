@@ -393,7 +393,7 @@ export class GenerateSubmissionDocumentService {
       ),
       naruResidenceNecessity: submission.naruResidenceNecessity,
       tfwhCount: submission.tfwhCount,
-      tfwhDesign: submission.tfwhDesign,
+      tfwhDesign: formatBooleanToYesNoString(submission.tfwhDesign),
       tfwhFarmSize: submission.tfwhFarmSize,
       naruClustered: submission.naruClustered,
       naruSetback: submission.naruSetback,
