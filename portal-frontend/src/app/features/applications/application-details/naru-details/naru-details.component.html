@@ -151,7 +151,7 @@
     <a *ngFor="let plan of buildingPlans" (click)="openFile(plan)">
       {{ plan.fileName }}
     </a>
-    <app-no-data [showRequired]="showErrors" *ngIf="buildingPlans.length === 0"></app-no-data>
+    <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
   </div>
 
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
