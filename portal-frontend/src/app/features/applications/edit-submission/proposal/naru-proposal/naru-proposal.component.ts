@@ -172,7 +172,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   onChangeOver500m2(answerIsYes: boolean) {
     if (
       !answerIsYes &&
-      this.residenceNecessity.value !== null &&
+      this.residenceNecessity.value &&
       this.willHaveAdditionalResidence.value !== true &&
       this.willHaveTemporaryForeignWorkerHousing.value !== true
     ) {
@@ -194,7 +194,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   onChangeAdditional(answerIsYes: boolean) {
     if (
       !answerIsYes &&
-      this.residenceNecessity.value !== null &&
+      this.residenceNecessity.value &&
       this.willBeOverFiveHundredM2.value !== true &&
       this.willHaveTemporaryForeignWorkerHousing.value !== true
     ) {
@@ -214,12 +214,16 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   onChangeTemporaryHousing(answerIsYes: boolean) {
+    console.log(this.tfwhCount.value);
+    console.log(this.tfwhDesign.value);
+    console.log(this.tfwhFarmSize.value);
+    console.log(this.tfwhCount.value || this.tfwhDesign.value !== null || this.tfwhFarmSize.value);
     if (
       !answerIsYes &&
-      (this.tfwhCount.value !== null ||
+      (this.tfwhCount.value ||
         this.tfwhDesign.value !== null ||
-        this.tfwhFarmSize.value !== null ||
-        (this.residenceNecessity.value !== null &&
+        this.tfwhFarmSize.value ||
+        (this.residenceNecessity.value &&
           this.willBeOverFiveHundredM2.value !== true &&
           this.willHaveAdditionalResidence.value !== true))
     ) {
