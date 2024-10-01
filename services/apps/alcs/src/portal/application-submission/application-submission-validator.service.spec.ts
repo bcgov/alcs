@@ -520,12 +520,9 @@ describe('ApplicationSubmissionValidatorService', () => {
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: true,
         nfuFillTypeDescription: 'VALID',
-        nfuFillOriginDescription: 'VALID',
         nfuTotalFillArea: 0.0,
         nfuMaxFillDepth: 1.5125,
         nfuAverageFillDepth: 1261.21,
-        nfuFillVolume: 742.1,
-        nfuProjectDuration: '1 day',
       });
 
       const res = await service.validateSubmission(application);
@@ -568,12 +565,9 @@ describe('ApplicationSubmissionValidatorService', () => {
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: true,
         nfuFillTypeDescription: 'VALID',
-        nfuFillOriginDescription: null,
         nfuTotalFillArea: 0.0,
         nfuMaxFillDepth: 1.5125,
         nfuAverageFillDepth: 121,
-        nfuFillVolume: 742.1,
-        nfuProjectDuration: '1 day',
         typeCode: 'NFUP',
       });
 
