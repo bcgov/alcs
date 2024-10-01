@@ -48,6 +48,11 @@ export interface ProposedLot {
   componentUuid: string;
 }
 
+export interface ExistingResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface ApplicationReviewDto {
   localGovernmentFileNumber: string;
   firstName: string;
@@ -214,6 +219,7 @@ export interface ApplicationSubmissionDto {
   naruToPlaceAverageDepth: number | null;
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
+  naruExistingResidences?: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;

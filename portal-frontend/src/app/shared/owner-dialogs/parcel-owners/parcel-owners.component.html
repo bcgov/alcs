@@ -28,7 +28,7 @@
 
     <ng-container matColumnDef="phone">
       <th mat-header-cell *matHeaderCellDef>Phone</th>
-      <td mat-cell *matCellDef="let element">{{ element.phoneNumber | mask : '(000) 000-0000' }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.phoneNumber | mask: '(000) 000-0000' }}</td>
     </ng-container>
 
     <ng-container matColumnDef="email">
@@ -41,8 +41,8 @@
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
           <a *ngIf="element.corporateSummary" (click)="onOpenFile(element.corporateSummary)">{{
-              element.corporateSummary.fileName
-            }}</a>
+            element.corporateSummary.fileName
+          }}</a>
           <div class="no-data" *ngIf="!element.corporateSummary">
             <div class="no-data-text">Not Applicable</div>
           </div>
@@ -78,14 +78,15 @@
   </table>
 </div>
 <ng-container *ngIf="isMobile">
-  <app-parcel-owner-mobile-card 
+  <app-parcel-owner-mobile-card
     *ngFor="let owner of sortedOwners.slice(0, visibleCount); let last = last"
     [owner]="owner"
     [isLast]="last"
     [isReviewStep]="false"
     (editClicked)="onEdit(owner)"
     (removeClicked)="onRemove(owner.uuid)"
-    (openFileClicked)="onOpenFile(owner.corporateSummary)">
+    (openFileClicked)="onOpenFile(owner.corporateSummary)"
+  >
   </app-parcel-owner-mobile-card>
   <div class="visible-count-container" *ngIf="visibleCount < sortedOwners.length">
     <a (click)="increaseVisibleCount()">See more owners</a>

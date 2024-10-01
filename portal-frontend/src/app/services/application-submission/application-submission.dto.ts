@@ -37,6 +37,11 @@ export interface ProposedLot {
   size: number | null;
 }
 
+export interface ExistingResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface ApplicationSubmissionDto {
   uuid: string;
   fileNumber: string;
@@ -156,6 +161,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   naruToPlaceAverageDepth: number | null;
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
+  naruExistingResidences?: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;
@@ -274,6 +280,7 @@ export interface ApplicationSubmissionUpdateDto {
   naruToPlaceAverageDepth?: number | null;
   naruSleepingUnits?: number | null;
   naruAgriTourism?: string | null;
+  naruExistingResidences?: ExistingResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody?: string | null;

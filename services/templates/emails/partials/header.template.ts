@@ -1,6 +1,6 @@
 import { masthead } from './masthead.template';
 
-export const header = `
+export const header = (isNotification: boolean = false) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,5 +14,5 @@ export const header = `
   <![endif]-->
 
   <div style="max-width: 600px; margin: 0 auto; padding-top: 40px; font-family: Helvetica, Arial, sans-serif;">
-    ${masthead}
+    ${masthead(isNotification)}
 `;

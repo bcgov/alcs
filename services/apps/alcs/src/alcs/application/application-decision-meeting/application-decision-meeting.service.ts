@@ -135,9 +135,9 @@ export class ApplicationDecisionMeetingService {
       .addSelect(
         `
         CASE
-          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END) is NOT NULL
-          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END)
-        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE) THEN meeting.date END)
+          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END) is NOT NULL
+          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END)
+        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END)
         END
         `,
         'next_meeting',
@@ -145,7 +145,9 @@ export class ApplicationDecisionMeetingService {
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.reconsiderations', 'reconsideration')
       .innerJoin('reconsideration.card', 'card')
-      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
+      .where('card.status_code NOT IN (:...values)', {
+        values: [CARD_STATUS.DECISION_RELEASED, CARD_STATUS.CANCELLED],
+      })
       .groupBy('reconsideration.uuid')
       .getRawMany();
   }
@@ -159,16 +161,18 @@ export class ApplicationDecisionMeetingService {
       .addSelect(
         `
         CASE
-          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END) is NOT NULL
-          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE) THEN meeting.date END)
-        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE) THEN meeting.date END)
+          WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END) is NOT NULL
+          THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END)
+        ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE AT TIME ZONE \'America/Vancouver\') THEN meeting.date END)
         END
         `,
         'next_meeting',
       )
       .innerJoin('meeting.application', 'application')
       .innerJoin('application.card', 'card')
-      .where(`card.status_code != '${CARD_STATUS.DECISION_RELEASED}'`)
+      .where('card.status_code NOT IN (:...values)', {
+        values: [CARD_STATUS.DECISION_RELEASED, CARD_STATUS.CANCELLED],
+      })
       .groupBy('application.uuid')
       .getRawMany();
   }
