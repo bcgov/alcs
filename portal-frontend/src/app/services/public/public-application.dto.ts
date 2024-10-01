@@ -11,6 +11,11 @@ export interface ExistingResidence {
   description: string;
 }
 
+export interface ProposedResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface GetPublicApplicationResponseDto {
   submission: PublicApplicationSubmissionDto;
   parcels: PublicParcelDto[];
@@ -124,6 +129,7 @@ export interface PublicApplicationSubmissionDto {
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
   naruExistingResidences?: ExistingResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;

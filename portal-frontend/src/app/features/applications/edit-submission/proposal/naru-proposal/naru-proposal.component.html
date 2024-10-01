@@ -367,7 +367,7 @@
             <th mat-header-cell *matHeaderCellDef class="description-column">Description</th>
             <td mat-cell *matCellDef="let element" class="description-data">
               {{ element.isExpanded ? element.description : getTruncatedDescription(element.description) }}
-              <a *ngIf="isDescriptionTruncated(element.description)" (click)="toggleReadMore(element)">
+              <a *ngIf="isDescriptionTruncated(element.description)" (click)="toggleReadMore(true, element)">
                 {{ element.isExpanded ? 'Read Less' : 'Read More' }}
               </a>
             </td>
@@ -380,11 +380,11 @@
                 type="button"
                 mat-stroked-button
                 color="primary"
-                (click)="onAddEditExistingResidence(element, true)"
+                (click)="onAddEditResidence(true, element, true)"
               >
                 Edit
               </button>
-              <button type="button" mat-stroked-button color="accent" (click)="onDeleteExistingResidence(element)">
+              <button type="button" mat-stroked-button color="accent" (click)="onDeleteResidence(true, element)">
                 Remove
               </button>
             </td></ng-container
@@ -401,18 +401,91 @@
         </table>
       </div>
       <ng-container *ngIf="isMobile">
+        <div class class="no-data-container" *ngIf="existingResidences.length === 0">
+          <td class="no-data-text" colspan="6">Use the button below to add any existing residence(s)</td>
+        </div>
         <app-naru-residence-mobile-card
           *ngFor="let existingResidence of existingResidences; let last = last"
-          [existingResidence]="existingResidence"
+          [residence]="existingResidence"
           [isLast]="last"
           [isReviewStep]="false"
-          (editClicked)="onAddEditExistingResidence(existingResidence, true)"
-          (removeClicked)="onDeleteExistingResidence(existingResidence)"
+          (editClicked)="onAddEditResidence(true, existingResidence, true)"
+          (removeClicked)="onDeleteResidence(true, existingResidence)"
         >
         </app-naru-residence-mobile-card>
       </ng-container>
-      <button mat-stroked-button color="primary" (click)="onAddEditExistingResidence(undefined, false)">
+      <button mat-stroked-button color="primary" (click)="onAddEditResidence(true, undefined, false)">
         + Add Existing Residence
+      </button>
+    </div>
+
+    <div class="full-row">
+      <mat-label>Total Floor Area of Proposed Residence(s)</mat-label>
+      <div class="scrollable" *ngIf="!isMobile">
+        <table mat-table [dataSource]="proposedResidencesSource">
+          <ng-container class="sample" matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>Proposed Residence</th>
+            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="floorArea">
+            <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="description-column">Description</th>
+            <td mat-cell *matCellDef="let element" class="description-data">
+              {{ element.isExpanded ? element.description : getTruncatedDescription(element.description) }}
+              <a *ngIf="isDescriptionTruncated(element.description)" (click)="toggleReadMore(false, element)">
+                {{ element.isExpanded ? 'Read Less' : 'Read More' }}
+              </a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell class="actions" *matCellDef="let element">
+              <button
+                type="button"
+                mat-stroked-button
+                color="primary"
+                (click)="onAddEditResidence(false, element, true)"
+              >
+                Edit
+              </button>
+              <button type="button" mat-stroked-button color="accent" (click)="onDeleteResidence(false, element)">
+                Remove
+              </button>
+            </td></ng-container
+          >
+
+          <tr mat-header-row *matHeaderRowDef="proposedResidencesDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: proposedResidencesDisplayedColumns"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="no-data-text" colspan="6">Use the button below to add any proposed residence(s)</td>
+          </tr>
+        </table>
+      </div>
+      <ng-container *ngIf="isMobile">
+        <div class class="no-data-container" *ngIf="proposedResidences.length === 0">
+          <td class="no-data-text" colspan="6">Use the button below to add any existing residence(s)</td>
+        </div>
+        <app-naru-residence-mobile-card
+          *ngFor="let proposedResidence of proposedResidences; let last = last"
+          [residence]="proposedResidence"
+          [isLast]="last"
+          [isReviewStep]="false"
+          (editClicked)="onAddEditResidence(false, proposedResidence, true)"
+          (removeClicked)="onDeleteResidence(false, proposedResidence)"
+        >
+        </app-naru-residence-mobile-card>
+      </ng-container>
+      <button mat-stroked-button color="primary" (click)="onAddEditResidence(false, undefined, false)">
+        + Add Proposed Residence
       </button>
     </div>
 

@@ -17,7 +17,7 @@ export class ResidenceDialogComponent implements OnInit {
   });
 
   isSaving: boolean = false;
-  existingResidence: FormExisingResidence = { floorArea: 0, description: '', isExpanded: false };
+  residence: FormExisingResidence | FormProposedResidence = { floorArea: 0, description: '', isExpanded: false };
 
   constructor(
     private dialogRef: MatDialogRef<ResidenceDialogComponent>,
@@ -33,15 +33,15 @@ export class ResidenceDialogComponent implements OnInit {
     if (this.data.residenceData) {
       this.floorArea.setValue(this.data.residenceData.floorArea!.toString());
       this.description.setValue(this.data.residenceData.description!);
-      this.existingResidence = { ...this.data.residenceData };
+      this.residence = { ...this.data.residenceData };
     }
   }
 
   onSaveAdd() {
     if (this.form.valid) {
-      this.existingResidence.description = this.description.value!;
-      this.existingResidence.floorArea = Number(this.floorArea.value!);
-      this.dialogRef.close({ isCancel: false, isEdit: this.data.isEdit, existingResidence: this.existingResidence });
+      this.residence.description = this.description.value!;
+      this.residence.floorArea = Number(this.floorArea.value!);
+      this.dialogRef.close({ isCancel: false, isEdit: this.data.isEdit, residence: this.residence });
     }
   }
 

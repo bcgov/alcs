@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
-import { FormExisingResidence } from '../../../features/applications/edit-submission/proposal/naru-proposal/naru-proposal.component';
+import {
+  FormExisingResidence,
+  FormProposedResidence,
+} from '../../../features/applications/edit-submission/proposal/naru-proposal/naru-proposal.component';
 import { isTruncated, truncate } from '../../utils/string-helper';
 import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT_MOBILE } from '../../constants';
 
@@ -10,18 +13,18 @@ import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT_MOBILE } from '../../constant
   styleUrl: './naru-residence-mobile-card.component.scss',
 })
 export class NaruResidenceMobileCardComponent {
-  @Input() existingResidence!: FormExisingResidence;
+  @Input() residence!: FormExisingResidence | FormProposedResidence;
   @Input() isLast: boolean = false;
   @Input() isReviewStep: boolean = false;
   @Output() editClicked = new EventEmitter<FormExisingResidence>();
   @Output() removeClicked = new EventEmitter<FormExisingResidence>();
 
   onEdit() {
-    this.editClicked.emit(this.existingResidence);
+    this.editClicked.emit(this.residence);
   }
 
   onRemove() {
-    this.removeClicked.emit(this.existingResidence);
+    this.removeClicked.emit(this.residence);
   }
 
   getTruncatedDescription(description: string): string {
@@ -33,6 +36,6 @@ export class NaruResidenceMobileCardComponent {
   }
 
   toggleReadMore(existingResidence: FormExisingResidence) {
-    this.existingResidence.isExpanded = !this.existingResidence.isExpanded;
+    this.residence.isExpanded = !this.residence.isExpanded;
   }
 }
