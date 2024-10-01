@@ -971,6 +971,18 @@ export class ApplicationSubmissionService {
       updateDto.naruWillImportFill,
       applicationSubmission.naruWillImportFill,
     );
+    applicationSubmission.tfwhCount = filterUndefined(
+      updateDto.tfwhCount,
+      applicationSubmission.tfwhCount,
+    );
+    applicationSubmission.tfwhDesign = filterUndefined(
+      updateDto.tfwhDesign,
+      applicationSubmission.tfwhDesign,
+    );
+    applicationSubmission.tfwhFarmSize = filterUndefined(
+      updateDto.tfwhFarmSize,
+      applicationSubmission.tfwhFarmSize,
+    );
     applicationSubmission.naruClustered = filterUndefined(
       updateDto.naruClustered,
       applicationSubmission.naruClustered,
