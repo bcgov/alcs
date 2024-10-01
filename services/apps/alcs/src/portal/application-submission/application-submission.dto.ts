@@ -741,7 +741,7 @@ export class ApplicationSubmissionUpdateDto {
 
   @IsArray()
   @IsOptional()
-  naruProposedResidences?: ExistingResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   @IsString()
