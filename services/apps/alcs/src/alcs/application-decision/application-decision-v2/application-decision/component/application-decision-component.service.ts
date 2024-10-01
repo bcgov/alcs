@@ -373,9 +373,6 @@ export class ApplicationDecisionComponentService {
         'Type, origin and quality of fill approved to be placed is required',
       );
     }
-    if (!component.soilToPlaceVolume) {
-      errors.push('Volume To Place is required');
-    }
     if (!component.soilToPlaceArea) {
       errors.push('Area To Place is required');
     }
@@ -393,9 +390,6 @@ export class ApplicationDecisionComponentService {
   ) {
     if (!component.soilTypeRemoved) {
       errors.push('Type of soil approved to be removed is required');
-    }
-    if (!component.soilToRemoveVolume) {
-      errors.push('Volume To Remove is required');
     }
     if (!component.soilToRemoveArea) {
       errors.push('Area To Remove is required');

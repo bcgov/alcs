@@ -217,6 +217,63 @@
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
 
+    <div class="full-row">
+      <mat-expansion-panel [expanded]="true" class="siting-of-residences">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Siting of the residence(s)</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="siting-of-residences-content">
+          <p>
+            Siting of the residence in the ALR should maintain a visible agricultural remainder and should not
+            unnecessarily infringe upon the productive farming area of the property. Siting considers both clustering
+            and setback from the lot line.
+          </p>
+
+          <p>
+            For more information see
+            <a
+              href="https://www.alc.gov.bc.ca/assets/alc/assets/legislation-and-regulation/policies/alc_policy_l-26_-_non-adhering_residential_use_applications.pdf"
+              target="_blank"
+              >L-26: Non-Adhering Residential Applications for Housing in the ALR.</a
+            >
+          </p>
+
+          <div class="siting-of-residences-figures">
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Unclustered</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/unclustered.svg"
+                alt=""
+              />
+            </figure>
+
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Clustered</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/clustered.svg"
+                alt=""
+              />
+            </figure>
+
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Setback</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/setback.svg"
+                alt=""
+              />
+            </figure>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
+
     <div
       class="full-row"
       *ngIf="
@@ -232,6 +289,9 @@
           what the temporary foreign workers will be doing on the farm</ng-container
         >.
       </label>
+      <div class="subtext">
+        Include a description of the scale, intensity, and labour capacity of the farm operation
+      </div>
       <mat-form-field appearance="outline">
         <textarea
           formControlName="residenceNecessity"
@@ -443,6 +503,9 @@
         </table>
       </div>
       <ng-container *ngIf="isMobile">
+        <div class class="no-data-container" *ngIf="existingResidences.length === 0">
+          <td class="no-data-text" colspan="6">Use the button below to add any existing residence(s)</td>
+        </div>
         <app-naru-residence-mobile-card
           *ngFor="let existingResidence of existingResidences; let last = last"
           [existingResidence]="existingResidence"

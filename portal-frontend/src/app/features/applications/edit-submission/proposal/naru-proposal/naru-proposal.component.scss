@@ -63,3 +63,35 @@ td {
   overflow-wrap: break-word;
   max-width: 40%;
 }
+
+.siting-of-residences {
+  --mat-expansion-header-text-weight: bold;
+}
+
+.siting-of-residences-content {
+  display: flex;
+  flex-direction: column;
+  gap: rem(24);
+}
+
+.siting-of-residences-figures {
+  display: flex;
+  gap: rem(32);
+  flex-wrap: wrap;
+  justify-content: center;
+  min-width: 0;
+}
+
+.siting-of-residences-figure {
+  margin: 0;
+}
+
+.siting-of-residences-figure-caption {
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: rem(4);
+}
+
+.siting-of-residences-figure-image {
+  display: block;
+}
