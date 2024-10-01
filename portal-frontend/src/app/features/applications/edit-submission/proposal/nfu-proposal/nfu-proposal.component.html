@@ -178,57 +178,13 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="full-row">
-        <label for="fillOrigin">Briefly describe the origin and quality of fill.</label>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="fillOriginDescription"
-            #fillOriginToPlaceText
-            maxlength="4000"
-            id="fillOrigin"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="fillOriginDescription.invalid && (fillOriginDescription.dirty || fillOriginDescription.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="fillOriginDescription.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</div>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="full-row">
-        <label for="projectDuration">Placement of Fill Project Duration</label>
-        <div class="subtext">Length of time you anticipate it would take to complete the project</div>
-        <mat-form-field appearance="outline">
-          <input
-            id="projectDuration"
-            maxlength="500"
-            matInput 
-            [formControl]="projectDuration" 
-            placeholder="Type project duration" 
-          />
-        </mat-form-field>
-        <div *ngIf="projectDuration.invalid && (projectDuration.dirty || projectDuration.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="projectDuration.errors?.['required']">This field is required</div>
-        </div>
-        <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
-        <div class="subtext">Characters left: {{ 500 - (projectDuration.value || '').length }}</div>
-      </div>
-    </div>
-
     <app-soil-table
       tableHeader="Fill to be Placed"
       [disabled]="fillTableDisabled"
       [touchAll]="showErrors"
       [(data)]="fillTableData"
       (dataChange)="markDirty()"
+      [showVolumeField]="false"
     ></app-soil-table>
   </section>
 </form>
