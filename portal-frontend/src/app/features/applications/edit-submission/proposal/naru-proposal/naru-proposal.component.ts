@@ -53,20 +53,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     },
     [Validators.required],
   );
-  fillOrigin = new FormControl<string | null>(
-    {
-      disabled: true,
-      value: null,
-    },
-    [Validators.required],
-  );
-  projectDuration = new FormControl<string | null>(
-    {
-      disabled: true,
-      value: null,
-    },
-    [Validators.required],
-  );
 
   existingResidences: FormExisingResidence[] = [];
   existingResidencesSource = new MatTableDataSource(this.existingResidences);
@@ -90,8 +76,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     locationRationale: this.locationRationale,
     infrastructure: this.infrastructure,
     fillType: this.fillType,
-    fillOrigin: this.fillOrigin,
-    projectDuration: this.projectDuration,
   });
 
   private submissionUuid = '';
@@ -126,10 +110,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           clustered: applicationSubmission.naruClustered,
           setback: applicationSubmission.naruSetback,
           fillType: applicationSubmission.naruFillType,
-          fillOrigin: applicationSubmission.naruFillOrigin,
           infrastructure: applicationSubmission.naruInfrastructure,
           locationRationale: applicationSubmission.naruLocationRationale,
-          projectDuration: applicationSubmission.naruProjectDuration,
         });
 
         if (applicationSubmission.naruWillImportFill !== null) {
@@ -140,7 +122,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         }
 
         this.fillTableData = {
-          volume: applicationSubmission.naruToPlaceVolume ?? undefined,
           area: applicationSubmission.naruToPlaceArea ?? undefined,
           maximumDepth: applicationSubmission.naruToPlaceMaximumDepth ?? undefined,
           averageDepth: applicationSubmission.naruToPlaceAverageDepth ?? undefined,
@@ -268,13 +249,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeFill(willImportFill: boolean) {
     const hasValues =
-      this.projectDuration.value ||
-      this.fillOrigin.value ||
       this.fillType.value ||
       this.fillTableData.area ||
       this.fillTableData.averageDepth ||
-      this.fillTableData.maximumDepth ||
-      this.fillTableData.volume;
+      this.fillTableData.maximumDepth;
 
     if (!willImportFill && hasValues) {
       this.confirmationDialogService
@@ -295,16 +273,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     this.fillTableDisabled = !willImportFill;
 
     if (willImportFill) {
-      this.projectDuration.enable();
-      this.fillOrigin.enable();
       this.fillType.enable();
     } else {
-      this.projectDuration.disable();
-      this.fillOrigin.disable();
       this.fillType.disable();
 
-      this.projectDuration.setValue(null);
-      this.fillOrigin.setValue(null);
       this.fillType.setValue(null);
     }
   }
@@ -322,10 +294,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         clustered,
         setback,
         fillType,
-        fillOrigin,
         infrastructure,
         locationRationale,
-        projectDuration,
       } = this.form.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
@@ -339,14 +309,11 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruClustered: clustered,
         naruSetback: setback,
         naruFillType: fillType,
-        naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,
         naruToPlaceMaximumDepth: this.fillTableData.maximumDepth ?? null,
         naruToPlaceArea: this.fillTableData.area ?? null,
-        naruToPlaceVolume: this.fillTableData.volume ?? null,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
-        naruProjectDuration: projectDuration,
         naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
       };
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
