@@ -401,6 +401,9 @@
         </table>
       </div>
       <ng-container *ngIf="isMobile">
+        <div class class="no-data-container" *ngIf="existingResidences.length === 0">
+          <td class="no-data-text" colspan="6">Use the button below to add any existing residence(s)</td>
+        </div>
         <app-naru-residence-mobile-card
           *ngFor="let existingResidence of existingResidences; let last = last"
           [existingResidence]="existingResidence"
