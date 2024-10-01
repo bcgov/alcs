@@ -53,6 +53,11 @@ export interface ExistingResidence {
   description: string;
 }
 
+export interface ProposedResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface ApplicationReviewDto {
   localGovernmentFileNumber: string;
   firstName: string;
@@ -217,6 +222,7 @@ export interface ApplicationSubmissionDto {
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
   naruExistingResidences?: ExistingResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;
