@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormExisingResidence } from '../naru-proposal.component';
+import { FormExisingResidence, FormProposedResidence } from '../naru-proposal.component';
 
 @Component({
-  selector: 'app-existing-residence-dialog',
-  templateUrl: './existing-residence-dialog.component.html',
-  styleUrl: './existing-residence-dialog.component.scss',
+  selector: 'app-residence-dialog',
+  templateUrl: './residence-dialog.component.html',
+  styleUrl: './residence-dialog.component.scss',
 })
-export class ExistingResidenceDialogComponent implements OnInit {
+export class ResidenceDialogComponent implements OnInit {
   floorArea = new FormControl<string | null>(null, [Validators.required]);
   description = new FormControl<string | null>(null, [Validators.required]);
   form = new FormGroup({
@@ -20,19 +20,20 @@ export class ExistingResidenceDialogComponent implements OnInit {
   existingResidence: FormExisingResidence = { floorArea: 0, description: '', isExpanded: false };
 
   constructor(
-    private dialogRef: MatDialogRef<ExistingResidenceDialogComponent>,
+    private dialogRef: MatDialogRef<ResidenceDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       isEdit?: boolean;
-      existingResidenceData?: FormExisingResidence;
+      isExisting?: boolean;
+      residenceData?: FormExisingResidence | FormProposedResidence;
     },
   ) {}
 
   ngOnInit(): void {
-    if (this.data.existingResidenceData) {
-      this.floorArea.setValue(this.data.existingResidenceData.floorArea!.toString());
-      this.description.setValue(this.data.existingResidenceData.description!);
-      this.existingResidence = { ...this.data.existingResidenceData };
+    if (this.data.residenceData) {
+      this.floorArea.setValue(this.data.residenceData.floorArea!.toString());
+      this.description.setValue(this.data.residenceData.description!);
+      this.existingResidence = { ...this.data.residenceData };
     }
   }
 

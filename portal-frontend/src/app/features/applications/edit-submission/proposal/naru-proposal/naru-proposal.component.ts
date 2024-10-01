@@ -17,12 +17,13 @@ import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { ExistingResidenceDialogComponent } from './existing-residence-dialog/existing-residence-dialog.component';
+import { ResidenceDialogComponent } from './residence-dialog/residence-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { isTruncated, truncate } from '../../../../../shared/utils/string-helper';
 import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT } from '../../../../../shared/constants';
 
 export type FormExisingResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
+export type FormProposedResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
 
 @Component({
   selector: 'app-naru-proposal',
@@ -360,11 +361,12 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   onAddEditExistingResidence(existingResidence: FormExisingResidence | undefined, isEdit: boolean) {
     const dialog = this.dialog
-      .open(ExistingResidenceDialogComponent, {
+      .open(ResidenceDialogComponent, {
         width: this.isMobile ? '90%' : '75%',
         data: {
           isEdit: isEdit,
-          existingResidenceData: existingResidence,
+          residenceData: existingResidence,
+          isExisting: true,
         },
       })
       .afterClosed()
