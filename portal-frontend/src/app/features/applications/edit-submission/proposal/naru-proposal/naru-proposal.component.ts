@@ -385,15 +385,21 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   onDeleteExistingResidence(existingResidence: FormExisingResidence) {
-    const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
-    if (index > -1) {
-      this.existingResidences.splice(index, 1);
-      this.existingResidencesSource.data = this.existingResidences;
-      this.isExistingResidencesDirty = true;
-      this.existingResidences.forEach((item, index) => {
-        item.id = index + 1;
+    this.confirmationDialogService
+      .openDialog({ title: 'Remove existing residence?', body: 'Do you want to continue?' })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
+          if (index > -1) {
+            this.existingResidences.splice(index, 1);
+            this.existingResidencesSource.data = this.existingResidences;
+            this.isExistingResidencesDirty = true;
+            this.existingResidences.forEach((item, index) => {
+              item.id = index + 1;
+            });
+          }
+        }
       });
-    }
   }
 
   getTruncatedDescription(description: string): string {
