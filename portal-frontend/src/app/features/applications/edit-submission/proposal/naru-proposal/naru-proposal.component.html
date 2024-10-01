@@ -514,7 +514,13 @@
     <div class="form-row">
       <div class="full-row">
         <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
-        <div class="subtext">The Commission must approve any proposed fill. List all proposed types of fill.</div>
+        <div class="subtext">
+          The Commission must approve any proposed fill. List all proposed types of fill.
+          <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/30_2019#section36" target="_blank"
+            >Prohibited fill</a
+          >
+          cannot be placed in the ALR.
+        </div>
         <mat-form-field appearance="outline">
           <textarea formControlName="fillType" #fillTypeToPlaceText maxlength="4000" id="fillType" matInput></textarea>
         </mat-form-field>
