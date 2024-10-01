@@ -564,7 +564,6 @@ describe('ApplicationSubmissionValidatorService', () => {
         nfuOutsideLands: 'VALID',
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: true,
-        nfuFillTypeDescription: 'VALID',
         nfuTotalFillArea: 0.0,
         nfuMaxFillDepth: 1.5125,
         nfuAverageFillDepth: 121,
