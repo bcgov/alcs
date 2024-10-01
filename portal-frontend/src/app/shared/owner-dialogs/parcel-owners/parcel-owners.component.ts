@@ -121,7 +121,6 @@ export class ParcelOwnersComponent implements OnInit{
         title: 'Remove Parcel Owner',
       })
       .subscribe(async (answer) => {
-        console.log(answer);
         if (answer) {
           this.onOwnerRemoved.emit(uuid);
         }
