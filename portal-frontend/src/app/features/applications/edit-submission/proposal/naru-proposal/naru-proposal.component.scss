@@ -76,26 +76,22 @@ td {
 
 .siting-of-residences-figures {
   display: flex;
-  flex-direction: column;
   gap: rem(32);
+  flex-wrap: wrap;
+  justify-content: center;
+  min-width: 0;
+}
 
-  @media screen and (min-width: $tabletBreakpoint) {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
+.siting-of-residences-figure {
+  margin: 0;
+}
 
-  .siting-of-residences-figure {
-    margin: 0;
+.siting-of-residences-figure-caption {
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: rem(4);
+}
 
-    .siting-of-residences-figure-caption {
-      text-align: center;
-      line-height: 1.5;
-      margin-bottom: rem(4);
-    }
-
-    .siting-of-residences-figure-image {
-      display: block;
-      width: 100%;
-    }
-  }
+.siting-of-residences-figure-image {
+  display: block;
 }
