@@ -84,16 +84,16 @@ td {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  figure {
+  .siting-of-residences-figure {
     margin: 0;
 
-    figcaption {
+    .siting-of-residences-figure-caption {
       text-align: center;
       line-height: 1.5;
       margin-bottom: rem(4);
     }
 
-    img {
+    .siting-of-residences-figure-image {
       display: block;
       width: 100%;
     }
