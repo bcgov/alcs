@@ -20,6 +20,7 @@ export class SoilTableComponent implements OnInit, OnChanges {
   @Input() data2?: SoilTableData;
   @Input() disabled = false;
   @Input() touchAll = false;
+  @Input() showVolumeField = true;
 
   @Output() dataChange = new EventEmitter<SoilTableData>();
   @Output() data2Change = new EventEmitter<SoilTableData>();
@@ -27,12 +28,12 @@ export class SoilTableComponent implements OnInit, OnChanges {
   idSuffix?: string;
   idSuffix2?: string | undefined;
 
-  volume = new FormControl<string | null>(null, [Validators.required]);
+  volume = new FormControl<string | null>(null);
   area = new FormControl<string | null>(null, [Validators.required]);
   maximumDepth = new FormControl<string | null>(null, [Validators.required]);
   averageDepth = new FormControl<string | null>(null, [Validators.required]);
 
-  volume2 = new FormControl<string | null>(null, [Validators.required]);
+  volume2 = new FormControl<string | null>(null);
   area2 = new FormControl<string | null>(null, [Validators.required]);
   maximumDepth2 = new FormControl<string | null>(null, [Validators.required]);
   averageDepth2 = new FormControl<string | null>(null, [Validators.required]);
@@ -49,6 +50,11 @@ export class SoilTableComponent implements OnInit, OnChanges {
   });
 
   ngOnInit(): void {
+    if (this.showVolumeField) {
+      this.volume.setValidators([Validators.required]);
+      this.volume2.setValidators([Validators.required]);
+    }
+
     if (this.data) {
       this.volume.setValue(this.data.volume?.toString(10) ?? null);
       this.area.setValue(this.data.area?.toString(10) ?? null);

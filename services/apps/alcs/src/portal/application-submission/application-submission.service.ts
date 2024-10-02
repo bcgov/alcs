@@ -743,21 +743,9 @@ export class ApplicationSubmissionService {
       updateDto.nfuAverageFillDepth,
       application.nfuAverageFillDepth,
     );
-    application.nfuFillVolume = filterUndefined(
-      updateDto.nfuFillVolume,
-      application.nfuFillVolume,
-    );
-    application.nfuProjectDuration = filterUndefined(
-      updateDto.nfuProjectDuration,
-      application.nfuProjectDuration,
-    );
     application.nfuFillTypeDescription = filterUndefined(
       updateDto.nfuFillTypeDescription,
       application.nfuFillTypeDescription,
-    );
-    application.nfuFillOriginDescription = filterUndefined(
-      updateDto.nfuFillOriginDescription,
-      application.nfuFillOriginDescription,
     );
 
     return application;
@@ -1019,18 +1007,6 @@ export class ApplicationSubmissionService {
     applicationSubmission.naruFillType = filterUndefined(
       updateDto.naruFillType,
       applicationSubmission.naruFillType,
-    );
-    applicationSubmission.naruFillOrigin = filterUndefined(
-      updateDto.naruFillOrigin,
-      applicationSubmission.naruFillOrigin,
-    );
-    applicationSubmission.naruProjectDuration = filterUndefined(
-      updateDto.naruProjectDuration,
-      applicationSubmission.naruProjectDuration,
-    );
-    applicationSubmission.naruToPlaceVolume = filterUndefined(
-      updateDto.naruToPlaceVolume,
-      applicationSubmission.naruToPlaceVolume,
     );
     applicationSubmission.naruToPlaceArea = filterUndefined(
       updateDto.naruToPlaceArea,
