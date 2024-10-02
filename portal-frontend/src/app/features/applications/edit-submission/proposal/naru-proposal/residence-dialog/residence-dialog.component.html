@@ -35,8 +35,11 @@
           "
           class="field-error"
         >
-          <mat-icon>warning</mat-icon>
+          <mat-icon class="warning-icon">warning</mat-icon>
           <div *ngIf="form.controls['floorArea']!.errors?.['required']">This field is required</div>
+          <div *ngIf="form.controls['floorArea']!.errors?.['pattern']">
+            This field must be a non-zero number with no more than 2 decimal places.
+          </div>
         </div>
       </div>
 
