@@ -580,6 +580,18 @@ export class ApplicationSubmission extends Base {
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
+  tfwhCount: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  tfwhDesign: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  tfwhFarmSize: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
   naruClustered: string | null;
 
   @AutoMap(() => String)

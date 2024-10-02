@@ -49,7 +49,7 @@ export class DecisionComponentComponent implements OnInit {
 
   // pofo, pfrs
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
-  volumeToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  volumeToPlace = new FormControl<number | null>(null, [Validators.min(MIN_SOIL_FIELDS)]);
   areaToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   averageDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
@@ -59,7 +59,7 @@ export class DecisionComponentComponent implements OnInit {
 
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
-  volumeToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  volumeToRemove = new FormControl<number | null>(null, [Validators.min(MIN_SOIL_FIELDS)]);
   areaToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   averageDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
