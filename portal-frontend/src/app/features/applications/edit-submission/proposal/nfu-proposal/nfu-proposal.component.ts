@@ -32,26 +32,12 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
   outsideLands = new FormControl<string | null>(null, [Validators.required]);
   agricultureSupport = new FormControl<string | null>(null, [Validators.required]);
   willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
-  projectDuration = new FormControl<string | null>(
-    {
-      disabled: true,
-      value: null,
-    },
-    [Validators.required]
-  );
   fillTypeDescription = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
     },
-    [Validators.required]
-  );
-  fillOriginDescription = new FormControl<string | null>(
-    {
-      disabled: true,
-      value: null,
-    },
-    [Validators.required]
+    [Validators.required],
   );
 
   form = new FormGroup({
@@ -60,9 +46,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
     outsideLands: this.outsideLands,
     agricultureSupport: this.agricultureSupport,
     willImportFill: this.willImportFill,
-    projectDuration: this.projectDuration,
     fillTypeDescription: this.fillTypeDescription,
-    fillOriginDescription: this.fillOriginDescription,
   });
   private submissionUuid = '';
   proposalMap: ApplicationDocumentDto[] = [];
@@ -73,7 +57,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
@@ -89,13 +73,10 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
           purpose: applicationSubmission.purpose,
           outsideLands: applicationSubmission.nfuOutsideLands,
           agricultureSupport: applicationSubmission.nfuAgricultureSupport,
-          projectDuration: applicationSubmission.nfuProjectDuration,
           fillTypeDescription: applicationSubmission.nfuFillTypeDescription,
-          fillOriginDescription: applicationSubmission.nfuFillOriginDescription,
         });
 
         this.fillTableData = {
-          volume: applicationSubmission.nfuFillVolume ?? undefined,
           area: applicationSubmission.nfuTotalFillArea ?? undefined,
           maximumDepth: applicationSubmission.nfuMaxFillDepth ?? undefined,
           averageDepth: applicationSubmission.nfuAverageFillDepth ?? undefined,
@@ -133,9 +114,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
       const nfuOutsideLands = this.outsideLands.getRawValue();
       const nfuAgricultureSupport = this.agricultureSupport.getRawValue();
       const nfuWillImportFill = this.willImportFill.getRawValue();
-      const nfuProjectDuration = this.projectDuration.getRawValue();
       const nfuFillTypeDescription = this.fillTypeDescription.getRawValue();
-      const nfuFillOriginDescription = this.fillOriginDescription.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         nfuHectares: nfuHectares ? parseFloat(nfuHectares) : null,
@@ -146,10 +125,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
         nfuTotalFillArea: this.fillTableData.area ?? null,
         nfuMaxFillDepth: this.fillTableData.maximumDepth ?? null,
         nfuAverageFillDepth: this.fillTableData.averageDepth ?? null,
-        nfuFillVolume: this.fillTableData.volume ?? null,
-        nfuProjectDuration,
         nfuFillTypeDescription,
-        nfuFillOriginDescription,
       };
 
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
@@ -159,13 +135,10 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
 
   onChangeFill(willImportFill: boolean) {
     const hasValues =
-      this.projectDuration.value ||
-      this.fillOriginDescription.value ||
       this.fillTypeDescription.value ||
       this.fillTableData.area ||
       this.fillTableData.averageDepth ||
-      this.fillTableData.maximumDepth ||
-      this.fillTableData.volume;
+      this.fillTableData.maximumDepth;
 
     if (!willImportFill && hasValues) {
       this.confirmationDialogService
@@ -186,16 +159,10 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
     this.fillTableDisabled = !willImportFill;
 
     if (willImportFill) {
-      this.projectDuration.enable();
-      this.fillOriginDescription.enable();
       this.fillTypeDescription.enable();
     } else {
-      this.projectDuration.disable();
-      this.fillOriginDescription.disable();
       this.fillTypeDescription.disable();
 
-      this.projectDuration.setValue(null);
-      this.fillOriginDescription.setValue(null);
       this.fillTypeDescription.setValue(null);
     }
   }

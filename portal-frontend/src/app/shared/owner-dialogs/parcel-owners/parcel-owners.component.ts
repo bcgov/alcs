@@ -15,6 +15,7 @@ import { openFileInline } from '../../utils/file';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { MOBILE_BREAKPOINT } from '../../utils/breakpoints';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-parcel-owners[owners][fileId][submissionUuid][ownerService]',
@@ -70,7 +71,7 @@ export class ParcelOwnersComponent implements OnInit{
   VISIBLE_COUNT = 5;
   visibleCount = this.VISIBLE_COUNT;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private confirmationDialogService: ConfirmationDialogService) {}
 
   ngOnInit(): void {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
@@ -114,7 +115,16 @@ export class ParcelOwnersComponent implements OnInit{
   }
 
   async onRemove(uuid: string) {
-    this.onOwnerRemoved.emit(uuid);
+    this.confirmationDialogService
+      .openDialog({
+        body: `Warning: Do you want to continue?`,
+        title: 'Remove Parcel Owner',
+      })
+      .subscribe(async (answer) => {
+        if (answer) {
+          this.onOwnerRemoved.emit(uuid);
+        }
+      });
   }
 
   async onOpenFile(file: ApplicationDocumentDto | NoticeOfIntentDocumentDto) {

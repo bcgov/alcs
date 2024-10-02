@@ -61,30 +61,56 @@
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Describe the necessity for an additional residence for farm use and how it will support agriculture in the short or
-    long term.
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruResidenceNecessity }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
-  </div>
+  <ng-container
+    *ngIf="
+      _applicationSubmission.naruWillBeOverFiveHundredM2 ||
+      _applicationSubmission.naruWillHaveAdditionalResidence ||
+      _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing
+    "
+  >
+    <div class="subheading2 grid-1">
+      Is your proposal necessary for farm use? If so, please explain<ng-container
+        *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing"
+      >
+        what the temporary foreign workers will be doing on the farm</ng-container
+      >.
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruResidenceNecessity }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
+    </div>
+  </ng-container>
 
-  <div class="subheading2 grid-1">
-    Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
-    short or long term.
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruResidenceNecessity }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
-  </div>
+  <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing">
+    <div class="subheading2 grid-1">How many temporary foreign workers will be housed by the proposal?</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.tfwhCount }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.tfwhCount"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Will the temporary foreign worker housing be designed to move from one place to another?
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.tfwhDesign }}
+      <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.tfwhDesign === null"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      What is the size (in hectares) of the farm operation that the temporary foreign workers will be supporting?
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.tfwhFarmSize }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.tfwhFarmSize"></app-no-data>
+    </div>
+  </ng-container>
 
   <div class="subheading2 grid-1">
     Will the proposed residence(s) be clustered with existing residential structures? Please explain.
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruClustered }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruClustered"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
@@ -92,7 +118,7 @@
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruSetback }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruSetback"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
@@ -182,7 +208,7 @@
     <a *ngFor="let plan of buildingPlans" (click)="openFile(plan)">
       {{ plan.fileName }}
     </a>
-    <app-no-data [showRequired]="showErrors" *ngIf="buildingPlans.length === 0"></app-no-data>
+    <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
   </div>
 
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
@@ -192,31 +218,9 @@
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFillType"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruFillOrigin }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFillOrigin"></app-no-data>
-    </div>
-
-    <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
-    <div class="grid-double">
-      <div *ngIf="_applicationSubmission.naruProjectDuration">{{ _applicationSubmission.naruProjectDuration }}</div>
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruProjectDuration"></app-no-data>
-    </div>
-
     <div class="full-width soil-table">
       <div></div>
       <div class="subheading2">Fill to be Placed</div>
-
-      <div class="subheading2">Volume</div>
-      <div>
-        {{ _applicationSubmission.naruToPlaceVolume }}
-        <span *ngIf="_applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="_applicationSubmission.naruToPlaceVolume === null"
-        ></app-no-data>
-      </div>
 
       <div class="subheading2">Area</div>
       <div>

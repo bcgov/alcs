@@ -19,48 +19,50 @@
         <span class="subheading1">{{ tableHeader2 }}</span>
       </div>
 
-      <div class="label">
-        <label for="{{ 'volume' + idSuffix }}">Volume</label>
-      </div>
-      <div>
-        <mat-form-field appearance="outline">
-          <input
-            min="0.01"
-            id="{{ 'volume' + idSuffix }}"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="volume"
-            (focus)="onInputFocus($event)"
-          />
-          <span matTextSuffix>m<sup>3</sup></span>
-        </mat-form-field>
-        <div *ngIf="volume.invalid && (volume.dirty || volume.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="volume.errors?.['required']">This field is required</div>
+      <ng-container *ngIf="showVolumeField">
+        <div class="label">
+          <label for="{{ 'volume' + idSuffix }}">Volume</label>
         </div>
-      </div>
-      <div *ngIf="data2">
-        <mat-form-field appearance="outline">
-          <input
-            min="0.01"
-            id="volume2"
-            attr.aria-label="{{ 'volume' + idSuffix2 }}"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="volume2"
-            (focus)="onInputFocus($event)"
-          />
-          <span matTextSuffix>m<sup>3</sup></span>
-        </mat-form-field>
-        <div *ngIf="volume2.invalid && (volume2.dirty || volume2.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="volume2.errors?.['required']">This field is required</div>
+        <div>
+          <mat-form-field appearance="outline">
+            <input
+              min="0.01"
+              id="{{ 'volume' + idSuffix }}"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              matInput
+              formControlName="volume"
+              (focus)="onInputFocus($event)"
+            />
+            <span matTextSuffix>m<sup>3</sup></span>
+          </mat-form-field>
+          <div *ngIf="volume.invalid && (volume.dirty || volume.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="volume.errors?.['required']">This field is required</div>
+          </div>
         </div>
-      </div>
+        <div *ngIf="data2">
+          <mat-form-field appearance="outline">
+            <input
+              min="0.01"
+              id="volume2"
+              attr.aria-label="{{ 'volume' + idSuffix2 }}"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              matInput
+              formControlName="volume2"
+              (focus)="onInputFocus($event)"
+            />
+            <span matTextSuffix>m<sup>3</sup></span>
+          </mat-form-field>
+          <div *ngIf="volume2.invalid && (volume2.dirty || volume2.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="volume2.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+      </ng-container>
 
       <div class="label">
         <label for="{{ 'area' + idSuffix }}">Area</label>

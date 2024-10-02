@@ -43,25 +43,14 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   willImportFill = new FormControl<boolean | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   residenceNecessity = new FormControl<string | null>(null, [Validators.required]);
+  tfwhCount = new FormControl<string | null>(null, [Validators.required]);
+  tfwhDesign = new FormControl<boolean | null>(null, [Validators.required]);
+  tfwhFarmSize = new FormControl<string | null>(null, [Validators.required]);
   clustered = new FormControl<string | null>(null, [Validators.required]);
   setback = new FormControl<string | null>(null, [Validators.required]);
   locationRationale = new FormControl<string | null>(null, [Validators.required]);
   infrastructure = new FormControl<string | null>(null, [Validators.required]);
   fillType = new FormControl<string | null>(
-    {
-      disabled: true,
-      value: null,
-    },
-    [Validators.required],
-  );
-  fillOrigin = new FormControl<string | null>(
-    {
-      disabled: true,
-      value: null,
-    },
-    [Validators.required],
-  );
-  projectDuration = new FormControl<string | null>(
     {
       disabled: true,
       value: null,
@@ -89,13 +78,14 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     willImportFill: this.willImportFill,
     purpose: this.purpose,
     residenceNecessity: this.residenceNecessity,
+    tfwhCount: this.tfwhCount,
+    tfwhDesign: this.tfwhDesign,
+    tfwhFarmSize: this.tfwhFarmSize,
     clustered: this.clustered,
     setback: this.setback,
     locationRationale: this.locationRationale,
     infrastructure: this.infrastructure,
     fillType: this.fillType,
-    fillOrigin: this.fillOrigin,
-    projectDuration: this.projectDuration,
   });
 
   private submissionUuid = '';
@@ -128,13 +118,14 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           willImportFill: applicationSubmission.naruWillImportFill,
           purpose: applicationSubmission.purpose,
           residenceNecessity: applicationSubmission.naruResidenceNecessity,
+          tfwhCount: applicationSubmission.tfwhCount,
+          tfwhDesign: applicationSubmission.tfwhDesign,
+          tfwhFarmSize: applicationSubmission.tfwhFarmSize,
           clustered: applicationSubmission.naruClustered,
           setback: applicationSubmission.naruSetback,
           fillType: applicationSubmission.naruFillType,
-          fillOrigin: applicationSubmission.naruFillOrigin,
           infrastructure: applicationSubmission.naruInfrastructure,
           locationRationale: applicationSubmission.naruLocationRationale,
-          projectDuration: applicationSubmission.naruProjectDuration,
         });
 
         if (applicationSubmission.naruWillImportFill !== null) {
@@ -145,7 +136,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         }
 
         this.fillTableData = {
-          volume: applicationSubmission.naruToPlaceVolume ?? undefined,
           area: applicationSubmission.naruToPlaceArea ?? undefined,
           maximumDepth: applicationSubmission.naruToPlaceMaximumDepth ?? undefined,
           averageDepth: applicationSubmission.naruToPlaceAverageDepth ?? undefined,
@@ -198,11 +188,12 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   onChangeOver500m2(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willBeOverFiveHundredM2.value !== null && !answerIsYes && hasValues) {
+    if (
+      !answerIsYes &&
+      this.residenceNecessity.value &&
+      this.willHaveAdditionalResidence.value !== true &&
+      this.willHaveTemporaryForeignWorkerHousing.value !== true
+    ) {
       this.confirmationDialogService
         .openDialog({
           title: 'Is your proposal for a principal residence with a total floor area greater than 500 m²?',
@@ -212,39 +203,19 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           this.willBeOverFiveHundredM2.setValue(!confirmed);
 
           if (confirmed) {
-            // TODO: wipe same fields as above
-          }
-        });
-    }
-  }
-
-  onChangeRetain(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willRetainResidence.value !== null && !answerIsYes && hasValues) {
-      this.confirmationDialogService
-        .openDialog({
-          title: 'Is your proposal to retain an existing residence while building a new residence?',
-          body: 'Warning: Changing your answer could remove some content already saved to this page. Do you want to continue?',
-        })
-        .subscribe((confirmed) => {
-          this.willRetainResidence.setValue(!confirmed);
-
-          if (confirmed) {
-            // TODO: wipe same fields as above
+            this.residenceNecessity.setValue(null);
           }
         });
     }
   }
 
   onChangeAdditional(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willHaveAdditionalResidence.value !== null && !answerIsYes && hasValues) {
+    if (
+      !answerIsYes &&
+      this.residenceNecessity.value &&
+      this.willBeOverFiveHundredM2.value !== true &&
+      this.willHaveTemporaryForeignWorkerHousing.value !== true
+    ) {
       this.confirmationDialogService
         .openDialog({
           title: 'Is your proposal for an additional residence?',
@@ -254,18 +225,22 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           this.willHaveAdditionalResidence.setValue(!confirmed);
 
           if (confirmed) {
-            // TODO: wipe same fields as above
+            this.residenceNecessity.setValue(null);
           }
         });
     }
   }
 
   onChangeTemporaryHousing(answerIsYes: boolean) {
-    // TODO: check for values of any fields that will be removed
-    //       if a user answers 'no'
-    const hasValues = true;
-
-    if (this.willHaveTemporaryForeignWorkerHousing.value !== null && !answerIsYes && hasValues) {
+    if (
+      !answerIsYes &&
+      (this.tfwhCount.value ||
+        this.tfwhDesign.value !== null ||
+        this.tfwhFarmSize.value ||
+        (this.residenceNecessity.value &&
+          this.willBeOverFiveHundredM2.value !== true &&
+          this.willHaveAdditionalResidence.value !== true))
+    ) {
       this.confirmationDialogService
         .openDialog({
           title: 'Is your proposal for temporary foreign worker housing?',
@@ -275,7 +250,13 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           this.willHaveTemporaryForeignWorkerHousing.setValue(!confirmed);
 
           if (confirmed) {
-            // TODO: wipe same fields as above
+            this.tfwhCount.setValue(null);
+            this.tfwhDesign.setValue(null);
+            this.tfwhFarmSize.setValue(null);
+
+            if (this.willBeOverFiveHundredM2.value !== true && this.willHaveAdditionalResidence.value !== true) {
+              this.residenceNecessity.setValue(null);
+            }
           }
         });
     }
@@ -283,13 +264,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeFill(willImportFill: boolean) {
     const hasValues =
-      this.projectDuration.value ||
-      this.fillOrigin.value ||
       this.fillType.value ||
       this.fillTableData.area ||
       this.fillTableData.averageDepth ||
-      this.fillTableData.maximumDepth ||
-      this.fillTableData.volume;
+      this.fillTableData.maximumDepth;
 
     if (!willImportFill && hasValues) {
       this.confirmationDialogService
@@ -310,16 +288,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     this.fillTableDisabled = !willImportFill;
 
     if (willImportFill) {
-      this.projectDuration.enable();
-      this.fillOrigin.enable();
       this.fillType.enable();
     } else {
-      this.projectDuration.disable();
-      this.fillOrigin.disable();
       this.fillType.disable();
 
-      this.projectDuration.setValue(null);
-      this.fillOrigin.setValue(null);
       this.fillType.setValue(null);
     }
   }
@@ -334,13 +306,14 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         willImportFill,
         purpose,
         residenceNecessity,
+        tfwhCount,
+        tfwhDesign,
+        tfwhFarmSize,
         clustered,
         setback,
         fillType,
-        fillOrigin,
         infrastructure,
         locationRationale,
-        projectDuration,
       } = this.form.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
@@ -351,17 +324,17 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruWillImportFill: willImportFill,
         purpose: purpose,
         naruResidenceNecessity: residenceNecessity,
+        tfwhCount: tfwhCount,
+        tfwhDesign: tfwhDesign,
+        tfwhFarmSize: tfwhFarmSize,
         naruClustered: clustered,
         naruSetback: setback,
         naruFillType: fillType,
-        naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,
         naruToPlaceMaximumDepth: this.fillTableData.maximumDepth ?? null,
         naruToPlaceArea: this.fillTableData.area ?? null,
-        naruToPlaceVolume: this.fillTableData.volume ?? null,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
-        naruProjectDuration: projectDuration,
         naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
         naruProposedResidences: this.proposedResidences.map(({ id, ...rest }) => rest),
       };

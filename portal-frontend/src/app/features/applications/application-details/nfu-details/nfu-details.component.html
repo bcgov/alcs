@@ -48,28 +48,10 @@
       {{ applicationSubmission.nfuFillTypeDescription }}
       <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillTypeDescription"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuFillOriginDescription }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillOriginDescription"></app-no-data>
-    </div>
-
-    <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
-    <div class="grid-double">
-      <div *ngIf="applicationSubmission.nfuProjectDuration">{{ applicationSubmission.nfuProjectDuration }}</div>
-      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuProjectDuration"></app-no-data>
-    </div>
 
     <div class="full-width soil-table">
       <div></div>
       <div class="subheading2">Fill to be Placed</div>
-
-      <div class="subheading2">Volume</div>
-      <div>
-        {{ applicationSubmission.nfuFillVolume }}
-        <span *ngIf="applicationSubmission.nfuFillVolume !== null">m<sup>3</sup></span>
-        <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuFillVolume === null"></app-no-data>
-      </div>
 
       <div class="subheading2">Area</div>
       <div>

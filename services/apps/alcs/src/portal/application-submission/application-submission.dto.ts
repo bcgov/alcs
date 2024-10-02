@@ -258,6 +258,15 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   naruWillImportFill: boolean | null;
 
   @AutoMap(() => String)
+  tfwhCount: string | null;
+
+  @AutoMap(() => Boolean)
+  tfwhDesign: boolean | null;
+
+  @AutoMap(() => String)
+  tfwhFarmSize: string | null;
+
+  @AutoMap(() => String)
   naruClustered: string | null;
 
   @AutoMap(() => String)
@@ -665,6 +674,18 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   naruWillImportFill?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  tfwhCount?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  tfwhDesign?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  tfwhFarmSize?: string | null;
 
   @IsString()
   @IsOptional()

@@ -240,6 +240,15 @@ export class PublicApplicationSubmissionDto {
   naruWillImportFill: boolean | null;
 
   @AutoMap(() => String)
+  tfwhCount: string | null;
+
+  @AutoMap(() => Boolean)
+  tfwhDesign: boolean | null;
+
+  @AutoMap(() => String)
+  tfwhFarmSize: string | null;
+
+  @AutoMap(() => String)
   naruClustered: string | null;
 
   @AutoMap(() => String)

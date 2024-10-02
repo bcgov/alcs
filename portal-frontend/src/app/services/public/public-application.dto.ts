@@ -111,6 +111,9 @@ export interface PublicApplicationSubmissionDto {
   naruWillHaveAdditionalResidence: boolean | null;
   naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
   naruWillImportFill: boolean | null;
+  tfwhCount: string | null;
+  tfwhDesign: boolean | null;
+  tfwhFarmSize: string | null;
   naruClustered: string | null;
   naruSetback: string | null;
   naruSubtype: NaruSubtypeDto | null;
