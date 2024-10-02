@@ -157,12 +157,42 @@
       <div class="subheading2 grid-1">Total Floor Area of Existing Residence(s) - If Applicable</div>
       <app-naru-residence-mobile-card
         *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let last = last"
-        [existingResidence]="existingResidence"
+        [residence]="existingResidence"
         [isLast]="last"
         [isReviewStep]="true"
       >
       </app-naru-residence-mobile-card>
     </ng-container>
+  </ng-container>
+
+  <div class="full-width existing-residences" *ngIf="!isMobile">
+    <div class="subheading2">Proposed Residence</div>
+    <div class="subheading2">Total Floor Area</div>
+    <div class="subheading2">Description</div>
+    <ng-container *ngIf="_applicationSubmission.naruProposedResidences?.length === 0">
+      <div>
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let i = index">
+      <div>
+        {{ i + 1 }}
+      </div>
+      <div>
+        {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+      </div>
+      <div>{{ proposedResidence.description }}</div>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="isMobile">
+    <div class="subheading2 grid-1">Total Floor Area of Proposed Residence(s)</div>
+    <app-naru-residence-mobile-card
+      *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let last = last"
+      [residence]="proposedResidence"
+      [isLast]="last"
+      [isReviewStep]="true"
+    >
+    </app-naru-residence-mobile-card>
   </ng-container>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>

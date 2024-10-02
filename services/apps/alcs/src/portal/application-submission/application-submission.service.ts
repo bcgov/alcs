@@ -1032,6 +1032,11 @@ export class ApplicationSubmissionService {
       updateDto.naruExistingResidences,
       applicationSubmission.naruExistingResidences,
     );
+
+    applicationSubmission.naruProposedResidences = filterUndefined(
+      updateDto.naruProposedResidences,
+      applicationSubmission.naruProposedResidences,
+    );
   }
 
   private setInclusionExclusionFields(

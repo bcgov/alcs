@@ -17,12 +17,13 @@ import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { ExistingResidenceDialogComponent } from './existing-residence-dialog/existing-residence-dialog.component';
+import { ResidenceDialogComponent } from './residence-dialog/residence-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { isTruncated, truncate } from '../../../../../shared/utils/string-helper';
 import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT } from '../../../../../shared/constants';
 
 export type FormExisingResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
+export type FormProposedResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
 
 @Component({
   selector: 'app-naru-proposal',
@@ -59,12 +60,15 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   existingResidences: FormExisingResidence[] = [];
   existingResidencesSource = new MatTableDataSource(this.existingResidences);
+  proposedResidences: FormExisingResidence[] = [];
+  proposedResidencesSource = new MatTableDataSource(this.proposedResidences);
   proposalMap: ApplicationDocumentDto[] = [];
   buildingPlans: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   isExistingResidencesDirty = false;
+  isProposedResidencesDirty = false;
 
   form = new FormGroup({
     willBeOverFiveHundredM2: this.willBeOverFiveHundredM2,
@@ -86,6 +90,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   private submissionUuid = '';
   existingResidencesDisplayedColumns: string[] = ['index', 'floorArea', 'description', 'action'];
+  proposedResidencesDisplayedColumns: string[] = ['index', 'floorArea', 'description', 'action'];
 
   constructor(
     private router: Router,
@@ -144,6 +149,16 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
             isExpanded: false,
           }));
           this.existingResidencesSource = new MatTableDataSource(this.existingResidences);
+        }
+
+        if (applicationSubmission.naruProposedResidences) {
+          this.proposedResidences = applicationSubmission.naruProposedResidences?.map((item, index) => ({
+            id: index + 1,
+            floorArea: item.floorArea,
+            description: item.description,
+            isExpanded: false,
+          }));
+          this.proposedResidencesSource = new MatTableDataSource(this.proposedResidences);
         }
 
         if (this.showErrors) {
@@ -282,7 +297,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && (this.form.dirty || this.isExistingResidencesDirty)) {
+    if (this.fileId && (this.form.dirty || this.isExistingResidencesDirty || this.isProposedResidencesDirty)) {
       const {
         willBeOverFiveHundredM2,
         willRetainResidence,
@@ -321,6 +336,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
         naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
+        naruProposedResidences: this.proposedResidences.map(({ id, ...rest }) => rest),
       };
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
@@ -331,48 +347,84 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     this.form.markAsDirty();
   }
 
-  onAddEditExistingResidence(existingResidence: FormExisingResidence | undefined, isEdit: boolean) {
+  onAddEditResidence(
+    isExistingResidence: boolean,
+    residence: FormExisingResidence | FormProposedResidence | undefined,
+    isEdit: boolean,
+  ) {
     const dialog = this.dialog
-      .open(ExistingResidenceDialogComponent, {
+      .open(ResidenceDialogComponent, {
         width: this.isMobile ? '90%' : '75%',
         data: {
           isEdit: isEdit,
-          existingResidenceData: existingResidence,
+          residenceData: residence,
+          isExisting: isExistingResidence,
         },
       })
       .afterClosed()
       .subscribe(async (res) => {
         if (!res.isCancel) {
-          this.isExistingResidencesDirty = true;
-          if (res.isEdit) {
-            const index = this.existingResidences.findIndex((e) => e.id === res.existingResidence.id);
-            if (index > -1) {
-              this.existingResidences[index] = res.existingResidence;
+          if (isExistingResidence) {
+            this.isExistingResidencesDirty = true;
+            if (res.isEdit) {
+              const index = this.existingResidences.findIndex((e) => e.id === res.residence.id);
+              if (index > -1) {
+                this.existingResidences[index] = res.residence;
+              }
+            } else {
+              this.existingResidences.push({ ...res.residence, id: this.existingResidences.length + 1 });
             }
+            this.existingResidencesSource.data = this.existingResidences;
           } else {
-            this.existingResidences.push({ ...res.existingResidence, id: this.existingResidences.length + 1 });
+            this.isProposedResidencesDirty = true;
+            if (res.isEdit) {
+              const index = this.proposedResidences.findIndex((e) => e.id === res.residence.id);
+              if (index > -1) {
+                this.proposedResidences[index] = res.residence;
+              }
+            } else {
+              this.proposedResidences.push({ ...res.residence, id: this.proposedResidences.length + 1 });
+            }
+            this.proposedResidencesSource.data = this.proposedResidences;
           }
-          this.existingResidencesSource.data = this.existingResidences;
         }
       });
   }
 
-  onDeleteExistingResidence(existingResidence: FormExisingResidence) {
-    this.confirmationDialogService
-      .openDialog({ title: 'Remove existing residence?', body: 'Do you want to continue?' })
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
-          if (index > -1) {
-            this.existingResidences.splice(index, 1);
-            this.existingResidencesSource.data = this.existingResidences;
-            this.isExistingResidencesDirty = true;
-            this.existingResidences.forEach((item, index) => {
-              item.id = index + 1;
-            });
+  onDeleteResidence(isExistingResidence: boolean, residence: FormExisingResidence | FormProposedResidence) {
+    if (isExistingResidence) {
+      this.confirmationDialogService
+        .openDialog({ title: 'Remove existing residence?', body: 'Do you want to continue?' })
+        .subscribe((confirmed) => {
+          if (confirmed) {
+            const index = this.existingResidences.findIndex((e) => e.id === residence.id);
+            if (index > -1) {
+              this.existingResidences.splice(index, 1);
+              this.existingResidencesSource.data = this.existingResidences;
+              this.isExistingResidencesDirty = true;
+              this.existingResidences.forEach((item, index) => {
+                item.id = index + 1;
+              });
+            }
           }
-        }
-      });
+        });
+    } else {
+      this.confirmationDialogService
+        .openDialog({ title: 'Remove proposed residence?', body: 'Do you want to continue?' })
+        .subscribe((confirmed) => {
+          if (confirmed) {
+            const index = this.proposedResidences.findIndex((e) => e.id === residence.id);
+            if (index > -1) {
+              this.proposedResidences.splice(index, 1);
+              this.proposedResidencesSource.data = this.proposedResidences;
+              this.isProposedResidencesDirty = true;
+              this.proposedResidences.forEach((item, index) => {
+                item.id = index + 1;
+              });
+            }
+          }
+        });
+    }
   }
 
   getTruncatedDescription(description: string): string {
@@ -383,10 +435,17 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     return isTruncated(description, EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT);
   }
 
-  toggleReadMore(existingResidence: FormExisingResidence) {
-    const index = this.existingResidences.findIndex((e) => e.id === existingResidence.id);
-    if (index > -1) {
-      this.existingResidences[index].isExpanded = !this.existingResidences[index].isExpanded;
+  toggleReadMore(isExistingResidence: boolean, residence: FormExisingResidence | FormProposedResidence) {
+    if (isExistingResidence) {
+      const index = this.existingResidences.findIndex((e) => e.id === residence.id);
+      if (index > -1) {
+        this.existingResidences[index].isExpanded = !this.existingResidences[index].isExpanded;
+      }
+    } else {
+      const index = this.proposedResidences.findIndex((e) => e.id === residence.id);
+      if (index > -1) {
+        this.proposedResidences[index].isExpanded = !this.proposedResidences[index].isExpanded;
+      }
     }
   }
 

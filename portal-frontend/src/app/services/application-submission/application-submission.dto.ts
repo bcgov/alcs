@@ -42,6 +42,11 @@ export interface ExistingResidence {
   description: string;
 }
 
+export interface ProposedResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface ApplicationSubmissionDto {
   uuid: string;
   fileNumber: string;
@@ -162,6 +167,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
   naruExistingResidences?: ExistingResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;
@@ -281,6 +287,7 @@ export interface ApplicationSubmissionUpdateDto {
   naruSleepingUnits?: number | null;
   naruAgriTourism?: string | null;
   naruExistingResidences?: ExistingResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody?: string | null;

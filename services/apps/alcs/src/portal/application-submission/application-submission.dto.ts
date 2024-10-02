@@ -18,6 +18,7 @@ import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import {
   ExistingResidence,
   ProposedLot,
+  ProposedResidence,
 } from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
@@ -319,6 +320,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => ExistingResidence)
   naruExistingResidences?: ExistingResidence[];
+
+  @AutoMap(() => ProposedResidence)
+  naruProposedResidences?: ProposedResidence[];
 
   @AutoMap(() => ApplicationSubmissionToSubmissionStatusDto)
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
@@ -755,6 +759,10 @@ export class ApplicationSubmissionUpdateDto {
   @IsArray()
   @IsOptional()
   naruExistingResidences?: ExistingResidence[];
+
+  @IsArray()
+  @IsOptional()
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   @IsString()

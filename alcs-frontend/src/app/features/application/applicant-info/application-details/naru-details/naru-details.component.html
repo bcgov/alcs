@@ -119,6 +119,23 @@
     </div>
   </ng-container>
 
+  <ng-container>
+    <div class="full-width existing-residences">
+      <div class="grid-1 subheading2">Proposed Residence</div>
+      <div class="grid-2 subheading2">Total Floor Area</div>
+      <div class="grid-3 subheading2">Description</div>
+      <ng-container *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let i = index">
+        <div class="grid-1">
+          {{ i + 1 }}
+        </div>
+        <div class="grid-2">
+          {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+        </div>
+        <div class="grid-3">{{ proposedResidence.description }}</div>
+      </ng-container>
+    </div>
+  </ng-container>
+
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
     <div *ngFor="let file of proposalMap">

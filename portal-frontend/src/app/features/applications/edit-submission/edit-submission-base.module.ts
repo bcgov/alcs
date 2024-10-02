@@ -38,7 +38,7 @@ import { SuccessComponent } from './success/success.component';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact/primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 import { OtherAttachmentsUploadDialogComponent } from './other-attachments/other-attachments-upload-dialog/other-attachments-upload-dialog.component';
 import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
-import { ExistingResidenceDialogComponent } from './proposal/naru-proposal/existing-residence-dialog/existing-residence-dialog.component';
+import { ResidenceDialogComponent } from './proposal/naru-proposal/residence-dialog/residence-dialog.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,7 @@ import { ExistingResidenceDialogComponent } from './proposal/naru-proposal/exist
     PofoProposalComponent,
     PfrsProposalComponent,
     NaruProposalComponent,
-    ExistingResidenceDialogComponent,
+    ResidenceDialogComponent,
     ExclProposalComponent,
     InclProposalComponent,
     CoveProposalComponent,
@@ -112,7 +112,7 @@ import { ExistingResidenceDialogComponent } from './proposal/naru-proposal/exist
     CoveProposalComponent,
     CovenantTransfereeDialogComponent,
     SuccessComponent,
-    ExistingResidenceDialogComponent,
+    ResidenceDialogComponent,
   ],
 })
 export class EditSubmissionBaseModule {}
