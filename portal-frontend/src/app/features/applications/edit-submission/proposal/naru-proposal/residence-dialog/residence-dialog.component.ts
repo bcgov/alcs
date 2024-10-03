@@ -9,7 +9,10 @@ import { FormExisingResidence, FormProposedResidence } from '../naru-proposal.co
   styleUrl: './residence-dialog.component.scss',
 })
 export class ResidenceDialogComponent implements OnInit {
-  floorArea = new FormControl<string | null>(null, [Validators.required]);
+  floorArea = new FormControl<string | null>(null, [
+    Validators.required,
+    Validators.pattern(/^(?!0(\.0{1,2})?$)\d+(\.\d{1,2})?$/),
+  ]);
   description = new FormControl<string | null>(null, [Validators.required]);
   form = new FormGroup({
     floorArea: this.floorArea,
@@ -42,6 +45,8 @@ export class ResidenceDialogComponent implements OnInit {
       this.residence.description = this.description.value!;
       this.residence.floorArea = Number(this.floorArea.value!);
       this.dialogRef.close({ isCancel: false, isEdit: this.data.isEdit, residence: this.residence });
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
