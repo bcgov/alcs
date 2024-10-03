@@ -92,7 +92,7 @@
       Will the temporary foreign worker housing be designed to move from one place to another?
     </div>
     <div class="grid-double">
-      {{ _applicationSubmission.tfwhDesign }}
+      {{ _applicationSubmission.tfwhDesign ? 'Yes' : 'No' }}
       <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.tfwhDesign === null"></app-no-data>
     </div>
 
