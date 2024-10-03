@@ -92,6 +92,7 @@ export class IntakeComponent implements OnInit, OnDestroy {
             if (update) {
               this.toastService.showSuccessToast('Notification updated');
               this.contactEmail = email;
+              this.resendResponse();
             }
           }
         }
