@@ -38,29 +38,29 @@
   <table>
     <thead>
       <th></th>
-      <th *ngIf="submission.soilToPlaceVolume !== null">Fill to be Placed</th>
       <th *ngIf="submission.soilToRemoveVolume !== null">Soil to be Removed</th>
+      <th *ngIf="submission.soilToPlaceVolume !== null">Fill to be Placed</th>
     </thead>
     <tbody>
       <tr>
         <td class="soil-table-label">Volume</td>
-        <td *ngIf="submission.soilToPlaceVolume !== null">{{ submission.soilToPlaceVolume }} m<sup>3</sup></td>
         <td *ngIf="submission.soilToRemoveVolume !== null">{{ submission.soilToRemoveVolume }} m<sup>3</sup></td>
+        <td *ngIf="submission.soilToPlaceVolume !== null">{{ submission.soilToPlaceVolume }} m<sup>3</sup></td>
       </tr>
       <tr>
         <td class="soil-table-label">Area</td>
-        <td *ngIf="submission.soilToPlaceArea !== null">{{ submission.soilToPlaceArea }} m<sup>2</sup></td>
         <td *ngIf="submission.soilToRemoveArea !== null">{{ submission.soilToRemoveArea }} m<sup>2</sup></td>
+        <td *ngIf="submission.soilToPlaceArea !== null">{{ submission.soilToPlaceArea }} m<sup>2</sup></td>
       </tr>
       <tr>
         <td class="soil-table-label">Maximum Depth</td>
-        <td *ngIf="submission.soilToPlaceMaximumDepth !== null">{{ submission.soilToPlaceMaximumDepth }} m</td>
         <td *ngIf="submission.soilToRemoveMaximumDepth !== null">{{ submission.soilToRemoveMaximumDepth }} m</td>
+        <td *ngIf="submission.soilToPlaceMaximumDepth !== null">{{ submission.soilToPlaceMaximumDepth }} m</td>
       </tr>
       <tr>
         <td class="soil-table-label">Average Depth</td>
-        <td *ngIf="submission.soilToPlaceAverageDepth !== null">{{ submission.soilToPlaceAverageDepth }} m</td>
         <td *ngIf="submission.soilToRemoveAverageDepth !== null">{{ submission.soilToRemoveAverageDepth }} m</td>
+        <td *ngIf="submission.soilToPlaceAverageDepth !== null">{{ submission.soilToPlaceAverageDepth }} m</td>
       </tr>
     </tbody>
   </table>
