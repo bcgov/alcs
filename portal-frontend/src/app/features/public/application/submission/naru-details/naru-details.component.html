@@ -131,6 +131,11 @@
       <div class="subheading2">Existing Residence</div>
       <div class="subheading2">Total Floor Area</div>
       <div class="subheading2">Description</div>
+      <ng-container *ngIf="applicationSubmission.naruExistingResidences?.length === 0">
+        <div>
+          <app-no-data></app-no-data>
+        </div>
+      </ng-container>
       <ng-container *ngFor="let existingResidence of applicationSubmission.naruExistingResidences; let i = index">
         <div>
           {{ i + 1 }}
