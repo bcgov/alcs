@@ -42,6 +42,7 @@ export class InboxNotificationService {
     if (cachedSearch) {
       const cachedNumbers = JSON.parse(cachedSearch) as string[];
       fileNumbers = new Set<string>(cachedNumbers);
+      didSearch = true;
     } else {
       const res = await this.searchForFileNumbers(searchDto);
       fileNumbers = res.finalResult;
@@ -155,6 +156,7 @@ export class InboxNotificationService {
     }
 
     if (searchDto.fileTypes.includes('SRW')) {
+      didSearch = true;
       const promise = NOTIFICATION_SEARCH_FILTERS.addFileTypeResults(
         searchDto,
         this.notificationRepository,
