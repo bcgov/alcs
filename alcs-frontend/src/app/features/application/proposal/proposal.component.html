@@ -8,7 +8,7 @@
         <ng-container *ngIf="application.type.code !== 'NARU'">(ha)</ng-container>
         <ng-container *ngIf="application.type.code === 'NARU'">(m<sup>2</sup>)</ng-container>
       </div>
-      <app-inline-number [value]="alrArea" (save)="onSaveAlrArea($event)" [decimals]="5"></app-inline-number>
+      <app-inline-number [value]="alrArea ?? null" (save)="onSaveAlrArea($event)" [decimals]="5"></app-inline-number>
     </div>
     <div>
       <div class="subheading2">Agricultural Capability</div>
