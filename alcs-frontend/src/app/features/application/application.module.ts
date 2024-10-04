@@ -87,6 +87,6 @@ const routes: Routes = [
     BoundaryAmendmentComponent,
     EditBoundaryAmendmentDialogComponent,
   ],
-  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
+  imports: [SharedModule.forRoot(), RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })
 export class ApplicationModule {}
