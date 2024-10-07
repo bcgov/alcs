@@ -69,6 +69,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   isExistingResidencesDirty = false;
   isProposedResidencesDirty = false;
+  proposedResidencesRequired = true;
 
   form = new FormGroup({
     willBeOverFiveHundredM2: this.willBeOverFiveHundredM2,
@@ -384,6 +385,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
               }
             } else {
               this.proposedResidences.push({ ...res.residence, id: this.proposedResidences.length + 1 });
+              this.proposedResidencesRequired = false;
             }
             this.proposedResidencesSource.data = this.proposedResidences;
           }
@@ -421,6 +423,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
               this.proposedResidences.forEach((item, index) => {
                 item.id = index + 1;
               });
+
+              if (this.proposedResidences.length === 0) {
+                this.proposedResidencesRequired = true;
+              }
             }
           }
         });
