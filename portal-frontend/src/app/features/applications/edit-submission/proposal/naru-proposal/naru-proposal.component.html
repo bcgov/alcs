@@ -586,9 +586,19 @@
         >
         </app-naru-residence-mobile-card>
       </ng-container>
-      <button type="button" mat-stroked-button color="primary" (click)="onAddEditResidence(false, undefined, false)">
+      <button
+        type="button"
+        mat-stroked-button
+        color="primary"
+        [ngClass]="{ 'error-field-outlined ng-invalid': showErrors && proposedResidencesRequired }"
+        (click)="onAddEditResidence(false, undefined, false)"
+      >
         + Add Proposed Residence
       </button>
+      <div class="field-error" *ngIf="showErrors && proposedResidencesRequired">
+        <mat-icon>warning</mat-icon>
+        <div>This field is required</div>
+      </div>
     </div>
 
     <div class="full-row">
