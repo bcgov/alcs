@@ -574,7 +574,7 @@
       </div>
       <ng-container *ngIf="isMobile">
         <div class class="no-data-container" *ngIf="proposedResidences.length === 0">
-          <td class="no-data-text" colspan="6">Use the button below to add any existing residence(s)</td>
+          <td class="no-data-text subtext" colspan="6">Use the button below to add any proposed residence(s)</td>
         </div>
         <app-naru-residence-mobile-card
           *ngFor="let proposedResidence of proposedResidences; let last = last"
