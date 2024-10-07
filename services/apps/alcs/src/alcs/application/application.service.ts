@@ -545,8 +545,9 @@ export class ApplicationService {
         SELECT * 
         FROM alcs.calculate_active_days(ARRAY(SELECT fa."application_uuid" FROM filtered_applications fa))
       )
-      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a 
-      INNER JOIN alcs.card c ON c."uuid" = a.card_uuid 
+      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a
+      INNER JOIN alcs.application_reconsideration ar on ar.application_uuid = a.uuid
+      INNER JOIN alcs.card c ON c."uuid" = ar.card_uuid 
       INNER JOIN calculated calc ON a."uuid" = calc.application_uuid
       INNER JOIN alcs.board board on c.board_uuid = board.uuid
       LEFT JOIN alcs.user u on u.uuid = c.assignee_uuid
