@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<database name="postgres" schema="oats" type="PostgreSQL - 16.4 (Debian 16.4-1.pgdg120+1)">
+<database name="postgres" schema="oats" type="PostgreSQL - 17.0 (Debian 17.0-1.pgdg120+1)">
    <tables>
       <table name="oats_accomplishment_codes" remarks="An ACCOMPLISHMENT CODE is a specific business function that must be completed for an ALR APPLICATION as it is processed by the ALC.For example: - Application Received - Site Map / Geometry - Acknowledgment - Staff Report Completed - Decision Rendered - Decision Geometry - Map Amendment" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="accomplishment_code" nullable="false" remarks="User supplied value to uniquely identify an ACCOMPLISHMENT CODE" size="10" type="varchar" typeCode="12">
@@ -18,8 +18,8 @@
          <index name="oats_accomplishment_codes_pkey" unique="true">
             <column ascending="true" name="accomplishment_code"/>
          </index>
-         <checkConstraint constraint="(((published_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_publi_000"/>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_023"/>
+         <checkConstraint constraint="((published_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_publi_000"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_023"/>
       </table>
       <table name="oats_accomplishments" remarks="An ALR ACCOMPLISHMENT is the declaration a specific ACCOMPLISHMENT CODE has been completed for an ALR APPLICATION." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="accomplishment_id" nullable="false" remarks="System generated sequence number to uniquely identify an ACCOMPLISHMENT" size="19" type="int8" typeCode="-5"/>
@@ -119,7 +119,7 @@
             <column ascending="true" name="alr_application_id"/>
             <column ascending="true" name="cardinal_direction"/>
          </index>
-         <checkConstraint constraint="(((cardinal_direction)::text = ANY ((ARRAY['NORTH'::character varying, 'EAST'::character varying, 'SOUTH'::character varying, 'WEST'::character varying])::text[])))" name="oats_ause_cd_ck"/>
+         <checkConstraint constraint="((cardinal_direction)::text = ANY ((ARRAY['NORTH'::character varying, 'EAST'::character varying, 'SOUTH'::character varying, 'WEST'::character varying])::text[]))" name="oats_ause_cd_ck"/>
       </table>
       <table name="oats_agri_capability_codes" remarks="An AGRI (AGRICULTURAL) CAPABILITY CODE is a measurement of a land's ability to support agricultural endeavours.  For example: - Prime Dominant - Secondary - Unclassified - Mixed" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="agri_capability_code" nullable="false" remarks="User supplied value to uniquely identify an AGRI CAPABILITY CODE" size="10" type="varchar" typeCode="12">
@@ -136,7 +136,7 @@
          <index name="oats_agri_capability_codes_pkey" unique="true">
             <column ascending="true" name="agri_capability_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_010"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_010"/>
       </table>
       <table name="oats_alc_staffs" remarks="Stores the list of ALC staffs that can be assigned to an application." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alc_staff_id" nullable="false" remarks="System generated sequence number to uniquely identify an ALC staff." size="19" type="int8" typeCode="-5">
@@ -229,13 +229,13 @@
          <index name="oats_alr_appl_components_pkey" unique="true">
             <column ascending="true" name="alr_appl_component_id"/>
          </index>
-         <checkConstraint constraint="(((agricultural_activities_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_apcp_aai_ck"/>
-         <checkConstraint constraint="(((alr_impact_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_apcp_aii_ck"/>
-         <checkConstraint constraint="(((applicationshare_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_apcp_asi_ck"/>
-         <checkConstraint constraint="(((((alr_change_code)::text = 'NFU'::text) AND ((nonfarm_use_type_code IS NOT NULL) AND (nonfarm_use_subtype_code IS NOT NULL))) OR ((nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL)) OR (((alr_change_code)::text = ANY ((ARRAY['INC'::character varying, 'EXC'::character varying, 'SDV'::character varying, 'SCH'::character varying])::text[])) AND (nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL))))" name="oats_apcp_chk3"/>
-         <checkConstraint constraint="(((homesite_severance_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_apcp_hsi_ck"/>
-         <checkConstraint constraint="(((material_need_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_apcp_mni_ck"/>
-         <checkConstraint constraint="(((owners_notified_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_apcp_oni_ck"/>
+         <checkConstraint constraint="((agricultural_activities_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_apcp_aai_ck"/>
+         <checkConstraint constraint="((alr_impact_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_apcp_aii_ck"/>
+         <checkConstraint constraint="((applicationshare_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_apcp_asi_ck"/>
+         <checkConstraint constraint="((((alr_change_code)::text = 'NFU'::text) AND ((nonfarm_use_type_code IS NOT NULL) AND (nonfarm_use_subtype_code IS NOT NULL))) OR ((nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL)) OR (((alr_change_code)::text = ANY ((ARRAY['INC'::character varying, 'EXC'::character varying, 'SDV'::character varying, 'SCH'::character varying])::text[])) AND (nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL)))" name="oats_apcp_chk3"/>
+         <checkConstraint constraint="((homesite_severance_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_apcp_hsi_ck"/>
+         <checkConstraint constraint="((material_need_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_apcp_mni_ck"/>
+         <checkConstraint constraint="((owners_notified_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_apcp_oni_ck"/>
       </table>
       <table name="oats_alr_appl_decisions" remarks="An ALR APPL DECISION is a resolution passed by the Commissioner's of the Agricultural Land Commission pertaining to the inclusion or exclusion of land or permitted land uses within the Agricultural Land Reserve. The Agricultural Land Commission staff makes recommendations to the Commissioners.  Only Commissioners are able to pass resolutions." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alr_appl_decision_id" nullable="false" remarks="System generated sequence number to uniquely identify a ALR APPL DECISION" size="19" type="int8" typeCode="-5">
@@ -274,9 +274,9 @@
          <index name="oats_alr_appl_decisions_reconsideration_request_id_key" unique="true">
             <column ascending="true" name="reconsideration_request_id"/>
          </index>
-         <checkConstraint constraint="((((alr_application_id IS NOT NULL) AND (reconsideration_request_id IS NULL)) OR ((alr_application_id IS NULL) AND (reconsideration_request_id IS NOT NULL))))" name="oats_aadc_chk"/>
-         <checkConstraint constraint="(((no_statistics_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_aadc_nsri_chk"/>
-         <checkConstraint constraint="(((outright_refusal_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_aadc_ori_chk"/>
+         <checkConstraint constraint="(((alr_application_id IS NOT NULL) AND (reconsideration_request_id IS NULL)) OR ((alr_application_id IS NULL) AND (reconsideration_request_id IS NOT NULL)))" name="oats_aadc_chk"/>
+         <checkConstraint constraint="((no_statistics_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_aadc_nsri_chk"/>
+         <checkConstraint constraint="((outright_refusal_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_aadc_ori_chk"/>
       </table>
       <table name="oats_alr_appl_meeting_codes" remarks="An ALR APPL MEETING CODE is a type of meeting that can be conducted when during the evaluation of an ALR APPLICATION.  For Example: - Exclusion Meeting - Site Visit - Public Information - Public Hearing" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alr_appl_meeting_code" nullable="false" remarks="User supplied value to uniquely identify an ALR APPL MEETING CODE" size="10" type="varchar" typeCode="12">
@@ -293,7 +293,7 @@
          <index name="oats_alr_appl_meeting_codes_pkey" unique="true">
             <column ascending="true" name="alr_appl_meeting_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_024"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_024"/>
       </table>
       <table name="oats_alr_appl_role_codes" remarks="An ALR APPL ROLE CODE is the function or reason a PERSON ORGANIZATION can be included as an ALR APPLICATION PARTY  For example: - Applicant - Agent - Local Government" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alr_appl_role_code" nullable="false" remarks="User supplied value to uniquely identify an ALR APPL ROLE CODE" size="10" type="varchar" typeCode="12">
@@ -310,7 +310,7 @@
          <index name="oats_alr_appl_role_codes_pkey" unique="true">
             <column ascending="true" name="alr_appl_role_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_003"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_003"/>
       </table>
       <table name="oats_alr_appl_state_codes" remarks="" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alr_appl_state_code" nullable="false" remarks="System value to uniquely identify an ALR APPL STATE CODE" size="10" type="varchar" typeCode="12"/>
@@ -363,7 +363,7 @@
             <column ascending="true" name="application_class_code"/>
             <column ascending="true" name="alr_change_code"/>
          </index>
-         <checkConstraint constraint="(((submit_to_lg_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1362772157_submi_000"/>
+         <checkConstraint constraint="((submit_to_lg_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1362772157_submi_000"/>
       </table>
       <table name="oats_alr_application_meetings" remarks="An ALR APPLICATION MEETING is an assembly of ALR APPLICATION stakeholders to address the Application." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alr_application_meeting_id" nullable="false" remarks="System generated sequence number to uniquely identify an ALR APPLICATION MEETING" size="19" type="int8" typeCode="-5"/>
@@ -535,14 +535,14 @@
          <index name="oats_appl_slgd_i" unique="false">
             <column ascending="true" name="submitted_to_lg_date"/>
          </index>
-         <checkConstraint constraint="(((application_class_code)::text = ANY ((ARRAY['LOA'::character varying, 'BLK'::character varying, 'SCH'::character varying, 'NOI'::character varying, 'NAN'::character varying])::text[])))" name="oats_appl_acc_ck"/>
-         <checkConstraint constraint="(((agrologist_plan_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_appl_api_ck"/>
-         <checkConstraint constraint="(((followup_noi_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_appl_fni_ck"/>
-         <checkConstraint constraint="(((fee_waived_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_appl_fwi_ck"/>
-         <checkConstraint constraint="(((ministry_notice_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_appl_mni_ck"/>
-         <checkConstraint constraint="(((on_site_processing_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_appl_ospi_ck"/>
-         <checkConstraint constraint="(((split_fee_with_local_gov_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_appl_sfwlgi_ck"/>
-         <checkConstraint constraint="(((srw_ind)::text = 'Y'::text))" name="oats_appl_srw_ck"/>
+         <checkConstraint constraint="((application_class_code)::text = ANY ((ARRAY['LOA'::character varying, 'BLK'::character varying, 'SCH'::character varying, 'NOI'::character varying, 'NAN'::character varying])::text[]))" name="oats_appl_acc_ck"/>
+         <checkConstraint constraint="((agrologist_plan_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_appl_api_ck"/>
+         <checkConstraint constraint="((followup_noi_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_appl_fni_ck"/>
+         <checkConstraint constraint="((fee_waived_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_appl_fwi_ck"/>
+         <checkConstraint constraint="((ministry_notice_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_appl_mni_ck"/>
+         <checkConstraint constraint="((on_site_processing_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_appl_ospi_ck"/>
+         <checkConstraint constraint="((split_fee_with_local_gov_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_appl_sfwlgi_ck"/>
+         <checkConstraint constraint="((srw_ind)::text = 'Y'::text)" name="oats_appl_srw_ck"/>
       </table>
       <table name="oats_alr_change_codes" remarks="An ALR CHANGE CODE is a type of change an applicant can request the Commission to consider.  For example: - Inclusion - Exclusion - Subdivision - Non Farm Use - Soil Change" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alr_change_code" nullable="false" remarks="System developer supplied value to uniquely identify an ALR CHANGE CODE" size="10" type="varchar" typeCode="12">
@@ -560,7 +560,7 @@
          <index name="oats_alr_change_codes_pkey" unique="true">
             <column ascending="true" name="alr_change_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_alcc_sri_chk"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_alcc_sri_chk"/>
       </table>
       <table name="oats_alr_unvalidated_app_data" remarks="Holds unvalidated data for an application currently IN PROGRESS. It is saved here until the application is validated and complete, then saved into the actual tables." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="alr_unvalidated_app_data_id" nullable="false" remarks="System generated sequence number to uniquely identify an UNVALIDATED APP DATA." size="19" type="int8" typeCode="-5"/>
@@ -606,8 +606,8 @@
          <index name="oats_application_class_codes_pkey" unique="true">
             <column ascending="true" name="application_class_code"/>
          </index>
-         <checkConstraint constraint="(((application_class_code)::text = ANY ((ARRAY['LOA'::character varying, 'BLK'::character varying, 'SCH'::character varying, 'NOI'::character varying, 'NAN'::character varying])::text[])))" name="avcon_1238100890_appli_001"/>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_025"/>
+         <checkConstraint constraint="((application_class_code)::text = ANY ((ARRAY['LOA'::character varying, 'BLK'::character varying, 'SCH'::character varying, 'NOI'::character varying, 'NAN'::character varying])::text[]))" name="avcon_1238100890_appli_001"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_025"/>
       </table>
       <table name="oats_capability_source_codes" remarks="A CAPABILITY SOURCE CODE is a provider of what the agricultural capability of land is.  For example: - British Columbia Land Inventory - Canadian Land Inventory - Consultant" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="capability_source_code" nullable="false" remarks="User supplied value to uniquely identify a CAPABILITY SOURCE CODE" size="10" type="varchar" typeCode="12">
@@ -624,7 +624,7 @@
          <index name="oats_capability_source_codes_pkey" unique="true">
             <column ascending="true" name="capability_source_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_019"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_019"/>
       </table>
       <table name="oats_committee_decision_codes" remarks="A COMMITTEE DECISION CODE is the decision a committee may render when reviewing an application.  For example: - Approve - Refuse - Partial - No Comment" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="committee_decision_code" nullable="false" remarks="User supplied value to uniquely identify a COMMITTEE DECISION CODE" size="10" type="varchar" typeCode="12">
@@ -641,7 +641,7 @@
          <index name="oats_committee_decision_codes_pkey" unique="true">
             <column ascending="true" name="committee_decision_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_005"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_005"/>
       </table>
       <table name="oats_committee_recommendations" remarks="A COMMITTEE RECOMMENDATION is the decision a committee has rendered regarding the ALR APPLICATION.  These committees are held prior to the ALR APPLICATION being submitted to the ALC." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="committee_recommendation_id" nullable="false" remarks="System generated sequence number to uniquely identify a COMMITTEE RECOMMENDATION" size="19" type="int8" typeCode="-5"/>
@@ -693,7 +693,7 @@
          <index name="oats_committee_type_codes_sort_order_key" unique="true">
             <column ascending="true" name="sort_order"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_022"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_022"/>
       </table>
       <table name="oats_complaint_appeals" remarks="A COMPLAINT APPEAL is a request by the property owner to have the enforcement action reconsidered." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="complaint_appeal_id" nullable="false" remarks="System generated sequence number to uniquely identify a COMPLAINT APPEAL" size="19" type="int8" typeCode="-5"/>
@@ -716,7 +716,7 @@
          <index name="oats_cmap_issu_fk_i" unique="false">
             <column ascending="true" name="issue_id"/>
          </index>
-         <checkConstraint constraint="(((upheld_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_uphel_000"/>
+         <checkConstraint constraint="((upheld_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_uphel_000"/>
       </table>
       <table name="oats_complaint_codes" remarks="A COMPLAINT CODE is a category under which COMPLAINTS can be classified.  For example: - Filling - Extraction - Buildings - Commercial Activity" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="complaint_code" nullable="false" remarks="User supplied value to uniquely identify an COMPLAINT CODE" size="10" type="varchar" typeCode="12">
@@ -733,7 +733,7 @@
          <index name="oats_complaint_codes_pkey" unique="true">
             <column ascending="true" name="complaint_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_020"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_020"/>
       </table>
       <table name="oats_compliance_inspections" remarks="A COMPLIANCE INSPECTION is follow-up review to ensure the CONDITIONS of an ALR APPL DECISION are being adhered to." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="compliance_inspection_id" nullable="false" remarks="System generated sequence number to uniquely identify a COMPLIANCE INSPECTION" size="19" type="int8" typeCode="-5"/>
@@ -771,7 +771,7 @@
          <index name="oats_condition_codes_pkey" unique="true">
             <column ascending="true" name="condition_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_009"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_009"/>
       </table>
       <table name="oats_condition_compliance_rpts" remarks="A CONDITION COMPLIANCE RPT is a request by the Commission to have the applicant submit a report on a specified date to detail the compliance is a CONDITION." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="condition_compliance_rpt_id" nullable="false" remarks="System generated sequence number to uniquely identify a CONDITION COMPLIANCE RPT" size="19" type="int8" typeCode="-5"/>
@@ -823,8 +823,8 @@
          <index name="oats_cond_cdcd_fk_i" unique="false">
             <column ascending="true" name="condition_code"/>
          </index>
-         <checkConstraint constraint="(((approval_dependant_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))) NOT VALID" name="avcon_1238100890_appro_001"/>
-         <checkConstraint constraint="(((security_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))) NOT VALID" name="avcon_1238100890_secur_000"/>
+         <checkConstraint constraint="((approval_dependant_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_appro_001"/>
+         <checkConstraint constraint="((security_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_secur_000"/>
       </table>
       <table name="oats_document_codes" remarks="A DOCUMENT CODE is the categorization of a DOCUMENT.  For example: - Acceptance Letter - Staff Report - Decision Meeting Minutes - Correspondence from Public" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="document_code" nullable="false" remarks="User supplied value to uniquely identify a DOCUMENT CODE" size="10" type="varchar" typeCode="12">
@@ -846,8 +846,8 @@
          <index name="oats_document_codes_sort_order_key" unique="true">
             <column ascending="true" name="sort_order"/>
          </index>
-         <checkConstraint constraint="(((publicly_viewable_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_docd_pvi_chk"/>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_docd_sri_chk"/>
+         <checkConstraint constraint="((publicly_viewable_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_docd_pvi_chk"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_docd_sri_chk"/>
       </table>
       <table name="oats_document_source_codes" remarks="" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="document_source_code" nullable="false" remarks="DOCUMENT SOURCE CODE is a unique code used to identify the source of a document. Examples of codes are: APP - Applicant and LG - Local Government." size="10" type="varchar" typeCode="12">
@@ -911,10 +911,10 @@
          <index name="oats_docu_plrv_fk_i" unique="false">
             <column ascending="true" name="planning_review_id"/>
          </index>
-         <checkConstraint constraint="((((alr_application_id IS NOT NULL) AND (issue_id IS NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NULL) AND (planning_review_id IS NOT NULL))))" name="oats_docu_chk"/>
-         <checkConstraint constraint="(((app_lg_viewable_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_od_alvi_chk"/>
-         <checkConstraint constraint="(((publicly_viewable_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_od_pvi_chk"/>
-         <checkConstraint constraint="(((referenced_in_staff_rpt_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_od_risri_chk"/>
+         <checkConstraint constraint="(((alr_application_id IS NOT NULL) AND (issue_id IS NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NULL) AND (planning_review_id IS NOT NULL)))" name="oats_docu_chk"/>
+         <checkConstraint constraint="((app_lg_viewable_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_od_alvi_chk"/>
+         <checkConstraint constraint="((publicly_viewable_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_od_pvi_chk"/>
+         <checkConstraint constraint="((referenced_in_staff_rpt_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_od_risri_chk"/>
       </table>
       <table name="oats_email_notifications" remarks="" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="email_notification_id" nullable="false" remarks="System generated sequence number to uniquely identify an EMAIL NOTIFICATION" size="19" type="int8" typeCode="-5"/>
@@ -1017,7 +1017,7 @@
          <index name="oats_financial_institute_codes_pkey" unique="true">
             <column ascending="true" name="financial_institute_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_013"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_013"/>
       </table>
       <table name="oats_financial_instrument_cds" remarks="A FINANCIAL INSTRUMENT CD is a type of funding medium the Commission can receive to insure the completion of a CONDITION.  For example: - Bond - Letter of Credit - Cash" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="financial_instrument_cd" nullable="false" remarks="User supplied value to uniquely identify a FINANCIAL INSTRUMENT CD" size="10" type="varchar" typeCode="12">
@@ -1035,8 +1035,8 @@
          <index name="oats_financial_instrument_cds_pkey" unique="true">
             <column ascending="true" name="financial_instrument_cd"/>
          </index>
-         <checkConstraint constraint="(((externally_managed_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_exter_000"/>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_006"/>
+         <checkConstraint constraint="((externally_managed_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_exter_000"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_006"/>
       </table>
       <table name="oats_financial_instruments" remarks="A FINANCIAL INSTRUMENT is the receipt of a letter of credit, bond, or cash (as identified by a FINANCIAL INSTRUMENT CODE) that will meet the request of an ALR APPL DECISION . SECURITY AMT.  The total SECURITY AMT may be met by multiple FINANCIAL INSTRUMENTS provided by different PERSON ORGANIZATIONS.  Once all the CONDITIONS that are bound by a FINANCIAL INSTRUMENT (CONDITION . SECURITY REQUIRED IND = 'Y') have been met, the ALC will release the instrument.  If a CONDITION bound by a FINANCIAL INSTRUMENT has not been met, the ALC may redeem the FINANCIAL INSTRUMENT, and use the money to fund the completion of the CONDITION." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="financial_instrument_id" nullable="false" remarks="System generated sequence number to uniquely identify a FINANCIAL INSTRUMENT" size="19" type="int8" typeCode="-5"/>
@@ -1088,7 +1088,7 @@
          <index name="oats_fiin_pog_fk_i" unique="false">
             <column ascending="true" name="person_organization_id"/>
          </index>
-         <checkConstraint constraint="(((auto_renew_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, NULL::character varying])::text[]))) NOT VALID" name="avcon_1238100890_auto__000"/>
+         <checkConstraint constraint="((auto_renew_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, NULL::character varying])::text[]))" name="avcon_1238100890_auto__000"/>
       </table>
       <table name="oats_inquiry_codes" remarks="An INQUIRY CODE is a category under which INQUIRIES can be classified.  For example: - Inquiry for investigation - General correspondence - Area of Interest - Community Plan" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="inquiry_code" nullable="false" remarks="User supplied value to uniquely identify an ISSUE CODE" size="10" type="varchar" typeCode="12">
@@ -1105,7 +1105,7 @@
          <index name="oats_inquiry_codes_pkey" unique="true">
             <column ascending="true" name="inquiry_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_008"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_008"/>
       </table>
       <table name="oats_issue_notes" remarks="An ISSUE NOTE is the noting of an event that has occurred during processing an ISSUE." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="issue_note_id" nullable="false" remarks="System generated sequence number to uniquely identify an ISSUE NOTE" size="19" type="int8" typeCode="-5"/>
@@ -1190,11 +1190,11 @@
          <index name="oats_issu_pog_fk_i" unique="false">
             <column ascending="true" name="local_gov_pog_id"/>
          </index>
-         <checkConstraint constraint="(((issu_type)::text = ANY ((ARRAY['INQ'::character varying, 'CMP'::character varying])::text[])))" name="avcon_1238100890_issu__000"/>
-         <checkConstraint constraint="(((recommend_land_remediation_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_recom_000"/>
-         <checkConstraint constraint="(((remediation_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_remed_000"/>
-         <checkConstraint constraint="(((swo_complied_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_swo_c_000"/>
-         <checkConstraint constraint="(((((issu_type)::text = 'CMP'::text) AND (inquiry_code IS NULL) AND (complaint_code IS NOT NULL)) OR (((issu_type)::text = 'INQ'::text) AND (inquiry_code IS NOT NULL) AND (complaint_code IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_date IS NULL) AND (swo_terms IS NULL) AND (swo_review_requested_date IS NULL) AND (swo_ceo_review_date IS NULL) AND (swo_ceo_review_description IS NULL) AND (swo_ceo_review_result IS NULL) AND (swo_complied_ind IS NULL) AND (recommend_fine_amt IS NULL) AND (recommend_land_remediation_ind IS NULL) AND (ceo_hearing_date IS NULL) AND (ceo_decision_date IS NULL) AND (fine_amt IS NULL) AND (fine_due_date IS NULL) AND (fine_received_date IS NULL) AND (remediation_required_ind IS NULL) AND (remediation_due_date IS NULL) AND (remediation_completion_date IS NULL))))" name="oats_issu_chk"/>
+         <checkConstraint constraint="((issu_type)::text = ANY ((ARRAY['INQ'::character varying, 'CMP'::character varying])::text[]))" name="avcon_1238100890_issu__000"/>
+         <checkConstraint constraint="((recommend_land_remediation_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_recom_000"/>
+         <checkConstraint constraint="((remediation_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_remed_000"/>
+         <checkConstraint constraint="((swo_complied_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_swo_c_000"/>
+         <checkConstraint constraint="((((issu_type)::text = 'CMP'::text) AND (inquiry_code IS NULL) AND (complaint_code IS NOT NULL)) OR (((issu_type)::text = 'INQ'::text) AND (inquiry_code IS NOT NULL) AND (complaint_code IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_date IS NULL) AND (swo_terms IS NULL) AND (swo_review_requested_date IS NULL) AND (swo_ceo_review_date IS NULL) AND (swo_ceo_review_description IS NULL) AND (swo_ceo_review_result IS NULL) AND (swo_complied_ind IS NULL) AND (recommend_fine_amt IS NULL) AND (recommend_land_remediation_ind IS NULL) AND (ceo_hearing_date IS NULL) AND (ceo_decision_date IS NULL) AND (fine_amt IS NULL) AND (fine_due_date IS NULL) AND (fine_received_date IS NULL) AND (remediation_required_ind IS NULL) AND (remediation_due_date IS NULL) AND (remediation_completion_date IS NULL)))" name="oats_issu_chk"/>
       </table>
       <table name="oats_land_title_charge_codes" remarks="A LAND TITLE CHARGE CODE is an interest in land that is registerable against the title to land.  For Example: - Liens - Covenant - Judgements - Easements - Certificate of Pending Litigation (previously known as Lis Pendens)  This code table represents a subtype (filtered subset) of the ALTOS system's VTRCDE table." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="land_title_charge_code" nullable="false" remarks="User supplied value to uniquely identify a LAND TITLE CHARGE CODE.  This is identical to the ALTOS VTRCDE.TRNSCTN_TYP_CD column." size="10" type="varchar" typeCode="12">
@@ -1211,7 +1211,7 @@
          <index name="oats_land_title_charge_codes_pkey" unique="true">
             <column ascending="true" name="land_title_charge_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_011"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_011"/>
       </table>
       <table name="oats_land_use_permits" remarks="A LAND USE PERMIT is the granting of a specific permission by a local government or a provincial government ministry to make changes on property, or allow activities to be conducted.  A LAND USE PERMIT may be covering one or more SUBJECT PROPERTIES under the ALR APPLICATION.  The ALC only needs to know these permits at the aggregate level of the application, and not against the individual properties.A LAND USE PERMIT may have been issued by contravenes the Act. For example: - A 'Permit' from a Local Government to allow the construction of a house - A 'Licence' from a Local Government to allow the operation of a word working shop. - A 'Permit' from the Ministry of Mines to allow gravel extraction - A 'Permit' from the Ministry of Environment for waste management" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="land_use_permit_id" nullable="false" remarks="System generated sequence number to uniquely identify a LAND USE PERMIT" size="19" type="int8" typeCode="-5"/>
@@ -1256,7 +1256,7 @@
          <index name="oats_local_gov_action_codes_pkey" unique="true">
             <column ascending="true" name="local_gov_action_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_016"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_016"/>
       </table>
       <table name="oats_local_gov_actions" remarks="A LOCAL GOV ACTION is the assertion that a specific LOCAL GOV ACTION CODE item has been completed for the ALR APPLICATION." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="local_gov_action_id" nullable="false" remarks="System generated sequence number to uniquely identify a LOCAL GOV ACTION" size="19" type="int8" typeCode="-5"/>
@@ -1306,7 +1306,7 @@
          <index name="oats_local_gov_service_codes_pkey" unique="true">
             <column ascending="true" name="local_gov_service_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_001"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_001"/>
       </table>
       <table name="oats_local_gov_services" remarks="A LOCAL GOV SERVICE is the inclusion of a specific type of infrastructure service (as identified by LOCAL GOV SERVICE CODE) that can be provided by a local government asserting that service is provided to the SUBJECT PROPERTIES under the ALR APPLICATION." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="local_gov_service_id" nullable="false" remarks="System generated sequence number to uniquely identify a LOCAL GOV SERVICE" size="19" type="int8" typeCode="-5"/>
@@ -1370,9 +1370,9 @@
          <index name="oats_lgr_pog_fk_i" unique="false">
             <column ascending="true" name="person_organization_id"/>
          </index>
-         <checkConstraint constraint="(((authorization_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1362772157_autho_000"/>
-         <checkConstraint constraint="(((community_pln_compliance_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, 'X'::character varying])::text[])))" name="avcon_1362772157_commu_000"/>
-         <checkConstraint constraint="(((zoning_compliance_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, 'X'::character varying])::text[])))" name="avcon_1362772157_zonin_000"/>
+         <checkConstraint constraint="((authorization_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1362772157_autho_000"/>
+         <checkConstraint constraint="((community_pln_compliance_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, 'X'::character varying])::text[]))" name="avcon_1362772157_commu_000"/>
+         <checkConstraint constraint="((zoning_compliance_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, 'X'::character varying])::text[]))" name="avcon_1362772157_zonin_000"/>
       </table>
       <table name="oats_map_amendment_periods" remarks="The Commission updates the official Agricultural Land Maps applying all inclusion and exclusion changes on a prescribed schedule.  A MAP AMENDMENT PERIOD is a timeframe in which all inclusion and exclusion decisions that were approved outright or all CONDITIONS have been met where applied to the ALR map.  There are 4 periods per year, each covering 3 months starting on January." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="amendment_year" nullable="false" remarks="The year of the MAP AMENDMENT PERIOD" size="5" type="int2" typeCode="5">
@@ -1419,7 +1419,7 @@
          <index name="oats_nfst_nftc_fk_i" unique="false">
             <column ascending="true" name="nonfarm_use_type_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_015"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_015"/>
       </table>
       <table name="oats_nonfarm_use_type_codes" remarks="A NONFARM USE TYPE CODE is a broad categorization of non-agricultural uses of land.  For example: - Industrial - Civic" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="nonfarm_use_type_code" nullable="false" remarks="User supplied value to uniquely identify a NONFARM USE TYPE CODE" size="10" type="varchar" typeCode="12">
@@ -1438,7 +1438,7 @@
          <index name="oats_nonfarm_use_type_codes_pkey" unique="true">
             <column ascending="true" name="nonfarm_use_type_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_004"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_004"/>
       </table>
       <table name="oats_notice_intent_info_rqst" remarks="A NOTICE INTENT INFO RQST (Notice of Intent Information Request) is a request made by the Commission to obtain further information from the applicant regarding their Notice of Intent.  If so the applicant has 30 days to respond to the request.  Once the Commission receives the information they have 45 days to either ask for more information or render a decision.  If the Commission does not respond within the timeframe, the applicant by default may proceed with their NOI." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="notice_intent_info_rqst_id" nullable="false" remarks="System generated sequence number to uniquely identify an NOTICE INTENT INFO RQST" size="19" type="int8" typeCode="-5"/>
@@ -1512,8 +1512,8 @@
          <index name="oats_organizations_organization_guid_key" unique="true">
             <column ascending="true" name="organization_guid"/>
          </index>
-         <checkConstraint constraint="(((((org_type)::text = 'BGO'::text) AND (ministry_cd IS NOT NULL) AND (organization_unit_cd IS NOT NULL) AND (alias_name IS NULL)) OR (((org_type)::text = 'NBC'::text) AND (ministry_cd IS NULL) AND (organization_unit_cd IS NULL))))" name="oats_org_chk"/>
-         <checkConstraint constraint="(((org_type)::text = ANY ((ARRAY['BGO'::character varying, 'NBC'::character varying])::text[])))" name="oats_org_ot_chk"/>
+         <checkConstraint constraint="((((org_type)::text = 'BGO'::text) AND (ministry_cd IS NOT NULL) AND (organization_unit_cd IS NOT NULL) AND (alias_name IS NULL)) OR (((org_type)::text = 'NBC'::text) AND (ministry_cd IS NULL) AND (organization_unit_cd IS NULL)))" name="oats_org_chk"/>
+         <checkConstraint constraint="((org_type)::text = ANY ((ARRAY['BGO'::character varying, 'NBC'::character varying])::text[]))" name="oats_org_ot_chk"/>
       </table>
       <table name="oats_payment_type_codes" remarks="A PAYMENT TYPE CODE identifies the type of payment in a financial instrument. For example: - CREDIT, CHEQUE, JOURNAL VOUCHER." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="payment_type_code" nullable="false" remarks="User supplied value to uniquely identify a PAYMENT TYPE CODE" size="10" type="varchar" typeCode="12">
@@ -1530,7 +1530,7 @@
          <index name="oats_payment_type_codes_pkey" unique="true">
             <column ascending="true" name="payment_type_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))) NOT VALID" name="avcon_1238100900_syste_013"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100900_syste_013"/>
       </table>
       <table name="oats_permit_type_codes" remarks="A PERMIT TYPE CODE is a classification of permission that a local government a provincial government ministry may grant a land owner to make changes on property, or allow activities to be conducted.  For example: - Permit - Licence - Approval" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="permit_type_code" nullable="false" remarks="User supplied value to uniquely identify a PERMIT TYPE CODE" size="10" type="varchar" typeCode="12">
@@ -1547,7 +1547,7 @@
          <index name="oats_permit_type_codes_pkey" unique="true">
             <column ascending="true" name="permit_type_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_002"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_002"/>
       </table>
       <table name="oats_person_org_addresses" remarks="A PERSON ORGANIZATION ADDRESS is the intersection of a PERSON_ORGANIZATION and an ADDRESS." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="person_organization_id" nullable="false" remarks="PERSON ORGANIZATION ID is the system generated unique identifier for PERSON ORGANIZATION." size="19" type="int8" typeCode="-5">
@@ -1639,8 +1639,8 @@
          <index name="oats_persons_pkey" unique="true">
             <column ascending="true" name="person_id"/>
          </index>
-         <checkConstraint constraint="(((per_type)::text = ANY ((ARRAY['EMP'::character varying, 'BPA'::character varying])::text[])))" name="avcon_1238100890_per_t_000"/>
-         <checkConstraint constraint="(((((per_type)::text = 'BPA'::text) AND (employee_id IS NULL)) OR (((per_type)::text = 'EMP'::text) AND ((employee_id IS NULL) OR (employee_id IS NOT NULL)))))" name="oats_per_chk"/>
+         <checkConstraint constraint="((per_type)::text = ANY ((ARRAY['EMP'::character varying, 'BPA'::character varying])::text[]))" name="avcon_1238100890_per_t_000"/>
+         <checkConstraint constraint="((((per_type)::text = 'BPA'::text) AND (employee_id IS NULL)) OR (((per_type)::text = 'EMP'::text) AND ((employee_id IS NULL) OR (employee_id IS NOT NULL))))" name="oats_per_chk"/>
       </table>
       <table name="oats_planning_acceptance_codes" remarks="A PLANNING ACCEPTANCE CODE is quantification of a PLANNING DECISION.  For example: - Endorsed  - Not Endorsed - Partial Endorsement" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="planning_acceptance_code" nullable="false" remarks="User supplied value to uniquely identify a PLANNING ACCEPTANCE CODE" size="10" type="varchar" typeCode="12">
@@ -1657,7 +1657,7 @@
          <index name="oats_planning_acceptance_codes_pkey" unique="true">
             <column ascending="true" name="planning_acceptance_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_000"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_000"/>
       </table>
       <table name="oats_planning_decisions" remarks="A PLANNING DECISION is a conclusion drawn by the ALC as to how a PLANNING REVIEW conforms to the ALR's mandate." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="planning_decision_id" nullable="false" remarks="System generated sequence number to uniquely identify a PLANNING DECISION" size="19" type="int8" typeCode="-5"/>
@@ -1686,7 +1686,7 @@
          <index name="oats_pldc_plrv_fk_i" unique="false">
             <column ascending="true" name="planning_review_id"/>
          </index>
-         <checkConstraint constraint="(((decision_source)::text = ANY ((ARRAY['STAF'::character varying, 'COMM'::character varying])::text[])))" name="avcon_1238100890_decis_000"/>
+         <checkConstraint constraint="((decision_source)::text = ANY ((ARRAY['STAF'::character varying, 'COMM'::character varying])::text[]))" name="avcon_1238100890_decis_000"/>
       </table>
       <table name="oats_planning_review_codes" remarks="A PLANNING REVIEW CODE is category under which a PLANNING REVIEW may be classified.  For example: - Official Community Plan Review - Zoning Review - Local Government Boundary Adjustment - Transportation Review - Parks Planning - Regional Plans - Crown Lands - ALR Boundary Review - Other" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="planning_review_code" nullable="false" remarks="User supplied value to uniquely identify a PLANNING REVIEW CODE" size="10" type="varchar" typeCode="12">
@@ -1703,7 +1703,7 @@
          <index name="oats_planning_review_codes_pkey" unique="true">
             <column ascending="true" name="planning_review_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_021"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_021"/>
       </table>
       <table name="oats_planning_review_notes" remarks="A PLANNING REVIEW NOTE is the noting of an event that has occurred during examination of a PLANNING REVIEW." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="planning_review_note_id" nullable="false" remarks="System generated sequence number to uniquely identify a PLANNING REVIEW NOTE" size="19" type="int8" typeCode="-5"/>
@@ -1758,8 +1758,8 @@
          <index name="oats_plrv_pog_fk_i" unique="false">
             <column ascending="true" name="person_organization_id"/>
          </index>
-         <checkConstraint constraint="(((gis_created_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_gis_c_000"/>
-         <checkConstraint constraint="(((open_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_open__000"/>
+         <checkConstraint constraint="((gis_created_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_gis_c_000"/>
+         <checkConstraint constraint="((open_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_open__000"/>
       </table>
       <table name="oats_properties" remarks="A PROPERTY is a delineated piece of land that can be identified by the Land Titles Office by its P.I.D. (Property Identifier), or is Crown land that can be identified by its P.I.N. (Parcel Identification Number), or other land the can be identified by a legal description." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="property_id" nullable="false" remarks="System generated sequence number to uniquely identify a PROPERTY" size="19" type="int8" typeCode="-5">
@@ -1829,9 +1829,9 @@
          <index name="oats_property_interests_pkey" unique="true">
             <column ascending="true" name="property_interest_id"/>
          </index>
-         <checkConstraint constraint="(((active_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_prin_ai_chk"/>
-         <checkConstraint constraint="(((((prin_type)::text = 'CHG'::text) AND (property_owner_type_code IS NULL) AND (land_title_charge_code IS NOT NULL) AND (active_ind IS NULL) AND (charge_nbr IS NOT NULL) AND (charge_desc IS NOT NULL)) OR (((prin_type)::text = 'OWN'::text) AND (person_organization_id IS NOT NULL) AND (property_owner_type_code IS NOT NULL) AND (land_title_charge_code IS NULL) AND (active_ind IS NOT NULL) AND (charge_nbr IS NULL) AND (charge_desc IS NULL)) OR (((prin_type)::text = 'NOOWN'::text) AND (person_organization_id IS NULL) AND (property_owner_type_code IS NOT NULL) AND (active_ind IS NOT NULL))))" name="oats_prin_chk"/>
-         <checkConstraint constraint="(((prin_type)::text = ANY ((ARRAY['OWN'::character varying, 'CHG'::character varying, 'NOOWN'::character varying])::text[])))" name="oats_prin_pt_chk"/>
+         <checkConstraint constraint="((active_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_prin_ai_chk"/>
+         <checkConstraint constraint="((((prin_type)::text = 'CHG'::text) AND (property_owner_type_code IS NULL) AND (land_title_charge_code IS NOT NULL) AND (active_ind IS NULL) AND (charge_nbr IS NOT NULL) AND (charge_desc IS NOT NULL)) OR (((prin_type)::text = 'OWN'::text) AND (person_organization_id IS NOT NULL) AND (property_owner_type_code IS NOT NULL) AND (land_title_charge_code IS NULL) AND (active_ind IS NOT NULL) AND (charge_nbr IS NULL) AND (charge_desc IS NULL)) OR (((prin_type)::text = 'NOOWN'::text) AND (person_organization_id IS NULL) AND (property_owner_type_code IS NOT NULL) AND (active_ind IS NOT NULL)))" name="oats_prin_chk"/>
+         <checkConstraint constraint="((prin_type)::text = ANY ((ARRAY['OWN'::character varying, 'CHG'::character varying, 'NOOWN'::character varying])::text[]))" name="oats_prin_pt_chk"/>
       </table>
       <table name="oats_property_owner_type_codes" remarks="A PROPERTY OWNER TYPE CODE defines the nature to which a person or organization can claim possession over land.  For example: - Fee Simple - Crown Land - First Nations" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="property_owner_type_code" nullable="false" remarks="User supplied value to uniquely identify an PROPERTY OWNER TYPE CODE" size="10" type="varchar" typeCode="12">
@@ -1848,7 +1848,7 @@
          <index name="oats_property_owner_type_codes_pkey" unique="true">
             <column ascending="true" name="property_owner_type_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_014"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_014"/>
       </table>
       <table name="oats_reconsideration_requests" remarks="A RECONSIDERATION REQUEST is a request to the Commission to re-evaluate their decision made on an ALR APPLICATION.  A RECONSIDERATION REQUEST can only be made when the applicant can provide more information the Commission did not have when their last decision was made, or the applicant can demonstrate there was error in the information the Commission had; it is not an opportunity for the applicant to alter the ALR APPLICATION." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="reconsideration_request_id" nullable="false" remarks="System generated sequence number to uniquely identify a RECONSIDERATION REQUEST" size="19" type="int8" typeCode="-5">
@@ -1873,10 +1873,10 @@
          <index name="oats_reconsideration_requests_pkey" unique="true">
             <column ascending="true" name="reconsideration_request_id"/>
          </index>
-         <checkConstraint constraint="(((error_information_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_rreq_eii_chk"/>
-         <checkConstraint constraint="(((new_information_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_rreq_nii_chk"/>
-         <checkConstraint constraint="(((new_proposal_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_rreq_npi_chk"/>
-         <checkConstraint constraint="(((staff_recommendation)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, 'NR'::character varying])::text[])))" name="oats_rreq_sr_chk"/>
+         <checkConstraint constraint="((error_information_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_rreq_eii_chk"/>
+         <checkConstraint constraint="((new_information_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_rreq_nii_chk"/>
+         <checkConstraint constraint="((new_proposal_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_rreq_npi_chk"/>
+         <checkConstraint constraint="((staff_recommendation)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying, 'NR'::character varying])::text[]))" name="oats_rreq_sr_chk"/>
       </table>
       <table name="oats_related_alr_applications" remarks="A RELATED APPLICATION is the association of one ALR APPLICATION to another." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="related_alr_application_id" nullable="false" remarks="System generated sequence number to uniquely identify a RELATED ALR APPLICATION" size="19" type="int8" typeCode="-5"/>
@@ -1917,7 +1917,7 @@
             <column ascending="true" name="primary_alr_application_id"/>
             <column ascending="true" name="secondary_alr_application_id"/>
          </index>
-         <checkConstraint constraint="(((include_in_staff_report_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_inclu_000"/>
+         <checkConstraint constraint="((include_in_staff_report_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_inclu_000"/>
       </table>
       <table name="oats_relationship_codes" remarks="A RELATIONSHIP CODE is the nature of a relationship between one ALR APPLICATION and another.  For example: - Notice of Intent (Link the application that arose from an NOI) - Related application (Link created after conducting research) - Inclusion Pending (Link created to insure an Inclusion is done prior to another application being approved)" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="relationship_code" nullable="false" remarks="User supplied value to uniquely identify a RELATIONSHIP CODE" size="10" type="varchar" typeCode="12">
@@ -1934,7 +1934,7 @@
          <index name="oats_relationship_codes_pkey" unique="true">
             <column ascending="true" name="relationship_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_017"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_017"/>
       </table>
       <table name="oats_rsdntl_use_type_codes" remarks="A RSDNTL USE TYPE CODE is a broad categorization of Non-Adhering Residential Use of land." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="rsdntl_use_type_code" nullable="false" remarks="User supplied value to uniquely identify a RSDNTL USE TYPE CODE" size="10" type="varchar" typeCode="12">
@@ -1967,7 +1967,7 @@
          <index name="oats_soil_change_codes_pkey" unique="true">
             <column ascending="true" name="soil_change_code"/>
          </index>
-         <checkConstraint constraint="(((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_syste_012"/>
+         <checkConstraint constraint="((system_required_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_syste_012"/>
       </table>
       <table name="oats_soil_change_elements" remarks="A SOIL CHANGE ELEMENT is the details of a specific soil change (remove soil, add fill)  proposal or decision." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="soil_change_element_id" nullable="false" remarks="System generated sequence number to uniquely identify a SOIL CHANGE PARTICULAR" size="19" type="int8" typeCode="-5"/>
@@ -2068,8 +2068,8 @@
          <index name="oats_sddp_subd_fk_i" unique="false">
             <column ascending="true" name="subdivision_design_id"/>
          </index>
-         <checkConstraint constraint="(((fully_in_alr_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_fully_000"/>
-         <checkConstraint constraint="(((remainder_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="avcon_1238100890_remai_000"/>
+         <checkConstraint constraint="((fully_in_alr_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_fully_000"/>
+         <checkConstraint constraint="((remainder_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="avcon_1238100890_remai_000"/>
       </table>
       <table name="oats_subdiv_parcel_intents" remarks="A SUBDIV PARCEL INTENT is either a parcel an applicant wishes to create as part of an ALR APPL COMPONENT-NON BOUNDARY CHANGE-SUBDIVISION, or a parcel the Commission has decided could be created.  This depends on whether ALR APPL COMPONENT is a proposal component (the relationship from ALR APPLICATION is supplied) or a decision component (the relationship from ALR APPL DECISION is supplied).   For each ALR APPL COMPONENT-NON BOUNDARY CHANGE-SUBDIVISION there must be at least two or more SUBDIV PARCEL INTENTS.  I.E. the creation of one new parcel always results in two parcels being created, the new parcel and the remainder of the original.The total of SUBDIV PARCEL INTENT . PARCEL SIZE should be the same as the parent ALR APPL COMPONENT's AREA.  A decision SUBDIV PARCEL INTENT is considered to be actualized when a relationship from a SUBDIV DESIGN PARCEL has been established.  Note: Two or more SUBDIV PARCEL INTENTS may be actualized by a single SUBDIV DESIGN PARCEL.  For example:  The decision allows the creation of 4 x 10ha parcels.  The applicant submits a survey plan that only creates 2x20ha parcels.  The actualization of two of the 10ha parcels will be from one of the 20ha parcels, and the actualization of the other two 10ha parcels will be from the other 20ha parcel.    Another example:  The decision allows the creation of 2 x 20ha parcels on the northern half of the property and 4 x 10ha lots on the southern half of the property.  The applicant submits a survey plan that creates the 2 northern 20ha parcels, but does not explicitly include the southern half of the property.  The actualization of the two 20ha parcels will be from the survey plan's two 20ha parcels.  If the applicant does not submit another survey plan before the decision expires, the southern four 10ha lots will be actualized by a by 40ha remainder SUBDIV DESIGN PARCEL (REMAINDER IND = 'Y')." schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="subdiv_parcel_intent_id" nullable="false" remarks="System generated sequence number to uniquely identify a SUBDIV PARCEL INTENT" size="19" type="int8" typeCode="-5"/>
@@ -2146,9 +2146,9 @@
          <index name="oats_subject_properties_pkey" unique="true">
             <column ascending="true" name="subject_property_id"/>
          </index>
-         <checkConstraint constraint="(((alr_application_land_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_sbjp_aali_chk"/>
-         <checkConstraint constraint="((((alr_application_id IS NOT NULL) AND (issue_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL))))" name="oats_sbjp_chk"/>
-         <checkConstraint constraint="(((farm_land_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))" name="oats_sp_isfi_000"/>
+         <checkConstraint constraint="((alr_application_land_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_sbjp_aali_chk"/>
+         <checkConstraint constraint="(((alr_application_id IS NOT NULL) AND (issue_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL)))" name="oats_sbjp_chk"/>
+         <checkConstraint constraint="((farm_land_ind)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))" name="oats_sp_isfi_000"/>
       </table>
       <table name="oats_system_setting_codes" remarks="A SYSTEM SETTING CODE is a system wide global variable value.  For example:- OATS Application Version" schema="oats" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="system_setting_code" nullable="false" remarks="System Developer supplied value to uniquely identify a SYSTEM SETTING CODE." size="10" type="varchar" typeCode="12"/>
