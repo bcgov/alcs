@@ -57,7 +57,9 @@ export class IncomingFileController {
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,
-        assignee: this.mapper.map(user, User, UserDto),
+        assignee: incomingFile.name
+          ? this.mapper.map(user, User, UserDto)
+          : null,
         highPriority: incomingFile.high_priority,
         activeDays: incomingFile.active_days,
       };
@@ -77,7 +79,9 @@ export class IncomingFileController {
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,
-        assignee: this.mapper.map(user, User, UserDto),
+        assignee: incomingFile.name
+          ? this.mapper.map(user, User, UserDto)
+          : null,
         highPriority: incomingFile.high_priority,
         activeDays: incomingFile.active_days,
       };
@@ -97,7 +101,9 @@ export class IncomingFileController {
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.PLAN,
-        assignee: this.mapper.map(user, User, UserDto),
+        assignee: incomingFile.name
+          ? this.mapper.map(user, User, UserDto)
+          : null,
         highPriority: incomingFile.high_priority,
         activeDays: incomingFile.active_days,
       };
