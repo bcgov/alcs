@@ -217,63 +217,6 @@
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
 
-    <div class="full-row">
-      <mat-expansion-panel [expanded]="true" class="siting-of-residences">
-        <mat-expansion-panel-header>
-          <mat-panel-title>Siting of the residence(s)</mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <div class="siting-of-residences-content">
-          <p>
-            Siting of the residence in the ALR should maintain a viable agricultural remainder and should not
-            unnecessarily infringe upon the productive farming area of the property. Siting considers both clustering
-            and setback from the lot line.
-          </p>
-
-          <p>
-            For more information see
-            <a
-              href="https://www.alc.gov.bc.ca/assets/alc/assets/legislation-and-regulation/policies/alc_policy_l-26_-_non-adhering_residential_use_applications.pdf"
-              target="_blank"
-              >Policy L-26: Non-Adhering Residential Applications for Housing in the ALR.</a
-            >
-          </p>
-
-          <div class="siting-of-residences-figures">
-            <figure class="siting-of-residences-figure">
-              <figcaption class="siting-of-residences-figure-caption">Unclustered</figcaption>
-              <img
-                width="100%"
-                class="siting-of-residences-figure-image"
-                src="assets/siting-figures/unclustered.svg"
-                alt=""
-              />
-            </figure>
-
-            <figure class="siting-of-residences-figure">
-              <figcaption class="siting-of-residences-figure-caption">Clustered</figcaption>
-              <img
-                width="100%"
-                class="siting-of-residences-figure-image"
-                src="assets/siting-figures/clustered.svg"
-                alt=""
-              />
-            </figure>
-
-            <figure class="siting-of-residences-figure">
-              <figcaption class="siting-of-residences-figure-caption">Setback</figcaption>
-              <img
-                width="100%"
-                class="siting-of-residences-figure-image"
-                src="assets/siting-figures/setback.svg"
-                alt=""
-              />
-            </figure>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </div>
-
     <div
       class="full-row"
       *ngIf="
@@ -373,6 +316,63 @@
         <div *ngIf="tfwhFarmSize.errors?.['required']">This field is required</div>
       </div>
       <div class="subtext">Characters left: {{ 4000 - tfwhFarmSizeText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
+      <mat-expansion-panel [expanded]="true" class="siting-of-residences">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Siting of the residence(s)</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="siting-of-residences-content">
+          <p>
+            Siting of the residence in the ALR should maintain a viable agricultural remainder and should not
+            unnecessarily infringe upon the productive farming area of the property. Siting considers both clustering
+            and setback from the lot line.
+          </p>
+
+          <p>
+            For more information see
+            <a
+              href="https://www.alc.gov.bc.ca/assets/alc/assets/legislation-and-regulation/policies/alc_policy_l-26_-_non-adhering_residential_use_applications.pdf"
+              target="_blank"
+              >Policy L-26: Non-Adhering Residential Applications for Housing in the ALR.</a
+            >
+          </p>
+
+          <div class="siting-of-residences-figures">
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Unclustered</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/unclustered.svg"
+                alt=""
+              />
+            </figure>
+
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Clustered</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/clustered.svg"
+                alt=""
+              />
+            </figure>
+
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Setback</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/setback.svg"
+                alt=""
+              />
+            </figure>
+          </div>
+        </div>
+      </mat-expansion-panel>
     </div>
 
     <div class="full-row">
