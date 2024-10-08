@@ -53,6 +53,7 @@ import { OptionalAttachmentsMobileCardComponent } from './optional-attachments-m
 import { OtherAttachmentMobileCardComponent } from './other-attachment-mobile-card/other-attachment-mobile-card.component';
 import { ParcelOwnerMobileCardComponent } from './mobile/parcel-owner-mobile-card/parcel-owner-mobile-card.component';
 import { TransfereeMobileCardComponent } from './mobile/transferee-mobile-card/transferee-mobile-card.component';
+import { NaruResidenceMobileCardComponent } from './mobile/naru-residence-mobile-card/naru-residence-mobile-card.component';
 
 @NgModule({
   providers: [
@@ -113,6 +114,7 @@ import { TransfereeMobileCardComponent } from './mobile/transferee-mobile-card/t
     OtherAttachmentMobileCardComponent,
     ParcelOwnerMobileCardComponent,
     TransfereeMobileCardComponent,
+    NaruResidenceMobileCardComponent,
   ],
   exports: [
     CommonModule,
@@ -165,6 +167,7 @@ import { TransfereeMobileCardComponent } from './mobile/transferee-mobile-card/t
     OtherAttachmentMobileCardComponent,
     ParcelOwnerMobileCardComponent,
     TransfereeMobileCardComponent,
+    NaruResidenceMobileCardComponent,
   ],
 })
 export class SharedModule {

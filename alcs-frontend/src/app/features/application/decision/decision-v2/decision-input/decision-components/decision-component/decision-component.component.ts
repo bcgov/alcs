@@ -49,7 +49,7 @@ export class DecisionComponentComponent implements OnInit {
 
   // pofo, pfrs
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
-  volumeToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  volumeToPlace = new FormControl<number | null>(null, [Validators.min(MIN_SOIL_FIELDS)]);
   areaToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   averageDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
@@ -59,13 +59,12 @@ export class DecisionComponentComponent implements OnInit {
 
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
-  volumeToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
+  volumeToRemove = new FormControl<number | null>(null, [Validators.min(MIN_SOIL_FIELDS)]);
   areaToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   averageDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
 
   // naru
-  naruSubtypeCode = new FormControl<string | null>(null, [Validators.required]);
   naruEndDate = new FormControl<Date | null>(null);
 
   //subd
@@ -266,13 +265,11 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private patchNaruFields() {
-    this.form.addControl('naruSubtypeCode', this.naruSubtypeCode);
     this.form.addControl('naruEndDate', this.naruEndDate);
     this.form.addControl('expiryDate', this.expiryDate);
 
     this.naruEndDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
     this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
-    this.naruSubtypeCode.setValue(this.data.naruSubtypeCode ?? null);
   }
 
   private patchSubdFields() {
@@ -350,16 +347,18 @@ export class DecisionComponentComponent implements OnInit {
     return {
       endDate: this.naruEndDate.value ? formatDateForApi(this.naruEndDate.value) : null,
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
-      naruSubtypeCode: this.naruSubtypeCode.value ?? null,
     };
   }
 
   private getSubdDataChange(): SubdDecisionComponentDto {
-    const update = this.subdApprovedLots.value?.map((e) => ({ 
-      ...e,
-      size: e.size ? e.size : null,
-      alrArea: e.alrArea ? e.alrArea : null
-    }) as ProposedDecisionLotDto);
+    const update = this.subdApprovedLots.value?.map(
+      (e) =>
+        ({
+          ...e,
+          size: e.size ? e.size : null,
+          alrArea: e.alrArea ? e.alrArea : null,
+        }) as ProposedDecisionLotDto,
+    );
     return {
       lots: update ?? undefined,
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,

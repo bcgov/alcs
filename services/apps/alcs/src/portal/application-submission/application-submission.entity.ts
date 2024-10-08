@@ -25,6 +25,16 @@ export class ProposedLot {
   planNumbers: string | null;
 }
 
+export class ExistingResidence {
+  floorArea: number;
+  description: string;
+}
+
+export class ProposedResidence {
+  floorArea: number;
+  description: string;
+}
+
 @Entity({
   comment: 'Portal intake form fields for applications',
 })
@@ -557,6 +567,42 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'boolean', nullable: true })
   soilHasSubmittedNotice: boolean | null;
 
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillBeOverFiveHundredM2: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillRetainResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillHaveAdditionalResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  tfwhCount: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  tfwhDesign: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  tfwhFarmSize: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruClustered: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruSetback: string | null;
+
   //NARU
   @AutoMap(() => NaruSubtype)
   @ManyToOne(() => NaruSubtype)
@@ -661,6 +707,24 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   naruAgriTourism: string | null;
+
+  @AutoMap(() => [ExistingResidence])
+  @Column({
+    comment: 'JSONB column containing NARU existing residences',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  naruExistingResidences: ExistingResidence[];
+
+  @AutoMap(() => [ProposedResidence])
+  @Column({
+    comment: 'JSONB column containing NARU proposed residences',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  naruProposedResidences: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
 

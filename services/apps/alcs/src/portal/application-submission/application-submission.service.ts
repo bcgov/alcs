@@ -743,21 +743,9 @@ export class ApplicationSubmissionService {
       updateDto.nfuAverageFillDepth,
       application.nfuAverageFillDepth,
     );
-    application.nfuFillVolume = filterUndefined(
-      updateDto.nfuFillVolume,
-      application.nfuFillVolume,
-    );
-    application.nfuProjectDuration = filterUndefined(
-      updateDto.nfuProjectDuration,
-      application.nfuProjectDuration,
-    );
     application.nfuFillTypeDescription = filterUndefined(
       updateDto.nfuFillTypeDescription,
       application.nfuFillTypeDescription,
-    );
-    application.nfuFillOriginDescription = filterUndefined(
-      updateDto.nfuFillOriginDescription,
-      application.nfuFillOriginDescription,
     );
 
     return application;
@@ -950,6 +938,47 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
+    applicationSubmission.naruWillBeOverFiveHundredM2 = filterUndefined(
+      updateDto.naruWillBeOverFiveHundredM2,
+      applicationSubmission.naruWillBeOverFiveHundredM2,
+    );
+    applicationSubmission.naruWillRetainResidence = filterUndefined(
+      updateDto.naruWillRetainResidence,
+      applicationSubmission.naruWillRetainResidence,
+    );
+    applicationSubmission.naruWillHaveAdditionalResidence = filterUndefined(
+      updateDto.naruWillHaveAdditionalResidence,
+      applicationSubmission.naruWillHaveAdditionalResidence,
+    );
+    applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing =
+      filterUndefined(
+        updateDto.naruWillHaveTemporaryForeignWorkerHousing,
+        applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing,
+      );
+    applicationSubmission.naruWillImportFill = filterUndefined(
+      updateDto.naruWillImportFill,
+      applicationSubmission.naruWillImportFill,
+    );
+    applicationSubmission.tfwhCount = filterUndefined(
+      updateDto.tfwhCount,
+      applicationSubmission.tfwhCount,
+    );
+    applicationSubmission.tfwhDesign = filterUndefined(
+      updateDto.tfwhDesign,
+      applicationSubmission.tfwhDesign,
+    );
+    applicationSubmission.tfwhFarmSize = filterUndefined(
+      updateDto.tfwhFarmSize,
+      applicationSubmission.tfwhFarmSize,
+    );
+    applicationSubmission.naruClustered = filterUndefined(
+      updateDto.naruClustered,
+      applicationSubmission.naruClustered,
+    );
+    applicationSubmission.naruSetback = filterUndefined(
+      updateDto.naruSetback,
+      applicationSubmission.naruSetback,
+    );
     applicationSubmission.naruSubtype = undefined;
     applicationSubmission.naruSubtypeCode = filterUndefined(
       updateDto.naruSubtypeCode,
@@ -975,25 +1004,9 @@ export class ApplicationSubmissionService {
       updateDto.naruExistingStructures,
       applicationSubmission.naruExistingStructures,
     );
-    applicationSubmission.naruWillImportFill = filterUndefined(
-      updateDto.naruWillImportFill,
-      applicationSubmission.naruWillImportFill,
-    );
     applicationSubmission.naruFillType = filterUndefined(
       updateDto.naruFillType,
       applicationSubmission.naruFillType,
-    );
-    applicationSubmission.naruFillOrigin = filterUndefined(
-      updateDto.naruFillOrigin,
-      applicationSubmission.naruFillOrigin,
-    );
-    applicationSubmission.naruProjectDuration = filterUndefined(
-      updateDto.naruProjectDuration,
-      applicationSubmission.naruProjectDuration,
-    );
-    applicationSubmission.naruToPlaceVolume = filterUndefined(
-      updateDto.naruToPlaceVolume,
-      applicationSubmission.naruToPlaceVolume,
     );
     applicationSubmission.naruToPlaceArea = filterUndefined(
       updateDto.naruToPlaceArea,
@@ -1014,6 +1027,15 @@ export class ApplicationSubmissionService {
     applicationSubmission.naruAgriTourism = filterUndefined(
       updateDto.naruAgriTourism,
       applicationSubmission.naruAgriTourism,
+    );
+    applicationSubmission.naruExistingResidences = filterUndefined(
+      updateDto.naruExistingResidences,
+      applicationSubmission.naruExistingResidences,
+    );
+
+    applicationSubmission.naruProposedResidences = filterUndefined(
+      updateDto.naruProposedResidences,
+      applicationSubmission.naruProposedResidences,
     );
   }
 

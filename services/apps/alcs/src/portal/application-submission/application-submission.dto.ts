@@ -15,7 +15,11 @@ import {
 } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
-import { ProposedLot } from './application-submission.entity';
+import {
+  ExistingResidence,
+  ProposedLot,
+  ProposedResidence,
+} from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 export const MAX_LANDUSE_FIELD_LENGTH = 500;
@@ -238,6 +242,36 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
 
+  @AutoMap(() => Boolean)
+  naruWillBeOverFiveHundredM2: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillRetainResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveAdditionalResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  tfwhCount: string | null;
+
+  @AutoMap(() => Boolean)
+  tfwhDesign: boolean | null;
+
+  @AutoMap(() => String)
+  tfwhFarmSize: string | null;
+
+  @AutoMap(() => String)
+  naruClustered: string | null;
+
+  @AutoMap(() => String)
+  naruSetback: string | null;
+
   //NARU Fields
   @AutoMap(() => [NaruSubtypeDto])
   naruSubtype: NaruSubtypeDto | null;
@@ -256,9 +290,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruExistingStructures: string | null;
-
-  @AutoMap(() => Boolean)
-  naruWillImportFill: boolean | null;
 
   @AutoMap(() => String)
   naruFillType: string | null;
@@ -286,6 +317,12 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruAgriTourism: string | null;
+
+  @AutoMap(() => ExistingResidence)
+  naruExistingResidences?: ExistingResidence[];
+
+  @AutoMap(() => ProposedResidence)
+  naruProposedResidences?: ProposedResidence[];
 
   @AutoMap(() => ApplicationSubmissionToSubmissionStatusDto)
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
@@ -618,6 +655,46 @@ export class ApplicationSubmissionUpdateDto {
   soilHasSubmittedNotice?: boolean;
 
   //NARU Fields
+  @IsBoolean()
+  @IsOptional()
+  naruWillBeOverFiveHundredM2?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillRetainResidence?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillHaveAdditionalResidence?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillHaveTemporaryForeignWorkerHousing?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillImportFill?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  tfwhCount?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  tfwhDesign?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  tfwhFarmSize?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruClustered?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruSetback?: string | null;
+
   @IsString()
   @IsOptional()
   naruSubtypeCode?: string | null;
@@ -641,10 +718,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruExistingStructures?: string | null;
-
-  @IsBoolean()
-  @IsOptional()
-  naruWillImportFill?: boolean | null;
 
   @IsString()
   @IsOptional()
@@ -682,6 +755,14 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruAgriTourism?: string | null;
+
+  @IsArray()
+  @IsOptional()
+  naruExistingResidences?: ExistingResidence[];
+
+  @IsArray()
+  @IsOptional()
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   @IsString()

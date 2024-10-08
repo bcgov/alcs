@@ -48,6 +48,16 @@ export interface ProposedLot {
   componentUuid: string;
 }
 
+export interface ExistingResidence {
+  floorArea: number;
+  description: string;
+}
+
+export interface ProposedResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface ApplicationReviewDto {
   localGovernmentFileNumber: string;
   firstName: string;
@@ -189,13 +199,22 @@ export interface ApplicationSubmissionDto {
   soilHasSubmittedNotice: boolean | null;
 
   //NARU Fields
+  naruWillBeOverFiveHundredM2: boolean | null;
+  naruWillRetainResidence: boolean | null;
+  naruWillHaveAdditionalResidence: boolean | null;
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+  naruWillImportFill: boolean | null;
+  tfwhCount: string | null;
+  tfwhDesign: boolean | null;
+  tfwhFarmSize: string | null;
+  naruClustered: string | null;
+  naruSetback: string | null;
   naruSubtype: BaseCodeDto | null;
   naruFloorArea: number | null;
   naruResidenceNecessity: string | null;
   naruLocationRationale: string | null;
   naruInfrastructure: string | null;
   naruExistingStructures: string | null;
-  naruWillImportFill: boolean | null;
   naruFillType: string | null;
   naruFillOrigin: string | null;
   naruProjectDuration: string | null;
@@ -205,6 +224,8 @@ export interface ApplicationSubmissionDto {
   naruToPlaceAverageDepth: number | null;
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
+  naruExistingResidences?: ExistingResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;

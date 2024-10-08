@@ -24,7 +24,6 @@ import { CoveProposalComponent } from './proposal/cove-proposal/cove-proposal.co
 import { CovenantTransfereeDialogComponent } from './proposal/cove-proposal/transferee-dialog/transferee-dialog.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
 import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
-import { ChangeSubtypeConfirmationDialogComponent } from './proposal/naru-proposal/change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
@@ -39,6 +38,7 @@ import { SuccessComponent } from './success/success.component';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact/primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 import { OtherAttachmentsUploadDialogComponent } from './other-attachments/other-attachments-upload-dialog/other-attachments-upload-dialog.component';
 import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
+import { ResidenceDialogComponent } from './proposal/naru-proposal/residence-dialog/residence-dialog.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,7 @@ import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
     PofoProposalComponent,
     PfrsProposalComponent,
     NaruProposalComponent,
-    ChangeSubtypeConfirmationDialogComponent,
+    ResidenceDialogComponent,
     ExclProposalComponent,
     InclProposalComponent,
     CoveProposalComponent,
@@ -112,6 +112,7 @@ import { MatCard, MatCardHeader, MatCardModule } from '@angular/material/card';
     CoveProposalComponent,
     CovenantTransfereeDialogComponent,
     SuccessComponent,
+    ResidenceDialogComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

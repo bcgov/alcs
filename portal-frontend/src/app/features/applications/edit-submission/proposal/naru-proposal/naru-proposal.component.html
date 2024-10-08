@@ -27,29 +27,181 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <mat-label for="subtype"><h5>Select a Sub-Type for your Non-Adhering Residential Use application</h5></mat-label>
-      <mat-radio-group
-        class="radio-group"
-        id="subtype"
-        formControlName="subtype"
-        (change)="onChangeSubtype($event)"
-        aria-label="Select an option"
+      <mat-label for="will-be-over-five-hundred-m2">
+        Is your proposal for a principal residence with a total floor area greater than 500 m<sup>2</sup>?
+      </mat-label>
+      <div class="subtext">Total floor area includes the basement and any attached garage</div>
+      <mat-button-toggle-group
+        (change)="onChangeOver500m2($event.value)"
+        class="input"
+        id="will-be-over-five-hundred-m2"
+        formControlName="willBeOverFiveHundredM2"
       >
-        <mat-radio-button *ngFor="let subtype of naruSubtypes" [value]="subtype.code">{{
-          subtype.label
-        }}</mat-radio-button>
-      </mat-radio-group>
-      <div *ngIf="subtype.invalid && (subtype.dirty || subtype.touched)" class="field-error">
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline':
+              willBeOverFiveHundredM2.invalid && (willBeOverFiveHundredM2.dirty || willBeOverFiveHundredM2.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline':
+              willBeOverFiveHundredM2.invalid && (willBeOverFiveHundredM2.dirty || willBeOverFiveHundredM2.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="willBeOverFiveHundredM2.invalid && (willBeOverFiveHundredM2.dirty || willBeOverFiveHundredM2.touched)"
+        class="field-error"
+      >
         <mat-icon>warning</mat-icon>
-        <div *ngIf="subtype.errors?.['required']">This field is required</div>
+        <div *ngIf="willBeOverFiveHundredM2.errors?.['required']">This field is required</div>
       </div>
     </div>
-    <div class="full-row" *ngIf="!subtype.value">
-      <hr />
-      Please select a sub-type above to view proposal questions
+
+    <div class="full-row">
+      <mat-label for="will-retain-residence">
+        Is your proposal to retain an existing residence while building a new residence?
+      </mat-label>
+      <mat-button-toggle-group class="input" id="will-retain-residence" formControlName="willRetainResidence">
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline': willRetainResidence.invalid && (willRetainResidence.dirty || willRetainResidence.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline': willRetainResidence.invalid && (willRetainResidence.dirty || willRetainResidence.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="willRetainResidence.invalid && (willRetainResidence.dirty || willRetainResidence.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willRetainResidence.errors?.['required']">This field is required</div>
+      </div>
     </div>
 
-    <div class="full-row" *ngIf="subtype.value">
+    <div class="full-row">
+      <mat-label for="will-have-additional-residence">Is your proposal for an additional residence?</mat-label>
+      <mat-button-toggle-group
+        (change)="onChangeAdditional($event.value)"
+        class="input"
+        id="will-have-additional-residence"
+        formControlName="willHaveAdditionalResidence"
+      >
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline':
+              willHaveAdditionalResidence.invalid &&
+              (willHaveAdditionalResidence.dirty || willHaveAdditionalResidence.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline':
+              willHaveAdditionalResidence.invalid &&
+              (willHaveAdditionalResidence.dirty || willHaveAdditionalResidence.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="
+          willHaveAdditionalResidence.invalid &&
+          (willHaveAdditionalResidence.dirty || willHaveAdditionalResidence.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willHaveAdditionalResidence.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <mat-label for="will-have-temporary-foreign-worker-housing">
+        Is your proposal for temporary foreign worker housing?
+      </mat-label>
+      <div class="subtext">For registration in a federal temporary worker program</div>
+      <mat-button-toggle-group
+        (change)="onChangeTemporaryHousing($event.value)"
+        class="input"
+        id="will-have-temporary-foreign-worker-housing"
+        formControlName="willHaveTemporaryForeignWorkerHousing"
+      >
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline':
+              willHaveTemporaryForeignWorkerHousing.invalid &&
+              (willHaveTemporaryForeignWorkerHousing.dirty || willHaveTemporaryForeignWorkerHousing.touched),
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline':
+              willHaveTemporaryForeignWorkerHousing.invalid &&
+              (willHaveTemporaryForeignWorkerHousing.dirty || willHaveTemporaryForeignWorkerHousing.touched),
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="
+          willHaveTemporaryForeignWorkerHousing.invalid &&
+          (willHaveTemporaryForeignWorkerHousing.dirty || willHaveTemporaryForeignWorkerHousing.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willHaveTemporaryForeignWorkerHousing.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <mat-label for="will-import-fill">
+        Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
+      </mat-label>
+      <div class="subtext">Fill is any material brought onto the property, including gravel for construction.</div>
+      <mat-button-toggle-group
+        (change)="onChangeFill($event.value)"
+        class="input"
+        id="will-import-fill"
+        formControlName="willImportFill"
+      >
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <div class="subtext">
         Include why you are applying for non-adhering residential use, what the proposal will achieve, and any benefits
@@ -65,506 +217,456 @@
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
 
-    <ng-container *ngIf="subtype.value === 'ARFU'">
-      <div>
-        <label for="floorArea"
-          >What is the total floor area (m<sup>2</sup>) of the proposed additional residence?</label
+    <div
+      class="full-row"
+      *ngIf="
+        willBeOverFiveHundredM2.value ||
+        willHaveAdditionalResidence.value ||
+        willHaveTemporaryForeignWorkerHousing.value
+      "
+    >
+      <label for="residenceNecessity">
+        Is your proposal necessary for farm use? If so, please explain<ng-container
+          *ngIf="willHaveTemporaryForeignWorkerHousing.value"
         >
-        <mat-form-field appearance="outline">
-          <input
-            id="floorArea"
-            mask="separator.5"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            min="0.01"
-            matInput
-            formControlName="floorArea"
-          />
-          <span *ngIf="floorArea.value" matTextSuffix>m<sup>2</sup></span>
-        </mat-form-field>
-        <div *ngIf="floorArea.invalid && (floorArea.dirty || floorArea.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="floorArea.errors?.['required']">This field is required</div>
-        </div>
+          what the temporary foreign workers will be doing on the farm</ng-container
+        >.
+      </label>
+      <div class="subtext">
+        Include a description of the scale, intensity, and labour capacity of the farm operation
       </div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="residenceNecessity"
+          #residenceNecessityText
+          maxlength="4000"
+          id="residenceNecessity"
+          matInput
+        ></textarea>
+      </mat-form-field>
+      <div
+        *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
+    </div>
 
-      <div class="full-row">
-        <label for="residenceNecessity"
-          >Describe the necessity for an additional residence for farm use and how it will support agriculture in the
-          short or long term.</label
+    <div class="full-row" *ngIf="willHaveTemporaryForeignWorkerHousing.value">
+      <label for="tfwh-count">How many temporary foreign workers will be housed by the proposal?</label>
+      <mat-form-field appearance="outline">
+        <textarea formControlName="tfwhCount" #tfwhCountText maxlength="4000" id="tfwh-count" matInput></textarea>
+      </mat-form-field>
+      <div *ngIf="tfwhCount.invalid && (tfwhCount.dirty || tfwhCount.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="tfwhCount.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - tfwhCountText.textLength }}</div>
+    </div>
+
+    <div class="full-row" *ngIf="willHaveTemporaryForeignWorkerHousing.value">
+      <mat-label for="tfwh-design">
+        Will the temporary foreign worker housing be designed to move from one place to another?
+      </mat-label>
+      <div class="subtext">Examples: modular trailers, manufactured homes</div>
+      <mat-button-toggle-group class="input" id="tfwh-design" formControlName="tfwhDesign">
+        <mat-button-toggle
+          [value]="true"
+          [ngClass]="{
+            'error-outline': tfwhDesign.invalid && (tfwhDesign.dirty || tfwhDesign.touched),
+          }"
+          >Yes</mat-button-toggle
         >
-        <div class="subtext">
-          Include a description of the scale, intensity, and labour capacity of the farm operation
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="residenceNecessity"
-            #residenceNecessityText
-            maxlength="4000"
-            id="residenceNecessity"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
-          class="field-error"
+        <mat-button-toggle
+          [value]="false"
+          [ngClass]="{
+            'error-outline': tfwhDesign.invalid && (tfwhDesign.dirty || tfwhDesign.touched),
+          }"
+          >No</mat-button-toggle
         >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
+      </mat-button-toggle-group>
+      <div *ngIf="tfwhDesign.invalid && (tfwhDesign.dirty || tfwhDesign.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="tfwhDesign.errors?.['required']">This field is required</div>
       </div>
+    </div>
 
-      <div class="full-row">
-        <label for="locationRationale"
-          >Describe the rationale for the proposed location of the additional residence.</label
-        >
-        <div class="subtext">
-          Include a description of the scale, intensity, and labour capacity of the farm operation
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="locationRationale"
-            #locationRationaleText
-            maxlength="4000"
-            id="locationRationale"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</div>
+    <div class="full-row" *ngIf="willHaveTemporaryForeignWorkerHousing.value">
+      <label for="tfwh-farm-size"
+        >What is the size (in hectares) of the farm operation that the temporary foreign workers will be
+        supporting?</label
+      >
+      <div class="subtext">
+        The farm may include multiple parcels (leased, rented or owned) that are not adjacent but are managed as a
+        single operation.
       </div>
-
-      <div class="full-row">
-        <label for="infrastructure">
-          Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
-          residence.
-        </label>
-        <div class="subtext">
-          Describe any infrastructure required to accommodate the additional residence and the approximate area required
-          for that infrastructure
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="infrastructure"
-            #infrastructureText
-            maxlength="4000"
-            id="infrastructure"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="tfwhFarmSize"
+          #tfwhFarmSizeText
+          maxlength="4000"
+          id="tfwh-farm-size"
+          matInput
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="tfwhFarmSize.invalid && (tfwhFarmSize.dirty || tfwhFarmSize.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="tfwhFarmSize.errors?.['required']">This field is required</div>
       </div>
-    </ng-container>
+      <div class="subtext">Characters left: {{ 4000 - tfwhFarmSizeText.textLength }}</div>
+    </div>
 
-    <ng-container *ngIf="subtype.value === 'PRIN'">
-      <div>
-        <label for="floorArea">
-          What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
-        </label>
-        <mat-form-field appearance="outline">
-          <input
-            id="floorArea"
-            mask="separator.5"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            min="0.01"
-            matInput
-            formControlName="floorArea"
-          />
-          <span *ngIf="floorArea.value" matTextSuffix>m<sup>2</sup></span>
-        </mat-form-field>
-        <div *ngIf="floorArea.invalid && (floorArea.dirty || floorArea.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="floorArea.errors?.['required']">This field is required</div>
+    <div class="full-row">
+      <mat-expansion-panel [expanded]="true" class="siting-of-residences">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Siting of the residence(s)</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="siting-of-residences-content">
+          <p>
+            Siting of the residence in the ALR should maintain a viable agricultural remainder and should not
+            unnecessarily infringe upon the productive farming area of the property. Siting considers both clustering
+            and setback from the lot line.
+          </p>
+
+          <p>
+            For more information see
+            <a
+              href="https://www.alc.gov.bc.ca/assets/alc/assets/legislation-and-regulation/policies/alc_policy_l-26_-_non-adhering_residential_use_applications.pdf"
+              target="_blank"
+              >Policy L-26: Non-Adhering Residential Applications for Housing in the ALR.</a
+            >
+          </p>
+
+          <div class="siting-of-residences-figures">
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Unclustered</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/unclustered.svg"
+                alt=""
+              />
+            </figure>
+
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Clustered</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/clustered.svg"
+                alt=""
+              />
+            </figure>
+
+            <figure class="siting-of-residences-figure">
+              <figcaption class="siting-of-residences-figure-caption">Setback</figcaption>
+              <img
+                width="100%"
+                class="siting-of-residences-figure-image"
+                src="assets/siting-figures/setback.svg"
+                alt=""
+              />
+            </figure>
+          </div>
         </div>
+      </mat-expansion-panel>
+    </div>
+
+    <div class="full-row">
+      <label for="clustered"
+        >Will the proposed residence(s) be clustered with existing residential structures? Please explain.</label
+      >
+      <mat-form-field appearance="outline">
+        <textarea formControlName="clustered" #clusteredText maxlength="4000" id="clustered" matInput></textarea>
+      </mat-form-field>
+      <div *ngIf="clustered.invalid && (clustered.dirty || clustered.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="clustered.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - clusteredText.textLength }}</div>
+    </div>
 
-      <div class="full-row">
-        <label for="residenceNecessity">
-          Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in
-          the short or long term.
-        </label>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="residenceNecessity"
-            #residenceNecessityText
-            maxlength="4000"
-            id="residenceNecessity"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
+    <div class="full-row">
+      <label for="setback"
+        >Will the proposed residence(s) be located within a 60 m setback from the front lot line? Please explain.</label
+      >
+      <mat-form-field appearance="outline">
+        <textarea formControlName="setback" #setbackText maxlength="4000" id="setback" matInput></textarea>
+      </mat-form-field>
+      <div *ngIf="setback.invalid && (setback.dirty || setback.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="setback.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - setbackText.textLength }}</div>
+    </div>
 
-      <div class="full-row">
-        <label for="locationRationale">
-          Describe the rationale for the proposed location of the principal residence.
-        </label>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="locationRationale"
-            #locationRationaleText
-            maxlength="4000"
-            id="locationRationale"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</div>
+    <div class="full-row">
+      <label for="locationRationale"
+        >Where on the parcel will the proposal be situated and is there an agricultural rationale for the proposed
+        location?</label
+      >
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="locationRationale"
+          #locationRationaleText
+          maxlength="4000"
+          id="locationRationale"
+          matInput
+        ></textarea>
+      </mat-form-field>
+      <div
+        *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</div>
+    </div>
 
-      <div class="full-row">
-        <label for="infrastructure">
-          Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the principal
-          residence.
-        </label>
-        <div class="subtext">
-          Describe any infrastructure required to accommodate the additional residence and the approximate area required
-          for that infrastructure
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="infrastructure"
-            #infrastructureText
-            maxlength="4000"
-            id="infrastructure"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</div>
+    <div class="full-row">
+      <label for="infrastructure">
+        Describe any infrastructure required to support the proposed residence(s) and the approximate area
+        (m<sup>2</sup>) required for that infrastructure
+      </label>
+      <div class="subtext">For example: driveway, septic field, sewage lagoon, yard</div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="infrastructure"
+          #infrastructureText
+          maxlength="4000"
+          id="infrastructure"
+          matInput
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
       </div>
-    </ng-container>
+      <div class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</div>
+    </div>
 
-    <ng-container *ngIf="subtype.value === 'TOUR'">
-      <div class="full-row">
-        <label for="floorArea"> What is the total floor area (m<sup>2</sup>) of the proposed accommodation? </label>
-        <mat-form-field appearance="outline">
-          <input
-            id="floorArea"
-            mask="separator.5"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            min="0.01"
-            matInput
-            formControlName="floorArea"
-          />
-          <span *ngIf="floorArea.value" matTextSuffix>m<sup>2</sup></span>
-        </mat-form-field>
-        <div *ngIf="floorArea.invalid && (floorArea.dirty || floorArea.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="floorArea.errors?.['required']">This field is required</div>
-        </div>
-      </div>
+    <div class="full-row">
+      <mat-label>Total Floor Area of Existing Residence(s) - If Applicable</mat-label>
+      <div class="scrollable" *ngIf="!isMobile">
+        <table mat-table [dataSource]="existingResidencesSource">
+          <ng-container class="sample" matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>Existing Residence</th>
+            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+          </ng-container>
 
-      <div class="full-row">
-        <label for="sleepingUnits"> How many "sleeping units" in total are proposed? </label>
-        <div class="subtext">
-          A "sleeping unit" means:
-          <ol>
-            <li>A bedroom or other area used for sleeping located in a residence, cabin or other</li>
-            structure
-            <li>A vehicle, trailer, tent or other structure, located on a campsite, field or other area</li>
-          </ol>
-        </div>
-        <mat-form-field appearance="outline">
-          <input
-            id="sleepingUnits"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            min="0.01"
-            matInput
-            formControlName="sleepingUnits"
-          />
-        </mat-form-field>
-        <div *ngIf="sleepingUnits.invalid && (sleepingUnits.dirty || sleepingUnits.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="sleepingUnits.errors?.['required']">This field is required</div>
-        </div>
-      </div>
+          <ng-container matColumnDef="floorArea">
+            <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+            </td>
+          </ng-container>
 
-      <div class="full-row">
-        <label for="residenceNecessity">
-          Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
-        </label>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="residenceNecessity"
-            #residenceNecessityText
-            maxlength="4000"
-            id="residenceNecessity"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
-      </div>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="description-column">Description</th>
+            <td mat-cell *matCellDef="let element" class="description-data">
+              {{ element.isExpanded ? element.description : getTruncatedDescription(element.description) }}
+              <a *ngIf="isDescriptionTruncated(element.description)" (click)="toggleReadMore(true, element)">
+                {{ element.isExpanded ? 'Read Less' : 'Read More' }}
+              </a>
+            </td>
+          </ng-container>
 
-      <div class="full-row">
-        <label for="locationRationale">
-          Describe the rationale for the proposed location of the tourism accommodation.
-        </label>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="locationRationale"
-            #locationRationaleText
-            maxlength="4000"
-            id="locationRationale"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</div>
-      </div>
-
-      <div class="full-row">
-        <label for="infrastructure">
-          Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
-          accommodation.
-        </label>
-        <div class="subtext">
-          Describe any infrastructure required to accommodate the tourism accommodation and the approximate area
-          required for that infrastructure.
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="infrastructure"
-            #infrastructureText
-            maxlength="4000"
-            id="infrastructure"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</div>
-      </div>
-
-      <div class="full-row">
-        <label for="agriTourism"> Describe any agri-tourism that is currently taking place on the property. </label>
-        <div class="subtext">Agri-tourism activities are defined in the Agricultural Land Reserve Use Regulation.</div>
-        <app-info-banner>
-          Please refer to the
-          <a
-            href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#naru"
-            target="_blank"
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell class="actions" *matCellDef="let element">
+              <button
+                type="button"
+                mat-stroked-button
+                color="primary"
+                (click)="onAddEditResidence(true, element, true)"
+              >
+                Edit
+              </button>
+              <button type="button" mat-stroked-button color="accent" (click)="onDeleteResidence(true, element)">
+                Remove
+              </button>
+            </td></ng-container
           >
-            Non-Adhering Residential Use</a
-          >
-          page on the ALC website for more information
-        </app-info-banner>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="agriTourism"
-            #agriTourismText
-            maxlength="4000"
-            id="agriTourism"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div *ngIf="agriTourism.invalid && (agriTourism.dirty || agriTourism.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="agriTourism.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - agriTourismText.textLength }}</div>
-      </div>
-    </ng-container>
 
-    <ng-container *ngIf="subtype.value">
-      <div class="full-row">
-        <label for="existingStructures">
-          Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
-          currently located on the property.
-        </label>
-        <div class="subtext">
-          Residential structure is defined as a structure, whether used permanently or temporarily as a residence,
-          agri-tourism accommodation, or tourist accommodation.
+          <tr mat-header-row *matHeaderRowDef="existingResidencesDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: existingResidencesDisplayedColumns"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="no-data-text" colspan="6">Use the button below to add any existing residence(s)</td>
+          </tr>
+        </table>
+      </div>
+      <ng-container *ngIf="isMobile">
+        <div class class="no-data-container" *ngIf="existingResidences.length === 0">
+          <td class="no-data-text subtext" colspan="6">Use the button below to add any existing residence(s)</td>
         </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="existingStructures"
-            #existingStructuresText
-            maxlength="4000"
-            id="existingStructures"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
-          class="field-error"
+        <app-naru-residence-mobile-card
+          *ngFor="let existingResidence of existingResidences; let last = last"
+          [residence]="existingResidence"
+          [isLast]="last"
+          [isReviewStep]="false"
+          (editClicked)="onAddEditResidence(true, existingResidence, true)"
+          (removeClicked)="onDeleteResidence(true, existingResidence)"
         >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
+        </app-naru-residence-mobile-card>
+      </ng-container>
+      <div class="residence-btn">
+        <button type="button" mat-stroked-button color="primary" (click)="onAddEditResidence(true, undefined, false)">
+          + Add Existing Residence
+        </button>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <mat-label>Total Floor Area of Proposed Residence(s)</mat-label>
+      <div class="scrollable" *ngIf="!isMobile">
+        <table mat-table [dataSource]="proposedResidencesSource">
+          <ng-container class="sample" matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>Proposed Residence</th>
+            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="floorArea">
+            <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="description-column">Description</th>
+            <td mat-cell *matCellDef="let element" class="description-data">
+              {{ element.isExpanded ? element.description : getTruncatedDescription(element.description) }}
+              <a *ngIf="isDescriptionTruncated(element.description)" (click)="toggleReadMore(false, element)">
+                {{ element.isExpanded ? 'Read Less' : 'Read More' }}
+              </a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell class="actions" *matCellDef="let element">
+              <button
+                type="button"
+                mat-stroked-button
+                color="primary"
+                (click)="onAddEditResidence(false, element, true)"
+              >
+                Edit
+              </button>
+              <button type="button" mat-stroked-button color="accent" (click)="onDeleteResidence(false, element)">
+                Remove
+              </button>
+            </td></ng-container
+          >
+
+          <tr mat-header-row *matHeaderRowDef="proposedResidencesDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: proposedResidencesDisplayedColumns"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="no-data-text" colspan="6">Use the button below to add any proposed residence(s)</td>
+          </tr>
+        </table>
+      </div>
+      <ng-container *ngIf="isMobile">
+        <div class class="no-data-container" *ngIf="proposedResidences.length === 0">
+          <td class="no-data-text subtext" colspan="6">Use the button below to add any proposed residence(s)</td>
         </div>
-        <div class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</div>
-      </div>
-
-      <div class="full-row">
-        <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
-        <div class="subtext">A visual representation of your proposal.</div>
-        <app-file-drag-drop
-          id="proposal-map"
-          [uploadedFiles]="proposalMap"
-          (uploadFiles)="attachProposalMap($event)"
-          (deleteFile)="onDeleteFile($event)"
-          (openFile)="openFile($event)"
-          [showErrors]="showErrors"
-          [isRequired]="true"
-          [showVirusError]="showProposalMapVirus"
-        ></app-file-drag-drop>
-      </div>
-
-      <div class="full-row">
-        <mat-label for="will-import-fill">
-          Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
-        </mat-label>
-        <div class="subtext">Fill is any material brought onto the property, including gravel for construction.</div>
-        <mat-button-toggle-group
-          (change)="onChangeFill($event.value)"
-          class="input"
-          id="will-import-fill"
-          formControlName="willImportFill"
+        <app-naru-residence-mobile-card
+          *ngFor="let proposedResidence of proposedResidences; let last = last"
+          [residence]="proposedResidence"
+          [isLast]="last"
+          [isReviewStep]="false"
+          (editClicked)="onAddEditResidence(false, proposedResidence, true)"
+          (removeClicked)="onDeleteResidence(false, proposedResidence)"
         >
-          <mat-button-toggle
-            [value]="true"
-            [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
-            >Yes</mat-button-toggle
-          >
-          <mat-button-toggle
-            [value]="false"
-            [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
-            >No</mat-button-toggle
-          >
-        </mat-button-toggle-group>
-        <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
-        </div>
+        </app-naru-residence-mobile-card>
+      </ng-container>
+      <button
+        type="button"
+        mat-stroked-button
+        color="primary"
+        [ngClass]="{ 'error-field-outlined ng-invalid': showErrors && proposedResidencesRequired }"
+        (click)="onAddEditResidence(false, undefined, false)"
+      >
+        + Add Proposed Residence
+      </button>
+      <div class="field-error" *ngIf="showErrors && proposedResidencesRequired">
+        <mat-icon>warning</mat-icon>
+        <div>This field is required</div>
       </div>
-    </ng-container>
+    </div>
+
+    <div class="full-row">
+      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachProposalMap($event)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+        [showVirusError]="showProposalMapVirus"
+      ></app-file-drag-drop>
+    </div>
+
+    <div class="full-row">
+      <mat-label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</mat-label>
+      <div class="subtext">
+        Building plans must be the most up to date, current version and should include (1) the total floor area of all
+        levels and intended use; and (2) interior and exterior views
+      </div>
+      <app-file-drag-drop
+        id="detailed-building-plans"
+        [uploadedFiles]="buildingPlans"
+        (uploadFiles)="attachBuildingPlan($event)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [showVirusError]="showBuildingPlanVirus"
+      ></app-file-drag-drop>
+    </div>
   </div>
 
-  <ng-container *ngIf="subtype.value">
-    <section>
-      <h3>Soil & Fill Components</h3>
-      <div class="form-row">
-        <div class="full-row">
-          <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
-          <div class="subtext">The Commission must approve any proposed fill. List all proposed types of fill.</div>
-          <mat-form-field appearance="outline">
-            <textarea
-              formControlName="fillType"
-              #fillTypeToPlaceText
-              maxlength="4000"
-              id="fillType"
-              matInput
-            ></textarea>
-          </mat-form-field>
-          <div *ngIf="fillType.invalid && (fillType.dirty || fillType.touched)" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="fillType.errors?.['required']">This field is required</div>
-          </div>
-          <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
-          <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="full-row">
-          <label for="fillOrigin">Briefly describe the origin and quality of fill.</label>
-          <mat-form-field appearance="outline">
-            <textarea
-              formControlName="fillOrigin"
-              #fillOriginToPlaceText
-              maxlength="4000"
-              id="fillOrigin"
-              matInput
-            ></textarea>
-          </mat-form-field>
-          <div *ngIf="fillOrigin.invalid && (fillOrigin.dirty || fillOrigin.touched)" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="fillOrigin.errors?.['required']">This field is required</div>
-          </div>
-          <div class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="full-row">
-          <label for="projectDuration">Placement of Fill Project Duration</label>
-          <div class="subtext">Length of time you anticipate it would take to complete the project</div>
-          <mat-form-field appearance="outline">
-            <input
-              id="projectDuration"
-              maxlength="500"
-              matInput
-              [formControl]="projectDuration"
-              placeholder="Type project duration"
-            />
-          </mat-form-field>
-          <div
-            *ngIf="projectDuration.invalid && (projectDuration.dirty || projectDuration.touched)"
-            class="field-error"
+  <section>
+    <h3>Soil & Fill Components</h3>
+    <div class="form-row">
+      <div class="full-row">
+        <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
+        <div class="subtext">
+          The Commission must approve any proposed fill. List all proposed types of fill.
+          <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/30_2019#section36" target="_blank"
+            >Prohibited fill</a
           >
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="projectDuration.errors?.['required']">This field is required</div>
-          </div>
-          <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
-          <div class="subtext">Characters left: {{ 500 - (projectDuration.value || '').length }}</div>
+          cannot be placed in the ALR.
         </div>
+        <mat-form-field appearance="outline">
+          <textarea formControlName="fillType" #fillTypeToPlaceText maxlength="4000" id="fillType" matInput></textarea>
+        </mat-form-field>
+        <div *ngIf="fillType.invalid && (fillType.dirty || fillType.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="fillType.errors?.['required']">This field is required</div>
+        </div>
+        <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
       </div>
+    </div>
 
-      <app-soil-table
-        tableHeader="Fill to be Placed"
-        [disabled]="fillTableDisabled"
-        [touchAll]="showErrors"
-        [(data)]="fillTableData"
-        (dataChange)="markDirty()"
-      ></app-soil-table>
-    </section>
-  </ng-container>
+    <app-soil-table
+      tableHeader="Fill to be Placed"
+      [disabled]="fillTableDisabled"
+      [touchAll]="showErrors"
+      [(data)]="fillTableData"
+      (dataChange)="markDirty()"
+      [showVolumeField]="false"
+    ></app-soil-table>
+  </section>
 </form>
 <div class="button-container">
   <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>

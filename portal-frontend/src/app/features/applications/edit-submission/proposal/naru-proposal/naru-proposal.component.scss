@@ -1,4 +1,5 @@
 @use '../../../../../../styles/functions' as *;
+@use '../../../../../../styles/colors';
 
 section {
   margin-top: rem(36);
@@ -17,4 +18,97 @@ section {
 
 :host::ng-deep .mat-mdc-radio-button label {
   font-weight: 400 !important;
+}
+
+.scrollable {
+  overflow-x: auto;
+}
+
+.actions {
+  button:not(:last-child) {
+    margin-right: rem(8) !important;
+  }
+}
+
+.no-data-text {
+  color: colors.$grey-dark;
+  text-align: center;
+  padding-top: 5px;
+}
+
+.visible-count-container {
+  text-align: center;
+  margin: 12px 0;
+  font-size: 1.1rem;
+}
+
+.no-data-container {
+  justify-content: center !important;
+}
+
+td {
+  vertical-align: top;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.description-column {
+  width: 40%;
+}
+
+.description-data {
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-width: 40%;
+}
+
+.siting-of-residences {
+  --mat-expansion-header-text-weight: bold;
+}
+
+.siting-of-residences-content {
+  display: flex;
+  flex-direction: column;
+  gap: rem(24);
+}
+
+.siting-of-residences-figures {
+  display: flex;
+  gap: rem(32);
+  flex-wrap: wrap;
+  justify-content: center;
+  min-width: 0;
+}
+
+.siting-of-residences-figure {
+  margin: 0;
+}
+
+.siting-of-residences-figure-caption {
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: rem(4);
+}
+
+.siting-of-residences-figure-image {
+  display: block;
+}
+
+.residence-btn {
+  padding-bottom: 10px;
+}
+
+.error-field-outlined.ng-invalid {
+  border: 1px solid colors.$error-color !important;
+
+  .mat-button-toggle {
+    border-color: colors.$error-color;
+    color: colors.$error-color !important;
+  }
+
+  &.upload-button {
+    border: 2px solid colors.$error-color;
+    margin-bottom: 0 !important;
+  }
 }

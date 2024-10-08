@@ -16,3 +16,19 @@
     grid-column-gap: rem(16);
   }
 }
+
+.existing-residences {
+  display: grid;
+  grid-template-columns: max-content max-content max-content max-content max-content;
+  overflow-x: auto;
+  grid-column-gap: rem(36);
+  grid-row-gap: rem(12);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .full-width {
+    grid-column: 1/3;
+  }
+}

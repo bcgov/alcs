@@ -212,8 +212,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   ) {
     const proceededModifications = modifications.filter(
       (modification) =>
-        (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-        (modification.reviewOutcome.code === 'PRC' && !modification.resultingDecision),
+        modification.reviewOutcome.code === 'PRC' &&
+        ((existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
+          !modification.resultingDecision),
     );
     this.postDecisions = proceededModifications.map((modification, index) => ({
       label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions

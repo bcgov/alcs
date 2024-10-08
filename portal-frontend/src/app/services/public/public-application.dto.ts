@@ -6,6 +6,16 @@ import {
 } from '../application-submission/application-submission.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from './public.dto';
 
+export interface ExistingResidence {
+  floorArea: number;
+  description: string;
+}
+
+export interface ProposedResidence {
+  floorArea: number;
+  description: string;
+}
+
 export interface GetPublicApplicationResponseDto {
   submission: PublicApplicationSubmissionDto;
   parcels: PublicParcelDto[];
@@ -96,13 +106,22 @@ export interface PublicApplicationSubmissionDto {
   soilHasSubmittedNotice?: boolean;
 
   //NARU Fields
+  naruWillBeOverFiveHundredM2: boolean | null;
+  naruWillRetainResidence: boolean | null;
+  naruWillHaveAdditionalResidence: boolean | null;
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+  naruWillImportFill: boolean | null;
+  tfwhCount: string | null;
+  tfwhDesign: boolean | null;
+  tfwhFarmSize: string | null;
+  naruClustered: string | null;
+  naruSetback: string | null;
   naruSubtype: NaruSubtypeDto | null;
   naruFloorArea: number | null;
   naruResidenceNecessity: string | null;
   naruLocationRationale: string | null;
   naruInfrastructure: string | null;
   naruExistingStructures: string | null;
-  naruWillImportFill: boolean | null;
   naruFillType: string | null;
   naruFillOrigin: string | null;
   naruProjectDuration: string | null;
@@ -112,6 +131,8 @@ export interface PublicApplicationSubmissionDto {
   naruToPlaceAverageDepth: number | null;
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
+  naruExistingResidences?: ExistingResidence[];
+  naruProposedResidences?: ProposedResidence[];
 
   //Inclusion / Exclusion Fields
   prescribedBody: string | null;

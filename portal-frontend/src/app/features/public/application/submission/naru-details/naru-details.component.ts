@@ -13,13 +13,18 @@ import { openFileInline } from '../../../../../shared/utils/file';
 })
 export class NaruDetailsComponent {
   proposalMap: PublicDocumentDto[] = [];
+  buildingPlans: PublicDocumentDto[] = [];
 
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;
   @Input() set applicationDocuments(documents: PublicDocumentDto[]) {
     this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
   }
 
-  constructor(private router: Router, private publicService: PublicService) {}
+  constructor(
+    private router: Router,
+    private publicService: PublicService,
+  ) {}
 
   async openFile(file: PublicDocumentDto) {
     const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, file.uuid);

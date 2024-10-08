@@ -46,29 +46,23 @@ export class ApplicationDecisionComponentService {
           updateDto.applicationDecisionComponentTypeCode;
       }
 
-      component.alrArea = filterUndefined(
-        updateDto.alrArea,
-        component.alrArea
-      );
-      component.agCap = filterUndefined(
-        updateDto.agCap,
-        component.agCap
-      );
+      component.alrArea = filterUndefined(updateDto.alrArea, component.alrArea);
+      component.agCap = filterUndefined(updateDto.agCap, component.agCap);
       component.agCapSource = filterUndefined(
         updateDto.agCapSource,
-        component.agCapSource
+        component.agCapSource,
       );
       component.agCapMap = filterUndefined(
         updateDto.agCapMap,
-        component.agCapMap
+        component.agCapMap,
       );
       component.agCapConsultant = filterUndefined(
         updateDto.agCapConsultant,
-        component.agCapConsultant
+        component.agCapConsultant,
       );
       component.endDate2 = filterUndefined(
         formatIncomingDate(updateDto.endDate2),
-        component.endDate2
+        component.endDate2,
       );
 
       this.patchNfuFields(component, updateDto);
@@ -85,7 +79,7 @@ export class ApplicationDecisionComponentService {
         component.inclExclApplicantType = updateDto.inclExclApplicantType;
         component.expiryDate = filterUndefined(
           formatIncomingDate(updateDto.expiryDate),
-          component.expiryDate
+          component.expiryDate,
         );
       }
 
@@ -159,16 +153,13 @@ export class ApplicationDecisionComponentService {
   ) {
     component.endDate = filterUndefined(
       formatIncomingDate(updateDto.endDate),
-      component.endDate
+      component.endDate,
     );
     component.nfuSubType = filterUndefined(
       updateDto.nfuSubType,
-      component.nfuSubType
+      component.nfuSubType,
     );
-    component.nfuType = filterUndefined(
-      updateDto.nfuType,
-      component.nfuType
-    );
+    component.nfuType = filterUndefined(updateDto.nfuType, component.nfuType);
   }
 
   private patchTurpFields(
@@ -177,7 +168,7 @@ export class ApplicationDecisionComponentService {
   ) {
     component.expiryDate = filterUndefined(
       formatIncomingDate(updateDto.expiryDate),
-      component.expiryDate
+      component.expiryDate,
     );
   }
 
@@ -187,27 +178,27 @@ export class ApplicationDecisionComponentService {
   ) {
     component.endDate = filterUndefined(
       formatIncomingDate(updateDto.endDate),
-      component.endDate
+      component.endDate,
     );
     component.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
-      component.soilFillTypeToPlace
+      component.soilFillTypeToPlace,
     );
     component.soilToPlaceArea = filterUndefined(
       updateDto.soilToPlaceArea,
-      component.soilToPlaceArea
+      component.soilToPlaceArea,
     );
     component.soilToPlaceVolume = filterUndefined(
       updateDto.soilToPlaceVolume,
-      component.soilToPlaceVolume
+      component.soilToPlaceVolume,
     );
     component.soilToPlaceMaximumDepth = filterUndefined(
       updateDto.soilToPlaceMaximumDepth,
-      component.soilToPlaceMaximumDepth
+      component.soilToPlaceMaximumDepth,
     );
     component.soilToPlaceAverageDepth = filterUndefined(
       updateDto.soilToPlaceAverageDepth,
-      component.soilToPlaceAverageDepth
+      component.soilToPlaceAverageDepth,
     );
   }
 
@@ -217,27 +208,27 @@ export class ApplicationDecisionComponentService {
   ) {
     component.endDate = filterUndefined(
       formatIncomingDate(updateDto.endDate),
-      component.endDate
+      component.endDate,
     );
     component.soilTypeRemoved = filterUndefined(
       updateDto.soilTypeRemoved,
-      component.soilTypeRemoved
+      component.soilTypeRemoved,
     );
     component.soilToRemoveVolume = filterUndefined(
       updateDto.soilToRemoveVolume,
-      component.soilToRemoveVolume
+      component.soilToRemoveVolume,
     );
     component.soilToRemoveArea = filterUndefined(
       updateDto.soilToRemoveArea,
-      component.soilToRemoveArea
+      component.soilToRemoveArea,
     );
     component.soilToRemoveMaximumDepth = filterUndefined(
       updateDto.soilToRemoveMaximumDepth,
-      component.soilToRemoveMaximumDepth
+      component.soilToRemoveMaximumDepth,
     );
     component.soilToRemoveAverageDepth = filterUndefined(
       updateDto.soilToRemoveAverageDepth,
-      component.soilToRemoveAverageDepth
+      component.soilToRemoveAverageDepth,
     );
   }
 
@@ -247,11 +238,11 @@ export class ApplicationDecisionComponentService {
   ) {
     component.endDate = filterUndefined(
       formatIncomingDate(updateDto.endDate),
-      component.endDate
+      component.endDate,
     );
     component.expiryDate = filterUndefined(
       formatIncomingDate(updateDto.expiryDate),
-      component.expiryDate
+      component.expiryDate,
     );
     component.naruSubtypeCode = updateDto.naruSubtypeCode;
   }
@@ -354,13 +345,6 @@ export class ApplicationDecisionComponentService {
         this.validatePofoDecisionComponentFields(component, errors);
         this.validateRosoDecisionComponentFields(component, errors);
       }
-
-      if (
-        component.applicationDecisionComponentTypeCode ===
-        APPLICATION_DECISION_COMPONENT_TYPE.NARU
-      ) {
-        this.validateNaruDecisionComponentFields(component, errors);
-      }
     }
 
     if (errors.length > 0) {
@@ -389,9 +373,6 @@ export class ApplicationDecisionComponentService {
         'Type, origin and quality of fill approved to be placed is required',
       );
     }
-    if (!component.soilToPlaceVolume) {
-      errors.push('Volume To Place is required');
-    }
     if (!component.soilToPlaceArea) {
       errors.push('Area To Place is required');
     }
@@ -410,9 +391,6 @@ export class ApplicationDecisionComponentService {
     if (!component.soilTypeRemoved) {
       errors.push('Type of soil approved to be removed is required');
     }
-    if (!component.soilToRemoveVolume) {
-      errors.push('Volume To Remove is required');
-    }
     if (!component.soilToRemoveArea) {
       errors.push('Area To Remove is required');
     }
@@ -421,15 +399,6 @@ export class ApplicationDecisionComponentService {
     }
     if (!component.soilToRemoveAverageDepth) {
       errors.push('Average Depth To Remove is required');
-    }
-  }
-
-  private validateNaruDecisionComponentFields(
-    component: CreateApplicationDecisionComponentDto,
-    errors: string[],
-  ) {
-    if (!component.naruSubtypeCode) {
-      errors.push('Residential Use Type is required');
     }
   }
 }

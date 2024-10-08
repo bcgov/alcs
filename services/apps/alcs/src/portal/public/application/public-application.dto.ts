@@ -1,7 +1,11 @@
 import { AutoMap } from 'automapper-classes';
 import { ApplicationStatusDto } from '../../../alcs/application/application-submission-status/submission-status.dto';
 import { NaruSubtypeDto } from '../../application-submission/application-submission.dto';
-import { ProposedLot } from '../../application-submission/application-submission.entity';
+import {
+  ExistingResidence,
+  ProposedLot,
+  ProposedResidence,
+} from '../../application-submission/application-submission.entity';
 import { PublicOwnerDto } from '../public.dto';
 
 export class PublicApplicationSubmissionDto {
@@ -220,6 +224,36 @@ export class PublicApplicationSubmissionDto {
   soilHasSubmittedNotice?: boolean;
 
   //NARU Fields
+  @AutoMap(() => Boolean)
+  naruWillBeOverFiveHundredM2: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillRetainResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveAdditionalResidence: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillHaveTemporaryForeignWorkerHousing: boolean | null;
+
+  @AutoMap(() => Boolean)
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  tfwhCount: string | null;
+
+  @AutoMap(() => Boolean)
+  tfwhDesign: boolean | null;
+
+  @AutoMap(() => String)
+  tfwhFarmSize: string | null;
+
+  @AutoMap(() => String)
+  naruClustered: string | null;
+
+  @AutoMap(() => String)
+  naruSetback: string | null;
+
   @AutoMap(() => [NaruSubtypeDto])
   naruSubtype: NaruSubtypeDto | null;
 
@@ -237,9 +271,6 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruExistingStructures: string | null;
-
-  @AutoMap(() => Boolean)
-  naruWillImportFill: boolean | null;
 
   @AutoMap(() => String)
   naruFillType: string | null;
@@ -267,6 +298,12 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruAgriTourism: string | null;
+
+  @AutoMap(() => ExistingResidence)
+  naruExistingResidences?: ExistingResidence[];
+
+  @AutoMap(() => ProposedResidence)
+  naruProposedResidences: ProposedResidence[] | null;
 
   //Inclusion / Exclusion Fields
   @AutoMap(() => String)
