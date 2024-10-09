@@ -5,24 +5,28 @@
   <div class="grid-double">
     <ng-container *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === true"> Yes </ng-container>
     <ng-container *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === false"> No </ng-container>
+    <app-no-data *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal to retain an existing residence while building a new residence?</div>
   <div class="grid-double">
     <ng-container *ngIf="_applicationSubmission.naruWillRetainResidence === true"> Yes </ng-container>
     <ng-container *ngIf="_applicationSubmission.naruWillRetainResidence === false"> No </ng-container>
+    <app-no-data *ngIf="_applicationSubmission.naruWillRetainResidence === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal for an additional residence?</div>
   <div class="grid-double">
     <ng-container *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === true"> Yes </ng-container>
     <ng-container *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === false"> No </ng-container>
+    <app-no-data *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal for temporary foreign worker housing?</div>
   <div class="grid-double">
     <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === true"> Yes </ng-container>
     <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === false"> No </ng-container>
+    <app-no-data *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
@@ -31,11 +35,13 @@
   <div class="grid-double">
     <ng-container *ngIf="_applicationSubmission.naruWillImportFill === true"> Yes </ng-container>
     <ng-container *ngIf="_applicationSubmission.naruWillImportFill === false"> No </ng-container>
+    <app-no-data *ngIf="_applicationSubmission.naruWillImportFill === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
+    <app-no-data *ngIf="_applicationSubmission.purpose === null"></app-no-data>
   </div>
 
   <ng-container
@@ -54,6 +60,7 @@
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruResidenceNecessity }}
+      <app-no-data *ngIf="_applicationSubmission.naruResidenceNecessity === null"></app-no-data>
     </div>
   </ng-container>
 
@@ -83,6 +90,7 @@
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruClustered }}
+    <app-no-data *ngIf="_applicationSubmission.naruClustered === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
@@ -90,6 +98,7 @@
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruSetback }}
+    <app-no-data *ngIf="_applicationSubmission.naruSetback === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
@@ -97,6 +106,7 @@
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruLocationRationale }}
+    <app-no-data *ngIf="_applicationSubmission.naruLocationRationale === null"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
@@ -105,6 +115,7 @@
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruInfrastructure }}
+    <app-no-data *ngIf="_applicationSubmission.naruInfrastructure === null"></app-no-data>
   </div>
 
   <ng-container *ngIf="_applicationSubmission.naruExistingResidences">
@@ -113,9 +124,7 @@
       <div class="grid-2 subheading2">Total Floor Area</div>
       <div class="grid-3 subheading2">Description</div>
       <ng-container *ngIf="_applicationSubmission.naruExistingResidences?.length === 0">
-        <div>
-          <app-no-data></app-no-data>
-        </div>
+        <app-no-data></app-no-data>
       </ng-container>
       <ng-container *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let i = index">
         <div class="grid-1">
@@ -134,6 +143,9 @@
       <div class="grid-1 subheading2">Proposed Residence</div>
       <div class="grid-2 subheading2">Total Floor Area</div>
       <div class="grid-3 subheading2">Description</div>
+      <ng-container *ngIf="_applicationSubmission.naruExistingResidences?.length === 0">
+        <app-no-data></app-no-data>
+      </ng-container>
       <ng-container *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let i = index">
         <div class="grid-1">
           {{ i + 1 }}
