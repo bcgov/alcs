@@ -8,6 +8,7 @@ export type IncomingFileDto = {
   assignee: UserDto | null;
   highPriority: boolean;
   activeDays: number;
+  isPaused: boolean;
 };
 
 export type IncomingFileBoardMapDto = Record<string, IncomingFileDto[]>;
