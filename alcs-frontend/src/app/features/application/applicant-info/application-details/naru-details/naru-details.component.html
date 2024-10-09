@@ -3,29 +3,34 @@
     Is your proposal for a principal residence with a total floor area greater than 500 m<sup>2</sup>?
   </div>
   <div class="grid-double">
-    {{ _applicationSubmission.naruWillBeOverFiveHundredM2 ? 'Yes' : 'No' }}
+    <ng-container *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === true"> Yes </ng-container>
+    <ng-container *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === false"> No </ng-container>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal to retain an existing residence while building a new residence?</div>
   <div class="grid-double">
-    {{ _applicationSubmission.naruWillRetainResidence ? 'Yes' : 'No' }}
+    <ng-container *ngIf="_applicationSubmission.naruWillRetainResidence === true"> Yes </ng-container>
+    <ng-container *ngIf="_applicationSubmission.naruWillRetainResidence === false"> No </ng-container>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal for an additional residence?</div>
   <div class="grid-double">
-    {{ _applicationSubmission.naruWillHaveAdditionalResidence ? 'Yes' : 'No' }}
+    <ng-container *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === true"> Yes </ng-container>
+    <ng-container *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === false"> No </ng-container>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal for temporary foreign worker housing?</div>
   <div class="grid-double">
-    {{ _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing ? 'Yes' : 'No' }}
+    <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === true"> Yes </ng-container>
+    <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === false"> No </ng-container>
   </div>
 
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
   </div>
   <div class="grid-double">
-    {{ _applicationSubmission.naruWillImportFill ? 'Yes' : 'No' }}
+    <ng-container *ngIf="_applicationSubmission.naruWillImportFill === true"> Yes </ng-container>
+    <ng-container *ngIf="_applicationSubmission.naruWillImportFill === false"> No </ng-container>
   </div>
 
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
