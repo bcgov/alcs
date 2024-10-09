@@ -22,7 +22,7 @@
 }
 
 .text {
-  padding: 8px;
+  padding: 16px 16px 18px 8px;
 }
 
 .content:hover {
@@ -56,8 +56,8 @@
 }
 
 .placeholder {
-  font-style: italic;
   color: colors.$grey;
+  padding: 8px;
 }
 
 .editable:hover {
