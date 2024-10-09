@@ -32,6 +32,7 @@ import {
   UpcomingMeetingBoardMapDto,
   UpcomingMeetingDto,
 } from './decision-meeting.dto';
+import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('decision-meeting')
@@ -43,6 +44,7 @@ export class DecisionMeetingController {
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReferralService: PlanningReferralService,
     private planningReviewMeetingService: PlanningReviewMeetingService,
+    private applicationTimeTrackingService: ApplicationTimeTrackingService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -137,6 +139,10 @@ export class DecisionMeetingController {
     const upcomingApplicationMeetings =
       await this.appDecisionMeetingService.getUpcomingApplicationMeetings();
     const allAppIds = upcomingApplicationMeetings.map((a) => a.uuid);
+    const pausedStatuses =
+      await this.applicationTimeTrackingService.getPausedStatusByUuid(
+        allAppIds,
+      );
     const allApps = await this.applicationService.getMany({
       uuid: Any(allAppIds),
     });
@@ -151,6 +157,7 @@ export class DecisionMeetingController {
         boardCode: app.card!.board.code,
         type: CARD_TYPE.APP,
         assignee: this.mapper.map(app.card!.assignee, User, UserDto),
+        isPaused: pausedStatuses.get(app.uuid)!,
       };
     });
   }
@@ -160,6 +167,8 @@ export class DecisionMeetingController {
       await this.appDecisionMeetingService.getUpcomingReconsiderationMeetings();
 
     const reconIds = upcomingReconsiderationMeetings.map((a) => a.uuid);
+    const pausedStatuses =
+      await this.applicationTimeTrackingService.getPausedStatusByUuid(reconIds);
     const reconsiderations =
       await this.reconsiderationService.getMany(reconIds);
     return reconsiderations.map((recon): UpcomingMeetingDto => {
@@ -173,6 +182,7 @@ export class DecisionMeetingController {
         boardCode: recon.card!.board.code,
         type: CARD_TYPE.APP,
         assignee: this.mapper.map(recon.card!.assignee, User, UserDto),
+        isPaused: pausedStatuses.get(recon.uuid)!,
       };
     });
   }
@@ -180,7 +190,6 @@ export class DecisionMeetingController {
   private async getMappedPlanningReviewMeetings() {
     const upcomingMeetings =
       await this.planningReviewMeetingService.getUpcomingMeetings();
-
     const planningReviewIds = upcomingMeetings.map((a) => a.uuid);
     const planningReferrals =
       await this.planningReferralService.getManyByPlanningReview(
@@ -208,6 +217,7 @@ export class DecisionMeetingController {
               User,
               UserDto,
             ),
+            isPaused: false,
           },
         ];
       },
