@@ -38,6 +38,7 @@ describe('ApplicationIncomingFileService', () => {
         assignee: null,
         highPriority: false,
         activeDays: 10,
+        isPaused: true,
       },
       {
         fileNumber: '2',
@@ -47,6 +48,7 @@ describe('ApplicationIncomingFileService', () => {
         assignee: null,
         highPriority: true,
         activeDays: 12,
+        isPaused: true,
       },
       {
         fileNumber: '3',
@@ -56,6 +58,7 @@ describe('ApplicationIncomingFileService', () => {
         assignee: null,
         highPriority: true,
         activeDays: 30,
+        isPaused: false,
       },
     ],
   };
@@ -70,6 +73,7 @@ describe('ApplicationIncomingFileService', () => {
         assignee: null,
         highPriority: true,
         activeDays: 30,
+        isPaused: false,
       },
       {
         fileNumber: '2',
@@ -79,6 +83,7 @@ describe('ApplicationIncomingFileService', () => {
         assignee: null,
         highPriority: true,
         activeDays: 12,
+        isPaused: true,
       },
       {
         fileNumber: '1',
@@ -88,6 +93,7 @@ describe('ApplicationIncomingFileService', () => {
         assignee: null,
         highPriority: false,
         activeDays: 10,
+        isPaused: true,
       },
     ],
   };
