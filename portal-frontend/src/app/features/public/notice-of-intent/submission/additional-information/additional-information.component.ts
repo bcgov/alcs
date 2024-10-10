@@ -7,8 +7,8 @@ import { openFileInline } from '../../../../../shared/utils/file';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
+  NOI_STRUCTURE_TYPE_LABEL_MAP,
 } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
-import { NOI_STRUCTURE_TYPE_LABEL_MAP } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-additional-information',

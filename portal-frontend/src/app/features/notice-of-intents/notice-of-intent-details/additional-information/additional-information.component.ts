@@ -7,9 +7,9 @@ import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
+  NOI_STRUCTURE_TYPE_LABEL_MAP,
 } from '../../edit-submission/additional-information/additional-information.component';
 import { openFileInline } from '../../../../shared/utils/file';
-import { NOI_STRUCTURE_TYPE_LABEL_MAP } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-additional-information',

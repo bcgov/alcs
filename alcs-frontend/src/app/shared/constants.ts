@@ -1,10 +1,1 @@
-import { STRUCTURE_TYPES } from '../services/notice-of-intent/notice-of-intent.dto';
-
 export const FILE_NAME_TRUNCATE_LENGTH = 30;
-export const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
-  [STRUCTURE_TYPES.FARM_STRUCTURE]: STRUCTURE_TYPES.FARM_STRUCTURE,
-  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
-  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
-  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'Residential Accessory Structure',
-  [STRUCTURE_TYPES.OTHER]: STRUCTURE_TYPES.OTHER,
-};

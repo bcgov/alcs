@@ -1,12 +1,3 @@
-import { STRUCTURE_TYPES } from '../features/notice-of-intents/edit-submission/additional-information/additional-information.component';
-
 export const VISIBLE_COUNT_INCREMENT = 5;
 export const EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT = 120;
 export const EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT_MOBILE = 100;
-export const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
-  [STRUCTURE_TYPES.FARM_STRUCTURE]: STRUCTURE_TYPES.FARM_STRUCTURE,
-  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
-  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
-  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'Residential Accessory Structure',
-  [STRUCTURE_TYPES.OTHER_STRUCTURE]: STRUCTURE_TYPES.OTHER_STRUCTURE,
-};

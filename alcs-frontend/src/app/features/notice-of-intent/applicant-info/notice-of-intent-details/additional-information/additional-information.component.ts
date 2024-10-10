@@ -8,7 +8,14 @@ import {
   STRUCTURE_TYPES,
 } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
-import { NOI_STRUCTURE_TYPE_LABEL_MAP } from 'src/app/shared/constants';
+
+const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
+  [STRUCTURE_TYPES.FARM_STRUCTURE]: STRUCTURE_TYPES.FARM_STRUCTURE,
+  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
+  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
+  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'Residential Accessory Structure',
+  [STRUCTURE_TYPES.OTHER]: STRUCTURE_TYPES.OTHER,
+};
 
 @Component({
   selector: 'app-additional-information',

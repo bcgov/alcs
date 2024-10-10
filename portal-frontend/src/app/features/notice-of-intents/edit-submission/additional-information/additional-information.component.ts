@@ -22,7 +22,6 @@ import { EditNoiSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { DeleteStructureConfirmationDialogComponent } from './delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
 import { SoilRemovalConfirmationDialogComponent } from './soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
-import { NOI_STRUCTURE_TYPE_LABEL_MAP } from '../../../../shared/constants';
 
 export enum STRUCTURE_TYPES {
   FARM_STRUCTURE = 'Farm Structure',
@@ -39,6 +38,14 @@ export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
   STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
 ];
+
+export const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
+  [STRUCTURE_TYPES.FARM_STRUCTURE]: STRUCTURE_TYPES.FARM_STRUCTURE,
+  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
+  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
+  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'Residential Accessory Structure',
+  [STRUCTURE_TYPES.OTHER_STRUCTURE]: STRUCTURE_TYPES.OTHER_STRUCTURE,
+};
 
 @Component({
   selector: 'app-additional-information',
