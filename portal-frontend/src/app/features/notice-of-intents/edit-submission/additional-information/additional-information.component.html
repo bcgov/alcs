@@ -181,6 +181,13 @@
 
       <div class="full-row" *ngIf="isSoilStructureFarmUseReasonVisible">
         <label for="soilStructureFarmUseReason">Describe how the structure is necessary for farm use</label>
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#farmstructures" target="_blank"
+            >Farm Structures in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureFarmUseReason"
@@ -211,6 +218,13 @@
           <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required for the
           residential structure(s)</label
         >
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+            >Housing in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureResidentialUseReason"
@@ -266,6 +280,13 @@
           <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
           <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required</label
         >
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+            >Housing in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureResidentialAccessoryUseReason"
