@@ -269,9 +269,9 @@ export interface ProposedStructure {
 
 export enum STRUCTURE_TYPES {
   FARM_STRUCTURE = 'Farm Structure',
-  PRINCIPAL_RESIDENCE = 'Residential - Principal Residence',
-  ADDITIONAL_RESIDENCE = 'Residential - Additional Residence',
-  ACCESSORY_STRUCTURE = 'Residential - Accessory Structure',
+  PRINCIPAL_RESIDENCE = 'Principal Residence',
+  ADDITIONAL_RESIDENCE = 'Additional Residence',
+  ACCESSORY_STRUCTURE = 'Residential Accessory Structure',
   OTHER = 'Other Structure',
 }
 
