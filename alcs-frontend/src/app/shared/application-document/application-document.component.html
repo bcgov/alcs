@@ -46,7 +46,7 @@
         (click)="onOpen(element.uuid, element.fileName)" 
         [matTooltip]="element.fileName"
         [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen">
-        {{ element.fileName | truncate: fileNameTruncLen}}
+        {{ element.fileName }}
       </a>
     </td>
   </ng-container>
