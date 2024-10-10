@@ -18,9 +18,9 @@ import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-o
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 
 export const PORTAL_TO_ALCS_STRUCTURE_MAP = {
-  'Principal Residence': 'RPRI',
-  'Additional Residence': 'RADD',
-  'Residential Accessory Structure': 'RACS',
+  'Residential - Principal Residence': 'RPRI',
+  'Residential - Additional Residence': 'RADD',
+  'Residential - Accessory Structure': 'RACS',
   'Farm Structure': 'FRST',
   'Other Structure': 'OTHR',
 };

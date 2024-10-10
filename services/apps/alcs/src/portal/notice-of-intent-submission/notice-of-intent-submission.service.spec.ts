@@ -283,13 +283,13 @@ describe('NoticeOfIntentSubmissionService', () => {
       localGovernmentUuid,
       soilProposedStructures: [
         {
-          type: 'Residential Accessory Structure',
+          type: 'Residential - Accessory Structure',
         },
         {
-          type: 'Additional Residence',
+          type: 'Residential - Additional Residence',
         },
         {
-          type: 'Principal Residence',
+          type: 'Residential - Principal Residence',
         },
         {
           type: 'Farm Structure',
