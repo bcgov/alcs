@@ -618,9 +618,9 @@ export class NoticeOfIntentSubmissionValidatorService {
       const hasResidentialStructure =
         noticeOfIntentSubmission.soilProposedStructures.some((structure) =>
           [
-            'Residential - Principal Residence',
-            'Residential - Additional Residence',
-            'Residential - Accessory Structure',
+            'Principal Residence',
+            'Additional Residence',
+            'Residential Accessory Structure',
           ].includes(structure.type!),
         );
       if (
@@ -637,7 +637,7 @@ export class NoticeOfIntentSubmissionValidatorService {
 
     const hasAccessoryStructure =
       noticeOfIntentSubmission.soilProposedStructures.find(
-        (structure) => structure.type === 'Residential - Accessory Structure',
+        (structure) => structure.type === 'Residential Accessory Structure',
       );
     if (
       hasAccessoryStructure &&

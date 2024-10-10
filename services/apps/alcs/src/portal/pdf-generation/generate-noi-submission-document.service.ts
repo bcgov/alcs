@@ -325,14 +325,14 @@ export class GenerateNoiSubmissionDocumentService {
           (structure) =>
             structure.type &&
             [
-              'Residential - Accessory Structure',
-              'Residential - Additional Residence',
-              'Residential - Principal Residence',
+              'Residential Accessory Structure',
+              'Additional Residence',
+              'Principal Residence',
             ].includes(structure.type),
         ),
       isSoilStructureResidentialAccessoryUseReasonVisible:
         !!submission?.soilProposedStructures.some(
-          (structure) => structure.type === 'Residential - Accessory Structure',
+          (structure) => structure.type === 'Residential Accessory Structure',
         ),
       isSoilOtherStructureUseReasonVisible:
         !!submission?.soilProposedStructures.some(
