@@ -65,7 +65,7 @@
 
   <ng-container *ngIf="confirmRemovalOfSoil">
     <form [formGroup]="structuresForm">
-      <mat-label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s)</mat-label>
+      <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
       <div class="scrollable">
         <table mat-table [dataSource]="structuresSource">
           <ng-container matColumnDef="index">
@@ -206,7 +206,10 @@
 
       <div class="full-row" *ngIf="isSoilStructureResidentialUseReasonVisible">
         <label for="soilStructureResidentialUseReason"
-          >Describe how the structure is necessary for residential use</label
+          >Describe why <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
+          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
+          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required for the
+          residential structure(s)</label
         >
         <mat-form-field appearance="outline">
           <textarea
@@ -232,7 +235,9 @@
       </div>
 
       <div class="full-row" *ngIf="isSoilAgriParcelActivityVisible">
-        <label for="soilAgriParcelActivity">Describe the current agricultural activity on the parcel(s)</label>
+        <label for="soilAgriParcelActivity"
+          >Describe the current or proposed agricultural activity on the parcel(s)</label
+        >
         <div class="subtext">Include the area, yields, crop types, and farm equipment size and attachments</div>
         <mat-form-field appearance="outline">
           <textarea
@@ -256,7 +261,10 @@
 
       <div class="full-row" *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
         <label for="soilStructureResidentialAccessoryUseReason"
-          >Describe the intended use of the residential accessory structure</label
+          >Describe the intended use of the residential accessory structure(s) and why
+          <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
+          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
+          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required</label
         >
         <mat-form-field appearance="outline">
           <textarea
@@ -282,7 +290,12 @@
       </div>
 
       <div class="full-row" *ngIf="isSoilOtherUseReasonVisible">
-        <label for="soilStructureOtherUseReason"> Describe the intended use of the 'Other' structure </label>
+        <label for="soilStructureOtherUseReason">
+          Describe the intended use of the 'Other' structure(s) and why
+          <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
+          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
+          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
+        </label>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureOtherUseReason"

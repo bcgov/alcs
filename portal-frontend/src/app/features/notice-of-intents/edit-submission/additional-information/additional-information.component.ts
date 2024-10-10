@@ -57,6 +57,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   ];
 
   private submissionUuid = '';
+  typeCode: string = '';
 
   confirmRemovalOfSoil = false;
   showBuildingPlanVirus = false;
@@ -107,6 +108,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       if (noiSubmission) {
         this.fileId = noiSubmission.fileNumber;
         this.submissionUuid = noiSubmission.uuid;
+        this.typeCode = noiSubmission.typeCode;
 
         switch (noiSubmission.typeCode) {
           case 'ROSO':
