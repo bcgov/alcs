@@ -22,6 +22,7 @@ import { EditNoiSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { DeleteStructureConfirmationDialogComponent } from './delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
 import { SoilRemovalConfirmationDialogComponent } from './soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
+import { NOI_STRUCTURE_TYPE_LABEL_MAP } from '../../../../shared/constants';
 
 export enum STRUCTURE_TYPES {
   FARM_STRUCTURE = 'Farm Structure',
@@ -48,12 +49,27 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   currentStep = EditNoiSteps.ExtraInfo;
 
   DOCUMENT = DOCUMENT_TYPE;
-  STRUCTURE_TYPES = [
-    STRUCTURE_TYPES.FARM_STRUCTURE,
-    STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
-    STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
-    STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
-    STRUCTURE_TYPES.OTHER_STRUCTURE,
+  STRUCTURE_TYPE_OPTIONS = [
+    {
+      label: STRUCTURE_TYPES.FARM_STRUCTURE,
+      value: STRUCTURE_TYPES.FARM_STRUCTURE,
+    },
+    {
+      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE],
+      value: STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
+    },
+    {
+      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE],
+      value: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+    },
+    {
+      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ACCESSORY_STRUCTURE],
+      value: STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+    },
+    {
+      label: STRUCTURE_TYPES.OTHER_STRUCTURE,
+      value: STRUCTURE_TYPES.OTHER_STRUCTURE,
+    },
   ];
 
   private submissionUuid = '';

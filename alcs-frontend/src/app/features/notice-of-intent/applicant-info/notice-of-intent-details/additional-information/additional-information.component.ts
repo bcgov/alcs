@@ -8,6 +8,7 @@ import {
   STRUCTURE_TYPES,
 } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
+import { NOI_STRUCTURE_TYPE_LABEL_MAP } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-additional-information',
@@ -81,5 +82,13 @@ export class AdditionalInformationComponent {
         this.firstQuestion = 'Are you removing soil and placing fill in order to build a structure?';
         break;
     }
+  }
+
+  mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {
+    if (value === null) {
+      return null;
+    }
+
+    return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
   }
 }

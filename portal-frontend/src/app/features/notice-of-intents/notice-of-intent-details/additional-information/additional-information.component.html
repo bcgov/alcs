@@ -23,7 +23,7 @@
           {{ i + 1 }}
         </div>
         <div class="grid-2">
-          {{ structure.type }}
+          {{ mapStructureTypeValueToLabel(structure.type) }}
           <app-no-data [showRequired]="showErrors" *ngIf="!structure.type"></app-no-data>
         </div>
         <div class="grid-3">
