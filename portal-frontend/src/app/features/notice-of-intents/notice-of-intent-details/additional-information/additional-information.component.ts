@@ -9,6 +9,7 @@ import {
   STRUCTURE_TYPES,
 } from '../../edit-submission/additional-information/additional-information.component';
 import { openFileInline } from '../../../../shared/utils/file';
+import { NOI_STRUCTURE_TYPE_LABEL_MAP } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-additional-information',
@@ -105,5 +106,13 @@ export class AdditionalInformationComponent {
     if (res) {
       openFileInline(res.url, file.fileName);
     }
+  }
+
+  mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {
+    if (value === null) {
+      return null;
+    }
+
+    return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
   }
 }

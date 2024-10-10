@@ -8,6 +8,7 @@ import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
 } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { NOI_STRUCTURE_TYPE_LABEL_MAP } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-additional-information',
@@ -87,5 +88,13 @@ export class AdditionalInformationComponent implements OnInit {
     if (res) {
       openFileInline(res.url, file.fileName);
     }
+  }
+
+  mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {
+    if (value === null) {
+      return null;
+    }
+
+    return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
   }
 }

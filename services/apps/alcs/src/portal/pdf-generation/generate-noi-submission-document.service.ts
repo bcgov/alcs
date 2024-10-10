@@ -381,7 +381,17 @@ export class GenerateNoiSubmissionDocumentService {
       soilProposedStructures: submission.soilProposedStructures.map(
         (structure, index) => ({
           area: structure.area ?? NO_DATA,
-          type: structure.type ?? NO_DATA,
+          type:
+            {
+              'Fram Structure': 'Fram Structure',
+              'Residential - Principal Residence': 'Principal Residence',
+              'Residential - Additional Residence': 'Additional Residence',
+              'Residential - Accessory Structure':
+                'Residential Accessory Structure',
+              'Other Structure': 'Other Structure',
+            }[structure.type ?? ''] ??
+            structure.type ??
+            NO_DATA,
           index: index + 1,
         }),
       ),
