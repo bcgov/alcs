@@ -528,9 +528,9 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
         owners: [],
         soilIsRemovingSoilForNewStructure: true,
         soilProposedStructures: [
-          { type: 'Residential - Accessory Structure', area: 5 },
+          { type: 'Residential Accessory Structure', area: 5 },
           { type: 'Farm Structure', area: 5 },
-          { type: 'Residential - Additional Residence', area: 5 },
+          { type: 'Additional Residence', area: 5 },
         ],
         soilStructureFarmUseReason: 'VALID',
         soilAgriParcelActivity: 'VALID',
@@ -676,9 +676,9 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
         owners: [],
         soilIsRemovingSoilForNewStructure: true,
         soilProposedStructures: [
-          { type: 'Residential - Accessory Structure', area: 5 },
+          { type: 'Residential Accessory Structure', area: 5 },
           { type: 'Farm Structure', area: 5 },
-          { type: 'Residential - Additional Residence', area: null },
+          { type: 'Additional Residence', area: null },
         ],
         typeCode: 'ROSO',
       });

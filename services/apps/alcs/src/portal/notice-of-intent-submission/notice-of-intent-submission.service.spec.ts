@@ -283,13 +283,13 @@ describe('NoticeOfIntentSubmissionService', () => {
       localGovernmentUuid,
       soilProposedStructures: [
         {
-          type: 'Residential - Accessory Structure',
+          type: 'Residential Accessory Structure',
         },
         {
-          type: 'Residential - Additional Residence',
+          type: 'Additional Residence',
         },
         {
-          type: 'Residential - Principal Residence',
+          type: 'Principal Residence',
         },
         {
           type: 'Farm Structure',
@@ -320,9 +320,9 @@ describe('NoticeOfIntentSubmissionService', () => {
       dateSubmittedToAlc: mockDate,
       typeCode,
       subtypes: [
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Accessory Structure'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Additional Residence'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Principal Residence'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential Accessory Structure'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP['Additional Residence'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP['Principal Residence'],
         PORTAL_TO_ALCS_STRUCTURE_MAP['Farm Structure'],
         'ARWF',
         'AEPM',
