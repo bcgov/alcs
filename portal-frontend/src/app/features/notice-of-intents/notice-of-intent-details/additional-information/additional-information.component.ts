@@ -7,6 +7,7 @@ import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
+  NOI_STRUCTURE_TYPE_LABEL_MAP,
 } from '../../edit-submission/additional-information/additional-information.component';
 import { openFileInline } from '../../../../shared/utils/file';
 
@@ -105,5 +106,13 @@ export class AdditionalInformationComponent {
     if (res) {
       openFileInline(res.url, file.fileName);
     }
+  }
+
+  mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {
+    if (value === null) {
+      return null;
+    }
+
+    return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
   }
 }

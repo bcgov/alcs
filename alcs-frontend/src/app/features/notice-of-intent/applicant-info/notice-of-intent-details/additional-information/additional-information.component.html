@@ -8,7 +8,7 @@
   </div>
 
   <ng-container *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure">
-    <div class="full-width subheading2">The total floor area (m<sup>2</sup>) of the proposed structure(s)</div>
+    <div class="full-width subheading2">The total floor area (m<sup>2</sup>) for each of the proposed structure(s)</div>
     <div class="full-width structure-table">
       <div class="grid-1 subheading2">#</div>
       <div class="grid-2 subheading2">Type</div>
@@ -18,7 +18,7 @@
           {{ i + 1 }}
         </div>
         <div class="grid-2">
-          {{ structure.type }}
+          {{ mapStructureTypeValueToLabel(structure.type) }}
           <app-no-data *ngIf="!structure.type"></app-no-data>
         </div>
         <div class="grid-3">
@@ -39,7 +39,12 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilStructureResidentialUseReasonVisible">
-      <div class="subheading2 grid-1">Describe how the structure is necessary for residential use</div>
+      <div class="subheading2 grid-1">
+        Describe why <ng-container *ngIf="_noiSubmission.typeCode === 'POFO'">placing fill</ng-container>
+        <ng-container *ngIf="_noiSubmission.typeCode === 'ROSO'">removing soil</ng-container>
+        <ng-container *ngIf="_noiSubmission.typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
+        for the residential structure(s)
+      </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureResidentialUseReason }}
         <app-no-data *ngIf="!_noiSubmission.soilStructureResidentialUseReason"></app-no-data>
@@ -47,7 +52,7 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilAgriParcelActivityVisible">
-      <div class="subheading2 grid-1">Describe the current agricultural activity on the parcel(s)</div>
+      <div class="subheading2 grid-1">Describe the current or proposed agricultural activity on the parcel(s)</div>
       <div class="grid-double">
         {{ _noiSubmission.soilAgriParcelActivity }}
         <app-no-data *ngIf="!_noiSubmission.soilAgriParcelActivity"></app-no-data>
@@ -55,7 +60,12 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
-      <div class="subheading2 grid-1">Describe the intended use of the residential accessory structure</div>
+      <div class="subheading2 grid-1">
+        Describe the intended use of the residential accessory structure(s) and why
+        <ng-container *ngIf="_noiSubmission.typeCode === 'POFO'">placing fill</ng-container>
+        <ng-container *ngIf="_noiSubmission.typeCode === 'ROSO'">removing soil</ng-container>
+        <ng-container *ngIf="_noiSubmission.typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
+      </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureResidentialAccessoryUseReason }}
         <app-no-data *ngIf="!_noiSubmission.soilStructureResidentialAccessoryUseReason"></app-no-data>
@@ -63,7 +73,12 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilOtherStructureUseReasonVisible">
-      <div class="subheading2 grid-1">Describe the intended use of the 'Other' structure</div>
+      <div class="subheading2 grid-1">
+        Describe the intended use of the 'Other' structure(s) and why
+        <ng-container *ngIf="_noiSubmission.typeCode === 'POFO'">placing fill</ng-container>
+        <ng-container *ngIf="_noiSubmission.typeCode === 'ROSO'">removing soil</ng-container>
+        <ng-container *ngIf="_noiSubmission.typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
+      </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureOtherUseReason }}
         <app-no-data *ngIf="!_noiSubmission.soilStructureOtherUseReason"></app-no-data>

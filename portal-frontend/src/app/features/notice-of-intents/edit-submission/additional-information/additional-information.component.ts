@@ -25,9 +25,9 @@ import { SoilRemovalConfirmationDialogComponent } from './soil-removal-confirmat
 
 export enum STRUCTURE_TYPES {
   FARM_STRUCTURE = 'Farm Structure',
-  PRINCIPAL_RESIDENCE = 'Principal Residence',
-  ADDITIONAL_RESIDENCE = 'Additional Residence',
-  ACCESSORY_STRUCTURE = 'Residential Accessory Structure',
+  PRINCIPAL_RESIDENCE = 'Residential - Principal Residence',
+  ADDITIONAL_RESIDENCE = 'Residential - Additional Residence',
+  ACCESSORY_STRUCTURE = 'Residential - Accessory Structure',
   OTHER_STRUCTURE = 'Other Structure',
 }
 
@@ -39,6 +39,14 @@ export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
 ];
 
+export const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
+  [STRUCTURE_TYPES.FARM_STRUCTURE]: STRUCTURE_TYPES.FARM_STRUCTURE,
+  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
+  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
+  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'Residential Accessory Structure',
+  [STRUCTURE_TYPES.OTHER_STRUCTURE]: STRUCTURE_TYPES.OTHER_STRUCTURE,
+};
+
 @Component({
   selector: 'app-additional-information',
   templateUrl: './additional-information.component.html',
@@ -48,12 +56,27 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   currentStep = EditNoiSteps.ExtraInfo;
 
   DOCUMENT = DOCUMENT_TYPE;
-  STRUCTURE_TYPES = [
-    STRUCTURE_TYPES.FARM_STRUCTURE,
-    STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
-    STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
-    STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
-    STRUCTURE_TYPES.OTHER_STRUCTURE,
+  STRUCTURE_TYPE_OPTIONS = [
+    {
+      label: STRUCTURE_TYPES.FARM_STRUCTURE,
+      value: STRUCTURE_TYPES.FARM_STRUCTURE,
+    },
+    {
+      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE],
+      value: STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
+    },
+    {
+      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE],
+      value: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+    },
+    {
+      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ACCESSORY_STRUCTURE],
+      value: STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+    },
+    {
+      label: STRUCTURE_TYPES.OTHER_STRUCTURE,
+      value: STRUCTURE_TYPES.OTHER_STRUCTURE,
+    },
   ];
 
   private submissionUuid = '';
