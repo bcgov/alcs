@@ -171,20 +171,32 @@ export class DecisionMeetingController {
       await this.applicationTimeTrackingService.getPausedStatusByUuid(reconIds);
     const reconsiderations =
       await this.reconsiderationService.getMany(reconIds);
-    return reconsiderations.map((recon): UpcomingMeetingDto => {
-      const meetingDate = upcomingReconsiderationMeetings.find(
-        (meeting) => meeting.uuid === recon.uuid,
-      );
-      return {
-        meetingDate: new Date(meetingDate!.next_meeting).getTime(),
-        fileNumber: recon.application.fileNumber,
-        applicant: recon.application.applicant,
-        boardCode: recon.card!.board.code,
-        type: CARD_TYPE.APP,
-        assignee: this.mapper.map(recon.card!.assignee, User, UserDto),
-        isPaused: pausedStatuses.get(recon.uuid)!,
-      };
-    });
+    return reconsiderations
+      .filter((recon) => {
+        const meetingDate = upcomingReconsiderationMeetings.find(
+          (meeting) => meeting.uuid === recon.uuid,
+        );
+
+        return (
+          new Date(meetingDate!.next_meeting).getTime() >
+          new Date(recon.submittedDate).getTime()
+        );
+      })
+      .map((recon): UpcomingMeetingDto => {
+        const meetingDate = upcomingReconsiderationMeetings.find(
+          (meeting) => meeting.uuid === recon.uuid,
+        );
+
+        return {
+          meetingDate: new Date(meetingDate!.next_meeting).getTime(),
+          fileNumber: recon.application.fileNumber,
+          applicant: recon.application.applicant,
+          boardCode: recon.card!.board.code,
+          type: CARD_TYPE.APP,
+          assignee: this.mapper.map(recon.card!.assignee, User, UserDto),
+          isPaused: pausedStatuses.get(recon.uuid)!,
+        };
+      });
   }
 
   private async getMappedPlanningReviewMeetings() {
