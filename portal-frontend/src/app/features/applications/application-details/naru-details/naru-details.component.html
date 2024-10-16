@@ -200,7 +200,7 @@
         {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
       </div>
       <div>
-        <ng-container *ngIf="proposedResidence.description === ''; else validDescription">
+        <ng-container *ngIf="!proposedResidence.description; else validDescription">
           <app-no-data [showRequired]="showErrors"></app-no-data>
         </ng-container>
         <ng-template #validDescription>
