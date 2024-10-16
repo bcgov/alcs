@@ -43,6 +43,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   showReclamationPlanVirus = false;
   showNoticeOfWorkVirus = false;
 
+  isNewStructure = new FormControl<boolean | null>(null, [Validators.required]);
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);
   followUpIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
@@ -56,6 +57,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   hasSubmittedNotice = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
 
   form = new FormGroup({
+    isNewStructure: this.isNewStructure,
     isFollowUp: this.isFollowUp,
     followUpIDs: this.followUpIDs,
     purpose: this.purpose,

@@ -26,6 +26,36 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
+      <mat-label for="is-new-structure">
+        Are you removing soil and placing fill in order to build a structure?
+      </mat-label>
+      <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
+      <div>
+        <mat-button-toggle-group class="input" id="is-new-structure" [formControl]="isNewStructure">
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
+            }"
+            [value]="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
+            }"
+            [value]="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-hint class="subtext"
+        >Note: The form will be updated with additional required questions if you are building a structure
+      </mat-hint>
+    </div>
+
+    <div class="full-row">
       <mat-label for="noi-follow-up">
         Has the ALC previously received an application or Notice of Intent for this proposal?
       </mat-label>
