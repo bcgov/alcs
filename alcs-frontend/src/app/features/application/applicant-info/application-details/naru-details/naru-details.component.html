@@ -131,7 +131,12 @@
           {{ i + 1 }}
         </div>
         <div class="grid-2">
-          {{ existingResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+          <ng-container *ngIf="existingResidence.floorArea === 0; else validFloorArea">
+            <app-no-data></app-no-data>
+          </ng-container>
+          <ng-template #validFloorArea>
+            {{ existingResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+          </ng-template>
         </div>
         <div class="grid-3">{{ existingResidence.description }}</div>
       </ng-container>
@@ -153,7 +158,14 @@
         <div class="grid-2">
           {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
         </div>
-        <div class="grid-3">{{ proposedResidence.description }}</div>
+        <div class="grid-3">
+          <ng-container *ngIf="!proposedResidence.description; else validDescription">
+            <app-no-data></app-no-data>
+          </ng-container>
+          <ng-template #validDescription>
+            {{ proposedResidence.description }}
+          </ng-template>
+        </div>
       </ng-container>
     </div>
   </ng-container>

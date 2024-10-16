@@ -1,3 +1,4 @@
+@use '../../../../styles/functions.scss' as *;
 @use '../../../../styles/colors';
 
 mat-card {
@@ -47,4 +48,36 @@ a {
   align-self: flex-end;
   padding-right: 30px;
   padding-bottom: 10px;
+}
+
+.text-error {
+  color: colors.$grey-dark;
+  font-weight: 400;
+  display: inline;
+  padding-bottom: 0 !important;
+}
+
+.field-error {
+  color: colors.$error-color;
+  font-size: rem(15);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+
+  .mat-icon {
+    min-width: rem(24);
+  }
+}
+
+.error-card {
+  border-radius: 4px !important;
+  border: 2px solid colors.$error-color !important;
+  padding: 0 0 5px 10px;
+  margin-top: 5px;
+  margin-left: -5px;
+}
+
+.no-data {
+  margin-bottom: -5px !important;
+  margin-top: -10px !important;
 }
