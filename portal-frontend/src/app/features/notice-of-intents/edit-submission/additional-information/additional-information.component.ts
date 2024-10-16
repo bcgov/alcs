@@ -33,9 +33,14 @@ export enum STRUCTURE_TYPES {
   OTHER_STRUCTURE = 'Other Structure',
 }
 
-export type FormProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null; id: string, typeLabel?: string | null };
+export type FormProposedStructure = {
+  type: STRUCTURE_TYPES | null;
+  area: string | null;
+  id: string;
+  typeLabel?: string | null;
+};
 
-export type TypeOption = { label: string, value: string };
+export type TypeOption = { label: string; value: string };
 
 export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
@@ -51,6 +56,29 @@ export const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
   [STRUCTURE_TYPES.OTHER_STRUCTURE]: STRUCTURE_TYPES.OTHER_STRUCTURE,
 };
 
+export const STRUCTURE_TYPE_OPTIONS = [
+  {
+    label: STRUCTURE_TYPES.FARM_STRUCTURE,
+    value: STRUCTURE_TYPES.FARM_STRUCTURE,
+  },
+  {
+    label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE],
+    value: STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
+  },
+  {
+    label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE],
+    value: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+  },
+  {
+    label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ACCESSORY_STRUCTURE],
+    value: STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+  },
+  {
+    label: STRUCTURE_TYPES.OTHER_STRUCTURE,
+    value: STRUCTURE_TYPES.OTHER_STRUCTURE,
+  },
+];
+
 @Component({
   selector: 'app-additional-information',
   templateUrl: './additional-information.component.html',
@@ -60,31 +88,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   currentStep = EditNoiSteps.ExtraInfo;
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
-  STRUCTURE_TYPE_OPTIONS: TypeOption[] = [
-    {
-      label: STRUCTURE_TYPES.FARM_STRUCTURE,
-      value: STRUCTURE_TYPES.FARM_STRUCTURE,
-    },
-    {
-      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE],
-      value: STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
-    },
-    {
-      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE],
-      value: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
-    },
-    {
-      label: NOI_STRUCTURE_TYPE_LABEL_MAP[STRUCTURE_TYPES.ACCESSORY_STRUCTURE],
-      value: STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
-    },
-    {
-      label: STRUCTURE_TYPES.OTHER_STRUCTURE,
-      value: STRUCTURE_TYPES.OTHER_STRUCTURE,
-    },
-  ];
+  structureTypeOptions = STRUCTURE_TYPE_OPTIONS;
 
   DOCUMENT = DOCUMENT_TYPE;
-  
+
   private submissionUuid = '';
   typeCode: string = '';
 
@@ -168,7 +175,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           ...structure,
           id: v4(),
           area: structure.area ? structure.area.toString(10) : null,
-          typeLabel: this.STRUCTURE_TYPE_OPTIONS.find((x) => x.value === structure.type)?.label,
+          typeLabel: this.structureTypeOptions.find((x) => x.value === structure.type)?.label,
         }));
 
         const newForm = new FormGroup({});
@@ -406,9 +413,9 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         structureData: {
           area: structureToEdit?.area,
           type: structureToEdit?.type,
-          options: this.STRUCTURE_TYPE_OPTIONS,
-        }
-      }
+          options: this.structureTypeOptions,
+        },
+      },
     });
     dialog.afterClosed().subscribe(async (result) => {
       if (!result) return;
@@ -464,9 +471,9 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         width: '70%',
         data: {
           structureData: {
-            options: this.STRUCTURE_TYPE_OPTIONS,
-          }
-        }
+            options: this.structureTypeOptions,
+          },
+        },
       });
       dialog.beforeClosed().subscribe(async (result) => {
         if (!result) return;
@@ -485,11 +492,11 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     const typeValue = type ? type.value : '';
     const typeLabel = type ? type.label : '';
     const newStructure = {
-                          type: typeValue,
-                          area: area ? area : '',
-                          id: v4(),
-                          typeLabel: typeLabel,
-                        };
+      type: typeValue,
+      area: area ? area : '',
+      id: v4(),
+      typeLabel: typeLabel,
+    };
     this.proposedStructures.push(newStructure);
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
