@@ -369,6 +369,10 @@ export class ApplicationSubmission extends Base {
   //Soil & Fill
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
+  soilIsNewStructure: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
   soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
