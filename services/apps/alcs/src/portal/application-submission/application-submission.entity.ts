@@ -17,6 +17,7 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { ProposedStructure } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 
 export class ProposedLot {
   type: 'Lot' | 'Road Dedication' | null;
@@ -570,6 +571,35 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   soilHasSubmittedNotice: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureFarmUseReason: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureResidentialUseReason: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilAgriParcelActivity: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureResidentialAccessoryUseReason: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureOtherUseReason: string | null;
+
+  @AutoMap(() => ProposedStructure)
+  @Column({
+    comment: 'JSONB Column containing the proposed structures',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  soilProposedStructures: ProposedStructure[];
 
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
