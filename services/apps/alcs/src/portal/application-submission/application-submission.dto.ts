@@ -165,6 +165,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   //Soil Fields
   @AutoMap(() => Boolean)
+  soilIsNewStructure: boolean | null;
+
+  @AutoMap(() => Boolean)
   soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
@@ -545,6 +548,10 @@ export class ApplicationSubmissionUpdateDto {
   subdProposedLots?: ProposedLot[];
 
   //Soil Fields
+  @IsBoolean()
+  @IsOptional()
+  soilIsNewStructure?: boolean | null;
+
   @IsBoolean()
   @IsOptional()
   soilIsFollowUp?: boolean | null;

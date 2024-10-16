@@ -813,6 +813,10 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
+    applicationSubmission.soilIsNewStructure = filterUndefined(
+      updateDto.soilIsNewStructure,
+      applicationSubmission.soilIsNewStructure,
+    );
     applicationSubmission.soilIsFollowUp = filterUndefined(
       updateDto.soilIsFollowUp,
       applicationSubmission.soilIsFollowUp,

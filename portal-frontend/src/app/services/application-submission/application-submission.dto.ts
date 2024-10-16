@@ -113,6 +113,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   subdProposedLots: ProposedLot[];
 
   //Soil Fields
+  soilIsNewStructure: boolean | null;
   soilIsFollowUp: boolean | null;
   soilFollowUpIDs: string | null;
   soilTypeRemoved: string | null;

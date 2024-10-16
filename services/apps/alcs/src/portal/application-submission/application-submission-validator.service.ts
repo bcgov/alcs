@@ -621,6 +621,7 @@ export class ApplicationSubmissionValidatorService {
     applicantDocuments: ApplicationDocument[],
   ) {
     if (
+      applicationSubmission.soilIsNewStructure === null ||
       applicationSubmission.soilIsFollowUp === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {

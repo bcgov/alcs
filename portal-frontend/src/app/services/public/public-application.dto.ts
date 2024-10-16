@@ -78,6 +78,7 @@ export interface PublicApplicationSubmissionDto {
   subdProposedLots: ProposedLot[];
 
   //Soil Fields
+  soilIsNewStructure: boolean | null;
   soilIsFollowUp: boolean | null;
   soilFollowUpIDs: string | null;
   soilTypeRemoved: string | null;

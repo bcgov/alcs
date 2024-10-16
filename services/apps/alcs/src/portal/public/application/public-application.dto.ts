@@ -146,6 +146,9 @@ export class PublicApplicationSubmissionDto {
 
   //Soil Fields
   @AutoMap(() => Boolean)
+  soilIsNewStructure: boolean | null;
+
+  @AutoMap(() => Boolean)
   soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
