@@ -7,7 +7,7 @@ import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
-  NOI_STRUCTURE_TYPE_LABEL_MAP,
+  STRUCTURE_TYPE_LABEL_MAP,
 } from '../../edit-submission/additional-information/additional-information.component';
 import { openFileInline } from '../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
@@ -116,6 +116,6 @@ export class AdditionalInformationComponent {
       return null;
     }
 
-    return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
+    return STRUCTURE_TYPE_LABEL_MAP[value];
   }
 }

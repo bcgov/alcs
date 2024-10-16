@@ -9,7 +9,7 @@ import {
 } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
-const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
+const STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
   [STRUCTURE_TYPES.FARM_STRUCTURE]: STRUCTURE_TYPES.FARM_STRUCTURE,
   [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
   [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
@@ -96,6 +96,6 @@ export class AdditionalInformationComponent {
       return null;
     }
 
-    return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
+    return STRUCTURE_TYPE_LABEL_MAP[value];
   }
 }
