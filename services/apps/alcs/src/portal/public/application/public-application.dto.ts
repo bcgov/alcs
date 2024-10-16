@@ -226,6 +226,21 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
 
+  @AutoMap(() => String)
+  soilStructureFarmUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilAgriParcelActivity?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureOtherUseReason?: string | null;
+
   //NARU Fields
   @AutoMap(() => Boolean)
   naruWillBeOverFiveHundredM2: boolean | null;

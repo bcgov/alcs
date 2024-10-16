@@ -105,6 +105,11 @@ export interface PublicApplicationSubmissionDto {
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean;
   soilHasSubmittedNotice?: boolean;
+  soilStructureFarmUseReason?: string | null;
+  soilStructureResidentialUseReason?: string | null;
+  soilAgriParcelActivity?: string | null;
+  soilStructureResidentialAccessoryUseReason?: string | null;
+  soilStructureOtherUseReason?: string | null;
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;

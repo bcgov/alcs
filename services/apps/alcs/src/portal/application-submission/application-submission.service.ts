@@ -924,6 +924,32 @@ export class ApplicationSubmissionService {
       applicationSubmission.soilHasSubmittedNotice,
     );
 
+    applicationSubmission.soilStructureFarmUseReason = filterUndefined(
+      updateDto.soilStructureFarmUseReason,
+      applicationSubmission.soilStructureFarmUseReason,
+    );
+
+    applicationSubmission.soilStructureResidentialUseReason = filterUndefined(
+      updateDto.soilStructureResidentialUseReason,
+      applicationSubmission.soilStructureResidentialUseReason,
+    );
+
+    applicationSubmission.soilAgriParcelActivity = filterUndefined(
+      updateDto.soilAgriParcelActivity,
+      applicationSubmission.soilAgriParcelActivity,
+    );
+
+    applicationSubmission.soilStructureResidentialAccessoryUseReason =
+      filterUndefined(
+        updateDto.soilStructureResidentialAccessoryUseReason,
+        applicationSubmission.soilStructureResidentialAccessoryUseReason,
+      );
+
+    applicationSubmission.soilStructureOtherUseReason = filterUndefined(
+      updateDto.soilStructureOtherUseReason,
+      applicationSubmission.soilStructureOtherUseReason,
+    );
+
     if (
       updateDto.soilHasSubmittedNotice === false ||
       updateDto.soilIsExtractionOrMining === false

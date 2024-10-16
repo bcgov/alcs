@@ -245,6 +245,21 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
 
+  @AutoMap(() => String)
+  soilStructureFarmUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilAgriParcelActivity?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureOtherUseReason?: string | null;
+
   @AutoMap(() => Boolean)
   naruWillBeOverFiveHundredM2: boolean | null;
 
@@ -660,6 +675,26 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   soilHasSubmittedNotice?: boolean;
+
+  @IsString()
+  @IsOptional()
+  soilStructureFarmUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureResidentialUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilAgriParcelActivity?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureOtherUseReason?: string | null;
 
   //NARU Fields
   @IsBoolean()
