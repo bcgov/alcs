@@ -34,9 +34,14 @@ export class ResidenceDialogComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data.residenceData) {
-      this.floorArea.setValue(this.data.residenceData.floorArea!.toString());
+      this.floorArea.setValue(
+        this.data.residenceData.floorArea === 0 ? '' : this.data.residenceData.floorArea!.toString(),
+      );
       this.description.setValue(this.data.residenceData.description!);
       this.residence = { ...this.data.residenceData };
+      if (this.data.residenceData.floorArea === 0 || this.data.residenceData.description === '') {
+        this.form.markAllAsTouched();
+      }
     }
   }
 

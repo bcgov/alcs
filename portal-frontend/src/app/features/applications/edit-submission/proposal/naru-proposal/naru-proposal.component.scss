@@ -112,3 +112,10 @@ td {
     margin-bottom: 0 !important;
   }
 }
+
+.no-data-text-error {
+  color: colors.$grey-dark;
+  font-weight: 400;
+  padding-bottom: 0 !important;
+  display: inline;
+}
