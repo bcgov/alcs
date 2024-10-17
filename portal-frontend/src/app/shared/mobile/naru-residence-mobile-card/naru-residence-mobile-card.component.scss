@@ -5,7 +5,7 @@ mat-card {
   width: 100%;
   box-shadow: none;
   border: none;
-  border-bottom: 1px solid #565656;
+  border-bottom: rem(1) solid #565656;
   border-radius: 0;
   word-wrap: break-word;
   white-space: normal;
@@ -22,8 +22,8 @@ mat-card-header {
 mat-card-content {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 0 0 10px 0 !important;
+  gap: rem(15);
+  padding: 0 0 rem(10) 0 !important;
 }
 
 .span-action {
@@ -32,22 +32,22 @@ mat-card-content {
 
 .last-card {
   border-bottom: none !important;
-  margin-bottom: 20px;
+  margin-bottom: rem(20);
 }
 
 .review-step {
-  border-bottom: 1px solid #565656;
+  border-bottom: rem(1) solid #565656;
   background-color: transparent;
 
   mat-card-header {
-    padding: 5px 0 10px 0 !important;
+    padding: rem(5) 0 rem(10) 0 !important;
   }
 }
 
 a {
   align-self: flex-end;
-  padding-right: 30px;
-  padding-bottom: 10px;
+  padding-right: rem(30);
+  padding-bottom: rem(10);
 }
 
 .text-error {
@@ -71,13 +71,13 @@ a {
 
 .error-card {
   border-radius: rem(4) !important;
-  border: 2px solid colors.$error-color !important;
-  padding: 0 0 5px 10px;
-  margin-top: 5px;
-  margin-left: -5px;
+  border: rem(2) solid colors.$error-color !important;
+  padding: 0 0 rem(5) rem(10);
+  margin-top: rem(5);
+  margin-left: rem(-5);
 }
 
 .no-data {
-  margin-bottom: -5px !important;
-  margin-top: -10px !important;
+  margin-bottom: rem(-5) !important;
+  margin-top: rem(-10) !important;
 }
