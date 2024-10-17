@@ -70,7 +70,7 @@ a {
 }
 
 .error-card {
-  border-radius: 4px !important;
+  border-radius: rem(4) !important;
   border: 2px solid colors.$error-color !important;
   padding: 0 0 5px 10px;
   margin-top: 5px;
