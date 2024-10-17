@@ -22,6 +22,8 @@ import { EditNoiSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { DeleteStructureConfirmationDialogComponent } from './delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
 import { SoilRemovalConfirmationDialogComponent } from './soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
+import { AddStructureDialogComponent } from './add-structure-dialog/add-structure-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 export enum STRUCTURE_TYPES {
   FARM_STRUCTURE = 'Farm Structure',
@@ -31,7 +33,9 @@ export enum STRUCTURE_TYPES {
   OTHER_STRUCTURE = 'Other Structure',
 }
 
-type FormProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null; id: string };
+export type FormProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null; id: string, typeLabel?: string | null };
+
+export type TypeOption = { label: string, value: string };
 
 export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
@@ -54,9 +58,9 @@ export const NOI_STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
 })
 export class AdditionalInformationComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditNoiSteps.ExtraInfo;
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
-  DOCUMENT = DOCUMENT_TYPE;
-  STRUCTURE_TYPE_OPTIONS = [
+  STRUCTURE_TYPE_OPTIONS: TypeOption[] = [
     {
       label: STRUCTURE_TYPES.FARM_STRUCTURE,
       value: STRUCTURE_TYPES.FARM_STRUCTURE,
@@ -79,6 +83,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     },
   ];
 
+  DOCUMENT = DOCUMENT_TYPE;
+  
   private submissionUuid = '';
   typeCode: string = '';
 
@@ -88,6 +94,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   proposedStructures: FormProposedStructure[] = [];
   structuresSource = new MatTableDataSource(this.proposedStructures);
+  structures: ProposedStructure[] = [];
   displayedColumns = ['index', 'type', 'area', 'action'];
 
   isSoilStructureFarmUseReasonVisible = false;
@@ -157,11 +164,11 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           soilStructureResidentialAccessoryUseReason: noiSubmission.soilStructureResidentialAccessoryUseReason,
           soilStructureOtherUseReason: noiSubmission.soilStructureOtherUseReason,
         });
-
         this.proposedStructures = noiSubmission.soilProposedStructures.map((structure) => ({
           ...structure,
           id: v4(),
           area: structure.area ? structure.area.toString(10) : null,
+          typeLabel: this.STRUCTURE_TYPE_OPTIONS.find((x) => x.value === structure.type)?.label,
         }));
 
         const newForm = new FormGroup({});
@@ -170,7 +177,6 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           newForm.addControl(`${lot.id}-area`, new FormControl(lot.area, [Validators.required]));
         }
         this.structuresForm = newForm;
-
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         this.prepareStructureSpecificTextInputs();
 
@@ -390,6 +396,37 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       });
   }
 
+  onStructureEdit(id: string) {
+    const structureToEdit = this.proposedStructures.find((structure) => structure.id === id);
+    const dialog = this.dialog.open(AddStructureDialogComponent, {
+      width: '70%',
+      data: {
+        isEdit: true,
+        structureId: structureToEdit?.id,
+        structureData: {
+          area: structureToEdit?.area,
+          type: structureToEdit?.type,
+          options: this.STRUCTURE_TYPE_OPTIONS,
+        }
+      }
+    });
+    dialog.beforeClosed().subscribe(async (result) => {
+      if (!result) return;
+      const structureToEdit = this.proposedStructures.find((structure) => structure.id === id);
+      if (structureToEdit) {
+        structureToEdit.area = result.dto.area.toString();
+        structureToEdit.type = result.dto.type.value;
+        structureToEdit.typeLabel = result.dto.type.label;
+        this.structuresSource = new MatTableDataSource(this.proposedStructures);
+        const areaControl = this.structuresForm.controls[`${structureToEdit?.id}-area`];
+        const typeControl = this.structuresForm.controls[`${structureToEdit?.id}-type`];
+        areaControl.setValue(structureToEdit.area?.toString());
+        typeControl.setValue(structureToEdit.type);
+        this.structuresForm.markAsDirty();
+      }
+    });
+  }
+
   private deleteStructure(id: string) {
     const structureToDelete = this.proposedStructures.find((structure) => structure.id === id);
 
@@ -422,12 +459,38 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   }
 
   onStructureAdd() {
-    const newStructure = { type: null, area: '', id: v4() };
+    if (this.isMobile) {
+      const dialog = this.dialog.open(AddStructureDialogComponent, {
+        width: '70%',
+        data: {
+          structureData: {
+            options: this.STRUCTURE_TYPE_OPTIONS,
+          }
+        }
+      });
+      dialog.beforeClosed().subscribe(async (result) => {
+        if (!result) return;
+        this.addControl(result.dto.type, result.dto.area);
+      });
+    } else {
+      this.addControl(null, null);
+    }
+  }
+
+  private addControl(type: any | null, area: string | null) {
+    const typeValue = type ? type.value : '';
+    const typeLabel = type ? type.label : '';
+    const newStructure = {
+                          type: typeValue,
+                          area: area ? area : '',
+                          id: v4(),
+                          typeLabel: typeLabel,
+                        };
     this.proposedStructures.push(newStructure);
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
-    this.structuresForm.addControl(`${newStructure.id}-type`, new FormControl(null, [Validators.required]));
-    this.structuresForm.addControl(`${newStructure.id}-area`, new FormControl(null, [Validators.required]));
+    this.structuresForm.addControl(`${newStructure.id}-type`, new FormControl(typeValue, [Validators.required]));
+    this.structuresForm.addControl(`${newStructure.id}-area`, new FormControl(area, [Validators.required]));
     this.structuresForm.markAsDirty();
   }
 

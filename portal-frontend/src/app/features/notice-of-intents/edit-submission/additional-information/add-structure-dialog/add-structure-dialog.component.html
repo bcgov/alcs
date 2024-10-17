@@ -1,0 +1,80 @@
+<div mat-dialog-title>
+  <h2 *ngIf="!data.isEdit">
+    Add Proposed Structure
+  </h2>
+  <h2 *ngIf="data.isEdit">
+    Edit Proposed Structure
+  </h2>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="form-container">
+      <div class="form-field-floor-area">
+        <div class="label">
+          <label for="type">Type</label>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-select
+            placeholder="Please select"
+            name="type"
+            id="type"
+            formControlName="type"
+            [compareWith]="compareSelected"
+          >
+            <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
+              {{ type.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-field-floor-area">
+        <div class="label">
+          <label for="area">Total Floor Area</label>
+        </div>
+        <mat-form-field appearance="outline">
+          <input
+            min="0.01"
+            mask="separator.5"
+            separatorLimit="9999999999"
+            thousandSeparator=","
+            matInput
+            id="area"
+            formControlName="area"
+            name="area"
+          />
+          <span matTextSuffix>m<sup>2</sup></span>
+        </mat-form-field>
+        <div
+          *ngIf="
+            form.controls['area']!.invalid &&
+            (form.controls['area']!.dirty || form.controls['area']!.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon class="warning-icon">warning</mat-icon>
+          <div *ngIf="form.controls['area']!.errors?.['required']">This field is required</div>
+          <div *ngIf="form.controls['area']!.errors?.['pattern']">
+            This field must be a non-zero number with no more than 2 decimal places.
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<mat-dialog-actions align="end">
+  <div class="button-container">
+    <button
+      *ngIf="!this.data.structureData"
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="isLoading"
+    >
+      ADD
+    </button>
+    <button *ngIf="this.data.structureData" mat-flat-button color="primary" (click)="onSubmit()" [disabled]="isLoading">
+      SAVE
+    </button>
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false" (click)="onCancel()">CANCEL</button>
+  </div>
+</mat-dialog-actions>
