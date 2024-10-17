@@ -477,16 +477,18 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   }
 
   private addControl(type: any | null, area: string | null) {
+    const typeValue = type ? type.value : '';
+    const typeLabel = type ? type.label : '';
     const newStructure = {
-                          type: type ? type.value : '',
+                          type: typeValue,
                           area: area ? area : '',
                           id: v4(),
-                          typeLabel: type ? type.label : '',
+                          typeLabel: typeLabel,
                         };
     this.proposedStructures.push(newStructure);
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
-    this.structuresForm.addControl(`${newStructure.id}-type`, new FormControl(type.value, [Validators.required]));
+    this.structuresForm.addControl(`${newStructure.id}-type`, new FormControl(typeValue, [Validators.required]));
     this.structuresForm.addControl(`${newStructure.id}-area`, new FormControl(area, [Validators.required]));
     this.structuresForm.markAsDirty();
   }
