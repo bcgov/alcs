@@ -32,7 +32,12 @@
       </mat-label>
       <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
       <div>
-        <mat-button-toggle-group class="input" id="is-new-structure" [formControl]="isNewStructure">
+        <mat-button-toggle-group
+          class="input"
+          (change)="onChangeIsNewStructure($event.value)"
+          id="is-new-structure"
+          [formControl]="isNewStructure"
+        >
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{

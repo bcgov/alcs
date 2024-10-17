@@ -16,14 +16,14 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConfirmationDialogService } from 'src/app/shared/confirmation-dialog/confirmation-dialog.service';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { v4 } from 'uuid';
 import {
   STRUCTURE_TYPES,
   STRUCTURE_TYPE_OPTIONS,
   FormProposedStructure,
 } from 'src/app/features/notice-of-intents/edit-submission/additional-information/additional-information.component';
-import { ProposedStructure } from 'src/app/services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { ProposedStructure } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 @Component({
   selector: 'app-pfrs-proposal',
@@ -99,10 +99,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     soilStructureOtherUseReason: this.soilStructureOtherUseReason,
   });
 
+  structuresForm = new FormGroup({} as any);
   proposedStructures: FormProposedStructure[] = [];
   structuresSource = new MatTableDataSource(this.proposedStructures);
   displayedColumns = ['index', 'type', 'area', 'action'];
-  structuresForm = new FormGroup({} as any);
 
   private submissionUuid = '';
   isMobile = false;
@@ -195,6 +195,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         for (const structure of applicationSubmission.soilProposedStructures) {
           this.addStructure(structure.type, structure.area);
         }
+        this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -296,6 +297,69 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
+  onChangeIsNewStructure(answeredYes: boolean | null) {
+    const hasValuesThatWillBeCleared: boolean = !!(
+      (answeredYes &&
+        (this.crossSections.length > 0 ||
+          this.reclamationPlan.length > 0 ||
+          this.noticeOfWork.length > 0 ||
+          this.reduceNegativeImpacts.value ||
+          this.alternativeMeasures.value ||
+          this.isExtractionOrMining.value ||
+          this.hasSubmittedNotice.value)) ||
+      (!answeredYes &&
+        (this.proposedStructures.length > 0 ||
+          this.soilStructureFarmUseReason.value ||
+          this.soilStructureResidentialUseReason.value ||
+          this.soilAgriParcelActivity.value ||
+          this.soilStructureResidentialAccessoryUseReason.value ||
+          this.soilStructureOtherUseReason.value))
+    );
+
+    if (hasValuesThatWillBeCleared) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Are you removing soil in order to build a structure?',
+          body: 'Warning: Changing your answer will remove all the saved progress on this step. Do you want to continue?',
+          confirmAction: 'Confirm',
+          cancelAction: 'Cancel',
+        })
+        .subscribe((isConfirmed) => {
+          if (isConfirmed) {
+            if (answeredYes) {
+              // Clear docs
+              this.crossSections = [];
+              this.reclamationPlan = [];
+              this.noticeOfWork = [];
+
+              // Clear questions
+              this.reduceNegativeImpacts.reset();
+              this.alternativeMeasures.reset();
+              this.isExtractionOrMining.reset();
+              this.hasSubmittedNotice.reset();
+            } else {
+              // Clear structures
+              this.structuresForm = new FormGroup({});
+              this.proposedStructures = [];
+              this.structuresSource = new MatTableDataSource(this.proposedStructures);
+              for (const type of Object.keys(this.structureTypeCounts) as Array<STRUCTURE_TYPES>) {
+                this.structureTypeCounts[type] = 0;
+              }
+
+              // Clear conditional questions
+              this.soilStructureFarmUseReason.reset();
+              this.soilStructureResidentialUseReason.reset();
+              this.soilAgriParcelActivity.reset();
+              this.soilStructureResidentialAccessoryUseReason.reset();
+              this.soilStructureOtherUseReason.reset();
+            }
+          } else {
+            this.isNewStructure.setValue(!answeredYes);
+          }
+        });
+    }
+  }
+
   onChangeIsFollowUp(selectedValue: string) {
     if (selectedValue === 'true') {
       this.followUpIDs.enable();
@@ -385,6 +449,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   onStructureAdd() {
     this.addStructure();
+    this.structuresSource = new MatTableDataSource(this.proposedStructures);
     this.structuresForm.markAsDirty();
   }
 
@@ -392,7 +457,6 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     const areaStr = area ? area.toString(10) : null;
     const newStructure = { type, area: areaStr, id: v4() };
     this.proposedStructures.push(newStructure);
-    this.structuresSource = new MatTableDataSource(this.proposedStructures);
     this.structuresForm.addControl(
       `${newStructure.id}-type`,
       new FormControl<string | null>(type, [Validators.required]),
