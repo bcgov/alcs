@@ -83,7 +83,10 @@ describe('AdditionalInformationComponent', () => {
       description: '',
     },
     submissionStatuses: [],
-    type: '',
+    type: {
+      value: '',
+      label: '',
+    },
     typeCode: '',
     updatedAt: 0,
     uuid: '',
