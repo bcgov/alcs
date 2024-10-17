@@ -146,4 +146,5 @@ export interface NoticeOfIntentSubmissionUpdateDto {
 export interface ProposedStructure {
   type: STRUCTURE_TYPES | null;
   area: number | null;
+  options?: any;
 }

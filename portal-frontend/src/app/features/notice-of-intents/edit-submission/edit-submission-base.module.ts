@@ -13,6 +13,8 @@ import { AdditionalInformationComponent } from './additional-information/additio
 import { NoticeOfIntentDetailsModule } from '../notice-of-intent-details/notice-of-intent-details.module';
 import { DeleteStructureConfirmationDialogComponent } from './additional-information/delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
 import { SoilRemovalConfirmationDialogComponent } from './additional-information/soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
+import { AddStructureDialogComponent } from './additional-information/add-structure-dialog/add-structure-dialog.component';
+import { StructureMobileCardComponent } from './additional-information/structure-mobile-card/structure-mobile-card.component';
 import { ChangeNoiTypeDialogComponent } from './change-noi-type-dialog/change-noi-type-dialog.component';
 import { EditSubmissionComponent } from './edit-submission.component';
 import { LandUseComponent } from './land-use/land-use.component';
@@ -67,6 +69,8 @@ import { MatCardModule } from '@angular/material/card';
     AdditionalInformationComponent,
     DeleteStructureConfirmationDialogComponent,
     SoilRemovalConfirmationDialogComponent,
+    AddStructureDialogComponent,
+    StructureMobileCardComponent,
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
     ChangeNoiTypeDialogComponent,

@@ -67,7 +67,19 @@
     <form [formGroup]="structuresForm">
       <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
       <div class="scrollable">
-        <table mat-table [dataSource]="structuresSource">
+        <div *ngIf="isMobile">
+          <app-structure-mobile-card            
+            *ngFor="let structure of proposedStructures; let last = last; index as i"
+            [structure]="structure"
+            [isLast]="last"
+            [isReviewStep]="true"
+            [index]="i"
+            (removeClicked)="onStructureRemove(structure.id)"
+            (editClicked)="onStructureEdit(structure.id)"
+            >
+          </app-structure-mobile-card>
+        </div>
+        <table mat-table [dataSource]="structuresSource" *ngIf="!isMobile">
           <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef>#</th>
             <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
