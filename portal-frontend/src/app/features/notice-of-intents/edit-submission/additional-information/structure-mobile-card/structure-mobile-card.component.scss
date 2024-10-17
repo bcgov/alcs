@@ -1,10 +1,11 @@
 @use '../../../../../../styles/colors';
+@use '../../../../../../styles/functions' as *;
 
 mat-card {
   width: 100%;
   box-shadow: none;
   border: none;
-  border-bottom: 1px solid #565656;
+  border-bottom: rem(1) solid #565656;
   border-radius: 0;
   word-wrap: break-word;
   white-space: normal;
@@ -19,8 +20,8 @@ mat-card-header {
 mat-card-content {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 0 0 10px 0 !important;
+  gap: rem(15);
+  padding: 0 0 rem(10) 0 !important;
 }
 
 .span-action {
@@ -29,20 +30,24 @@ mat-card-content {
 
 .last-card {
   border-bottom: none !important;
-  margin-bottom: 20px;
+  margin-bottom: rem(20);
 }
 
 .review-step {
-  border-bottom: 1px solid #565656;
+  border-bottom: rem(1) solid #565656;
   background-color: transparent;
 
   mat-card-header {
-    padding: 5px 0 10px 0 !important;
+    padding: rem(5) 0 rem(10) 0 !important;
   }
 }
 
 a {
   align-self: flex-end;
-  padding-right: 30px;
-  padding-bottom: 10px;
+  padding-right: rem(30);
+  padding-bottom: rem(10);
+}
+
+.strong {
+  font-weight: 700;
 }

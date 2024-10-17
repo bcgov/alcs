@@ -26,7 +26,7 @@
 }
 
 .mobile-structure-card-border {
-  border-top: 1px solid #aaaaaa;
+  border-top: rem(1) solid #aaaaaa;
 }
 
 .mobile-structure-title {
@@ -35,8 +35,7 @@
 }
 
 .mobile-structure-label {
-  font-size: 0.8125rem !important;
-  margin: 5px 0px 5px 0px;
+  margin: rem(5) 0 rem(5) 0;
 }
 
 .strong {

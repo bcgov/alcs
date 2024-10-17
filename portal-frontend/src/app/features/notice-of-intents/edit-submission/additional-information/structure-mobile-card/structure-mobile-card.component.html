@@ -1,8 +1,8 @@
 <mat-card [ngClass]="{ 'last-card': isLast }">
   <mat-card-header>
     <mat-card-title>
-      <mat-label>#{{ index+1 }} Total Floor Area: </mat-label>{{ structure.area }} <span matTextSuffix>(m<sup>2</sup>)</span> <br />
-      <mat-label>Type: </mat-label>{{ structure.typeLabel }}
+      <span class="strong">#{{ index+1 }} Total Floor Area: </span>{{ structure.area }} <span matTextSuffix>(m<sup>2</sup>)</span> <br />
+      <span class="strong">Type: </span>{{ structure.typeLabel }}
     </mat-card-title>
     <ng-container>
       <button mat-icon-button [mat-menu-trigger-for]="menu">
