@@ -478,10 +478,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   private addControl(type: any | null, area: string | null) {
     const newStructure = {
-                          type: type.value,
+                          type: type ? type.value : '',
                           area: area ? area : '',
                           id: v4(),
-                          typeLabel: type.label
+                          typeLabel: type ? type.label : '',
                         };
     this.proposedStructures.push(newStructure);
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
