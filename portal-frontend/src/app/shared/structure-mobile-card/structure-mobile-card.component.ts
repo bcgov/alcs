@@ -3,8 +3,8 @@ import {
   FormProposedStructure,
   NOI_STRUCTURE_TYPE_LABEL_MAP,
   STRUCTURE_TYPES,
-} from '../../../../../features/notice-of-intents/edit-submission/additional-information/additional-information.component';
-import { ProposedStructure } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+} from '../../features/notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { ProposedStructure } from '../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 @Component({
   selector: 'app-structure-mobile-card',
