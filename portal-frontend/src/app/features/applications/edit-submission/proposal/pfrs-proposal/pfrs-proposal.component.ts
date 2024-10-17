@@ -1,7 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
@@ -24,7 +23,6 @@ import {
   STRUCTURE_TYPE_OPTIONS,
   FormProposedStructure,
 } from 'src/app/features/notice-of-intents/edit-submission/additional-information/additional-information.component';
-import { TurDetailsComponent } from '../../../application-details/tur-details/tur-details.component';
 import { ProposedStructure } from 'src/app/services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 @Component({
