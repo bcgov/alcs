@@ -1,10 +1,10 @@
-<mat-card [ngClass]="{ 'last-card': isLast, 'review-step': isReviewStep }">
+<mat-card [ngClass]="{ 'last-card': isLast }">
   <mat-card-header>
     <mat-card-title>
       <mat-label>#{{ index+1 }} Total Floor Area: </mat-label>{{ structure.area }} <span matTextSuffix>(m<sup>2</sup>)</span> <br />
       <mat-label>Type: </mat-label>{{ structure.typeLabel }}
     </mat-card-title>
-    <ng-container *ngIf="true">
+    <ng-container>
       <button mat-icon-button [mat-menu-trigger-for]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>

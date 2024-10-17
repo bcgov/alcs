@@ -20,7 +20,6 @@
             id="type"
             formControlName="type"
             [compareWith]="compareSelected"
-            (selectionChange)="showValue()"
           >
             <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
               {{ type.label }}

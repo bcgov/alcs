@@ -10,6 +10,7 @@ import {
   NOI_STRUCTURE_TYPE_LABEL_MAP,
 } from '../../edit-submission/additional-information/additional-information.component';
 import { openFileInline } from '../../../../shared/utils/file';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-additional-information',
@@ -22,6 +23,8 @@ export class AdditionalInformationComponent {
   @Input() draftMode = false;
 
   firstQuestion = 'FIX THIS';
+
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 

@@ -478,7 +478,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   private addControl(type: any | null, area: string | null) {
     const newStructure = {
-                          type,
+                          type: type.value,
                           area: area ? area : '',
                           id: v4(),
                           typeLabel: type.label

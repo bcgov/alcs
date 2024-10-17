@@ -54,8 +54,6 @@ export class AddStructureDialogComponent {
 
   async onSubmit() {
     this.isLoading = true;
-    const seletedType = this.type.value;
-    console.log(seletedType);
     const dto: ProposedStructure = {
       area: Number(this.area.value!),
       type: this.structureTypeOptions.find((v: any) => v.value === this.type.value!),
@@ -66,10 +64,6 @@ export class AddStructureDialogComponent {
       structureId: this.data.structureId,
       dto,
     });
-  }
-
-  showValue() {
-    console.log(this.type.value);
   }
 
   onCancel() {
