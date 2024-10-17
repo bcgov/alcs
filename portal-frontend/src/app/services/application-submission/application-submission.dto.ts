@@ -1,5 +1,6 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
+import { ProposedStructure } from '../notice-of-intent-submission/notice-of-intent-submission.dto';
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -145,6 +146,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAgriParcelActivity: string | null;
   soilStructureResidentialAccessoryUseReason: string | null;
   soilStructureOtherUseReason: string | null;
+  soilProposedStructures: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;
@@ -271,6 +273,7 @@ export interface ApplicationSubmissionUpdateDto {
   soilAgriParcelActivity?: string | null;
   soilStructureResidentialAccessoryUseReason?: string | null;
   soilStructureOtherUseReason?: string | null;
+  soilProposedStructures?: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2?: boolean | null;

@@ -20,6 +20,7 @@ import {
   ProposedLot,
   ProposedResidence,
 } from './application-submission.entity';
+import { ProposedStructure } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 export const MAX_LANDUSE_FIELD_LENGTH = 500;
@@ -259,6 +260,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   soilStructureOtherUseReason?: string | null;
+
+  @AutoMap(() => [ProposedStructure])
+  soilProposedStructures: ProposedStructure[];
 
   @AutoMap(() => Boolean)
   naruWillBeOverFiveHundredM2: boolean | null;
@@ -695,6 +699,10 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   soilStructureOtherUseReason?: string | null;
+
+  @IsArray()
+  @IsOptional()
+  soilProposedStructures?: ProposedStructure[];
 
   //NARU Fields
   @IsBoolean()

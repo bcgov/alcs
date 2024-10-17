@@ -4,6 +4,7 @@ import {
   NaruSubtypeDto,
   ProposedLot,
 } from '../application-submission/application-submission.dto';
+import { ProposedStructure } from '../notice-of-intent-submission/notice-of-intent-submission.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from './public.dto';
 
 export interface ExistingResidence {
@@ -110,6 +111,7 @@ export interface PublicApplicationSubmissionDto {
   soilAgriParcelActivity?: string | null;
   soilStructureResidentialAccessoryUseReason?: string | null;
   soilStructureOtherUseReason?: string | null;
+  soilProposedStructures?: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;

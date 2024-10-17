@@ -7,6 +7,7 @@ import {
   ProposedResidence,
 } from '../../application-submission/application-submission.entity';
 import { PublicOwnerDto } from '../public.dto';
+import { ProposedStructure } from '../../notice-of-intent-submission/notice-of-intent-submission.entity';
 
 export class PublicApplicationSubmissionDto {
   @AutoMap()
@@ -240,6 +241,9 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => String)
   soilStructureOtherUseReason?: string | null;
+
+  @AutoMap(() => [ProposedStructure])
+  soilProposedStructures: ProposedStructure[];
 
   //NARU Fields
   @AutoMap(() => Boolean)

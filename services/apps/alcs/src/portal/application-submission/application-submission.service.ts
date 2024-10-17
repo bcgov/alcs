@@ -950,6 +950,11 @@ export class ApplicationSubmissionService {
       applicationSubmission.soilStructureOtherUseReason,
     );
 
+    applicationSubmission.soilProposedStructures = filterUndefined(
+      updateDto.soilProposedStructures,
+      applicationSubmission.soilProposedStructures,
+    );
+
     if (
       updateDto.soilHasSubmittedNotice === false ||
       updateDto.soilIsExtractionOrMining === false

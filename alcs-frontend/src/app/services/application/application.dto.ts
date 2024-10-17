@@ -203,6 +203,7 @@ export interface ApplicationSubmissionDto {
   soilAgriParcelActivity: string | null;
   soilStructureResidentialAccessoryUseReason: string | null;
   soilStructureOtherUseReason: string | null;
+  soilProposedStructures: string | null;
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;
