@@ -175,7 +175,6 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           newForm.addControl(`${lot.id}-area`, new FormControl(lot.area, [Validators.required]));
         }
         this.structuresForm = newForm;
-        
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         this.prepareStructureSpecificTextInputs();
 

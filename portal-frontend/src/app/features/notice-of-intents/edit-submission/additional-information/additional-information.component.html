@@ -72,7 +72,6 @@
             *ngFor="let structure of proposedStructures; let last = last; index as i"
             [structure]="structure"
             [isLast]="last"
-            [isReviewStep]="true"
             [index]="i"
             (removeClicked)="onStructureRemove(structure.id)"
             (editClicked)="onStructureEdit(structure.id)"
