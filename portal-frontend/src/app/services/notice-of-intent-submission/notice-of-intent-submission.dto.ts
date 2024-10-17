@@ -1,4 +1,4 @@
-import { STRUCTURE_TYPES } from '../../features/notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { STRUCTURE_TYPES, TypeOption } from '../../features/notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { NoticeOfIntentOwnerDto } from '../notice-of-intent-owner/notice-of-intent-owner.dto';
 
@@ -146,5 +146,5 @@ export interface NoticeOfIntentSubmissionUpdateDto {
 export interface ProposedStructure {
   type: STRUCTURE_TYPES | null;
   area: number | null;
-  options?: any;
+  options?: TypeOption[];
 }

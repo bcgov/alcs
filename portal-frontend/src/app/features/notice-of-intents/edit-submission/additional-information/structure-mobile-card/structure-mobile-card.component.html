@@ -1,10 +1,10 @@
-<mat-card [ngClass]="{ 'last-card': isLast }">
+<mat-card [ngClass]="{ 'last-card': isLast, 'review-step':  isReviewStep }">
   <mat-card-header>
     <mat-card-title>
-      <span class="strong">#{{ index+1 }} Total Floor Area: </span>{{ structure.area }} <span matTextSuffix>(m<sup>2</sup>)</span> <br />
-      <span class="strong">Type: </span>{{ structure.typeLabel }}
+      <span class="strong">#{{ index+1 }} Total Floor Area: </span><span [class.strong]="isReviewStep">{{ structure.area }} <span matTextSuffix>(m<sup>2</sup>)</span></span> <br />
+      <span class="strong">Type: </span>{{ mapStructureTypeValueToLabel(structure.type) }}
     </mat-card-title>
-    <ng-container>
+    <ng-container *ngIf="!isReviewStep">
       <button mat-icon-button [mat-menu-trigger-for]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>

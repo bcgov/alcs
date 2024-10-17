@@ -35,6 +35,8 @@ export enum STRUCTURE_TYPES {
 
 export type FormProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null; id: string, typeLabel?: string | null };
 
+export type TypeOption = { label: string, value: string };
+
 export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
   STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
@@ -58,7 +60,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   currentStep = EditNoiSteps.ExtraInfo;
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
-  STRUCTURE_TYPE_OPTIONS = [
+  STRUCTURE_TYPE_OPTIONS: TypeOption[] = [
     {
       label: STRUCTURE_TYPES.FARM_STRUCTURE,
       value: STRUCTURE_TYPES.FARM_STRUCTURE,

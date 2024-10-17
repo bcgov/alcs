@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProposedStructure } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { STRUCTURE_TYPES } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -38,9 +37,9 @@ export class AddStructureDialogComponent {
     }
     if (data.isEdit) {
       const editArea = data.structureData?.area ? data.structureData?.area : 0;
-      const editType = data.structureData?.options.find((x: any) => x.value === data.structureData?.type);
+      const editType = data.structureData?.options?.find((x: any) => x.value === data.structureData?.type);
       this.area.setValue(editArea.toString());
-      this.type.setValue(editType.value);
+      this.type.setValue(editType ? editType.value : '');
     }
   }
 
