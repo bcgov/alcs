@@ -90,6 +90,7 @@
     class="meeting-card"
     [ngClass]="{
       'meeting-highlighted': meeting.isHighlighted,
+      'file-paused': meeting.isPaused,
     }"
   >
     <div class="split">
@@ -118,7 +119,8 @@
     (click)="openMeetings(incomingFile.fileNumber, incomingFile.type)"
     class="meeting-card"
     [ngClass]="{
-      'meeting-highlighted': incomingFile.isHighlighted
+      'meeting-highlighted': incomingFile.isHighlighted,
+      'file-paused': incomingFile.isPaused,
     }"
   >
     <div class="split">

@@ -1,0 +1,53 @@
+@use '../../../styles/colors';
+@use '../../../styles/functions' as *;
+
+mat-card {
+  width: 100%;
+  box-shadow: none;
+  border: none;
+  border-bottom: rem(1) solid #565656;
+  border-radius: 0;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 !important;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: rem(15);
+  padding: 0 0 rem(10) 0 !important;
+}
+
+.span-action {
+  font-weight: normal;
+}
+
+.last-card {
+  border-bottom: none !important;
+  margin-bottom: rem(20);
+}
+
+.review-step {
+  border-bottom: rem(1) solid #565656;
+  background-color: transparent;
+
+  mat-card-header {
+    padding: rem(5) 0 rem(10) 0 !important;
+  }
+}
+
+a {
+  align-self: flex-end;
+  padding-right: rem(30);
+  padding-bottom: rem(10);
+}
+
+.strong {
+  font-weight: 700;
+}
