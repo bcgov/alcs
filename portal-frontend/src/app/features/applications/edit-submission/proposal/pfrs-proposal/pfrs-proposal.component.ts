@@ -16,6 +16,16 @@ import { parseStringToBoolean } from '../../../../../shared/utils/string-helper'
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmationDialogService } from 'src/app/shared/confirmation-dialog/confirmation-dialog.service';
+import { v4 } from 'uuid';
+import {
+  STRUCTURE_TYPES,
+  STRUCTURE_TYPE_OPTIONS,
+  FormProposedStructure,
+} from 'src/app/features/notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { TurDetailsComponent } from '../../../application-details/tur-details/tur-details.component';
+import { ProposedStructure } from 'src/app/services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 @Component({
   selector: 'app-pfrs-proposal',
@@ -31,6 +41,14 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   DOCUMENT = DOCUMENT_TYPE;
+
+  structureTypes = STRUCTURE_TYPES;
+  structureTypeOptions = STRUCTURE_TYPE_OPTIONS;
+  structureTypeCounts: Record<STRUCTURE_TYPES, number> = Object.fromEntries(
+    Object.entries(STRUCTURE_TYPES).map(([_, type]) => [type, 0]),
+  ) as { [key in STRUCTURE_TYPES]: number };
+
+  typeCode: string = '';
 
   proposalMap: ApplicationDocumentDto[] = [];
   crossSections: ApplicationDocumentDto[] = [];
@@ -56,6 +74,13 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   isExtractionOrMining = new FormControl<string | null>(null, [Validators.required]);
   hasSubmittedNotice = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
 
+  // Conditional structure questions
+  soilStructureFarmUseReason = new FormControl<string | null>(null);
+  soilStructureResidentialUseReason = new FormControl<string | null>(null);
+  soilAgriParcelActivity = new FormControl<string | null>(null);
+  soilStructureResidentialAccessoryUseReason = new FormControl<string | null>(null);
+  soilStructureOtherUseReason = new FormControl<string | null>(null);
+
   form = new FormGroup({
     isNewStructure: this.isNewStructure,
     isFollowUp: this.isFollowUp,
@@ -69,7 +94,17 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     alternativeMeasures: this.alternativeMeasures,
     isExtractionOrMining: this.isExtractionOrMining,
     hasSubmittedNotice: this.hasSubmittedNotice,
+    soilStructureFarmUseReason: this.soilStructureFarmUseReason,
+    soilStructureResidentialUseReason: this.soilStructureResidentialUseReason,
+    soilAgriParcelActivity: this.soilAgriParcelActivity,
+    soilStructureResidentialAccessoryUseReason: this.soilStructureResidentialAccessoryUseReason,
+    soilStructureOtherUseReason: this.soilStructureOtherUseReason,
   });
+
+  proposedStructures: FormProposedStructure[] = [];
+  structuresSource = new MatTableDataSource(this.proposedStructures);
+  displayedColumns = ['index', 'type', 'area', 'action'];
+  structuresForm = new FormGroup({} as any);
 
   private submissionUuid = '';
   isMobile = false;
@@ -83,7 +118,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     private applicationService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
+    private confirmationDialogService: ConfirmationDialogService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
@@ -95,6 +131,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
+        this.typeCode = applicationSubmission.typeCode;
 
         this.alreadyRemovedTableData = {
           volume: applicationSubmission.soilAlreadyRemovedVolume ?? 0,
@@ -137,6 +174,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         }
 
         this.form.patchValue({
+          isNewStructure: applicationSubmission.soilIsNewStructure,
           isFollowUp: formatBooleanToString(applicationSubmission.soilIsFollowUp),
           followUpIDs: applicationSubmission.soilFollowUpIDs,
           purpose: applicationSubmission.purpose,
@@ -148,7 +186,18 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           fillProjectDuration: applicationSubmission.fillProjectDuration,
           isExtractionOrMining: formatBooleanToString(applicationSubmission.soilIsExtractionOrMining),
           hasSubmittedNotice: formatBooleanToString(applicationSubmission.soilHasSubmittedNotice),
+          soilStructureFarmUseReason: applicationSubmission.soilStructureFarmUseReason,
+          soilStructureResidentialUseReason: applicationSubmission.soilStructureResidentialUseReason,
+          soilAgriParcelActivity: applicationSubmission.soilAgriParcelActivity,
+          soilStructureResidentialAccessoryUseReason: applicationSubmission.soilStructureResidentialAccessoryUseReason,
+          soilStructureOtherUseReason: applicationSubmission.soilStructureOtherUseReason,
         });
+
+        this.structuresForm = new FormGroup({});
+        for (const structure of applicationSubmission.soilProposedStructures) {
+          this.addStructure(structure.type, structure.area);
+        }
+
         if (this.showErrors) {
           this.form.markAllAsTouched();
         }
@@ -189,6 +238,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   protected async save() {
     if (this.fileId && (this.form.dirty || this.areComponentsDirty)) {
+      const isNewStructure = this.isNewStructure.getRawValue();
       const isFollowUp = this.isFollowUp.getRawValue();
       const followUpIDs = this.followUpIDs.getRawValue();
       const purpose = this.purpose.getRawValue();
@@ -197,12 +247,22 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       const soilFillTypeToPlace = this.fillTypeToPlace.getRawValue();
       const soilAlternativeMeasures = this.alternativeMeasures.getRawValue();
 
+      const updatedStructures: ProposedStructure[] = this.proposedStructures.map((lot) => {
+        const lotType = this.structuresForm.controls[`${lot.id}-type`].value;
+        const lotArea = this.structuresForm.controls[`${lot.id}-area`].value;
+        return {
+          type: lotType,
+          area: lotArea ? parseFloat(lotArea) : null,
+        };
+      });
+
       const updateDto: ApplicationSubmissionUpdateDto = {
         purpose,
         soilTypeRemoved,
         soilFillTypeToPlace,
         soilReduceNegativeImpacts,
         soilAlternativeMeasures,
+        soilIsNewStructure: isNewStructure,
         soilIsFollowUp: parseStringToBoolean(isFollowUp),
         soilFollowUpIDs: followUpIDs,
         soilToRemoveVolume: this.removalTableData?.volume ?? null,
@@ -224,7 +284,13 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         soilProjectDuration: this.soilProjectDuration.value,
         fillProjectDuration: this.fillProjectDuration.value,
         soilHasSubmittedNotice: parseStringToBoolean(this.hasSubmittedNotice.getRawValue()),
+        soilStructureFarmUseReason: this.soilStructureFarmUseReason.value,
+        soilStructureResidentialUseReason: this.soilStructureResidentialUseReason.value,
+        soilAgriParcelActivity: this.soilAgriParcelActivity.value,
+        soilStructureResidentialAccessoryUseReason: this.soilStructureResidentialAccessoryUseReason.value,
+        soilStructureOtherUseReason: this.soilStructureOtherUseReason.value,
         soilIsExtractionOrMining: parseStringToBoolean(this.isExtractionOrMining.getRawValue()),
+        soilProposedStructures: updatedStructures,
       };
 
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
@@ -252,6 +318,130 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeNoticeOfWork(selectedValue: string) {
     this.requiresNoticeOfWork = selectedValue === 'true';
+  }
+
+  onChangeStructureType(id: string, newType: STRUCTURE_TYPES) {
+    const structure = this.proposedStructures.find((structure) => structure.id === id);
+
+    if (!structure) {
+      console.error('Failed to find structure');
+      return;
+    }
+
+    if (this.hasInput(structure.type)) {
+      this.confirmationDialogService
+        .openDialog({
+          title: 'Change Structure Type',
+          body: 'Changing the structure type will remove inputs relevant to the current structure. Do you want to continue?',
+          confirmAction: 'Confirm',
+          cancelAction: 'Cancel',
+        })
+        .subscribe((isConfirmed) => {
+          if (isConfirmed) {
+            this.setStructureTypeInput(structure, newType);
+          } else {
+            this.structuresForm.get(structure.id + '-type')?.setValue(structure.type);
+          }
+        });
+    } else {
+      return this.setStructureTypeInput(structure, newType);
+    }
+  }
+
+  private hasInput(type: STRUCTURE_TYPES | null) {
+    switch (type) {
+      case STRUCTURE_TYPES.FARM_STRUCTURE:
+        return !!(this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value);
+
+      case STRUCTURE_TYPES.ACCESSORY_STRUCTURE:
+        return !!(
+          this.soilStructureResidentialUseReason.value || this.soilStructureResidentialAccessoryUseReason.value
+        );
+
+      case STRUCTURE_TYPES.OTHER_STRUCTURE:
+        return !!this.soilStructureOtherUseReason.value;
+
+      case STRUCTURE_TYPES.PRINCIPAL_RESIDENCE:
+      case STRUCTURE_TYPES.ADDITIONAL_RESIDENCE:
+        return !!this.soilStructureResidentialUseReason.value;
+
+      case null:
+        return false;
+
+      default:
+        return true;
+    }
+  }
+
+  private setStructureTypeInput(structure: FormProposedStructure, newType: STRUCTURE_TYPES) {
+    if (structure.type !== null && this.structureTypeCounts[structure.type] > 0) {
+      this.structureTypeCounts[structure.type]--;
+    }
+
+    this.structureTypeCounts[newType]++;
+
+    structure.type = newType;
+
+    this.form.markAsDirty();
+  }
+
+  onStructureAdd() {
+    this.addStructure();
+    this.structuresForm.markAsDirty();
+  }
+
+  addStructure(type: STRUCTURE_TYPES | null = null, area: number | null = null) {
+    const areaStr = area ? area.toString(10) : null;
+    const newStructure = { type, area: areaStr, id: v4() };
+    this.proposedStructures.push(newStructure);
+    this.structuresSource = new MatTableDataSource(this.proposedStructures);
+    this.structuresForm.addControl(
+      `${newStructure.id}-type`,
+      new FormControl<string | null>(type, [Validators.required]),
+    );
+    this.structuresForm.addControl(
+      `${newStructure.id}-area`,
+      new FormControl<string | null>(areaStr, [Validators.required]),
+    );
+
+    if (type) {
+      this.structureTypeCounts[type]++;
+    }
+  }
+
+  onStructureRemove(id: string) {
+    this.confirmationDialogService
+      .openDialog({
+        title:
+          'Warning: Deleting the structure type can remove some content already saved to this page. Do you want to continue?',
+        body: 'Changing the structure type will remove inputs relevant to the current structure. Do you want to continue?',
+        confirmAction: 'Confirm',
+        cancelAction: 'Cancel',
+      })
+      .subscribe(async (result) => {
+        if (result) {
+          this.deleteStructure(id);
+        }
+      });
+  }
+
+  private deleteStructure(id: string) {
+    const structureToDelete = this.proposedStructures.find((structure) => structure.id === id);
+
+    if (!structureToDelete) {
+      console.error('Failed to find deleted structure');
+      return;
+    }
+
+    this.proposedStructures = this.proposedStructures.filter((structure) => structure.id !== structureToDelete.id);
+    this.structuresSource = new MatTableDataSource(this.proposedStructures);
+    this.structuresForm.removeControl(`${id}-type`);
+    this.structuresForm.removeControl(`${id}-area`);
+    this.structuresForm.markAsDirty();
+
+    if (structureToDelete.type !== null && this.structureTypeCounts[structureToDelete.type] > 0) {
+      this.structureTypeCounts[structureToDelete.type]--;
+    }
   }
 
   markDirty() {
