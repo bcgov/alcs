@@ -12,12 +12,21 @@ import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT_MOBILE } from '../../constant
   templateUrl: './naru-residence-mobile-card.component.html',
   styleUrl: './naru-residence-mobile-card.component.scss',
 })
-export class NaruResidenceMobileCardComponent {
+export class NaruResidenceMobileCardComponent implements OnInit {
   @Input() residence!: FormExisingResidence | FormProposedResidence;
   @Input() isLast: boolean = false;
   @Input() isReviewStep: boolean = false;
+  @Input() showErrors: boolean = false;
   @Output() editClicked = new EventEmitter<FormExisingResidence>();
   @Output() removeClicked = new EventEmitter<FormExisingResidence>();
+
+  isError: boolean = false;
+
+  ngOnInit(): void {
+    if (this.residence.floorArea === 0 || this.residence.description === '') {
+      this.isError = true;
+    }
+  }
 
   onEdit() {
     this.editClicked.emit(this.residence);

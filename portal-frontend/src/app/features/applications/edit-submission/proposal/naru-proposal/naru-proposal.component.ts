@@ -336,8 +336,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruToPlaceArea: this.fillTableData.area ?? null,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
-        naruExistingResidences: this.existingResidences.map(({ id, ...rest }) => rest),
-        naruProposedResidences: this.proposedResidences.map(({ id, ...rest }) => rest),
+        naruExistingResidences: this.existingResidences.map(({ id, isExpanded, ...rest }) => rest),
+        naruProposedResidences: this.proposedResidences.map(({ id, isExpanded, ...rest }) => rest),
       };
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
