@@ -31,9 +31,6 @@
           <app-no-data [showRequired]="showErrors" *ngIf="!structure.area"></app-no-data>
         </div>
       </ng-container>
-      <div *ngIf="_noiSubmission.soilProposedStructures.length === 0" class="full-width">
-        <app-no-data [showRequired]="showErrors"></app-no-data>
-      </div>
     </div>
     <ng-container *ngIf="isMobile">
       <app-structure-mobile-card            
@@ -44,8 +41,10 @@
           [isReviewStep]="true"
           >
       </app-structure-mobile-card>
-      <br />
     </ng-container>
+    <div *ngIf="_noiSubmission.soilProposedStructures.length === 0" class="full-width">
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    </div>
 
     <ng-container *ngIf="isSoilStructureFarmUseReasonVisible">
       <div class="subheading2 grid-1">Describe how the structure is necessary for farm use</div>
