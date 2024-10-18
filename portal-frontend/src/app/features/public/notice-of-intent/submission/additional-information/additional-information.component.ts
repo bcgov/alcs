@@ -9,6 +9,7 @@ import {
   STRUCTURE_TYPES,
   NOI_STRUCTURE_TYPE_LABEL_MAP,
 } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-additional-information',
@@ -17,6 +18,7 @@ import {
 })
 export class AdditionalInformationComponent implements OnInit {
   firstQuestion = 'FIX THIS';
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   @Input() noiSubmission!: PublicNoticeOfIntentSubmissionDto;
 
