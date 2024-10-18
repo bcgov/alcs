@@ -24,6 +24,7 @@ import {
   CreateApplicationDecisionMeetingDto,
   DecisionMeetingDto,
 } from './decision-meeting.dto';
+import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 
 describe('DecisionMeetingController', () => {
   let controller: DecisionMeetingController;
@@ -33,8 +34,12 @@ describe('DecisionMeetingController', () => {
   let mockEmailService: DeepMocked<EmailService>;
   let mockPlanningReferralService: DeepMocked<PlanningReferralService>;
   let mockPlanningReviewMeetingService: DeepMocked<PlanningReviewMeetingService>;
+  let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
   let mockApplication;
   let mockMeeting;
+
+  let mockedApplicationsPausedStatuses: Map<string, boolean> = new Map();
+  let mockedReconsiderationsPausedStatuses: Map<string, boolean> = new Map();
 
   beforeEach(async () => {
     mockMeetingService = createMock();
@@ -43,6 +48,7 @@ describe('DecisionMeetingController', () => {
     mockPlanningReferralService = createMock();
     mockEmailService = createMock();
     mockPlanningReviewMeetingService = createMock();
+    mockApplicationTimeTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -77,6 +83,10 @@ describe('DecisionMeetingController', () => {
         {
           provide: PlanningReviewMeetingService,
           useValue: mockPlanningReviewMeetingService,
+        },
+        {
+          provide: ApplicationTimeTrackingService,
+          useValue: mockApplicationTimeTrackingService,
         },
         {
           provide: ClsService,
@@ -164,7 +174,9 @@ describe('DecisionMeetingController', () => {
   it('should load and map application meetings', async () => {
     mockApplicationService.getMany.mockResolvedValue([mockApplication]);
     mockReconsiderationService.getMany.mockResolvedValue([]);
-
+    mockApplicationTimeTrackingService.getPausedStatusByUuid.mockResolvedValue(
+      mockedApplicationsPausedStatuses,
+    );
     mockApplication.card!.board = {
       code: 'CODE',
     } as Board;
@@ -187,6 +199,9 @@ describe('DecisionMeetingController', () => {
     mockApplicationService.getMany.mockResolvedValue([]);
 
     const reconMock = initApplicationReconsiderationMockEntity(mockApplication);
+    mockApplicationTimeTrackingService.getPausedStatusByUuid.mockResolvedValue(
+      mockedApplicationsPausedStatuses,
+    );
     reconMock.card!.board = {
       code: 'CODE',
     } as Board;

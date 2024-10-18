@@ -50,7 +50,6 @@
 }
 
 a {
-  font-size: 14px !important;
   cursor: pointer;
 }
 
@@ -87,4 +86,51 @@ a {
 .cdk-drag-placeholder,
 .cdk-drag-preview {
   background-color: colors.$grey-light !important;
+}
+
+
+.mat-column-index {
+  width: 2%;
+}
+
+.mat-column-source {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 10% !important;
+  width: 10% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.mat-column-type {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 21% !important;
+  width: 21% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.mat-column-fileName {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 55% !important;
+  width: 55% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.mat-column-uploadedAt {
+  width: 18%;
+}
+
+.mat-column-action {
+  width: 2%;
+}
+
+.mat-column-sorting {
+  width: 2%;
 }

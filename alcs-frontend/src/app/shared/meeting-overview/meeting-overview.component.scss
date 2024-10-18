@@ -316,3 +316,8 @@ mat-panel-description {
 .incoming-files-panel {
   margin-top: 16px;
 }
+
+.file-paused {
+  opacity: 0.8;
+  background-color: colors.$paused-color;
+}
