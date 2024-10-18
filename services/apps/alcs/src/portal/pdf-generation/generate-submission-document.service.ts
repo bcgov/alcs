@@ -411,8 +411,18 @@ export class GenerateSubmissionDocumentService {
       naruSetback: submission.naruSetback,
       naruLocationRationale: submission.naruLocationRationale,
       naruInfrastructure: submission.naruInfrastructure,
-      naruExistingResidences: naruExistingResidences,
-      naruProposedResidences: naruProposedResidences,
+      naruExistingResidences: naruExistingResidences.map((e) => ({
+        cnt: e.cnt,
+        floorArea: e.floorArea != 0 ? e.floorArea : '',
+        description: e.description,
+        noData: NO_DATA,
+      })),
+      naruProposedResidences: naruProposedResidences.map((e) => ({
+        cnt: e.cnt,
+        floorArea: e.floorArea,
+        description: e.description,
+        noData: NO_DATA,
+      })),
 
       buildingPlans: documents
         .filter(
