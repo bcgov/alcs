@@ -43,12 +43,6 @@ mat-card-content {
   }
 }
 
-a {
-  align-self: flex-end;
-  padding-right: rem(30);
-  padding-bottom: rem(10);
-}
-
 .strong {
   font-weight: 700;
 }
@@ -91,4 +85,16 @@ a {
 .no-data {
   margin-bottom: rem(-5) !important;
   margin-top: rem(-10) !important;
+}
+
+.residential-warning {
+  width: 100%;
+  background-color: rgba(colors.$secondary-color-light, 0.5);
+  margin-bottom: rem(20);
+}
+
+.residential-warning-text {
+  font-weight: 400;
+  font-size: rem(12);
+  margin: rem(20) rem(10) rem(20) rem(10);
 }

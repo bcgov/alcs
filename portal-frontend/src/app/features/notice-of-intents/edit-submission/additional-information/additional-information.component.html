@@ -79,10 +79,10 @@
             >
           </app-structure-mobile-card>
         </div>
-        <table mat-table [dataSource]="structuresSource" *ngIf="!isMobile">
+        <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
           <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef>#</th>
-            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+            <td mat-cell *matCellDef="let i = dataIndex">{{ i + 1 }}</td>
           </ng-container>
 
           <ng-container matColumnDef="type">
@@ -159,6 +159,21 @@
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <ng-container matColumnDef="msgWarning">
+            <td colspan="7" mat-cell *matCellDef>
+              <div class="residential-warning">
+                <div class="residential-warning-text">
+                  The proposed residential structure and its total floor area must be allowed under the ALC Act and/or ALR Use Regulation. 
+                  If not, you may require a 'Non-Adhering Residential Use' application instead. For more info, please see 
+                  <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank">Housing in the ALR</a> 
+                  on the ALC website.
+                </div>
+              </div>              
+            </td>
+          </ng-container>
+
+          <tr mat-row class="row-group" *matRowDef="let row; columns: ['msgWarning']; when: isWarning"></tr>
 
           <tr class="mat-row no-data" *matNoDataRow>
             <td class="text-center" colspan="7">
