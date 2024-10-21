@@ -27,6 +27,16 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <div
+          *ngIf="
+            form.controls['type']!.invalid &&
+            (form.controls['type']!.dirty || form.controls['type']!.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon class="warning-icon">warning</mat-icon>
+          <div *ngIf="form.controls['type']!.errors?.['required']">This field is required</div>
+        </div>
       </div>
       <div class="form-field">
         <div class="label">

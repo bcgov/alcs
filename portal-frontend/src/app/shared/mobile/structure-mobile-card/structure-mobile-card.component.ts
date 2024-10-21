@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, type OnInit } from '@angular/core';
 import {
   FormProposedStructure,
   NOI_STRUCTURE_TYPE_LABEL_MAP,
@@ -11,7 +11,7 @@ import { ProposedStructure } from '../../../services/notice-of-intent-submission
   templateUrl: './structure-mobile-card.component.html',
   styleUrl: './structure-mobile-card.component.scss',
 })
-export class StructureMobileCardComponent {
+export class StructureMobileCardComponent implements OnInit {
   @Input() structure!: FormProposedStructure | ProposedStructure;
   @Input() isLast: boolean = false;
   @Input() index: number = 0;
@@ -23,10 +23,7 @@ export class StructureMobileCardComponent {
   isError: boolean = false;
 
   ngOnInit(): void {
-    if (this.structure.area === null || this.structure.area === 0 || this.structure.type === null) {
-      this.isError = true;
-      this.showErrors = true;
-    }
+    this.checkError();
   }
 
   onEdit() {
@@ -50,5 +47,12 @@ export class StructureMobileCardComponent {
       return true;
     }
     return false;
+  }
+
+  private checkError() {
+    if (this.structure.area === null || this.structure.area === 0 || this.structure.type === null) {
+      this.isError = true;
+      this.showErrors = true;
+    }
   }
 }

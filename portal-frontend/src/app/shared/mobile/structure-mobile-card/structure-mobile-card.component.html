@@ -1,22 +1,31 @@
-<mat-card [ngClass]="{ 'last-card': isLast, 'review-step':  isReviewStep, 'error-card': isError && !isReviewStep }">
+<mat-card [ngClass]="{ 'last-card': isLast, 'review-step':  isReviewStep, 'error-card': (structure.area === 0 || !structure.area || !structure.area) && !isReviewStep }">
   <mat-card-header>
     <mat-card-title>
       <div class="line-info-floor">
         <span class="strong">#{{ index+1 }} Total Floor Area: </span>
         <ng-container *ngIf="structure.area === 0 || !structure.area; else validFloorArea">
-          <div class="text-error">No Data</div>
+            <div class="text-error">No Data</div>
+            <div [ngClass]="isReviewStep ? 'review-error' : 'field-error'">
+              <mat-icon>warning</mat-icon>
+              <div>{{ isReviewStep ? 'Required Field' : 'This field is required'}}</div>
+            </div>
         </ng-container>
         <ng-template #validFloorArea>
           <span [class.strong]="isReviewStep">{{ structure.area }} <span matTextSuffix>(m<sup>2</sup>)</span></span>
         </ng-template>
       <div class="line-info-type">
-        <span class="strong">Type: </span>{{ mapStructureTypeValueToLabel(structure.type) }}
+        <ng-container *ngIf="!structure.type; else validType">
+          <span class="strong">Type: </span>
+          <div class="text-error">No Data</div>
+          <div [ngClass]="isReviewStep ? 'review-error' : 'field-error'">
+            <mat-icon>warning</mat-icon>
+            <div>{{ isReviewStep ? 'Required Field' : 'This field is required'}}</div>
+          </div>
+        </ng-container>
+        <ng-template #validType>
+          <span class="strong">Type: </span>{{ mapStructureTypeValueToLabel(structure.type) }}
+        </ng-template>
       </div>
-      <div class="field-error" *ngIf="(!structure.area || structure.area === 0 || !structure.type) && !isReviewStep">
-        <mat-icon>warning</mat-icon>
-        <div>This field is required</div>
-      </div>
-      <app-no-data [showRequired]="showErrors" *ngIf="(!structure.area || structure.area === 0 || !structure.type) && isReviewStep"></app-no-data>
     </div>
     </mat-card-title>
     <ng-container *ngIf="!isReviewStep">
