@@ -137,9 +137,7 @@
         </div>
       </ng-container>
       <ng-container *ngFor="let existingResidence of applicationSubmission.naruExistingResidences; let i = index">
-        <div>
-          {{ i + 1 }}
-        </div>
+        <div>#{{ i + 1 }}</div>
         <div>
           {{ existingResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
         </div>
@@ -174,7 +172,7 @@
       <div class="subheading2">Total Floor Area</div>
       <div class="subheading2">Description</div>
       <ng-container *ngFor="let proposedResidence of applicationSubmission.naruProposedResidences; let i = index">
-        <div>{{ i + 1 }}</div>
+        <div>#{{ i + 1 }}</div>
         <div>
           {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
         </div>
@@ -182,7 +180,7 @@
       </ng-container>
     </div>
     <ng-container *ngIf="isMobile">
-      <div class="subheading2 grid-1 residence-mobile-header">Total Floor Area of Proposed Residence(s)</div>
+      <div class="subheading2 grid-1">Total Floor Area of Proposed Residence(s)</div>
       <ng-container *ngIf="applicationSubmission.naruProposedResidences?.length === 0">
         <div>
           <app-no-data></app-no-data>
