@@ -590,12 +590,15 @@
         type="button"
         mat-stroked-button
         color="primary"
-        [ngClass]="{ 'error-field-outlined ng-invalid': showErrors && proposedResidencesRequired }"
+        [ngClass]="{
+          'error-field-outlined ng-invalid':
+            showErrors && proposedResidencesRequired && proposedResidences.length === 0,
+        }"
         (click)="onAddEditResidence(false, undefined, false)"
       >
         + Add Proposed Residence
       </button>
-      <div class="field-error" *ngIf="showErrors && proposedResidencesRequired">
+      <div class="field-error" *ngIf="showErrors && proposedResidencesRequired && proposedResidences.length === 0">
         <mat-icon>warning</mat-icon>
         <div>This field is required</div>
       </div>
