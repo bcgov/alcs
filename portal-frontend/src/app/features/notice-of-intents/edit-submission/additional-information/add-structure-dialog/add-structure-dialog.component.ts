@@ -52,6 +52,10 @@ export class AddStructureDialogComponent {
   }
 
   async onSubmit() {
+    if (!this.form.valid) {
+      this.dialogRef.close(null);
+      return;
+    }
     this.isLoading = true;
     const dto: ProposedStructure = {
       area: Number(this.area.value!),
