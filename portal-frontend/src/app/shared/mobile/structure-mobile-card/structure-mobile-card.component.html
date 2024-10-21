@@ -33,4 +33,12 @@
       </mat-menu>
     </ng-container>
   </mat-card-header>
+  <div class="residential-warning" *ngIf="isResidential(structure.type) && !isReviewStep">
+    <div class="residential-warning-text">
+      The proposed residential structure and its total floor area must be allowed under the ALC Act and/or ALR Use Regulation. 
+      If not, you may require a 'Non-Adhering Residential Use' application instead. For more info, please see 
+      <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank">Housing in the ALR</a> 
+      on the ALC website.
+    </div>
+  </div>
 </mat-card>

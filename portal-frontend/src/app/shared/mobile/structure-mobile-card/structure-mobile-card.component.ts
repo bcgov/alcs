@@ -44,4 +44,11 @@ export class StructureMobileCardComponent {
 
     return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
   }
+
+  isResidential(type: STRUCTURE_TYPES | null): boolean {
+    if (type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE) {
+      return true;
+    }
+    return false;
+  }
 }

@@ -359,7 +359,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       console.error('Failed to find structure');
       return;
     }
-
+    this.structuresSource = new MatTableDataSource(this.proposedStructures);
     const prevType = structure.type;
     const hasInput = this.checkStructureTypeInput(prevType);
 
@@ -475,6 +475,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     } else {
       this.addControl(null, null);
     }
+  }
+
+  isWarning(index: number, item: ProposedStructure): boolean {
+    return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
   }
 
   private addControl(type: any | null, area: string | null) {
