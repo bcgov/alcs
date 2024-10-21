@@ -150,16 +150,15 @@
     </div>
   </div>
 
-  <ng-container *ngIf="buildingPlans.length !== 0">
-    <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
-    <div class="grid-double">
-      <div *ngFor="let file of buildingPlans">
-        <a (click)="openFile(file)">
-          {{ file.fileName }}
-        </a>
-      </div>
+  <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
+  <div class="grid-double">
+    <div *ngFor="let file of buildingPlans">
+      <a (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
     </div>
-  </ng-container>
+    <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
+  </div>
 
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
     <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
