@@ -75,6 +75,22 @@ mat-card-content {
   }
 }
 
+.review-error {
+  margin-top: rem(4);
+  color: colors.$error-color;
+  display: flex;
+  align-items: center;
+  font-size: rem(12);
+
+  .mat-icon {
+    margin-right: rem(4);
+    font-size: rem(14);
+    width: rem(14);
+    min-width: rem(14);
+    height: rem(14);
+  }
+}
+
 .error-card {
   border-radius: rem(4) !important;
   border: rem(2) solid colors.$error-color !important;

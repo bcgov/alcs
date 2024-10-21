@@ -410,7 +410,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         }
       }
     });
-    dialog.beforeClosed().subscribe(async (result) => {
+    dialog.afterClosed().subscribe(async (result) => {
       if (!result) return;
       const structureToEdit = this.proposedStructures.find((structure) => structure.id === id);
       if (structureToEdit) {

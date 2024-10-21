@@ -36,9 +36,9 @@ export class AddStructureDialogComponent {
       this.structureTypeOptions = data.structureData.options;
     }
     if (data.isEdit) {
-      const editArea = data.structureData?.area ? data.structureData?.area : 0;
+      const editArea = data.structureData?.area ? data.structureData?.area.toString() : '';
       const editType = data.structureData?.options?.find((x: any) => x.value === data.structureData?.type);
-      this.area.setValue(editArea.toString());
+      this.area.setValue(editArea);
       this.type.setValue(editType ? editType.value : '');
     }
   }
@@ -53,7 +53,6 @@ export class AddStructureDialogComponent {
 
   async onSubmit() {
     if (!this.form.valid) {
-      this.dialogRef.close(null);
       return;
     }
     this.isLoading = true;
