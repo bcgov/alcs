@@ -70,7 +70,7 @@
     "reflect-metadata": "^0.1.14",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
-    "s3-streamlogger": "^1.9.2",
+    "s3-streamlogger": "^1.10.1",
     "source-map-support": "^0.5.21",
     "ts-proto": "^1.171.0",
     "ts-protoc-gen": "^0.15.0",
