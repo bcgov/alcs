@@ -37,10 +37,6 @@ mat-card-content {
 .review-step {
   border-bottom: rem(1) solid #565656;
   background-color: transparent;
-
-  mat-card-header {
-    padding: rem(5) 0 rem(10) 0 !important;
-  }
 }
 
 .strong {
@@ -53,7 +49,7 @@ mat-card-content {
 }
 
 .line-info-type {
-  padding-bottom: rem(10);
+  padding-bottom: rem(5);
 }
 
 .text-error {
@@ -65,6 +61,7 @@ mat-card-content {
 
 .field-error {
   color: colors.$error-color;
+  margin-bottom: rem(4);
   font-size: rem(15);
   font-weight: 700;
   display: flex;
@@ -77,6 +74,7 @@ mat-card-content {
 
 .review-error {
   margin-top: rem(4);
+  margin-bottom: rem(4);
   color: colors.$error-color;
   display: flex;
   align-items: center;
@@ -94,8 +92,6 @@ mat-card-content {
 .error-card {
   border-radius: rem(4) !important;
   border: rem(2) solid colors.$error-color !important;
-  padding: 0 0 rem(5) rem(10);
-  margin-top: rem(5);
 }
 
 .no-data {

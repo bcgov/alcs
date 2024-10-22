@@ -40,6 +40,8 @@ export class AddStructureDialogComponent {
       const editType = data.structureData?.options?.find((x: any) => x.value === data.structureData?.type);
       this.area.setValue(editArea);
       this.type.setValue(editType ? editType.value : '');
+      this.form.controls.area.markAsTouched();
+      this.form.controls.type.markAsTouched();
     }
   }
 
