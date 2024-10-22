@@ -76,7 +76,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="true"
             >Yes
@@ -84,7 +84,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="false"
             >No
@@ -478,10 +478,7 @@
     >
       <div class="full-row">
         <label for="soilStructureResidentialUseReason"
-          >Describe why <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
-          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
-          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required for the
-          residential structure(s)</label
+          >Describe why placing fill/removing soil is required for the residential structure(s)</label
         >
         <div class="info-banner subtext">
           Please refer to
@@ -517,10 +514,8 @@
     <ng-container *ngIf="structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0">
       <div class="full-row">
         <label for="soilStructureResidentialAccessoryUseReason"
-          >Describe the intended use of the residential accessory structure(s) and why
-          <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
-          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
-          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required</label
+          >Describe the intended use of the residential accessory structure(s) and why placing fill/removing soil is
+          required</label
         >
         <div class="info-banner subtext">
           Please refer to
@@ -556,10 +551,7 @@
     <ng-container *ngIf="structureTypeCounts[structureTypes.OTHER_STRUCTURE] > 0">
       <div class="full-row">
         <label for="soilStructureOtherUseReason">
-          Describe the intended use of the 'Other' structure(s) and why
-          <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
-          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
-          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
+          Describe the intended use of the 'Other' structure(s) and why placing fill/removing soil is required
         </label>
         <mat-form-field appearance="outline">
           <textarea

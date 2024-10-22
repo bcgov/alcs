@@ -46,8 +46,6 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     Object.entries(STRUCTURE_TYPES).map(([_, type]) => [type, 0]),
   ) as { [key in STRUCTURE_TYPES]: number };
 
-  typeCode: string = '';
-
   proposalMap: ApplicationDocumentDto[] = [];
   crossSections: ApplicationDocumentDto[] = [];
   reclamationPlan: ApplicationDocumentDto[] = [];
@@ -129,7 +127,6 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
-        this.typeCode = applicationSubmission.typeCode;
 
         this.alreadyRemovedTableData = {
           volume: applicationSubmission.soilAlreadyRemovedVolume ?? 0,
