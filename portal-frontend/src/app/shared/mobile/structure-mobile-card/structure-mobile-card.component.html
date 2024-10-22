@@ -13,6 +13,7 @@
         <ng-template #validFloorArea>
           <span [class.strong]="isReviewStep">{{ structure.area }} <span matTextSuffix>(m<sup>2</sup>)</span></span>
         </ng-template>
+      </div>
       <div class="line-info-type">
         <ng-container *ngIf="!structure.type; else validType">
           <span class="strong">Type: </span>
@@ -26,7 +27,6 @@
           <span class="strong">Type: </span>{{ mapStructureTypeValueToLabel(structure.type) }}
         </ng-template>
       </div>
-    </div>
     </mat-card-title>
     <ng-container *ngIf="!isReviewStep">
       <button mat-icon-button [mat-menu-trigger-for]="menu">
