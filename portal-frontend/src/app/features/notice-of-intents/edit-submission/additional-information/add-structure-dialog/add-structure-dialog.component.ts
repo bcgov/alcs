@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProposedStructure } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { pairwise } from 'rxjs';
 
 @Component({
   selector: 'add-structure-dialog',
@@ -24,6 +25,8 @@ export class AddStructureDialogComponent {
 
   structureTypeOptions: any = [];
 
+  showTypeChangeWarning: boolean = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
       structureId?: string;
@@ -32,6 +35,10 @@ export class AddStructureDialogComponent {
     },
     private dialogRef: MatDialogRef<AddStructureDialogComponent>,
   ) {
+    this.type.valueChanges.pipe(pairwise()).subscribe(([oldType, newType]) => {
+      this.showTypeChangeWarning = !!data.isEdit && oldType !== newType;
+    });
+
     if (data?.structureData?.options) {
       this.structureTypeOptions = data.structureData.options;
     }
