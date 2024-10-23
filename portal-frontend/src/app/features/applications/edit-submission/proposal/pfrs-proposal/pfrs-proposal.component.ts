@@ -24,6 +24,7 @@ import {
   FormProposedStructure,
 } from 'src/app/features/notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { ProposedStructure } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { AddStructureDialogComponent } from '../../../../notice-of-intents/edit-submission/additional-information/add-structure-dialog/add-structure-dialog.component';
 
 @Component({
   selector: 'app-pfrs-proposal',
@@ -190,7 +191,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
         this.structuresForm = new FormGroup({});
         for (const structure of applicationSubmission.soilProposedStructures) {
-          this.addStructure(structure.type, structure.area);
+          this.addControl(structure.type, structure.area);
         }
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
@@ -445,12 +446,32 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   onStructureAdd() {
-    this.addStructure();
-    this.structuresSource = new MatTableDataSource(this.proposedStructures);
-    this.structuresForm.markAsDirty();
+    if (this.isMobile) {
+      const dialog = this.dialog.open(AddStructureDialogComponent, {
+        width: '70%',
+        data: {
+          structureData: {
+            options: this.structureTypeOptions,
+          },
+        },
+      });
+      dialog
+        .beforeClosed()
+        .subscribe(async (result: { isEditing: boolean; structureId: string; dto: ProposedStructure }) => {
+          if (!result) return;
+          this.addControl(result.dto.type, result.dto.area);
+          this.structuresSource = new MatTableDataSource(this.proposedStructures);
+
+          this.structureTypeCounts[result.dto.type!]++;
+          console.log(this.structureTypeCounts);
+        });
+    } else {
+      this.addControl();
+      this.structuresSource = new MatTableDataSource(this.proposedStructures);
+    }
   }
 
-  addStructure(type: STRUCTURE_TYPES | null = null, area: number | null = null) {
+  addControl(type: STRUCTURE_TYPES | null = null, area: number | null = null) {
     const areaStr = area ? area.toString(10) : null;
     const newStructure = { type, area: areaStr, id: v4() };
     this.proposedStructures.push(newStructure);
@@ -466,6 +487,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     if (type) {
       this.structureTypeCounts[type]++;
     }
+  }
+
+  isWarning(index: number, item: ProposedStructure): boolean {
+    return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
   }
 
   onStructureRemove(id: string) {
@@ -501,6 +526,42 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     if (structureToDelete.type !== null && this.structureTypeCounts[structureToDelete.type] > 0) {
       this.structureTypeCounts[structureToDelete.type]--;
     }
+  }
+
+  onStructureEdit(id: string) {
+    const structureToEdit = this.proposedStructures.find((structure) => structure.id === id);
+    const dialog = this.dialog.open(AddStructureDialogComponent, {
+      width: '70%',
+      data: {
+        isEdit: true,
+        structureId: structureToEdit?.id,
+        structureData: {
+          area: structureToEdit?.area,
+          type: structureToEdit?.type,
+          options: this.structureTypeOptions,
+        },
+      },
+    });
+    dialog
+      .afterClosed()
+      .subscribe(async (result: { isEditing: boolean; structureId: string; dto: ProposedStructure }) => {
+        if (!result) return;
+        const structureToEdit = this.proposedStructures.find((structure) => structure.id === id);
+
+        if (structureToEdit) {
+          if (structureToEdit.type !== result.dto.type) {
+            this.setStructureTypeInput(structureToEdit, result.dto.type!);
+          }
+
+          structureToEdit.area = result.dto.area ? result.dto.area.toString(10) : null;
+          structureToEdit.type = result.dto.type;
+          const areaControl = this.structuresForm.controls[`${structureToEdit?.id}-area`];
+          const typeControl = this.structuresForm.controls[`${structureToEdit?.id}-type`];
+          areaControl.setValue(structureToEdit.area?.toString());
+          typeControl.setValue(structureToEdit.type);
+          this.structuresForm.markAsDirty();
+        }
+      });
   }
 
   markDirty() {
