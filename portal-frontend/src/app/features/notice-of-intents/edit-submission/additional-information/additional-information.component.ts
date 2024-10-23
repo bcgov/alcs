@@ -37,7 +37,6 @@ export type FormProposedStructure = {
   type: STRUCTURE_TYPES | null;
   area: string | null;
   id: string;
-  typeLabel?: string | null;
 };
 
 export type TypeOption = { label: string; value: string };
@@ -171,19 +170,11 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           soilStructureResidentialAccessoryUseReason: noiSubmission.soilStructureResidentialAccessoryUseReason,
           soilStructureOtherUseReason: noiSubmission.soilStructureOtherUseReason,
         });
-        this.proposedStructures = noiSubmission.soilProposedStructures.map((structure) => ({
-          ...structure,
-          id: v4(),
-          area: structure.area ? structure.area.toString(10) : null,
-          typeLabel: this.structureTypeOptions.find((x) => x.value === structure.type)?.label,
-        }));
 
-        const newForm = new FormGroup({});
-        for (const lot of this.proposedStructures) {
-          newForm.addControl(`${lot.id}-type`, new FormControl(lot.type, [Validators.required]));
-          newForm.addControl(`${lot.id}-area`, new FormControl(lot.area, [Validators.required]));
+        this.structuresForm = new FormGroup({});
+        for (const lot of noiSubmission.soilProposedStructures) {
+          this.addControl(lot.type, lot.area);
         }
-        this.structuresForm = newForm;
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         this.prepareStructureSpecificTextInputs();
 
@@ -422,8 +413,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       const structureToEdit = this.proposedStructures.find((structure) => structure.id === id);
       if (structureToEdit) {
         structureToEdit.area = result.dto.area.toString();
-        structureToEdit.type = result.dto.type.value;
-        structureToEdit.typeLabel = result.dto.type.label;
+        structureToEdit.type = result.dto.type;
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         const areaControl = this.structuresForm.controls[`${structureToEdit?.id}-area`];
         const typeControl = this.structuresForm.controls[`${structureToEdit?.id}-type`];
@@ -475,12 +465,16 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           },
         },
       });
-      dialog.beforeClosed().subscribe(async (result) => {
-        if (!result) return;
-        this.addControl(result.dto.type, result.dto.area);
-      });
+      dialog
+        .beforeClosed()
+        .subscribe(async (result: { isEditing: boolean; structureId: string; dto: ProposedStructure }) => {
+          if (!result) return;
+          this.addControl(result.dto.type, result.dto.area);
+          this.structuresSource = new MatTableDataSource(this.proposedStructures);
+        });
     } else {
       this.addControl(null, null);
+      this.structuresSource = new MatTableDataSource(this.proposedStructures);
     }
   }
 
@@ -488,20 +482,19 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
   }
 
-  private addControl(type: any | null, area: string | null) {
-    const typeValue = type ? type.value : '';
-    const typeLabel = type ? type.label : '';
-    const newStructure = {
-      type: typeValue,
-      area: area ? area : '',
-      id: v4(),
-      typeLabel: typeLabel,
-    };
+  private addControl(type: STRUCTURE_TYPES | null, area: number | null) {
+    const areaStr = area ? area.toString(10) : null;
+    const newStructure: FormProposedStructure = { type, area: areaStr, id: v4() };
     this.proposedStructures.push(newStructure);
-    this.structuresSource = new MatTableDataSource(this.proposedStructures);
+    this.structuresForm.addControl(
+      `${newStructure.id}-type`,
+      new FormControl<string | null>(type, [Validators.required]),
+    );
+    this.structuresForm.addControl(
+      `${newStructure.id}-area`,
+      new FormControl<string | null>(areaStr, [Validators.required]),
+    );
 
-    this.structuresForm.addControl(`${newStructure.id}-type`, new FormControl(typeValue, [Validators.required]));
-    this.structuresForm.addControl(`${newStructure.id}-area`, new FormControl(area, [Validators.required]));
     this.structuresForm.markAsDirty();
   }
 

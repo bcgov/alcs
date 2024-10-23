@@ -60,7 +60,7 @@ export class AddStructureDialogComponent {
     this.isLoading = true;
     const dto: ProposedStructure = {
       area: Number(this.area.value!),
-      type: this.structureTypeOptions.find((v: any) => v.value === this.type.value!),
+      type: this.structureTypeOptions.find((v: any) => v.value === this.type.value!).value,
     };
     this.isLoading = false;
     this.dialogRef.close({
