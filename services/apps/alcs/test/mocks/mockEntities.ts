@@ -22,6 +22,8 @@ import { Comment } from '../../src/alcs/comment/comment.entity';
 import { CommentMention } from '../../src/alcs/comment/mention/comment-mention.entity';
 import { AssigneeDto, UserDto } from '../../src/user/user.dto';
 import { User } from '../../src/user/user.entity';
+import { TagCategory } from 'apps/alcs/src/alcs/admin/tag-category/tag-category.entity';
+import { Tag } from 'apps/alcs/src/alcs/admin/tag/tag.entity';
 
 const initCardStatusMockEntity = (): CardStatus => {
   const cardStatus = new CardStatus();
@@ -341,6 +343,22 @@ const initApplicationMeetingMock = (
   return meeting;
 };
 
+const initTagCategoryMockEntity = (): TagCategory => {
+  const category = new TagCategory();
+  category.name = 'fake-name';
+  return category;
+};
+
+const initTagMockEntity = (): Tag => {
+  const tag = new Tag();
+  tag.name = 'tag-name';
+  tag.isActive = true;
+  tag.category = initTagCategoryMockEntity();
+  tag.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+
+  return tag;
+};
+
 export {
   initCardStatusMockEntity,
   initApplicationMockEntity,
@@ -360,4 +378,6 @@ export {
   initApplicationDecisionMock,
   initApplicationReconsiderationMockEntity,
   initApplicationModificationMockEntity,
+  initTagCategoryMockEntity,
+  initTagMockEntity,
 };
