@@ -273,9 +273,15 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           if (isConfirmed) {
             if (answeredYes) {
               // Clear docs
-              this.crossSections = [];
-              this.reclamationPlan = [];
-              this.buildingPlans = [];
+              for (const crossSection of this.crossSections) {
+                this.onDeleteFile(crossSection);
+              }
+              for (const reclamationPlan_ of this.reclamationPlan) {
+                this.onDeleteFile(reclamationPlan_);
+              }
+              for (const buildingPlan of this.buildingPlans) {
+                this.onDeleteFile(buildingPlan);
+              }
 
               // Clear questions
               this.reduceNegativeImpacts.reset();

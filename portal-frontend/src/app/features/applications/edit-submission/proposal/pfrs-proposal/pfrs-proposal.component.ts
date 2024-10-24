@@ -337,10 +337,18 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           if (isConfirmed) {
             if (answeredYes) {
               // Clear docs
-              this.crossSections = [];
-              this.reclamationPlan = [];
-              this.buildingPlans = [];
-              this.noticeOfWork = [];
+              for (const crossSection of this.crossSections) {
+                this.onDeleteFile(crossSection);
+              }
+              for (const reclamationPlan_ of this.reclamationPlan) {
+                this.onDeleteFile(reclamationPlan_);
+              }
+              for (const buildingPlan of this.buildingPlans) {
+                this.onDeleteFile(buildingPlan);
+              }
+              for (const noticeOfWork_ of this.noticeOfWork) {
+                this.onDeleteFile(noticeOfWork_);
+              }
 
               // Clear questions
               this.reduceNegativeImpacts.reset();
