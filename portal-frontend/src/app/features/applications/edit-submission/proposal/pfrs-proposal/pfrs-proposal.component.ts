@@ -50,12 +50,14 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   proposalMap: ApplicationDocumentDto[] = [];
   crossSections: ApplicationDocumentDto[] = [];
   reclamationPlan: ApplicationDocumentDto[] = [];
+  buildingPlans: ApplicationDocumentDto[] = [];
   noticeOfWork: ApplicationDocumentDto[] = [];
   areComponentsDirty = false;
 
   showProposalMapVirus = false;
   showCrossSectionVirus = false;
   showReclamationPlanVirus = false;
+  showBuildingPlanVirus = false;
   showNoticeOfWorkVirus = false;
 
   isNewStructure = new FormControl<boolean | null>(null, [Validators.required]);
@@ -207,6 +209,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
       this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
       this.reclamationPlan = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
+      this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
       this.noticeOfWork = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.NOTICE_OF_WORK);
     });
   }
@@ -228,6 +231,11 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   async attachReclamationPlan(file: FileHandle) {
     const res = await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
     this.showReclamationPlanVirus = !res;
+  }
+
+  async attachBuildingPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+    this.showBuildingPlanVirus = !res;
   }
 
   async attachNoticeOfWork(file: FileHandle) {
@@ -313,7 +321,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           this.soilStructureResidentialUseReason.value ||
           this.soilAgriParcelActivity.value ||
           this.soilStructureResidentialAccessoryUseReason.value ||
-          this.soilStructureOtherUseReason.value))
+          this.soilStructureOtherUseReason.value ||
+          this.buildingPlans.length > 0))
     );
 
     if (hasValuesThatWillBeCleared) {
@@ -330,6 +339,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
               // Clear docs
               this.crossSections = [];
               this.reclamationPlan = [];
+              this.buildingPlans = [];
               this.noticeOfWork = [];
 
               // Clear questions
