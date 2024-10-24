@@ -32,6 +32,12 @@ import { NoiSubtypeController } from './noi-subtype/noi-subtype.controller';
 import { NoiSubtypeService } from './noi-subtype/noi-subtype.service';
 import { UnarchiveCardController } from './unarchive-card/unarchive-card.controller';
 import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
+import { TagCategoryService } from './tag-category/tag-category.service';
+import { TagCategoryController } from './tag-category/tag-category.controller';
+import { TagCategory } from './tag-category/tag-category.entity';
+import { Tag } from './tag/tag.entity';
+import { TagController } from './tag/tag.controller';
+import { TagService } from './tag/tag.service';
 
 @Module({
   imports: [
@@ -42,6 +48,8 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
       NoticeOfIntentSubtype,
       ApplicationDecisionConditionType,
       Configuration,
+      TagCategory,
+      Tag,
     ]),
     ApplicationModule,
     NoticeOfIntentModule,
@@ -62,6 +70,8 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     UnarchiveCardController,
     NoiSubtypeController,
     ApplicationDecisionMakerController,
+    TagCategoryController,
+    TagController,
     ApplicationDecisionConditionTypesController,
     CardStatusController,
     BoardManagementController,
@@ -71,6 +81,8 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     HolidayService,
     ApplicationCeoCriterionService,
     ApplicationDecisionMakerService,
+    TagCategoryService,
+    TagService,
     UnarchiveCardService,
     NoiSubtypeService,
     ApplicationDecisionConditionTypesService,
