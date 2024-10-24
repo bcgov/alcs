@@ -26,9 +26,7 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <mat-label for="is-new-structure">
-        Are you removing soil and placing fill in order to build a structure?
-      </mat-label>
+      <mat-label for="is-new-structure"> Are you placing fill in order to build a structure? </mat-label>
       <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
       <div>
         <mat-button-toggle-group
@@ -422,7 +420,7 @@
     >
       <div class="full-row">
         <label for="soilStructureResidentialUseReason"
-          >Describe why placing fill/removing soil is required for the residential structure(s)</label
+          >Describe why placing fill is required for the residential structure(s)</label
         >
         <div class="info-banner subtext">
           Please refer to
@@ -458,8 +456,7 @@
     <ng-container *ngIf="structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0">
       <div class="full-row">
         <label for="soilStructureResidentialAccessoryUseReason"
-          >Describe the intended use of the residential accessory structure(s) and why placing fill/removing soil is
-          required</label
+          >Describe the intended use of the residential accessory structure(s) and why placing fill is required</label
         >
         <div class="info-banner subtext">
           Please refer to
@@ -495,7 +492,7 @@
     <ng-container *ngIf="structureTypeCounts[structureTypes.OTHER_STRUCTURE] > 0">
       <div class="full-row">
         <label for="soilStructureOtherUseReason">
-          Describe the intended use of the 'Other' structure(s) and why placing fill/removing soil is required
+          Describe the intended use of the 'Other' structure(s) and why placing fill is required
         </label>
         <mat-form-field appearance="outline">
           <textarea
