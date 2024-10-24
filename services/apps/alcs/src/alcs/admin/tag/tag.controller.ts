@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -40,7 +40,7 @@ export class TagController {
     return await this.service.create(createDto);
   }
 
-  @Put('/:uuid')
+  @Patch('/:uuid')
   @UserRoles(AUTH_ROLE.ADMIN)
   async update(@Param('uuid') uuid: string, @Body() updateDto: TagDto) {
     return await this.service.update(uuid, updateDto);
