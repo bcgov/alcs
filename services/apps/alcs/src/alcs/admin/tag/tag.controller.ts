@@ -14,7 +14,7 @@ import * as config from 'config';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { TagService } from './tag.service';
-import { AUTH_ROLE } from 'apps/alcs/src/common/authorization/roles';
+import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { TagDto } from './tag.dto';
 
 @Controller('tag')

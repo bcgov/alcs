@@ -8,7 +8,7 @@ import { TagCategory } from '../tag-category/tag-category.entity';
 import {
   initTagCategoryMockEntity,
   initTagMockEntity,
-} from 'apps/alcs/test/mocks/mockEntities';
+} from '../../../../test/mocks/mockEntities';
 import { AutomapperModule } from 'automapper-nestjs';
 import { classes } from 'automapper-classes';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -54,8 +54,10 @@ describe('TagCategoryService', () => {
 
     service = module.get<TagService>(TagService);
 
+    tagRepositoryMock.findOneOrFail.mockResolvedValue(mockTagEntity);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
     tagRepositoryMock.save.mockResolvedValue(mockTagEntity);
+    tagCategoryRepositoryMock.findOne.mockResolvedValue(mockTagCategoryEntity);
     tagCategoryRepositoryMock = module.get(getRepositoryToken(TagCategory));
   });
 
@@ -87,13 +89,17 @@ describe('TagCategoryService', () => {
       category: mockTagCategoryEntity,
     };
 
-    tagRepositoryMock.findOne.mockResolvedValue(null);
+    tagRepositoryMock.findOneOrFail.mockRejectedValue(
+      new ServiceValidationException(
+        `Tag for with ${mockTagEntity.uuid} not found`,
+      ),
+    );
 
     await expect(
       service.update(mockTagEntity.uuid, payload),
     ).rejects.toMatchObject(
       new ServiceValidationException(
-        `Card for with ${mockTagEntity.uuid} not found`,
+        `Tag for with ${mockTagEntity.uuid} not found`,
       ),
     );
     expect(tagRepositoryMock.save).toBeCalledTimes(0);
@@ -115,7 +121,10 @@ describe('TagCategoryService', () => {
     const payload: TagDto = {
       name: mockTagEntity.name,
       isActive: mockTagEntity.isActive,
-      category: mockTagCategoryEntity,
+      category: {
+        uuid: 'fakeuuid',
+        name: '',
+      },
     };
 
     tagCategoryRepositoryMock.findOne.mockResolvedValue(null);
