@@ -330,19 +330,21 @@
         </div>
       </form>
 
-      <div class="full-row">
-        <button
-          mat-stroked-button
-          color="primary"
-          (click)="onStructureAdd()"
-          [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
-          type="button"
-        >
-          + Add Structure
-        </button>
-        <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
-          At least one structure is required
-        </app-validation-error>
+      <div class="form-row">
+        <div class="full-row">
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="onStructureAdd()"
+            [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
+            type="button"
+          >
+            + Add Structure
+          </button>
+          <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
+            At least one structure is required
+          </app-validation-error>
+        </div>
       </div>
 
       <div class="full-row">
