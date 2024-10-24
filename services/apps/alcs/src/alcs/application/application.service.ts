@@ -481,6 +481,7 @@ export class ApplicationService {
 
   async getIncomingApplicationFiles(): Promise<
     {
+      uuid: string;
       file_number: string;
       applicant: string;
       code: string;
@@ -506,7 +507,7 @@ export class ApplicationService {
         SELECT * 
         FROM alcs.calculate_active_days(ARRAY(SELECT fa."uuid" FROM filtered_applications fa))
       )
-      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a 
+      SELECT a.uuid, a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a 
       INNER JOIN alcs.card c ON c."uuid" = a.card_uuid 
       INNER JOIN calculated calc ON a."uuid" = calc.application_uuid
       INNER JOIN alcs.board board on c.board_uuid = board.uuid
@@ -519,6 +520,7 @@ export class ApplicationService {
 
   async getIncomingReconsiderationFiles(): Promise<
     {
+      uuid: string;
       file_number: string;
       applicant: string;
       code: string;
@@ -530,22 +532,30 @@ export class ApplicationService {
     }[]
   > {
     const query = `
-      WITH filtered_applications AS (
+      WITH latest_meeting AS (
+        SELECT adm.application_uuid, MAX(adm.date) AS latest_meeting_date
+        FROM alcs.application_decision_meeting adm
+        GROUP BY adm.application_uuid
+      ),
+      filtered_applications AS (
         SELECT ar.application_uuid FROM alcs.application_reconsideration ar
         INNER JOIN alcs.application a on a.uuid = ar.application_uuid
+        LEFT JOIN latest_meeting lm on lm.application_uuid = ar.application_uuid
         LEFT JOIN alcs.application_decision_meeting adm ON adm.application_uuid = ar.application_uuid
+        AND adm.date = lm.latest_meeting_date
         INNER JOIN alcs.card c ON c."uuid" = ar.card_uuid
         WHERE c.status_code NOT IN (${this.excludeStatuses.map((_, index) => `$${index + 1}`).join(', ')})
         AND c.archived != TRUE
         GROUP BY ar.application_uuid
         HAVING COUNT(adm.uuid) = 0
         OR COUNT(CASE WHEN adm.audit_deleted_date_at IS NULL THEN 1 END) = 0
+        OR COUNT(CASE WHEN adm.date < ar.submitted_date AND adm.audit_deleted_date_at is NULL THEN 1 END) > 0
       ),
       calculated AS (
         SELECT * 
         FROM alcs.calculate_active_days(ARRAY(SELECT fa."application_uuid" FROM filtered_applications fa))
       )
-      SELECT a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a
+      SELECT a.uuid, a.file_number, a.applicant, board.code, u.name, u.given_name, u.family_name, c.high_priority, calc.active_days FROM alcs.application a
       INNER JOIN alcs.application_reconsideration ar on ar.application_uuid = a.uuid
       INNER JOIN alcs.card c ON c."uuid" = ar.card_uuid 
       INNER JOIN calculated calc ON a."uuid" = calc.application_uuid

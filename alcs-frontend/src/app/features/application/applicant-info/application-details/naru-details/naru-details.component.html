@@ -127,9 +127,7 @@
         <app-no-data></app-no-data>
       </ng-container>
       <ng-container *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let i = index">
-        <div class="grid-1">
-          {{ i + 1 }}
-        </div>
+        <div class="grid-1">#{{ i + 1 }}</div>
         <div class="grid-2">
           <ng-container *ngIf="existingResidence.floorArea === 0; else validFloorArea">
             <app-no-data></app-no-data>
@@ -152,9 +150,7 @@
         <app-no-data></app-no-data>
       </ng-container>
       <ng-container *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let i = index">
-        <div class="grid-1">
-          {{ i + 1 }}
-        </div>
+        <div class="grid-1">#{{ i + 1 }}</div>
         <div class="grid-2">
           {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
         </div>
@@ -179,16 +175,15 @@
     </div>
   </div>
 
-  <ng-container *ngIf="buildingPlans.length !== 0">
-    <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
-    <div class="grid-double">
-      <div *ngFor="let file of buildingPlans">
-        <a (click)="openFile(file)">
-          {{ file.fileName }}
-        </a>
-      </div>
+  <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
+  <div class="grid-double">
+    <div *ngFor="let file of buildingPlans">
+      <a (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
     </div>
-  </ng-container>
+    <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
+  </div>
 
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
     <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>

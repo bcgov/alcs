@@ -48,6 +48,32 @@ export class ApplicationTimeTrackingService {
     return result;
   }
 
+  async getPausedStatusByUuid(applicationUuids: string[]) {
+    const pausedCalculations = (await this.applicationPausedRepository.query(
+      `
+        SELECT application_uuid,
+               count(uuid)
+        FROM alcs.application_paused
+        WHERE start_date < NOW()
+          AND COALESCE(end_date, NOW()) >= NOW()
+          AND application_uuid = ANY($1)
+        GROUP BY application_uuid;`,
+      [`{${applicationUuids.join(', ')}}`],
+    )) as {
+      application_uuid: string;
+      count: number;
+    }[];
+
+    const result = new Map<string, boolean>();
+    for (const appId of applicationUuids) {
+      const isPaused = pausedCalculations.find(
+        (row) => row.application_uuid === appId,
+      );
+      result.set(appId, !!isPaused);
+    }
+    return result;
+  }
+
   async getTimes(applicationUuids: string[]) {
     const activeCounts = (await this.applicationPausedRepository.query(
       `

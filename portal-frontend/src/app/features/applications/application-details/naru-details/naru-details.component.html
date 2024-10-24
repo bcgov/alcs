@@ -151,9 +151,7 @@
         </div>
       </ng-container>
       <ng-container *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let i = index">
-        <div>
-          {{ i + 1 }}
-        </div>
+        <div>#{{ i + 1 }}</div>
         <div>
           <ng-container *ngIf="existingResidence.floorArea === 0; else validFloorArea">
             <app-no-data [showRequired]="showErrors"></app-no-data>
@@ -173,8 +171,13 @@
         </div>
       </ng-container>
       <app-naru-residence-mobile-card
-        *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let last = last"
-        [residence]="existingResidence"
+        *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let last = last; let i = index"
+        [residence]="{
+          id: i + 1,
+          floorArea: existingResidence.floorArea,
+          description: existingResidence.description,
+          isExpanded: false,
+        }"
         [isLast]="last"
         [isReviewStep]="true"
         [showErrors]="showErrors"
@@ -193,9 +196,7 @@
       </div>
     </ng-container>
     <ng-container *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let i = index">
-      <div>
-        {{ i + 1 }}
-      </div>
+      <div>#{{ i + 1 }}</div>
       <div>
         {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
       </div>
@@ -217,8 +218,13 @@
       </div>
     </ng-container>
     <app-naru-residence-mobile-card
-      *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let last = last"
-      [residence]="proposedResidence"
+      *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let last = last; let i = index"
+      [residence]="{
+        id: i + 1,
+        floorArea: proposedResidence.floorArea,
+        description: proposedResidence.description,
+        isExpanded: false,
+      }"
       [isLast]="last"
       [isReviewStep]="true"
       [showErrors]="showErrors"

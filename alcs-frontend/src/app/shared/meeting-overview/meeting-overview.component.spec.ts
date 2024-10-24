@@ -88,6 +88,7 @@ describe('MeetingOverviewComponent', () => {
           fileNumber: '',
           meetingDate: 0,
           type: CardType.APP,
+          isPaused: true,
         },
       ],
     });

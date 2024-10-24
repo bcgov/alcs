@@ -29,6 +29,11 @@
     <td *matCellDef="let element; let i = index" mat-cell>{{ i + 1 }}</td>
   </ng-container>
 
+  <ng-container matColumnDef="source">
+    <th *matHeaderCellDef mat-header-cell>Source</th>
+    <td *matCellDef="let element" mat-cell>{{ element.source }}</td>
+  </ng-container>
+
   <ng-container matColumnDef="type">
     <th *matHeaderCellDef mat-header-cell>Type</th>
     <td *matCellDef="let element" mat-cell>{{ element.type?.label }}</td>
@@ -41,14 +46,9 @@
         (click)="onOpen(element.uuid, element.fileName)" 
         [matTooltip]="element.fileName"
         [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen">
-        {{ element.fileName | truncate: fileNameTruncLen}}
+        {{ element.fileName }}
       </a>
     </td>
-  </ng-container>
-
-  <ng-container matColumnDef="source">
-    <th *matHeaderCellDef mat-header-cell>Source</th>
-    <td *matCellDef="let element" mat-cell>{{ element.source }}</td>
   </ng-container>
 
   <ng-container matColumnDef="uploadedAt">
