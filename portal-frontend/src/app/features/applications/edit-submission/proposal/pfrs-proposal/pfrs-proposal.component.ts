@@ -190,7 +190,9 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         });
 
         this.structuresForm = new FormGroup({});
+        this.proposedStructures = [];
         for (const structure of applicationSubmission.soilProposedStructures) {
+          console.log(structure);
           this.addControl(structure.type, structure.area);
         }
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
@@ -463,7 +465,6 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
           this.structureTypeCounts[result.dto.type!]++;
-          console.log(this.structureTypeCounts);
         });
     } else {
       this.addControl();
