@@ -1,6 +1,7 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { CardDto } from '../card/card.dto';
+import { ProposedStructure } from '../notice-of-intent/notice-of-intent.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
@@ -203,7 +204,7 @@ export interface ApplicationSubmissionDto {
   soilAgriParcelActivity: string | null;
   soilStructureResidentialAccessoryUseReason: string | null;
   soilStructureOtherUseReason: string | null;
-  soilProposedStructures: string | null;
+  soilProposedStructures: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;
