@@ -207,6 +207,11 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       const soilFillTypeToPlace = this.fillTypeToPlace.getRawValue();
       const soilAlternativeMeasures = this.alternativeMeasures.getRawValue();
       const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
+      const soilStructureFarmUseReason = this.soilStructureFarmUseReason.getRawValue();
+      const soilStructureResidentialUseReason = this.soilStructureResidentialUseReason.getRawValue();
+      const soilAgriParcelActivity = this.soilAgriParcelActivity.getRawValue();
+      const soilStructureResidentialAccessoryUseReason = this.soilStructureResidentialAccessoryUseReason.getRawValue();
+      const soilStructureOtherUseReason = this.soilStructureOtherUseReason.getRawValue();
 
       const updatedStructures: ProposedStructure[] = this.proposedStructures.map((lot) => {
         const lotType = this.structuresForm.controls[`${lot.id}-type`].value;
@@ -234,9 +239,12 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyPlacedMaximumDepth: this.alreadyFilledTableData?.maximumDepth ?? null,
         soilAlreadyPlacedAverageDepth: this.alreadyFilledTableData?.averageDepth ?? null,
         soilProjectDuration: this.projectDuration.value,
-        soilStructureFarmUseReason: this.soilStructureFarmUseReason.value,
-        soilStructureResidentialUseReason: this.soilStructureResidentialUseReason.value,
         soilProposedStructures: updatedStructures,
+        soilStructureFarmUseReason,
+        soilStructureResidentialUseReason,
+        soilAgriParcelActivity,
+        soilStructureResidentialAccessoryUseReason,
+        soilStructureOtherUseReason,
       };
 
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
