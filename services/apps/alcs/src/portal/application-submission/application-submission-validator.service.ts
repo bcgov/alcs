@@ -534,10 +534,7 @@ export class ApplicationSubmissionValidatorService {
     applicantDocuments: ApplicationDocument[],
     errors: Error[],
   ) {
-    if (
-      applicationSubmission.soilTypeRemoved === null ||
-      applicationSubmission.soilReduceNegativeImpacts === null
-    ) {
+    if (applicationSubmission.soilTypeRemoved === null) {
       errors.push(
         new ServiceValidationException(
           `${applicationSubmission.typeCode} Proposal incomplete`,
@@ -574,11 +571,7 @@ export class ApplicationSubmissionValidatorService {
     applicantDocuments: ApplicationDocument[],
     errors: Error[],
   ) {
-    if (
-      applicationSubmission.soilFillTypeToPlace === null ||
-      applicationSubmission.soilAlternativeMeasures === null ||
-      applicationSubmission.soilReduceNegativeImpacts === null
-    ) {
+    if (applicationSubmission.soilFillTypeToPlace === null) {
       errors.push(
         new ServiceValidationException(
           `${applicationSubmission.typeCode} Proposal incomplete`,
@@ -622,8 +615,7 @@ export class ApplicationSubmissionValidatorService {
   ) {
     if (
       applicationSubmission.soilIsNewStructure === null ||
-      applicationSubmission.soilIsFollowUp === null ||
-      applicationSubmission.soilReduceNegativeImpacts === null
+      applicationSubmission.soilIsFollowUp === null
     ) {
       errors.push(
         new ServiceValidationException(
@@ -650,28 +642,6 @@ export class ApplicationSubmissionValidatorService {
       errors.push(
         new ServiceValidationException(
           `${applicationSubmission.typeCode} proposal missing Proposal Map / Site Plan`,
-        ),
-      );
-    }
-
-    const crossSections = applicantDocuments.filter(
-      (document) => document.typeCode === DOCUMENT_TYPE.CROSS_SECTIONS,
-    );
-    if (crossSections.length === 0) {
-      errors.push(
-        new ServiceValidationException(
-          `${applicationSubmission.typeCode} proposal missing Cross Section Diagrams`,
-        ),
-      );
-    }
-
-    const reclamationPlans = applicantDocuments.filter(
-      (document) => document.typeCode === DOCUMENT_TYPE.RECLAMATION_PLAN,
-    );
-    if (reclamationPlans.length === 0) {
-      errors.push(
-        new ServiceValidationException(
-          `${applicationSubmission.typeCode} proposal missing Reclamation Plans`,
         ),
       );
     }
