@@ -23,7 +23,7 @@ export class TagCategoryService {
     return (
       (await this.repository.findAndCount({
         where: searchExpression,
-        order: { name: 'DESC' },
+        order: { name: 'ASC' },
         take: itemsPerPage,
         skip: pageIndex * itemsPerPage,
       })) || [[], 0]

@@ -1,0 +1,60 @@
+@use '../../../../../styles/colors';
+@use '../../../../../styles/functions.scss' as *;
+
+mat-dialog-title {
+  margin-bottom: 24px;
+}
+
+.warning-banner {
+  margin-top: rem(8);
+  background-color: green;
+  padding: rem(16);
+
+  .display-none {
+    display: none !important;
+  }
+}
+
+.warning {
+  padding: rem(16);
+  font-size: rem(14);
+  background-color: rgba(colors.$field-warning-bg-color, 0.5);
+  border-radius: rem(8);
+  display: flex;
+  align-items: center;
+  color: colors.$dark-contrast-text;
+  margin-top: rem(18);
+
+  mat-icon {
+    color: colors.$dark-contrast-text;
+    margin-right: 16px;
+  }
+}
+
+.dialog {
+  padding: rem(24);
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: rem(24);
+    column-gap: rem(24);
+    margin-bottom: rem(12);
+
+    .description {
+      margin-top: rem(20);    
+    }
+
+    .error {
+      border:2px solid colors.$error-color;
+    }
+
+    .full-width {
+      grid-column: 1/3;
+    }
+
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+  }
+}

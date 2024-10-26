@@ -30,7 +30,7 @@ export class TagService {
         relations: {
           category: true,
         },
-        order: { name: 'DESC' },
+        order: { name: 'ASC' },
         take: itemsPerPage,
         skip: pageIndex * itemsPerPage,
       })) || [[], 0]

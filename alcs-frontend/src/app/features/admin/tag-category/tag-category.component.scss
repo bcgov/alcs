@@ -1,0 +1,38 @@
+@use '../../../../styles/colors';
+@use '../../../../styles/functions.scss' as *;
+
+.container {
+  .actions-bar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .search-control {
+    margin-right: rem(24);
+    display: inline-block;
+  }
+
+  .delete-btn {
+    color: colors.$error-color;
+    width: rem(48)!important;
+    min-width: unset!important;
+  }
+
+  .mat-icon {
+    margin-right: rem(1);
+  }
+
+  .edit-btn {
+    color: colors.$primary-color-dark;
+    width: rem(48)!important;
+    min-width: unset!important;
+  }
+
+  .mat-column-name {
+    width: 70%;
+  }
+
+  .mat-column-actions {
+    width: 30%;
+  }
+}

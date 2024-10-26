@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -16,6 +18,7 @@ import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { TagService } from './tag.service';
 import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { TagDto } from './tag.dto';
+import { QueryFailedError } from 'typeorm';
 
 @Controller('tag')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -37,18 +40,45 @@ export class TagController {
   @Post('')
   @UserRoles(AUTH_ROLE.ADMIN)
   async create(@Body() createDto: TagDto) {
-    return await this.service.create(createDto);
+    try {
+      return await this.service.create(createDto);
+    } catch (e) {
+      if (e.constructor === QueryFailedError) {
+        const msg = (e as QueryFailedError).message;
+        throw new HttpException(msg, HttpStatus.CONFLICT);
+      } else {
+        throw e;
+      }
+    }
   }
 
   @Patch('/:uuid')
   @UserRoles(AUTH_ROLE.ADMIN)
   async update(@Param('uuid') uuid: string, @Body() updateDto: TagDto) {
-    return await this.service.update(uuid, updateDto);
+    try {
+      return await this.service.update(uuid, updateDto);
+    } catch (e) {
+      if (e.constructor === QueryFailedError) {
+        const msg = (e as QueryFailedError).message;
+        throw new HttpException(msg, HttpStatus.CONFLICT);
+      } else {
+        throw e;
+      }
+    }
   }
 
   @Delete('/:uuid')
   @UserRoles(AUTH_ROLE.ADMIN)
   async delete(@Param('uuid') uuid: string) {
-    return await this.service.delete(uuid);
+    try {
+      return await this.service.delete(uuid);
+    } catch (e) {
+      if (e.constructor === QueryFailedError) {
+        const msg = (e as QueryFailedError).message;
+        throw new HttpException(msg, HttpStatus.CONFLICT);
+      } else {
+        throw e;
+      }
+    }
   }
 }

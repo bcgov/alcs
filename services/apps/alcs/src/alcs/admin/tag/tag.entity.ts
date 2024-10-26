@@ -17,7 +17,7 @@ export class Tag extends Base {
   uuid: string;
 
   @AutoMap()
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @AutoMap()

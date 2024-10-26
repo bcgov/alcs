@@ -25,6 +25,8 @@ import { LocalGovernmentComponent } from './local-government/local-government.co
 import { NoiSubtypeDialogComponent } from './noi-subtype/noi-subtype-dialog/noi-subtype-dialog.component';
 import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
 import { UnarchiveComponent } from './unarchive/unarchive.component';
+import { TagCategoryComponent } from './tag-category/tag-category.component';
+import { TagCategoryDialogComponent } from './tag-category/tag-category-dialog/tag-category-dialog.component';
 
 const routes: Routes = [
   {
@@ -56,6 +58,8 @@ const routes: Routes = [
     BoardManagementDialogComponent,
     ConfigurationComponent,
     MaintenanceBannerConfirmationDialogComponent,
+    TagCategoryComponent,
+    TagCategoryDialogComponent,
   ],
   imports: [
     CommonModule,
