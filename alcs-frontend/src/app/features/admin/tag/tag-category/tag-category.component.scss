@@ -1,0 +1,49 @@
+@use '../../../../../styles/colors';
+@use '../../../../../styles/functions.scss' as *;
+
+.container {
+  .actions-bar {
+    margin-top: rem(30);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .search-control {
+    margin-right: rem(24);
+    display: inline-block;
+  }
+
+  table {
+    margin: rem(35) rem(2) rem(30) rem(2);
+    box-shadow: 2px 2px 8px 2px #00000040;
+  }
+
+  .mdc-data-table__table {
+    min-width: unset!important;
+    width: 99%;
+  }
+
+  .delete-btn {
+    color: colors.$error-color;
+    width: rem(48)!important;
+    min-width: unset!important;
+  }
+
+  .mat-icon {
+    margin-right: rem(1);
+  }
+
+  .edit-btn {
+    color: colors.$primary-color-dark;
+    width: rem(48)!important;
+    min-width: unset!important;
+  }
+
+  .mat-column-name {
+    width: 70%;
+  }
+
+  .mat-column-actions {
+    width: 30%;
+  }
+}

@@ -4,10 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { firstValueFrom, of, throwError } from 'rxjs';
 import { CardType } from '../../shared/card/card.component';
 import { ToastService } from '../toast/toast.service';
-import { CardService } from './card.service';
+import { TagService } from './tag.service';
 
 describe('CardService', () => {
-  let service: CardService;
+  let service: TagService;
   let httpClient: DeepMocked<HttpClient>;
   let toastService: DeepMocked<ToastService>;
 
@@ -27,7 +27,7 @@ describe('CardService', () => {
         },
       ],
     });
-    service = TestBed.inject(CardService);
+    service = TestBed.inject(TagService);
   });
 
   it('should be created', () => {
@@ -43,7 +43,7 @@ describe('CardService', () => {
       ])
     );
 
-    await service.updateCard({
+    await service.update({
       assigneeUuid: undefined,
       boardCode: '',
       highPriority: false,
@@ -73,24 +73,5 @@ describe('CardService', () => {
 
     expect(httpClient.patch).toHaveBeenCalledTimes(1);
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
-  it('should fetch and publish codes', async () => {
-    httpClient.get.mockReturnValue(
-      of({
-        reconsiderationType: [
-          {
-            code: 'code',
-          },
-        ],
-      })
-    );
-
-    await service.fetchCodes();
-    const res = await firstValueFrom(service.$cardReconTypes);
-
-    expect(httpClient.get).toHaveBeenCalledTimes(1);
-    expect(res.length).toEqual(1);
-    expect(res[0].code).toEqual('code');
   });
 });

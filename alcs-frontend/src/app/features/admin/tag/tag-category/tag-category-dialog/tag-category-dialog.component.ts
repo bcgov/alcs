@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TagCategoryDto } from '../../../../services/tag/tag-category/tag-category.dto';
-import { TagCategoryService } from '../../../../services/tag/tag-category/tag-category.service';
+import { TagCategoryDto } from '../../../../../services/tag/tag-category/tag-category.dto';
+import { TagCategoryService } from '../../../../../services/tag/tag-category/tag-category.service';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 @Component({

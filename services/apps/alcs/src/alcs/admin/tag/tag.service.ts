@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './tag.entity';
 import { TagDto } from './tag.dto';
@@ -20,7 +20,7 @@ export class TagService {
 
     if (search) {
       searchExpression = {
-        name: Like(`%${search}%`),
+        name: ILike(`%${search}%`),
       };
     }
 

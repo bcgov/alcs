@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { TagCategoryDialogComponent } from './tag-category-dialog/tag-category-dialog.component';
-import { TagCategoryService } from '../../../services/tag/tag-category/tag-category.service';
-import { TagCategoryDto } from '../../../services/tag/tag-category/tag-category.dto';
+import { TagCategoryService } from '../../../../services/tag/tag-category/tag-category.service';
+import { TagCategoryDto } from '../../../../services/tag/tag-category/tag-category.dto';
 import { PageEvent } from '@angular/material/paginator';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { ToastService } from '../../../services/toast/toast.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-tag-category',

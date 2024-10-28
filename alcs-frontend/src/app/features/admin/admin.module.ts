@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
@@ -25,8 +26,11 @@ import { LocalGovernmentComponent } from './local-government/local-government.co
 import { NoiSubtypeDialogComponent } from './noi-subtype/noi-subtype-dialog/noi-subtype-dialog.component';
 import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
 import { UnarchiveComponent } from './unarchive/unarchive.component';
-import { TagCategoryComponent } from './tag-category/tag-category.component';
-import { TagCategoryDialogComponent } from './tag-category/tag-category-dialog/tag-category-dialog.component';
+import { TagCategoryComponent } from './tag/tag-category/tag-category.component';
+import { TagCategoryDialogComponent } from './tag/tag-category/tag-category-dialog/tag-category-dialog.component';
+import { TagComponent } from './tag/tag.component';
+import { TagDialogComponent } from './tag/tag-dialog/tag-dialog.component';
+import { TagContainerComponent } from './tag/tag-container.component';
 
 const routes: Routes = [
   {
@@ -60,6 +64,9 @@ const routes: Routes = [
     MaintenanceBannerConfirmationDialogComponent,
     TagCategoryComponent,
     TagCategoryDialogComponent,
+    TagComponent,
+    TagDialogComponent,
+    TagContainerComponent,
   ],
   imports: [
     CommonModule,
@@ -68,6 +75,7 @@ const routes: Routes = [
     MatPaginatorModule,
     DragDropModule,
     MatChipsModule,
+    MatTabsModule,
   ],
 })
 export class AdminModule {}

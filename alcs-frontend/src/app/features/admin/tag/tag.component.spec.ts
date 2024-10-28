@@ -3,29 +3,29 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { NoiSubtypeService } from '../../../services/noi-subtype/noi-subtype.service';
+import { TagService } from '../../../services/tag/tag.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { TagCategoryComponent } from './tag-category.component';
+import { TagComponent } from './tag.component';
 
-describe('NoiSubtypeComponent', () => {
-  let component: TagCategoryComponent;
-  let fixture: ComponentFixture<TagCategoryComponent>;
-  let mockNoiSubtypeService: DeepMocked<NoiSubtypeService>;
+describe('TagComponent', () => {
+  let component: TagComponent;
+  let fixture: ComponentFixture<TagComponent>;
+  let mockTagService: DeepMocked<TagService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockConfirmationDialogService: DeepMocked<ConfirmationDialogService>;
 
   beforeEach(async () => {
-    mockNoiSubtypeService = createMock();
+    mockTagService = createMock();
     mockDialog = createMock();
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [TagCategoryComponent],
+      declarations: [TagComponent],
       providers: [
         {
-          provide: NoiSubtypeService,
-          useValue: mockNoiSubtypeService,
+          provide: TagService,
+          useValue: mockTagService,
         },
         {
           provide: MatDialog,
@@ -40,7 +40,7 @@ describe('NoiSubtypeComponent', () => {
       imports: [HttpClientTestingModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TagCategoryComponent);
+    fixture = TestBed.createComponent(TagComponent);
     component = fixture.componentInstance;
 
     fixture.detectChanges();

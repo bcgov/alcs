@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="actions-bar">
+    <div>
+      <div class="search-control">
+        <mat-form-field>
+          <mat-label>Enter tag</mat-label>
+          <input matInput placeholder="Tag Name" type="text" [(ngModel)]="search" [matAutocomplete]="auto" (ngModelChange)='updateFilter($event)'>
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="search-control">
+        <button mat-flat-button color="primary" (click)="fetch()">Search</button>
+      </div>
+    </div>
+    <div class="right">
+      <button mat-flat-button color="primary" (click)="onCreate()">Create</button>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="tags">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <ng-container matColumnDef="number">
+      <th mat-header-cell *matHeaderCellDef>Number</th>
+      <td mat-cell *matCellDef="let row">{{ row.number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef>Category</th>
+      <td mat-cell *matCellDef="let row">{{ row.category.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="isActive">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row">
+        <div class="left" *ngIf="row.isActive">
+          <mat-icon color="primary">check_circle_outline</mat-icon>
+          Active
+        </div>
+        <div class="left" *ngIf="!row.isActive">
+          <mat-icon color="warn">not_interested</mat-icon>
+          Inactive
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button class="edit-btn" mat-flat-button (click)="onEdit(row)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button class="delete-btn" mat-flat-button (click)="onDelete(row)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  </table>
+
+  <mat-paginator
+    [length]="total"
+    [pageSize]="20"
+    [pageSizeOptions]="[20, 50, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page of categories"
+  ></mat-paginator>
+</div>

@@ -10,7 +10,7 @@ import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
 import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
 import { UnarchiveComponent } from './unarchive/unarchive.component';
-import { TagCategoryComponent } from './tag-category/tag-category.component';
+import { TagContainerComponent } from './tag/tag-container.component';
 
 export const childRoutes = [
   {
@@ -77,7 +77,7 @@ export const childRoutes = [
     path: 'tag',
     menuTitle: 'Tags/Categories',
     icon: 'sell',
-    component: TagCategoryComponent,
+    component: TagContainerComponent,
   },
 ];
 
