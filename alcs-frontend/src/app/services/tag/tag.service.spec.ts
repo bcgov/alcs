@@ -1,29 +1,28 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { firstValueFrom, of, throwError } from 'rxjs';
-import { CardType } from '../../shared/card/card.component';
+import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 import { TagService } from './tag.service';
 
-describe('CardService', () => {
+describe('TagCategoryService', () => {
   let service: TagService;
-  let httpClient: DeepMocked<HttpClient>;
-  let toastService: DeepMocked<ToastService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockToastService: DeepMocked<ToastService>;
 
   beforeEach(() => {
-    httpClient = createMock();
-    toastService = createMock();
+    mockHttpClient = createMock();
+    mockToastService = createMock();
 
     TestBed.configureTestingModule({
       providers: [
         {
           provide: HttpClient,
-          useValue: httpClient,
+          useValue: mockHttpClient,
         },
         {
           provide: ToastService,
-          useValue: toastService,
+          useValue: mockToastService,
         },
       ],
     });
@@ -34,44 +33,138 @@ describe('CardService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should update a card', async () => {
-    httpClient.patch.mockReturnValue(
-      of([
-        {
-          uuid: '1',
-        },
-      ])
+  it('should call post on create', async () => {
+    mockHttpClient.post.mockReturnValue(
+      of({
+        uuid: 'fake',
+      })
     );
 
-    await service.update({
-      assigneeUuid: undefined,
-      boardCode: '',
-      highPriority: false,
-      statusCode: '',
-      typeCode: CardType.APP,
+    const res = await service.create({
       uuid: '',
+      name: '',
+      category: {
+        uuid: '',
+        name: ''
+      },
+      isActive: true,
     });
 
-    expect(httpClient.patch).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res!.uuid).toEqual('fake');
   });
 
-  it('should show an error toast message if update card fails', async () => {
-    httpClient.patch.mockReturnValue(
+  it('should show toast if create fails', async () => {
+    mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
       })
     );
 
-    await service.updateCard({
-      assigneeUuid: undefined,
-      boardCode: '',
-      highPriority: false,
-      statusCode: '',
-      typeCode: CardType.NOI_MODI,
+    const res = await service.create({
       uuid: '',
+      name: '',
+      category: {
+        uuid: '',
+        name: ''
+      },
+      isActive: true,
     });
 
-    expect(httpClient.patch).toHaveBeenCalledTimes(1);
-    expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeUndefined();
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call patch on update', async () => {
+    mockHttpClient.patch.mockReturnValue(
+      of({
+        code: 'fake',
+      })
+    );
+
+    const res = await service.update('fake', {
+      uuid: '',
+      name: '',
+      category: {
+        uuid: '',
+        name: ''
+      },
+      isActive: true,
+    });
+
+    expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res!.uuid).toEqual('fake');
+  });
+
+  it('should show toast if update fails', async () => {
+    mockHttpClient.patch.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    const res = await service.update('mock', {
+      uuid: '',
+      name: '',
+      category: {
+        uuid: '',
+        name: ''
+      },
+      isActive: true,
+    });
+
+    expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call get on fetch', async () => {
+    mockHttpClient.get.mockReturnValue(of([]));
+
+    await service.fetch(0, 0);
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('should show toast if get fails', async () => {
+    mockHttpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    const res = await service.fetch(0, 0);
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call delete on delete', async () => {
+    mockHttpClient.delete.mockReturnValue(
+      of({
+        uuid: 'fake',
+      })
+    );
+
+    const res = await service.delete('fake');
+
+    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res!.uuid).toEqual('fake');
+  });
+
+  it('should show toast if delete fails', async () => {
+    mockHttpClient.delete.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    const res = await service.delete('mock');
+
+    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });

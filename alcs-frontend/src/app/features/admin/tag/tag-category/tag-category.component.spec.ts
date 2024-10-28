@@ -8,7 +8,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 
 import { TagCategoryComponent } from './tag-category.component';
 
-describe('NoiSubtypeComponent', () => {
+describe('TagCategoryComponent', () => {
   let component: TagCategoryComponent;
   let fixture: ComponentFixture<TagCategoryComponent>;
   let mockNoiSubtypeService: DeepMocked<NoiSubtypeService>;

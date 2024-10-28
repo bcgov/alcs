@@ -2,11 +2,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { NoiSubtypeService } from '../../../../services/noi-subtype/noi-subtype.service';
+import { TagCategoryService } from '../../../../../services/tag/tag-category/tag-category.service';
 
 import { TagCategoryDialogComponent } from './tag-category-dialog.component';
 
-describe('NoiSubtypeDialogComponent', () => {
+describe('TagCategoryDialogComponent', () => {
   let component: TagCategoryDialogComponent;
   let fixture: ComponentFixture<TagCategoryDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('NoiSubtypeDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: undefined },
         { provide: MatDialogRef, useValue: {} },
         {
-          provide: NoiSubtypeService,
+          provide: TagCategoryService,
           useValue: {},
         },
       ],

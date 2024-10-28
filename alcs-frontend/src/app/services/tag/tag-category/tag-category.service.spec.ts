@@ -3,10 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
-import { CardStatusService } from './card-status.service';
+import { TagCategoryService } from './tag-category.service';
 
-describe('CardStatusService', () => {
-  let service: CardStatusService;
+describe('TagCategoryService', () => {
+  let service: TagCategoryService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
@@ -26,7 +26,7 @@ describe('CardStatusService', () => {
         },
       ],
     });
-    service = TestBed.inject(CardStatusService);
+    service = TestBed.inject(TagCategoryService);
   });
 
   it('should be created', () => {
@@ -36,19 +36,18 @@ describe('CardStatusService', () => {
   it('should call post on create', async () => {
     mockHttpClient.post.mockReturnValue(
       of({
-        code: 'fake',
+        uuid: 'fake',
       })
     );
 
     const res = await service.create({
-      code: '',
-      label: '',
-      description: '',
+      uuid: '',
+      name: '',
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
-    expect(res!.code).toEqual('fake');
+    expect(res!.uuid).toEqual('fake');
   });
 
   it('should show toast if create fails', async () => {
@@ -59,9 +58,8 @@ describe('CardStatusService', () => {
     );
 
     const res = await service.create({
-      code: '',
-      label: '',
-      description: '',
+      uuid: '',
+      name: '',
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
@@ -77,14 +75,13 @@ describe('CardStatusService', () => {
     );
 
     const res = await service.update('fake', {
-      code: '',
-      label: '',
-      description: '',
+      uuid: '',
+      name: '',
     });
 
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
-    expect(res!.code).toEqual('fake');
+    expect(res!.uuid).toEqual('fake');
   });
 
   it('should show toast if update fails', async () => {
@@ -95,9 +92,8 @@ describe('CardStatusService', () => {
     );
 
     const res = await service.update('mock', {
-      code: '',
-      label: '',
-      description: '',
+      uuid: '',
+      name: '',
     });
 
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
@@ -107,7 +103,7 @@ describe('CardStatusService', () => {
   it('should call get on fetch', async () => {
     mockHttpClient.get.mockReturnValue(of([]));
 
-    await service.fetch();
+    await service.fetch(0, 0);
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
   });
@@ -119,7 +115,7 @@ describe('CardStatusService', () => {
       })
     );
 
-    const res = await service.fetch();
+    const res = await service.fetch(0, 0);
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
@@ -128,7 +124,7 @@ describe('CardStatusService', () => {
   it('should call delete on delete', async () => {
     mockHttpClient.delete.mockReturnValue(
       of({
-        code: 'fake',
+        uuid: 'fake',
       })
     );
 
@@ -136,7 +132,7 @@ describe('CardStatusService', () => {
 
     expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
-    expect(res!.code).toEqual('fake');
+    expect(res!.uuid).toEqual('fake');
   });
 
   it('should show toast if delete fails', async () => {
