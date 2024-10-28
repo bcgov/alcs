@@ -1,7 +1,7 @@
 import { AutoMap } from 'automapper-classes';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Base } from '../../../common/entities/base.entity';
-import { TagCategory } from '../tag-category/tag-category.entity';
+import { Base } from '../../common/entities/base.entity';
+import { TagCategory } from './tag-category/tag-category.entity';
 
 @Entity({ comment: 'Tag.' })
 export class Tag extends Base {

@@ -3,7 +3,7 @@ import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './tag.entity';
 import { TagDto } from './tag.dto';
-import { TagCategory } from '../tag-category/tag-category.entity';
+import { TagCategory } from './tag-category/tag-category.entity';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
