@@ -1,0 +1,26 @@
+<div class="tag-container" (mouseenter)="hovered = true" (mouseleave)="hovered = false">
+  <mat-form-field class="tag-field" appearance="outline">
+    <mat-chip-grid #chipGrid>
+      <mat-chip-row *ngFor="let tag of tags" (removed)="removeTag(tag)"
+        >{{ tag }}
+        <button matChipRemove [attr.aria-label]="'remove ' + tag">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+      <input
+        placeholder="Add tag..."
+        #tagInput
+        [matChipInputFor]="chipGrid"
+        [matAutocomplete]="auto"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addTag($event)"
+        [value]="tagInput.value"
+        (focus)="showPlaceholder = false"
+        (blur)="showPlaceholder = tags.length === 0"
+      />
+    </mat-chip-grid>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectTag($event)">
+      <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">{{ tag }}</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>

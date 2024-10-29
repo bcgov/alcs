@@ -74,6 +74,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 import { DragDropDirective } from './drag-drop-file/drag-drop-file.directive';
 import { TruncatePipe } from './pipes/truncate.pipe';
+import { TagsHeaderComponent } from './tags-header/tags-header.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -115,6 +117,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     InlineButtonToggleComponent,
     DragDropDirective,
     TruncatePipe,
+    TagsHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -140,6 +143,8 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     MatDialogModule,
     NgSelectModule,
     MatSlideToggleModule,
+    MatChipsModule,
+    MatAutocompleteModule,
   ],
   exports: [
     CommonModule,
@@ -214,6 +219,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     InlineButtonToggleComponent,
     DragDropDirective,
     TruncatePipe,
+    TagsHeaderComponent,
   ],
 })
 export class SharedModule {
