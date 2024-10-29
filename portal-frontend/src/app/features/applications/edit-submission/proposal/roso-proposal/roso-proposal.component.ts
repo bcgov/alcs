@@ -279,13 +279,15 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
               for (const reclamationPlan_ of this.reclamationPlan) {
                 this.onDeleteFile(reclamationPlan_);
               }
-              for (const buildingPlan of this.buildingPlans) {
-                this.onDeleteFile(buildingPlan);
-              }
 
               // Clear questions
               this.reduceNegativeImpacts.reset();
             } else {
+              // Clear docs
+              for (const buildingPlan of this.buildingPlans) {
+                this.onDeleteFile(buildingPlan);
+              }
+
               // Clear structures
               this.structuresForm = new FormGroup({});
               this.proposedStructures = [];

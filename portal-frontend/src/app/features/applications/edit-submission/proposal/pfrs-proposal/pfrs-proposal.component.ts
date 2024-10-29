@@ -343,9 +343,6 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
               for (const reclamationPlan_ of this.reclamationPlan) {
                 this.onDeleteFile(reclamationPlan_);
               }
-              for (const buildingPlan of this.buildingPlans) {
-                this.onDeleteFile(buildingPlan);
-              }
               for (const noticeOfWork_ of this.noticeOfWork) {
                 this.onDeleteFile(noticeOfWork_);
               }
@@ -356,6 +353,11 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
               this.isExtractionOrMining.reset();
               this.hasSubmittedNotice.reset();
             } else {
+              // Clear docs
+              for (const buildingPlan of this.buildingPlans) {
+                this.onDeleteFile(buildingPlan);
+              }
+
               // Clear structures
               this.structuresForm = new FormGroup({});
               this.proposedStructures = [];
