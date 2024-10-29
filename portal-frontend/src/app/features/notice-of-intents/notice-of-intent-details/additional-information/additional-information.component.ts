@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
@@ -117,5 +117,10 @@ export class AdditionalInformationComponent {
     }
 
     return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -500,5 +500,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   private setRequired(formControl: FormControl<any>) {
     formControl.setValidators([Validators.required]);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }
