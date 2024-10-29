@@ -1,4 +1,12 @@
 <div *ngIf="applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">Are you removing soil and placing fill in order to build a structure?</div>
+  <div class="grid-double">
+    <span *ngIf="applicationSubmission.soilIsNewStructure !== null">
+      {{ applicationSubmission.soilIsNewStructure ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="applicationSubmission.soilIsNewStructure === null"></app-no-data>
+  </div>
+
   <div class="subheading2 grid-1">
     Has the ALC previously received an application or Notice of Intent for this proposal?
   </div>
@@ -107,11 +115,95 @@
     <app-no-data *ngIf="!applicationSubmission.soilAlternativeMeasures"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilReduceNegativeImpacts }}
-    <app-no-data *ngIf="!applicationSubmission.soilReduceNegativeImpacts"></app-no-data>
-  </div>
+  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === true">
+    <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
+    <div class="grid-double">
+      {{ applicationSubmission.soilReduceNegativeImpacts }}
+      <app-no-data *ngIf="!applicationSubmission.soilReduceNegativeImpacts"></app-no-data>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === true">
+    <div class="full-width subheading2">The total floor area (m<sup>2</sup>) for each of the proposed structure(s)</div>
+    <div class="full-width structure-table" *ngIf="!isMobile">
+      <div class="grid-1 subheading2">#</div>
+      <div class="grid-2 subheading2">Type</div>
+      <div class="grid-3 subheading2">Area</div>
+      <ng-container *ngFor="let structure of applicationSubmission.soilProposedStructures; let i = index">
+        <div class="grid-1">
+          {{ i + 1 }}
+        </div>
+        <div class="grid-2">
+          {{ mapStructureTypeValueToLabel(structure.type) }}
+          <app-no-data *ngIf="!structure.type"></app-no-data>
+        </div>
+        <div class="grid-3">
+          {{ structure.area }} <span *ngIf="structure.area">m<sup>2</sup></span>
+          <app-no-data *ngIf="!structure.area"></app-no-data>
+        </div>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="isMobile">
+      <app-structure-mobile-card
+        *ngFor="let structure of applicationSubmission.soilProposedStructures; let last = last; index as i"
+        [structure]="structure"
+        [isLast]="last"
+        [index]="i"
+        [isReviewStep]="true"
+      >
+      </app-structure-mobile-card>
+    </ng-container>
+    <div *ngIf="applicationSubmission.soilProposedStructures.length === 0" class="full-width">
+      <app-no-data></app-no-data>
+    </div>
+
+    <ng-container *ngIf="isSoilStructureFarmUseReasonVisible">
+      <div class="subheading2 grid-1">Describe how the structure is necessary for farm use</div>
+      <div class="grid-double">
+        {{ applicationSubmission.soilStructureFarmUseReason }}
+        <app-no-data *ngIf="!applicationSubmission.soilStructureFarmUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilStructureResidentialUseReasonVisible">
+      <div class="subheading2 grid-1">
+        Describe why placing fill/removing soil is required for the residential structure(s)
+      </div>
+      <div class="grid-double">
+        {{ applicationSubmission.soilStructureResidentialUseReason }}
+        <app-no-data *ngIf="!applicationSubmission.soilStructureResidentialUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilAgriParcelActivityVisible">
+      <div class="subheading2 grid-1">Describe the current or proposed agricultural activity on the parcel(s)</div>
+      <div class="grid-double">
+        {{ applicationSubmission.soilAgriParcelActivity }}
+        <app-no-data *ngIf="!applicationSubmission.soilAgriParcelActivity"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
+      <div class="subheading2 grid-1">
+        Describe the intended use of the residential accessory structure(s) and why placing fill/removing soil is
+        required
+      </div>
+      <div class="grid-double">
+        {{ applicationSubmission.soilStructureResidentialAccessoryUseReason }}
+        <app-no-data *ngIf="!applicationSubmission.soilStructureResidentialAccessoryUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilOtherStructureVisible">
+      <div class="subheading2 grid-1">
+        Describe the intended use of the 'Other' structure(s) and why placing fill/removing soil is required
+      </div>
+      <div class="grid-double">
+        {{ applicationSubmission.soilStructureOtherUseReason }}
+        <app-no-data *ngIf="!applicationSubmission.soilStructureOtherUseReason"></app-no-data>
+      </div>
+    </ng-container>
+  </ng-container>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
@@ -121,11 +213,23 @@
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">Cross Sections</div>
-  <div class="grid-double multiple-documents">
-    <a *ngFor="let file of crossSections" (click)="openFile(file)">
-      {{ file.fileName }}
-    </a>
-    <app-no-data *ngIf="crossSections.length === 0"></app-no-data>
-  </div>
+  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === true">
+    <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
+    <div class="grid-double multiple-documents">
+      <a *ngFor="let file of buildingPlans" (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+      <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === false">
+    <div class="subheading2 grid-1">Cross Sections</div>
+    <div class="grid-double multiple-documents">
+      <a *ngFor="let file of crossSections" (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+      <app-no-data *ngIf="crossSections.length === 0"></app-no-data>
+    </div>
+  </ng-container>
 </div>

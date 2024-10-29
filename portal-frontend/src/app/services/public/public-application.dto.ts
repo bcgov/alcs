@@ -111,7 +111,7 @@ export interface PublicApplicationSubmissionDto {
   soilAgriParcelActivity?: string | null;
   soilStructureResidentialAccessoryUseReason?: string | null;
   soilStructureOtherUseReason?: string | null;
-  soilProposedStructures?: ProposedStructure[];
+  soilProposedStructures: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;
