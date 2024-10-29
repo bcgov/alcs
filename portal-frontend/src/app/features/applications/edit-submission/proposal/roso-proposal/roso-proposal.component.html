@@ -205,144 +205,144 @@
     </div>
 
     <ng-container *ngIf="isNewStructure.value === true">
-      <form [formGroup]="structuresForm">
-        <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
-        <div class="scrollable">
-          <div *ngIf="isMobile">
-            <app-structure-mobile-card
-              *ngFor="let structure of proposedStructures; let last = last; index as i"
-              [structure]="structure"
-              [isLast]="last"
-              [index]="i"
-              [isReviewStep]="false"
-              (removeClicked)="onStructureRemove(structure.id)"
-              (editClicked)="onStructureEdit(structure.id)"
-            >
-            </app-structure-mobile-card>
-          </div>
-          <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
-            <ng-container matColumnDef="index">
-              <th mat-header-cell *matHeaderCellDef>#</th>
-              <td mat-cell *matCellDef="let i = dataIndex">{{ i + 1 }}</td>
-            </ng-container>
+      <div class="full-row">
+        <form [formGroup]="structuresForm">
+          <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
+          <div class="scrollable">
+            <div *ngIf="isMobile">
+              <app-structure-mobile-card
+                *ngFor="let structure of proposedStructures; let last = last; index as i"
+                [structure]="structure"
+                [isLast]="last"
+                [index]="i"
+                [isReviewStep]="false"
+                (removeClicked)="onStructureRemove(structure.id)"
+                (editClicked)="onStructureEdit(structure.id)"
+              >
+              </app-structure-mobile-card>
+            </div>
+            <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
+              <ng-container matColumnDef="index">
+                <th mat-header-cell *matHeaderCellDef>#</th>
+                <td mat-cell *matCellDef="let i = dataIndex">{{ i + 1 }}</td>
+              </ng-container>
 
-            <ng-container matColumnDef="type">
-              <th mat-header-cell *matHeaderCellDef>Type</th>
-              <td mat-cell *matCellDef="let element">
-                <mat-form-field appearance="outline">
-                  <mat-select
-                    [value]="element.type"
-                    placeholder="Please select"
-                    [formControlName]="element.id + '-type'"
-                    (valueChange)="onChangeStructureType(element.id, $event)"
-                  >
-                    <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
-                      {{ type.label }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <div
-                  *ngIf="
-                    structuresForm.controls[element.id + '-type']!.invalid &&
-                    (structuresForm.controls[element.id + '-type']!.dirty ||
-                      structuresForm.controls[element.id + '-type']!.touched)
-                  "
-                  class="field-error"
-                >
-                  <mat-icon>warning</mat-icon>
-                  <div *ngIf="structuresForm.controls[element.id + '-type']!.errors?.['required']">
-                    This field is required
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="area">
-              <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
-              <td mat-cell *matCellDef="let element">
-                <mat-form-field appearance="outline">
-                  <input
-                    type="text"
-                    matInput
-                    thousandSeparator=","
-                    mask="separator.5"
-                    separatorLimit="9999999999"
-                    min="0.01"
-                    placeholder="Type area"
-                    [formControlName]="element.id + '-area'"
-                  />
-                  <span matTextSuffix>m<sup>2</sup></span>
-                </mat-form-field>
-                <div
-                  *ngIf="
-                    structuresForm.controls[element.id + '-area']!.invalid &&
-                    (structuresForm.controls[element.id + '-area']!.dirty ||
-                      structuresForm.controls[element.id + '-area']!.touched)
-                  "
-                  class="field-error"
-                >
-                  <mat-icon>warning</mat-icon>
-                  <div *ngIf="structuresForm.controls[element.id + '-area']!.errors?.['required']">
-                    This field is required
-                  </div>
-                </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef>Action</th>
-              <td mat-cell *matCellDef="let element">
-                <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
-                  Remove
-                </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-            <ng-container matColumnDef="msgWarning">
-              <td colspan="7" mat-cell *matCellDef>
-                <div class="residential-warning">
-                  <div class="residential-warning-text">
-                    The proposed residential structure and its total floor area must be allowed under the ALC Act and/or
-                    ALR Use Regulation. If not, you may require a 'Non-Adhering Residential Use' application instead.
-                    For more info, please see
-                    <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
-                      >Housing in the ALR</a
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-form-field appearance="outline">
+                    <mat-select
+                      [value]="element.type"
+                      placeholder="Please select"
+                      [formControlName]="element.id + '-type'"
+                      (valueChange)="onChangeStructureType(element.id, $event)"
                     >
-                    on the ALC website.
+                      <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
+                        {{ type.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div
+                    *ngIf="
+                      structuresForm.controls[element.id + '-type']!.invalid &&
+                      (structuresForm.controls[element.id + '-type']!.dirty ||
+                        structuresForm.controls[element.id + '-type']!.touched)
+                    "
+                    class="field-error"
+                  >
+                    <mat-icon>warning</mat-icon>
+                    <div *ngIf="structuresForm.controls[element.id + '-type']!.errors?.['required']">
+                      This field is required
+                    </div>
                   </div>
-                </div>
-              </td>
-            </ng-container>
+                </td>
+              </ng-container>
 
-            <tr mat-row class="row-group" *matRowDef="let row; columns: ['msgWarning']; when: isWarning"></tr>
+              <ng-container matColumnDef="area">
+                <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      thousandSeparator=","
+                      mask="separator.5"
+                      separatorLimit="9999999999"
+                      min="0.01"
+                      placeholder="Type area"
+                      [formControlName]="element.id + '-area'"
+                    />
+                    <span matTextSuffix>m<sup>2</sup></span>
+                  </mat-form-field>
+                  <div
+                    *ngIf="
+                      structuresForm.controls[element.id + '-area']!.invalid &&
+                      (structuresForm.controls[element.id + '-area']!.dirty ||
+                        structuresForm.controls[element.id + '-area']!.touched)
+                    "
+                    class="field-error"
+                  >
+                    <mat-icon>warning</mat-icon>
+                    <div *ngIf="structuresForm.controls[element.id + '-area']!.errors?.['required']">
+                      This field is required
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
 
-            <tr class="mat-row no-data" *matNoDataRow>
-              <td class="text-center" colspan="7">
-                No Proposed Structures Entered. Use the button below to add your first structure.
-              </td>
-            </tr>
-          </table>
-        </div>
-      </form>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
+                    Remove
+                  </button>
+                </td>
+              </ng-container>
 
-      <div class="form-row">
-        <div class="full-row">
-          <button
-            mat-stroked-button
-            color="primary"
-            (click)="onStructureAdd()"
-            [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
-            type="button"
-          >
-            + Add Structure
-          </button>
-          <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
-            At least one structure is required
-          </app-validation-error>
-        </div>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+              <ng-container matColumnDef="msgWarning">
+                <td colspan="7" mat-cell *matCellDef>
+                  <div class="residential-warning">
+                    <div class="residential-warning-text">
+                      The proposed residential structure and its total floor area must be allowed under the ALC Act
+                      and/or ALR Use Regulation. If not, you may require a 'Non-Adhering Residential Use' application
+                      instead. For more info, please see
+                      <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+                        >Housing in the ALR</a
+                      >
+                      on the ALC website.
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-row class="row-group" *matRowDef="let row; columns: ['msgWarning']; when: isWarning"></tr>
+
+              <tr class="mat-row no-data" *matNoDataRow>
+                <td class="text-center" colspan="7">
+                  No Proposed Structures Entered. Use the button below to add your first structure.
+                </td>
+              </tr>
+            </table>
+          </div>
+        </form>
+      </div>
+
+      <div class="full-row">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="onStructureAdd()"
+          [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
+          type="button"
+        >
+          + Add Structure
+        </button>
+        <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
+          At least one structure is required
+        </app-validation-error>
       </div>
 
       <div class="full-row">
