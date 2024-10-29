@@ -126,11 +126,6 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilAgriParcelActivityVisible">
-      <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
-      <div class="grid-double">
-        <span>{{ _applicationSubmission.soilReduceNegativeImpacts }}</span>
-      </div>
-
       <div class="subheading2 grid-1">Describe the current or proposed agricultural activity on the parcel(s)</div>
       <div class="grid-double">
         {{ _applicationSubmission.soilAgriParcelActivity }}
@@ -166,6 +161,11 @@
     </div>
     <div class="grid-double">
       <span>{{ _applicationSubmission.soilAlternativeMeasures }}</span>
+    </div>
+
+    <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
+    <div class="grid-double">
+      <span>{{ _applicationSubmission.soilReduceNegativeImpacts }}</span>
     </div>
   </ng-container>
 
