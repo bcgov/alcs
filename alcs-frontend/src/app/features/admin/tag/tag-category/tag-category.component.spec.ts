@@ -7,8 +7,9 @@ import { NoiSubtypeService } from '../../../../services/noi-subtype/noi-subtype.
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { TagCategoryComponent } from './tag-category.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-describe('TagCategoryComponent', () => {
+fdescribe('TagCategoryComponent', () => {
   let component: TagCategoryComponent;
   let fixture: ComponentFixture<TagCategoryComponent>;
   let mockNoiSubtypeService: DeepMocked<NoiSubtypeService>;
@@ -37,7 +38,7 @@ describe('TagCategoryComponent', () => {
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, MatAutocompleteModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TagCategoryComponent);
