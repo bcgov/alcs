@@ -115,7 +115,7 @@
     <app-no-data *ngIf="!applicationSubmission.soilAlternativeMeasures"></app-no-data>
   </div>
 
-  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === true">
+  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === false">
     <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
     <div class="grid-double">
       {{ applicationSubmission.soilReduceNegativeImpacts }}
