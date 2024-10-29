@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TagDto } from '../../../../services/tag/tag.dto';
 import { TagService } from '../../../../services/tag/tag.service';
 import { TagCategoryService } from '../../../../services/tag/tag-category/tag-category.service';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TagCategoryDto } from 'src/app/services/tag/tag-category/tag-category.dto';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -76,7 +75,7 @@ export class TagDialogComponent implements OnInit {
       try {
         await this.tagService.update(this.uuid, dto);
       } catch (e) {
-        this.handleError(e);
+        this.showWarning();
         this.isLoading = false;
         return;
       }
@@ -84,7 +83,7 @@ export class TagDialogComponent implements OnInit {
       try {
         await this.tagService.create(dto);
       } catch (e) {
-        this.handleError(e);
+        this.showWarning();
         this.isLoading = false;
         return;
       }
@@ -97,14 +96,8 @@ export class TagDialogComponent implements OnInit {
     this.showNameWarning = false;
   }
 
-  private handleError(e: any) {
-    const res = e as HttpErrorResponse;
-    if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('duplicate key')) {
-      this.showNameWarning = true;
-      this.name = '';
-    } else {
-      throw e;
-    }
+  private showWarning() {
+    this.showNameWarning = true;
+    this.name = '';
   }
-
 }

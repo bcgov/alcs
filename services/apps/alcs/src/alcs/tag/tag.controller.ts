@@ -26,11 +26,11 @@ import { QueryFailedError } from 'typeorm';
 export class TagController {
   constructor(private service: TagService) {}
 
-  @Get('/:pageIndex/:itemsPerPage')
+  @Get('')
   @UserRoles(AUTH_ROLE.ADMIN)
   async fetch(
-    @Param('pageIndex') pageIndex: number,
-    @Param('itemsPerPage') itemsPerPage: number,
+    @Query('pageIndex') pageIndex: number,
+    @Query('itemsPerPage') itemsPerPage: number,
     @Query('search') search?: string,
   ) {
     const result = await this.service.fetch(pageIndex, itemsPerPage, search);

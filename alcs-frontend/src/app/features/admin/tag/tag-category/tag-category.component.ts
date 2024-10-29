@@ -6,7 +6,6 @@ import { TagCategoryDialogComponent } from './tag-category-dialog/tag-category-d
 import { TagCategoryService } from '../../../../services/tag/tag-category/tag-category.service';
 import { TagCategoryDto } from '../../../../services/tag/tag-category/tag-category.dto';
 import { PageEvent } from '@angular/material/paginator';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
@@ -96,7 +95,7 @@ export class TagCategoryComponent implements OnInit {
           try {
             await this.tagCategoryService.delete(categoryDto.uuid);
           } catch (e) {
-            this.handleError(e);
+            this.toastService.showErrorToast('Category is associated with tags. Unable to delete.');
           }
           await this.fetch();
         }
@@ -107,15 +106,6 @@ export class TagCategoryComponent implements OnInit {
     const response = await this.tagCategoryService.search(0, 5, value);
     if (response) {
       this.filteredOptions = response.data.map((res) => res.name);
-    }
-  }
-
-  private handleError(e: any) {
-    const res = e as HttpErrorResponse;
-    if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('update or delete on table')) {
-      this.toastService.showErrorToast('Category is associated with tags. Unable to delete.');
-    } else {
-      throw e;
     }
   }
 }

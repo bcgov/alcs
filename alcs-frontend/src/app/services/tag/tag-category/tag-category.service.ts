@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
@@ -28,10 +28,12 @@ export class TagCategoryService {
   }
 
   async search(pageIndex: number, itemsPerPage: number, search?: string) {
-    const searchQuery = search ? `?search=${search}` : '';
+    const pageQuery = `?pageIndex=${pageIndex}`;
+    const itemsQuery = `&itemsPerPage=${itemsPerPage}`;
+    const searchQuery = search ? `&search=${search}` : '';
     try {
       return await firstValueFrom(
-        this.http.get<PaginatedTagCategoryResponse>(`${this.url}/${pageIndex}/${itemsPerPage}${searchQuery}`)
+        this.http.get<PaginatedTagCategoryResponse>(`${this.url}${pageQuery}${itemsQuery}${searchQuery}`)
       );
     } catch (err) {
       console.error(err);
@@ -44,23 +46,44 @@ export class TagCategoryService {
     try {
       return await firstValueFrom(this.http.post<TagCategoryDto>(`${this.url}`, createDto));
     } catch (e) {
-      throw e;
+      const res = e as HttpErrorResponse;
+      if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('duplicate key')) {
+        throw e as HttpErrorResponse;
+      } else {
+        console.error(e);
+        this.toastService.showErrorToast('Failed to create tag category');
+      }
     }
+    return;
   }
 
   async update(uuid: string, updateDto: TagCategoryDto) {
     try {
       return await firstValueFrom(this.http.patch<TagCategoryDto>(`${this.url}/${uuid}`, updateDto));
     } catch (e) {
-      throw e;
+      const res = e as HttpErrorResponse;
+      if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('duplicate key')) {
+        throw e as HttpErrorResponse;
+      } else {
+        console.error(e);
+        this.toastService.showErrorToast('Failed to update tag category');
+      }
     }
+    return;
   }
 
-  async delete(code: string) {
+  async delete(uuid: string) {
     try {
-      return await firstValueFrom(this.http.delete<TagCategoryDto>(`${this.url}/${code}`));
+      return await firstValueFrom(this.http.delete<TagCategoryDto>(`${this.url}/${uuid}`));
     } catch (e) {
-      throw e;
+      const res = e as HttpErrorResponse;
+      if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('update or delete on table')) {
+        throw e as HttpErrorResponse;
+      } else {
+        console.error(e);
+        this.toastService.showErrorToast('Failed to delete tag category');
+      }
     }
+    return;
   }
 }

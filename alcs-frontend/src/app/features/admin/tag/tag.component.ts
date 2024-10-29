@@ -6,7 +6,6 @@ import { TagDialogComponent } from './tag-dialog/tag-dialog.component';
 import { TagService } from '../../../services/tag/tag.service';
 import { TagDto } from '../../../services/tag/tag.dto';
 import { PageEvent } from '@angular/material/paginator';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
@@ -96,7 +95,7 @@ export class TagComponent implements OnInit {
           try {
             await this.tagService.delete(tagDto.uuid);
           } catch (e) {
-            this.handleError(e);
+            this.toastService.showErrorToast('Tag is associated with files. Unable to delete.');
           }
           await this.fetch();
         }
@@ -107,15 +106,6 @@ export class TagComponent implements OnInit {
     const response = await this.tagService.search(0, 5, value);
     if (response) {
       this.filteredOptions = response.data.map((res) => res.name);
-    }
-  }
-
-  private handleError(e: any) {
-    const res = e as HttpErrorResponse;
-    if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('update or delete on table')) {
-      this.toastService.showErrorToast('Tag is associated with files. Unable to delete.');
-    } else {
-      throw e;
     }
   }
 }

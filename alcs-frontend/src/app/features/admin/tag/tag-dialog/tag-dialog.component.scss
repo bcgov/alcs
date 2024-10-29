@@ -1,5 +1,4 @@
 @use '../../../../../styles/colors';
-@use '../../../../../styles/functions.scss' as *;
 
 
 mat-dialog-title {
@@ -7,9 +6,9 @@ mat-dialog-title {
 }
 
 .warning-banner {
-  margin-top: rem(8);
+  margin-top: 8px;
   background-color: green;
-  padding: rem(16);
+  padding: 16px;
 
   .display-none {
     display: none !important;
@@ -17,14 +16,14 @@ mat-dialog-title {
 }
 
 .warning {
-  padding: rem(16);
-  font-size: rem(14);
+  padding: 16px;
+  font-size: 14px;
   background-color: rgba(colors.$field-warning-bg-color, 0.5);
-  border-radius: rem(8);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   color: colors.$dark-contrast-text;
-  margin-top: rem(18);
+  margin-top: 18px;
 
   mat-icon {
     color: colors.$dark-contrast-text;
@@ -33,17 +32,17 @@ mat-dialog-title {
 }
 
 .dialog {
-  padding: rem(24);
+  padding: 24px;
 
   form {
     display: grid;
     grid-template-columns: 1fr;
-    row-gap: rem(24);
-    column-gap: rem(24);
-    margin-bottom: rem(24);
+    row-gap: 24px;
+    column-gap: 24px;
+    margin-bottom: 24px;
 
     .dialog-field {
-      margin-top: rem(20);
+      margin-top: 20px;
     }
 
     .mat-mdc-form-field {

@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TagCategoryDto } from '../../../../../services/tag/tag-category/tag-category.dto';
 import { TagCategoryService } from '../../../../../services/tag/tag-category/tag-category.service';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-tag-category-dialog',
@@ -41,7 +40,7 @@ export class TagCategoryDialogComponent {
       try {
         await this.tagCategoryService.update(this.uuid, dto);
       } catch (e) {
-        this.handleError(e);
+        this.showWarning();
         this.isLoading = false;
         return;
       }
@@ -49,7 +48,7 @@ export class TagCategoryDialogComponent {
       try {
         await this.tagCategoryService.create(dto);
       } catch (e) {
-        this.handleError(e);
+        this.showWarning();
         this.isLoading = false;
         return;
       }
@@ -62,14 +61,8 @@ export class TagCategoryDialogComponent {
     this.showNameWarning = false;
   }
 
-  private handleError(e: any) {
-    const res = e as HttpErrorResponse;
-    if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('duplicate key')) {
-      this.showNameWarning = true;
-      this.name = '';
-    } else {
-      throw e;
-    }
+  private showWarning() {
+    this.showNameWarning = true;
+    this.name = '';
   }
-
 }
