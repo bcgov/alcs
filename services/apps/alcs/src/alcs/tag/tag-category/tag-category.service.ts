@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TagCategory } from './tag-category.entity';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagCategoryDto } from './tag-category.dto';
 
@@ -16,14 +16,14 @@ export class TagCategoryService {
 
     if (search) {
       searchExpression = {
-        name: Like(`%${search}%`),
+        name: ILike(`%${search}%`),
       };
     }
 
     return (
       (await this.repository.findAndCount({
         where: searchExpression,
-        order: { name: 'DESC' },
+        order: { name: 'ASC' },
         take: itemsPerPage,
         skip: pageIndex * itemsPerPage,
       })) || [[], 0]

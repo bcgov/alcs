@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './tag.entity';
 import { TagDto } from './tag.dto';
-import { TagCategory } from '../tag-category/tag-category.entity';
+import { TagCategory } from './tag-category/tag-category.entity';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class TagService {
 
     if (search) {
       searchExpression = {
-        name: Like(`%${search}%`),
+        name: ILike(`%${search}%`),
       };
     }
 
@@ -30,7 +30,7 @@ export class TagService {
         relations: {
           category: true,
         },
-        order: { name: 'DESC' },
+        order: { name: 'ASC' },
         take: itemsPerPage,
         skip: pageIndex * itemsPerPage,
       })) || [[], 0]

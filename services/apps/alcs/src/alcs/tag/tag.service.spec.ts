@@ -4,11 +4,11 @@ import { TagService } from './tag.service';
 import { Repository } from 'typeorm';
 import { Tag } from './tag.entity';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { TagCategory } from '../tag-category/tag-category.entity';
+import { TagCategory } from '../tag/tag-category/tag-category.entity';
 import {
   initTagCategoryMockEntity,
   initTagMockEntity,
-} from '../../../../test/mocks/mockEntities';
+} from '../../../test/mocks/mockEntities';
 import { AutomapperModule } from 'automapper-nestjs';
 import { classes } from 'automapper-classes';
 import { getRepositoryToken } from '@nestjs/typeorm';

@@ -3,8 +3,8 @@ import { TagController } from './tag.controller';
 import { TagService } from './tag.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { ClsService } from 'nestjs-cls';
-import { initTagMockEntity } from '../../../../test/mocks/mockEntities';
-import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
+import { initTagMockEntity } from '../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Tag } from './tag.entity';
 import { TagDto } from './tag.dto';
 

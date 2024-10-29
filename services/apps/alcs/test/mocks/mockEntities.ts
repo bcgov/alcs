@@ -22,8 +22,8 @@ import { Comment } from '../../src/alcs/comment/comment.entity';
 import { CommentMention } from '../../src/alcs/comment/mention/comment-mention.entity';
 import { AssigneeDto, UserDto } from '../../src/user/user.dto';
 import { User } from '../../src/user/user.entity';
-import { TagCategory } from '../../src/alcs/admin/tag-category/tag-category.entity';
-import { Tag } from '../../src/alcs/admin/tag/tag.entity';
+import { TagCategory } from '../../src/alcs/tag/tag-category/tag-category.entity';
+import { Tag } from '../../src/alcs/tag/tag.entity';
 
 const initCardStatusMockEntity = (): CardStatus => {
   const cardStatus = new CardStatus();

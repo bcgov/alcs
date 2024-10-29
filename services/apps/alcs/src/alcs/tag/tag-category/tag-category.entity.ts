@@ -16,6 +16,6 @@ export class TagCategory extends Base {
   uuid: string;
 
   @AutoMap()
-  @Column()
+  @Column({ unique: true })
   name: string;
 }
