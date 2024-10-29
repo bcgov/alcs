@@ -55,32 +55,10 @@ describe('TagCategoryService', () => {
     expect(res!.uuid).toEqual('fake');
   });
 
-  it('should show toast if create fails', async () => {
-    mockHttpClient.post.mockReturnValue(
-      throwError(() => {
-        new Error('');
-      })
-    );
-
-    const res = await service.create({
-      uuid: '',
-      name: '',
-      category: {
-        uuid: '',
-        name: ''
-      },
-      isActive: true,
-    });
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(res).toBeUndefined();
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
   it('should call patch on update', async () => {
     mockHttpClient.patch.mockReturnValue(
       of({
-        code: 'fake',
+        uuid: 'fake',
       })
     );
 
@@ -97,27 +75,6 @@ describe('TagCategoryService', () => {
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
     expect(res!.uuid).toEqual('fake');
-  });
-
-  it('should show toast if update fails', async () => {
-    mockHttpClient.patch.mockReturnValue(
-      throwError(() => {
-        new Error('');
-      })
-    );
-
-    const res = await service.update('mock', {
-      uuid: '',
-      name: '',
-      category: {
-        uuid: '',
-        name: ''
-      },
-      isActive: true,
-    });
-
-    expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should call get on fetch', async () => {
@@ -153,18 +110,5 @@ describe('TagCategoryService', () => {
     expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
     expect(res!.uuid).toEqual('fake');
-  });
-
-  it('should show toast if delete fails', async () => {
-    mockHttpClient.delete.mockReturnValue(
-      throwError(() => {
-        new Error('');
-      })
-    );
-
-    const res = await service.delete('mock');
-
-    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });

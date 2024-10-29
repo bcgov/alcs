@@ -35,7 +35,6 @@ export class TagDialogComponent implements OnInit {
     private tagService: TagService,
     private tagCategoryService: TagCategoryService,
   ) {
-    console.log(data);
     if (data) {
       this.uuid = data.uuid;
       this.name = data.name;

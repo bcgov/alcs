@@ -3,10 +3,12 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { TagService } from '../../../services/tag/tag.service';
+import { PaginatedTagResponse, TagService } from '../../../services/tag/tag.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { TagComponent } from './tag.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { BehaviorSubject } from 'rxjs';
 
 describe('TagComponent', () => {
   let component: TagComponent;
@@ -19,6 +21,7 @@ describe('TagComponent', () => {
     mockTagService = createMock();
     mockDialog = createMock();
     mockConfirmationDialogService = createMock();
+    mockTagService.$tags = new BehaviorSubject<PaginatedTagResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
       declarations: [TagComponent],
@@ -37,7 +40,7 @@ describe('TagComponent', () => {
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, MatAutocompleteModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TagComponent);
