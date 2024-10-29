@@ -34,7 +34,7 @@ export class TagService {
         this.http.get<PaginatedTagResponse>(`${this.url}/${pageIndex}/${itemsPerPage}${searchQuery}`)
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
       this.toastService.showErrorToast('Failed to fetch tags');
     }
     return;

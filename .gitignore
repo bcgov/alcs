@@ -16,8 +16,3 @@ playwright/.cache/
 .~lock.*
 
 /ora2pg_data
-alcs-frontend/.eslintrc.json
-tsconfig.json
-services/.prettierrc
-services/.prettierrc
-alcs-frontend/.eslintrc.json
