@@ -652,14 +652,6 @@ export class ApplicationSubmissionValidatorService {
     applicationDocuments: ApplicationDocument[],
     errors: Error[],
   ) {
-    if (applicationSubmission.soilIsExtractionOrMining === null) {
-      errors.push(
-        new ServiceValidationException(
-          `${applicationSubmission.typeCode} proposal missing extraction/mining answer`,
-        ),
-      );
-    }
-
     if (applicationSubmission.soilIsExtractionOrMining) {
       if (applicationSubmission.soilHasSubmittedNotice === null) {
         errors.push(
