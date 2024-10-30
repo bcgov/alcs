@@ -396,7 +396,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       console.error('Failed to find structure');
       return;
     }
-    return this.setStructureAreaInput(structure, input.value);
+    this.setStructureAreaInput(structure, input.value);
   }
 
   onStructureRemove(id: string) {
