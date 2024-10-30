@@ -6,6 +6,8 @@ import {
   Entity,
   Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -23,10 +25,11 @@ import { ApplicationDecisionMeeting } from './application-decision-meeting/appli
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
+import { Tag } from '../tag/tag.entity';
+// import { ApplicationTag } from './application-tag/application-tag.entity';
 
 @Entity({
-  comment:
-    'Base data for applications including the ID, key dates, and the date of the first decision',
+  comment: 'Base data for applications including the ID, key dates, and the date of the first decision',
 })
 export class Application extends Base {
   constructor(data?: Partial<Application>) {
@@ -266,8 +269,7 @@ export class Application extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Application Id that is applicable only to paper version applications from 70s - 80s',
+    comment: 'Application Id that is applicable only to paper version applications from 70s - 80s',
     nullable: true,
   })
   legacyId?: string | null;
@@ -277,10 +279,7 @@ export class Application extends Base {
   pauses: ApplicationPaused[];
 
   @AutoMap()
-  @OneToMany(
-    () => ApplicationDecisionMeeting,
-    (appDecMeeting) => appDecMeeting.application,
-  )
+  @OneToMany(() => ApplicationDecisionMeeting, (appDecMeeting) => appDecMeeting.application)
   decisionMeetings: ApplicationDecisionMeeting[];
 
   @AutoMap()
@@ -288,10 +287,7 @@ export class Application extends Base {
   applicationMeetings: ApplicationMeeting[];
 
   @AutoMap()
-  @OneToMany(
-    () => ApplicationDocument,
-    (appDocument) => appDocument.application,
-  )
+  @OneToMany(() => ApplicationDocument, (appDocument) => appDocument.application)
   documents: ApplicationDocument[];
 
   @AutoMap()
@@ -309,16 +305,15 @@ export class Application extends Base {
   cardUuid: string;
 
   @AutoMap()
-  @OneToMany(
-    () => ApplicationReconsideration,
-    (appRecon) => appRecon.application,
-  )
+  @OneToMany(() => ApplicationReconsideration, (appRecon) => appRecon.application)
   reconsiderations: ApplicationReconsideration[];
 
   @AutoMap(() => ApplicationSubmissionReview)
-  @OneToOne(
-    () => ApplicationSubmissionReview,
-    (appReview) => appReview.application,
-  )
+  @OneToOne(() => ApplicationSubmissionReview, (appReview) => appReview.application)
   submittedApplicationReview?: ApplicationSubmissionReview;
+
+  @AutoMap(() => [Tag])
+  @ManyToMany(() => Tag, (tag) => tag.applications)
+  @JoinTable({ name: 'application_tag' })
+  tags: Tag[];
 }
