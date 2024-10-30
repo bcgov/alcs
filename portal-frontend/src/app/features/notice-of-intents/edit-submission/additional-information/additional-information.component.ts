@@ -353,6 +353,12 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     this.form.markAsDirty();
   }
 
+  private setStructureAreaInput(structure: FormProposedStructure, value: string) {
+    structure.area = value;
+    this.prepareStructureSpecificTextInputs();
+    this.form.markAsDirty();
+  }
+
   onChangeStructureType(id: string, value: STRUCTURE_TYPES) {
     const structure = this.proposedStructures.find((structure) => structure.id === id);
     if (!structure) {
@@ -381,6 +387,16 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         }
       });
     }
+  }
+
+  onChangeArea(id: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const structure = this.proposedStructures.find((structure) => structure.id === id);
+    if (!structure) {
+      console.error('Failed to find structure');
+      return;
+    }
+    return this.setStructureAreaInput(structure, input.value);
   }
 
   onStructureRemove(id: string) {
