@@ -11,5 +11,6 @@ import { TagService } from './tag.service';
   imports: [TypeOrmModule.forFeature([TagCategory, Tag])],
   controllers: [TagCategoryController, TagController],
   providers: [TagCategoryService, TagService],
+  exports: [TypeOrmModule],
 })
 export class TagModule {}

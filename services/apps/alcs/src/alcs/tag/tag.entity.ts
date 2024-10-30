@@ -1,7 +1,8 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { TagCategory } from './tag-category/tag-category.entity';
+import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 
 @Entity({ comment: 'Tag.' })
 export class Tag extends Base {
@@ -28,4 +29,7 @@ export class Tag extends Base {
     nullable: true,
   })
   category?: TagCategory | null;
+
+  @ManyToMany(() => NoticeOfIntent, (noticeOfIntent) => noticeOfIntent.tags)
+  noticeOfIntents: NoticeOfIntent[];
 }
