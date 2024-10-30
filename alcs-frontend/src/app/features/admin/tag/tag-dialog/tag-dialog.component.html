@@ -15,14 +15,13 @@
         <div>
           <ng-select
             appearance="outline"
-            required
             name="categoryId"
             [items]="categories"
             appendTo="body"
             placeholder="Select Category"
             bindLabel="name"
             bindValue="uuid"
-            [clearable]="false"
+            [clearable]="true"
             [(ngModel)]="categoryId"
           >
             <ng-template ng-option-tmp let-item="item" let-search="searchTerm">

@@ -37,7 +37,7 @@
 
     <ng-container matColumnDef="category">
       <th mat-header-cell *matHeaderCellDef>Category</th>
-      <td mat-cell *matCellDef="let row">{{ row.category.name }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.category ? row.category.name : '' }}</td>
     </ng-container>
 
     <ng-container matColumnDef="isActive">

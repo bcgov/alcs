@@ -1,4 +1,4 @@
-import { IsBoolean, IsObject, IsString } from 'class-validator';
+import { IsBoolean, IsObject, IsOptional, IsString } from 'class-validator';
 import { TagCategoryDto } from './tag-category/tag-category.dto';
 
 export class TagDto {
@@ -9,5 +9,6 @@ export class TagDto {
   isActive: boolean;
 
   @IsObject()
-  category: TagCategoryDto;
+  @IsOptional()
+  category?: TagCategoryDto;
 }

@@ -24,6 +24,8 @@ export class Tag extends Base {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToOne(() => TagCategory)
-  category: TagCategory;
+  @ManyToOne(() => TagCategory, {
+    nullable: true,
+  })
+  category?: TagCategory | null;
 }

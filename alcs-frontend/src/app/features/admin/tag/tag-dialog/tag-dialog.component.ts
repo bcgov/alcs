@@ -15,7 +15,7 @@ export class TagDialogComponent implements OnInit {
   destroy = new Subject<void>();
   uuid = '';
   name = '';
-  category: TagCategoryDto = {
+  category: TagCategoryDto | undefined = {
     uuid: '',
     name: '',
   };
@@ -37,8 +37,8 @@ export class TagDialogComponent implements OnInit {
     if (data) {
       this.uuid = data.uuid;
       this.name = data.name;
-      this.category = data.category;
-      this.categoryId = data.category.uuid;
+      this.category = data.category ? data.category : undefined;
+      this.categoryId = data.category ? data.category.uuid : '';
       this.isActive = data.isActive.toString();
     }
     this.isEdit = !!data;
@@ -60,19 +60,20 @@ export class TagDialogComponent implements OnInit {
 
   async onSubmit() {
     this.isLoading = true;
-
+    console.log(this.categoryId);
     const dto: TagDto = {
       uuid: this.uuid,
       name: this.name,
-      category: {
+      category: this.categoryId && this.categoryId !== '' ? {
         uuid: this.categoryId,
         name: '',
-      },
+      } : undefined,
       isActive: this.isActive === 'true',
     };
 
     if (this.isEdit) {
       try {
+        console.log(dto);
         await this.tagService.update(this.uuid, dto);
       } catch (e) {
         this.showWarning();
