@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tag } from '../../tag/tag.entity';
 import { Application } from '../application.entity';
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class ApplicationTagService {
@@ -15,7 +15,10 @@ export class ApplicationTagService {
   ) {}
 
   async addTagToApplication(fileNumber: string, tagName: string) {
-    const application = await this.applicationRepository.findOne({ where: { fileNumber: fileNumber } });
+    const application = await this.applicationRepository.findOne({
+      where: { fileNumber: fileNumber },
+      relations: ['tags'],
+    });
     if (!application) {
       throw new ServiceNotFoundException(`Application not found with number ${fileNumber}`);
     }
@@ -28,12 +31,24 @@ export class ApplicationTagService {
     if (!application.tags) {
       application.tags = [];
     }
+
+    console.log(tag.uuid);
+    console.log(application.tags);
+    const tagExists = application.tags.some((t) => t.uuid === tag.uuid);
+    console.log(tagExists);
+    if (tagExists) {
+      throw new ServiceValidationException(`Tag ${tagName} already exists`);
+    }
+
     application.tags.push(tag);
     return this.applicationRepository.save(application);
   }
 
   async removeTagFromApplication(fileNumber: string, tagName: string) {
-    const application = await this.applicationRepository.findOne({ where: { fileNumber: fileNumber } });
+    const application = await this.applicationRepository.findOne({
+      where: { fileNumber: fileNumber },
+      relations: ['tags'],
+    });
     if (!application) {
       throw new ServiceNotFoundException(`Application not found with number ${fileNumber}`);
     }
@@ -46,6 +61,12 @@ export class ApplicationTagService {
     if (!application.tags) {
       application.tags = [];
     }
+
+    const tagExists = application.tags.some((t) => t.uuid === tag.uuid);
+    if (!tagExists) {
+      throw new ServiceValidationException(`Tag ${tagName} does not exist`);
+    }
+
     application.tags = application.tags.filter((t) => t.uuid !== tag.uuid);
     return this.applicationRepository.save(application);
   }

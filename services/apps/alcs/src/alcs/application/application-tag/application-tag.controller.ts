@@ -28,42 +28,18 @@ export class ApplicationTagController {
   @Get('')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getApplicationTags(@Param('fileNumber') fileNumber: string) {
-    try {
-      return await this.service.getApplicationTags(fileNumber);
-    } catch (e) {
-      this.logger.error(`Failed to load tags for application with number ${fileNumber}`, e.stack);
-      throw new HttpException(
-        `Failed to load tags for application with file number ${fileNumber}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.service.getApplicationTags(fileNumber);
   }
 
   @Post('')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async addTagToApplication(@Param('fileNumber') fileNumber: string, @Body() dto: ApplicationTagDto) {
-    try {
-      return await this.service.addTagToApplication(fileNumber, dto.tagName);
-    } catch (e) {
-      this.logger.error(`Failed to add tag ${dto.tagName} to application with file number ${fileNumber}`, e.stack);
-      throw new HttpException(
-        `Failed to add tag ${dto.tagName} to application with file number ${fileNumber}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.service.addTagToApplication(fileNumber, dto.tagName);
   }
 
-  @Delete('')
+  @Delete('/:tagName')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async removeTagFromApplication(@Param('fileNumber') fileNumber: string, @Body() dto: ApplicationTagDto) {
-    try {
-      return await this.service.removeTagFromApplication(fileNumber, dto.tagName);
-    } catch (e) {
-      this.logger.error(`Failed to remove tag ${dto.tagName} to application with file number ${fileNumber}`, e.stack);
-      throw new HttpException(
-        `Failed to remove tag ${dto.tagName} to application with file number ${fileNumber}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async removeTagFromApplication(@Param('fileNumber') fileNumber: string, @Param('tagName') tagName: string) {
+    return await this.service.removeTagFromApplication(fileNumber, tagName);
   }
 }
