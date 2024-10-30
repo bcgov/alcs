@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './tag.entity';
 import { TagDto } from './tag.dto';
 import { TagCategory } from './tag-category/tag-category.entity';
-import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class TagService {
@@ -38,20 +37,18 @@ export class TagService {
   }
 
   async create(dto: TagDto) {
-    const category = await this.categoryRepository.findOne({
-      where: {
-        uuid: dto.category.uuid,
-      },
-    });
-
-    if (!category) {
-      throw new ServiceValidationException('Provided category does not exist');
-    }
+    const category = dto.category
+      ? await this.categoryRepository.findOne({
+          where: {
+            uuid: dto.category.uuid,
+          },
+        })
+      : null;
 
     const newTag = new Tag();
     newTag.name = dto.name;
     newTag.isActive = dto.isActive;
-    newTag.category = category;
+    newTag.category = category ? category : null;
     return this.repository.save(newTag);
   }
 
@@ -62,25 +59,21 @@ export class TagService {
   }
 
   async update(uuid: string, updateDto: TagDto) {
-    const category = await this.categoryRepository.findOne({
-      where: {
-        uuid: updateDto.category.uuid,
-      },
-    });
-
-    if (!category) {
-      throw new ServiceValidationException('Provided category does not exist');
-    }
+    const category = updateDto.category
+      ? await this.categoryRepository.findOne({
+          where: {
+            uuid: updateDto.category.uuid,
+          },
+        })
+      : null;
     const tag = await this.getOneOrFail(uuid);
     tag.name = updateDto.name;
     tag.isActive = updateDto.isActive;
-    tag.category = category;
+    tag.category = category ? category : null;
     return await this.repository.save(tag);
   }
 
   async delete(uuid: string) {
-    const tag = await this.getOneOrFail(uuid);
-
-    return await this.repository.remove(tag);
+    return await this.repository.softDelete(uuid);
   }
 }

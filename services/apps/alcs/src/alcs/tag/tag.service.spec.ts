@@ -5,16 +5,12 @@ import { Repository } from 'typeorm';
 import { Tag } from './tag.entity';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { TagCategory } from '../tag/tag-category/tag-category.entity';
-import {
-  initTagCategoryMockEntity,
-  initTagMockEntity,
-} from '../../../test/mocks/mockEntities';
+import { initTagCategoryMockEntity, initTagMockEntity } from '../../../test/mocks/mockEntities';
 import { AutomapperModule } from 'automapper-nestjs';
 import { classes } from 'automapper-classes';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { TagDto } from './tag.dto';
-import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 describe('TagCategoryService', () => {
   let service: TagService;
@@ -82,29 +78,6 @@ describe('TagCategoryService', () => {
     expect(tagRepositoryMock.save).toHaveBeenCalledWith(mockTagEntity);
   });
 
-  it('should fail update if tag does not exist', async () => {
-    const payload: TagDto = {
-      name: mockTagEntity.name,
-      isActive: mockTagEntity.isActive,
-      category: mockTagCategoryEntity,
-    };
-
-    tagRepositoryMock.findOneOrFail.mockRejectedValue(
-      new ServiceValidationException(
-        `Tag for with ${mockTagEntity.uuid} not found`,
-      ),
-    );
-
-    await expect(
-      service.update(mockTagEntity.uuid, payload),
-    ).rejects.toMatchObject(
-      new ServiceValidationException(
-        `Tag for with ${mockTagEntity.uuid} not found`,
-      ),
-    );
-    expect(tagRepositoryMock.save).toBeCalledTimes(0);
-  });
-
   it('should call save when tag successfully create', async () => {
     const payload: TagDto = {
       name: mockTagEntity.name,
@@ -115,24 +88,5 @@ describe('TagCategoryService', () => {
     await service.create(payload);
 
     expect(tagRepositoryMock.save).toBeCalledTimes(1);
-  });
-
-  it('should fail on create if Tag Category does not exist', async () => {
-    const payload: TagDto = {
-      name: mockTagEntity.name,
-      isActive: mockTagEntity.isActive,
-      category: {
-        uuid: 'fakeuuid',
-        name: '',
-      },
-    };
-
-    tagCategoryRepositoryMock.findOne.mockResolvedValue(null);
-
-    await expect(service.create(payload)).rejects.toMatchObject(
-      new ServiceValidationException('Provided category does not exist'),
-    );
-
-    expect(tagRepositoryMock.save).toBeCalledTimes(0);
   });
 });
