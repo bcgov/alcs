@@ -10,5 +10,5 @@ export class TagDto {
 
   @IsObject()
   @IsOptional()
-  category?: TagCategoryDto;
+  category?: TagCategoryDto | null;
 }

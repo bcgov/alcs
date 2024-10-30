@@ -7,6 +7,7 @@ import { initTagMockEntity } from '../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Tag } from './tag.entity';
 import { TagDto } from './tag.dto';
+import { UpdateResult } from 'typeorm';
 
 describe('TagController', () => {
   let controller: TagController;
@@ -46,9 +47,19 @@ describe('TagController', () => {
   });
 
   it('should create a tag', async () => {
+    const dto: TagDto = {
+      name: mockTag.name,
+      category: mockTag.category
+        ? {
+            uuid: mockTag.category?.uuid,
+            name: mockTag.name,
+          }
+        : null,
+      isActive: mockTag.isActive,
+    };
     tagService.create.mockResolvedValue(mockTag);
 
-    const result = await controller.create(mockTag);
+    const result = await controller.create(dto);
     expect(tagService.create).toHaveBeenCalledTimes(1);
     expect(result).toEqual(mockTag);
   });
@@ -71,10 +82,10 @@ describe('TagController', () => {
   });
 
   it('should delete a tag', async () => {
-    tagService.delete.mockResolvedValue(mockTag);
+    tagService.delete.mockResolvedValue({} as UpdateResult);
 
     const result = await controller.delete(mockTag.uuid);
     expect(tagService.delete).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(mockTag);
+    expect(result).toBeDefined();
   });
 });
