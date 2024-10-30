@@ -269,6 +269,7 @@
                   min="0.01"
                   placeholder="Type area"
                   [formControlName]="element.id + '-area'"
+                  (change)="onChangeArea(element.id, $event)"
                 />
                 <span matTextSuffix>m<sup>2</sup></span>
               </mat-form-field>

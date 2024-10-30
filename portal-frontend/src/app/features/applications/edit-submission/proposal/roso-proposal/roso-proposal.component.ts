@@ -465,6 +465,21 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
+  onChangeArea(id: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const structure = this.proposedStructures.find((structure) => structure.id === id);
+    if (!structure) {
+      console.error('Failed to find structure');
+      return;
+    }
+    this.setStructureAreaInput(structure, input.value);
+  }
+
+  private setStructureAreaInput(structure: FormProposedStructure, value: string) {
+    structure.area = value;
+    this.form.markAsDirty();
+  }
+
   private hasInput(type: STRUCTURE_TYPES | null) {
     switch (type) {
       case STRUCTURE_TYPES.FARM_STRUCTURE:
