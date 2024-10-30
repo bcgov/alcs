@@ -495,12 +495,35 @@ export class GenerateSubmissionDocumentService {
     submission: ApplicationSubmission,
     documents: ApplicationDocument[],
   ) {
+    const hasFarmStructure = submission.soilProposedStructures.some(
+      (structure) => structure.type === 'Farm Structure',
+    );
+
+    const hasResidentialStructure = submission.soilProposedStructures.some(
+      (structure) =>
+        structure.type === 'Residential - Principal Residence' ||
+        structure.type === 'Residential - Additional Residence' ||
+        structure.type === 'Residential - Accessory Structure',
+    );
+
+    const hasAccessoryStructure = submission.soilProposedStructures.some(
+      (structure) => structure.type === 'Residential - Accessory Structure',
+    );
+
+    const hasOtherStructure = submission.soilProposedStructures.some(
+      (structure) => structure.type === 'Other Structure',
+    );
+
     const crossSections = documents.filter(
       (document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS,
     );
 
     const reclamationPlans = documents.filter(
       (document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN,
+    );
+
+    const buildingPlans = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN,
     );
 
     const noticesOfWork = documents.filter(
@@ -510,6 +533,9 @@ export class GenerateSubmissionDocumentService {
     pdfData = {
       ...pdfData,
       fillProjectDuration: submission.fillProjectDuration,
+      soilIsNewStructure: formatBooleanToYesNoString(
+        submission.soilIsNewStructure,
+      ),
       soilIsFollowUp: formatBooleanToYesNoString(submission.soilIsFollowUp),
       soilFollowUpIDs: submission.soilFollowUpIDs,
       soilProjectDuration: submission.soilProjectDuration,
@@ -535,8 +561,40 @@ export class GenerateSubmissionDocumentService {
       soilFillTypeToPlace: submission.soilFillTypeToPlace,
       soilAlternativeMeasures: submission.soilAlternativeMeasures,
 
+      soilProposedStructures: submission.soilProposedStructures.map(
+        (structure, index) => ({
+          area: structure.area ?? NO_DATA,
+          type:
+            {
+              'Fram Structure': 'Fram Structure',
+              'Residential - Principal Residence': 'Principal Residence',
+              'Residential - Additional Residence': 'Additional Residence',
+              'Residential - Accessory Structure':
+                'Residential Accessory Structure',
+              'Other Structure': 'Other Structure',
+            }[structure.type ?? ''] ??
+            structure.type ??
+            NO_DATA,
+          index: index + 1,
+        }),
+      ),
+
+      hasFarmStructure,
+      hasResidentialStructure,
+      hasAccessoryStructure,
+      hasOtherStructure,
+
+      soilStructureFarmUseReason: submission.soilStructureFarmUseReason,
+      soilStructureResidentialUseReason:
+        submission.soilStructureResidentialUseReason,
+      soilAgriParcelActivity: submission.soilAgriParcelActivity,
+      soilStructureResidentialAccessoryUseReason:
+        submission.soilStructureResidentialAccessoryUseReason,
+      soilStructureOtherUseReason: submission.soilStructureOtherUseReason,
+
       crossSections: crossSections.map((d) => d.document),
       reclamationPlans: reclamationPlans.map((d) => d.document),
+      buildingPlans: buildingPlans[0]?.document.fileName,
       noticesOfWork: noticesOfWork.map((d) => d.document),
       soilIsExtractionOrMining: formatBooleanToYesNoString(
         submission.soilIsExtractionOrMining,
