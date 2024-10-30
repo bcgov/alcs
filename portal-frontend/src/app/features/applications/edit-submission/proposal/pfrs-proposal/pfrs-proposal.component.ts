@@ -22,7 +22,7 @@ import {
   STRUCTURE_TYPES,
   STRUCTURE_TYPE_OPTIONS,
   FormProposedStructure,
-} from 'src/app/features/notice-of-intents/edit-submission/additional-information/additional-information.component';
+} from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { ProposedStructure } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { AddStructureDialogComponent } from '../../../../notice-of-intents/edit-submission/additional-information/add-structure-dialog/add-structure-dialog.component';
 
