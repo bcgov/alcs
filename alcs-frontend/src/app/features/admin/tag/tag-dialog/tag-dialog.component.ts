@@ -60,7 +60,6 @@ export class TagDialogComponent implements OnInit {
 
   async onSubmit() {
     this.isLoading = true;
-    console.log(this.categoryId);
     const dto: TagDto = {
       uuid: this.uuid,
       name: this.name,
@@ -73,7 +72,6 @@ export class TagDialogComponent implements OnInit {
 
     if (this.isEdit) {
       try {
-        console.log(dto);
         await this.tagService.update(this.uuid, dto);
       } catch (e) {
         this.showWarning();
