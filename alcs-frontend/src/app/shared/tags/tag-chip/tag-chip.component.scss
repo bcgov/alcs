@@ -1,0 +1,11 @@
+mat-chip-row {
+  border-radius: 4px;
+  border-color: #929292;
+  border: 1px solid;
+  background-color: #f3f3f3 !important;
+}
+
+::ng-deep .tag-remove-icon {
+  color: warn !important;
+  font-weight: 400 !important;
+}
