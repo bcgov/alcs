@@ -22,7 +22,6 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../../common/authorization/roles'
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class ApplicationTagController {
-  private logger = new Logger(ApplicationTagController.name);
   constructor(private service: ApplicationTagService) {}
 
   @Get('')

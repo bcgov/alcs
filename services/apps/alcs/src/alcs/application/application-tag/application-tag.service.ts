@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tag } from '../../tag/tag.entity';
@@ -7,8 +7,6 @@ import { ServiceNotFoundException, ServiceValidationException } from '@app/commo
 
 @Injectable()
 export class ApplicationTagService {
-  private logger = new Logger(ApplicationTagService.name);
-
   constructor(
     @InjectRepository(Tag) private tagRepository: Repository<Tag>,
     @InjectRepository(Application) private applicationRepository: Repository<Application>,
@@ -32,10 +30,7 @@ export class ApplicationTagService {
       application.tags = [];
     }
 
-    console.log(tag.uuid);
-    console.log(application.tags);
     const tagExists = application.tags.some((t) => t.uuid === tag.uuid);
-    console.log(tagExists);
     if (tagExists) {
       throw new ServiceValidationException(`Tag ${tagName} already exists`);
     }
@@ -64,7 +59,7 @@ export class ApplicationTagService {
 
     const tagExists = application.tags.some((t) => t.uuid === tag.uuid);
     if (!tagExists) {
-      throw new ServiceValidationException(`Tag ${tagName} does not exist`);
+      throw new ServiceValidationException(`Tag ${tagName} does not exist in the application`);
     }
 
     application.tags = application.tags.filter((t) => t.uuid !== tag.uuid);
@@ -76,9 +71,11 @@ export class ApplicationTagService {
       where: { fileNumber: fileNumber },
       relations: ['tags'],
     });
+
     if (!application) {
       throw new ServiceNotFoundException(`Application not found with number ${fileNumber}`);
     }
+
     return application.tags && application.tags.length > 0
       ? application.tags.sort((a, b) => a.auditCreatedAt.getTime() - b.auditCreatedAt.getTime())
       : [];
