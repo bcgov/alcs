@@ -25,6 +25,7 @@ import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission
 import {
   NoticeOfIntentSubmission,
   PORTAL_TO_ALCS_STRUCTURE_MAP,
+  STRUCTURE_TYPES,
 } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
 
@@ -283,16 +284,16 @@ describe('NoticeOfIntentSubmissionService', () => {
       localGovernmentUuid,
       soilProposedStructures: [
         {
-          type: 'Residential - Accessory Structure',
+          type: STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
         },
         {
-          type: 'Residential - Additional Residence',
+          type: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
         },
         {
-          type: 'Residential - Principal Residence',
+          type: STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
         },
         {
-          type: 'Farm Structure',
+          type: STRUCTURE_TYPES.FARM_STRUCTURE,
         },
       ],
       soilIsAreaWideFilling: true,
@@ -320,10 +321,10 @@ describe('NoticeOfIntentSubmissionService', () => {
       dateSubmittedToAlc: mockDate,
       typeCode,
       subtypes: [
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Accessory Structure'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Additional Residence'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Principal Residence'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Farm Structure'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.ACCESSORY_STRUCTURE],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.FARM_STRUCTURE],
         'ARWF',
         'AEPM',
       ],

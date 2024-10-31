@@ -27,6 +27,10 @@ import { ApplicationParcelService } from '../application-submission/application-
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
+import {
+  STRUCTURE_TYPE_LABEL_MAP,
+  STRUCTURE_TYPES,
+} from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 
 export enum APPLICATION_SUBMISSION_TYPES {
   NFUP = 'NFUP',
@@ -496,22 +500,22 @@ export class GenerateSubmissionDocumentService {
     documents: ApplicationDocument[],
   ) {
     const hasFarmStructure = submission.soilProposedStructures.some(
-      (structure) => structure.type === 'Farm Structure',
+      (structure) => structure.type === STRUCTURE_TYPES.FARM_STRUCTURE,
     );
 
     const hasResidentialStructure = submission.soilProposedStructures.some(
       (structure) =>
-        structure.type === 'Residential - Principal Residence' ||
-        structure.type === 'Residential - Additional Residence' ||
-        structure.type === 'Residential - Accessory Structure',
+        structure.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE ||
+        structure.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE ||
+        structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
     );
 
     const hasAccessoryStructure = submission.soilProposedStructures.some(
-      (structure) => structure.type === 'Residential - Accessory Structure',
+      (structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
     );
 
     const hasOtherStructure = submission.soilProposedStructures.some(
-      (structure) => structure.type === 'Other Structure',
+      (structure) => structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE,
     );
 
     const crossSections = documents.filter(
@@ -565,14 +569,7 @@ export class GenerateSubmissionDocumentService {
         (structure, index) => ({
           area: structure.area ?? NO_DATA,
           type:
-            {
-              'Fram Structure': 'Fram Structure',
-              'Residential - Principal Residence': 'Principal Residence',
-              'Residential - Additional Residence': 'Additional Residence',
-              'Residential - Accessory Structure':
-                'Residential Accessory Structure',
-              'Other Structure': 'Other Structure',
-            }[structure.type ?? ''] ??
+            STRUCTURE_TYPE_LABEL_MAP[structure.type ?? ''] ??
             structure.type ??
             NO_DATA,
           index: index + 1,
