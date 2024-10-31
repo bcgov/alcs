@@ -29,6 +29,9 @@ import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-typ
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
+import { TagModule } from '../tag/tag.module';
+import { NoticeOfIntentTagService } from './notice-of-intent-tag/notice-of-intent-tag.service';
+import { NoticeOfIntentTagController } from './notice-of-intent-tag/notice-of-intent-tag.controller';
 
 @Module({
   imports: [
@@ -52,6 +55,7 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     LocalGovernmentModule,
     NoticeOfIntentSubmissionStatusModule,
     forwardRef(() => NoticeOfIntentSubmissionModule),
+    TagModule,
   ],
   providers: [
     NoticeOfIntentService,
@@ -60,6 +64,7 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     NoticeOfIntentDocumentService,
     NoticeOfIntentSubmissionService,
     NoticeOfIntentParcelProfile,
+    NoticeOfIntentTagService,
   ],
   controllers: [
     NoticeOfIntentController,
@@ -67,12 +72,14 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     NoticeOfIntentDocumentController,
     NoticeOfIntentSubmissionController,
     NoticeOfIntentParcelController,
+    NoticeOfIntentTagController,
   ],
   exports: [
     NoticeOfIntentService,
     NoticeOfIntentMeetingService,
     NoticeOfIntentDocumentService,
     NoticeOfIntentSubmissionService,
+    NoticeOfIntentTagService,
   ],
 })
 export class NoticeOfIntentModule {}
