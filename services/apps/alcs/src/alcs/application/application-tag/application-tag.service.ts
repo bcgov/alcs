@@ -76,8 +76,6 @@ export class ApplicationTagService {
       throw new ServiceNotFoundException(`Application not found with number ${fileNumber}`);
     }
 
-    return application.tags && application.tags.length > 0
-      ? application.tags.sort((a, b) => a.auditCreatedAt.getTime() - b.auditCreatedAt.getTime())
-      : [];
+    return application.tags && application.tags.length > 0 ? application.tags : [];
   }
 }
