@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from '../../tag/tag.entity';
 import { NoticeOfIntent } from '../notice-of-intent.entity';
@@ -7,8 +7,6 @@ import { ServiceNotFoundException, ServiceValidationException } from '@app/commo
 
 @Injectable()
 export class NoticeOfIntentTagService {
-  private logger = new Logger(NoticeOfIntentTagService.name);
-
   constructor(
     @InjectRepository(Tag) private tagRepository: Repository<Tag>,
     @InjectRepository(NoticeOfIntent) private noiRepository: Repository<NoticeOfIntent>,

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import * as config from 'config';
@@ -11,7 +11,6 @@ import { NoticeOfIntentTagDto } from './notice-of-intent-tag.dto';
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class NoticeOfIntentTagController {
-  private logger = new Logger(NoticeOfIntentTagController.name);
   constructor(private service: NoticeOfIntentTagService) {}
 
   @Get('')
