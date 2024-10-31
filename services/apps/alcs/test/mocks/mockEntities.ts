@@ -24,6 +24,8 @@ import { AssigneeDto, UserDto } from '../../src/user/user.dto';
 import { User } from '../../src/user/user.entity';
 import { TagCategory } from '../../src/alcs/tag/tag-category/tag-category.entity';
 import { Tag } from '../../src/alcs/tag/tag.entity';
+import { NoticeOfIntent } from '../../src/alcs/notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentType } from '../../src/alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 
 const initCardStatusMockEntity = (): CardStatus => {
   const cardStatus = new CardStatus();
@@ -113,6 +115,19 @@ const initApplicationTypeMockEntity = (): ApplicationType => {
   applicationType.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
 
   return applicationType;
+};
+
+const initNoticeOfIntentTypeMockEntity = (): NoticeOfIntentType => {
+  const noticeOfIntentType = new NoticeOfIntentType();
+  noticeOfIntentType.code = 'type_1';
+  noticeOfIntentType.description = 'noi desc 1';
+  noticeOfIntentType.label = 'noi_label';
+  noticeOfIntentType.shortLabel = 'short_label';
+  noticeOfIntentType.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentType.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentType.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+
+  return noticeOfIntentType;
 };
 
 const initUserMockEntity = (): User => {
@@ -207,12 +222,42 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
   return applicationEntity;
 };
 
+const initNoticeOfIntentMockEntity = (fileNumber?: string): NoticeOfIntent => {
+  const noticeOfIntentEntity = new NoticeOfIntent();
+  noticeOfIntentEntity.fileNumber = fileNumber ?? 'app_1';
+  noticeOfIntentEntity.applicant = 'applicant 1';
+  noticeOfIntentEntity.uuid = '1111-1111-1111-1111';
+  noticeOfIntentEntity.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentEntity.card = initCardMockEntity();
+  noticeOfIntentEntity.cardUuid = noticeOfIntentEntity.card.uuid;
+  noticeOfIntentEntity.type = initNoticeOfIntentTypeMockEntity();
+  noticeOfIntentEntity.card.highPriority = false;
+  noticeOfIntentEntity.region = {
+    code: 'fake',
+    label: 'fake',
+    auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
+    auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
+  } as ApplicationRegion;
+
+  return noticeOfIntentEntity;
+};
+
 const initApplicationWithTagsMockEntity = (): Application => {
   const applicationEntity = initApplicationMockEntity();
   const tagEntity = initTagMockEntity();
   applicationEntity.tags = [];
   applicationEntity.tags.push(tagEntity);
   return applicationEntity;
+};
+
+const initNoticeOfIntentWithTagsMockEntity = (): NoticeOfIntent => {
+  const noticeOfIntentEntity = initNoticeOfIntentMockEntity();
+  const tagEntity = initTagMockEntity();
+  noticeOfIntentEntity.tags = [];
+  noticeOfIntentEntity.tags.push(tagEntity);
+  return noticeOfIntentEntity;
 };
 
 const initMockUserDto = (assignee?: User): UserDto => {
@@ -369,4 +414,6 @@ export {
   initTagCategoryMockEntity,
   initTagMockEntity,
   initApplicationWithTagsMockEntity,
+  initNoticeOfIntentMockEntity,
+  initNoticeOfIntentWithTagsMockEntity,
 };
