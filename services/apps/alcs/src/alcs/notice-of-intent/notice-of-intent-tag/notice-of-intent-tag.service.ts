@@ -71,12 +71,11 @@ export class NoticeOfIntentTagService {
     const noi = await this.noiRepository.findOne({
       where: { fileNumber: fileNumber },
       relations: ['tags'],
+      order: { auditCreatedAt: 'ASC' },
     });
     if (!noi) {
       throw new ServiceNotFoundException(`Notice of Intent not found with number ${fileNumber}`);
     }
-    return noi.tags && noi.tags.length > 0
-      ? noi.tags.sort((a, b) => a.auditCreatedAt.getTime() - b.auditCreatedAt.getTime())
-      : [];
+    return noi.tags && noi.tags.length > 0 ? noi.tags : [];
   }
 }
