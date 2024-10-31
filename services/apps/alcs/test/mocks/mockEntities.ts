@@ -54,10 +54,7 @@ const initCardSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   return subtask;
 };
 
-const initCardGISSubtaskMockEntity = (
-  card: Card,
-  uuid?: string,
-): CardSubtask => {
+const initCardGISSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   const subtask = new CardSubtask();
   subtask.assignee = initUserMockEntity();
   subtask.uuid = uuid ?? '11111';
@@ -164,10 +161,7 @@ const initApplicationReconsiderationMockEntity = (
   return reconsideration;
 };
 
-const initApplicationModificationMockEntity = (
-  application?: Application,
-  card?: Card,
-): ApplicationModification => {
+const initApplicationModificationMockEntity = (application?: Application, card?: Card): ApplicationModification => {
   const app = application ?? initApplicationMockEntity();
   const modification = new ApplicationModification({
     application: app,
@@ -208,10 +202,16 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
   } as ApplicationRegion;
 
-  applicationEntity.reconsiderations = [
-    initApplicationReconsiderationMockEntity(applicationEntity),
-  ];
+  applicationEntity.reconsiderations = [initApplicationReconsiderationMockEntity(applicationEntity)];
 
+  return applicationEntity;
+};
+
+const initApplicationWithTagsMockEntity = (): Application => {
+  const applicationEntity = initApplicationMockEntity();
+  const tagEntity = initTagMockEntity();
+  applicationEntity.tags = [];
+  applicationEntity.tags.push(tagEntity);
   return applicationEntity;
 };
 
@@ -223,9 +223,7 @@ const initMockUserDto = (assignee?: User): UserDto => {
   userDto.identityProvider = userEntity.identityProvider;
   userDto.name = userEntity.name!;
   userDto.idirUserName = userEntity.idirUserName;
-  userDto.initials =
-    userEntity.givenName!.charAt(0).toUpperCase() +
-    userEntity.familyName.charAt(0).toUpperCase();
+  userDto.initials = userEntity.givenName!.charAt(0).toUpperCase() + userEntity.familyName.charAt(0).toUpperCase();
   userDto.bceidUserName = undefined;
 
   return userDto;
@@ -236,9 +234,7 @@ const initMockAssigneeDto = (assignee?: User): AssigneeDto => {
   const assigneeDto = new AssigneeDto();
   assigneeDto.uuid = userEntity.uuid;
   assigneeDto.name = userEntity.name;
-  assigneeDto.initials =
-    userEntity.givenName!.charAt(0).toUpperCase() +
-    userEntity.familyName.charAt(0).toUpperCase();
+  assigneeDto.initials = userEntity.givenName!.charAt(0).toUpperCase() + userEntity.familyName.charAt(0).toUpperCase();
   assigneeDto.mentionLabel =
     userEntity.givenName!.charAt(0).toUpperCase() +
     userEntity.givenName!.slice(1) +
@@ -270,10 +266,7 @@ const initCommentMock = (author?: any): Comment => {
   return comment;
 };
 
-const initCommentMentionMock = (
-  comment?: Comment,
-  user?: User,
-): CommentMention => {
+const initCommentMentionMock = (comment?: Comment, user?: User): CommentMention => {
   const mention = new CommentMention();
   const commentEntity = comment ?? initCommentMock();
   const userEntity = user ?? initUserMockEntity();
@@ -286,16 +279,12 @@ const initCommentMentionMock = (
   return mention;
 };
 
-const initApplicationDecisionMeetingMock = (
-  application?: Application,
-): ApplicationDecisionMeeting => {
+const initApplicationDecisionMeetingMock = (application?: Application): ApplicationDecisionMeeting => {
   const meeting = new ApplicationDecisionMeeting();
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
   meeting.date = new Date(2022, 1, 1, 1, 1, 1, 1);
-  meeting.applicationUuid = application
-    ? application.uuid
-    : 'fake-application-uuid';
+  meeting.applicationUuid = application ? application.uuid : 'fake-application-uuid';
 
   return meeting;
 };
@@ -324,9 +313,7 @@ const initApplicationMeetingMock = (
   const meeting = new ApplicationMeeting();
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
-  meeting.applicationUuid = application
-    ? application.uuid
-    : 'fake-application-uuid';
+  meeting.applicationUuid = application ? application.uuid : 'fake-application-uuid';
   if (meetingType) {
     meeting.type = meetingType;
   } else {
@@ -351,6 +338,7 @@ const initTagCategoryMockEntity = (): TagCategory => {
 
 const initTagMockEntity = (): Tag => {
   const tag = new Tag();
+  tag.uuid = 'tag-uuid';
   tag.name = 'tag-name';
   tag.isActive = true;
   tag.category = initTagCategoryMockEntity();
@@ -380,4 +368,5 @@ export {
   initApplicationModificationMockEntity,
   initTagCategoryMockEntity,
   initTagMockEntity,
+  initApplicationWithTagsMockEntity,
 };
