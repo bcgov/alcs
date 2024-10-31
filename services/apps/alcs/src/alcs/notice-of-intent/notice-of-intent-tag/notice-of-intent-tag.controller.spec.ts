@@ -41,7 +41,7 @@ describe('NoticeOfIntentTagController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should return tags for the application', async () => {
+  it('should return tags for the noi', async () => {
     noiTagService.getNoticeOfIntentTags.mockResolvedValue([mockTagEntity]);
 
     const result = await controller.getApplicationTags('noi_1');

@@ -52,7 +52,7 @@ describe('NoticeOfIntentTagService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should add tag to the application if not existing', async () => {
+  it('should add tag to the noi if not existing', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(mockNoiEntityWithoutTags);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
     noiRepositoryMock.save.mockResolvedValue(mockNoiEntityWithTags);
@@ -62,7 +62,7 @@ describe('NoticeOfIntentTagService', () => {
     expect(noiRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
-  it('should raise an error if application is not found', async () => {
+  it('should raise an error if noi is not found', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(service.addTagToNoticeOfIntent('noi-1', 'tag-name')).rejects.toThrow(ServiceNotFoundException);
@@ -75,28 +75,28 @@ describe('NoticeOfIntentTagService', () => {
     await expect(service.addTagToNoticeOfIntent('noi-1', 'tag-name')).rejects.toThrow(ServiceNotFoundException);
   });
 
-  it('should raise an error if the application already has the tag', async () => {
+  it('should raise an error if the noi already has the tag', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(mockNoiEntityWithTags);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
 
     await expect(service.addTagToNoticeOfIntent('noi-1', 'tag-name')).rejects.toThrow(ServiceValidationException);
   });
 
-  it('should throw an error if the application does not have any tags when deleting', async () => {
+  it('should throw an error if the noi does not have any tags when deleting', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(mockNoiEntityWithoutTags);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
 
     await expect(service.removeTagFromNoticeOfIntent('noi-1', 'tag-name')).rejects.toThrow(ServiceValidationException);
   });
 
-  it('should throw an error if the application does not have the tag requested when deleting', async () => {
+  it('should throw an error if the noi does not have the tag requested when deleting', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(mockNoiEntityWithDifferentTags);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
 
     await expect(service.removeTagFromNoticeOfIntent('noi-1', 'tag-name')).rejects.toThrow(ServiceValidationException);
   });
 
-  it('should delete the tag from application if exists', async () => {
+  it('should delete the tag from noi if exists', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(mockNoiEntityWithTags);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
     noiRepositoryMock.save.mockResolvedValue(mockNoiEntityWithoutTags);
@@ -106,7 +106,7 @@ describe('NoticeOfIntentTagService', () => {
     expect(noiRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
-  it('should return application tags', async () => {
+  it('should return noi tags', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(mockNoiEntityWithTags);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
 
@@ -115,7 +115,7 @@ describe('NoticeOfIntentTagService', () => {
     expect(result.length).toEqual(1);
   });
 
-  it('should return empty array if application does not have tags', async () => {
+  it('should return empty array if noi does not have tags', async () => {
     noiRepositoryMock.findOne.mockResolvedValue(mockNoiEntityWithoutTags);
 
     const result = await service.getNoticeOfIntentTags('noi-1');
