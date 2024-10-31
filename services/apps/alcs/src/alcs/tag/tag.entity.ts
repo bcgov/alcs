@@ -3,6 +3,7 @@ import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 't
 import { Base } from '../../common/entities/base.entity';
 import { TagCategory } from './tag-category/tag-category.entity';
 import { Application } from '../application/application.entity';
+import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 
 @Entity({ comment: 'Tag.' })
 export class Tag extends Base {
@@ -32,4 +33,7 @@ export class Tag extends Base {
 
   @ManyToMany(() => Application, (application) => application.tags)
   applications: Application[];
+  
+  @ManyToMany(() => NoticeOfIntent, (noticeOfIntent) => noticeOfIntent.tags)
+  noticeOfIntents: NoticeOfIntent[];
 }
