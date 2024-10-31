@@ -95,7 +95,7 @@
                   [formControlName]="element.id + '-type'"
                   (valueChange)="onChangeStructureType(element.id, $event)"
                 >
-                  <mat-option *ngFor="let type of STRUCTURE_TYPE_OPTIONS" [value]="type.value">
+                  <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
                     {{ type.label }}
                   </mat-option>
                 </mat-select>

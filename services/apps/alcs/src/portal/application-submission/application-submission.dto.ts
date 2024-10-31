@@ -20,6 +20,7 @@ import {
   ProposedLot,
   ProposedResidence,
 } from './application-submission.entity';
+import { ProposedStructure } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 export const MAX_LANDUSE_FIELD_LENGTH = 500;
@@ -165,6 +166,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   //Soil Fields
   @AutoMap(() => Boolean)
+  soilIsNewStructure: boolean | null;
+
+  @AutoMap(() => Boolean)
   soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
@@ -241,6 +245,24 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
+
+  @AutoMap(() => String)
+  soilStructureFarmUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilAgriParcelActivity?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureOtherUseReason?: string | null;
+
+  @AutoMap(() => [ProposedStructure])
+  soilProposedStructures: ProposedStructure[];
 
   @AutoMap(() => Boolean)
   naruWillBeOverFiveHundredM2: boolean | null;
@@ -547,6 +569,10 @@ export class ApplicationSubmissionUpdateDto {
   //Soil Fields
   @IsBoolean()
   @IsOptional()
+  soilIsNewStructure?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
   soilIsFollowUp?: boolean | null;
 
   @IsString()
@@ -653,6 +679,30 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   soilHasSubmittedNotice?: boolean;
+
+  @IsString()
+  @IsOptional()
+  soilStructureFarmUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureResidentialUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilAgriParcelActivity?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureOtherUseReason?: string | null;
+
+  @IsArray()
+  @IsOptional()
+  soilProposedStructures?: ProposedStructure[];
 
   //NARU Fields
   @IsBoolean()

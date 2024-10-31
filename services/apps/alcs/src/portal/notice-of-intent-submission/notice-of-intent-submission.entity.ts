@@ -17,12 +17,28 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 
+export enum STRUCTURE_TYPES {
+  FARM_STRUCTURE = 'Farm Structure',
+  PRINCIPAL_RESIDENCE = 'Residential - Principal Residence',
+  ADDITIONAL_RESIDENCE = 'Residential - Additional Residence',
+  ACCESSORY_STRUCTURE = 'Residential - Accessory Structure',
+  OTHER_STRUCTURE = 'Other Structure',
+}
+
+export const STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
+  [STRUCTURE_TYPES.FARM_STRUCTURE]: STRUCTURE_TYPES.FARM_STRUCTURE,
+  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
+  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
+  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'Residential Accessory Structure',
+  [STRUCTURE_TYPES.OTHER_STRUCTURE]: STRUCTURE_TYPES.OTHER_STRUCTURE,
+};
+
 export const PORTAL_TO_ALCS_STRUCTURE_MAP = {
-  'Residential - Principal Residence': 'RPRI',
-  'Residential - Additional Residence': 'RADD',
-  'Residential - Accessory Structure': 'RACS',
-  'Farm Structure': 'FRST',
-  'Other Structure': 'OTHR',
+  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'RPRI',
+  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'RADD',
+  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'RACS',
+  [STRUCTURE_TYPES.FARM_STRUCTURE]: 'FRST',
+  [STRUCTURE_TYPES.OTHER_STRUCTURE]: 'OTHR',
 };
 
 export class ProposedStructure {

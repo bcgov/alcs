@@ -7,7 +7,7 @@ import { openFileInline } from '../../../../../shared/utils/file';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
-  NOI_STRUCTURE_TYPE_LABEL_MAP,
+  STRUCTURE_TYPE_LABEL_MAP,
 } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 
@@ -97,7 +97,7 @@ export class AdditionalInformationComponent implements OnInit {
       return null;
     }
 
-    return NOI_STRUCTURE_TYPE_LABEL_MAP[value];
+    return STRUCTURE_TYPE_LABEL_MAP[value];
   }
 
   @HostListener('window:resize', ['$event'])

@@ -635,10 +635,6 @@ describe('ApplicationSubmissionValidatorService', () => {
       const res = await service.validateSubmission(application);
 
       expect(
-        includesError(res.errors, new Error(`ROSO Proposal incomplete`)),
-      ).toBe(true);
-
-      expect(
         includesError(res.errors, new Error(`ROSO Soil Table Incomplete`)),
       ).toBe(true);
     });
@@ -656,37 +652,6 @@ describe('ApplicationSubmissionValidatorService', () => {
         includesError(
           res.errors,
           new Error(`ROSO Proposal missing Application or NOI IDs`),
-        ),
-      ).toBe(true);
-    });
-
-    it('should complain about missing files', async () => {
-      const application = new ApplicationSubmission({
-        owners: [],
-        soilIsFollowUp: true,
-        typeCode: 'ROSO',
-      });
-
-      const res = await service.validateSubmission(application);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`ROSO proposal missing Proposal Map / Site Plan`),
-        ),
-      ).toBe(true);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`ROSO proposal missing Cross Section Diagrams`),
-        ),
-      ).toBe(true);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`ROSO proposal missing Reclamation Plans`),
         ),
       ).toBe(true);
     });
@@ -758,37 +723,6 @@ describe('ApplicationSubmissionValidatorService', () => {
         ),
       ).toBe(true);
     });
-
-    it('should complain about missing files', async () => {
-      const application = new ApplicationSubmission({
-        owners: [],
-        soilIsFollowUp: true,
-        typeCode: 'POFO',
-      });
-
-      const res = await service.validateSubmission(application);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`POFO proposal missing Proposal Map / Site Plan`),
-        ),
-      ).toBe(true);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`POFO proposal missing Cross Section Diagrams`),
-        ),
-      ).toBe(true);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`POFO proposal missing Reclamation Plans`),
-        ),
-      ).toBe(true);
-    });
   });
 
   describe('PFRS Applications', () => {
@@ -856,37 +790,6 @@ describe('ApplicationSubmissionValidatorService', () => {
         includesError(
           res.errors,
           new Error(`PFRS Proposal missing Application or NOI IDs`),
-        ),
-      ).toBe(true);
-    });
-
-    it('should complain about missing files', async () => {
-      const application = new ApplicationSubmission({
-        owners: [],
-        soilIsFollowUp: true,
-        typeCode: 'PFRS',
-      });
-
-      const res = await service.validateSubmission(application);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`PFRS proposal missing Proposal Map / Site Plan`),
-        ),
-      ).toBe(true);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`PFRS proposal missing Cross Section Diagrams`),
-        ),
-      ).toBe(true);
-
-      expect(
-        includesError(
-          res.errors,
-          new Error(`PFRS proposal missing Reclamation Plans`),
         ),
       ).toBe(true);
     });

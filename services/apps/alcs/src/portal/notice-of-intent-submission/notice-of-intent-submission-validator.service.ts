@@ -8,7 +8,10 @@ import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from './notice-of-intent-parcel/notice-of-intent-parcel.service';
-import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
+import {
+  NoticeOfIntentSubmission,
+  STRUCTURE_TYPES,
+} from './notice-of-intent-submission.entity';
 
 export class ValidatedNoticeOfIntentSubmission extends NoticeOfIntentSubmission {
   applicant: string;
@@ -618,9 +621,9 @@ export class NoticeOfIntentSubmissionValidatorService {
       const hasResidentialStructure =
         noticeOfIntentSubmission.soilProposedStructures.some((structure) =>
           [
-            'Residential - Principal Residence',
-            'Residential - Additional Residence',
-            'Residential - Accessory Structure',
+            STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
+            STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+            STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
           ].includes(structure.type!),
         );
       if (
