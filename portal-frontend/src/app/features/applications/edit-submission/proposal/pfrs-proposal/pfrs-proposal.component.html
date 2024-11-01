@@ -23,8 +23,44 @@
     </li>
   </ul>
 </app-warning-banner>
+
 <form [formGroup]="form">
   <div class="form-row">
+    <div class="full-row">
+      <mat-label for="is-new-structure">
+        Are you removing soil and placing fill in order to build a structure?
+      </mat-label>
+      <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
+      <div>
+        <mat-button-toggle-group
+          class="input"
+          (change)="onChangeIsNewStructure($event.value)"
+          id="is-new-structure"
+          [formControl]="isNewStructure"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
+            }"
+            [value]="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
+            }"
+            [value]="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-hint class="subtext"
+        >Note: The form will be updated with additional required questions if you are building a structure
+      </mat-hint>
+    </div>
+
     <div class="full-row">
       <mat-label for="noi-follow-up">
         Has the ALC previously received an application or Notice of Intent for this proposal?
@@ -40,7 +76,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="true"
             >Yes
@@ -48,7 +84,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="false"
             >No
@@ -56,6 +92,7 @@
         </mat-button-toggle-group>
       </div>
     </div>
+
     <div class="full-row">
       <label for="followUpIDs">Application or NOI ID</label>
       <div class="subtext">If you have multiple IDs, please separate with a comma.</div>
@@ -68,6 +105,7 @@
         <div *ngIf="followUpIDs.errors?.['required']">This field is required</div>
       </div>
     </div>
+
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <div class="subtext">
@@ -180,6 +218,7 @@
         (dataChange)="markDirty()"
       ></app-soil-table>
     </div>
+
     <div class="full-row">
       <mat-label
         >Of the proposed totals provided above, please input the dimensions of soil that has already been removed or
@@ -254,64 +293,385 @@
       <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
       <div class="subtext">Characters left: {{ 4000 - soilTypeRemovedText.textLength }}</div>
     </div>
+  </div>
 
-    <div class="full-row">
-      <label for="alternativeMeasures"
-        >What alternative measures have you considered or attempted before proposing to place fill?</label
-      >
-      <div class="subtext">
-        Applicants should provide evidence demonstrating that normal farm practices have been attempted prior to the
-        submission of this application to place fill.
+  <ng-container *ngIf="isNewStructure.value === true">
+    <form [formGroup]="structuresForm">
+      <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
+      <div class="scrollable">
+        <div *ngIf="isMobile">
+          <app-structure-mobile-card
+            *ngFor="let structure of proposedStructures; let last = last; index as i"
+            [structure]="structure"
+            [isLast]="last"
+            [index]="i"
+            [isReviewStep]="false"
+            (removeClicked)="onStructureRemove(structure.id)"
+            (editClicked)="onStructureEdit(structure.id)"
+          >
+          </app-structure-mobile-card>
+        </div>
+        <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let i = dataIndex">{{ i + 1 }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  [value]="element.type"
+                  placeholder="Please select"
+                  [formControlName]="element.id + '-type'"
+                  (valueChange)="onChangeStructureType(element.id, $event)"
+                >
+                  <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
+                    {{ type.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div
+                *ngIf="
+                  structuresForm.controls[element.id + '-type']!.invalid &&
+                  (structuresForm.controls[element.id + '-type']!.dirty ||
+                    structuresForm.controls[element.id + '-type']!.touched)
+                "
+                class="field-error"
+              >
+                <mat-icon>warning</mat-icon>
+                <div *ngIf="structuresForm.controls[element.id + '-type']!.errors?.['required']">
+                  This field is required
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="area">
+            <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field appearance="outline">
+                <input
+                  type="text"
+                  matInput
+                  thousandSeparator=","
+                  mask="separator.5"
+                  separatorLimit="9999999999"
+                  min="0.01"
+                  placeholder="Type area"
+                  [formControlName]="element.id + '-area'"
+                  (change)="onChangeArea(element.id, $event)"
+                />
+                <span matTextSuffix>m<sup>2</sup></span>
+              </mat-form-field>
+              <div
+                *ngIf="
+                  structuresForm.controls[element.id + '-area']!.invalid &&
+                  (structuresForm.controls[element.id + '-area']!.dirty ||
+                    structuresForm.controls[element.id + '-area']!.touched)
+                "
+                class="field-error"
+              >
+                <mat-icon>warning</mat-icon>
+                <div *ngIf="structuresForm.controls[element.id + '-area']!.errors?.['required']">
+                  This field is required
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
+                Remove
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <ng-container matColumnDef="msgWarning">
+            <td colspan="7" mat-cell *matCellDef>
+              <div class="residential-warning">
+                <div class="residential-warning-text">
+                  The proposed residential structure and its total floor area must be allowed under the ALC Act and/or
+                  ALR Use Regulation. If not, you may require a 'Non-Adhering Residential Use' application instead. For
+                  more info, please see
+                  <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+                    >Housing in the ALR</a
+                  >
+                  on the ALC website.
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-row class="row-group" *matRowDef="let row; columns: ['msgWarning']; when: isWarning"></tr>
+
+          <tr class="mat-row no-data" *matNoDataRow>
+            <td class="text-center" colspan="7">
+              No Proposed Structures Entered. Use the button below to add your first structure.
+            </td>
+          </tr>
+        </table>
       </div>
-      <mat-form-field appearance="outline">
-        <textarea
-          formControlName="alternativeMeasures"
-          #soilAlternativeMeasuresText
-          maxlength="4000"
-          id="alternativeMeasures"
-          matInput
-          placeholder="Type comment"
-        ></textarea>
-      </mat-form-field>
-      <div
-        *ngIf="alternativeMeasures.invalid && (alternativeMeasures.dirty || alternativeMeasures.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="alternativeMeasures.errors?.['required']">This field is required</div>
+    </form>
+
+    <div class="form-row">
+      <div class="full-row">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="onStructureAdd()"
+          [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
+          type="button"
+        >
+          + Add Structure
+        </button>
+        <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
+          At least one structure is required
+        </app-validation-error>
       </div>
-      <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
-      <div class="subtext">Characters left: {{ 4000 - soilAlternativeMeasuresText.textLength }}</div>
     </div>
 
     <div class="full-row">
-      <label for="agricultural-support">
-        What steps will be taken to reduce impacts to surrounding agricultural land?
-        <div class="subtext">Describe impact reducing measures.</div>
-      </label>
-      <mat-form-field appearance="outline">
-        <textarea
-          [formControl]="reduceNegativeImpacts"
-          #reduceNegativeImpactsText
-          maxlength="4000"
-          id="agricultural-support"
-          matInput
-          placeholder="Type comment"
-        ></textarea>
-      </mat-form-field>
-      <div
-        *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
-      </div>
-      <mat-hint class="subtext">
-        Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
-        temporary or permanent drainage, etc.
-      </mat-hint>
-      <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
+      <app-warning-banner>
+        Selected proposed structure type(s) will determine the proposal questions below
+      </app-warning-banner>
     </div>
+  </ng-container>
+
+  <div class="form-row">
+    <ng-container *ngIf="structureTypeCounts[structureTypes.FARM_STRUCTURE] > 0">
+      <div class="full-row">
+        <label for="soilStructureFarmUseReason">Describe how the structure is necessary for farm use</label>
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#farmstructures" target="_blank"
+            >Farm Structures in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureFarmUseReason"
+            #soilStructureFarmUseReasonText
+            maxlength="4000"
+            id="soilStructureFarmUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureFarmUseReason.invalid &&
+            (soilStructureFarmUseReason.dirty || soilStructureFarmUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureFarmUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureFarmUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
+        <label for="soilAgriParcelActivity"
+          >Describe the current or proposed agricultural activity on the parcel(s)</label
+        >
+        <div class="subtext">Include the area, yields, crop types, and farm equipment size and attachments</div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilAgriParcelActivity"
+            #soilAgriParcelActivityText
+            maxlength="4000"
+            id="soilAgriParcelActivity"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="soilAgriParcelActivity.invalid && (soilAgriParcelActivity.dirty || soilAgriParcelActivity.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilAgriParcelActivity.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilAgriParcelActivityText.textLength }}</div>
+      </div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        structureTypeCounts[structureTypes.PRINCIPAL_RESIDENCE] > 0 ||
+        structureTypeCounts[structureTypes.ADDITIONAL_RESIDENCE] > 0 ||
+        structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0
+      "
+    >
+      <div class="full-row">
+        <label for="soilStructureResidentialUseReason"
+          >Describe why placing fill/removing soil is required for the residential structure(s)</label
+        >
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+            >Housing in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureResidentialUseReason"
+            #soilStructureResidentialUseReasonText
+            maxlength="4000"
+            id="soilStructureResidentialUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureResidentialUseReason.invalid &&
+            (soilStructureResidentialUseReason.dirty || soilStructureResidentialUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureResidentialUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureResidentialUseReasonText.textLength }}</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0">
+      <div class="full-row">
+        <label for="soilStructureResidentialAccessoryUseReason"
+          >Describe the intended use of the residential accessory structure(s) and why placing fill/removing soil is
+          required</label
+        >
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+            >Housing in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureResidentialAccessoryUseReason"
+            #structureResidentialAccessoryUseReasonText
+            maxlength="4000"
+            id="soilStructureResidentialAccessoryUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureResidentialAccessoryUseReason.invalid &&
+            (soilStructureResidentialAccessoryUseReason.dirty || soilStructureResidentialAccessoryUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureResidentialAccessoryUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - structureResidentialAccessoryUseReasonText.textLength }}</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="structureTypeCounts[structureTypes.OTHER_STRUCTURE] > 0">
+      <div class="full-row">
+        <label for="soilStructureOtherUseReason">
+          Describe the intended use of the 'Other' structure(s) and why placing fill/removing soil is required
+        </label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureOtherUseReason"
+            #soilStructureOtherUseReasonText
+            maxlength="4000"
+            id="soilStructureOtherUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureOtherUseReason.invalid &&
+            (soilStructureOtherUseReason.dirty || soilStructureOtherUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureOtherUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureOtherUseReasonText.textLength }}</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isNewStructure.value === false">
+      <div class="full-row">
+        <label for="alternativeMeasures"
+          >What alternative measures have you considered or attempted before proposing to place fill?</label
+        >
+        <div class="subtext">
+          Applicants should provide evidence demonstrating that normal farm practices have been attempted prior to the
+          submission of this application to place fill.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="alternativeMeasures"
+            #soilAlternativeMeasuresText
+            maxlength="4000"
+            id="alternativeMeasures"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="alternativeMeasures.invalid && (alternativeMeasures.dirty || alternativeMeasures.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="alternativeMeasures.errors?.['required']">This field is required</div>
+        </div>
+        <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - soilAlternativeMeasuresText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
+        <label for="agricultural-support">
+          What steps will be taken to reduce impacts to surrounding agricultural land?
+          <div class="subtext">Describe impact reducing measures.</div>
+        </label>
+        <mat-form-field appearance="outline">
+          <textarea
+            [formControl]="reduceNegativeImpacts"
+            #reduceNegativeImpactsText
+            maxlength="4000"
+            id="agricultural-support"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
+        </div>
+        <mat-hint class="subtext">
+          Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
+          temporary or permanent drainage, etc.
+        </mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
+      </div>
+    </ng-container>
+
     <div class="full-row">
       <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
       <div class="subtext">A visual representation of your proposal.</div>
@@ -326,159 +686,184 @@
         [showVirusError]="showProposalMapVirus"
       ></app-file-drag-drop>
     </div>
-    <div class="full-row">
-      <mat-label class="subheading2" for="cross-section">Cross Sections</mat-label>
-      <div class="subtext">Include North-South and East-West cross sections</div>
-      <app-info-banner>
-        Please refer to
-        <a
-          href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
-          target="_blank"
-          >Removal of Soil & Placement of Fill</a
-        >
-        on the ALC website for more information
-      </app-info-banner>
-      <app-file-drag-drop
-        id="cross-section"
-        [uploadedFiles]="crossSections"
-        (uploadFiles)="attachCrossSection($event)"
-        (deleteFile)="onDeleteFile($event)"
-        (openFile)="openFile($event)"
-        [showErrors]="showErrors"
-        [isRequired]="true"
-        [allowMultiple]="true"
-        [showVirusError]="showCrossSectionVirus"
-      ></app-file-drag-drop>
-    </div>
-    <div class="full-row">
-      <mat-label class="subheading2" for="reclamation-plan">Reclamation Plan</mat-label>
-      <div class="subtext">
-        The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
-        agricultural capability assessment.
-      </div>
-      <app-info-banner>
-        Please refer to
-        <a
-          href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
-          target="_blank"
-          >Removal of Soil & Placement of Fill</a
-        >
-        on the ALC website for more information
-      </app-info-banner>
-      <app-file-drag-drop
-        id="reclamation-plan"
-        [uploadedFiles]="reclamationPlan"
-        (uploadFiles)="attachReclamationPlan($event)"
-        (deleteFile)="onDeleteFile($event)"
-        (openFile)="openFile($event)"
-        [showErrors]="showErrors"
-        [isRequired]="true"
-        [allowMultiple]="true"
-        [showVirusError]="showReclamationPlanVirus"
-      ></app-file-drag-drop>
-    </div>
 
-    <div class="full-row">
-      <mat-label for="isExtractionOrMining">Is your proposal for aggregate extraction or placer mining?</mat-label>
-      <div>
-        <mat-button-toggle-group
-          class="input"
-          (change)="onChangeMiningExtraction($event.value)"
-          id="isExtractionOrMining"
-          formControlName="isExtractionOrMining"
-        >
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline':
-                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)
-            }"
-            value="true"
-            >Yes
-          </mat-button-toggle>
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline':
-                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)
-            }"
-            value="false"
-            >No
-          </mat-button-toggle>
-        </mat-button-toggle-group>
+    <ng-container *ngIf="isNewStructure.value === false">
+      <div class="full-row">
+        <mat-label class="subheading2" for="cross-section">Cross Sections</mat-label>
+        <div class="subtext">Include North-South and East-West cross sections</div>
+        <app-info-banner>
+          Please refer to
+          <a
+            href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
+            target="_blank"
+            >Removal of Soil & Placement of Fill</a
+          >
+          on the ALC website for more information
+        </app-info-banner>
+        <app-file-drag-drop
+          id="cross-section"
+          [uploadedFiles]="crossSections"
+          (uploadFiles)="attachCrossSection($event)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+          [allowMultiple]="true"
+          [showVirusError]="showCrossSectionVirus"
+        ></app-file-drag-drop>
       </div>
-      <div
-        *ngIf="isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="isExtractionOrMining.errors?.['required']">This field is required</div>
-      </div>
-    </div>
 
-    <div class="full-row">
-      <mat-label for="hasSubmittedNotice">
-        Have you submitted a Notice of Work to the Ministry of Energy, Mines and Low Carbon Innovation (EMLI)?
-      </mat-label>
-      <div class="subtext">If yes, please attach the Notice of Work in the section below.</div>
-      <div>
-        <mat-button-toggle-group
-          class="input"
-          (change)="onChangeNoticeOfWork($event.value)"
-          id="hasSubmittedNotice"
-          formControlName="hasSubmittedNotice"
-        >
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)
-            }"
-            value="true"
-            >Yes
-          </mat-button-toggle>
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)
-            }"
-            value="false"
-            >No
-          </mat-button-toggle>
-        </mat-button-toggle-group>
+      <div class="full-row">
+        <mat-label class="subheading2" for="reclamation-plan">Reclamation Plan</mat-label>
+        <div class="subtext">
+          The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
+          agricultural capability assessment.
+        </div>
+        <app-info-banner>
+          Please refer to
+          <a
+            href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
+            target="_blank"
+            >Removal of Soil & Placement of Fill</a
+          >
+          on the ALC website for more information
+        </app-info-banner>
+        <app-file-drag-drop
+          id="reclamation-plan"
+          [uploadedFiles]="reclamationPlan"
+          (uploadFiles)="attachReclamationPlan($event)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+          [allowMultiple]="true"
+          [showVirusError]="showReclamationPlanVirus"
+        ></app-file-drag-drop>
       </div>
-      <div
-        *ngIf="hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="hasSubmittedNotice.errors?.['required']">This field is required</div>
-      </div>
-    </div>
+    </ng-container>
 
-    <div class="full-row">
-      <mat-label class="subheading2" for="noticeOfWork">Notice of Work</mat-label>
-      <app-info-banner>
-        Please refer to
-        <a
-          href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
-          target="_blank"
-          >Removal of Soil & Placement of Fill</a
+    <ng-container *ngIf="isNewStructure.value === true">
+      <div class="full-row">
+        <mat-label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</mat-label>
+        <div class="subtext">
+          Building plans must be the most up to date, current version and should include (1) the total floor area of all
+          levels and intended use; and (2) interior and exterior views
+        </div>
+        <app-file-drag-drop
+          id="detailed-building-plans"
+          [uploadedFiles]="buildingPlans"
+          (uploadFiles)="attachBuildingPlan($event)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [showVirusError]="showBuildingPlanVirus"
+        ></app-file-drag-drop>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isNewStructure.value === false">
+      <div class="full-row">
+        <mat-label for="isExtractionOrMining">Is your proposal for aggregate extraction or placer mining?</mat-label>
+        <div>
+          <mat-button-toggle-group
+            class="input"
+            (change)="onChangeMiningExtraction($event.value)"
+            id="isExtractionOrMining"
+            formControlName="isExtractionOrMining"
+          >
+            <mat-button-toggle
+              class="toggle-button"
+              [ngClass]="{
+                'error-outline':
+                  isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched),
+              }"
+              value="true"
+              >Yes
+            </mat-button-toggle>
+            <mat-button-toggle
+              class="toggle-button"
+              [ngClass]="{
+                'error-outline':
+                  isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched),
+              }"
+              value="false"
+              >No
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div
+          *ngIf="isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)"
+          class="field-error"
         >
-        on the ALC website for more information
-      </app-info-banner>
-      <app-file-drag-drop
-        id="noticeOfWork"
-        [uploadedFiles]="noticeOfWork"
-        (uploadFiles)="attachNoticeOfWork($event)"
-        (deleteFile)="onDeleteFile($event)"
-        (openFile)="openFile($event)"
-        [showErrors]="showErrors"
-        [isRequired]="true"
-        [disabled]="!requiresNoticeOfWork"
-        [allowMultiple]="true"
-        [showVirusError]="showNoticeOfWorkVirus"
-      ></app-file-drag-drop>
-    </div>
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="isExtractionOrMining.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <mat-label for="hasSubmittedNotice">
+          Have you submitted a Notice of Work to the Ministry of Energy, Mines and Low Carbon Innovation (EMLI)?
+        </mat-label>
+        <div class="subtext">If yes, please attach the Notice of Work in the section below.</div>
+        <div>
+          <mat-button-toggle-group
+            class="input"
+            (change)="onChangeNoticeOfWork($event.value)"
+            id="hasSubmittedNotice"
+            formControlName="hasSubmittedNotice"
+          >
+            <mat-button-toggle
+              class="toggle-button"
+              [ngClass]="{
+                'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched),
+              }"
+              value="true"
+              >Yes
+            </mat-button-toggle>
+            <mat-button-toggle
+              class="toggle-button"
+              [ngClass]="{
+                'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched),
+              }"
+              value="false"
+              >No
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div
+          *ngIf="hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="hasSubmittedNotice.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <mat-label class="subheading2" for="noticeOfWork">Notice of Work</mat-label>
+        <app-info-banner>
+          Please refer to
+          <a
+            href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
+            target="_blank"
+            >Removal of Soil & Placement of Fill</a
+          >
+          on the ALC website for more information
+        </app-info-banner>
+        <app-file-drag-drop
+          id="noticeOfWork"
+          [uploadedFiles]="noticeOfWork"
+          (uploadFiles)="attachNoticeOfWork($event)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+          [disabled]="!requiresNoticeOfWork"
+          [allowMultiple]="true"
+          [showVirusError]="showNoticeOfWorkVirus"
+        ></app-file-drag-drop>
+      </div>
+    </ng-container>
   </div>
 </form>
 <div class="button-container">

@@ -7,6 +7,7 @@ import {
   ProposedResidence,
 } from '../../application-submission/application-submission.entity';
 import { PublicOwnerDto } from '../public.dto';
+import { ProposedStructure } from '../../notice-of-intent-submission/notice-of-intent-submission.entity';
 
 export class PublicApplicationSubmissionDto {
   @AutoMap()
@@ -146,6 +147,9 @@ export class PublicApplicationSubmissionDto {
 
   //Soil Fields
   @AutoMap(() => Boolean)
+  soilIsNewStructure: boolean | null;
+
+  @AutoMap(() => Boolean)
   soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
@@ -222,6 +226,24 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
+
+  @AutoMap(() => String)
+  soilStructureFarmUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilAgriParcelActivity?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureOtherUseReason?: string | null;
+
+  @AutoMap(() => [ProposedStructure])
+  soilProposedStructures: ProposedStructure[];
 
   //NARU Fields
   @AutoMap(() => Boolean)

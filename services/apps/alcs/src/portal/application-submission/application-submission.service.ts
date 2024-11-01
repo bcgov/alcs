@@ -813,6 +813,10 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
+    applicationSubmission.soilIsNewStructure = filterUndefined(
+      updateDto.soilIsNewStructure,
+      applicationSubmission.soilIsNewStructure,
+    );
     applicationSubmission.soilIsFollowUp = filterUndefined(
       updateDto.soilIsFollowUp,
       applicationSubmission.soilIsFollowUp,
@@ -918,6 +922,37 @@ export class ApplicationSubmissionService {
     applicationSubmission.soilHasSubmittedNotice = filterUndefined(
       updateDto.soilHasSubmittedNotice,
       applicationSubmission.soilHasSubmittedNotice,
+    );
+
+    applicationSubmission.soilStructureFarmUseReason = filterUndefined(
+      updateDto.soilStructureFarmUseReason,
+      applicationSubmission.soilStructureFarmUseReason,
+    );
+
+    applicationSubmission.soilStructureResidentialUseReason = filterUndefined(
+      updateDto.soilStructureResidentialUseReason,
+      applicationSubmission.soilStructureResidentialUseReason,
+    );
+
+    applicationSubmission.soilAgriParcelActivity = filterUndefined(
+      updateDto.soilAgriParcelActivity,
+      applicationSubmission.soilAgriParcelActivity,
+    );
+
+    applicationSubmission.soilStructureResidentialAccessoryUseReason =
+      filterUndefined(
+        updateDto.soilStructureResidentialAccessoryUseReason,
+        applicationSubmission.soilStructureResidentialAccessoryUseReason,
+      );
+
+    applicationSubmission.soilStructureOtherUseReason = filterUndefined(
+      updateDto.soilStructureOtherUseReason,
+      applicationSubmission.soilStructureOtherUseReason,
+    );
+
+    applicationSubmission.soilProposedStructures = filterUndefined(
+      updateDto.soilProposedStructures,
+      applicationSubmission.soilProposedStructures,
     );
 
     if (

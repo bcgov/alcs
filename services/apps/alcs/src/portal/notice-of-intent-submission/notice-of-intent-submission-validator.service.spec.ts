@@ -19,7 +19,10 @@ import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-o
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from './notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-submission-validator.service';
-import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
+import {
+  NoticeOfIntentSubmission,
+  STRUCTURE_TYPES,
+} from './notice-of-intent-submission.entity';
 
 function includesError(errors: Error[], target: Error) {
   return errors.some((error) => error.message === target.message);
@@ -528,9 +531,9 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
         owners: [],
         soilIsRemovingSoilForNewStructure: true,
         soilProposedStructures: [
-          { type: 'Residential - Accessory Structure', area: 5 },
-          { type: 'Farm Structure', area: 5 },
-          { type: 'Residential - Additional Residence', area: 5 },
+          { type: STRUCTURE_TYPES.ACCESSORY_STRUCTURE, area: 5 },
+          { type: STRUCTURE_TYPES.FARM_STRUCTURE, area: 5 },
+          { type: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE, area: 5 },
         ],
         soilStructureFarmUseReason: 'VALID',
         soilAgriParcelActivity: 'VALID',
@@ -676,9 +679,9 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
         owners: [],
         soilIsRemovingSoilForNewStructure: true,
         soilProposedStructures: [
-          { type: 'Residential - Accessory Structure', area: 5 },
-          { type: 'Farm Structure', area: 5 },
-          { type: 'Residential - Additional Residence', area: null },
+          { type: STRUCTURE_TYPES.ACCESSORY_STRUCTURE, area: 5 },
+          { type: STRUCTURE_TYPES.FARM_STRUCTURE, area: 5 },
+          { type: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE, area: null },
         ],
         typeCode: 'ROSO',
       });
