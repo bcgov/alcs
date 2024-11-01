@@ -80,6 +80,8 @@ export class TagCategoryService {
       return await firstValueFrom(this.http.delete<TagCategoryDto>(`${this.url}/${uuid}`));
     } catch (e) {
       const res = e as HttpErrorResponse;
+
+      // TODO: FIX THE ERROR
       // if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('update or delete on table')) {
       //   this.toastService.showErrorToast('weird');
       // } else if (
