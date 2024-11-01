@@ -11,14 +11,17 @@ import * as config from 'config';
 import { TagCategoryDto } from './tag-category.dto';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { TagCategoryService } from './tag-category.service';
+import { Tag } from '../tag.entity';
 
 describe('TagCategoryService', () => {
   let service: TagCategoryService;
   let tagCategoryRepositoryMock: DeepMocked<Repository<TagCategory>>;
+  let tagRepositoryMock: DeepMocked<Repository<Tag>>;
   let mockTagCategoryEntity;
 
   beforeEach(async () => {
     tagCategoryRepositoryMock = createMock<Repository<TagCategory>>();
+    tagRepositoryMock = createMock<Repository<Tag>>();
     mockTagCategoryEntity = initTagCategoryMockEntity();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -32,6 +35,10 @@ describe('TagCategoryService', () => {
         {
           provide: getRepositoryToken(TagCategory),
           useValue: tagCategoryRepositoryMock,
+        },
+        {
+          provide: getRepositoryToken(Tag),
+          useValue: tagRepositoryMock,
         },
         {
           provide: CONFIG_TOKEN,
@@ -52,9 +59,7 @@ describe('TagCategoryService', () => {
   });
 
   it('should get a tag category', async () => {
-    expect(await service.getOneOrFail('fake')).toStrictEqual(
-      mockTagCategoryEntity,
-    );
+    expect(await service.getOneOrFail('fake')).toStrictEqual(mockTagCategoryEntity);
   });
 
   it('should call save when an tag category is updated', async () => {
@@ -66,9 +71,7 @@ describe('TagCategoryService', () => {
     const result = await service.update(mockTagCategoryEntity.uuid, payload);
     expect(result).toStrictEqual(mockTagCategoryEntity);
     expect(tagCategoryRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(tagCategoryRepositoryMock.save).toHaveBeenCalledWith(
-      mockTagCategoryEntity,
-    );
+    expect(tagCategoryRepositoryMock.save).toHaveBeenCalledWith(mockTagCategoryEntity);
   });
 
   it('should fail update if tag category does not exist', async () => {
@@ -78,17 +81,11 @@ describe('TagCategoryService', () => {
     };
 
     tagCategoryRepositoryMock.findOneOrFail.mockRejectedValue(
-      new ServiceValidationException(
-        `Tag Category for with ${mockTagCategoryEntity.uuid} not found`,
-      ),
+      new ServiceValidationException(`Tag Category for with ${mockTagCategoryEntity.uuid} not found`),
     );
 
-    await expect(
-      service.update(mockTagCategoryEntity.uuid, payload),
-    ).rejects.toMatchObject(
-      new ServiceValidationException(
-        `Tag Category for with ${mockTagCategoryEntity.uuid} not found`,
-      ),
+    await expect(service.update(mockTagCategoryEntity.uuid, payload)).rejects.toMatchObject(
+      new ServiceValidationException(`Tag Category for with ${mockTagCategoryEntity.uuid} not found`),
     );
     expect(tagCategoryRepositoryMock.save).toBeCalledTimes(0);
   });

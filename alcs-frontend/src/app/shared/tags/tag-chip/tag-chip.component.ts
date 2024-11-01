@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TagDto } from 'src/app/services/tag/tag.dto';
+import { TagDto } from '../../../services/tag/tag.dto';
 
 @Component({
   selector: 'app-tag-chip',

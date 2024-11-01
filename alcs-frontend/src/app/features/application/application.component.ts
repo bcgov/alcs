@@ -29,7 +29,7 @@ import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
 import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationTagService } from '../../services/application/application-tag/application-tag.service';
-import { FileTagService } from 'src/app/services/common/file-tag.service';
+import { FileTagService } from '../../services/common/file-tag.service';
 
 export const unsubmittedRoutes = [
   {

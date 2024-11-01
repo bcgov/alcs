@@ -49,21 +49,21 @@ describe('ApplicationTagController', () => {
   });
 
   it('should create tags', async () => {
-    applicationTagService.addTagToApplication.mockResolvedValue(mockApplicationEntityWithTags);
+    applicationTagService.addTagToApplication.mockResolvedValue([mockTagEntity]);
 
     const mockTagDto = new ApplicationTagDto();
     mockTagDto.tagName = 'tag-name';
 
     const result = await controller.addTagToApplication('app_1', mockTagDto);
     expect(applicationTagService.addTagToApplication).toHaveBeenCalledTimes(1);
-    expect(result.tags[0].name).toEqual('tag-name');
+    expect(result[0].name).toEqual('tag-name');
   });
 
   it('should remove tags', async () => {
-    applicationTagService.removeTagFromApplication.mockResolvedValue(mockApplicationEntityWithoutTags);
+    applicationTagService.removeTagFromApplication.mockResolvedValue([]);
 
     const result = await controller.removeTagFromApplication('app_1', 'tag-name');
     expect(applicationTagService.removeTagFromApplication).toHaveBeenCalledTimes(1);
-    expect(result.tags.length).toEqual(0);
+    expect(result.length).toEqual(0);
   });
 });

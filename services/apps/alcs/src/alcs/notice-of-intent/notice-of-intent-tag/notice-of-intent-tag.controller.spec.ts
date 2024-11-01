@@ -50,21 +50,21 @@ describe('NoticeOfIntentTagController', () => {
   });
 
   it('should create tags', async () => {
-    noiTagService.addTagToNoticeOfIntent.mockResolvedValue(mockNoticeOfIntentEntityWithTags);
+    noiTagService.addTagToNoticeOfIntent.mockResolvedValue([mockTagEntity]);
 
     const mockTagDto = new NoticeOfIntentTagDto();
     mockTagDto.tagName = 'tag-name';
 
     const result = await controller.addTagToApplication('noi_1', mockTagDto);
     expect(noiTagService.addTagToNoticeOfIntent).toHaveBeenCalledTimes(1);
-    expect(result.tags[0].name).toEqual('tag-name');
+    expect(result[0].name).toEqual('tag-name');
   });
 
   it('should remove tags', async () => {
-    noiTagService.removeTagFromNoticeOfIntent.mockResolvedValue(mockNoticeOfIntentEntityWithoutTags);
+    noiTagService.removeTagFromNoticeOfIntent.mockResolvedValue([]);
 
     const result = await controller.removeTagFromApplication('noi_1', 'tag-name');
     expect(noiTagService.removeTagFromNoticeOfIntent).toHaveBeenCalledTimes(1);
-    expect(result.tags.length).toEqual(0);
+    expect(result.length).toEqual(0);
   });
 });

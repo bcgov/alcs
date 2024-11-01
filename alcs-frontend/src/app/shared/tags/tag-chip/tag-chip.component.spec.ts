@@ -8,12 +8,12 @@ describe('TagChipComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TagChipComponent]
-    })
-    .compileComponents();
-    
+      declarations: [TagChipComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TagChipComponent);
     component = fixture.componentInstance;
+    component.tag = { uuid: 'tag-uuid', name: 'tag-name', isActive: true };
     fixture.detectChanges();
   });
 
