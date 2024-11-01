@@ -1,0 +1,41 @@
+.tag-container {
+  width: 100%;
+  margin-left: -10px;
+  margin-top: -5px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding-top: -20px;
+
+  &.hovered {
+    border: 1px solid #aaaaaa;
+  }
+
+  &.clicked {
+    border: 1px solid #929292;
+  }
+
+  .tag-field {
+    width: 100%;
+    margin: -10px -5px;
+
+    ::ng-deep .mdc-text-field--outlined.mdc-text-field--focused {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__trailing,
+      .mdc-notched-outline__notch {
+        border: none !important;
+      }
+    }
+
+    ::ng-deep .mdc-text-field--outlined {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__trailing,
+      .mdc-notched-outline__notch {
+        border: none !important;
+      }
+    }
+  }
+}
+
+.category {
+  color: #a0a0a0;
+}

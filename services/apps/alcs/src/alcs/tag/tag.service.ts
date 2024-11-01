@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './tag.entity';
 import { TagDto } from './tag.dto';
 import { TagCategory } from './tag-category/tag-category.entity';
+import { ServiceConflictException, ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class TagService {
@@ -74,6 +75,22 @@ export class TagService {
   }
 
   async delete(uuid: string) {
+    if (await this.isAssociated(uuid)) {
+      throw new ServiceConflictException('Tag is associated with files. Unable to delete.');
+    }
     return await this.repository.softDelete(uuid);
+  }
+
+  async isAssociated(uuid: string) {
+    const tag = await this.repository.findOne({
+      where: { uuid: uuid },
+      relations: ['applications', 'noticeOfIntents'],
+    });
+
+    if (!tag) {
+      throw new ServiceNotFoundException('Tag not found');
+    }
+
+    return (tag.applications && tag.applications.length > 0) || (tag.noticeOfIntents && tag.noticeOfIntents.length > 0);
   }
 }

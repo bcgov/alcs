@@ -16,6 +16,7 @@ export type ApplicationPill = {
 export class ApplicationTypePillComponent {
   @Input() type!: ApplicationPill;
   @Input() useShortLabel = false;
+  @Input() isHeader = false;
 
   constructor() {}
 }

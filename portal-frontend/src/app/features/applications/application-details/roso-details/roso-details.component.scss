@@ -16,3 +16,41 @@
     grid-column-gap: rem(16);
   }
 }
+
+.structure-table {
+  display: grid;
+  grid-template-columns: max-content max-content max-content;
+  overflow-x: auto;
+  grid-column-gap: rem(36);
+  grid-row-gap: rem(12);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    grid-template-columns: 0.55fr 1fr 1fr;
+  }
+
+  @media screen and (min-width: $midBreakpoint) {
+    grid-template-columns: 1fr 1fr 2fr;
+  }
+}
+
+.mobile-structure-card {
+  width: 100%;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.mobile-structure-card-border {
+  border-top: rem(1) solid #aaaaaa;
+}
+
+.mobile-structure-title {
+  display: block;
+  margin: 0;
+}
+
+.mobile-structure-label {
+  margin: rem(5) 0 rem(5) 0;
+}

@@ -16,7 +16,10 @@ export interface PaginatedTagCategoryResponse {
 export class TagCategoryService {
   private url = `${environment.apiUrl}/tag-category`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   public $categories = new BehaviorSubject<PaginatedTagCategoryResponse>({ data: [], total: 0 });
 
@@ -33,7 +36,7 @@ export class TagCategoryService {
     const searchQuery = search ? `&search=${search}` : '';
     try {
       return await firstValueFrom(
-        this.http.get<PaginatedTagCategoryResponse>(`${this.url}${pageQuery}${itemsQuery}${searchQuery}`)
+        this.http.get<PaginatedTagCategoryResponse>(`${this.url}${pageQuery}${itemsQuery}${searchQuery}`),
       );
     } catch (err) {
       console.error(err);
@@ -77,10 +80,17 @@ export class TagCategoryService {
       return await firstValueFrom(this.http.delete<TagCategoryDto>(`${this.url}/${uuid}`));
     } catch (e) {
       const res = e as HttpErrorResponse;
-      if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('update or delete on table')) {
-        throw e as HttpErrorResponse;
+
+      // TODO: FIX THE ERROR
+      // if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('update or delete on table')) {
+      //   this.toastService.showErrorToast('weird');
+      // } else if (
+      if (
+        res.error.statusCode === HttpStatusCode.Conflict &&
+        res.error.message === 'Category is associated with tags. Unable to delete.'
+      ) {
+        this.toastService.showErrorToast('Category is associated with tags. Unable to delete.');
       } else {
-        console.error(e);
         this.toastService.showErrorToast('Failed to delete tag category');
       }
     }

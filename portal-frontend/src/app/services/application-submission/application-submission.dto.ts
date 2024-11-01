@@ -1,5 +1,6 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
+import { ProposedStructure } from '../notice-of-intent-submission/notice-of-intent-submission.dto';
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -113,6 +114,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   subdProposedLots: ProposedLot[];
 
   //Soil Fields
+  soilIsNewStructure: boolean | null;
   soilIsFollowUp: boolean | null;
   soilFollowUpIDs: string | null;
   soilTypeRemoved: string | null;
@@ -139,6 +141,12 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean;
   soilHasSubmittedNotice: boolean;
+  soilStructureFarmUseReason: string | null;
+  soilStructureResidentialUseReason: string | null;
+  soilAgriParcelActivity: string | null;
+  soilStructureResidentialAccessoryUseReason: string | null;
+  soilStructureOtherUseReason: string | null;
+  soilProposedStructures: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;
@@ -233,6 +241,7 @@ export interface ApplicationSubmissionUpdateDto {
   subdProposedLots?: ProposedLot[];
 
   //Soil Fields
+  soilIsNewStructure?: boolean | null;
   soilIsFollowUp?: boolean | null;
   soilFollowUpIDs?: string | null;
   soilTypeRemoved?: string | null;
@@ -259,6 +268,12 @@ export interface ApplicationSubmissionUpdateDto {
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
+  soilStructureFarmUseReason?: string | null;
+  soilStructureResidentialUseReason?: string | null;
+  soilAgriParcelActivity?: string | null;
+  soilStructureResidentialAccessoryUseReason?: string | null;
+  soilStructureOtherUseReason?: string | null;
+  soilProposedStructures?: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2?: boolean | null;
