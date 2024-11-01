@@ -44,6 +44,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
 
   @Input() application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
   @Input() service: FileTagService | undefined;
+  @Input() isHidden: boolean = false;
 
   constructor(
     private tagService: TagService,

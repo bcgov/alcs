@@ -49,6 +49,7 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
 
   @Input() applicationDetailService?: ApplicationDetailService;
   @Input() applicationSubmissionService?: ApplicationSubmissionService;
+  @Input() isTagSectionHidden: boolean = true;
 
   legacyId?: string;
 

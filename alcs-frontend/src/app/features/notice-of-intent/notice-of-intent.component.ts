@@ -17,6 +17,8 @@ import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { FileTagService } from '../../services/common/file-tag.service';
+import { NoticeOfIntentTagService } from '../../services/notice-of-intent/notice-of-intent-tag/notice-of-intent-tag.service';
 
 export const childRoutes = [
   {
@@ -92,6 +94,7 @@ const preSubmissionRoutes = [
   selector: 'app-notice-of-intent',
   templateUrl: './notice-of-intent.component.html',
   styleUrls: ['./notice-of-intent.component.scss'],
+  providers: [{ provide: FileTagService, useClass: NoticeOfIntentTagService }],
 })
 export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
@@ -110,7 +113,7 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private route: ActivatedRoute,
     private titleService: Title,
-    public noticeOfIntentStatusService: NoticeOfIntentSubmissionStatusService
+    public noticeOfIntentStatusService: NoticeOfIntentSubmissionStatusService,
   ) {}
 
   ngOnInit(): void {
@@ -123,7 +126,7 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
     this.noticeOfIntentDetailService.$noticeOfIntent.pipe(takeUntil(this.destroy)).subscribe(async (noticeOfIntent) => {
       if (noticeOfIntent) {
         this.titleService.setTitle(
-          `${environment.siteName} | ${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`
+          `${environment.siteName} | ${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
         );
 
         this.isApplicantSubmission = noticeOfIntent.source === SYSTEM_SOURCE_TYPES.APPLICANT;

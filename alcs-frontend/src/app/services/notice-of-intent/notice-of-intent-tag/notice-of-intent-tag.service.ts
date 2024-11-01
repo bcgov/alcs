@@ -1,17 +1,17 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ToastService } from '../../toast/toast.service';
+import { FileTagService } from '../../common/file-tag.service';
 import { environment } from '../../../../environments/environment';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ToastService } from '../../toast/toast.service';
 import { firstValueFrom } from 'rxjs';
 import { TagDto } from '../../tag/tag.dto';
-import { ApplicationTagDto } from './application-tag.dto';
-import { FileTagService } from '../../common/file-tag.service';
+import { NoticeOfIntentTagDto } from './notice-of-intent-tag.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationTagService extends FileTagService {
-  private baseUrl = `${environment.apiUrl}/application`;
+export class NoticeOfIntentTagService extends FileTagService {
+  private baseUrl = `${environment.apiUrl}/notice-of-intent`;
   private tagUrl = 'tag';
 
   constructor(http: HttpClient, toastService: ToastService) {
@@ -24,24 +24,24 @@ export class ApplicationTagService extends FileTagService {
       return await firstValueFrom(this.http.get<TagDto[]>(requestUrl));
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {
-        this.toastService.showErrorToast(`Application with File ID ${fileNumber} was not found!`);
+        this.toastService.showErrorToast(`Notice of Intent with File ID ${fileNumber} was not found!`);
       } else {
-        this.toastService.showErrorToast('Failed to retrieve the application');
+        this.toastService.showErrorToast('Failed to retrieve the Notice of Intent');
       }
     }
     return;
   }
 
-  async addTag(fileNumber: string, applicationTagDto: ApplicationTagDto) {
+  async addTag(fileNumber: string, noiTagDto: NoticeOfIntentTagDto) {
     const requestUrl = `${this.baseUrl}/${fileNumber}/${this.tagUrl}`;
     console.log(requestUrl);
     try {
-      return await firstValueFrom(this.http.post<TagDto[]>(requestUrl, applicationTagDto));
+      return await firstValueFrom(this.http.post<TagDto[]>(requestUrl, noiTagDto));
     } catch (e) {
       if (e instanceof HttpErrorResponse && (e.status === 404 || e.status === 400)) {
         this.toastService.showErrorToast(e.message);
       } else {
-        this.toastService.showErrorToast('Failed to add tag to the application');
+        this.toastService.showErrorToast('Failed to add tag to the Notice of Intent');
       }
     }
 
@@ -57,7 +57,7 @@ export class ApplicationTagService extends FileTagService {
       if (e instanceof HttpErrorResponse && (e.status === 404 || e.status === 400)) {
         this.toastService.showErrorToast(e.message);
       } else {
-        this.toastService.showErrorToast('Failed to remove tag to the application');
+        this.toastService.showErrorToast('Failed to remove tag to the Notice of Intent');
       }
     }
     return;

@@ -1,4 +1,4 @@
-<div class="tag-container" (mouseenter)="hovered = true" (mouseleave)="hovered = false">
+<div class="tag-container">
   <mat-form-field class="tag-field" appearance="outline">
     <mat-chip-grid #chipGrid>
       <app-tag-chip *ngFor="let tag of tags" (removeClicked)="removeTag(tag)" [tag]="tag"></app-tag-chip>
