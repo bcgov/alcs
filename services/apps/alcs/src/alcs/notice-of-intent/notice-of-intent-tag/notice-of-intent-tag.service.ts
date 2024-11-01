@@ -37,7 +37,7 @@ export class NoticeOfIntentTagService {
     }
 
     noi.tags.push(tag);
-    return this.noiRepository.save(noi);
+    return (await this.noiRepository.save(noi)).tags;
   }
 
   async removeTagFromNoticeOfIntent(fileNumber: string, tagName: string) {
@@ -64,7 +64,7 @@ export class NoticeOfIntentTagService {
     }
 
     noi.tags = noi.tags.filter((t) => t.uuid !== tag.uuid);
-    return this.noiRepository.save(noi);
+    return (await this.noiRepository.save(noi)).tags;
   }
 
   async getNoticeOfIntentTags(fileNumber: string) {

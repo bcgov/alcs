@@ -16,7 +16,10 @@ export interface PaginatedTagResponse {
 export class TagService {
   private url = `${environment.apiUrl}/tag`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   public $tags = new BehaviorSubject<PaginatedTagResponse>({ data: [], total: 0 });
 
@@ -33,7 +36,7 @@ export class TagService {
     const searchQuery = search ? `&search=${search}` : '';
     try {
       return await firstValueFrom(
-        this.http.get<PaginatedTagResponse>(`${this.url}${pageQuery}${itemsQuery}${searchQuery}`)
+        this.http.get<PaginatedTagResponse>(`${this.url}${pageQuery}${itemsQuery}${searchQuery}`),
       );
     } catch (err) {
       console.error(err);
@@ -79,6 +82,11 @@ export class TagService {
       const res = e as HttpErrorResponse;
       if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('update or delete on table')) {
         throw e as HttpErrorResponse;
+      } else if (
+        res.error.statusCode === HttpStatusCode.Conflict &&
+        res.error.message.includes('Tag is associated with files. Unable to delete.')
+      ) {
+        this.toastService.showErrorToast('Tag is associate with files. Unable to delete.');
       } else {
         console.error(e);
         this.toastService.showErrorToast('Failed to delete tag');

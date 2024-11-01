@@ -3,12 +3,16 @@ import { TagCategory } from './tag-category.entity';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagCategoryDto } from './tag-category.dto';
+import { Tag } from '../tag.entity';
+import { ServiceConflictException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class TagCategoryService {
   constructor(
     @InjectRepository(TagCategory)
     private repository: Repository<TagCategory>,
+    @InjectRepository(Tag)
+    private tagRepository: Repository<Tag>,
   ) {}
 
   async fetch(pageIndex: number, itemsPerPage: number, search?: string) {
@@ -51,6 +55,17 @@ export class TagCategoryService {
   async delete(uuid: string) {
     const tagCategory = await this.getOneOrFail(uuid);
 
+    if (await this.isAssociated(tagCategory)) {
+      throw new ServiceConflictException('Category is associated with tags. Unable to delete.');
+    }
     return await this.repository.remove(tagCategory);
+  }
+
+  async isAssociated(tagCategory: TagCategory) {
+    const associatedTags = await this.tagRepository.find({ where: { category: { uuid: tagCategory.uuid } } });
+
+    console.log(associatedTags);
+
+    return associatedTags.length > 0;
   }
 }

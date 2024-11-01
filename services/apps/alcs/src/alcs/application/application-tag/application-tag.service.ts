@@ -36,7 +36,7 @@ export class ApplicationTagService {
     }
 
     application.tags.push(tag);
-    return this.applicationRepository.save(application);
+    return (await this.applicationRepository.save(application)).tags;
   }
 
   async removeTagFromApplication(fileNumber: string, tagName: string) {
@@ -63,7 +63,7 @@ export class ApplicationTagService {
     }
 
     application.tags = application.tags.filter((t) => t.uuid !== tag.uuid);
-    return this.applicationRepository.save(application);
+    return (await this.applicationRepository.save(application)).tags;
   }
 
   async getApplicationTags(fileNumber: string) {
