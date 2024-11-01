@@ -91,7 +91,6 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
   async initFileTags() {
     const res = await this.fileTagService.getTags(this.application?.fileNumber!);
     this.tags = res!;
-    // this.filteredTags = of(this.filterTags(''));
   }
 
   private filterTags(value: string): TagDto[] {
@@ -107,7 +106,6 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
     const res = await this.fileTagService.addTag(this.application?.fileNumber!, appTagDto);
     this.tags = res ? res : this.tags;
     this.tagControl.setValue('');
-    // this.filteredTags = of(this.filterTags(''));
   }
 
   async remove(tagName: string) {
