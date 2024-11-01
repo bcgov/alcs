@@ -35,8 +35,11 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
   filteredTags: Observable<TagDto[]> = of([]);
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagControl = new FormControl();
+  allTagsReceived: boolean = false;
 
   hovered = false;
+  clicked = false;
+  firstClicked = false;
   showPlaceholder = false;
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
@@ -63,6 +66,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
     this.fetchTags();
     this.tagService.$tags.pipe(takeUntil(this.destroy)).subscribe((result: { data: TagDto[]; total: number }) => {
       this.allTags = result.data;
+      this.allTagsReceived = true;
     });
   }
 
@@ -72,14 +76,22 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
     }
   }
 
+  onClick(): void {
+    this.clicked = true;
+    if (!this.firstClicked) {
+      this.firstClicked = true;
+      this.tagControl.setValue('');
+    }
+  }
+
   async fetchTags() {
-    this.tagService.fetch(0, 0);
+    await this.tagService.fetch(0, 0);
   }
 
   async initFileTags() {
-    console.log(this.application?.fileNumber);
     const res = await this.fileTagService.getTags(this.application?.fileNumber!);
     this.tags = res!;
+    // this.filteredTags = of(this.filterTags(''));
   }
 
   private filterTags(value: string): TagDto[] {
@@ -95,6 +107,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
     const res = await this.fileTagService.addTag(this.application?.fileNumber!, appTagDto);
     this.tags = res ? res : this.tags;
     this.tagControl.setValue('');
+    // this.filteredTags = of(this.filterTags(''));
   }
 
   async remove(tagName: string) {

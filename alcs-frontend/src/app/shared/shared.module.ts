@@ -15,7 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -77,6 +77,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
 import { TagsHeaderComponent } from './tags/tags-header/tags-header.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { TagChipComponent } from './tags/tag-chip/tag-chip.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -226,6 +227,12 @@ import { TagChipComponent } from './tags/tag-chip/tag-chip.component';
   ],
 })
 export class SharedModule {
+  constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+    matIconRegistry.addSvgIcon(
+      'cancel_filled',
+      domSanitizer.bypassSecurityTrustResourceUrl('/assets/icons/cancel_filled.svg'),
+    );
+  }
   static forRoot(): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
