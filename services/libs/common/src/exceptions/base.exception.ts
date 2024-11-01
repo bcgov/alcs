@@ -29,3 +29,9 @@ export class ServiceNotFoundException extends BaseServiceException {
     super(error, HttpStatus.NOT_FOUND);
   }
 }
+
+export class ServiceConflictException extends BaseServiceException {
+  constructor(error: string | Record<string, any>) {
+    super(error, HttpStatus.CONFLICT);
+  }
+}
