@@ -29,6 +29,7 @@ import { DecisionMeetingService } from '../../services/decision-meeting/decision
 import { UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/decision-meeting.dto';
 import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
 import { IncomingFileBoardMapDto } from 'src/app/services/incoming-file/incoming-file.dto';
+import { FileTagService } from '../../services/common/file-tag.service';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -149,6 +150,7 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
     private boardService: BoardService,
     private meetingService: DecisionMeetingService,
     private incomingFileService: IncomingFileService,
+    private fileTagService: FileTagService,
   ) {}
 
   ngOnInit(): void {

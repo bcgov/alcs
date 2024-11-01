@@ -1,6 +1,7 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { CardDto } from '../card/card.dto';
+import { TagDto } from '../tag/tag.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
@@ -281,6 +282,7 @@ export interface ApplicationDto {
   proposalEndDate2?: number;
   proposalExpiryDate?: number;
   legacyId?: string;
+  tags?: TagDto[];
 }
 
 export interface UpdateApplicationDto {

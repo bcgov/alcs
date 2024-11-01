@@ -28,6 +28,8 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
 import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
+import { ApplicationTagService } from '../../services/application/application-tag/application-tag.service';
+import { FileTagService } from 'src/app/services/common/file-tag.service';
 
 export const unsubmittedRoutes = [
   {
@@ -170,6 +172,7 @@ export const appChildRoutes = [
   selector: 'app-application',
   templateUrl: './application.component.html',
   styleUrls: ['./application.component.scss'],
+  providers: [{ provide: FileTagService, useClass: ApplicationTagService }],
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

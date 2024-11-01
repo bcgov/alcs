@@ -1,18 +1,34 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, ElementRef, ViewChild, type OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  type OnInit,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { map, Observable, of, startWith, Subject, takeUntil } from 'rxjs';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { map, Observable, of, startWith, Subject, takeUntil, tap } from 'rxjs';
 import { TagDto } from '../../../services/tag/tag.dto';
-import { TagService } from 'src/app/services/tag/tag.service';
+import { TagService } from '../../../services/tag/tag.service';
+import { ApplicationDto } from '../../../services/application/application.dto';
+import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
+import { CommissionerApplicationDto } from '../../../services/commissioner/commissioner.dto';
+import { NotificationDto } from '../../../services/notification/notification.dto';
+import { ApplicationTagDto } from '../../../services/application/application-tag/application-tag.dto';
+import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
+import { ToastService } from '../../../services/toast/toast.service';
+import { FileTagService } from '../../../services/common/file-tag.service';
 
 @Component({
   selector: 'app-tags-header',
   templateUrl: './tags-header.component.html',
   styleUrl: './tags-header.component.scss',
 })
-export class TagsHeaderComponent implements OnInit {
+export class TagsHeaderComponent implements OnInit, OnChanges {
   destroy = new Subject<void>();
   tags: TagDto[] = [];
   allTags: TagDto[] = [];
@@ -24,8 +40,17 @@ export class TagsHeaderComponent implements OnInit {
   showPlaceholder = false;
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
+  @ViewChild(MatAutocompleteTrigger) autoCompleteTrigger!: MatAutocompleteTrigger;
 
-  constructor(private tagService: TagService) {}
+  @Input() application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
+  @Input() service: FileTagService | undefined;
+
+  constructor(
+    private tagService: TagService,
+    private fileTagService: FileTagService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.filteredTags = this.tagControl.valueChanges.pipe(
@@ -37,13 +62,25 @@ export class TagsHeaderComponent implements OnInit {
     this.fetchTags();
     this.tagService.$tags.pipe(takeUntil(this.destroy)).subscribe((result: { data: TagDto[]; total: number }) => {
       this.allTags = result.data;
-      console.log(this.allTags);
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['application'] && changes['application'].currentValue !== undefined) {
+      this.initFileTags();
+    }
   }
 
   async fetchTags() {
     this.tagService.fetch(0, 0);
   }
+
+  async initFileTags() {
+    console.log(this.application?.fileNumber);
+    const res = await this.fileTagService.getTags(this.application?.fileNumber!);
+    this.tags = res!;
+  }
+
   private filterTags(value: string): TagDto[] {
     const filterValue = value.toLowerCase();
     return this.allTags.filter(
@@ -53,30 +90,58 @@ export class TagsHeaderComponent implements OnInit {
     );
   }
 
-  addTag(event: { input: HTMLInputElement; value: string }): void {
+  async add(appTagDto: ApplicationTagDto) {
+    const res = await this.fileTagService.addTag(this.application?.fileNumber!, appTagDto);
+    this.tags = res ? res : this.tags;
+    this.tagControl.setValue('');
+  }
+
+  async remove(tagName: string) {
+    const res = await this.fileTagService.deleteTag(this.application?.fileNumber!, tagName);
+    this.tags = res ? res : this.tags;
+  }
+
+  addTag(event: { input: HTMLInputElement; value: string }) {
     const value = event.value.trim().toLowerCase();
     const tagToAdd = this.allTags.find((tag) => tag.name.toLowerCase() === value);
-    if (tagToAdd && !this.tags.find((tag) => tag.uuid === tagToAdd.uuid)) {
-      this.tags.push(tagToAdd);
-      this.tagControl.setValue('');
+
+    if (tagToAdd) {
+      const appTagDto: ApplicationTagDto = {
+        tagName: tagToAdd.name,
+      };
+
+      this.add(appTagDto);
     }
-    event.input.value = '';
   }
 
   removeTag(tag: TagDto): void {
     const index = this.tags.findIndex((t) => t.uuid === tag.uuid);
+
     if (index >= 0) {
-      this.tags.splice(index, 1);
-      this.tagControl.setValue('');
+      const tagName = this.tags[index].name;
+      this.confirmationDialogService
+        .openDialog({
+          body: `Are you sure you want to remove the tag ${tagName}?`,
+        })
+        .subscribe(async (confirmed) => {
+          if (confirmed) {
+            this.remove(tagName);
+            this.toastService.showSuccessToast(`Tag ${tagName} successfully removed`);
+          }
+        });
     }
   }
 
-  selectTag(event: MatAutocompleteSelectedEvent): void {
-    const value = event.option.value as TagDto;
-    if (!this.tags.find((tag) => tag.uuid === value.uuid)) {
-      this.tags.push(value);
+  selectTag(event: MatAutocompleteSelectedEvent) {
+    const selectedTag = event.option.value as TagDto;
+
+    if (!this.tags.find((tag) => tag.uuid === selectedTag.uuid)) {
+      const appTagDto: ApplicationTagDto = {
+        tagName: selectedTag.name,
+      };
+
+      this.add(appTagDto);
       this.tagInput!.nativeElement.value = '';
-      this.tagControl.setValue('');
     }
   }
 }
