@@ -33,6 +33,10 @@ import { formatDateForApi } from '../../shared/utils/api-date-formatter';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
 import { AuthenticationService, ROLES } from '../../services/authentication/authentication.service';
+import { TagCategoryService } from '../../services/tag/tag-category/tag-category.service';
+import { TagCategoryDto } from '../../services/tag/tag-category/tag-category.dto';
+import { TagDto } from '../../services/tag/tag.dto';
+import { TagService } from '../../services/tag/tag.service';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
@@ -93,11 +97,15 @@ export class SearchComponent implements OnInit, OnDestroy {
     dateSubmittedTo: new FormControl(undefined),
     dateDecidedFrom: new FormControl(undefined),
     dateDecidedTo: new FormControl(undefined),
+    tagCategory: new FormControl<string | undefined>(undefined),
+    tag: new FormControl<string[]>([]),
   });
   resolutionYears: number[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
+  tags: TagDto[] = [];
+  tagCategories: TagCategoryDto[] = [];
   applicationStatuses: ApplicationStatusDto[] = [];
   allStatuses: (ApplicationStatusDto | NoticeOfIntentStatusDto | NotificationSubmissionStatusDto)[] = [];
 
@@ -123,6 +131,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     private authService: AuthenticationService,
     public fileTypeService: FileTypeDataSourceService,
     public portalStatusDataService: PortalStatusDataSourceService,
+    public tagCategoryService: TagCategoryService,
+    public tagService: TagService,
   ) {
     this.titleService.setTitle('ALCS | Search');
   }
@@ -145,6 +155,18 @@ export class SearchComponent implements OnInit, OnDestroy {
           this.onSubmit();
         }
       });
+
+    this.tagCategoryService.$categories
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((result: { data: TagCategoryDto[]; total: number }) => {
+      this.tagCategories = result.data;
+    });
+
+    this.tagService.$tags
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((result: { data: TagDto[]; total: number }) => {
+      this.tags = result.data;
+    });
 
     this.searchForm.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
       let isEmpty = true;
@@ -188,6 +210,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.loadGovernments();
     this.applicationService.setup();
     this.loadStatuses();
+
+    this.tagCategoryService.fetch(0, 0);
+    this.tagService.fetch(0, 0);
 
     this.filteredLocalGovernments = this.localGovernmentControl.valueChanges.pipe(
       startWith(''),
@@ -296,6 +321,8 @@ export class SearchComponent implements OnInit, OnDestroy {
         ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
         : undefined,
       fileTypes: fileTypes,
+      tagCategoryId: this.searchForm.controls.tagCategory.value ?? undefined,
+      tagIds: this.searchForm.controls.tag.value ?? undefined,
     };
   }
 

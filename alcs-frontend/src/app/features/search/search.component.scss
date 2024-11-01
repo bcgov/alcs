@@ -9,6 +9,25 @@ h4 {
   margin-top: 48px !important;
 }
 
+.category-label {
+  color: colors.$grey;
+}
+
+.option-right {
+  right: 0;
+  position: absolute;
+}
+
+.option-left {
+  left: 0;
+  position: absolute;
+}
+
+.option-container {
+  width: 100%;
+  position: relative;
+}
+
 .info-banner {
   margin-top: -16px;
   background-color: rgba(#F7F7F7, 0.5);

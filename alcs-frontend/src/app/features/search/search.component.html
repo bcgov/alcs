@@ -81,16 +81,44 @@
     </div>
     <div class="row">
       <div class="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Tags</mat-label>
-          <input id="legacyId" matInput />
-        </mat-form-field>
+        <ng-select
+          appearance="outline"
+          [items]="tags"
+          [multiple]="true"
+          appendTo="body"
+          placeholder="Tags"
+          bindLabel="name"
+          bindValue="uuid"
+          formControlName="tag"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div>
+              <div class="option-container">
+                <div class="option-left">
+                  <span [ngOptionHighlight]="search">{{ item.name }}</span><span class="category-label">{{ item.category ? ' : ' + item.category.name : '' }}</span>
+                </div>
+                <div class="option-right">
+                  {{ !item.isActive ? 'Inactive' : '' }}
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-select>
       </div>
       <div class="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Tag Categories</mat-label>
-          <input id="legacyId" matInput />
-        </mat-form-field>
+        <ng-select
+          appearance="outline"
+          [items]="tagCategories"
+          appendTo="body"
+          placeholder="Tag Categories"
+          bindLabel="name"
+          bindValue="uuid"
+          formControlName="tagCategory"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.name }}</div>
+          </ng-template>
+        </ng-select>
       </div>
     </div>
   </div>
