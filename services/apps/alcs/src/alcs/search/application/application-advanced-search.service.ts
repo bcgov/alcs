@@ -4,10 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
 import { QueryRunner, Repository } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
-import {
-  getNextDayToPacific,
-  getStartOfDayToPacific,
-} from '../../../utils/pacific-date-time-helper';
+import { getNextDayToPacific, getStartOfDayToPacific } from '../../../utils/pacific-date-time-helper';
 import { APP_SEARCH_FILTERS } from '../../../utils/search/application-search-filters';
 import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
@@ -49,11 +46,7 @@ export class ApplicationAdvancedSearchService {
       fileNumbers = new Set<string>(cachedNumbers);
     } else {
       fileNumbers = await this.searchForFileNumbers(searchDto);
-      await client.setEx(
-        searchKey,
-        SEARCH_CACHE_TIME,
-        JSON.stringify([...fileNumbers.values()]),
-      );
+      await client.setEx(searchKey, SEARCH_CACHE_TIME, JSON.stringify([...fileNumbers.values()]));
     }
 
     if (fileNumbers.size === 0) {
@@ -72,11 +65,7 @@ export class ApplicationAdvancedSearchService {
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
-      .orderBy(
-        sortQuery,
-        searchDto.sortDirection,
-        searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST',
-      )
+      .orderBy(sortQuery, searchDto.sortDirection, searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
@@ -118,10 +107,7 @@ export class ApplicationAdvancedSearchService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      const promise = APP_SEARCH_FILTERS.addFileNumberResults(
-        searchDto,
-        this.applicationRepository,
-      );
+      const promise = APP_SEARCH_FILTERS.addFileNumberResults(searchDto, this.applicationRepository);
       promises.push(promise);
     }
 
@@ -130,10 +116,17 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      const promise = APP_SEARCH_FILTERS.addPortalStatusResults(
-        searchDto,
-        this.applicationSubmissionRepository,
-      );
+      const promise = APP_SEARCH_FILTERS.addPortalStatusResults(searchDto, this.applicationSubmissionRepository);
+      promises.push(promise);
+    }
+
+    if (searchDto.tagIds && searchDto.tagIds.length > 0) {
+      const promise = APP_SEARCH_FILTERS.addTagsResults(searchDto, this.applicationRepository);
+      promises.push(promise);
+    }
+
+    if (searchDto.tagCategoryId) {
+      const promise = APP_SEARCH_FILTERS.addTagCategoryResults(searchDto, this.applicationRepository);
       promises.push(promise);
     }
 
@@ -151,18 +144,12 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.name) {
-      const promise = APP_SEARCH_FILTERS.addNameResults(
-        searchDto,
-        this.applicationSubmissionRepository,
-      );
+      const promise = APP_SEARCH_FILTERS.addNameResults(searchDto, this.applicationSubmissionRepository);
       promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
-      const promise = APP_SEARCH_FILTERS.addParcelResults(
-        searchDto,
-        this.applicationSubmissionRepository,
-      );
+      const promise = APP_SEARCH_FILTERS.addParcelResults(searchDto, this.applicationSubmissionRepository);
       promises.push(promise);
     }
 
@@ -171,10 +158,7 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.fileTypes.length > 0) {
-      const promise = APP_SEARCH_FILTERS.addFileTypeResults(
-        searchDto,
-        this.applicationRepository,
-      );
+      const promise = APP_SEARCH_FILTERS.addFileTypeResults(searchDto, this.applicationRepository);
       promises.push(promise);
     }
 
@@ -189,16 +173,11 @@ export class ApplicationAdvancedSearchService {
     const t0 = performance.now();
     const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
-    this.logger.debug(
-      `ALCS Application pre-search search took ${t1 - t0} milliseconds.`,
-    );
+    this.logger.debug(`ALCS Application pre-search search took ${t1 - t0} milliseconds.`);
     return finalResult;
   }
 
-  private addLegacyIDResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addLegacyIDResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.applicationRepository.find({
       where: {
         legacyId: searchDto.legacyId,
@@ -210,10 +189,7 @@ export class ApplicationAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addRegionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addRegionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.applicationRepository.find({
       where: {
         regionCode: searchDto.regionCode,
@@ -225,10 +201,7 @@ export class ApplicationAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addDecisionResolutionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addDecisionResolutionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const query = this.applicationRepository
       .createQueryBuilder('app')
       .select('app.fileNumber')
@@ -252,36 +225,24 @@ export class ApplicationAdvancedSearchService {
     promises.push(query.getMany());
   }
 
-  private addSubmittedDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const query = this.applicationRepository
-      .createQueryBuilder('app')
-      .select('app.fileNumber');
+  private addSubmittedDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
+    const query = this.applicationRepository.createQueryBuilder('app').select('app.fileNumber');
 
     if (searchDto.dateSubmittedFrom !== undefined) {
       query.andWhere('app.date_submitted_to_alc >= :date_submitted_from', {
-        date_submitted_from: getStartOfDayToPacific(
-          searchDto.dateSubmittedFrom,
-        ).toISOString(),
+        date_submitted_from: getStartOfDayToPacific(searchDto.dateSubmittedFrom).toISOString(),
       });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
       query.andWhere('app.date_submitted_to_alc < :date_submitted_to', {
-        date_submitted_to: getNextDayToPacific(
-          searchDto.dateSubmittedTo,
-        ).toISOString(),
+        date_submitted_to: getNextDayToPacific(searchDto.dateSubmittedTo).toISOString(),
       });
     }
     promises.push(query.getMany());
   }
 
-  private addDecisionDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addDecisionDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const query = this.applicationRepository
       .createQueryBuilder('app')
       .select('app.fileNumber')
@@ -293,17 +254,13 @@ export class ApplicationAdvancedSearchService {
 
     if (searchDto.dateDecidedFrom) {
       query.andWhere('decision.date >= :decision_date', {
-        decision_date: getStartOfDayToPacific(
-          searchDto.dateDecidedFrom,
-        ).toISOString(),
+        decision_date: getStartOfDayToPacific(searchDto.dateDecidedFrom).toISOString(),
       });
     }
 
     if (searchDto.dateDecidedTo) {
       query.andWhere('decision.date < :decision_date_to', {
-        decision_date_to: getNextDayToPacific(
-          searchDto.dateDecidedTo,
-        ).toISOString(),
+        decision_date_to: getNextDayToPacific(searchDto.dateDecidedTo).toISOString(),
       });
     }
     promises.push(query.getMany());

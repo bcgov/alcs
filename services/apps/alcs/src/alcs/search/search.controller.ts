@@ -5,10 +5,7 @@ import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
 import { DataSource, Repository } from 'typeorm';
-import {
-  ROLES_ALLOWED_APPLICATIONS,
-  ROLES_ALLOWED_SEARCH,
-} from '../../common/authorization/roles';
+import { ROLES_ALLOWED_APPLICATIONS, ROLES_ALLOWED_SEARCH } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { APPLICATION_SUBMISSION_TYPES } from '../../portal/pdf-generation/generate-submission-document.service';
@@ -70,20 +67,12 @@ export class SearchController {
     const application = await this.searchService.getApplication(searchTerm);
     const noi = await this.searchService.getNoi(searchTerm);
     const notification = await this.searchService.getNotification(searchTerm);
-    const planningReview =
-      await this.searchService.getPlanningReview(searchTerm);
+    const planningReview = await this.searchService.getPlanningReview(searchTerm);
     const inquiry = await this.searchService.getInquiry(searchTerm);
 
     const result: SearchResultDto[] = [];
 
-    this.mapSearchResults(
-      result,
-      application,
-      noi,
-      planningReview,
-      notification,
-      inquiry,
-    );
+    this.mapSearchResults(result, application, noi, planningReview, notification, inquiry);
 
     return result;
   }
@@ -120,64 +109,38 @@ export class SearchController {
   @Post('/advanced')
   @UserRoles(...ROLES_ALLOWED_SEARCH)
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
-    const {
-      searchApplications,
-      searchNoi,
-      searchPlanningReviews,
-      searchNotifications,
-      searchInquiries,
-    } = this.getEntitiesTypeToSearch(searchDto);
+    const { searchApplications, searchNoi, searchPlanningReviews, searchNotifications, searchInquiries } =
+      this.getEntitiesTypeToSearch(searchDto);
 
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
     try {
-      let applicationSearchResult: AdvancedSearchResultDto<
-        ApplicationSubmissionSearchView[]
-      > | null = null;
+      let applicationSearchResult: AdvancedSearchResultDto<ApplicationSubmissionSearchView[]> | null = null;
       if (searchApplications) {
-        applicationSearchResult =
-          await this.applicationSearchService.searchApplications(
-            searchDto,
-            queryRunner,
-          );
+        applicationSearchResult = await this.applicationSearchService.searchApplications(searchDto, queryRunner);
       }
 
-      let noticeOfIntentSearchService: AdvancedSearchResultDto<
-        NoticeOfIntentSubmissionSearchView[]
-      > | null = null;
+      let noticeOfIntentSearchService: AdvancedSearchResultDto<NoticeOfIntentSubmissionSearchView[]> | null = null;
       if (searchNoi) {
-        noticeOfIntentSearchService =
-          await this.noticeOfIntentSearchService.searchNoticeOfIntents(
-            searchDto,
-            queryRunner,
-          );
-      }
-      let notifications: AdvancedSearchResultDto<
-        NotificationSubmissionSearchView[]
-      > | null = null;
-      if (searchNotifications) {
-        notifications = await this.notificationSearchService.search(
+        noticeOfIntentSearchService = await this.noticeOfIntentSearchService.searchNoticeOfIntents(
           searchDto,
           queryRunner,
         );
       }
 
-      let planningReviews: AdvancedSearchResultDto<
-        PlanningReviewSearchView[]
-      > | null = null;
+      let notifications: AdvancedSearchResultDto<NotificationSubmissionSearchView[]> | null = null;
+      if (searchNotifications) {
+        notifications = await this.notificationSearchService.search(searchDto, queryRunner);
+      }
+
+      let planningReviews: AdvancedSearchResultDto<PlanningReviewSearchView[]> | null = null;
       if (searchPlanningReviews) {
-        planningReviews = await this.planningReviewSearchService.search(
-          searchDto,
-          queryRunner,
-        );
+        planningReviews = await this.planningReviewSearchService.search(searchDto, queryRunner);
       }
 
       let inquiries: AdvancedSearchResultDto<InquirySearchView[]> | null = null;
       if (searchInquiries) {
-        inquiries = await this.inquirySearchService.search(
-          searchDto,
-          queryRunner,
-        );
+        inquiries = await this.inquirySearchService.search(searchDto, queryRunner);
       }
 
       return await this.mapAdvancedSearchResults(
@@ -200,19 +163,9 @@ export class SearchController {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
     try {
-      const applications =
-        await this.applicationSearchService.searchApplications(
-          searchDto,
-          queryRunner,
-        );
+      const applications = await this.applicationSearchService.searchApplications(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(
-        applications,
-        null,
-        null,
-        null,
-        null,
-      );
+      const mappedSearchResult = await this.mapAdvancedSearchResults(applications, null, null, null, null);
 
       return {
         total: mappedSearchResult.totalApplications,
@@ -230,19 +183,9 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<NoticeOfIntentSearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    const noticeOfIntents =
-      await this.noticeOfIntentSearchService.searchNoticeOfIntents(
-        searchDto,
-        queryRunner,
-      );
+    const noticeOfIntents = await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto, queryRunner);
 
-    const mappedSearchResult = await this.mapAdvancedSearchResults(
-      null,
-      noticeOfIntents,
-      null,
-      null,
-      null,
-    );
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, noticeOfIntents, null, null, null);
 
     return {
       total: mappedSearchResult.totalNoticeOfIntents,
@@ -257,18 +200,9 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<NotificationSearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    const notifications = await this.notificationSearchService.search(
-      searchDto,
-      queryRunner,
-    );
+    const notifications = await this.notificationSearchService.search(searchDto, queryRunner);
 
-    const mappedSearchResult = await this.mapAdvancedSearchResults(
-      null,
-      null,
-      null,
-      notifications,
-      null,
-    );
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, notifications, null);
 
     return {
       total: mappedSearchResult.totalNotifications,
@@ -283,18 +217,9 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<PlanningReviewSearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    const planningReviews = await this.planningReviewSearchService.search(
-      searchDto,
-      queryRunner,
-    );
+    const planningReviews = await this.planningReviewSearchService.search(searchDto, queryRunner);
 
-    const mappedSearchResult = await this.mapAdvancedSearchResults(
-      null,
-      null,
-      planningReviews,
-      null,
-      null,
-    );
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, planningReviews, null, null);
 
     return {
       total: mappedSearchResult.totalPlanningReviews,
@@ -309,18 +234,9 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<InquirySearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    const inquiries = await this.inquirySearchService.search(
-      searchDto,
-      queryRunner,
-    );
+    const inquiries = await this.inquirySearchService.search(searchDto, queryRunner);
 
-    const mappedSearchResult = await this.mapAdvancedSearchResults(
-      null,
-      null,
-      null,
-      null,
-      inquiries,
-    );
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, null, inquiries);
 
     return {
       total: mappedSearchResult.totalInquiries,
@@ -339,9 +255,7 @@ export class SearchController {
       searchApplications =
         searchDto.fileTypes.filter((searchType) =>
           Object.values(APPLICATION_SUBMISSION_TYPES).includes(
-            APPLICATION_SUBMISSION_TYPES[
-              searchType as keyof typeof APPLICATION_SUBMISSION_TYPES
-            ],
+            APPLICATION_SUBMISSION_TYPES[searchType as keyof typeof APPLICATION_SUBMISSION_TYPES],
           ),
         ).length > 0;
 
@@ -352,17 +266,13 @@ export class SearchController {
       planningReviewTypeSpecified =
         searchDto.fileTypes.filter((searchType) =>
           Object.values(PLANNING_REVIEW_TYPES).includes(
-            PLANNING_REVIEW_TYPES[
-              searchType as keyof typeof PLANNING_REVIEW_TYPES
-            ],
+            PLANNING_REVIEW_TYPES[searchType as keyof typeof PLANNING_REVIEW_TYPES],
           ),
         ).length > 0;
 
       inquiriesTypeSpecified =
         searchDto.fileTypes.filter((searchType) =>
-          Object.values(INQUIRY_TYPES).includes(
-            INQUIRY_TYPES[searchType as keyof typeof INQUIRY_TYPES],
-          ),
+          Object.values(INQUIRY_TYPES).includes(INQUIRY_TYPES[searchType as keyof typeof INQUIRY_TYPES]),
         ).length > 0;
     }
 
@@ -400,16 +310,10 @@ export class SearchController {
   }
 
   private async mapAdvancedSearchResults(
-    applications: AdvancedSearchResultDto<
-      ApplicationSubmissionSearchView[]
-    > | null,
-    noticeOfIntents: AdvancedSearchResultDto<
-      NoticeOfIntentSubmissionSearchView[]
-    > | null,
+    applications: AdvancedSearchResultDto<ApplicationSubmissionSearchView[]> | null,
+    noticeOfIntents: AdvancedSearchResultDto<NoticeOfIntentSubmissionSearchView[]> | null,
     planningReviews: AdvancedSearchResultDto<PlanningReviewSearchView[]> | null,
-    notifications: AdvancedSearchResultDto<
-      NotificationSubmissionSearchView[]
-    > | null,
+    notifications: AdvancedSearchResultDto<NotificationSubmissionSearchView[]> | null,
     inquiries: AdvancedSearchResultDto<InquirySearchView[]> | null,
   ) {
     const response = new AdvancedSearchResponseDto();
@@ -423,50 +327,34 @@ export class SearchController {
       }
 
       mappedApplications.push(
-        ...applications.data.map((app) =>
-          this.mapApplicationToAdvancedSearchResult(app, appTypeMap),
-        ),
+        ...applications.data.map((app) => this.mapApplicationToAdvancedSearchResult(app, appTypeMap)),
       );
     }
 
     const mappedNoticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
     if (noticeOfIntents && noticeOfIntents.data.length > 0) {
       mappedNoticeOfIntents.push(
-        ...noticeOfIntents.data.map((noi) =>
-          this.mapNoticeOfIntentToAdvancedSearchResult(noi),
-        ),
+        ...noticeOfIntents.data.map((noi) => this.mapNoticeOfIntentToAdvancedSearchResult(noi)),
       );
     }
 
     const mappedNotifications: NotificationSearchResultDto[] = [];
     if (notifications && notifications.data && notifications.data.length > 0) {
       mappedNotifications.push(
-        ...notifications.data.map((notification) =>
-          this.mapNotificationToAdvancedSearchResult(notification),
-        ),
+        ...notifications.data.map((notification) => this.mapNotificationToAdvancedSearchResult(notification)),
       );
     }
 
     const mappedPlanningReviews: PlanningReviewSearchResultDto[] = [];
-    if (
-      planningReviews &&
-      planningReviews.data &&
-      planningReviews.data.length > 0
-    ) {
+    if (planningReviews && planningReviews.data && planningReviews.data.length > 0) {
       mappedPlanningReviews.push(
-        ...planningReviews.data.map((planningReview) =>
-          this.mapPlanningReviewToAdvancedSearchResult(planningReview),
-        ),
+        ...planningReviews.data.map((planningReview) => this.mapPlanningReviewToAdvancedSearchResult(planningReview)),
       );
     }
 
     const mappedInquiries: InquirySearchResultDto[] = [];
     if (inquiries && inquiries.data && inquiries.data.length > 0) {
-      mappedInquiries.push(
-        ...inquiries.data.map((inquiry) =>
-          this.mapInquiryToAdvancedSearchResult(inquiry),
-        ),
-      );
+      mappedInquiries.push(...inquiries.data.map((inquiry) => this.mapInquiryToAdvancedSearchResult(inquiry)));
     }
 
     response.applications = mappedApplications;
@@ -483,26 +371,18 @@ export class SearchController {
     return response;
   }
 
-  private mapApplicationToSearchResult(
-    application: Application,
-  ): SearchResultDto {
+  private mapApplicationToSearchResult(application: Application): SearchResultDto {
     return {
       type: CARD_TYPE.APP,
       referenceId: application.fileNumber,
       localGovernmentName: application.localGovernment?.name,
       applicant: application.applicant,
       fileNumber: application.fileNumber,
-      label: this.mapper.map(
-        application.type,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
+      label: this.mapper.map(application.type, ApplicationType, ApplicationTypeDto),
     };
   }
 
-  private mapNoticeOfIntentToSearchResult(
-    noi: NoticeOfIntent,
-  ): SearchResultDto {
+  private mapNoticeOfIntentToSearchResult(noi: NoticeOfIntent): SearchResultDto {
     return {
       type: CARD_TYPE.NOI,
       referenceId: noi.fileNumber,
@@ -512,9 +392,7 @@ export class SearchController {
     };
   }
 
-  private mapPlanningReviewToSearchResult(
-    planning: PlanningReview,
-  ): SearchResultDto {
+  private mapPlanningReviewToSearchResult(planning: PlanningReview): SearchResultDto {
     return {
       type: CARD_TYPE.PLAN,
       referenceId: planning.fileNumber,
@@ -534,9 +412,7 @@ export class SearchController {
     };
   }
 
-  private mapNotificationToSearchResult(
-    notification: Notification,
-  ): SearchResultDto {
+  private mapNotificationToSearchResult(notification: Notification): SearchResultDto {
     return {
       type: CARD_TYPE.NOTIFICATION,
       referenceId: notification.fileNumber,
@@ -554,11 +430,7 @@ export class SearchController {
       referenceId: application.fileNumber,
       fileNumber: application.fileNumber,
       dateSubmitted: application.dateSubmittedToAlc?.getTime(),
-      type: this.mapper.map(
-        appTypeMap.get(application.applicationTypeCode),
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
+      type: this.mapper.map(appTypeMap.get(application.applicationTypeCode), ApplicationType, ApplicationTypeDto),
       localGovernmentName: application.localGovernmentName,
       ownerName: application.applicant,
       class: 'APP',
@@ -573,11 +445,7 @@ export class SearchController {
       referenceId: noi.fileNumber,
       fileNumber: noi.fileNumber,
       dateSubmitted: noi.dateSubmittedToAlc?.getTime(),
-      type: this.mapper.map(
-        noi.noticeOfIntentType,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
+      type: this.mapper.map(noi.noticeOfIntentType, ApplicationType, ApplicationTypeDto),
       localGovernmentName: noi.localGovernmentName,
       ownerName: noi.applicant,
       class: 'NOI',
@@ -592,11 +460,7 @@ export class SearchController {
       referenceId: notification.fileNumber,
       fileNumber: notification.fileNumber,
       dateSubmitted: notification.dateSubmittedToAlc?.getTime(),
-      type: this.mapper.map(
-        notification.notificationType,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
+      type: this.mapper.map(notification.notificationType, ApplicationType, ApplicationTypeDto),
       localGovernmentName: notification.localGovernmentName,
       ownerName: notification.applicant,
       class: 'NOTI',
@@ -626,9 +490,7 @@ export class SearchController {
     };
   }
 
-  private mapInquiryToAdvancedSearchResult(
-    inquiry: InquirySearchView,
-  ): InquirySearchResultDto {
+  private mapInquiryToAdvancedSearchResult(inquiry: InquirySearchView): InquirySearchResultDto {
     return {
       fileNumber: inquiry.fileNumber,
       open: inquiry.open,

@@ -84,6 +84,14 @@ export class InboxRequestDto {
 
   @IsBoolean()
   createdByMe: boolean;
+
+  @IsArray()
+  @IsOptional()
+  tagIds?: string[];
+
+  @IsString()
+  @IsOptional()
+  tagCategoryId?: string;
 }
 
 // typeorm does not transform property names for the status
