@@ -34,7 +34,6 @@ export class ApplicationTagService extends FileTagService {
 
   async addTag(fileNumber: string, applicationTagDto: ApplicationTagDto) {
     const requestUrl = `${this.baseUrl}/${fileNumber}/${this.tagUrl}`;
-    console.log(requestUrl);
     try {
       return await firstValueFrom(this.http.post<TagDto[]>(requestUrl, applicationTagDto));
     } catch (e) {

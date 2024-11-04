@@ -25,7 +25,7 @@
       autoActiveFirstOption
       class="auto-complete"
     >
-      <mat-option *ngFor="let tag of filteredTags | async" [value]="tag"
+      <mat-option (mousedown)="markClicked()" *ngFor="let tag of filteredTags | async" [value]="tag"
         >{{ tag.name }} <span class="category" *ngIf="tag.category"> : {{ tag.category.name }}</span></mat-option
       >
     </mat-autocomplete>

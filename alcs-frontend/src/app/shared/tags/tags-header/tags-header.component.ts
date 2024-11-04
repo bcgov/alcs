@@ -42,6 +42,8 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
   clicked = false;
   firstClicked = false;
   selectClicked = false;
+  selectTyped = false;
+  addTyped = false;
   showPlaceholder = false;
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
@@ -126,6 +128,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
       };
 
       this.add(appTagDto);
+      this.addTyped = true;
     }
   }
 
@@ -157,18 +160,36 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
 
       this.add(appTagDto);
       this.tagInput!.nativeElement.value = '';
-      this.selectClicked = true;
+      if (!this.selectClicked) {
+        this.selectTyped = true;
+      }
     }
   }
 
   @HostListener('document:click', ['$event.target'])
   public onDocumentClick(targetElement: HTMLElement): void {
     const clickedInside = this.elementRef.nativeElement.contains(targetElement);
-    if (!clickedInside && !this.selectClicked) {
-      this.clicked = false;
+
+    if (!clickedInside) {
+      if (!this.selectClicked || this.selectTyped || this.addTyped) {
+        this.clicked = false;
+      }
     }
+
     if (this.selectClicked) {
       this.selectClicked = false;
     }
+
+    if (this.selectTyped) {
+      this.selectTyped = false;
+    }
+
+    if (this.addTyped) {
+      this.addTyped = false;
+    }
+  }
+
+  markClicked() {
+    this.selectClicked = true;
   }
 }
