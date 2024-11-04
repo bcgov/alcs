@@ -26,6 +26,10 @@ export class ApplicationTagService {
       throw new ServiceNotFoundException(`Tag not found with name ${tagName}`);
     }
 
+    if (!tag.isActive) {
+      throw new ServiceValidationException('Could not add the deactivated tag to application.');
+    }
+
     if (!application.tags) {
       application.tags = [];
     }

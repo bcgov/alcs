@@ -39,7 +39,7 @@ export class ApplicationTagService extends FileTagService {
       return await firstValueFrom(this.http.post<TagDto[]>(requestUrl, applicationTagDto));
     } catch (e) {
       if (e instanceof HttpErrorResponse && (e.status === 404 || e.status === 400)) {
-        this.toastService.showErrorToast(e.message);
+        this.toastService.showErrorToast(e.error.message);
       } else {
         this.toastService.showErrorToast('Failed to add tag to the application');
       }
@@ -55,7 +55,7 @@ export class ApplicationTagService extends FileTagService {
       return await firstValueFrom(this.http.delete<TagDto[]>(requestUrl));
     } catch (e) {
       if (e instanceof HttpErrorResponse && (e.status === 404 || e.status === 400)) {
-        this.toastService.showErrorToast(e.message);
+        this.toastService.showErrorToast(e.error.message);
       } else {
         this.toastService.showErrorToast('Failed to remove tag to the application');
       }

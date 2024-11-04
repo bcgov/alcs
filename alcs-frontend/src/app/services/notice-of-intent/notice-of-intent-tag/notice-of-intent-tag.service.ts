@@ -34,12 +34,11 @@ export class NoticeOfIntentTagService extends FileTagService {
 
   async addTag(fileNumber: string, noiTagDto: NoticeOfIntentTagDto) {
     const requestUrl = `${this.baseUrl}/${fileNumber}/${this.tagUrl}`;
-    console.log(requestUrl);
     try {
       return await firstValueFrom(this.http.post<TagDto[]>(requestUrl, noiTagDto));
     } catch (e) {
       if (e instanceof HttpErrorResponse && (e.status === 404 || e.status === 400)) {
-        this.toastService.showErrorToast(e.message);
+        this.toastService.showErrorToast(e.error.message);
       } else {
         this.toastService.showErrorToast('Failed to add tag to the Notice of Intent');
       }
@@ -55,7 +54,7 @@ export class NoticeOfIntentTagService extends FileTagService {
       return await firstValueFrom(this.http.delete<TagDto[]>(requestUrl));
     } catch (e) {
       if (e instanceof HttpErrorResponse && (e.status === 404 || e.status === 400)) {
-        this.toastService.showErrorToast(e.message);
+        this.toastService.showErrorToast(e.error.message);
       } else {
         this.toastService.showErrorToast('Failed to remove tag to the Notice of Intent');
       }

@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   Input,
   OnChanges,
   SimpleChanges,
@@ -40,6 +41,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
   hovered = false;
   clicked = false;
   firstClicked = false;
+  selectClicked = false;
   showPlaceholder = false;
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
@@ -54,6 +56,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
     private fileTagService: FileTagService,
     private confirmationDialogService: ConfirmationDialogService,
     private toastService: ToastService,
+    private elementRef: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +68,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
 
     this.fetchTags();
     this.tagService.$tags.pipe(takeUntil(this.destroy)).subscribe((result: { data: TagDto[]; total: number }) => {
-      this.allTags = result.data;
+      this.allTags = result.data.filter((tag) => tag.isActive);
       this.allTagsReceived = true;
     });
   }
@@ -133,7 +136,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
       const tagName = this.tags[index].name;
       this.confirmationDialogService
         .openDialog({
-          body: `Are you sure you want to remove the tag ${tagName}?`,
+          body: `Are you sure you want to remove the tag <b> ${tagName} </b>?`,
         })
         .subscribe(async (confirmed) => {
           if (confirmed) {
@@ -154,6 +157,18 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
 
       this.add(appTagDto);
       this.tagInput!.nativeElement.value = '';
+      this.selectClicked = true;
+    }
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  public onDocumentClick(targetElement: HTMLElement): void {
+    const clickedInside = this.elementRef.nativeElement.contains(targetElement);
+    if (!clickedInside && !this.selectClicked) {
+      this.clicked = false;
+    }
+    if (this.selectClicked) {
+      this.selectClicked = false;
     }
   }
 }

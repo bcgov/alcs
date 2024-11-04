@@ -64,8 +64,6 @@ export class TagCategoryService {
   async isAssociated(tagCategory: TagCategory) {
     const associatedTags = await this.tagRepository.find({ where: { category: { uuid: tagCategory.uuid } } });
 
-    console.log(associatedTags);
-
     return associatedTags.length > 0;
   }
 }
