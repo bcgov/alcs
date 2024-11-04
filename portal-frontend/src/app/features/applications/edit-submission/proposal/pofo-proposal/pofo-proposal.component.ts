@@ -338,6 +338,8 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       return;
     }
 
+    this.structuresSource = new MatTableDataSource(this.proposedStructures);
+
     if (this.hasInput(structure.type)) {
       this.confirmationDialogService
         .openDialog({
