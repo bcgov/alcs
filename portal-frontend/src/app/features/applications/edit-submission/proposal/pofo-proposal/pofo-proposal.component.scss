@@ -13,6 +13,10 @@ section {
   width: 100%;
 }
 
+.mat-mdc-table .mdc-data-table__row {
+  height: rem(75);
+}
+
 .info-banner {
   background-color: rgba(colors.$secondary-color-light, 0.5);
   padding: rem(4);
