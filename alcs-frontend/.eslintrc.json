@@ -1,7 +1,6 @@
 {
   "root": true,
   "ignorePatterns": ["projects/**/*"],
-  "no-octal-escape": 0,
   "overrides": [
     {
       "files": ["*.ts"],
