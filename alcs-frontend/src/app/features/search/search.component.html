@@ -102,11 +102,9 @@
                 (click)="clearSearch()"
                 (blur)="checkDirty()"
               />
-              @if (tags.length > 0) {
-                <button class="clear-button" matSuffix mat-icon-button aria-label="Clear" (click)="clearTags()">
+                <button *ngIf="tags.length > 0" class="clear-button" matSuffix mat-icon-button aria-label="Clear" (click)="clearTags()">
                   <mat-icon>close</mat-icon>
                 </button>
-              }
             </mat-chip-grid>
             <mat-autocomplete
               #auto="matAutocomplete"
