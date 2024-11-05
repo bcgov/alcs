@@ -82,4 +82,13 @@ export class ApplicationTagService {
 
     return application.tags && application.tags.length > 0 ? application.tags : [];
   }
+
+  async applicationHasTag(fileNumber: string, tagName: string): Promise<boolean> {
+    const application = await this.applicationRepository.findOne({
+      where: { fileNumber: fileNumber },
+      relations: ['tags'],
+    });
+
+    return application?.tags.some((tag) => tag.name === tagName) ?? false;
+  }
 }
