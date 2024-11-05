@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
@@ -6,7 +6,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
-import { Observable, Subject, combineLatestWith, map, startWith, takeUntil } from 'rxjs';
+import { Observable, Subject, combineLatestWith, map, of, startWith, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
@@ -37,6 +37,8 @@ import { TagCategoryService } from '../../services/tag/tag-category/tag-category
 import { TagCategoryDto } from '../../services/tag/tag-category/tag-category.dto';
 import { TagDto } from '../../services/tag/tag.dto';
 import { TagService } from '../../services/tag/tag.service';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
@@ -54,6 +56,15 @@ export class SearchComponent implements OnInit, OnDestroy {
   @ViewChild('searchResultTabs') tabGroup!: MatTabGroup;
   @ViewChild('fileTypeDropDown') fileTypeFilterDropDownComponent!: FileTypeFilterDropDownComponent;
   @ViewChild('statusTypeDropDown') portalStatusFilterDropDownComponent!: FileTypeFilterDropDownComponent;
+  @ViewChild(MatAutocompleteTrigger) autoCompleteTrigger!: MatAutocompleteTrigger;
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement> | undefined;
+  
+  hovered = false;
+  clicked = false;
+  firstClicked = false;
+  showPlaceholder = false;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  filteredTags: Observable<TagDto[]> = of([]);
 
   applications: ApplicationSearchResultDto[] = [];
   applicationTotal = 0;
@@ -74,7 +85,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   itemsPerPage = 20;
   sortDirection: SortDirection = 'desc';
   sortField = 'dateSubmitted';
-
+  tagControl = new FormControl();
   localGovernmentControl = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string[]>([]);
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
@@ -105,6 +116,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
   tags: TagDto[] = [];
+  allTags: TagDto[] = [];
   tagCategories: TagCategoryDto[] = [];
   applicationStatuses: ApplicationStatusDto[] = [];
   allStatuses: (ApplicationStatusDto | NoticeOfIntentStatusDto | NotificationSubmissionStatusDto)[] = [];
@@ -140,6 +152,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setup();
 
+    this.updateFilteredTags();
+
     this.applicationService.$applicationRegions
       .pipe(takeUntil(this.$destroy))
       .pipe(combineLatestWith(this.applicationService.$applicationStatuses, this.activatedRoute.queryParamMap))
@@ -165,7 +179,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.tagService.$tags
       .pipe(takeUntil(this.$destroy))
       .subscribe((result: { data: TagDto[]; total: number }) => {
-      this.tags = result.data;
+      this.allTags = result.data;
     });
 
     this.searchForm.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
@@ -399,6 +413,64 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   onPortalStatusChange(statusCodes: string[]) {
     this.portalStatusControl.setValue(statusCodes);
+  }
+
+  onClick(): void {
+    this.clicked = true;
+    if (!this.firstClicked) {
+      this.firstClicked = true;
+      this.tagControl.setValue('');
+    }
+  }  
+
+  removeTag(tag: TagDto): void {
+    this.tags = this.tags.filter((t) => t.uuid !== tag.uuid)
+    this.updateFilteredTags();
+  }
+
+  clearTags() {
+    this.tags = [];
+    this.updateFilteredTags();
+  }
+
+  clearSearch() {
+    this.tagInput!.nativeElement.value = '';
+  }
+
+  checkDirty() {
+    this.tagInput!.nativeElement.value = this.tags.length > 0 ? ' ' : '';    
+  }
+
+  selectTag(event: MatAutocompleteSelectedEvent) {
+    const selectedTag = event.option.value as TagDto;
+
+    if (!this.tags.find((tag) => tag.uuid === selectedTag.uuid)) {
+      this.tags.push(selectedTag);
+      this.tagInput!.nativeElement.value = ' ';
+      this.tagControl.setValue('');
+      this.searchForm.controls.tag.setValue(this.tags.map((t) => t.uuid));
+    }
+  }
+
+  private filterTags(value: string): TagDto[] {
+    const filterValue = value.toLowerCase();
+    return this.allTags.filter(
+      (tag) => {
+        if (filterValue) {
+          return !this.tags.includes(tag) && tag.name.toLowerCase().startsWith(filterValue)
+        } else {
+          return !this.tags.includes(tag);
+        }
+      }
+    );
+  }
+
+  private updateFilteredTags(): void {
+    this.filteredTags = this.tagControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value?.name || '')),
+      map((name) => this.filterTags(name || '')),
+    );
   }
 
   private async loadGovernments() {

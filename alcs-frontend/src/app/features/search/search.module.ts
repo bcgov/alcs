@@ -12,6 +12,7 @@ import { NoticeOfIntentSearchTableComponent } from './notice-of-intent-search-ta
 import { NotificationSearchTableComponent } from './notification-search-table/notification-search-table.component';
 import { SearchComponent } from './search.component';
 import { InquirySearchTableComponent } from './inquiry-search-table/inquiry-search-table.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
     MatTabsModule,
     MatPaginatorModule,
     MatTreeModule,
+    MatChipsModule,
   ],
 })
 export class SearchModule {}

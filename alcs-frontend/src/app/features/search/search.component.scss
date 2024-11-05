@@ -13,19 +13,13 @@ h4 {
   color: colors.$grey;
 }
 
-.option-right {
-  right: 0;
-  position: absolute;
+.inactive-label {
+  float: right;
 }
 
-.option-left {
-  left: 0;
-  position: absolute;
-}
-
-.option-container {
+.tag-field {
   width: 100%;
-  position: relative;
+  margin-top: 2px;
 }
 
 .info-banner {
@@ -53,6 +47,10 @@ h4 {
       margin-right: 8px;
     }
   }
+}
+
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+  width: 100%;
 }
 
 :host::ng-deep {
