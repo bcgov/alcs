@@ -173,7 +173,6 @@ export class NoticeOfIntentAdvancedSearchService {
 
     const allIds: Set<string>[] = [];
     for (const result of queryResults) {
-      console.log('count');
       const fileNumbers = new Set<string>();
       result.forEach((currentValue) => {
         fileNumbers.add(currentValue.fileNumber);
@@ -182,8 +181,6 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     const finalResult = intersectSets(allIds);
-
-    console.log(finalResult);
 
     const t1 = performance.now();
     this.logger.debug(`ALCS Application pre-search search took ${t1 - t0} milliseconds.`);
