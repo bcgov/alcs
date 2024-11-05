@@ -26,12 +26,16 @@ export class NoticeOfIntentTagService {
       throw new ServiceNotFoundException(`Tag not found with name ${tagName}`);
     }
 
+    if (!tag.isActive) {
+      throw new ServiceValidationException('Could not add the deactivated tag to notice of intent.');
+    }
+
     if (!noi.tags) {
       noi.tags = [];
     }
 
     const tagExists = noi.tags.some((t) => t.uuid === tag.uuid);
-    console.log(tagExists);
+
     if (tagExists) {
       throw new ServiceValidationException(`Tag ${tagName} already exists`);
     }
