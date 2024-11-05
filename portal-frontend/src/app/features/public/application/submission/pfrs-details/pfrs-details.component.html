@@ -289,16 +289,6 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === true">
-    <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
-    <div class="grid-double multiple-documents">
-      <a *ngFor="let file of buildingPlans" (click)="openFile(file)">
-        {{ file.fileName }}
-      </a>
-      <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
-    </div>
-  </ng-container>
-
   <ng-container *ngIf="applicationSubmission.soilIsNewStructure === false">
     <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
     <div class="grid-double">

@@ -59,13 +59,11 @@ export class PfrsDetailsComponent {
     this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
     this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     this.reclamationPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
-    this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
   }
 
   crossSections: PublicDocumentDto[] = [];
   proposalMap: PublicDocumentDto[] = [];
   reclamationPlans: PublicDocumentDto[] = [];
-  buildingPlans: PublicDocumentDto[] = [];
 
   constructor(private router: Router, private publicService: PublicService) {}
 

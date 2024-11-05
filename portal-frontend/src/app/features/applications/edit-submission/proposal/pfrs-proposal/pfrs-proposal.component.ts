@@ -199,8 +199,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         }
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
+        this.updateStructureTypeFields();
         if (this.showErrors) {
           this.form.markAllAsTouched();
+          this.structuresForm.markAllAsTouched();
         }
       }
     });
@@ -244,7 +246,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && (this.form.dirty || this.areComponentsDirty)) {
+    if (this.fileId && (this.form.dirty || this.structuresForm.dirty || this.areComponentsDirty)) {
       const isNewStructure = this.isNewStructure.getRawValue();
       const isFollowUp = this.isFollowUp.getRawValue();
       const followUpIDs = this.followUpIDs.getRawValue();
@@ -410,6 +412,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       return;
     }
 
+    this.structuresSource = new MatTableDataSource(this.proposedStructures);
+
     if (this.hasInput(structure.type)) {
       this.confirmationDialogService
         .openDialog({
@@ -474,12 +478,65 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     if (structure.type !== null && this.structureTypeCounts[structure.type] > 0) {
       this.structureTypeCounts[structure.type]--;
     }
-
     this.structureTypeCounts[newType]++;
 
     structure.type = newType;
 
+    this.updateStructureTypeFields();
     this.form.markAsDirty();
+  }
+
+  updateStructureTypeFields() {
+    // Remove
+
+    if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] === 0) {
+      this.soilStructureFarmUseReason.removeValidators([Validators.required]);
+      this.soilStructureFarmUseReason.reset();
+      this.soilAgriParcelActivity.removeValidators([Validators.required]);
+      this.soilAgriParcelActivity.reset();
+    }
+
+    if (
+      this.structureTypeCounts[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE] === 0 &&
+      this.structureTypeCounts[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE] === 0 &&
+      this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0
+    ) {
+      this.soilStructureResidentialUseReason.reset();
+      this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
+    }
+
+    if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] === 0) {
+      this.soilStructureResidentialAccessoryUseReason.reset();
+      this.soilStructureResidentialAccessoryUseReason.removeValidators([Validators.required]);
+    }
+
+    if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0) {
+      this.soilStructureOtherUseReason.reset();
+      this.soilStructureOtherUseReason.removeValidators([Validators.required]);
+    }
+
+    // Add
+
+    if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] > 0) {
+      this.soilStructureFarmUseReason.setValidators([Validators.required]);
+      this.soilAgriParcelActivity.setValidators([Validators.required]);
+    }
+
+    if (
+      this.structureTypeCounts[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE] > 0 ||
+      this.structureTypeCounts[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE] > 0 ||
+      this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0
+    ) {
+      this.soilStructureResidentialUseReason.setValidators([Validators.required]);
+    }
+
+    if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0) {
+      this.soilStructureResidentialAccessoryUseReason.setValidators([Validators.required]);
+    }
+
+    if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] > 0) {
+      this.soilStructureOtherUseReason.setValidators([Validators.required]);
+    }
   }
 
   onStructureAdd() {
@@ -523,10 +580,16 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     if (type) {
       this.structureTypeCounts[type]++;
     }
+
+    this.structuresForm.markAsDirty();
   }
 
   isWarning(index: number, item: ProposedStructure): boolean {
-    return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
+    return (
+      item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE ||
+      item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE ||
+      item.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE
+    );
   }
 
   onStructureRemove(id: string) {
