@@ -4,10 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
 import { QueryRunner, Repository } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
-import {
-  getNextDayToPacific,
-  getStartOfDayToPacific,
-} from '../../../utils/pacific-date-time-helper';
+import { getNextDayToPacific, getStartOfDayToPacific } from '../../../utils/pacific-date-time-helper';
 import { NOI_SEARCH_FILTERS } from '../../../utils/search/notice-of-intent-search-filters';
 import { intersectSets } from '../../../utils/set-helper';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -49,11 +46,7 @@ export class NoticeOfIntentAdvancedSearchService {
       fileNumbers = new Set<string>(cachedNumbers);
     } else {
       fileNumbers = await this.searchForFileNumbers(searchDto);
-      await client.setEx(
-        searchKey,
-        SEARCH_CACHE_TIME,
-        JSON.stringify([...fileNumbers.values()]),
-      );
+      await client.setEx(searchKey, SEARCH_CACHE_TIME, JSON.stringify([...fileNumbers.values()]));
     }
 
     if (fileNumbers.size === 0) {
@@ -65,11 +58,7 @@ export class NoticeOfIntentAdvancedSearchService {
 
     let query = this.noiSearchRepository
       .createQueryBuilder('noiSearch', queryRunner)
-      .innerJoinAndMapOne(
-        'noiSearch.noticeOfIntentType',
-        'noiSearch.noticeOfIntentType',
-        'noticeOfIntentType',
-      )
+      .innerJoinAndMapOne('noiSearch.noticeOfIntentType', 'noiSearch.noticeOfIntentType', 'noticeOfIntentType')
       .andWhere('noiSearch.fileNumber IN(:...fileNumbers)', {
         fileNumbers: [...fileNumbers.values()],
       });
@@ -77,11 +66,7 @@ export class NoticeOfIntentAdvancedSearchService {
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
-      .orderBy(
-        sortQuery,
-        searchDto.sortDirection,
-        searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST',
-      )
+      .orderBy(sortQuery, searchDto.sortDirection, searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
@@ -123,10 +108,7 @@ export class NoticeOfIntentAdvancedSearchService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      const promise = NOI_SEARCH_FILTERS.addFileNumberResults(
-        searchDto,
-        this.noiRepository,
-      );
+      const promise = NOI_SEARCH_FILTERS.addFileNumberResults(searchDto, this.noiRepository);
       promises.push(promise);
     }
 
@@ -135,19 +117,22 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      const promise = NOI_SEARCH_FILTERS.addPortalStatusResults(
-        searchDto,
-        this.noiSubmissionRepository,
-      );
+      const promise = NOI_SEARCH_FILTERS.addPortalStatusResults(searchDto, this.noiSubmissionRepository);
+      promises.push(promise);
+    }
+
+    if (searchDto.tagIds && searchDto.tagIds.length > 0) {
+      const promise = NOI_SEARCH_FILTERS.addTagsResults(searchDto, this.noiRepository);
+      promises.push(promise);
+    }
+
+    if (searchDto.tagCategoryId) {
+      const promise = NOI_SEARCH_FILTERS.addTagCategoryResults(searchDto, this.noiRepository);
       promises.push(promise);
     }
 
     if (searchDto.governmentName) {
-      const promise = NOI_SEARCH_FILTERS.addGovernmentResults(
-        searchDto,
-        this.noiRepository,
-        this.governmentRepository,
-      );
+      const promise = NOI_SEARCH_FILTERS.addGovernmentResults(searchDto, this.noiRepository, this.governmentRepository);
       promises.push(promise);
     }
 
@@ -156,18 +141,12 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     if (searchDto.name) {
-      const promise = NOI_SEARCH_FILTERS.addNameResults(
-        searchDto,
-        this.noiSubmissionRepository,
-      );
+      const promise = NOI_SEARCH_FILTERS.addNameResults(searchDto, this.noiSubmissionRepository);
       promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
-      const promise = NOI_SEARCH_FILTERS.addParcelResults(
-        searchDto,
-        this.noiSubmissionRepository,
-      );
+      const promise = NOI_SEARCH_FILTERS.addParcelResults(searchDto, this.noiSubmissionRepository);
       promises.push(promise);
     }
 
@@ -176,10 +155,7 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     if (searchDto.fileTypes.includes('NOI')) {
-      const promise = NOI_SEARCH_FILTERS.addFileTypeResults(
-        searchDto,
-        this.noiRepository,
-      );
+      const promise = NOI_SEARCH_FILTERS.addFileTypeResults(searchDto, this.noiRepository);
       promises.push(promise);
     }
 
@@ -207,16 +183,11 @@ export class NoticeOfIntentAdvancedSearchService {
     const finalResult = intersectSets(allIds);
 
     const t1 = performance.now();
-    this.logger.debug(
-      `ALCS Application pre-search search took ${t1 - t0} milliseconds.`,
-    );
+    this.logger.debug(`ALCS Application pre-search search took ${t1 - t0} milliseconds.`);
     return finalResult;
   }
 
-  private addDecisionResolutionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addDecisionResolutionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     let query = this.noiRepository
       .createQueryBuilder('noi')
       .select('noi.fileNumber')
@@ -227,12 +198,9 @@ export class NoticeOfIntentAdvancedSearchService {
       );
 
     if (searchDto.resolutionNumber !== undefined) {
-      query = query.andWhere(
-        'decision.resolution_number = :resolution_number',
-        {
-          resolution_number: searchDto.resolutionNumber,
-        },
-      );
+      query = query.andWhere('decision.resolution_number = :resolution_number', {
+        resolution_number: searchDto.resolutionNumber,
+      });
     }
 
     if (searchDto.resolutionYear !== undefined) {
@@ -243,10 +211,7 @@ export class NoticeOfIntentAdvancedSearchService {
     promises.push(query.getMany());
   }
 
-  private addLegacyIDResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addLegacyIDResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.noiRepository.find({
       where: {
         legacyId: searchDto.legacyId,
@@ -258,10 +223,7 @@ export class NoticeOfIntentAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addRegionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addRegionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.noiRepository.find({
       where: {
         regionCode: searchDto.regionCode,
@@ -273,42 +235,24 @@ export class NoticeOfIntentAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addSubmittedDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    let query = this.noiRepository
-      .createQueryBuilder('noi')
-      .select('noi.fileNumber');
+  private addSubmittedDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
+    let query = this.noiRepository.createQueryBuilder('noi').select('noi.fileNumber');
 
     if (searchDto.dateSubmittedFrom !== undefined) {
-      query = query.andWhere(
-        'noi.date_submitted_to_alc >= :date_submitted_from',
-        {
-          date_submitted_from: getStartOfDayToPacific(
-            searchDto.dateSubmittedFrom,
-          ).toISOString(),
-        },
-      );
+      query = query.andWhere('noi.date_submitted_to_alc >= :date_submitted_from', {
+        date_submitted_from: getStartOfDayToPacific(searchDto.dateSubmittedFrom).toISOString(),
+      });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query = query.andWhere(
-        'noi.date_submitted_to_alc < :date_submitted_to',
-        {
-          date_submitted_to: getNextDayToPacific(
-            searchDto.dateSubmittedTo,
-          ).toISOString(),
-        },
-      );
+      query = query.andWhere('noi.date_submitted_to_alc < :date_submitted_to', {
+        date_submitted_to: getNextDayToPacific(searchDto.dateSubmittedTo).toISOString(),
+      });
     }
     promises.push(query.getMany());
   }
 
-  private addDecisionDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addDecisionDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     let query = this.noiRepository
       .createQueryBuilder('noi')
       .select('noi.fileNumber')
@@ -320,17 +264,13 @@ export class NoticeOfIntentAdvancedSearchService {
 
     if (searchDto.dateDecidedFrom) {
       query = query.andWhere('decision.date >= :decision_date', {
-        decision_date: getStartOfDayToPacific(
-          searchDto.dateDecidedFrom,
-        ).toISOString(),
+        decision_date: getStartOfDayToPacific(searchDto.dateDecidedFrom).toISOString(),
       });
     }
 
     if (searchDto.dateDecidedTo) {
       query = query.andWhere('decision.date < :decision_date_to', {
-        decision_date_to: getNextDayToPacific(
-          searchDto.dateDecidedTo,
-        ).toISOString(),
+        decision_date_to: getNextDayToPacific(searchDto.dateDecidedTo).toISOString(),
       });
     }
     promises.push(query.getMany());

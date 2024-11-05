@@ -79,6 +79,65 @@
         </mat-form-field>
       </div>
     </div>
+    <div class="row">
+      <div class="column">
+        <div
+          class="tag-container"
+          [ngClass]="{ hovered: hovered, clicked: clicked }"
+          (mouseleave)="hovered = false"
+          (mouseenter)="hovered = true"
+          (click)="onClick()"
+        >
+          <mat-form-field class="tag-field" appearance="outline">
+            <mat-label>Tags</mat-label>
+            <mat-chip-grid #chipGrid>
+              <app-tag-chip *ngFor="let tag of tags" (removeClicked)="removeTag(tag)" [tag]="tag"></app-tag-chip>
+              <input
+                #tagInput
+                [matChipInputFor]="chipGrid"
+                [formControl]="tagControl"
+                [matAutocomplete]="auto"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (focus)="autoCompleteTrigger.openPanel()"
+                (click)="clearSearch()"
+                (blur)="checkDirty()"
+              />
+              @if (tags.length > 0) {
+                <button class="clear-button" matSuffix mat-icon-button aria-label="Clear" (click)="clearTags()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </mat-chip-grid>
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="selectTag($event)"
+              autoActiveFirstOption
+              class="auto-complete"
+            >
+              <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                {{ tag.name }} <span class="category-label" *ngIf="tag.category"> : {{ tag.category.name }}</span>
+                <span *ngIf="!tag.isActive" class="inactive-label">&nbsp;Inactive</span>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="column">
+        <ng-select
+          appearance="outline"
+          [items]="tagCategories"
+          appendTo="body"
+          placeholder="Tag Categories"
+          bindLabel="name"
+          bindValue="uuid"
+          formControlName="tagCategory"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.name }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
   </div>
 
   <div class="search-fields-wrapper">
