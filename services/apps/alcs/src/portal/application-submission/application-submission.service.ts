@@ -35,6 +35,7 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { ApplicationTagService } from '../../alcs/application/application-tag/application-tag.service';
 
 const LG_VISIBLE_STATUSES = [
   SUBMISSION_STATUS.INCOMPLETE,
@@ -82,6 +83,7 @@ export class ApplicationSubmissionService {
     private generateReviewDocumentService: GenerateReviewDocumentService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectMapper() private mapper: Mapper,
+    private applicationTagService: ApplicationTagService,
   ) {}
 
   async getOrFailByFileNumber(fileNumber: string) {
@@ -196,6 +198,8 @@ export class ApplicationSubmissionService {
     this.setNARUFields(applicationSubmission, updateDto);
     this.setInclusionExclusionFields(applicationSubmission, updateDto);
     this.setCovenantFields(applicationSubmission, updateDto);
+
+    await this.applyTags(applicationSubmission);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -1224,5 +1228,53 @@ export class ApplicationSubmissionService {
       ownerGuid: result[0]?.bceid_business_guid,
       localGovernmentGuid: result[0]?.localGovernment_bceid_business_guid,
     };
+  }
+
+  private async applyTags(applicationSubmission: ApplicationSubmission) {
+    switch (applicationSubmission.typeCode) {
+      case 'NARU':
+        await this.applyNaruTags(applicationSubmission);
+        break;
+    }
+  }
+
+  private async applyNaruTags(applicationSubmission: ApplicationSubmission) {
+    await this.conditionallyApplyTag(
+      applicationSubmission.fileNumber,
+      applicationSubmission.naruWillBeOverFiveHundredM2 ?? false,
+      'Principal Residence > 500m2',
+    );
+    await this.conditionallyApplyTag(
+      applicationSubmission.fileNumber,
+      applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing ?? false,
+      'Temporary Foreign Worker Housing',
+    );
+    await this.conditionallyApplyTag(
+      applicationSubmission.fileNumber,
+      applicationSubmission.naruWillRetainResidence ?? false,
+      'Reside & Replace',
+    );
+    await this.conditionallyApplyTag(
+      applicationSubmission.fileNumber,
+      applicationSubmission.naruWillHaveAdditionalResidence ?? false,
+      'Additional Residence',
+    );
+    await this.conditionallyApplyTag(
+      applicationSubmission.fileNumber,
+      applicationSubmission.naruWillImportFill ?? false,
+      'Fill Placement',
+    );
+  }
+
+  private async conditionallyApplyTag(fileNumber: string, condition: boolean, tagName: string) {
+    const tagExists = await this.applicationTagService.applicationHasTag(fileNumber, tagName);
+
+    if (condition && !tagExists) {
+      await this.applicationTagService.addTagToApplication(fileNumber, tagName);
+    }
+
+    if (!condition && tagExists) {
+      await this.applicationTagService.removeTagFromApplication(fileNumber, tagName);
+    }
   }
 }
