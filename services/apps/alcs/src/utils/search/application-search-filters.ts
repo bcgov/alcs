@@ -48,6 +48,11 @@ export const APP_SEARCH_FILTERS = {
       .where('application_tag.tag_uuid IN (:...tagIds)', {
         tagIds: searchDto.tagIds,
       })
+      .groupBy('app.fileNumber')
+      .addGroupBy('app.uuid')
+      .having('count(distinct tag_uuid) = :countCategories', {
+        countCategories: searchDto.tagIds?.length,
+      })
       .getMany();
   },
   addTagCategoryResults: (searchDto: SearchRequestDto | InboxRequestDto, appRepository: Repository<Application>) => {

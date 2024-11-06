@@ -42,6 +42,11 @@ export const NOI_SEARCH_FILTERS = {
       .where('notice_of_intent_tag.tag_uuid IN (:...tagIds)', {
         tagIds: searchDto.tagIds,
       })
+      .groupBy('noi.fileNumber')
+      .addGroupBy('noi.uuid')
+      .having('count(distinct tag_uuid) = :countCategories', {
+        countCategories: searchDto.tagIds?.length,
+      })
       .getMany();
   },
   addTagCategoryResults: (searchDto: SearchRequestDto | InboxRequestDto, noiRepository: Repository<NoticeOfIntent>) => {

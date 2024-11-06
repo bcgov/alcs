@@ -446,7 +446,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     if (!this.tags.find((tag) => tag.uuid === selectedTag.uuid)) {
       this.tags.push(selectedTag);
-      this.tagInput!.nativeElement.value = ' ';
+      this.tagInput!.nativeElement.value = '';
       this.tagControl.setValue('');
       this.searchForm.controls.tag.setValue(this.tags.map((t) => t.uuid));
     }
