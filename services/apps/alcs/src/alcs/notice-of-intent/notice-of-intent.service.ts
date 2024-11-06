@@ -426,7 +426,7 @@ export class NoticeOfIntentService {
     await this.repository.save(existingNoticeOfIntent);
 
     if (createDto.tags && createDto.tags.length > 0) {
-      createDto.tags.map(async (tag) => {
+      for (const tag of createDto.tags) {
         try {
           await this.noticeOfIntentTagService.addTagToNoticeOfIntent(createDto.fileNumber, tag);
         } catch (e) {
@@ -434,7 +434,7 @@ export class NoticeOfIntentService {
             `Could not add tag ${tag} to application number ${createDto.fileNumber} with error: ${e.error}`,
           );
         }
-      });
+      }
     }
 
     return this.getByFileNumber(createDto.fileNumber);
