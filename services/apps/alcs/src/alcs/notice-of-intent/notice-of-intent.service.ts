@@ -1,19 +1,9 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import {
-  FindOptionsRelations,
-  FindOptionsWhere,
-  IsNull,
-  Like,
-  Not,
-  Repository,
-} from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, IsNull, Like, Not, Repository } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { PORTAL_TO_ALCS_STRUCTURE_MAP } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
@@ -30,12 +20,9 @@ import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submis
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
-import {
-  CreateNoticeOfIntentServiceDto,
-  NoticeOfIntentDto,
-  UpdateNoticeOfIntentDto,
-} from './notice-of-intent.dto';
+import { CreateNoticeOfIntentServiceDto, NoticeOfIntentDto, UpdateNoticeOfIntentDto } from './notice-of-intent.dto';
 import { NoticeOfIntent } from './notice-of-intent.entity';
+import { NoticeOfIntentTagService } from './notice-of-intent-tag/notice-of-intent-tag.service';
 
 @Injectable()
 export class NoticeOfIntentService {
@@ -70,13 +57,10 @@ export class NoticeOfIntentService {
     private localGovernmentService: LocalGovernmentService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
+    private noticeOfIntentTagService: NoticeOfIntentTagService,
   ) {}
 
-  async create(
-    createDto: CreateNoticeOfIntentServiceDto,
-    board?: Board,
-    persist = true,
-  ) {
+  async create(createDto: CreateNoticeOfIntentServiceDto, board?: Board, persist = true) {
     await this.fileNumberService.checkValidFileNumber(createDto.fileNumber);
 
     const type = await this.typeRepository.findOneOrFail({
@@ -96,11 +80,7 @@ export class NoticeOfIntentService {
     });
 
     if (board) {
-      noticeOfIntent.card = await this.cardService.create(
-        CARD_TYPE.NOI,
-        board,
-        false,
-      );
+      noticeOfIntent.card = await this.cardService.create(CARD_TYPE.NOI, board, false);
     }
 
     if (persist) {
@@ -114,9 +94,7 @@ export class NoticeOfIntentService {
   async getOrFailByUuid(uuid: string) {
     const noticeOfIntent = await this.get(uuid);
     if (!noticeOfIntent) {
-      throw new ServiceNotFoundException(
-        `Failed to find notice of intent with uuid ${uuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find notice of intent with uuid ${uuid}`);
     }
 
     return noticeOfIntent;
@@ -141,9 +119,7 @@ export class NoticeOfIntentService {
     });
 
     if (!noticeOfIntent) {
-      throw new ServiceNotFoundException(
-        `Failed to find notice of intent with card uuid ${cardUuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find notice of intent with card uuid ${cardUuid}`);
     }
 
     return noticeOfIntent;
@@ -221,19 +197,14 @@ export class NoticeOfIntentService {
   async update(fileNumber: string, updateDto: UpdateNoticeOfIntentDto) {
     const noticeOfIntent = await this.getByFileNumber(fileNumber);
 
-    noticeOfIntent.summary = filterUndefined(
-      updateDto.summary,
-      noticeOfIntent.summary,
-    );
+    noticeOfIntent.summary = filterUndefined(updateDto.summary, noticeOfIntent.summary);
     if (updateDto.localGovernmentUuid) {
       noticeOfIntent.localGovernmentUuid = updateDto.localGovernmentUuid;
     }
 
     if (updateDto.subtype) {
       const subtypes = await this.listSubtypes();
-      const selectedSubtypes = updateDto.subtype.map(
-        (code) => subtypes.find((subtype) => subtype.code === code)!,
-      );
+      const selectedSubtypes = updateDto.subtype.map((code) => subtypes.find((subtype) => subtype.code === code)!);
 
       noticeOfIntent.subtype = selectedSubtypes;
     }
@@ -253,25 +224,13 @@ export class NoticeOfIntentService {
       noticeOfIntent.dateReceivedAllItems,
     );
 
-    noticeOfIntent.feePaidDate = filterUndefined(
-      formatIncomingDate(updateDto.feePaidDate),
-      noticeOfIntent.feePaidDate,
-    );
+    noticeOfIntent.feePaidDate = filterUndefined(formatIncomingDate(updateDto.feePaidDate), noticeOfIntent.feePaidDate);
 
-    noticeOfIntent.feeWaived = filterUndefined(
-      updateDto.feeWaived,
-      noticeOfIntent.feeWaived,
-    );
+    noticeOfIntent.feeWaived = filterUndefined(updateDto.feeWaived, noticeOfIntent.feeWaived);
 
-    noticeOfIntent.feeSplitWithLg = filterUndefined(
-      updateDto.feeSplitWithLg,
-      noticeOfIntent.feeSplitWithLg,
-    );
+    noticeOfIntent.feeSplitWithLg = filterUndefined(updateDto.feeSplitWithLg, noticeOfIntent.feeSplitWithLg);
 
-    noticeOfIntent.feeAmount = filterUndefined(
-      updateDto.feeAmount,
-      noticeOfIntent.feeAmount,
-    );
+    noticeOfIntent.feeAmount = filterUndefined(updateDto.feeAmount, noticeOfIntent.feeAmount);
 
     noticeOfIntent.dateSubmittedToAlc = filterUndefined(
       formatIncomingDate(updateDto.dateSubmittedToAlc),
@@ -279,39 +238,19 @@ export class NoticeOfIntentService {
     );
 
     noticeOfIntent.retroactive =
-      updateDto.retroactive !== undefined
-        ? updateDto.retroactive
-        : noticeOfIntent.retroactive;
+      updateDto.retroactive !== undefined ? updateDto.retroactive : noticeOfIntent.retroactive;
 
-    noticeOfIntent.alrArea = filterUndefined(
-      updateDto.alrArea,
-      noticeOfIntent.alrArea,
-    );
+    noticeOfIntent.alrArea = filterUndefined(updateDto.alrArea, noticeOfIntent.alrArea);
 
-    noticeOfIntent.agCap = filterUndefined(
-      updateDto.agCap,
-      noticeOfIntent.agCap,
-    );
+    noticeOfIntent.agCap = filterUndefined(updateDto.agCap, noticeOfIntent.agCap);
 
-    noticeOfIntent.agCapConsultant = filterUndefined(
-      updateDto.agCapConsultant,
-      noticeOfIntent.agCapConsultant,
-    );
+    noticeOfIntent.agCapConsultant = filterUndefined(updateDto.agCapConsultant, noticeOfIntent.agCapConsultant);
 
-    noticeOfIntent.agCapMap = filterUndefined(
-      updateDto.agCapMap,
-      noticeOfIntent.agCapMap,
-    );
+    noticeOfIntent.agCapMap = filterUndefined(updateDto.agCapMap, noticeOfIntent.agCapMap);
 
-    noticeOfIntent.agCapSource = filterUndefined(
-      updateDto.agCapSource,
-      noticeOfIntent.agCapSource,
-    );
+    noticeOfIntent.agCapSource = filterUndefined(updateDto.agCapSource, noticeOfIntent.agCapSource);
 
-    noticeOfIntent.staffObservations = filterUndefined(
-      updateDto.staffObservations,
-      noticeOfIntent.staffObservations,
-    );
+    noticeOfIntent.staffObservations = filterUndefined(updateDto.staffObservations, noticeOfIntent.staffObservations);
 
     noticeOfIntent.proposalEndDate = filterUndefined(
       formatIncomingDate(updateDto.proposalEndDate),
@@ -323,10 +262,7 @@ export class NoticeOfIntentService {
       noticeOfIntent.proposalEndDate2,
     );
 
-    noticeOfIntent.hideFromPortal = filterUndefined(
-      updateDto.hideFromPortal,
-      noticeOfIntent.hideFromPortal,
-    );
+    noticeOfIntent.hideFromPortal = filterUndefined(updateDto.hideFromPortal, noticeOfIntent.hideFromPortal);
 
     if (updateDto.typeCode) {
       noticeOfIntent.type = await this.typeRepository.findOneOrFail({
@@ -337,9 +273,7 @@ export class NoticeOfIntentService {
     }
 
     if (updateDto.regionCode) {
-      noticeOfIntent.region = await this.codeService.fetchRegion(
-        updateDto.regionCode,
-      );
+      noticeOfIntent.region = await this.codeService.fetchRegion(updateDto.regionCode);
     }
 
     await this.repository.save(noticeOfIntent);
@@ -349,10 +283,7 @@ export class NoticeOfIntentService {
     return this.getByFileNumber(noticeOfIntent.fileNumber);
   }
 
-  private async updateStatus(
-    updateDto: UpdateNoticeOfIntentDto,
-    noticeOfIntent: NoticeOfIntent,
-  ) {
+  private async updateStatus(updateDto: UpdateNoticeOfIntentDto, noticeOfIntent: NoticeOfIntent) {
     try {
       if (updateDto.dateAcknowledgedIncomplete !== undefined) {
         await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
@@ -469,48 +400,43 @@ export class NoticeOfIntentService {
     });
 
     if (!existingNoticeOfIntent) {
-      throw new ServiceValidationException(
-        `Notice of Intent with file number does not exist ${createDto.fileNumber}`,
-      );
+      throw new ServiceValidationException(`Notice of Intent with file number does not exist ${createDto.fileNumber}`);
     }
 
     if (!createDto.localGovernmentUuid) {
-      throw new ServiceValidationException(
-        `Local government is not set for notice of intent ${createDto.fileNumber}`,
-      );
+      throw new ServiceValidationException(`Local government is not set for notice of intent ${createDto.fileNumber}`);
     }
 
-    let region = createDto.regionCode
-      ? await this.codeService.fetchRegion(createDto.regionCode)
-      : undefined;
+    let region = createDto.regionCode ? await this.codeService.fetchRegion(createDto.regionCode) : undefined;
 
     if (!region) {
-      const localGov = await this.localGovernmentService.getByUuid(
-        createDto.localGovernmentUuid,
-      );
+      const localGov = await this.localGovernmentService.getByUuid(createDto.localGovernmentUuid);
       region = localGov?.preferredRegion;
     }
 
     existingNoticeOfIntent.fileNumber = createDto.fileNumber;
     existingNoticeOfIntent.applicant = createDto.applicant;
-    existingNoticeOfIntent.dateSubmittedToAlc =
-      createDto.dateSubmittedToAlc || null;
+    existingNoticeOfIntent.dateSubmittedToAlc = createDto.dateSubmittedToAlc || null;
     existingNoticeOfIntent.localGovernmentUuid = createDto.localGovernmentUuid;
     existingNoticeOfIntent.typeCode = createDto.typeCode;
     existingNoticeOfIntent.region = region;
     existingNoticeOfIntent.card = new Card();
     existingNoticeOfIntent.card.typeCode = CARD_TYPE.NOI;
 
-    if (createDto.subtypes && createDto.subtypes.length > 0) {
-      const subtypes = await this.listSubtypes();
-      const selectedSubtypes = subtypes.filter((subtype) =>
-        createDto.subtypes!.includes(subtype.code),
-      );
+    await this.repository.save(existingNoticeOfIntent);
 
-      existingNoticeOfIntent.subtype = selectedSubtypes;
+    if (createDto.tags && createDto.tags.length > 0) {
+      createDto.tags.map(async (tag) => {
+        try {
+          await this.noticeOfIntentTagService.addTagToNoticeOfIntent(createDto.fileNumber, tag);
+        } catch (e) {
+          this.logger.error(
+            `Could not add tag ${tag} to application number ${createDto.fileNumber} with error: ${e.error}`,
+          );
+        }
+      });
     }
 
-    await this.repository.save(existingNoticeOfIntent);
     return this.getByFileNumber(createDto.fileNumber);
   }
 

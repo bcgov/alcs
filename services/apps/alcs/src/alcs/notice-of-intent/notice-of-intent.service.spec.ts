@@ -25,6 +25,7 @@ import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
+import { NoticeOfIntentTagService } from './notice-of-intent-tag/notice-of-intent-tag.service';
 
 describe('NoticeOfIntentService', () => {
   let service: NoticeOfIntentService;
@@ -37,6 +38,7 @@ describe('NoticeOfIntentService', () => {
   let mockCodeService: DeepMocked<CodeService>;
   let mockSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
   let mockNoticeOfIntentSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
+  let mockNoticeOfIntentTagService: DeepMocked<NoticeOfIntentTagService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
@@ -48,6 +50,7 @@ describe('NoticeOfIntentService', () => {
     mockCodeService = createMock();
     mockSubmissionStatusService = createMock();
     mockNoticeOfIntentSubmissionService = createMock();
+    mockNoticeOfIntentTagService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -94,6 +97,7 @@ describe('NoticeOfIntentService', () => {
           provide: NoticeOfIntentSubmissionService,
           useValue: mockNoticeOfIntentSubmissionService,
         },
+        { provide: NoticeOfIntentTagService, useValue: mockNoticeOfIntentTagService },
       ],
     }).compile();
 
@@ -113,9 +117,7 @@ describe('NoticeOfIntentService', () => {
     mockCardService.create.mockResolvedValue(mockCard);
     mockFileNumberService.checkValidFileNumber.mockResolvedValue(true);
     mockCodeService.fetchRegion.mockResolvedValue(new ApplicationRegion());
-    mockTypeRepository.findOneOrFail.mockResolvedValue(
-      new NoticeOfIntentType(),
-    );
+    mockTypeRepository.findOneOrFail.mockResolvedValue(new NoticeOfIntentType());
 
     await service.create(
       {
@@ -180,9 +182,7 @@ describe('NoticeOfIntentService', () => {
     const promise = service.getOrFailByUuid('uuid');
 
     await expect(promise).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Failed to find notice of intent with uuid uuid`,
-      ),
+      new ServiceNotFoundException(`Failed to find notice of intent with uuid uuid`),
     );
 
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
@@ -261,12 +261,8 @@ describe('NoticeOfIntentService', () => {
     expect(res).toBeDefined();
     expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(
-      mockSubmissionStatusService.setStatusDateByFileNumber,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockSubmissionStatusService.setStatusDateByFileNumber,
-    ).toHaveBeenCalledWith(
+    expect(mockSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
       undefined,
       NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
       new Date(5),
