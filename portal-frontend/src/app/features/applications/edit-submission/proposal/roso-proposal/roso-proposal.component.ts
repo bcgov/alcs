@@ -343,8 +343,6 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
             this.setStructureTypeInput(newStructure, result.dto.type);
           }
           this.structuresSource = new MatTableDataSource(this.proposedStructures);
-
-          this.structureTypeCounts[result.dto.type!]++;
         });
     } else {
       this.addControl();
@@ -403,6 +401,8 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     this.structuresForm.removeControl(`${id}-type`);
     this.structuresForm.removeControl(`${id}-area`);
     this.structuresForm.markAsDirty();
+
+    this.updateStructureTypeFields();
 
     if (structureToDelete.type !== null && this.structureTypeCounts[structureToDelete.type] > 0) {
       this.structureTypeCounts[structureToDelete.type]--;
@@ -532,9 +532,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] === 0) {
       this.soilStructureFarmUseReason.removeValidators([Validators.required]);
-      this.soilStructureFarmUseReason.reset();
       this.soilAgriParcelActivity.removeValidators([Validators.required]);
-      this.soilAgriParcelActivity.reset();
     }
 
     if (
@@ -542,17 +540,14 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       this.structureTypeCounts[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE] === 0 &&
       this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0
     ) {
-      this.soilStructureResidentialUseReason.reset();
       this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] === 0) {
-      this.soilStructureResidentialAccessoryUseReason.reset();
       this.soilStructureResidentialAccessoryUseReason.removeValidators([Validators.required]);
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0) {
-      this.soilStructureOtherUseReason.reset();
       this.soilStructureOtherUseReason.removeValidators([Validators.required]);
     }
 
@@ -560,7 +555,9 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] > 0) {
       this.soilStructureFarmUseReason.setValidators([Validators.required]);
+      this.soilStructureFarmUseReason.reset();
       this.soilAgriParcelActivity.setValidators([Validators.required]);
+      this.soilAgriParcelActivity.reset();
     }
 
     if (
@@ -569,14 +566,17 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0
     ) {
       this.soilStructureResidentialUseReason.setValidators([Validators.required]);
+      this.soilStructureResidentialUseReason.reset();
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0) {
       this.soilStructureResidentialAccessoryUseReason.setValidators([Validators.required]);
+      this.soilStructureResidentialAccessoryUseReason.reset();
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] > 0) {
       this.soilStructureOtherUseReason.setValidators([Validators.required]);
+      this.soilStructureOtherUseReason.reset();
     }
   }
 
