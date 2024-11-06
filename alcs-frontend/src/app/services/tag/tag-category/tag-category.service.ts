@@ -50,8 +50,8 @@ export class TagCategoryService {
       return await firstValueFrom(this.http.post<TagCategoryDto>(`${this.url}`, createDto));
     } catch (e) {
       const res = e as HttpErrorResponse;
-      if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('duplicate key')) {
-        throw e as HttpErrorResponse;
+      if (res.error.statusCode === HttpStatusCode.Conflict) {
+        throw res;
       } else {
         console.error(e);
         this.toastService.showErrorToast('Failed to create tag category');
@@ -65,8 +65,8 @@ export class TagCategoryService {
       return await firstValueFrom(this.http.patch<TagCategoryDto>(`${this.url}/${uuid}`, updateDto));
     } catch (e) {
       const res = e as HttpErrorResponse;
-      if (res.error.statusCode === HttpStatusCode.Conflict && res.error.message.includes('duplicate key')) {
-        throw e as HttpErrorResponse;
+      if (res.error.statusCode === HttpStatusCode.Conflict) {
+        throw res;
       } else {
         console.error(e);
         this.toastService.showErrorToast('Failed to update tag category');

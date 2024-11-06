@@ -7,7 +7,7 @@
     <div class="full-width">
       <mat-form-field class="description" appearance="outline">
         <mat-label>Name</mat-label>
-        <input required matInput id="name" [(ngModel)]="name" name="name" (ngModelChange)="onChange()" />
+        <input required matInput id="name" [(ngModel)]="name" name="name" (ngModelChange)="onChange()" [formControl]="nameControl" />
       </mat-form-field>
       <div class="warning-section">
         <div class="warning" *ngIf="showNameWarning">

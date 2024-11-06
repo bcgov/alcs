@@ -19,7 +19,7 @@ export class Tag extends Base {
   uuid: string;
 
   @AutoMap()
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @AutoMap()
@@ -33,7 +33,7 @@ export class Tag extends Base {
 
   @ManyToMany(() => Application, (application) => application.tags)
   applications: Application[];
-  
+
   @ManyToMany(() => NoticeOfIntent, (noticeOfIntent) => noticeOfIntent.tags)
   noticeOfIntents: NoticeOfIntent[];
 }
