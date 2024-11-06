@@ -153,7 +153,10 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
         this.proposedStructures = [];
         this.structuresForm = new FormGroup({});
         for (const structure of applicationSubmission.soilProposedStructures) {
-          this.addControl(structure.type, structure.area);
+          const newStructure = this.addControl(structure.area);
+          if (structure.type !== null) {
+            this.setStructureTypeInput(newStructure, structure.type);
+          }
         }
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
@@ -335,7 +338,10 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
         .beforeClosed()
         .subscribe(async (result: { isEditing: boolean; structureId: string; dto: ProposedStructure }) => {
           if (!result) return;
-          this.addControl(result.dto.type, result.dto.area);
+          const newStructure = this.addControl(result.dto.area);
+          if (result.dto.type !== null) {
+            this.setStructureTypeInput(newStructure, result.dto.type);
+          }
           this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
           this.structureTypeCounts[result.dto.type!]++;
@@ -346,24 +352,22 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  addControl(type: STRUCTURE_TYPES | null = null, area: number | null = null) {
+  addControl(area: number | null = null): FormProposedStructure {
     const areaStr = area ? area.toString(10) : null;
-    const newStructure = { type, area: areaStr, id: v4() };
+    const newStructure: FormProposedStructure = { type: null, area: areaStr, id: v4() };
     this.proposedStructures.push(newStructure);
     this.structuresForm.addControl(
       `${newStructure.id}-type`,
-      new FormControl<string | null>(type, [Validators.required]),
+      new FormControl<string | null>(null, [Validators.required]),
     );
     this.structuresForm.addControl(
       `${newStructure.id}-area`,
       new FormControl<string | null>(areaStr, [Validators.required]),
     );
 
-    if (type) {
-      this.structureTypeCounts[type]++;
-    }
-
     this.structuresForm.markAsDirty();
+
+    return newStructure;
   }
 
   isWarning(index: number, item: ProposedStructure): boolean {
