@@ -43,13 +43,13 @@ export class SubdDetailsComponent {
   constructor(
     private router: Router,
     private applicationDocumentService: ApplicationDocumentService,
-    private applicationParcelService: ApplicationParcelService
+    private applicationParcelService: ApplicationParcelService,
   ) {}
 
   async onEditSection(step: number) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`
+        `/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`,
       );
     } else {
       await this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
@@ -69,7 +69,7 @@ export class SubdDetailsComponent {
       if (parcels) {
         this.totalTargetAcres = parcels
           .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
-          .toFixed(2);
+          .toFixed(5);
       }
     }
   }
