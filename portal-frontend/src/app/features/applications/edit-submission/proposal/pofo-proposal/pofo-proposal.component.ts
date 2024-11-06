@@ -407,6 +407,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     this.updateStructureCounts(structure.type, newType);
 
     structure.type = newType;
+    this.structuresForm.get(`${structure.id}-type`)?.setValue(newType);
 
     this.updateStructureTypeFields();
     this.form.markAsDirty();
