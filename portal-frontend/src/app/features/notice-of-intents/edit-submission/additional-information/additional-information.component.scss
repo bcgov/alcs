@@ -36,3 +36,11 @@
   margin: rem(10) 0 rem(20) rem(5);
   line-height: rem(24);
 }
+
+.no-top-border {
+  border-top-style: hidden;
+}
+
+.no-bottom-border {
+  border-bottom-style: hidden;
+}

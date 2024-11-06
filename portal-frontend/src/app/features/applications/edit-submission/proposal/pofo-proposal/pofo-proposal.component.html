@@ -222,12 +222,12 @@
         <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
           <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef>#</th>
-            <td mat-cell *matCellDef="let i = dataIndex">{{ i + 1 }}</td>
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">{{ i + 1 }}</td>
           </ng-container>
 
           <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
               <mat-form-field appearance="outline">
                 <mat-select
                   [value]="element.type"
@@ -258,7 +258,7 @@
 
           <ng-container matColumnDef="area">
             <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -291,7 +291,7 @@
 
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef>Action</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
               <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
                 Remove
               </button>
