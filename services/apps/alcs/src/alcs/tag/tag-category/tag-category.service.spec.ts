@@ -48,6 +48,7 @@ describe('TagCategoryService', () => {
     }).compile();
 
     service = module.get<TagCategoryService>(TagCategoryService);
+    tagCategoryRepositoryMock.find.mockResolvedValue([]);
     tagCategoryRepositoryMock.findOne.mockResolvedValue(mockTagCategoryEntity);
     tagCategoryRepositoryMock.findOneOrFail.mockResolvedValue(mockTagCategoryEntity);
     tagCategoryRepositoryMock.save.mockResolvedValue(mockTagCategoryEntity);

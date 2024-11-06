@@ -48,6 +48,7 @@ describe('TagController', () => {
 
   it('should create a tag', async () => {
     const dto: TagDto = {
+      uuid: mockTag.uuid,
       name: mockTag.name,
       category: mockTag.category
         ? {

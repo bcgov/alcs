@@ -7,6 +7,7 @@ import { initTagCategoryMockEntity } from '../../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { TagCategory } from './tag-category.entity';
 import { TagCategoryDto } from './tag-category.dto';
+import { UpdateResult } from 'typeorm';
 
 describe('TagCategoryController', () => {
   let controller: TagCategoryController;
@@ -62,20 +63,17 @@ describe('TagCategoryController', () => {
       name: mockCategoryTag.name,
     } as TagCategoryDto;
 
-    const result = await controller.update(
-      mockCategoryTag.uuid,
-      categoryToUpdate,
-    );
+    const result = await controller.update(mockCategoryTag.uuid, categoryToUpdate);
 
     expect(tagCategoryService.update).toHaveBeenCalledTimes(1);
     expect(result).toEqual(mockCategoryTag);
   });
 
   it('should delete a tag category', async () => {
-    tagCategoryService.delete.mockResolvedValue(mockCategoryTag);
+    tagCategoryService.delete.mockResolvedValue({} as UpdateResult);
 
     const result = await controller.delete(mockCategoryTag.uuid);
     expect(tagCategoryService.delete).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(mockCategoryTag);
+    expect(result).toBeDefined();
   });
 });
