@@ -31,7 +31,7 @@ export class NoticeOfIntentTagService {
     }
 
     const tagExists = noi.tags.some((t) => t.uuid === tag.uuid);
-    console.log(tagExists);
+
     if (tagExists) {
       throw new ServiceValidationException(`Tag ${tagName} already exists`);
     }

@@ -1,12 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  IsArray,
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { NoticeOfIntentOwnerDto } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.dto';
@@ -210,4 +203,5 @@ export class CreateNoticeOfIntentServiceDto {
   localGovernmentUuid?: string;
   source?: 'ALCS' | 'APPLICANT';
   subtypes?: string[];
+  tags?: string[];
 }

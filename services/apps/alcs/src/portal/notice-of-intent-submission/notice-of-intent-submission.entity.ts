@@ -1,14 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  AfterLoad,
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { AfterLoad, Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { Base } from '../../common/entities/base.entity';
@@ -39,6 +30,14 @@ export const PORTAL_TO_ALCS_STRUCTURE_MAP = {
   [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'RACS',
   [STRUCTURE_TYPES.FARM_STRUCTURE]: 'FRST',
   [STRUCTURE_TYPES.OTHER_STRUCTURE]: 'OTHR',
+};
+
+export const PORTAL_TO_ALCS_TAGS_MAP = {
+  [STRUCTURE_TYPES.PRINCIPAL_RESIDENCE]: 'Principal Residence',
+  [STRUCTURE_TYPES.ADDITIONAL_RESIDENCE]: 'Additional Residence',
+  [STRUCTURE_TYPES.ACCESSORY_STRUCTURE]: 'Accessory Structure',
+  [STRUCTURE_TYPES.FARM_STRUCTURE]: 'Farm Structure',
+  [STRUCTURE_TYPES.OTHER_STRUCTURE]: 'Other Structure',
 };
 
 export class ProposedStructure {
@@ -100,8 +99,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Describe all agriculture that currently takes place on the parcel(s).',
+    comment: 'Describe all agriculture that currently takes place on the parcel(s).',
     nullable: true,
   })
   parcelsAgricultureDescription?: string | null;
@@ -117,8 +115,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Describe all other uses that currently take place on the parcel(s).',
+    comment: 'Describe all other uses that currently take place on the parcel(s).',
     nullable: true,
   })
   parcelsNonAgricultureUseDescription?: string | null;
@@ -126,8 +123,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'The land uses surrounding the parcel(s) under application on the North.',
+    comment: 'The land uses surrounding the parcel(s) under application on the North.',
     nullable: true,
   })
   northLandUseType?: string | null;
@@ -135,8 +131,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Description of the land uses surrounding the parcel(s) under application on the North.',
+    comment: 'Description of the land uses surrounding the parcel(s) under application on the North.',
     nullable: true,
   })
   northLandUseTypeDescription?: string | null;
@@ -144,8 +139,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'The land uses surrounding the parcel(s) under application on the East.',
+    comment: 'The land uses surrounding the parcel(s) under application on the East.',
     nullable: true,
   })
   eastLandUseType?: string | null;
@@ -153,8 +147,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Description of the land uses surrounding the parcel(s) under application on the East.',
+    comment: 'Description of the land uses surrounding the parcel(s) under application on the East.',
     nullable: true,
   })
   eastLandUseTypeDescription?: string | null;
@@ -162,8 +155,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'The land uses surrounding the parcel(s) under application on the South.',
+    comment: 'The land uses surrounding the parcel(s) under application on the South.',
     nullable: true,
   })
   southLandUseType?: string | null;
@@ -171,8 +163,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Description of the land uses surrounding the parcel(s) under application on the South.',
+    comment: 'Description of the land uses surrounding the parcel(s) under application on the South.',
     nullable: true,
   })
   southLandUseTypeDescription?: string | null;
@@ -180,8 +171,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'The land uses surrounding the parcel(s) under application on the West.',
+    comment: 'The land uses surrounding the parcel(s) under application on the West.',
     nullable: true,
   })
   westLandUseType?: string | null;
@@ -189,8 +179,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Description of the land uses surrounding the parcel(s) under application on the West.',
+    comment: 'Description of the land uses surrounding the parcel(s) under application on the West.',
     nullable: true,
   })
   westLandUseTypeDescription?: string | null;
@@ -450,26 +439,16 @@ export class NoticeOfIntentSubmission extends Base {
   })
   noticeOfIntent: NoticeOfIntent;
 
-  @OneToMany(
-    () => NoticeOfIntentOwner,
-    (owner) => owner.noticeOfIntentSubmission,
-  )
+  @OneToMany(() => NoticeOfIntentOwner, (owner) => owner.noticeOfIntentSubmission)
   owners: NoticeOfIntentOwner[];
 
-  @OneToMany(
-    () => NoticeOfIntentParcel,
-    (parcel) => parcel.noticeOfIntentSubmission,
-  )
+  @OneToMany(() => NoticeOfIntentParcel, (parcel) => parcel.noticeOfIntentSubmission)
   parcels: NoticeOfIntentParcel[];
 
-  @OneToMany(
-    () => NoticeOfIntentSubmissionToSubmissionStatus,
-    (status) => status.submission,
-    {
-      eager: true,
-      persistence: false,
-    },
-  )
+  @OneToMany(() => NoticeOfIntentSubmissionToSubmissionStatus, (status) => status.submission, {
+    eager: true,
+    persistence: false,
+  })
   submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatus[] = [];
 
   private _status: NoticeOfIntentSubmissionToSubmissionStatus;
@@ -493,8 +472,7 @@ export class NoticeOfIntentSubmission extends Base {
       if (
         effectiveDate &&
         effectiveDate <= now &&
-        (!this.status ||
-          status.statusType.weight > this.status.statusType.weight)
+        (!this.status || status.statusType.weight > this.status.statusType.weight)
       ) {
         this.status = status;
       }
