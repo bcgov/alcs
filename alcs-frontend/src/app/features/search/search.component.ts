@@ -336,7 +336,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         : undefined,
       fileTypes: fileTypes,
       tagCategoryId: this.searchForm.controls.tagCategory.value ?? undefined,
-      tagIds: this.searchForm.controls.tag.value ?? undefined,
+      tagIds: this.tags.map((t) => t.uuid),
     };
   }
 
