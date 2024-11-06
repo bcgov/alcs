@@ -403,10 +403,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     this.structuresForm.markAsDirty();
 
     this.updateStructureTypeFields();
-
-    if (structureToDelete.type !== null && this.structureTypeCounts[structureToDelete.type] > 0) {
-      this.structureTypeCounts[structureToDelete.type]--;
-    }
+    this.updateStructureCounts(structureToDelete.type, null);
   }
 
   onStructureEdit(id: string) {
@@ -516,15 +513,22 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   private setStructureTypeInput(structure: FormProposedStructure, newType: STRUCTURE_TYPES) {
-    if (structure.type !== null && this.structureTypeCounts[structure.type] > 0) {
-      this.structureTypeCounts[structure.type]--;
-    }
-    this.structureTypeCounts[newType]++;
+    this.updateStructureCounts(structure.type, newType);
 
     structure.type = newType;
 
     this.updateStructureTypeFields();
     this.form.markAsDirty();
+  }
+
+  private updateStructureCounts(oldType: STRUCTURE_TYPES | null, newType: STRUCTURE_TYPES | null) {
+    if (oldType !== null && this.structureTypeCounts[oldType] > 0) {
+      this.structureTypeCounts[oldType]--;
+    }
+
+    if (newType !== null) {
+      this.structureTypeCounts[newType]++;
+    }
   }
 
   updateStructureTypeFields() {
