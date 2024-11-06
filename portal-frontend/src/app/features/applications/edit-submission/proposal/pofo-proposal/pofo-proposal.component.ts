@@ -156,7 +156,10 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         this.proposedStructures = [];
         this.structuresForm = new FormGroup({});
         for (const structure of applicationSubmission.soilProposedStructures) {
-          this.addControl(structure.type, structure.area);
+          const newStructure = this.addControl(structure.area);
+          if (structure.type !== null) {
+            this.setStructureTypeInput(newStructure, structure.type);
+          }
         }
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
@@ -401,15 +404,23 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   private setStructureTypeInput(structure: FormProposedStructure, newType: STRUCTURE_TYPES) {
-    if (structure.type !== null && this.structureTypeCounts[structure.type] > 0) {
-      this.structureTypeCounts[structure.type]--;
-    }
-    this.structureTypeCounts[newType]++;
+    this.updateStructureCounts(structure.type, newType);
 
     structure.type = newType;
+    this.structuresForm.get(`${structure.id}-type`)?.setValue(newType);
 
     this.updateStructureTypeFields();
     this.form.markAsDirty();
+  }
+
+  private updateStructureCounts(oldType: STRUCTURE_TYPES | null, newType: STRUCTURE_TYPES | null) {
+    if (oldType !== null && this.structureTypeCounts[oldType] > 0) {
+      this.structureTypeCounts[oldType]--;
+    }
+
+    if (newType !== null) {
+      this.structureTypeCounts[newType]++;
+    }
   }
 
   updateStructureTypeFields() {
@@ -417,9 +428,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] === 0) {
       this.soilStructureFarmUseReason.removeValidators([Validators.required]);
-      this.soilStructureFarmUseReason.reset();
       this.soilAgriParcelActivity.removeValidators([Validators.required]);
-      this.soilAgriParcelActivity.reset();
     }
 
     if (
@@ -427,17 +436,14 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       this.structureTypeCounts[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE] === 0 &&
       this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0
     ) {
-      this.soilStructureResidentialUseReason.reset();
       this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] === 0) {
-      this.soilStructureResidentialAccessoryUseReason.reset();
       this.soilStructureResidentialAccessoryUseReason.removeValidators([Validators.required]);
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0) {
-      this.soilStructureOtherUseReason.reset();
       this.soilStructureOtherUseReason.removeValidators([Validators.required]);
     }
 
@@ -445,7 +451,9 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] > 0) {
       this.soilStructureFarmUseReason.setValidators([Validators.required]);
+      this.soilStructureFarmUseReason.reset();
       this.soilAgriParcelActivity.setValidators([Validators.required]);
+      this.soilAgriParcelActivity.reset();
     }
 
     if (
@@ -454,14 +462,17 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0
     ) {
       this.soilStructureResidentialUseReason.setValidators([Validators.required]);
+      this.soilStructureResidentialUseReason.reset();
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0) {
       this.soilStructureResidentialAccessoryUseReason.setValidators([Validators.required]);
+      this.soilStructureResidentialAccessoryUseReason.reset();
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] > 0) {
       this.soilStructureOtherUseReason.setValidators([Validators.required]);
+      this.soilStructureOtherUseReason.reset();
     }
   }
 
@@ -479,10 +490,11 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         .beforeClosed()
         .subscribe(async (result: { isEditing: boolean; structureId: string; dto: ProposedStructure }) => {
           if (!result) return;
-          this.addControl(result.dto.type, result.dto.area);
+          const newStructure = this.addControl(result.dto.area);
+          if (result.dto.type !== null) {
+            this.setStructureTypeInput(newStructure, result.dto.type);
+          }
           this.structuresSource = new MatTableDataSource(this.proposedStructures);
-
-          this.structureTypeCounts[result.dto.type!]++;
         });
     } else {
       this.addControl();
@@ -490,32 +502,26 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  addControl(type: STRUCTURE_TYPES | null = null, area: number | null = null) {
+  addControl(area: number | null = null): FormProposedStructure {
     const areaStr = area ? area.toString(10) : null;
-    const newStructure = { type, area: areaStr, id: v4() };
+    const newStructure: FormProposedStructure = { type: null, area: areaStr, id: v4() };
     this.proposedStructures.push(newStructure);
     this.structuresForm.addControl(
       `${newStructure.id}-type`,
-      new FormControl<string | null>(type, [Validators.required]),
+      new FormControl<string | null>(null, [Validators.required]),
     );
     this.structuresForm.addControl(
       `${newStructure.id}-area`,
       new FormControl<string | null>(areaStr, [Validators.required]),
     );
 
-    if (type) {
-      this.structureTypeCounts[type]++;
-    }
-
     this.structuresForm.markAsDirty();
+
+    return newStructure;
   }
 
   isWarning(index: number, item: ProposedStructure): boolean {
-    return (
-      item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE ||
-      item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE ||
-      item.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE
-    );
+    return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
   }
 
   onStructureRemove(id: string) {
@@ -548,9 +554,8 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     this.structuresForm.removeControl(`${id}-area`);
     this.structuresForm.markAsDirty();
 
-    if (structureToDelete.type !== null && this.structureTypeCounts[structureToDelete.type] > 0) {
-      this.structureTypeCounts[structureToDelete.type]--;
-    }
+    this.updateStructureTypeFields();
+    this.updateStructureCounts(structureToDelete.type, null);
   }
 
   onStructureEdit(id: string) {
