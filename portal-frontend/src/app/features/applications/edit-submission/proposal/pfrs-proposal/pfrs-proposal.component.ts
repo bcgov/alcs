@@ -585,11 +585,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   isWarning(index: number, item: ProposedStructure): boolean {
-    return (
-      item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE ||
-      item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE ||
-      item.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE
-    );
+    return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
   }
 
   onStructureRemove(id: string) {
