@@ -52,6 +52,7 @@ describe('TagCategoryService', () => {
 
     tagRepositoryMock.findOneOrFail.mockResolvedValue(mockTagEntity);
     tagRepositoryMock.findOne.mockResolvedValue(mockTagEntity);
+    tagRepositoryMock.find.mockResolvedValue([]);
     tagRepositoryMock.save.mockResolvedValue(mockTagEntity);
     tagCategoryRepositoryMock.findOne.mockResolvedValue(mockTagCategoryEntity);
     tagCategoryRepositoryMock = module.get(getRepositoryToken(TagCategory));
@@ -67,6 +68,7 @@ describe('TagCategoryService', () => {
 
   it('should call save when an Tag is updated', async () => {
     const payload: TagDto = {
+      uuid: mockTagEntity.uuid,
       name: mockTagEntity.name,
       isActive: mockTagEntity.isActive,
       category: mockTagCategoryEntity,
@@ -80,6 +82,7 @@ describe('TagCategoryService', () => {
 
   it('should call save when tag successfully create', async () => {
     const payload: TagDto = {
+      uuid: mockTagEntity.uuid,
       name: mockTagEntity.name,
       isActive: mockTagEntity.isActive,
       category: mockTagCategoryEntity,

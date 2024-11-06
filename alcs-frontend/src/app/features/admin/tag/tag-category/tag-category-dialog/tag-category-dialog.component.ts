@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TagCategoryDto } from '../../../../../services/tag/tag-category/tag-category.dto';
 import { TagCategoryService } from '../../../../../services/tag/tag-category/tag-category.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-tag-category-dialog',
@@ -15,6 +16,7 @@ export class TagCategoryDialogComponent {
   isLoading = false;
   isEdit = false;
   showNameWarning = false;
+  nameControl = new FormControl();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: TagCategoryDto | undefined,
@@ -63,6 +65,6 @@ export class TagCategoryDialogComponent {
 
   private showWarning() {
     this.showNameWarning = true;
-    this.name = '';
+    this.nameControl.setErrors({"invalid": true});
   }
 }

@@ -5,6 +5,7 @@ import { TagService } from '../../../../services/tag/tag.service';
 import { TagCategoryService } from '../../../../services/tag/tag-category/tag-category.service';
 import { TagCategoryDto } from 'src/app/services/tag/tag-category/tag-category.dto';
 import { Subject, takeUntil } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-tag-dialog',
@@ -25,6 +26,7 @@ export class TagDialogComponent implements OnInit {
   isLoading = false;
   isEdit = false;
   showNameWarning = false;
+  nameControl = new FormControl();
 
   categories: TagCategoryDto[] = [];
 
@@ -97,6 +99,6 @@ export class TagDialogComponent implements OnInit {
 
   private showWarning() {
     this.showNameWarning = true;
-    this.name = '';
+    this.nameControl.setErrors({"invalid": true});
   }
 }

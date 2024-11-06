@@ -38,6 +38,9 @@ export class TagService {
   }
 
   async create(dto: TagDto) {
+    if (await this.hasName(dto)) {
+      throw new ServiceConflictException('There is already a tag with this name. Unable to create.');
+    }
     const category = dto.category
       ? await this.categoryRepository.findOne({
           where: {
@@ -60,6 +63,10 @@ export class TagService {
   }
 
   async update(uuid: string, updateDto: TagDto) {
+    updateDto.uuid = uuid;
+    if (await this.hasName(updateDto)) {
+      throw new ServiceConflictException('There is already a tag with this name. Unable to update.');
+    }
     const category = updateDto.category
       ? await this.categoryRepository.findOne({
           where: {
@@ -92,5 +99,15 @@ export class TagService {
     }
 
     return (tag.applications && tag.applications.length > 0) || (tag.noticeOfIntents && tag.noticeOfIntents.length > 0);
+  }
+
+  async hasName(tag: TagDto) {
+    let tags = await this.repository.find({
+      where: { name: tag.name },
+    });
+    if (tag.uuid) {
+      tags = tags.filter((t) => t.uuid !== tag.uuid);
+    }
+    return tags.length > 0;
   }
 }

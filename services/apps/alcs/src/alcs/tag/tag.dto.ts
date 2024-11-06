@@ -3,6 +3,9 @@ import { TagCategoryDto } from './tag-category/tag-category.dto';
 
 export class TagDto {
   @IsString()
+  uuid: string;
+
+  @IsString()
   name: string;
 
   @IsBoolean()
