@@ -1,7 +1,4 @@
-import {
-  BaseServiceException,
-  ServiceNotFoundException,
-} from '@app/common/exceptions/base.exception';
+import { BaseServiceException, ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
@@ -36,6 +33,7 @@ import {
 import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 import { ApplicationTagService } from '../../alcs/application/application-tag/application-tag.service';
+import { PORTAL_TO_ALCS_TAGS_MAP } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 
 const LG_VISIBLE_STATUSES = [
   SUBMISSION_STATUS.INCOMPLETE,
@@ -100,10 +98,7 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  async getOrFailByUuid(
-    uuid: string,
-    relations: FindOptionsRelations<ApplicationSubmission> = {},
-  ) {
+  async getOrFailByUuid(uuid: string, relations: FindOptionsRelations<ApplicationSubmission> = {}) {
     const application = await this.applicationSubmissionRepository.findOne({
       where: {
         uuid,
@@ -140,9 +135,7 @@ export class ApplicationSubmissionService {
     });
 
     if (!initialStatus) {
-      throw new BaseServiceException(
-        'Failed to load In Progress Status for Creating Application',
-      );
+      throw new BaseServiceException('Failed to load In Progress Status for Creating Application');
     }
 
     const applicationSubmission = new ApplicationSubmission({
@@ -152,39 +145,24 @@ export class ApplicationSubmissionService {
       prescribedBody,
     });
 
-    const submission = await this.applicationSubmissionRepository.save(
-      applicationSubmission,
-    );
+    const submission = await this.applicationSubmissionRepository.save(applicationSubmission);
 
     // FIXME ideally this should happen in the same transaction as creation of submission
-    await this.applicationSubmissionStatusService.setInitialStatuses(
-      submission.uuid,
-    );
+    await this.applicationSubmissionStatusService.setInitialStatuses(submission.uuid);
 
     return fileNumber;
   }
 
-  async update(
-    submissionUuid: string,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
+  async update(submissionUuid: string, updateDto: ApplicationSubmissionUpdateDto) {
     const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
 
     applicationSubmission.applicant = updateDto.applicant;
-    applicationSubmission.purpose = filterUndefined(
-      updateDto.purpose,
-      applicationSubmission.purpose,
-    );
-    applicationSubmission.typeCode =
-      updateDto.typeCode || applicationSubmission.typeCode;
+    applicationSubmission.purpose = filterUndefined(updateDto.purpose, applicationSubmission.purpose);
+    applicationSubmission.typeCode = updateDto.typeCode || applicationSubmission.typeCode;
     applicationSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
     applicationSubmission.returnedComment = updateDto.returnedComment;
-    applicationSubmission.hasOtherParcelsInCommunity =
-      updateDto.hasOtherParcelsInCommunity;
-    applicationSubmission.prescribedBody = filterUndefined(
-      updateDto.prescribedBody,
-      updateDto.prescribedBody,
-    );
+    applicationSubmission.hasOtherParcelsInCommunity = updateDto.hasOtherParcelsInCommunity;
+    applicationSubmission.prescribedBody = filterUndefined(updateDto.prescribedBody, updateDto.prescribedBody);
     applicationSubmission.otherParcelsDescription = filterUndefined(
       updateDto.otherParcelsDescription,
       applicationSubmission.otherParcelsDescription,
@@ -204,40 +182,28 @@ export class ApplicationSubmissionService {
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
     if (!applicationSubmission.isDraft && updateDto.localGovernmentUuid) {
-      await this.applicationService.updateByFileNumber(
-        applicationSubmission.fileNumber,
-        {
-          localGovernmentUuid: updateDto.localGovernmentUuid,
-        },
-      );
+      await this.applicationService.updateByFileNumber(applicationSubmission.fileNumber, {
+        localGovernmentUuid: updateDto.localGovernmentUuid,
+      });
     }
 
     if (!applicationSubmission.isDraft && updateDto.typeCode) {
-      await this.applicationService.updateByFileNumber(
-        applicationSubmission.fileNumber,
-        {
-          typeCode: updateDto.typeCode,
-        },
-      );
+      await this.applicationService.updateByFileNumber(applicationSubmission.fileNumber, {
+        typeCode: updateDto.typeCode,
+      });
     }
 
     return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
-  async setPrimaryContact(
-    submissionUuid: string,
-    primaryContactUuid: string | null,
-  ) {
+  async setPrimaryContact(submissionUuid: string, primaryContactUuid: string | null) {
     const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
     applicationSubmission.primaryContactOwnerUuid = primaryContactUuid;
     await this.applicationSubmissionRepository.save(applicationSubmission);
   }
 
   async submitToLg(submission: ApplicationSubmission) {
-    return await this.updateStatus(
-      submission,
-      SUBMISSION_STATUS.SUBMITTED_TO_LG,
-    );
+    return await this.updateStatus(submission, SUBMISSION_STATUS.SUBMITTED_TO_LG);
   }
 
   async updateStatus(
@@ -280,43 +246,23 @@ export class ApplicationSubmissionService {
         shouldCreateCard,
       );
 
-      await this.updateStatus(
-        application,
-        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-        submittedApp.dateSubmittedToAlc,
-      );
+      await this.updateStatus(application, SUBMISSION_STATUS.SUBMITTED_TO_ALC, submittedApp.dateSubmittedToAlc);
 
-      this.generateAndAttachPdfs(
-        application.fileNumber,
-        user,
-        !!applicationReview,
-      );
+      this.generateAndAttachPdfs(application.fileNumber, user, !!applicationReview);
     } catch (ex) {
       this.logger.error(ex);
-      throw new BaseServiceException(
-        `Failed to submit application: ${application.fileNumber}`,
-      );
+      throw new BaseServiceException(`Failed to submit application: ${application.fileNumber}`);
     }
 
     return submittedApp;
   }
 
-  private async generateAndAttachPdfs(
-    fileNumber: string,
-    user: User,
-    hasReview: boolean,
-  ) {
+  private async generateAndAttachPdfs(fileNumber: string, user: User, hasReview: boolean) {
     try {
-      await this.submissionDocumentGenerationService.generateAndAttach(
-        fileNumber,
-        user,
-      );
+      await this.submissionDocumentGenerationService.generateAndAttach(fileNumber, user);
 
       if (hasReview) {
-        await this.generateReviewDocumentService.generateAndAttach(
-          fileNumber,
-          user,
-        );
+        await this.generateReviewDocumentService.generateAndAttach(fileNumber, user);
       }
     } catch (e) {
       this.logger.error(`Error generating the document on submission${e}`);
@@ -357,20 +303,13 @@ export class ApplicationSubmissionService {
         'fapsst',
         'aps.uuid = fapsst.submission_uuid',
       )
-      .leftJoinAndSelect(
-        User,
-        'createdBy',
-        'createdBy.uuid = aps.created_by_uuid',
-      )
+      .leftJoinAndSelect(User, 'createdBy', 'createdBy.uuid = aps.created_by_uuid')
       .leftJoin(LocalGovernment, 'lg', 'lg.uuid = aps.local_government_uuid')
       .where('aps.isDraft=False')
-      .andWhere(
-        '(createdBy.bceid_business_guid = :bceidGuid or (fapsst is not null and lg.uuid=:lgUuid))',
-        {
-          bceidGuid: localGovernment.bceidBusinessGuid,
-          lgUuid: localGovernment.uuid,
-        },
-      )
+      .andWhere('(createdBy.bceid_business_guid = :bceidGuid or (fapsst is not null and lg.uuid=:lgUuid))', {
+        bceidGuid: localGovernment.bceidBusinessGuid,
+        lgUuid: localGovernment.uuid,
+      })
       .leftJoinAndSelect('aps.submissionStatuses', 'submissionStatuses')
       .leftJoinAndSelect('submissionStatuses.statusType', 'statusType')
       .orderBy('aps.auditUpdatedAt', 'DESC')
@@ -379,54 +318,42 @@ export class ApplicationSubmissionService {
     return submissions;
   }
 
-  private async getForGovernmentByUuid(
-    uuid: string,
-    localGovernment: LocalGovernment,
-  ) {
+  private async getForGovernmentByUuid(uuid: string, localGovernment: LocalGovernment) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
     }
 
-    const existingApplication =
-      await this.applicationSubmissionRepository.findOne({
-        where: [
-          //Owns
-          {
-            uuid,
-            createdBy: {
-              bceidBusinessGuid: localGovernment.bceidBusinessGuid,
-            },
-            isDraft: false,
+    const existingApplication = await this.applicationSubmissionRepository.findOne({
+      where: [
+        //Owns
+        {
+          uuid,
+          createdBy: {
+            bceidBusinessGuid: localGovernment.bceidBusinessGuid,
           },
-          //Local Government
-          {
-            isDraft: false,
-            uuid,
-            localGovernmentUuid: localGovernment.uuid,
-          },
-        ],
-        order: {
-          auditUpdatedAt: 'DESC',
-          owners: {
-            firstName: 'ASC',
-            parcels: {
-              purchasedDate: 'ASC',
-            },
+          isDraft: false,
+        },
+        //Local Government
+        {
+          isDraft: false,
+          uuid,
+          localGovernmentUuid: localGovernment.uuid,
+        },
+      ],
+      order: {
+        auditUpdatedAt: 'DESC',
+        owners: {
+          firstName: 'ASC',
+          parcels: {
+            purchasedDate: 'ASC',
           },
         },
-        relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
-      });
+      },
+      relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
+    });
 
-    if (
-      !existingApplication ||
-      !this.isSubmissionVisibleToLocalGovernment(
-        existingApplication,
-        localGovernment,
-      )
-    ) {
-      throw new ServiceNotFoundException(
-        `Failed to load application with uuid ${uuid}`,
-      );
+    if (!existingApplication || !this.isSubmissionVisibleToLocalGovernment(existingApplication, localGovernment)) {
+      throw new ServiceNotFoundException(`Failed to load application with uuid ${uuid}`);
     }
 
     return existingApplication;
@@ -438,70 +365,53 @@ export class ApplicationSubmissionService {
   ) {
     return (
       (existingApplication.createdBy &&
-        existingApplication.createdBy.bceidBusinessGuid ===
-          localGovernment.bceidBusinessGuid) ||
-      (LG_VISIBLE_STATUSES.includes(
-        existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
-      ) &&
+        existingApplication.createdBy.bceidBusinessGuid === localGovernment.bceidBusinessGuid) ||
+      (LG_VISIBLE_STATUSES.includes(existingApplication.status.statusTypeCode as SUBMISSION_STATUS) &&
         existingApplication.submissionStatuses.some(
           (status) =>
-            [
-              SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-              SUBMISSION_STATUS.SUBMITTED_TO_LG,
-            ].includes(status.statusTypeCode as SUBMISSION_STATUS) &&
-            status.effectiveDate !== null,
+            [SUBMISSION_STATUS.SUBMITTED_TO_ALC, SUBMISSION_STATUS.SUBMITTED_TO_LG].includes(
+              status.statusTypeCode as SUBMISSION_STATUS,
+            ) && status.effectiveDate !== null,
         ))
     );
   }
 
-  async getForGovernmentByFileId(
-    fileNumber: string,
-    localGovernment: LocalGovernment,
-  ) {
+  async getForGovernmentByFileId(fileNumber: string, localGovernment: LocalGovernment) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
     }
 
-    const existingApplication =
-      await this.applicationSubmissionRepository.findOne({
-        where: [
-          //Owns
-          {
-            fileNumber,
-            createdBy: {
-              bceidBusinessGuid: localGovernment.bceidBusinessGuid,
-            },
-            isDraft: false,
+    const existingApplication = await this.applicationSubmissionRepository.findOne({
+      where: [
+        //Owns
+        {
+          fileNumber,
+          createdBy: {
+            bceidBusinessGuid: localGovernment.bceidBusinessGuid,
           },
-          //Local Government
-          {
-            isDraft: false,
-            fileNumber,
-            localGovernmentUuid: localGovernment.uuid,
-          },
-        ],
-        order: {
-          auditUpdatedAt: 'DESC',
-          owners: {
-            firstName: 'ASC',
-            parcels: {
-              purchasedDate: 'ASC',
-            },
+          isDraft: false,
+        },
+        //Local Government
+        {
+          isDraft: false,
+          fileNumber,
+          localGovernmentUuid: localGovernment.uuid,
+        },
+      ],
+      order: {
+        auditUpdatedAt: 'DESC',
+        owners: {
+          firstName: 'ASC',
+          parcels: {
+            purchasedDate: 'ASC',
           },
         },
-        relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
-      });
+      },
+      relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
+    });
 
-    if (
-      !existingApplication ||
-      !this.isSubmissionVisibleToLocalGovernment(
-        existingApplication,
-        localGovernment,
-      )
-    ) {
-      throw new ServiceNotFoundException(
-        `Failed to load application with File ID ${fileNumber}`,
-      );
+    if (!existingApplication || !this.isSubmissionVisibleToLocalGovernment(existingApplication, localGovernment)) {
+      throw new ServiceNotFoundException(`Failed to load application with File ID ${fileNumber}`);
     }
 
     return existingApplication;
@@ -535,30 +445,21 @@ export class ApplicationSubmissionService {
   async getIfCreatorByFileNumber(fileNumber: string, user: User) {
     const applicationSubmission = await this.getByFileNumber(fileNumber, user);
     if (!applicationSubmission) {
-      throw new ServiceNotFoundException(
-        `Failed to load application with File ID ${fileNumber}`,
-      );
+      throw new ServiceNotFoundException(`Failed to load application with File ID ${fileNumber}`);
     }
     return applicationSubmission;
   }
 
   async getIfCreatorByUuid(uuid: string, user: User) {
     const applicationSubmission = await this.getByUuid(uuid);
-    if (
-      !applicationSubmission ||
-      applicationSubmission.createdBy.uuid !== user.uuid
-    ) {
-      throw new ServiceNotFoundException(
-        `Failed to load application with ID ${uuid}`,
-      );
+    if (!applicationSubmission || applicationSubmission.createdBy.uuid !== user.uuid) {
+      throw new ServiceNotFoundException(`Failed to load application with ID ${uuid}`);
     }
     return applicationSubmission;
   }
 
   async verifyAccessByFileId(fileId: string, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles!.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles!.includes(value));
     if (overlappingRoles.length > 0) {
       return await this.applicationSubmissionRepository.findOneOrFail({
         where: {
@@ -570,9 +471,7 @@ export class ApplicationSubmissionService {
     }
 
     if (user.bceidBusinessGuid) {
-      const localGovernment = await this.localGovernmentService.getByGuid(
-        user.bceidBusinessGuid,
-      );
+      const localGovernment = await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
       if (localGovernment) {
         return await this.getForGovernmentByFileId(fileId, localGovernment);
       }
@@ -582,9 +481,7 @@ export class ApplicationSubmissionService {
   }
 
   async verifyAccessByUuid(submissionUuid: string, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles!.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles!.includes(value));
     if (overlappingRoles.length > 0) {
       return await this.applicationSubmissionRepository.findOneOrFail({
         where: {
@@ -597,14 +494,9 @@ export class ApplicationSubmissionService {
     }
 
     if (user.bceidBusinessGuid) {
-      const localGovernment = await this.localGovernmentService.getByGuid(
-        user.bceidBusinessGuid,
-      );
+      const localGovernment = await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
       if (localGovernment) {
-        return await this.getForGovernmentByUuid(
-          submissionUuid,
-          localGovernment,
-        );
+        return await this.getForGovernmentByUuid(submissionUuid, localGovernment);
       }
     }
 
@@ -621,18 +513,12 @@ export class ApplicationSubmissionService {
     return apps.map((app) => {
       const matchingAppType = types.find((type) => type.code === app.typeCode);
       return {
-        ...this.mapper.map(
-          app,
-          ApplicationSubmission,
-          ApplicationSubmissionDto,
-        ),
+        ...this.mapper.map(app, ApplicationSubmission, ApplicationSubmissionDto),
         type: matchingAppType!.label,
         requiresGovernmentReview: matchingAppType!.requiresGovernmentReview,
-        canEdit: [
-          SUBMISSION_STATUS.IN_PROGRESS,
-          SUBMISSION_STATUS.INCOMPLETE,
-          SUBMISSION_STATUS.WRONG_GOV,
-        ].includes(app.status.statusTypeCode as SUBMISSION_STATUS),
+        canEdit: [SUBMISSION_STATUS.IN_PROGRESS, SUBMISSION_STATUS.INCOMPLETE, SUBMISSION_STATUS.WRONG_GOV].includes(
+          app.status.statusTypeCode as SUBMISSION_STATUS,
+        ),
         canView: app.status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED,
         canReview:
           [
@@ -646,31 +532,19 @@ export class ApplicationSubmissionService {
     });
   }
 
-  async mapToDetailedDTO(
-    application: ApplicationSubmission,
-    userGovernment?: LocalGovernment,
-  ) {
+  async mapToDetailedDTO(application: ApplicationSubmission, userGovernment?: LocalGovernment) {
     const types = await this.applicationService.fetchApplicationTypes();
-    const mappedApp = this.mapper.map(
-      application,
-      ApplicationSubmission,
-      ApplicationSubmissionDetailedDto,
-    );
+    const mappedApp = this.mapper.map(application, ApplicationSubmission, ApplicationSubmissionDetailedDto);
 
-    const matchingAppType = types.find(
-      (type) => type.code === application.typeCode,
-    );
+    const matchingAppType = types.find((type) => type.code === application.typeCode);
     return {
       ...mappedApp,
       type: matchingAppType!.label,
       requiresGovernmentReview: matchingAppType!.requiresGovernmentReview,
-      canEdit: [
-        SUBMISSION_STATUS.IN_PROGRESS,
-        SUBMISSION_STATUS.INCOMPLETE,
-        SUBMISSION_STATUS.WRONG_GOV,
-      ].includes(application.status.statusTypeCode as SUBMISSION_STATUS),
-      canView:
-        application.status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED,
+      canEdit: [SUBMISSION_STATUS.IN_PROGRESS, SUBMISSION_STATUS.INCOMPLETE, SUBMISSION_STATUS.WRONG_GOV].includes(
+        application.status.statusTypeCode as SUBMISSION_STATUS,
+      ),
+      canView: application.status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED,
       canReview:
         [
           SUBMISSION_STATUS.SUBMITTED_TO_LG,
@@ -683,70 +557,36 @@ export class ApplicationSubmissionService {
   }
 
   async cancel(submission: ApplicationSubmission) {
-    await this.applicationSubmissionStatusService.setStatusDate(
-      submission.uuid,
-      SUBMISSION_STATUS.CANCELLED,
-    );
+    await this.applicationSubmissionStatusService.setStatusDate(submission.uuid, SUBMISSION_STATUS.CANCELLED);
   }
 
-  private setLandUseFields(
-    application: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
-    application.parcelsAgricultureDescription =
-      updateDto.parcelsAgricultureDescription;
-    application.parcelsAgricultureImprovementDescription =
-      updateDto.parcelsAgricultureImprovementDescription;
-    application.parcelsNonAgricultureUseDescription =
-      updateDto.parcelsNonAgricultureUseDescription;
+  private setLandUseFields(application: ApplicationSubmission, updateDto: ApplicationSubmissionUpdateDto) {
+    application.parcelsAgricultureDescription = updateDto.parcelsAgricultureDescription;
+    application.parcelsAgricultureImprovementDescription = updateDto.parcelsAgricultureImprovementDescription;
+    application.parcelsNonAgricultureUseDescription = updateDto.parcelsNonAgricultureUseDescription;
     application.northLandUseType = updateDto.northLandUseType;
-    application.northLandUseTypeDescription =
-      updateDto.northLandUseTypeDescription;
+    application.northLandUseTypeDescription = updateDto.northLandUseTypeDescription;
     application.eastLandUseType = updateDto.eastLandUseType;
-    application.eastLandUseTypeDescription =
-      updateDto.eastLandUseTypeDescription;
+    application.eastLandUseTypeDescription = updateDto.eastLandUseTypeDescription;
     application.southLandUseType = updateDto.southLandUseType;
-    application.southLandUseTypeDescription =
-      updateDto.southLandUseTypeDescription;
+    application.southLandUseTypeDescription = updateDto.southLandUseTypeDescription;
     application.westLandUseType = updateDto.westLandUseType;
-    application.westLandUseTypeDescription =
-      updateDto.westLandUseTypeDescription;
+    application.westLandUseTypeDescription = updateDto.westLandUseTypeDescription;
 
     return application;
   }
 
-  private setNFUFields(
-    application: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
-    application.nfuHectares = filterUndefined(
-      updateDto.nfuHectares,
-      application.nfuHectares,
-    );
-    application.nfuOutsideLands = filterUndefined(
-      updateDto.nfuOutsideLands,
-      application.nfuOutsideLands,
-    );
+  private setNFUFields(application: ApplicationSubmission, updateDto: ApplicationSubmissionUpdateDto) {
+    application.nfuHectares = filterUndefined(updateDto.nfuHectares, application.nfuHectares);
+    application.nfuOutsideLands = filterUndefined(updateDto.nfuOutsideLands, application.nfuOutsideLands);
     application.nfuAgricultureSupport = filterUndefined(
       updateDto.nfuAgricultureSupport,
       application.nfuAgricultureSupport,
     );
-    application.nfuWillImportFill = filterUndefined(
-      updateDto.nfuWillImportFill,
-      application.nfuWillImportFill,
-    );
-    application.nfuTotalFillArea = filterUndefined(
-      updateDto.nfuTotalFillArea,
-      application.nfuTotalFillArea,
-    );
-    application.nfuMaxFillDepth = filterUndefined(
-      updateDto.nfuMaxFillDepth,
-      application.nfuMaxFillDepth,
-    );
-    application.nfuAverageFillDepth = filterUndefined(
-      updateDto.nfuAverageFillDepth,
-      application.nfuAverageFillDepth,
-    );
+    application.nfuWillImportFill = filterUndefined(updateDto.nfuWillImportFill, application.nfuWillImportFill);
+    application.nfuTotalFillArea = filterUndefined(updateDto.nfuTotalFillArea, application.nfuTotalFillArea);
+    application.nfuMaxFillDepth = filterUndefined(updateDto.nfuMaxFillDepth, application.nfuMaxFillDepth);
+    application.nfuAverageFillDepth = filterUndefined(updateDto.nfuAverageFillDepth, application.nfuAverageFillDepth);
     application.nfuFillTypeDescription = filterUndefined(
       updateDto.nfuFillTypeDescription,
       application.nfuFillTypeDescription,
@@ -755,10 +595,7 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  private setTURFields(
-    application: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
+  private setTURFields(application: ApplicationSubmission, updateDto: ApplicationSubmissionUpdateDto) {
     application.turAgriculturalActivities = filterUndefined(
       updateDto.turAgriculturalActivities,
       application.turAgriculturalActivities,
@@ -767,10 +604,7 @@ export class ApplicationSubmissionService {
       updateDto.turReduceNegativeImpacts,
       application.turReduceNegativeImpacts,
     );
-    application.turOutsideLands = filterUndefined(
-      updateDto.turOutsideLands,
-      application.turOutsideLands,
-    );
+    application.turOutsideLands = filterUndefined(updateDto.turOutsideLands, application.turOutsideLands);
     application.turTotalCorridorArea = filterUndefined(
       updateDto.turTotalCorridorArea,
       application.turTotalCorridorArea,
@@ -782,10 +616,7 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  private async setSUBDFields(
-    applicationSubmission: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
+  private async setSUBDFields(applicationSubmission: ApplicationSubmission, updateDto: ApplicationSubmissionUpdateDto) {
     applicationSubmission.subdSuitability = filterUndefined(
       updateDto.subdSuitability,
       applicationSubmission.subdSuitability,
@@ -803,20 +634,12 @@ export class ApplicationSubmissionService {
       applicationSubmission.subdProposedLots,
     );
     if (updateDto.subdIsHomeSiteSeverance === false) {
-      const applicationUuid = await this.applicationService.getUuid(
-        applicationSubmission.fileNumber,
-      );
-      await this.applicationDocumentService.deleteByType(
-        DOCUMENT_TYPE.HOMESITE_SEVERANCE,
-        applicationUuid,
-      );
+      const applicationUuid = await this.applicationService.getUuid(applicationSubmission.fileNumber);
+      await this.applicationDocumentService.deleteByType(DOCUMENT_TYPE.HOMESITE_SEVERANCE, applicationUuid);
     }
   }
 
-  private async setSoilFields(
-    applicationSubmission: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
+  private async setSoilFields(applicationSubmission: ApplicationSubmission, updateDto: ApplicationSubmissionUpdateDto) {
     applicationSubmission.soilIsNewStructure = filterUndefined(
       updateDto.soilIsNewStructure,
       applicationSubmission.soilIsNewStructure,
@@ -943,11 +766,10 @@ export class ApplicationSubmissionService {
       applicationSubmission.soilAgriParcelActivity,
     );
 
-    applicationSubmission.soilStructureResidentialAccessoryUseReason =
-      filterUndefined(
-        updateDto.soilStructureResidentialAccessoryUseReason,
-        applicationSubmission.soilStructureResidentialAccessoryUseReason,
-      );
+    applicationSubmission.soilStructureResidentialAccessoryUseReason = filterUndefined(
+      updateDto.soilStructureResidentialAccessoryUseReason,
+      applicationSubmission.soilStructureResidentialAccessoryUseReason,
+    );
 
     applicationSubmission.soilStructureOtherUseReason = filterUndefined(
       updateDto.soilStructureOtherUseReason,
@@ -959,24 +781,13 @@ export class ApplicationSubmissionService {
       applicationSubmission.soilProposedStructures,
     );
 
-    if (
-      updateDto.soilHasSubmittedNotice === false ||
-      updateDto.soilIsExtractionOrMining === false
-    ) {
-      const applicationUuid = await this.applicationService.getUuid(
-        applicationSubmission.fileNumber,
-      );
-      await this.applicationDocumentService.deleteByType(
-        DOCUMENT_TYPE.NOTICE_OF_WORK,
-        applicationUuid,
-      );
+    if (updateDto.soilHasSubmittedNotice === false || updateDto.soilIsExtractionOrMining === false) {
+      const applicationUuid = await this.applicationService.getUuid(applicationSubmission.fileNumber);
+      await this.applicationDocumentService.deleteByType(DOCUMENT_TYPE.NOTICE_OF_WORK, applicationUuid);
     }
   }
 
-  private setNARUFields(
-    applicationSubmission: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
+  private setNARUFields(applicationSubmission: ApplicationSubmission, updateDto: ApplicationSubmissionUpdateDto) {
     applicationSubmission.naruWillBeOverFiveHundredM2 = filterUndefined(
       updateDto.naruWillBeOverFiveHundredM2,
       applicationSubmission.naruWillBeOverFiveHundredM2,
@@ -989,44 +800,25 @@ export class ApplicationSubmissionService {
       updateDto.naruWillHaveAdditionalResidence,
       applicationSubmission.naruWillHaveAdditionalResidence,
     );
-    applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing =
-      filterUndefined(
-        updateDto.naruWillHaveTemporaryForeignWorkerHousing,
-        applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing,
-      );
+    applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing = filterUndefined(
+      updateDto.naruWillHaveTemporaryForeignWorkerHousing,
+      applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing,
+    );
     applicationSubmission.naruWillImportFill = filterUndefined(
       updateDto.naruWillImportFill,
       applicationSubmission.naruWillImportFill,
     );
-    applicationSubmission.tfwhCount = filterUndefined(
-      updateDto.tfwhCount,
-      applicationSubmission.tfwhCount,
-    );
-    applicationSubmission.tfwhDesign = filterUndefined(
-      updateDto.tfwhDesign,
-      applicationSubmission.tfwhDesign,
-    );
-    applicationSubmission.tfwhFarmSize = filterUndefined(
-      updateDto.tfwhFarmSize,
-      applicationSubmission.tfwhFarmSize,
-    );
-    applicationSubmission.naruClustered = filterUndefined(
-      updateDto.naruClustered,
-      applicationSubmission.naruClustered,
-    );
-    applicationSubmission.naruSetback = filterUndefined(
-      updateDto.naruSetback,
-      applicationSubmission.naruSetback,
-    );
+    applicationSubmission.tfwhCount = filterUndefined(updateDto.tfwhCount, applicationSubmission.tfwhCount);
+    applicationSubmission.tfwhDesign = filterUndefined(updateDto.tfwhDesign, applicationSubmission.tfwhDesign);
+    applicationSubmission.tfwhFarmSize = filterUndefined(updateDto.tfwhFarmSize, applicationSubmission.tfwhFarmSize);
+    applicationSubmission.naruClustered = filterUndefined(updateDto.naruClustered, applicationSubmission.naruClustered);
+    applicationSubmission.naruSetback = filterUndefined(updateDto.naruSetback, applicationSubmission.naruSetback);
     applicationSubmission.naruSubtype = undefined;
     applicationSubmission.naruSubtypeCode = filterUndefined(
       updateDto.naruSubtypeCode,
       applicationSubmission.naruSubtypeCode,
     );
-    applicationSubmission.naruFloorArea = filterUndefined(
-      updateDto.naruFloorArea,
-      applicationSubmission.naruFloorArea,
-    );
+    applicationSubmission.naruFloorArea = filterUndefined(updateDto.naruFloorArea, applicationSubmission.naruFloorArea);
     applicationSubmission.naruResidenceNecessity = filterUndefined(
       updateDto.naruResidenceNecessity,
       applicationSubmission.naruResidenceNecessity,
@@ -1043,10 +835,7 @@ export class ApplicationSubmissionService {
       updateDto.naruExistingStructures,
       applicationSubmission.naruExistingStructures,
     );
-    applicationSubmission.naruFillType = filterUndefined(
-      updateDto.naruFillType,
-      applicationSubmission.naruFillType,
-    );
+    applicationSubmission.naruFillType = filterUndefined(updateDto.naruFillType, applicationSubmission.naruFillType);
     applicationSubmission.naruToPlaceArea = filterUndefined(
       updateDto.naruToPlaceArea,
       applicationSubmission.naruToPlaceArea,
@@ -1090,10 +879,7 @@ export class ApplicationSubmissionService {
       updateDto.inclExclHectares,
       applicationSubmission.inclExclHectares,
     );
-    applicationSubmission.exclWhyLand = filterUndefined(
-      updateDto.exclWhyLand,
-      applicationSubmission.exclWhyLand,
-    );
+    applicationSubmission.exclWhyLand = filterUndefined(updateDto.exclWhyLand, applicationSubmission.exclWhyLand);
     applicationSubmission.inclAgricultureSupport = filterUndefined(
       updateDto.inclAgricultureSupport,
       applicationSubmission.inclAgricultureSupport,
@@ -1112,10 +898,7 @@ export class ApplicationSubmissionService {
     );
   }
 
-  private setCovenantFields(
-    applicationSubmission: ApplicationSubmission,
-    updateDto: ApplicationSubmissionUpdateDto,
-  ) {
+  private setCovenantFields(applicationSubmission: ApplicationSubmission, updateDto: ApplicationSubmissionUpdateDto) {
     applicationSubmission.coveAreaImpacted = filterUndefined(
       updateDto.coveAreaImpacted,
       applicationSubmission.coveAreaImpacted,
@@ -1124,10 +907,7 @@ export class ApplicationSubmissionService {
       updateDto.coveFarmImpact,
       applicationSubmission.coveFarmImpact,
     );
-    applicationSubmission.coveHasDraft = filterUndefined(
-      updateDto.coveHasDraft,
-      applicationSubmission.coveHasDraft,
-    );
+    applicationSubmission.coveHasDraft = filterUndefined(updateDto.coveHasDraft, applicationSubmission.coveHasDraft);
   }
 
   async listNaruSubtypes() {
@@ -1154,9 +934,7 @@ export class ApplicationSubmissionService {
   }
 
   async canDeleteDocument(document: ApplicationDocument, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles!.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles!.includes(value));
     if (overlappingRoles.length > 0) {
       return true;
     }
@@ -1164,19 +942,14 @@ export class ApplicationSubmissionService {
     const documentFlags = await this.getDocumentFlags(document);
 
     const isOwner = user.uuid === documentFlags.ownerUuid;
-    const isGovernmentOnFile =
-      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
-    const isSameAccountAsOwner =
-      !!user.bceidBusinessGuid &&
-      user.bceidBusinessGuid === documentFlags.ownerGuid;
+    const isGovernmentOnFile = user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const isSameAccountAsOwner = !!user.bceidBusinessGuid && user.bceidBusinessGuid === documentFlags.ownerGuid;
 
     return isOwner || isGovernmentOnFile || isSameAccountAsOwner;
   }
 
   async canAccessDocument(document: ApplicationDocument, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles.includes(value));
 
     //If user is ALCS staff
     if (overlappingRoles.length > 0) {
@@ -1191,8 +964,7 @@ export class ApplicationSubmissionService {
     const documentFlags = await this.getDocumentFlags(document);
 
     const applicantFlag =
-      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
-      user.uuid === documentFlags.ownerUuid;
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) && user.uuid === documentFlags.ownerUuid;
     const governmentFlag =
       !!user.bceidBusinessGuid &&
       document.visibilityFlags.includes(VISIBILITY_FLAG.GOVERNMENT) &&
@@ -1212,11 +984,7 @@ export class ApplicationSubmissionService {
       .leftJoin('application.documents', 'document')
       .leftJoin('submission.createdBy', 'user')
       .leftJoin('application.localGovernment', 'localGovernment')
-      .select([
-        'user.uuid',
-        'user.bceid_business_guid',
-        'localGovernment.bceidBusinessGuid',
-      ])
+      .select(['user.uuid', 'user.bceid_business_guid', 'localGovernment.bceidBusinessGuid'])
       .where('document.uuid = :uuid', {
         uuid: document.uuid,
       })
@@ -1234,6 +1002,15 @@ export class ApplicationSubmissionService {
     switch (applicationSubmission.typeCode) {
       case 'NARU':
         await this.applyNaruTags(applicationSubmission);
+        break;
+      case 'ROSO':
+        await this.applyRosoTags(applicationSubmission);
+        break;
+      case 'POFO':
+        await this.applyPofoTags(applicationSubmission);
+        break;
+      case 'PFRS':
+        await this.applyPfrsTags(applicationSubmission);
         break;
     }
   }
@@ -1264,6 +1041,106 @@ export class ApplicationSubmissionService {
       applicationSubmission.naruWillImportFill ?? false,
       'Fill Placement',
     );
+  }
+
+  private async applyRosoTags(applicationSubmission: ApplicationSubmission) {
+    await this.applySoilStructuresTags(applicationSubmission);
+    const addRetroactive =
+      (applicationSubmission.soilAlreadyRemovedVolume ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyRemovedArea ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyRemovedAverageDepth ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyRemovedMaximumDepth ?? 0) > 0;
+
+    try {
+      await this.conditionallyApplyTag(applicationSubmission.fileNumber, addRetroactive, 'Retroactive');
+    } catch (e) {
+      this.logger.error(
+        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+      );
+    }
+  }
+
+  private async applyPofoTags(applicationSubmission: ApplicationSubmission) {
+    await this.applySoilStructuresTags(applicationSubmission);
+
+    const addRetroactive =
+      (applicationSubmission.soilAlreadyPlacedVolume ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyPlacedArea ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyPlacedMaximumDepth ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyPlacedAverageDepth ?? 0) > 0;
+
+    try {
+      await this.conditionallyApplyTag(applicationSubmission.fileNumber, addRetroactive, 'Retroactive');
+    } catch (e) {
+      this.logger.error(
+        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+      );
+    }
+  }
+
+  private async applyPfrsTags(applicationSubmission: ApplicationSubmission) {
+    await this.applySoilStructuresTags(applicationSubmission);
+
+    const addRosoRetroactive =
+      (applicationSubmission.soilAlreadyRemovedVolume ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyRemovedArea ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyRemovedAverageDepth ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyRemovedMaximumDepth ?? 0) > 0;
+
+    const addPofoRetroactive =
+      (applicationSubmission.soilAlreadyPlacedVolume ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyPlacedArea ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyPlacedMaximumDepth ?? 0) > 0 ||
+      (applicationSubmission.soilAlreadyPlacedAverageDepth ?? 0) > 0;
+
+    try {
+      await this.conditionallyApplyTag(
+        applicationSubmission.fileNumber,
+        addPofoRetroactive || addRosoRetroactive,
+        'Retroactive',
+      );
+    } catch (e) {
+      this.logger.error(
+        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+      );
+    }
+  }
+
+  private async applySoilStructuresTags(applicationSubmission: ApplicationSubmission) {
+    const structureTags = [
+      'Principal Residence',
+      'Additional Residence',
+      'Accessory Structure',
+      'Farm Structure',
+      'Other Structure',
+    ];
+    const tags: string[] = [];
+
+    const structureTypes = applicationSubmission.soilProposedStructures.reduce((map, value) => {
+      if (value.type) {
+        map.add(PORTAL_TO_ALCS_TAGS_MAP[value.type]);
+      }
+      return map;
+    }, new Set<string>());
+
+    for (const structureTag of structureTags) {
+      try {
+        const tagExists = await this.applicationTagService.applicationHasTag(
+          applicationSubmission.fileNumber,
+          structureTag,
+        );
+
+        if (!structureTypes.has(structureTag) && tagExists) {
+          await this.applicationTagService.removeTagFromApplication(applicationSubmission.fileNumber, structureTag);
+        } else if (structureTypes.has(structureTag) && !tagExists) {
+          await this.applicationTagService.addTagToApplication(applicationSubmission.fileNumber, structureTag);
+        }
+      } catch (e) {
+        this.logger.error(
+          `Could not conditionally add tag ${structureTag} to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+        );
+      }
+    }
   }
 
   private async conditionallyApplyTag(fileNumber: string, condition: boolean, tagName: string) {
