@@ -6,7 +6,7 @@ export class AnswerNoToStructuresForOldSoilApps1731100639156 implements Migratio
       update
         alcs.application_submission as2
       set
-        as2.soil_is_new_structure = false
+        soil_is_new_structure = false
       where
         as2.type_code in ('PFRS', 'POFO', 'ROSO')
         and as2.soil_is_new_structure is null;
