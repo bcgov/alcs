@@ -454,15 +454,13 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   private filterTags(value: string): TagDto[] {
     const filterValue = value.toLowerCase();
-    return this.allTags.filter(
-      (tag) => {
-        if (filterValue) {
-          return !this.tags.includes(tag) && tag.name.toLowerCase().startsWith(filterValue)
-        } else {
-          return !this.tags.includes(tag);
-        }
+    return this.allTags.filter((tag) => {
+      if (filterValue) {
+        return !this.tags.includes(tag) && tag.name.toLowerCase().includes(filterValue);
+      } else {
+        return !this.tags.includes(tag);
       }
-    );
+    });
   }
 
   private updateFilteredTags(): void {
