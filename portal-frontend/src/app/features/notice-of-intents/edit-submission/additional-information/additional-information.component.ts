@@ -192,8 +192,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   }
 
   async attachBuildingPlan(file: FileHandle) {
-    const hasVirus = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
-    this.showBuildingPlanVirus = !hasVirus;
+    const attachmentSucceeded = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+    this.showBuildingPlanVirus = !attachmentSucceeded;
   }
 
   prepareStructureSpecificTextInputs() {
