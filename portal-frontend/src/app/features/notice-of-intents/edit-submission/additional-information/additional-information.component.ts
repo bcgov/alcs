@@ -173,8 +173,11 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
         this.structuresForm = new FormGroup({});
         this.proposedStructures = [];
-        for (const lot of noiSubmission.soilProposedStructures) {
-          this.addControl(lot.type, lot.area);
+        for (const structure of noiSubmission.soilProposedStructures) {
+          const newStructure = this.addControl(structure.area);
+          if (structure.type !== null) {
+            this.setStructureTypeInput(newStructure, structure.type);
+          }
         }
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         this.prepareStructureSpecificTextInputs();
@@ -429,8 +432,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       if (!result) return;
       const structureToEdit = this.proposedStructures.find((structure) => structure.id === id);
       if (structureToEdit) {
+        this.setStructureTypeInput(structureToEdit, result.dto.type);
         structureToEdit.area = result.dto.area.toString();
-        structureToEdit.type = result.dto.type;
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         const areaControl = this.structuresForm.controls[`${structureToEdit?.id}-area`];
         const typeControl = this.structuresForm.controls[`${structureToEdit?.id}-type`];
@@ -486,11 +489,14 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         .beforeClosed()
         .subscribe(async (result: { isEditing: boolean; structureId: string; dto: ProposedStructure }) => {
           if (!result) return;
-          this.addControl(result.dto.type, result.dto.area);
+          const newStructure = this.addControl(result.dto.area);
+          if (result.dto.type !== null) {
+            this.setStructureTypeInput(newStructure, result.dto.type);
+          }
           this.structuresSource = new MatTableDataSource(this.proposedStructures);
         });
     } else {
-      this.addControl(null, null);
+      this.addControl();
       this.structuresSource = new MatTableDataSource(this.proposedStructures);
     }
   }
@@ -499,13 +505,13 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
   }
 
-  private addControl(type: STRUCTURE_TYPES | null, area: number | null) {
+  private addControl(area: number | null = null) {
     const areaStr = area ? area.toString(10) : null;
-    const newStructure: FormProposedStructure = { type, area: areaStr, id: v4() };
+    const newStructure: FormProposedStructure = { type: null, area: areaStr, id: v4() };
     this.proposedStructures.push(newStructure);
     this.structuresForm.addControl(
       `${newStructure.id}-type`,
-      new FormControl<string | null>(type, [Validators.required]),
+      new FormControl<string | null>(null, [Validators.required]),
     );
     this.structuresForm.addControl(
       `${newStructure.id}-area`,
@@ -513,6 +519,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     );
 
     this.structuresForm.markAsDirty();
+
+    return newStructure;
   }
 
   private setRequired(formControl: FormControl<any>) {
