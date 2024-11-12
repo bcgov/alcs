@@ -102,8 +102,7 @@ export class TagsHeaderComponent implements OnInit, OnChanges {
     const filterValue = value.toLowerCase();
     return this.allTags.filter(
       (tag) =>
-        tag.name.toLowerCase().startsWith(filterValue) &&
-        !this.tags.some((selectedTag) => selectedTag.uuid === tag.uuid),
+        tag.name.toLowerCase().includes(filterValue) && !this.tags.some((selectedTag) => selectedTag.uuid === tag.uuid),
     );
   }
 
