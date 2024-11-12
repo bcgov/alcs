@@ -172,6 +172,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         });
 
         this.structuresForm = new FormGroup({});
+        this.proposedStructures = [];
         for (const lot of noiSubmission.soilProposedStructures) {
           this.addControl(lot.type, lot.area);
         }
