@@ -1125,16 +1125,11 @@ export class ApplicationSubmissionService {
 
     for (const structureTag of structureTags) {
       try {
-        const tagExists = await this.applicationTagService.applicationHasTag(
+        await this.conditionallyApplyTag(
           applicationSubmission.fileNumber,
+          structureTypes.has(structureTag),
           structureTag,
         );
-
-        if (!structureTypes.has(structureTag) && tagExists) {
-          await this.applicationTagService.removeTagFromApplication(applicationSubmission.fileNumber, structureTag);
-        } else if (structureTypes.has(structureTag) && !tagExists) {
-          await this.applicationTagService.addTagToApplication(applicationSubmission.fileNumber, structureTag);
-        }
       } catch (e) {
         this.logger.error(
           `Could not conditionally add tag ${structureTag} to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
