@@ -172,6 +172,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         });
 
         this.structuresForm = new FormGroup({});
+        this.proposedStructures = [];
         for (const lot of noiSubmission.soilProposedStructures) {
           this.addControl(lot.type, lot.area);
         }
@@ -191,8 +192,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   }
 
   async attachBuildingPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
-    this.showBuildingPlanVirus = !res;
+    const attachmentSucceeded = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+    this.showBuildingPlanVirus = !attachmentSucceeded;
   }
 
   prepareStructureSpecificTextInputs() {
