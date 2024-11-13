@@ -461,14 +461,15 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     const changingToResidentialType = newType && residentialTypes.includes(newType);
 
     return !!(
-      (oldType &&
+      oldType !== newType &&
+      ((oldType &&
         oldType === STRUCTURE_TYPES.FARM_STRUCTURE &&
         (this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value)) ||
-      (changingFromResidentialType && !changingToResidentialType && this.soilStructureResidentialUseReason.value) ||
-      (oldType &&
-        oldType === STRUCTURE_TYPES.ACCESSORY_STRUCTURE &&
-        this.soilStructureResidentialAccessoryUseReason.value) ||
-      (oldType && oldType === STRUCTURE_TYPES.OTHER_STRUCTURE && this.soilStructureOtherUseReason.value)
+        (changingFromResidentialType && !changingToResidentialType && this.soilStructureResidentialUseReason.value) ||
+        (oldType &&
+          oldType === STRUCTURE_TYPES.ACCESSORY_STRUCTURE &&
+          this.soilStructureResidentialAccessoryUseReason.value) ||
+        (oldType && oldType === STRUCTURE_TYPES.OTHER_STRUCTURE && this.soilStructureOtherUseReason.value))
     );
   }
 
