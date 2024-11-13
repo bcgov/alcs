@@ -416,7 +416,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
-    if (this.hasInput(structure.type)) {
+    if (this.hasInput(structure.type, newType)) {
       this.confirmationDialogService
         .openDialog({
           title: 'Change Structure Type',
@@ -451,29 +451,25 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     this.form.markAsDirty();
   }
 
-  private hasInput(type: STRUCTURE_TYPES | null) {
-    switch (type) {
-      case STRUCTURE_TYPES.FARM_STRUCTURE:
-        return !!(this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value);
+  private hasInput(oldType: STRUCTURE_TYPES | null, newType: STRUCTURE_TYPES | null) {
+    const residentialTypes = [
+      STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
+      STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+      STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+    ];
+    const changingFromResidentialType = oldType && residentialTypes.includes(oldType);
+    const changingToResidentialType = newType && residentialTypes.includes(newType);
 
-      case STRUCTURE_TYPES.ACCESSORY_STRUCTURE:
-        return !!(
-          this.soilStructureResidentialUseReason.value || this.soilStructureResidentialAccessoryUseReason.value
-        );
-
-      case STRUCTURE_TYPES.OTHER_STRUCTURE:
-        return !!this.soilStructureOtherUseReason.value;
-
-      case STRUCTURE_TYPES.PRINCIPAL_RESIDENCE:
-      case STRUCTURE_TYPES.ADDITIONAL_RESIDENCE:
-        return !!this.soilStructureResidentialUseReason.value;
-
-      case null:
-        return false;
-
-      default:
-        return true;
-    }
+    return !!(
+      (oldType &&
+        oldType === STRUCTURE_TYPES.FARM_STRUCTURE &&
+        (this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value)) ||
+      (changingFromResidentialType && !changingToResidentialType && this.soilStructureResidentialUseReason.value) ||
+      (oldType &&
+        oldType === STRUCTURE_TYPES.ACCESSORY_STRUCTURE &&
+        this.soilStructureResidentialAccessoryUseReason.value) ||
+      (oldType && oldType === STRUCTURE_TYPES.OTHER_STRUCTURE && this.soilStructureOtherUseReason.value)
+    );
   }
 
   private setStructureTypeInput(structure: FormProposedStructure, newType: STRUCTURE_TYPES) {
@@ -498,9 +494,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   updateStructureTypeFields() {
     // Remove
-
     if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] === 0) {
+      this.soilStructureFarmUseReason.reset();
       this.soilStructureFarmUseReason.removeValidators([Validators.required]);
+      this.soilAgriParcelActivity.reset();
       this.soilAgriParcelActivity.removeValidators([Validators.required]);
     }
 
@@ -509,14 +506,17 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       this.structureTypeCounts[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE] === 0 &&
       this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0
     ) {
+      this.soilStructureResidentialUseReason.reset();
       this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
     }
 
-    if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] === 0) {
+    if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0) {
+      this.soilStructureResidentialAccessoryUseReason.reset();
       this.soilStructureResidentialAccessoryUseReason.removeValidators([Validators.required]);
     }
 
-    if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] === 0) {
+    if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] === 0) {
+      this.soilStructureOtherUseReason.reset();
       this.soilStructureOtherUseReason.removeValidators([Validators.required]);
     }
 
@@ -524,9 +524,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.FARM_STRUCTURE] > 0) {
       this.soilStructureFarmUseReason.setValidators([Validators.required]);
-      this.soilStructureFarmUseReason.reset();
       this.soilAgriParcelActivity.setValidators([Validators.required]);
-      this.soilAgriParcelActivity.reset();
     }
 
     if (
@@ -535,17 +533,14 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0
     ) {
       this.soilStructureResidentialUseReason.setValidators([Validators.required]);
-      this.soilStructureResidentialUseReason.reset();
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.ACCESSORY_STRUCTURE] > 0) {
       this.soilStructureResidentialAccessoryUseReason.setValidators([Validators.required]);
-      this.soilStructureResidentialAccessoryUseReason.reset();
     }
 
     if (this.structureTypeCounts[STRUCTURE_TYPES.OTHER_STRUCTURE] > 0) {
       this.soilStructureOtherUseReason.setValidators([Validators.required]);
-      this.soilStructureOtherUseReason.reset();
     }
   }
 
@@ -627,8 +622,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     this.structuresForm.removeControl(`${id}-area`);
     this.structuresForm.markAsDirty();
 
-    this.updateStructureTypeFields();
     this.updateStructureCounts(structureToDelete.type, null);
+    this.updateStructureTypeFields();
   }
 
   onStructureEdit(id: string) {
