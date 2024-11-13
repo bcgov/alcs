@@ -146,11 +146,6 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
           projectDuration: applicationSubmission.soilProjectDuration,
-          soilStructureFarmUseReason: applicationSubmission.soilStructureFarmUseReason,
-          soilStructureResidentialUseReason: applicationSubmission.soilStructureResidentialUseReason,
-          soilAgriParcelActivity: applicationSubmission.soilAgriParcelActivity,
-          soilStructureResidentialAccessoryUseReason: applicationSubmission.soilStructureResidentialAccessoryUseReason,
-          soilStructureOtherUseReason: applicationSubmission.soilStructureOtherUseReason,
         });
 
         this.proposedStructures = [];
@@ -164,6 +159,15 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
         this.updateStructureTypeFields();
+
+        this.form.patchValue({
+          soilStructureFarmUseReason: applicationSubmission.soilStructureFarmUseReason,
+          soilStructureResidentialUseReason: applicationSubmission.soilStructureResidentialUseReason,
+          soilAgriParcelActivity: applicationSubmission.soilAgriParcelActivity,
+          soilStructureResidentialAccessoryUseReason: applicationSubmission.soilStructureResidentialAccessoryUseReason,
+          soilStructureOtherUseReason: applicationSubmission.soilStructureOtherUseReason,
+        });
+
         if (this.showErrors) {
           this.form.markAllAsTouched();
           this.structuresForm.markAllAsTouched();
