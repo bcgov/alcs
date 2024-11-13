@@ -331,22 +331,26 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     }
   }
 
-  private checkStructureTypeInput(type: STRUCTURE_TYPES | null) {
-    switch (type) {
-      case STRUCTURE_TYPES.FARM_STRUCTURE:
-        return !!(this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value);
-      case STRUCTURE_TYPES.ACCESSORY_STRUCTURE:
-        return !!(
-          this.soilStructureResidentialUseReason.value || this.soilStructureResidentialAccessoryUseReason.value
-        );
-      case STRUCTURE_TYPES.OTHER_STRUCTURE:
-        return !!this.soilStructureOtherUseReason.value;
-      case STRUCTURE_TYPES.PRINCIPAL_RESIDENCE:
-      case STRUCTURE_TYPES.ADDITIONAL_RESIDENCE:
-        return !!this.soilStructureResidentialUseReason.value;
-      case null:
-        return false;
-    }
+  private structureChangeRequiresConfirmation(oldType: STRUCTURE_TYPES | null, newType: STRUCTURE_TYPES): boolean {
+    const residentialTypes = [
+      STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
+      STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+      STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+    ];
+    const changingFromResidentialType = oldType && residentialTypes.includes(oldType);
+    const changingToResidentialType = newType && residentialTypes.includes(newType);
+
+    return !!(
+      oldType !== newType &&
+      ((oldType &&
+        oldType === STRUCTURE_TYPES.FARM_STRUCTURE &&
+        (this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value)) ||
+        (changingFromResidentialType && !changingToResidentialType && this.soilStructureResidentialUseReason.value) ||
+        (oldType &&
+          oldType === STRUCTURE_TYPES.ACCESSORY_STRUCTURE &&
+          this.soilStructureResidentialAccessoryUseReason.value) ||
+        (oldType && oldType === STRUCTURE_TYPES.OTHER_STRUCTURE && this.soilStructureOtherUseReason.value))
+    );
   }
 
   private setStructureTypeInput(structure: FormProposedStructure, newType: STRUCTURE_TYPES) {
@@ -362,18 +366,16 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     this.form.markAsDirty();
   }
 
-  onChangeStructureType(id: string, value: STRUCTURE_TYPES) {
+  onChangeStructureType(id: string, newType: STRUCTURE_TYPES) {
     const structure = this.proposedStructures.find((structure) => structure.id === id);
     if (!structure) {
       console.error('Failed to find structure');
       return;
     }
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
-    const prevType = structure.type;
-    const hasInput = this.checkStructureTypeInput(prevType);
-
-    if (!hasInput) {
-      return this.setStructureTypeInput(structure, value);
+    const oldType = structure.type;
+    if (!this.structureChangeRequiresConfirmation(oldType, newType)) {
+      return this.setStructureTypeInput(structure, newType);
     } else {
       const dialog = this.confirmationDialogService.openDialog({
         title: 'Change Structure Type',
@@ -384,9 +386,9 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
       dialog.subscribe((isConfirmed) => {
         if (isConfirmed) {
-          this.setStructureTypeInput(structure, value);
+          this.setStructureTypeInput(structure, newType);
         } else {
-          this.structuresForm.get(structure.id + '-type')?.setValue(prevType);
+          this.structuresForm.get(structure.id + '-type')?.setValue(oldType);
         }
       });
     }
