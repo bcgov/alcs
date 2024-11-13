@@ -416,7 +416,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
-    if (this.hasInput(structure.type, newType)) {
+    if (this.structureChangeRequiresConfirmation(structure.type, newType)) {
       this.confirmationDialogService
         .openDialog({
           title: 'Change Structure Type',
@@ -451,7 +451,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     this.form.markAsDirty();
   }
 
-  private hasInput(oldType: STRUCTURE_TYPES | null, newType: STRUCTURE_TYPES | null) {
+  private structureChangeRequiresConfirmation(
+    oldType: STRUCTURE_TYPES | null,
+    newType: STRUCTURE_TYPES | null,
+  ): boolean {
     const residentialTypes = [
       STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
       STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
