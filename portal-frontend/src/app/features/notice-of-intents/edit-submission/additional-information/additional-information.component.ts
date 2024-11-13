@@ -506,7 +506,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     return item.type === STRUCTURE_TYPES.PRINCIPAL_RESIDENCE || item.type === STRUCTURE_TYPES.ADDITIONAL_RESIDENCE;
   }
 
-  private addControl(area: number | null = null) {
+  private addControl(area: number | null = null): FormProposedStructure {
     const areaStr = area ? area.toString(10) : null;
     const newStructure: FormProposedStructure = { type: null, area: areaStr, id: v4() };
     this.proposedStructures.push(newStructure);
