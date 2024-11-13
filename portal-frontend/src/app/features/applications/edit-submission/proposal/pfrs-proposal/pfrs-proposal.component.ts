@@ -184,11 +184,6 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           fillProjectDuration: applicationSubmission.fillProjectDuration,
           isExtractionOrMining: formatBooleanToString(applicationSubmission.soilIsExtractionOrMining),
           hasSubmittedNotice: formatBooleanToString(applicationSubmission.soilHasSubmittedNotice),
-          soilStructureFarmUseReason: applicationSubmission.soilStructureFarmUseReason,
-          soilStructureResidentialUseReason: applicationSubmission.soilStructureResidentialUseReason,
-          soilAgriParcelActivity: applicationSubmission.soilAgriParcelActivity,
-          soilStructureResidentialAccessoryUseReason: applicationSubmission.soilStructureResidentialAccessoryUseReason,
-          soilStructureOtherUseReason: applicationSubmission.soilStructureOtherUseReason,
         });
 
         this.structuresForm = new FormGroup({});
@@ -202,6 +197,15 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
         this.updateStructureTypeFields();
+
+        this.form.patchValue({
+          soilStructureFarmUseReason: applicationSubmission.soilStructureFarmUseReason,
+          soilStructureResidentialUseReason: applicationSubmission.soilStructureResidentialUseReason,
+          soilAgriParcelActivity: applicationSubmission.soilAgriParcelActivity,
+          soilStructureResidentialAccessoryUseReason: applicationSubmission.soilStructureResidentialAccessoryUseReason,
+          soilStructureOtherUseReason: applicationSubmission.soilStructureOtherUseReason,
+        });
+
         if (this.showErrors) {
           this.form.markAllAsTouched();
           this.structuresForm.markAllAsTouched();
