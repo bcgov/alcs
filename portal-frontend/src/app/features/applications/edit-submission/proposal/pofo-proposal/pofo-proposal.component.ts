@@ -347,7 +347,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
 
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
-    if (this.hasInput(structure.type, newType)) {
+    if (this.structureChangeRequiresConfirmation(structure.type, newType)) {
       this.confirmationDialogService
         .openDialog({
           title: 'Change Structure Type',
@@ -382,7 +382,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     this.form.markAsDirty();
   }
 
-  private hasInput(oldType: STRUCTURE_TYPES | null, newType: STRUCTURE_TYPES | null) {
+  private structureChangeRequiresConfirmation(oldType: STRUCTURE_TYPES | null, newType: STRUCTURE_TYPES | null) {
     const residentialTypes = [
       STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
       STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
@@ -392,14 +392,15 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     const changingToResidentialType = newType && residentialTypes.includes(newType);
 
     return !!(
-      (oldType &&
+      oldType !== newType &&
+      ((oldType &&
         oldType === STRUCTURE_TYPES.FARM_STRUCTURE &&
         (this.soilAgriParcelActivity.value || this.soilStructureFarmUseReason.value)) ||
-      (changingFromResidentialType && !changingToResidentialType && this.soilStructureResidentialUseReason.value) ||
-      (oldType &&
-        oldType === STRUCTURE_TYPES.ACCESSORY_STRUCTURE &&
-        this.soilStructureResidentialAccessoryUseReason.value) ||
-      (oldType && oldType === STRUCTURE_TYPES.OTHER_STRUCTURE && this.soilStructureOtherUseReason.value)
+        (changingFromResidentialType && !changingToResidentialType && this.soilStructureResidentialUseReason.value) ||
+        (oldType &&
+          oldType === STRUCTURE_TYPES.ACCESSORY_STRUCTURE &&
+          this.soilStructureResidentialAccessoryUseReason.value) ||
+        (oldType && oldType === STRUCTURE_TYPES.OTHER_STRUCTURE && this.soilStructureOtherUseReason.value))
     );
   }
 
