@@ -162,15 +162,6 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           this.confirmRemovalOfSoil = true;
         }
 
-        this.form.patchValue({
-          isRemovingSoilForNewStructure: formatBooleanToString(noiSubmission.soilIsRemovingSoilForNewStructure),
-          soilStructureFarmUseReason: noiSubmission.soilStructureFarmUseReason,
-          soilStructureResidentialUseReason: noiSubmission.soilStructureResidentialUseReason,
-          soilAgriParcelActivity: noiSubmission.soilAgriParcelActivity,
-          soilStructureResidentialAccessoryUseReason: noiSubmission.soilStructureResidentialAccessoryUseReason,
-          soilStructureOtherUseReason: noiSubmission.soilStructureOtherUseReason,
-        });
-
         this.structuresForm = new FormGroup({});
         this.proposedStructures = [];
         for (const structure of noiSubmission.soilProposedStructures) {
@@ -181,6 +172,15 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         }
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         this.prepareStructureSpecificTextInputs();
+
+        this.form.patchValue({
+          isRemovingSoilForNewStructure: formatBooleanToString(noiSubmission.soilIsRemovingSoilForNewStructure),
+          soilStructureFarmUseReason: noiSubmission.soilStructureFarmUseReason,
+          soilStructureResidentialUseReason: noiSubmission.soilStructureResidentialUseReason,
+          soilAgriParcelActivity: noiSubmission.soilAgriParcelActivity,
+          soilStructureResidentialAccessoryUseReason: noiSubmission.soilStructureResidentialAccessoryUseReason,
+          soilStructureOtherUseReason: noiSubmission.soilStructureOtherUseReason,
+        });
 
         if (this.showErrors) {
           this.structuresForm.markAllAsTouched();
