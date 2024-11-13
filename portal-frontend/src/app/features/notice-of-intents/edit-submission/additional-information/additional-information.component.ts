@@ -349,9 +349,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     }
   }
 
-  private setStructureTypeInput(structure: FormProposedStructure, value: STRUCTURE_TYPES) {
-    structure.type = value;
+  private setStructureTypeInput(structure: FormProposedStructure, newType: STRUCTURE_TYPES) {
+    structure.type = newType;
     this.prepareStructureSpecificTextInputs();
+    this.structuresForm.get(`${structure.id}-type`)?.setValue(newType);
     this.form.markAsDirty();
   }
 
