@@ -13,12 +13,9 @@
     <div class="form-container">
       <div class="form-field-floor-area">
         <div class="label">
-          <label for="floorAreaId">Total Floor Area (<span matTextSuffix>m<sup>2</sup></span>) according to the ALC's definition(s)</label>
+          <label for="floorAreaId">Total Floor Area (m2)</label>
         </div>
-        <div class="subtext">Please refer to <a
-          href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing"
-          target="_blank"
-        >Housing in the ALR</a> on the ALC website for more detail.</div>
+        <div class="subtext">Include the basement and any attached garage</div>
         <mat-form-field appearance="outline">
           <input
             min="0.01"
@@ -50,7 +47,7 @@
         <div class="label">
           <label for="descriptionId">Description of the Residence</label>
         </div>
-        <div class="subtext">Include measurements (<span matTextSuffix>m<sup>2</sup></span>) of any basement or attached garage</div>
+        <div class="subtext">Include if it has an attached garage or basement</div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="description"
