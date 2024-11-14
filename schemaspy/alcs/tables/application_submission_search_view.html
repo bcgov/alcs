@@ -268,7 +268,7 @@
                                 </tr>
                                 <tr>
                                     <td><span id="status">status</span></td>
-                                    <td>jsonb</td>
+                                    <td>text</td>
                                     <td>2147483647</td>
                                     <td title='nullable'>√</td>
                                     <td title=''></td>
@@ -343,7 +343,7 @@
 <area shape="rect" id="node21" href="public_application_submission_s_21a213ce.html" target="_top" title="public_application_submission_search_view" alt="" coords="301,1857,803,1921">
 <area shape="rect" id="node22" href="public_notice_of_intent_submiss_882223b5.html" target="_top" title="public_notice_of_intent_submission_search_view" alt="" coords="277,1939,827,2003">
 <area shape="rect" id="node23" href="public_notification_submission__33ffb967.html" target="_top" title="public_notification_submission_search_view" alt="" coords="299,2020,805,2084">
-<area shape="rect" id="node24" href="tag.html" target="_top" title="tag" alt="" coords="996,2135,1157,2223">
+<area shape="rect" id="node24" href="tag.html" target="_top" title="tag" alt="" coords="1019,2135,1135,2223">
 <area shape="rect" id="node25" href="tag_category.html" target="_top" title="tag_category" alt="" coords="447,2101,657,2189">
 <area shape="rect" id="node26" href="typeorm_metadata.html" target="_top" title="typeorm_metadata" alt="" coords="418,2243,686,2331">
 </map>
@@ -363,7 +363,7 @@
                             </div>
                         </div>
                         <div class="box-body">
-                            <textarea id="sql-script-codemirror" name="sql-script-codemirror" rows="" style="display: none;">SELECT app_sub.uuid,&#10;    app_sub.applicant,&#10;    app.uuid AS application_uuid,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    app_sub.file_number,&#10;    app.type_code AS application_type_code,&#10;    app.date_submitted_to_alc,&#10;    app.decision_date,&#10;    app.region_code AS application_region_code,&#10;    alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid) AS status&#10;   FROM ((alcs.application_submission app_sub&#10;     JOIN alcs.application app ON ((((app.file_number)::text &#61; (app_sub.file_number)::text) AND (app.audit_deleted_date_at IS NULL))))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON (((app_sub.local_government_uuid &#61; &quot;localGovernment&quot;.uuid) AND (&quot;localGovernment&quot;.audit_deleted_date_at IS NULL))))&#10;  WHERE ((app_sub.is_draft IS NOT TRUE) AND (app_sub.audit_deleted_date_at IS NULL));</textarea>
+                            <textarea id="sql-script-codemirror" name="sql-script-codemirror" rows="" style="display: none;">SELECT app_sub.uuid,&#10;    app_sub.applicant,&#10;    app.uuid AS application_uuid,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    app_sub.file_number,&#10;    app.type_code AS application_type_code,&#10;    app.date_submitted_to_alc,&#10;    app.decision_date,&#10;    app.region_code AS application_region_code,&#10;    NULL::text AS status&#10;   FROM ((alcs.application_submission app_sub&#10;     JOIN alcs.application app ON ((((app.file_number)::text &#61; (app_sub.file_number)::text) AND (app.audit_deleted_date_at IS NULL))))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON (((app_sub.local_government_uuid &#61; &quot;localGovernment&quot;.uuid) AND (&quot;localGovernment&quot;.audit_deleted_date_at IS NULL))))&#10;  WHERE ((app_sub.is_draft IS NOT TRUE) AND (app_sub.audit_deleted_date_at IS NULL));</textarea>
                             <div style="padding-top: 5px;"><hr></div>
                             <div class="box box-solid">
                                 <div class="box-header with-border">

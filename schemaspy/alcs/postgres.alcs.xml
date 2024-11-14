@@ -1088,7 +1088,7 @@
             <column ascending="true" name="application_file_number"/>
          </index>
       </table>
-      <table name="application_submission_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT app_sub.uuid,&#10;    app_sub.applicant,&#10;    app.uuid AS application_uuid,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    app_sub.file_number,&#10;    app.type_code AS application_type_code,&#10;    app.date_submitted_to_alc,&#10;    app.decision_date,&#10;    app.region_code AS application_region_code,&#10;    alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid) AS status&#10;   FROM ((alcs.application_submission app_sub&#10;     JOIN alcs.application app ON ((((app.file_number)::text = (app_sub.file_number)::text) AND (app.audit_deleted_date_at IS NULL))))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON (((app_sub.local_government_uuid = &quot;localGovernment&quot;.uuid) AND (&quot;localGovernment&quot;.audit_deleted_date_at IS NULL))))&#10;  WHERE ((app_sub.is_draft IS NOT TRUE) AND (app_sub.audit_deleted_date_at IS NULL));">
+      <table name="application_submission_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT app_sub.uuid,&#10;    app_sub.applicant,&#10;    app.uuid AS application_uuid,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    app_sub.file_number,&#10;    app.type_code AS application_type_code,&#10;    app.date_submitted_to_alc,&#10;    app.decision_date,&#10;    app.region_code AS application_region_code,&#10;    NULL::text AS status&#10;   FROM ((alcs.application_submission app_sub&#10;     JOIN alcs.application app ON ((((app.file_number)::text = (app_sub.file_number)::text) AND (app.audit_deleted_date_at IS NULL))))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON (((app_sub.local_government_uuid = &quot;localGovernment&quot;.uuid) AND (&quot;localGovernment&quot;.audit_deleted_date_at IS NULL))))&#10;  WHERE ((app_sub.is_draft IS NOT TRUE) AND (app_sub.audit_deleted_date_at IS NULL));">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="applicant" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="application_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
@@ -1100,9 +1100,13 @@
          <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="date_submitted_to_alc" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="decision_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="application_region_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="status" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
       </table>
-      <table name="application_submission_status_type" numRows="13" remarks="Code table for possible application portal statuses" schema="alcs" type="TABLE">
+      <table name="application_submission_status_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT file_number,&#10;    alcs.get_current_status_for_application_submission_by_uuid(uuid) AS status&#10;   FROM alcs.application_submission app_sub&#10;  WHERE ((is_draft IS NOT TRUE) AND (audit_deleted_date_at IS NULL));">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="file_number" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+      </table>
+      <table name="application_submission_status_type" remarks="Code table for possible application portal statuses" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1162,7 +1166,7 @@
             <column ascending="true" name="application_uuid"/>
          </index>
       </table>
-      <table name="application_type" numRows="10" remarks="Code table for possible application types" schema="alcs" type="TABLE">
+      <table name="application_type" remarks="Code table for possible application types" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1213,7 +1217,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_allowed_card_types_card_type" numRows="52" remarks="Card types allowed on each kanban board" schema="alcs" type="TABLE">
+      <table name="board_allowed_card_types_card_type" remarks="Card types allowed on each kanban board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_08dbb99476efaa2d0eed8ee1f7a" implied="false" onDeleteCascade="true" schema="alcs" table="board"/>
          </column>
@@ -1233,7 +1237,7 @@
             <column ascending="true" name="card_type_code"/>
          </index>
       </table>
-      <table name="board_create_card_types_card_type" numRows="2" remarks="Contains the type of cards can be created from each board" schema="alcs" type="TABLE">
+      <table name="board_create_card_types_card_type" remarks="Contains the type of cards can be created from each board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_6bab6507fdfd4c78ad0c0ef795c" implied="false" onDeleteCascade="true" schema="alcs" table="board"/>
          </column>
@@ -1253,7 +1257,7 @@
             <column ascending="true" name="board_uuid"/>
          </index>
       </table>
-      <table name="board_status" numRows="133" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
+      <table name="board_status" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1594,7 +1598,7 @@
             <column ascending="true" name="oats_document_id"/>
          </index>
       </table>
-      <table name="document_code" numRows="63" remarks="Code table for possible document types" schema="alcs" type="TABLE">
+      <table name="document_code" numRows="59" remarks="Code table for possible document types" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1655,7 +1659,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" numRows="100" remarks="Holidays used by the application active day tracking function" schema="alcs" type="TABLE">
+      <table name="holiday_entity" remarks="Holidays used by the application active day tracking function" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="Unique identifier that is safe to share." size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="Unique name of the stat holiday." size="2147483647" type="varchar" typeCode="12">
             <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
@@ -1866,7 +1870,7 @@
             <column ascending="true" name="description"/>
          </index>
       </table>
-      <table name="local_government" numRows="187" remarks="Status, type, BCeID, and contact info of local or first nation governments" schema="alcs" type="TABLE">
+      <table name="local_government" numRows="148" remarks="Status, type, BCeID, and contact info of local or first nation governments" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1916,7 +1920,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="migrations" numRows="420" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
+      <table name="migrations" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('alcs.migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -1946,6 +1950,10 @@
          <index name="UQ_629710d76c4058afacd2e44b3f4" unique="true">
             <column ascending="true" name="description"/>
          </index>
+      </table>
+      <table name="noi_submission_status_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT file_number,&#10;    alcs.get_current_status_for_notice_of_intent_submission_by_uuid(uuid) AS status&#10;   FROM alcs.notice_of_intent_submission noi_sub&#10;  WHERE ((is_draft IS NOT TRUE) AND (audit_deleted_date_at IS NULL));">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="file_number" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
       </table>
       <table name="notice_of_intent" remarks="Base data for Notice of Intents incl. the ID, key dates, and the date of the first decision" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2566,7 +2574,7 @@
             <column ascending="true" name="file_number"/>
          </index>
       </table>
-      <table name="notice_of_intent_submission_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT nois.uuid,&#10;    nois.applicant,&#10;    noi.uuid AS notice_of_intent_uuid,&#10;    &quot;noticeOfIntentType&quot;.audit_deleted_date_at AS &quot;noticeOfIntentType_audit_deleted_date_at&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_created_at AS &quot;noticeOfIntentType_audit_created_at&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_updated_at AS &quot;noticeOfIntentType_audit_updated_at&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_created_by AS &quot;noticeOfIntentType_audit_created_by&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_updated_by AS &quot;noticeOfIntentType_audit_updated_by&quot;,&#10;    &quot;noticeOfIntentType&quot;.label AS &quot;noticeOfIntentType_label&quot;,&#10;    &quot;noticeOfIntentType&quot;.code AS &quot;noticeOfIntentType_code&quot;,&#10;    &quot;noticeOfIntentType&quot;.description AS &quot;noticeOfIntentType_description&quot;,&#10;    &quot;noticeOfIntentType&quot;.short_label AS &quot;noticeOfIntentType_short_label&quot;,&#10;    &quot;noticeOfIntentType&quot;.background_color AS &quot;noticeOfIntentType_background_color&quot;,&#10;    &quot;noticeOfIntentType&quot;.text_color AS &quot;noticeOfIntentType_text_color&quot;,&#10;    &quot;noticeOfIntentType&quot;.html_description AS &quot;noticeOfIntentType_html_description&quot;,&#10;    &quot;noticeOfIntentType&quot;.portal_label AS &quot;noticeOfIntentType_portal_label&quot;,&#10;    &quot;noticeOfIntentType&quot;.alc_fee_amount AS &quot;noticeOfIntentType_alc_fee_amount&quot;,&#10;    &quot;noticeOfIntentType&quot;.government_fee_amount AS &quot;noticeOfIntentType_government_fee_amount&quot;,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    nois.file_number,&#10;    nois.local_government_uuid,&#10;    nois.type_code AS notice_of_intent_type_code,&#10;    nois.is_draft,&#10;    noi.date_submitted_to_alc,&#10;    noi.legacy_id,&#10;    noi.decision_date,&#10;    noi.region_code AS notice_of_intent_region_code,&#10;    alcs.get_current_status_for_notice_of_intent_submission_by_uuid(nois.uuid) AS status&#10;   FROM (((alcs.notice_of_intent_submission nois&#10;     JOIN alcs.notice_of_intent noi ON ((((noi.file_number)::text = (nois.file_number)::text) AND (noi.audit_deleted_date_at IS NULL))))&#10;     JOIN alcs.notice_of_intent_type &quot;noticeOfIntentType&quot; ON (((nois.type_code)::text = &quot;noticeOfIntentType&quot;.code)))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON ((nois.local_government_uuid = &quot;localGovernment&quot;.uuid)))&#10;  WHERE (nois.is_draft IS NOT TRUE);">
+      <table name="notice_of_intent_submission_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT nois.uuid,&#10;    nois.applicant,&#10;    noi.uuid AS notice_of_intent_uuid,&#10;    &quot;noticeOfIntentType&quot;.audit_deleted_date_at AS &quot;noticeOfIntentType_audit_deleted_date_at&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_created_at AS &quot;noticeOfIntentType_audit_created_at&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_updated_at AS &quot;noticeOfIntentType_audit_updated_at&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_created_by AS &quot;noticeOfIntentType_audit_created_by&quot;,&#10;    &quot;noticeOfIntentType&quot;.audit_updated_by AS &quot;noticeOfIntentType_audit_updated_by&quot;,&#10;    &quot;noticeOfIntentType&quot;.label AS &quot;noticeOfIntentType_label&quot;,&#10;    &quot;noticeOfIntentType&quot;.code AS &quot;noticeOfIntentType_code&quot;,&#10;    &quot;noticeOfIntentType&quot;.description AS &quot;noticeOfIntentType_description&quot;,&#10;    &quot;noticeOfIntentType&quot;.short_label AS &quot;noticeOfIntentType_short_label&quot;,&#10;    &quot;noticeOfIntentType&quot;.background_color AS &quot;noticeOfIntentType_background_color&quot;,&#10;    &quot;noticeOfIntentType&quot;.text_color AS &quot;noticeOfIntentType_text_color&quot;,&#10;    &quot;noticeOfIntentType&quot;.html_description AS &quot;noticeOfIntentType_html_description&quot;,&#10;    &quot;noticeOfIntentType&quot;.portal_label AS &quot;noticeOfIntentType_portal_label&quot;,&#10;    &quot;noticeOfIntentType&quot;.alc_fee_amount AS &quot;noticeOfIntentType_alc_fee_amount&quot;,&#10;    &quot;noticeOfIntentType&quot;.government_fee_amount AS &quot;noticeOfIntentType_government_fee_amount&quot;,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    nois.file_number,&#10;    nois.local_government_uuid,&#10;    nois.type_code AS notice_of_intent_type_code,&#10;    nois.is_draft,&#10;    noi.date_submitted_to_alc,&#10;    noi.legacy_id,&#10;    noi.decision_date,&#10;    noi.region_code AS notice_of_intent_region_code,&#10;    NULL::text AS status&#10;   FROM (((alcs.notice_of_intent_submission nois&#10;     JOIN alcs.notice_of_intent noi ON ((((noi.file_number)::text = (nois.file_number)::text) AND (noi.audit_deleted_date_at IS NULL))))&#10;     JOIN alcs.notice_of_intent_type &quot;noticeOfIntentType&quot; ON (((nois.type_code)::text = &quot;noticeOfIntentType&quot;.code)))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON ((nois.local_government_uuid = &quot;localGovernment&quot;.uuid)))&#10;  WHERE (nois.is_draft IS NOT TRUE);">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="applicant" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="notice_of_intent_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
@@ -2596,7 +2604,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="24" name="legacy_id" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="25" name="decision_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="26" name="notice_of_intent_region_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="27" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="27" name="status" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
       </table>
       <table name="notice_of_intent_submission_status_type" remarks="The code table for Notice of Intent Submissions Statuses" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2863,7 +2871,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="notification_submission_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT noti_sub.uuid,&#10;    noti_sub.applicant,&#10;    noti.uuid AS notification_uuid,&#10;    &quot;notificationType&quot;.audit_deleted_date_at AS &quot;notificationType_audit_deleted_date_at&quot;,&#10;    &quot;notificationType&quot;.audit_created_at AS &quot;notificationType_audit_created_at&quot;,&#10;    &quot;notificationType&quot;.audit_updated_at AS &quot;notificationType_audit_updated_at&quot;,&#10;    &quot;notificationType&quot;.audit_created_by AS &quot;notificationType_audit_created_by&quot;,&#10;    &quot;notificationType&quot;.audit_updated_by AS &quot;notificationType_audit_updated_by&quot;,&#10;    &quot;notificationType&quot;.label AS &quot;notificationType_label&quot;,&#10;    &quot;notificationType&quot;.code AS &quot;notificationType_code&quot;,&#10;    &quot;notificationType&quot;.description AS &quot;notificationType_description&quot;,&#10;    &quot;notificationType&quot;.short_label AS &quot;notificationType_short_label&quot;,&#10;    &quot;notificationType&quot;.background_color AS &quot;notificationType_background_color&quot;,&#10;    &quot;notificationType&quot;.text_color AS &quot;notificationType_text_color&quot;,&#10;    &quot;notificationType&quot;.html_description AS &quot;notificationType_html_description&quot;,&#10;    &quot;notificationType&quot;.portal_label AS &quot;notificationType_portal_label&quot;,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    noti_sub.file_number,&#10;    noti_sub.local_government_uuid,&#10;    noti.type_code AS notification_type_code,&#10;    noti.date_submitted_to_alc,&#10;    noti.region_code AS notification_region_code,&#10;    alcs.get_current_status_for_notification_submission_by_uuid(noti_sub.uuid) AS status&#10;   FROM (((alcs.notification_submission noti_sub&#10;     JOIN alcs.notification noti ON ((((noti.file_number)::text = (noti_sub.file_number)::text) AND (noti.audit_deleted_date_at IS NULL))))&#10;     JOIN alcs.notification_type &quot;notificationType&quot; ON (((noti_sub.type_code)::text = &quot;notificationType&quot;.code)))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON ((noti.local_government_uuid = &quot;localGovernment&quot;.uuid)));">
+      <table name="notification_submission_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT noti_sub.uuid,&#10;    noti_sub.applicant,&#10;    noti.uuid AS notification_uuid,&#10;    &quot;notificationType&quot;.audit_deleted_date_at AS &quot;notificationType_audit_deleted_date_at&quot;,&#10;    &quot;notificationType&quot;.audit_created_at AS &quot;notificationType_audit_created_at&quot;,&#10;    &quot;notificationType&quot;.audit_updated_at AS &quot;notificationType_audit_updated_at&quot;,&#10;    &quot;notificationType&quot;.audit_created_by AS &quot;notificationType_audit_created_by&quot;,&#10;    &quot;notificationType&quot;.audit_updated_by AS &quot;notificationType_audit_updated_by&quot;,&#10;    &quot;notificationType&quot;.label AS &quot;notificationType_label&quot;,&#10;    &quot;notificationType&quot;.code AS &quot;notificationType_code&quot;,&#10;    &quot;notificationType&quot;.description AS &quot;notificationType_description&quot;,&#10;    &quot;notificationType&quot;.short_label AS &quot;notificationType_short_label&quot;,&#10;    &quot;notificationType&quot;.background_color AS &quot;notificationType_background_color&quot;,&#10;    &quot;notificationType&quot;.text_color AS &quot;notificationType_text_color&quot;,&#10;    &quot;notificationType&quot;.html_description AS &quot;notificationType_html_description&quot;,&#10;    &quot;notificationType&quot;.portal_label AS &quot;notificationType_portal_label&quot;,&#10;    &quot;localGovernment&quot;.name AS local_government_name,&#10;    noti_sub.file_number,&#10;    noti_sub.local_government_uuid,&#10;    noti.type_code AS notification_type_code,&#10;    noti.date_submitted_to_alc,&#10;    noti.region_code AS notification_region_code,&#10;    NULL::text AS status&#10;   FROM (((alcs.notification_submission noti_sub&#10;     JOIN alcs.notification noti ON ((((noti.file_number)::text = (noti_sub.file_number)::text) AND (noti.audit_deleted_date_at IS NULL))))&#10;     JOIN alcs.notification_type &quot;notificationType&quot; ON (((noti_sub.type_code)::text = &quot;notificationType&quot;.code)))&#10;     LEFT JOIN alcs.local_government &quot;localGovernment&quot; ON ((noti.local_government_uuid = &quot;localGovernment&quot;.uuid)));">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="applicant" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="notification_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
@@ -2888,7 +2896,11 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="notification_type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="20" name="date_submitted_to_alc" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="21" name="notification_region_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="status" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+      </table>
+      <table name="notification_submission_status_search_view" numRows="0" remarks="" schema="alcs" type="VIEW" viewSql=" SELECT file_number,&#10;    alcs.get_current_status_for_notification_submission_by_uuid(uuid) AS status&#10;   FROM alcs.notification_submission not_sub&#10;  WHERE (audit_deleted_date_at IS NULL);">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="file_number" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
       </table>
       <table name="notification_submission_status_type" remarks="Statuses for Notification Submissions" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -3397,7 +3409,7 @@
             <column ascending="true" name="planning_review_uuid"/>
          </index>
       </table>
-      <table name="tag" numRows="107" remarks="Tag." schema="alcs" type="TABLE">
+      <table name="tag" remarks="Tag." schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -3436,7 +3448,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="typeorm_metadata" numRows="12" remarks="" schema="alcs" type="TABLE">
+      <table name="typeorm_metadata" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="database" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="schema" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
