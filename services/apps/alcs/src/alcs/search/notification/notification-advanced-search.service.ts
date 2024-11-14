@@ -12,6 +12,7 @@ import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NotificationSubmissionSearchView } from './notification-search-view.entity';
 import { getNextDayToPacific, getStartOfDayToPacific } from '../../../utils/pacific-date-time-helper';
+import { NotificationSubmissionStatusSearchView } from '../status/notification-search-status-view.entity';
 
 @Injectable()
 export class NotificationAdvancedSearchService {
@@ -45,11 +46,7 @@ export class NotificationAdvancedSearchService {
       fileNumbers = new Set<string>(cachedNumbers);
     } else {
       fileNumbers = await this.searchForFileNumbers(searchDto);
-      await client.setEx(
-        searchKey,
-        SEARCH_CACHE_TIME,
-        JSON.stringify([...fileNumbers.values()]),
-      );
+      await client.setEx(searchKey, SEARCH_CACHE_TIME, JSON.stringify([...fileNumbers.values()]));
     }
 
     if (fileNumbers.size === 0) {
@@ -70,17 +67,20 @@ export class NotificationAdvancedSearchService {
         fileNumbers: [...fileNumbers.values()],
       });
 
+    if (searchDto.sortField === 'status') {
+      query = query.innerJoin(
+        NotificationSubmissionStatusSearchView,
+        'not_status',
+        'not_status.file_number = "notificationSearch"."file_number"',
+      );
+    }
+
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
-      .orderBy(
-        sortQuery,
-        searchDto.sortDirection,
-        searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST',
-      )
+      .orderBy(sortQuery, searchDto.sortDirection, searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
-
     const t0 = performance.now();
     const results = await Promise.all([query.getMany(), query.getCount()]);
     const t1 = performance.now();
@@ -106,8 +106,8 @@ export class NotificationAdvancedSearchService {
       case 'government':
         return '"notificationSearch"."local_government_name"';
 
-      case 'portalStatus':
-        return `"notificationSearch"."status" ->> 'label' `;
+      case 'status':
+        return `"not_status"."status" ->> 'label' `;
 
       default:
       case 'dateSubmitted':
@@ -119,18 +119,12 @@ export class NotificationAdvancedSearchService {
     const promises: Promise<{ fileNumber: string }[]>[] = [];
 
     if (searchDto.fileNumber) {
-      const promise = NOTIFICATION_SEARCH_FILTERS.addFileNumberResults(
-        searchDto,
-        this.notificationRepository,
-      );
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileNumberResults(searchDto, this.notificationRepository);
       promises.push(promise);
     }
 
     if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
-      const promise = NOTIFICATION_SEARCH_FILTERS.addPortalStatusResults(
-        searchDto,
-        this.notificationSubRepository,
-      );
+      const promise = NOTIFICATION_SEARCH_FILTERS.addPortalStatusResults(searchDto, this.notificationSubRepository);
       promises.push(promise);
     }
 
@@ -148,26 +142,17 @@ export class NotificationAdvancedSearchService {
     }
 
     if (searchDto.name) {
-      const promise = NOTIFICATION_SEARCH_FILTERS.addNameResults(
-        searchDto,
-        this.notificationSubRepository,
-      );
+      const promise = NOTIFICATION_SEARCH_FILTERS.addNameResults(searchDto, this.notificationSubRepository);
       promises.push(promise);
     }
 
     if (searchDto.pid || searchDto.civicAddress) {
-      const promise = NOTIFICATION_SEARCH_FILTERS.addParcelResults(
-        searchDto,
-        this.notificationSubRepository,
-      );
+      const promise = NOTIFICATION_SEARCH_FILTERS.addParcelResults(searchDto, this.notificationSubRepository);
       promises.push(promise);
     }
 
     if (searchDto.fileTypes.includes('SRW')) {
-      const promise = NOTIFICATION_SEARCH_FILTERS.addFileTypeResults(
-        searchDto,
-        this.notificationRepository,
-      );
+      const promise = NOTIFICATION_SEARCH_FILTERS.addFileTypeResults(searchDto, this.notificationRepository);
       promises.push(promise);
     }
 
@@ -178,16 +163,11 @@ export class NotificationAdvancedSearchService {
     const t0 = performance.now();
     const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
-    this.logger.debug(
-      `ALCS Application pre-search search took ${t1 - t0} milliseconds.`,
-    );
+    this.logger.debug(`ALCS Application pre-search search took ${t1 - t0} milliseconds.`);
     return finalResult;
   }
 
-  private addRegionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addRegionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.notificationRepository.find({
       where: {
         regionCode: searchDto.regionCode,
@@ -199,34 +179,19 @@ export class NotificationAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addSubmittedDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    let query = this.notificationRepository
-      .createQueryBuilder('notification')
-      .select('notification.fileNumber');
+  private addSubmittedDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
+    let query = this.notificationRepository.createQueryBuilder('notification').select('notification.fileNumber');
 
     if (searchDto.dateSubmittedFrom !== undefined) {
-      query = query.andWhere(
-        'notification.date_submitted_to_alc >= :date_submitted_from',
-        {
-          date_submitted_from: getStartOfDayToPacific(
-            searchDto.dateSubmittedFrom
-          ).toISOString(),
-        },
-      );
+      query = query.andWhere('notification.date_submitted_to_alc >= :date_submitted_from', {
+        date_submitted_from: getStartOfDayToPacific(searchDto.dateSubmittedFrom).toISOString(),
+      });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query = query.andWhere(
-        'notification.date_submitted_to_alc < :date_submitted_to',
-        {
-          date_submitted_to: getNextDayToPacific(
-            searchDto.dateSubmittedTo
-          ).toISOString(),
-        },
-      );
+      query = query.andWhere('notification.date_submitted_to_alc < :date_submitted_to', {
+        date_submitted_to: getNextDayToPacific(searchDto.dateSubmittedTo).toISOString(),
+      });
     }
     promises.push(query.getMany());
   }

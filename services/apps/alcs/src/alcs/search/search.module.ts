@@ -23,6 +23,10 @@ import { PlanningReviewAdvancedSearchService } from './planning-review/planning-
 import { PlanningReviewSearchView } from './planning-review/planning-review-search-view.entity';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
+import { SearchStatusService } from './status/search-status.service';
+import { ApplicationSubmissionStatusSearchView } from './status/application-search-status-view.entity';
+import { NoiSubmissionStatusSearchView } from './status/noi-search-status-view.entity';
+import { NotificationSubmissionStatusSearchView } from './status/notification-search-status-view.entity';
 
 @Module({
   imports: [
@@ -42,6 +46,9 @@ import { SearchService } from './search.service';
       Inquiry,
       InquirySearchView,
       LocalGovernment,
+      ApplicationSubmissionStatusSearchView,
+      NoiSubmissionStatusSearchView,
+      NotificationSubmissionStatusSearchView,
     ]),
   ],
   providers: [
@@ -52,6 +59,7 @@ import { SearchService } from './search.service';
     NotificationAdvancedSearchService,
     PlanningReviewAdvancedSearchService,
     InquiryAdvancedSearchService,
+    SearchStatusService,
   ],
   controllers: [SearchController],
 })

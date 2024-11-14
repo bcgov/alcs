@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { InquiryTypeDto } from '../inquiry/inquiry.dto';
 import { PlanningReviewTypeDto } from '../planning-review/planning-review.dto';
@@ -19,13 +13,7 @@ export class SearchResultDto {
   label?: ApplicationTypeDto;
 }
 
-export type SearchEntityClass =
-  | 'APP'
-  | 'NOI'
-  | 'PLAN'
-  | 'COV'
-  | 'NOTI'
-  | 'INQR';
+export type SearchEntityClass = 'APP' | 'NOI' | 'PLAN' | 'COV' | 'NOTI' | 'INQR';
 
 export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;
@@ -34,7 +22,7 @@ export class ApplicationSearchResultDto {
   localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
-  status: string;
+  status?: string | null;
   dateSubmitted?: number;
   class: SearchEntityClass;
 }
@@ -46,7 +34,7 @@ export class NoticeOfIntentSearchResultDto {
   localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
-  status: string;
+  status?: string | null;
   dateSubmitted?: number;
   class: SearchEntityClass;
 }
@@ -69,7 +57,7 @@ export class NotificationSearchResultDto {
   localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
-  status: string;
+  status?: string | null;
   dateSubmitted?: number;
   class: SearchEntityClass;
 }
@@ -98,6 +86,11 @@ export class AdvancedSearchResponseDto {
   totalPlanningReviews: number;
   totalNotifications: number;
   totalInquiries: number;
+}
+
+export class StatusUpdateSearchResultDto {
+  fileNumber: string;
+  status: string;
 }
 
 export class AdvancedSearchResultDto<T> {

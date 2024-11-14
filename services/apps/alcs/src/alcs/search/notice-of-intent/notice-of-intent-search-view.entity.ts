@@ -1,11 +1,4 @@
-import {
-  DataSource,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  ViewColumn,
-  ViewEntity,
-} from 'typeorm';
+import { DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentType } from '../../notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -38,23 +31,12 @@ export class SearchNoticeOfIntentSubmissionStatusType {
       .addSelect('noi.decision_date', 'decision_date')
       .addSelect('noi.uuid', 'notice_of_intent_uuid')
       .addSelect('noi.region_code', 'notice_of_intent_region_code')
-      .addSelect(
-        'alcs.get_current_status_for_notice_of_intent_submission_by_uuid(nois.uuid)',
-        'status',
-      )
+      .addSelect('null', 'status')
       .from(NoticeOfIntentSubmission, 'nois')
       .innerJoin(NoticeOfIntent, 'noi', 'noi.file_number = nois.file_number')
       .withDeleted()
-      .innerJoinAndSelect(
-        NoticeOfIntentType,
-        'noticeOfIntentType',
-        'nois.type_code = noticeOfIntentType.code',
-      )
-      .leftJoin(
-        LocalGovernment,
-        'localGovernment',
-        'nois.local_government_uuid = localGovernment.uuid',
-      )
+      .innerJoinAndSelect(NoticeOfIntentType, 'noticeOfIntentType', 'nois.type_code = noticeOfIntentType.code')
+      .leftJoin(LocalGovernment, 'localGovernment', 'nois.local_government_uuid = localGovernment.uuid')
       .where(`nois.is_draft IS NOT TRUE`),
 })
 export class NoticeOfIntentSubmissionSearchView {

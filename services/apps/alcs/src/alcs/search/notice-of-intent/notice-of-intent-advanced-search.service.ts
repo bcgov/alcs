@@ -13,6 +13,7 @@ import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search-view.entity';
+import { NoiSubmissionStatusSearchView } from '../status/noi-search-status-view.entity';
 
 @Injectable()
 export class NoticeOfIntentAdvancedSearchService {
@@ -63,13 +64,20 @@ export class NoticeOfIntentAdvancedSearchService {
         fileNumbers: [...fileNumbers.values()],
       });
 
+    if (searchDto.sortField === 'status') {
+      query = query.innerJoin(
+        NoiSubmissionStatusSearchView,
+        'noi_status',
+        'noi_status.file_number = "noiSearch"."file_number"',
+      );
+    }
+
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
       .orderBy(sortQuery, searchDto.sortDirection, searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
-
     const t0 = performance.now();
     const results = await Promise.all([query.getMany(), query.getCount()]);
     const t1 = performance.now();
@@ -95,8 +103,8 @@ export class NoticeOfIntentAdvancedSearchService {
       case 'government':
         return '"noiSearch"."local_government_name"';
 
-      case 'portalStatus':
-        return `"noiSearch"."status" ->> 'label' `;
+      case 'status':
+        return `"noi_status"."status" ->> 'label' `;
 
       default:
       case 'dateSubmitted':

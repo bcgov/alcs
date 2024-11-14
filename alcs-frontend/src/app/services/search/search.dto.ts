@@ -11,7 +11,7 @@ export interface ApplicationSearchResultDto {
   dateSubmitted: number;
   portalStatus?: string;
   class: string;
-  status: string;
+  status?: string | null;
 }
 
 export interface NoticeOfIntentSearchResultDto extends ApplicationSearchResultDto {}
@@ -92,4 +92,9 @@ export interface SearchResultDto {
   localGovernmentName: string;
   boardCode?: string;
   label?: ApplicationTypeDto;
+}
+
+export interface StatusUpdateSearchResultDto {
+  fileNumber: string;
+  status: string;
 }

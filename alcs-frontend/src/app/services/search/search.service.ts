@@ -13,6 +13,7 @@ import {
   PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
+  StatusUpdateSearchResultDto,
 } from './search.dto';
 
 @Injectable({
@@ -45,7 +46,7 @@ export class SearchService {
       return undefined;
     }
   }
-
+  
   async advancedSearchApplicationsFetch(searchDto: SearchRequestDto) {
     try {
       return await firstValueFrom(
@@ -57,6 +58,51 @@ export class SearchService {
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      return undefined;
+    }
+  }
+
+  async advancedSearchApplicationStatusFetch(fileNumbers: string[]) {
+    try {
+      return await firstValueFrom(
+        this.http.post<StatusUpdateSearchResultDto[]>(
+          `${this.baseUrl}/advanced/application-status`,
+          fileNumbers,
+        ),
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast(`Application Status search failed. Please refresh the page and try again`);
+      return undefined;
+    }
+  }
+
+  async advancedSearchNoiStatusFetch(fileNumbers: string[]) {
+    try {
+      return await firstValueFrom(
+        this.http.post<StatusUpdateSearchResultDto[]>(
+          `${this.baseUrl}/advanced/noi-status`,
+          fileNumbers,
+        ),
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast(`Notice of Intent search failed. Please refresh the page and try again`);
+      return undefined;
+    }
+  }
+
+  async advancedSearchNotificationStatusFetch(fileNumbers: string[]) {
+    try {
+      return await firstValueFrom(
+        this.http.post<StatusUpdateSearchResultDto[]>(
+          `${this.baseUrl}/advanced/notification-status`,
+          fileNumbers,
+        ),
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast(`Notification search failed. Please refresh the page and try again`);
       return undefined;
     }
   }
