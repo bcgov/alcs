@@ -13,6 +13,7 @@ import { NotificationSearchTableComponent } from './notification-search-table/no
 import { SearchComponent } from './search.component';
 import { InquirySearchTableComponent } from './inquiry-search-table/inquiry-search-table.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { SpinnerStatusComponent } from './spinner-status/spinner-status.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,7 @@ const routes: Routes = [
     NotificationSearchTableComponent,
     FileTypeFilterDropDownComponent,
     InquirySearchTableComponent,
+    SpinnerStatusComponent,
   ],
   imports: [
     CommonModule,

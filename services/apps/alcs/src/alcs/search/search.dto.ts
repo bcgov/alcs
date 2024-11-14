@@ -22,7 +22,7 @@ export class ApplicationSearchResultDto {
   localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
-  status?: string | null;
+  status?: string;
   dateSubmitted?: number;
   class: SearchEntityClass;
 }
@@ -34,7 +34,7 @@ export class NoticeOfIntentSearchResultDto {
   localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
-  status?: string | null;
+  status?: string;
   dateSubmitted?: number;
   class: SearchEntityClass;
 }
@@ -57,7 +57,7 @@ export class NotificationSearchResultDto {
   localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
-  status?: string | null;
+  status?: string;
   dateSubmitted?: number;
   class: SearchEntityClass;
 }

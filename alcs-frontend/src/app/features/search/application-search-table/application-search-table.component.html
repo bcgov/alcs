@@ -53,9 +53,7 @@
           *ngIf="element.status"
           [type]="element.status"
         ></app-application-submission-status-type-pill>
-        <div class="spinner-overlay" *ngIf="!element.status">
-          <mat-spinner></mat-spinner>
-        </div>
+        <app-spinner-status *ngIf="!element.status" />
       </td>
     </ng-container>
 
