@@ -510,7 +510,7 @@ export class SearchController {
       localGovernmentName: application.localGovernmentName,
       ownerName: application.applicant,
       class: 'APP',
-      status: application.status ? application.status.status_type_code : null,
+      status: application.status && application.status.status_type_code,
     };
   }
 
@@ -525,7 +525,7 @@ export class SearchController {
       localGovernmentName: noi.localGovernmentName,
       ownerName: noi.applicant,
       class: 'NOI',
-      status: noi.status ? noi.status.status_type_code : null,
+      status: noi.status && noi.status.status_type_code,
     };
   }
 
@@ -540,7 +540,7 @@ export class SearchController {
       localGovernmentName: notification.localGovernmentName,
       ownerName: notification.applicant,
       class: 'NOTI',
-      status: notification.status ? notification.status.status_type_code : null,
+      status: notification.status && notification.status.status_type_code,
     };
   }
 
