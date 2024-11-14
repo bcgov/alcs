@@ -37,6 +37,7 @@ planning_review_meeting_type
 planning_review_type
 user
 local_government
+tag_category
 card
 document
 application
@@ -57,6 +58,7 @@ application_decision_condition
 notification_submission
 inquiry
 application_paused
+tag
 application_decision_component_lot
 comment
 notice_of_intent_decision_component
@@ -81,6 +83,7 @@ application_modified_decisions
 application_parcel_owners_application_owner
 application_reconsidered_decisions
 application_submission_to_submission_status
+application_tag
 board_allowed_card_types_card_type
 board_create_card_types_card_type
 board_status
@@ -93,6 +96,7 @@ notice_of_intent_modified_decisions
 notice_of_intent_parcel_owners_notice_of_intent_owner
 notice_of_intent_submission_to_submission_status
 notice_of_intent_subtype_notice_of_intent_subtype
+notice_of_intent_tag
 notification_parcel
 notification_submission_to_submission_status
 planning_referral

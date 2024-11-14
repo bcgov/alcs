@@ -341,7 +341,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="table" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="138" HEIGHT="16">table</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="138" HEIGHT="16">name</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="value" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="138" HEIGHT="16">value</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">12 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/typeorm_metadata.html"
     target="_top"
@@ -360,7 +360,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="order" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">order</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="board_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">board_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="status_code" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">status_code</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">133 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/board_status.html"
     target="_top"
@@ -494,7 +494,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="is_first_nation" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="164" HEIGHT="16">is_first_nation</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="is_active" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="164" HEIGHT="16">is_active</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="emails" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="164" HEIGHT="16">emails</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">148 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">187 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/local_government.html"
     target="_top"
@@ -530,7 +530,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="id" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="79" HEIGHT="16">id</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="timestamp" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="79" HEIGHT="16">timestamp</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="79" HEIGHT="16">name</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">420 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/migrations.html"
     target="_top"
@@ -911,7 +911,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="103" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="103" HEIGHT="16">name</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="day" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="103" HEIGHT="16">day</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">100 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/holiday_entity.html"
     target="_top"
@@ -1176,7 +1176,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="description" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">description</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="oats_code" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">oats_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="portal_label" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">portal_label</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">59 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">63 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/document_code.html"
     target="_top"
@@ -1451,6 +1451,13 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="tfwh_count" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">tfwh_count</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="tfwh_design" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">tfwh_design</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="tfwh_farm_size" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">tfwh_farm_size</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="soil_is_new_structure" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_is_new_structure</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="soil_structure_farm_use_reason" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_farm_use_reason</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="soil_structure_residential_use_reason" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_residential_use_reason</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="soil_agri_parcel_activity" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_agri_parcel_activity</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="soil_structure_residential_accessory_use_reason" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_residential_accessory_use_reason</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="soil_structure_other_use_reason" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_other_use_reason</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="soil_proposed_structures" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_proposed_structures</TD></TR></TABLE></TD></TR>
       <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/application_submission.html"
@@ -1479,6 +1486,25 @@ digraph "largeImpliedRelationshipsDiagram" {
     URL="tables/planning_referral.html"
     target="_top"
     tooltip="planning_referral"
+  ];
+  "tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="24" HEIGHT="16"><B>tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_deleted_date_at" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_deleted_date_at</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_created_at" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_created_at</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_updated_at" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_updated_at</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_created_by" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_created_by</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_updated_by" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_updated_by</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="is_active" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">is_active</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="category_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">category_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">107 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">2 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="tables/tag.html"
+    target="_top"
+    tooltip="tag"
   ];
   "application_parcel_owners_application_owner" [
    label=<
@@ -1638,7 +1664,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="proposal_end_date2" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">proposal_end_date2</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="hide_from_portal" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">hide_from_portal</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="created_at" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">created_at</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">7 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">8 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/notice_of_intent.html"
     target="_top"
@@ -1850,7 +1876,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="269" HEIGHT="16"><B>board_allowed_card_types_card_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="board_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="269" HEIGHT="16">board_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="card_type_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="269" HEIGHT="16">card_type_code</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">52 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/board_allowed_card_types_card_type.html"
     target="_top"
@@ -1968,6 +1994,18 @@ digraph "largeImpliedRelationshipsDiagram" {
     target="_top"
     tooltip="application_decision_condition_component"
   ];
+  "application_tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="112" HEIGHT="16"><B>application_tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="application_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="120" HEIGHT="16">application_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="tag_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="120" HEIGHT="16">tag_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="tables/application_tag.html"
+    target="_top"
+    tooltip="application_tag"
+  ];
   "application_type" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -1989,7 +2027,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="portal_order" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="212" HEIGHT="16">portal_order</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="alc_fee_amount" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="212" HEIGHT="16">alc_fee_amount</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="government_fee_amount" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="212" HEIGHT="16">government_fee_amount</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">10 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/application_type.html"
     target="_top"
@@ -2033,7 +2071,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="alcs_color" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="262" HEIGHT="16">alcs_color</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="portal_background_color" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="262" HEIGHT="16">portal_background_color</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="portal_color" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="262" HEIGHT="16">portal_color</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">13 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/application_submission_status_type.html"
     target="_top"
@@ -2117,11 +2155,23 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD PORT="legacy_id" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">legacy_id</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="proposal_end_date2" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">proposal_end_date2</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="hide_from_portal" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">hide_from_portal</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">10 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">11 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/application.html"
     target="_top"
     tooltip="application"
+  ];
+  "notice_of_intent_tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="147" HEIGHT="16"><B>notice_of_intent_tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="notice_of_intent_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="155" HEIGHT="16">notice_of_intent_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="tag_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="155" HEIGHT="16">tag_uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="tables/notice_of_intent_tag.html"
+    target="_top"
+    tooltip="notice_of_intent_tag"
   ];
   "notice_of_intent_decision_component_type" [
    label=<
@@ -2252,6 +2302,23 @@ digraph "largeImpliedRelationshipsDiagram" {
     target="_top"
     tooltip="notice_of_intent_meeting"
   ];
+  "tag_category" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="95" HEIGHT="16"><B>tag_category</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_deleted_date_at" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_deleted_date_at</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_created_at" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_created_at</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_updated_at" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_updated_at</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_created_by" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_created_by</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="audit_updated_by" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">audit_updated_by</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">name</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="tables/tag_category.html"
+    target="_top"
+    tooltip="tag_category"
+  ];
   "comment_mention" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -2354,7 +2421,7 @@ digraph "largeImpliedRelationshipsDiagram" {
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="259" HEIGHT="16"><B>board_create_card_types_card_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="board_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="259" HEIGHT="16">board_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="card_type_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="259" HEIGHT="16">card_type_code</TD></TR></TABLE></TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">2 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="tables/board_create_card_types_card_type.html"
     target="_top"
@@ -2875,6 +2942,8 @@ digraph "largeImpliedRelationshipsDiagram" {
   "application_submission_search_view":"local_government_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "application_submission_to_submission_status":"status_type_code":w -> "application_submission_status_type":"code":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission_to_submission_status":"submission_uuid":w -> "application_submission":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_tag":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_tag":"tag_uuid":w -> "tag":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "board_allowed_card_types_card_type":"board_uuid":w -> "board":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "board_allowed_card_types_card_type":"card_type_code":w -> "card_type":"code":e [arrowhead=none dir=back arrowtail=crowodot];
   "board_create_card_types_card_type":"board_uuid":w -> "board":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -2964,6 +3033,8 @@ digraph "largeImpliedRelationshipsDiagram" {
   "notice_of_intent_submission_to_submission_status":"submission_uuid":w -> "notice_of_intent_submission":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "notice_of_intent_subtype_notice_of_intent_subtype":"notice_of_intent_subtype_code":w -> "notice_of_intent_subtype":"code":e [arrowhead=none dir=back arrowtail=crowodot];
   "notice_of_intent_subtype_notice_of_intent_subtype":"notice_of_intent_uuid":w -> "notice_of_intent":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notice_of_intent_tag":"notice_of_intent_uuid":w -> "notice_of_intent":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notice_of_intent_tag":"tag_uuid":w -> "tag":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "notification":"card_uuid":w -> "card":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
   "notification":"local_government_uuid":w -> "local_government":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "notification":"region_code":w -> "application_region":"code":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -3012,6 +3083,9 @@ digraph "largeImpliedRelationshipsDiagram" {
   "staff_journal":"notice_of_intent_uuid":w -> "notice_of_intent":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "staff_journal":"notification_uuid":w -> "notification":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "staff_journal":"planning_review_uuid":w -> "planning_review":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "tag":"category_uuid":w -> "tag_category":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "tag":"name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
+  "tag_category":"name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "typeorm_metadata":"name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "user":"bceid_user_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "user":"business_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];

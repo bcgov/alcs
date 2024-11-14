@@ -20,6 +20,7 @@
             <child column="application_uuid" foreignKey="FK_3839ac16a55bdfe8fda77dbd050" implied="false" onDeleteCascade="false" schema="alcs" table="application_modification"/>
             <child column="application_uuid" foreignKey="FK_57e39f7c811d07c646fc04e8bdf" implied="false" onDeleteCascade="false" schema="alcs" table="application_paused"/>
             <child column="application_uuid" foreignKey="FK_69f4ed0db8aa26fca099a85d3bd" implied="false" onDeleteCascade="false" schema="alcs" table="application_reconsideration"/>
+            <child column="application_uuid" foreignKey="FK_b3eb1df7fc12b1f93b9b294a491" implied="false" onDeleteCascade="true" schema="alcs" table="application_tag"/>
             <child column="application_uuid" foreignKey="FK_307f19048298cf30add9562a0b7" implied="false" onDeleteCascade="false" schema="alcs" table="staff_journal"/>
          </column>
          <column autoUpdated="true" defaultValue="nextval('alcs.alcs_file_number_seq'::regclass)" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -1026,6 +1027,13 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="109" name="tfwh_count" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="110" name="tfwh_design" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="111" name="tfwh_farm_size" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="112" name="soil_is_new_structure" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="113" name="soil_structure_farm_use_reason" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="114" name="soil_structure_residential_use_reason" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="115" name="soil_agri_parcel_activity" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="116" name="soil_structure_residential_accessory_use_reason" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="117" name="soil_structure_other_use_reason" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'[]'::jsonb" digits="0" id="118" name="soil_proposed_structures" nullable="false" remarks="JSONB Column containing the proposed structures" size="2147483647" type="jsonb" typeCode="1111"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_61e192975e82347bab189b34fcc" unique="true">
             <column ascending="true" name="uuid"/>
@@ -1094,7 +1102,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="application_region_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="status" nullable="true" remarks="" size="2147483647" type="jsonb" typeCode="1111"/>
       </table>
-      <table name="application_submission_status_type" remarks="Code table for possible application portal statuses" schema="alcs" type="TABLE">
+      <table name="application_submission_status_type" numRows="13" remarks="Code table for possible application portal statuses" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1134,7 +1142,27 @@
             <column ascending="true" name="status_type_code"/>
          </index>
       </table>
-      <table name="application_type" remarks="Code table for possible application types" schema="alcs" type="TABLE">
+      <table name="application_tag" remarks="" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="application_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_b3eb1df7fc12b1f93b9b294a491" implied="false" onDeleteCascade="true" schema="alcs" table="application"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="tag_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_9b7b9b172959a3cb5f9776f0ce3" implied="false" onDeleteCascade="false" schema="alcs" table="tag"/>
+         </column>
+         <primaryKey column="application_uuid" sequenceNumberInPK="1"/>
+         <primaryKey column="tag_uuid" sequenceNumberInPK="2"/>
+         <index name="PK_0b7e45b13295c030c1bf552523b" unique="true">
+            <column ascending="true" name="application_uuid"/>
+            <column ascending="true" name="tag_uuid"/>
+         </index>
+         <index name="IDX_9b7b9b172959a3cb5f9776f0ce" unique="false">
+            <column ascending="true" name="tag_uuid"/>
+         </index>
+         <index name="IDX_b3eb1df7fc12b1f93b9b294a49" unique="false">
+            <column ascending="true" name="application_uuid"/>
+         </index>
+      </table>
+      <table name="application_type" numRows="10" remarks="Code table for possible application types" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1185,7 +1213,7 @@
             <column ascending="true" name="code"/>
          </index>
       </table>
-      <table name="board_allowed_card_types_card_type" remarks="Card types allowed on each kanban board" schema="alcs" type="TABLE">
+      <table name="board_allowed_card_types_card_type" numRows="52" remarks="Card types allowed on each kanban board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_08dbb99476efaa2d0eed8ee1f7a" implied="false" onDeleteCascade="true" schema="alcs" table="board"/>
          </column>
@@ -1205,7 +1233,7 @@
             <column ascending="true" name="card_type_code"/>
          </index>
       </table>
-      <table name="board_create_card_types_card_type" remarks="Contains the type of cards can be created from each board" schema="alcs" type="TABLE">
+      <table name="board_create_card_types_card_type" numRows="2" remarks="Contains the type of cards can be created from each board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="board_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_6bab6507fdfd4c78ad0c0ef795c" implied="false" onDeleteCascade="true" schema="alcs" table="board"/>
          </column>
@@ -1225,7 +1253,7 @@
             <column ascending="true" name="board_uuid"/>
          </index>
       </table>
-      <table name="board_status" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
+      <table name="board_status" numRows="133" remarks="Columns on each kanban board" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1479,6 +1507,8 @@
             <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="public_application_submission_search_view"/>
             <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="public_notice_of_intent_submission_search_view"/>
             <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="public_notification_submission_search_view"/>
+            <child column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="tag"/>
+            <child column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="tag_category"/>
             <child column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="typeorm_metadata"/>
             <child column="bceid_user_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="user"/>
             <child column="business_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="user"/>
@@ -1564,7 +1594,7 @@
             <column ascending="true" name="oats_document_id"/>
          </index>
       </table>
-      <table name="document_code" numRows="59" remarks="Code table for possible document types" schema="alcs" type="TABLE">
+      <table name="document_code" numRows="63" remarks="Code table for possible document types" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1625,7 +1655,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" remarks="Holidays used by the application active day tracking function" schema="alcs" type="TABLE">
+      <table name="holiday_entity" numRows="100" remarks="Holidays used by the application active day tracking function" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="Unique identifier that is safe to share." size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="Unique name of the stat holiday." size="2147483647" type="varchar" typeCode="12">
             <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
@@ -1836,7 +1866,7 @@
             <column ascending="true" name="description"/>
          </index>
       </table>
-      <table name="local_government" numRows="148" remarks="Status, type, BCeID, and contact info of local or first nation governments" schema="alcs" type="TABLE">
+      <table name="local_government" numRows="187" remarks="Status, type, BCeID, and contact info of local or first nation governments" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1886,7 +1916,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="migrations" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
+      <table name="migrations" numRows="420" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('alcs.migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -1929,6 +1959,7 @@
             <child column="notice_of_intent_uuid" foreignKey="FK_a848f8d93e3636f77cdf3d67084" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_meeting"/>
             <child column="notice_of_intent_uuid" foreignKey="FK_0369285c23e89b516a317fb986d" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_modification"/>
             <child column="notice_of_intent_uuid" foreignKey="FK_6f01212893c055cb309c67cb74b" implied="false" onDeleteCascade="true" schema="alcs" table="notice_of_intent_subtype_notice_of_intent_subtype"/>
+            <child column="notice_of_intent_uuid" foreignKey="FK_2baab887c8e66032ba78750b912" implied="false" onDeleteCascade="true" schema="alcs" table="notice_of_intent_tag"/>
             <child column="notice_of_intent_uuid" foreignKey="FK_130f95c5d9a8a1d7b9149d62b39" implied="false" onDeleteCascade="false" schema="alcs" table="staff_journal"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
@@ -2647,6 +2678,26 @@
             <column ascending="true" name="notice_of_intent_subtype_code"/>
          </index>
       </table>
+      <table name="notice_of_intent_tag" remarks="" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="notice_of_intent_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_2baab887c8e66032ba78750b912" implied="false" onDeleteCascade="true" schema="alcs" table="notice_of_intent"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="tag_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_404540b8fc70a267572f0d506aa" implied="false" onDeleteCascade="false" schema="alcs" table="tag"/>
+         </column>
+         <primaryKey column="notice_of_intent_uuid" sequenceNumberInPK="1"/>
+         <primaryKey column="tag_uuid" sequenceNumberInPK="2"/>
+         <index name="PK_8ae82272ffcbd27427172fd5e11" unique="true">
+            <column ascending="true" name="notice_of_intent_uuid"/>
+            <column ascending="true" name="tag_uuid"/>
+         </index>
+         <index name="IDX_2baab887c8e66032ba78750b91" unique="false">
+            <column ascending="true" name="notice_of_intent_uuid"/>
+         </index>
+         <index name="IDX_404540b8fc70a267572f0d506a" unique="false">
+            <column ascending="true" name="tag_uuid"/>
+         </index>
+      </table>
       <table name="notice_of_intent_type" remarks="Code table for possible NOI types" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -3346,7 +3397,46 @@
             <column ascending="true" name="planning_review_uuid"/>
          </index>
       </table>
-      <table name="typeorm_metadata" remarks="" schema="alcs" type="TABLE">
+      <table name="tag" numRows="107" remarks="Tag." schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="tag_uuid" foreignKey="FK_9b7b9b172959a3cb5f9776f0ce3" implied="false" onDeleteCascade="false" schema="alcs" table="application_tag"/>
+            <child column="tag_uuid" foreignKey="FK_404540b8fc70a267572f0d506aa" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_tag"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
+            <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="7" name="is_active" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="category_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_ff4d55f591b098af8bc6213835c" implied="false" onDeleteCascade="false" schema="alcs" table="tag_category"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_d70de2c1e1a3b52adb904028ea2" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="tag_category" remarks="Tag category." schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="category_uuid" foreignKey="FK_ff4d55f591b098af8bc6213835c" implied="false" onDeleteCascade="false" schema="alcs" table="tag"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
+            <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_ff4d55f591b098af8bc6213835c" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="typeorm_metadata" numRows="12" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="type" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="database" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="schema" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>

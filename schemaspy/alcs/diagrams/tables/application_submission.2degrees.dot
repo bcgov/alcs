@@ -35,6 +35,7 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_submission_review":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission_to_submission_status":"status_type_code":w -> "application_submission_status_type":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission_to_submission_status":"submission_uuid":w -> "application_submission":"uuid.type":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_tag":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card_subtask":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card_subtask":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -72,7 +73,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="local_government_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">local_government_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="card_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">card_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">10 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">11 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application.html"
     target="_top"
@@ -337,6 +338,13 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="tfwh_count" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">tfwh_count</TD></TR></TABLE></TD><TD PORT="tfwh_count.type" ALIGN="LEFT">text[2147483647]</TD></TR>
       <TR><TD PORT="tfwh_design" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">tfwh_design</TD></TR></TABLE></TD><TD PORT="tfwh_design.type" ALIGN="LEFT">bool[1]</TD></TR>
       <TR><TD PORT="tfwh_farm_size" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">tfwh_farm_size</TD></TR></TABLE></TD><TD PORT="tfwh_farm_size.type" ALIGN="LEFT">text[2147483647]</TD></TR>
+      <TR><TD PORT="soil_is_new_structure" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_is_new_structure</TD></TR></TABLE></TD><TD PORT="soil_is_new_structure.type" ALIGN="LEFT">bool[1]</TD></TR>
+      <TR><TD PORT="soil_structure_farm_use_reason" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_farm_use_reason</TD></TR></TABLE></TD><TD PORT="soil_structure_farm_use_reason.type" ALIGN="LEFT">text[2147483647]</TD></TR>
+      <TR><TD PORT="soil_structure_residential_use_reason" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_residential_use_reason</TD></TR></TABLE></TD><TD PORT="soil_structure_residential_use_reason.type" ALIGN="LEFT">text[2147483647]</TD></TR>
+      <TR><TD PORT="soil_agri_parcel_activity" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_agri_parcel_activity</TD></TR></TABLE></TD><TD PORT="soil_agri_parcel_activity.type" ALIGN="LEFT">text[2147483647]</TD></TR>
+      <TR><TD PORT="soil_structure_residential_accessory_use_reason" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_residential_accessory_use_reason</TD></TR></TABLE></TD><TD PORT="soil_structure_residential_accessory_use_reason.type" ALIGN="LEFT">text[2147483647]</TD></TR>
+      <TR><TD PORT="soil_structure_other_use_reason" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_structure_other_use_reason</TD></TR></TABLE></TD><TD PORT="soil_structure_other_use_reason.type" ALIGN="LEFT">text[2147483647]</TD></TR>
+      <TR><TD PORT="soil_proposed_structures" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="372" HEIGHT="16">soil_proposed_structures</TD></TR></TABLE></TD><TD PORT="soil_proposed_structures.type" ALIGN="LEFT">jsonb[2147483647]</TD></TR>
       <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="4" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_submission.html"
@@ -359,7 +367,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="262" HEIGHT="16"><B>application_submission_status_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">13 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_submission_status_type.html"
     target="_top"
@@ -378,12 +386,23 @@ digraph "twoDegreesRelationshipsDiagram" {
     target="_top"
     tooltip="application_submission_to_submission_status"
   ];
+  "application_tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="112" HEIGHT="16"><B>application_tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="application_tag.html"
+    target="_top"
+    tooltip="application_tag"
+  ];
   "application_type" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="120" HEIGHT="16"><B>application_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">10 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_type.html"
     target="_top"
@@ -477,7 +496,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="129" HEIGHT="16"><B>local_government</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">148 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">187 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="local_government.html"
     target="_top"

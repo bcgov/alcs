@@ -26,6 +26,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
   "application_submission_review":"elipses":w -> "configuration":"elipses":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "application_submission_review":"elipses":w -> "configuration":"elipses":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "application_submission_review":"elipses":w -> "configuration":"elipses":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
+  "application_tag":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card_subtask":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card_subtask":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -64,6 +65,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
   "notice_of_intent_submission":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "notice_of_intent_submission":"elipses":w -> "notice_of_intent":"file_number":e [arrowhead=none dir=back arrowtail=crowodot];
   "notice_of_intent_subtype_notice_of_intent_subtype":"elipses":w -> "notice_of_intent":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notice_of_intent_tag":"elipses":w -> "notice_of_intent":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "notification":"card_uuid":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "notification":"local_government_uuid":w -> "local_government":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "notification":"region_code":w -> "application_region":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -109,7 +111,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
       <TR><TD PORT="local_government_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">local_government_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="card_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">card_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">10 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">11 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application.html"
     target="_top"
@@ -225,12 +227,23 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     target="_top"
     tooltip="application_submission_review"
   ];
+  "application_tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="112" HEIGHT="16"><B>application_tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="application_tag.html"
+    target="_top"
+    tooltip="application_tag"
+  ];
   "application_type" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="120" HEIGHT="16"><B>application_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">10 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_type.html"
     target="_top"
@@ -285,7 +298,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="98" HEIGHT="16"><B>configuration</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">45 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">47 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="configuration.html"
     target="_top"
@@ -351,7 +364,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="129" HEIGHT="16"><B>local_government</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">148 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">187 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="local_government.html"
     target="_top"
@@ -379,7 +392,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
       <TR><TD PORT="region_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">region_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="type_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">type_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">7 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">8 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="notice_of_intent.html"
     target="_top"
@@ -450,6 +463,17 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     URL="notice_of_intent_subtype_notice_931dee5f.html"
     target="_top"
     tooltip="notice_of_intent_subtype_notice_of_intent_subtype"
+  ];
+  "notice_of_intent_tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="147" HEIGHT="16"><B>notice_of_intent_tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="notice_of_intent_tag.html"
+    target="_top"
+    tooltip="notice_of_intent_tag"
   ];
   "notice_of_intent_type" [
    label=<

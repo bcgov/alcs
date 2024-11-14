@@ -32,6 +32,8 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
   "application_submission_review":"ocp_bylaw_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "application_submission_review":"zoning_bylaw_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "application_submission_search_view":"elipses":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
+  "application_tag":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_tag":"elipses":w -> "tag":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "card":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card_subtask":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "card_subtask":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -88,6 +90,9 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
   "staff_journal":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "staff_journal":"elipses":w -> "inquiry":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "staff_journal":"elipses":w -> "planning_review":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "tag":"elipses":w -> "tag_category":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "tag":"elipses":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
+  "tag_category":"elipses":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "typeorm_metadata":"elipses":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "user":"bceid_user_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
   "user":"business_name":w -> "configuration":"name":e [arrowhead=none dir=back arrowtail=crowodot style=dashed];
@@ -107,7 +112,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
       <TR><TD PORT="local_government_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">local_government_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="card_uuid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="232" HEIGHT="16">card_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">10 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">11 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application.html"
     target="_top"
@@ -268,12 +273,23 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     target="_top"
     tooltip="application_submission_search_view"
   ];
+  "application_tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="112" HEIGHT="16"><B>application_tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="application_tag.html"
+    target="_top"
+    tooltip="application_tag"
+  ];
   "application_type" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="120" HEIGHT="16"><B>application_type</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">10 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_type.html"
     target="_top"
@@ -328,7 +344,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="98" HEIGHT="16"><B>configuration</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">45 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">47 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="configuration.html"
     target="_top"
@@ -361,7 +377,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="103" HEIGHT="16"><B>holiday_entity</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">100 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="holiday_entity.html"
     target="_top"
@@ -393,7 +409,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="129" HEIGHT="16"><B>local_government</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">148 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">187 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="local_government.html"
     target="_top"
@@ -415,7 +431,7 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="79" HEIGHT="16"><B>migrations</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">420 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="migrations.html"
     target="_top"
@@ -558,12 +574,34 @@ digraph "twoDegreesRelationshipsDiagramImplied" {
     target="_top"
     tooltip="staff_journal"
   ];
+  "tag" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="24" HEIGHT="16"><B>tag</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">107 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">2 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="tag.html"
+    target="_top"
+    tooltip="tag"
+  ];
+  "tag_category" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="95" HEIGHT="16"><B>tag_category</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="tag_category.html"
+    target="_top"
+    tooltip="tag_category"
+  ];
   "typeorm_metadata" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="138" HEIGHT="16"><B>typeorm_metadata</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">12 rows</TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="typeorm_metadata.html"
     target="_top"
