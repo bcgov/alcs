@@ -9,10 +9,7 @@ import { SearchRequestDto } from '../../portal/public/search/public-search.dto';
 import { formatStringToPostgresSearchStringArrayWithWildCard } from '../search-helper';
 
 export const NOI_SEARCH_FILTERS = {
-  addFileNumberResults: (
-    searchDto: SearchRequestDto | InboxRequestDto,
-    noiRepository: Repository<NoticeOfIntent>,
-  ) => {
+  addFileNumberResults: (searchDto: SearchRequestDto | InboxRequestDto, noiRepository: Repository<NoticeOfIntent>) => {
     return noiRepository.find({
       where: {
         fileNumber: searchDto.fileNumber,
@@ -37,12 +34,37 @@ export const NOI_SEARCH_FILTERS = {
       )
       .getMany();
   },
+  addTagsResults: (searchDto: SearchRequestDto | InboxRequestDto, noiRepository: Repository<NoticeOfIntent>) => {
+    return noiRepository
+      .createQueryBuilder('noi')
+      .select('noi.fileNumber')
+      .leftJoin('notice_of_intent_tag', 'notice_of_intent_tag', 'notice_of_intent_tag.notice_of_intent_uuid = noi.uuid')
+      .where('notice_of_intent_tag.tag_uuid IN (:...tagIds)', {
+        tagIds: searchDto.tagIds,
+      })
+      .groupBy('noi.fileNumber')
+      .addGroupBy('noi.uuid')
+      .having('count(distinct tag_uuid) = :countCategories', {
+        countCategories: searchDto.tagIds?.length,
+      })
+      .getMany();
+  },
+  addTagCategoryResults: (searchDto: SearchRequestDto | InboxRequestDto, noiRepository: Repository<NoticeOfIntent>) => {
+    return noiRepository
+      .createQueryBuilder('noi')
+      .select('noi.fileNumber')
+      .leftJoin('notice_of_intent_tag', 'notice_of_intent_tag', 'notice_of_intent_tag.notice_of_intent_uuid = noi.uuid')
+      .leftJoin('tag', 'tag', 'tag.uuid = notice_of_intent_tag.tag_uuid')
+      .where('tag.category_uuid IN (:categoryId)', {
+        categoryId: searchDto.tagCategoryId,
+      })
+      .getMany();
+  },
   addNameResults: (
     searchDto: SearchRequestDto | InboxRequestDto,
     noiSubmissionRepository: Repository<NoticeOfIntentSubmission>,
   ) => {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
     return noiSubmissionRepository
       .createQueryBuilder('noiSub')
       .select('noiSub.fileNumber')
@@ -60,24 +82,15 @@ export const NOI_SEARCH_FILTERS = {
                 names: formattedSearchString,
               },
             )
-            .orWhere(
-              'LOWER(notice_of_intent_owner.first_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notice_of_intent_owner.last_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notice_of_intent_owner.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
+            .orWhere('LOWER(notice_of_intent_owner.first_name) LIKE ANY (:names)', {
+              names: formattedSearchString,
+            })
+            .orWhere('LOWER(notice_of_intent_owner.last_name) LIKE ANY (:names)', {
+              names: formattedSearchString,
+            })
+            .orWhere('LOWER(notice_of_intent_owner.organization_name) LIKE ANY (:names)', {
+              names: formattedSearchString,
+            }),
         ),
       )
       .getMany();
@@ -107,11 +120,7 @@ export const NOI_SEARCH_FILTERS = {
     const query = noiSubmissionRepository
       .createQueryBuilder('noiSub')
       .select('noiSub.fileNumber')
-      .leftJoin(
-        NoticeOfIntentParcel,
-        'parcel',
-        'parcel.notice_of_intent_submission_uuid = noiSub.uuid',
-      );
+      .leftJoin(NoticeOfIntentParcel, 'parcel', 'parcel.notice_of_intent_submission_uuid = noiSub.uuid');
 
     if (searchDto.pid) {
       query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
@@ -125,10 +134,7 @@ export const NOI_SEARCH_FILTERS = {
 
     return query.getMany();
   },
-  addFileTypeResults: (
-    searchDto: SearchRequestDto | InboxRequestDto,
-    noiRepository: Repository<NoticeOfIntent>,
-  ) => {
+  addFileTypeResults: (searchDto: SearchRequestDto | InboxRequestDto, noiRepository: Repository<NoticeOfIntent>) => {
     return noiRepository.find({
       select: {
         fileNumber: true,

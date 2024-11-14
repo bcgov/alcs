@@ -98,11 +98,11 @@ export class NotificationSearchTableComponent {
         board: e.boardCode,
         class: e.class,
         status: {
-          backgroundColor: status!.alcsBackgroundColor,
-          textColor: status!.alcsColor,
-          borderColor: status!.alcsBackgroundColor,
-          label: status!.label,
-          shortLabel: status!.label,
+          backgroundColor: status ? status!.alcsBackgroundColor : '',
+          textColor: status ? status!.alcsColor : '',
+          borderColor: status ? status!.alcsBackgroundColor : '',
+          label: status ? status!.label : '',
+          shortLabel: status ? status!.label : '',
         },
       };
     });

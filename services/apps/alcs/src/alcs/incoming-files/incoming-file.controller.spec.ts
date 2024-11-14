@@ -8,16 +8,19 @@ import { classes } from 'automapper-classes';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ClsService } from 'nestjs-cls';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
+import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 
 describe('IncomingFileController', () => {
   let controller: IncomingFileController;
   let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
   let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
   const CODE_ONE = 'CODE_ONE';
   const CODE_TWO = 'CODE_TWO';
   const CODE_THREE = 'CODE_THREE';
   let mockApplications = [
     {
+      uuid: 'uuid-1',
       file_number: '1',
       applicant: 'applicant1',
       code: CODE_ONE,
@@ -28,6 +31,7 @@ describe('IncomingFileController', () => {
       active_days: 10,
     },
     {
+      uuid: 'uuid-2',
       file_number: '2',
       applicant: 'applicant2',
       code: CODE_ONE,
@@ -40,6 +44,7 @@ describe('IncomingFileController', () => {
   ];
   let mockReconsiderations = [
     {
+      uuid: 'uuid-3',
       file_number: '3',
       applicant: 'applicant1',
       code: CODE_TWO,
@@ -50,6 +55,7 @@ describe('IncomingFileController', () => {
       active_days: 10,
     },
     {
+      uuid: 'uuid-4',
       file_number: '4',
       applicant: 'applicant2',
       code: CODE_TWO,
@@ -62,6 +68,7 @@ describe('IncomingFileController', () => {
   ];
   let mockPlanningReviews = [
     {
+      uuid: 'uuid-5',
       file_number: '5',
       applicant: 'applicant1',
       code: CODE_THREE,
@@ -72,6 +79,7 @@ describe('IncomingFileController', () => {
       active_days: 10,
     },
     {
+      uuid: 'uuid-6',
       file_number: '6',
       applicant: 'applicant2',
       code: CODE_THREE,
@@ -83,9 +91,25 @@ describe('IncomingFileController', () => {
     },
   ];
 
+  let mockedApplicationsPausedStatuses: Map<string, boolean> = new Map();
+  let mockedReconsPausedStatuses: Map<string, boolean> = new Map();
+  let mockedPausedStatuses: Map<string, boolean> = new Map();
+
+  mockedApplicationsPausedStatuses.set('uuid-1', true);
+  mockedApplicationsPausedStatuses.set('uuid-2', true);
+
+  mockedReconsPausedStatuses.set('uuid-3', false);
+  mockedReconsPausedStatuses.set('uuid-4', false);
+
+  mockedPausedStatuses.set('uuid-1', true);
+  mockedPausedStatuses.set('uuid-2', true);
+  mockedPausedStatuses.set('uuid-3', true);
+  mockedPausedStatuses.set('uuid-4', true);
+
   beforeEach(async () => {
     mockApplicationService = createMock();
     mockPlanningReviewService = createMock();
+    mockApplicationTimeTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -103,6 +127,10 @@ describe('IncomingFileController', () => {
         {
           provide: PlanningReviewService,
           useValue: mockPlanningReviewService,
+        },
+        {
+          provide: ApplicationTimeTrackingService,
+          useValue: mockApplicationTimeTrackingService,
         },
         {
           provide: ClsService,
@@ -130,6 +158,9 @@ describe('IncomingFileController', () => {
       [],
     );
 
+    mockApplicationTimeTrackingService.getPausedStatusByUuid.mockResolvedValue(
+      mockedApplicationsPausedStatuses,
+    );
     const res = await controller.getIncomingFiles();
 
     expect(Object.keys(res).length).toEqual(1);
@@ -137,6 +168,7 @@ describe('IncomingFileController', () => {
     expect(res.CODE_ONE.length).toEqual(2);
     expect(res.CODE_ONE[0].highPriority).toEqual(true);
     expect(res.CODE_ONE[1].activeDays).toEqual(20);
+    expect(res.CODE_ONE[0].isPaused).toEqual(true);
   });
 
   it('should load and map incoming reconsiderations', async () => {
@@ -148,6 +180,9 @@ describe('IncomingFileController', () => {
       [],
     );
 
+    mockApplicationTimeTrackingService.getPausedStatusByUuid.mockResolvedValue(
+      mockedReconsPausedStatuses,
+    );
     const res = await controller.getIncomingFiles();
 
     expect(Object.keys(res).length).toEqual(1);
@@ -155,6 +190,7 @@ describe('IncomingFileController', () => {
     expect(res.CODE_TWO.length).toEqual(2);
     expect(res.CODE_TWO[0].highPriority).toEqual(true);
     expect(res.CODE_TWO[1].activeDays).toEqual(20);
+    expect(res.CODE_TWO[0].isPaused).toEqual(false);
   });
 
   it('should load and map incoming planning reviews', async () => {
@@ -166,6 +202,9 @@ describe('IncomingFileController', () => {
       mockPlanningReviews,
     );
 
+    mockApplicationTimeTrackingService.getPausedStatusByUuid.mockResolvedValue(
+      new Map<string, boolean>(),
+    );
     const res = await controller.getIncomingFiles();
 
     expect(Object.keys(res).length).toEqual(1);
@@ -173,6 +212,7 @@ describe('IncomingFileController', () => {
     expect(res.CODE_THREE.length).toEqual(2);
     expect(res.CODE_THREE[0].highPriority).toEqual(true);
     expect(res.CODE_THREE[1].activeDays).toEqual(20);
+    expect(res.CODE_THREE[0].isPaused).toEqual(false);
   });
 
   it('should load and map applications, reconsiderations, and planning reviews', async () => {
@@ -186,6 +226,9 @@ describe('IncomingFileController', () => {
       mockPlanningReviews,
     );
 
+    mockApplicationTimeTrackingService.getPausedStatusByUuid.mockResolvedValue(
+      mockedPausedStatuses,
+    );
     const res = await controller.getIncomingFiles();
 
     expect(Object.keys(res).length).toEqual(3);
@@ -193,13 +236,16 @@ describe('IncomingFileController', () => {
     expect(res.CODE_ONE.length).toEqual(2);
     expect(res.CODE_ONE[0].highPriority).toEqual(true);
     expect(res.CODE_ONE[1].activeDays).toEqual(20);
+    expect(res.CODE_ONE[0].isPaused).toEqual(true);
     expect(res.CODE_TWO).toBeDefined();
     expect(res.CODE_TWO.length).toEqual(2);
     expect(res.CODE_TWO[0].highPriority).toEqual(true);
     expect(res.CODE_TWO[1].activeDays).toEqual(20);
+    expect(res.CODE_TWO[0].isPaused).toEqual(true);
     expect(res.CODE_THREE).toBeDefined();
     expect(res.CODE_THREE.length).toEqual(2);
     expect(res.CODE_THREE[0].highPriority).toEqual(true);
     expect(res.CODE_THREE[1].activeDays).toEqual(20);
+    expect(res.CODE_THREE[1].isPaused).toEqual(false);
   });
 });

@@ -25,15 +25,15 @@ import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission
 import {
   NoticeOfIntentSubmission,
   PORTAL_TO_ALCS_STRUCTURE_MAP,
+  PORTAL_TO_ALCS_TAGS_MAP,
+  STRUCTURE_TYPES,
 } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
 
 describe('NoticeOfIntentSubmissionService', () => {
   let service: NoticeOfIntentSubmissionService;
   let mockRepository: DeepMocked<Repository<NoticeOfIntentSubmission>>;
-  let mockStatusRepository: DeepMocked<
-    Repository<NoticeOfIntentSubmissionStatusType>
-  >;
+  let mockStatusRepository: DeepMocked<Repository<NoticeOfIntentSubmissionStatusType>>;
   let mockNoiService: DeepMocked<NoticeOfIntentService>;
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockNoiDocService: DeepMocked<NoticeOfIntentDocumentService>;
@@ -102,9 +102,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       ],
     }).compile();
 
-    service = module.get<NoticeOfIntentSubmissionService>(
-      NoticeOfIntentSubmissionService,
-    );
+    service = module.get<NoticeOfIntentSubmissionService>(NoticeOfIntentSubmissionService);
 
     mockNoiSubmission = new NoticeOfIntentSubmission({
       fileNumber: 'file-number',
@@ -115,8 +113,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       createdBy: mockUser,
     });
 
-    mockQueryBuilder =
-      createMock<SelectQueryBuilder<NoticeOfIntentSubmission>>();
+    mockQueryBuilder = createMock<SelectQueryBuilder<NoticeOfIntentSubmission>>();
     mockQueryBuilder.leftJoin.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.select.mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.where.mockReturnValue(mockQueryBuilder);
@@ -125,8 +122,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       {
         user_uuid: 'user_uuid',
         bceid_business_guid: 'bceid_business_guid',
-        localGovernment_bceid_business_guid:
-          'localGovernment_bceid_business_guid',
+        localGovernment_bceid_business_guid: 'localGovernment_bceid_business_guid',
       },
     ]);
   });
@@ -232,40 +228,27 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiService.submit.mockRejectedValue(new Error());
 
     await expect(
-      service.submitToAlcs(
-        noticeOfIntentSubmission as ValidatedNoticeOfIntentSubmission,
-        mockUser,
-      ),
-    ).rejects.toMatchObject(
-      new BaseServiceException(
-        `Failed to submit notice of intent: ${fileNumber}`,
-      ),
-    );
+      service.submitToAlcs(noticeOfIntentSubmission as ValidatedNoticeOfIntentSubmission, mockUser),
+    ).rejects.toMatchObject(new BaseServiceException(`Failed to submit notice of intent: ${fileNumber}`));
   });
 
   it('should call out to service on submitToAlcs', async () => {
     const mockNoticeOfIntent = new NoticeOfIntent({
       dateSubmittedToAlc: new Date(),
     });
-    mockNoiStatusService.setStatusDate.mockResolvedValue(
-      new NoticeOfIntentSubmissionToSubmissionStatus(),
-    );
+    mockNoiStatusService.setStatusDate.mockResolvedValue(new NoticeOfIntentSubmissionToSubmissionStatus());
     mockGenerateNoiSubmissionDocumentService.generateAndAttach.mockResolvedValue();
 
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
-    await service.submitToAlcs(
-      mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
-      mockUser,
-    );
+    await service.submitToAlcs(mockNoiSubmission as ValidatedNoticeOfIntentSubmission, mockUser);
 
     expect(mockNoiService.submit).toBeCalledTimes(1);
     expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
-    expect(
-      mockGenerateNoiSubmissionDocumentService.generateAndAttach,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockGenerateNoiSubmissionDocumentService.generateAndAttach).toHaveBeenCalledTimes(1);
   });
 
-  it('should populate noi subtypes', async () => {
+  //TODO: This test should be removed once transition to tags from subtypes is completed
+  it.skip('should populate noi subtypes', async () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
@@ -283,16 +266,16 @@ describe('NoticeOfIntentSubmissionService', () => {
       localGovernmentUuid,
       soilProposedStructures: [
         {
-          type: 'Residential - Accessory Structure',
+          type: STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
         },
         {
-          type: 'Residential - Additional Residence',
+          type: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
         },
         {
-          type: 'Residential - Principal Residence',
+          type: STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
         },
         {
-          type: 'Farm Structure',
+          type: STRUCTURE_TYPES.FARM_STRUCTURE,
         },
       ],
       soilIsAreaWideFilling: true,
@@ -301,15 +284,10 @@ describe('NoticeOfIntentSubmissionService', () => {
     const mockNoticeOfIntent = new NoticeOfIntent({
       dateSubmittedToAlc: new Date(),
     });
-    mockNoiStatusService.setStatusDate.mockResolvedValue(
-      new NoticeOfIntentSubmissionToSubmissionStatus(),
-    );
+    mockNoiStatusService.setStatusDate.mockResolvedValue(new NoticeOfIntentSubmissionToSubmissionStatus());
 
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
-    await service.submitToAlcs(
-      mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
-      mockUser,
-    );
+    await service.submitToAlcs(mockNoiSubmission as ValidatedNoticeOfIntentSubmission, mockUser);
 
     expect(mockNoiService.submit).toHaveBeenCalledTimes(1);
     expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
@@ -320,17 +298,75 @@ describe('NoticeOfIntentSubmissionService', () => {
       dateSubmittedToAlc: mockDate,
       typeCode,
       subtypes: [
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Accessory Structure'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Additional Residence'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Principal Residence'],
-        PORTAL_TO_ALCS_STRUCTURE_MAP['Farm Structure'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.ACCESSORY_STRUCTURE],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE],
+        PORTAL_TO_ALCS_STRUCTURE_MAP[STRUCTURE_TYPES.FARM_STRUCTURE],
         'ARWF',
         'AEPM',
       ],
     });
-    expect(
-      mockGenerateNoiSubmissionDocumentService.generateAndAttach,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockGenerateNoiSubmissionDocumentService.generateAndAttach).toHaveBeenCalledTimes(1);
+  });
+
+  it('should populate noi tags', async () => {
+    const applicant = 'Bruce Wayne';
+    const typeCode = 'fake-code';
+    const fileNumber = 'fake';
+    const localGovernmentUuid = 'fake-uuid';
+
+    mockGenerateNoiSubmissionDocumentService.generateAndAttach.mockResolvedValue();
+
+    const mockDate = new Date('2022-01-01');
+    jest.useFakeTimers().setSystemTime(mockDate);
+
+    const mockNoiSubmission = new NoticeOfIntentSubmission({
+      fileNumber,
+      applicant,
+      typeCode,
+      localGovernmentUuid,
+      soilProposedStructures: [
+        {
+          type: STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+        },
+        {
+          type: STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+        },
+        {
+          type: STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
+        },
+        {
+          type: STRUCTURE_TYPES.FARM_STRUCTURE,
+        },
+      ],
+      soilIsAreaWideFilling: true,
+      soilIsExtractionOrMining: true,
+    });
+    const mockNoticeOfIntent = new NoticeOfIntent({
+      dateSubmittedToAlc: new Date(),
+    });
+    mockNoiStatusService.setStatusDate.mockResolvedValue(new NoticeOfIntentSubmissionToSubmissionStatus());
+
+    mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
+    await service.submitToAlcs(mockNoiSubmission as ValidatedNoticeOfIntentSubmission, mockUser);
+
+    expect(mockNoiService.submit).toHaveBeenCalledTimes(1);
+    expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.submit).toHaveBeenCalledWith({
+      applicant,
+      fileNumber,
+      localGovernmentUuid,
+      dateSubmittedToAlc: mockDate,
+      typeCode,
+      tags: [
+        PORTAL_TO_ALCS_TAGS_MAP[STRUCTURE_TYPES.ACCESSORY_STRUCTURE],
+        PORTAL_TO_ALCS_TAGS_MAP[STRUCTURE_TYPES.ADDITIONAL_RESIDENCE],
+        PORTAL_TO_ALCS_TAGS_MAP[STRUCTURE_TYPES.PRINCIPAL_RESIDENCE],
+        PORTAL_TO_ALCS_TAGS_MAP[STRUCTURE_TYPES.FARM_STRUCTURE],
+        'Area-Wide Filling',
+      ],
+    });
+    expect(mockGenerateNoiSubmissionDocumentService.generateAndAttach).toHaveBeenCalledTimes(1);
   });
 
   it('should update fields if notice of intent exists', async () => {

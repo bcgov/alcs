@@ -8,6 +8,7 @@ export type UpcomingMeetingDto = {
   boardCode: string;
   assignee: AssigneeDto;
   type: CardType;
+  isPaused: boolean;
 };
 
 export type UpcomingMeetingBoardMapDto = Record<string, UpcomingMeetingDto[]>;

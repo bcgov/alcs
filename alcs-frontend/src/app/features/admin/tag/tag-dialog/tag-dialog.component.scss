@@ -1,0 +1,52 @@
+@use '../../../../../styles/colors';
+
+
+mat-dialog-title {
+  margin-bottom: 24px;
+}
+
+.warning-banner {
+  margin-top: 8px;
+  background-color: green;
+  padding: 16px;
+
+  .display-none {
+    display: none !important;
+  }
+}
+
+.warning {
+  padding: 16px;
+  font-size: 14px;
+  background-color: rgba(colors.$field-warning-bg-color, 0.5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  color: colors.$dark-contrast-text;
+  margin-top: 18px;
+
+  mat-icon {
+    color: colors.$dark-contrast-text;
+    margin-right: 16px;
+  }
+}
+
+.dialog {
+  padding: 24px;
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+    column-gap: 24px;
+    margin-bottom: 24px;
+
+    .dialog-field {
+      margin-top: 20px;
+    }
+
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+  }
+}

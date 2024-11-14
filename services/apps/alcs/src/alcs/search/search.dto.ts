@@ -180,4 +180,12 @@ export class SearchRequestDto extends PagingRequestDto {
 
   @IsArray()
   fileTypes: string[];
+
+  @IsArray()
+  @IsOptional()
+  tagIds?: string[];
+
+  @IsString()
+  @IsOptional()
+  tagCategoryId?: string;
 }

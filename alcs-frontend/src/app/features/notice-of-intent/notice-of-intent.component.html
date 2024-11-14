@@ -7,9 +7,10 @@
       days="Calendar Days"
       [showStatus]="true"
       [submissionStatusService]="noticeOfIntentStatusService"
+      [isTagSectionHidden]="false"
     ></app-details-header>
     <div class="content">
-      <div *ngIf='!isApplicantSubmission || showSubmittedToAlcMenuItems' class="nav">
+      <div *ngIf="!isApplicantSubmission || showSubmittedToAlcMenuItems" class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
             [routerLink]="route.path ? route.path : './'"
@@ -22,7 +23,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf='isApplicantSubmission && !showSubmittedToAlcMenuItems' class="nav">
+      <div *ngIf="isApplicantSubmission && !showSubmittedToAlcMenuItems" class="nav">
         <div *ngFor="let route of preSubmissionRoute" class="nav-link">
           <div
             [routerLink]="route.path ? route.path : './'"

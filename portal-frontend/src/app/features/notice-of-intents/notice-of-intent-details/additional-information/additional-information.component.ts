@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
@@ -7,8 +7,10 @@ import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
+  STRUCTURE_TYPE_LABEL_MAP,
 } from '../../edit-submission/additional-information/additional-information.component';
 import { openFileInline } from '../../../../shared/utils/file';
+import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 
 @Component({
   selector: 'app-additional-information',
@@ -21,6 +23,8 @@ export class AdditionalInformationComponent {
   @Input() draftMode = false;
 
   firstQuestion = 'FIX THIS';
+
+  isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
@@ -105,5 +109,18 @@ export class AdditionalInformationComponent {
     if (res) {
       openFileInline(res.url, file.fileName);
     }
+  }
+
+  mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {
+    if (value === null) {
+      return null;
+    }
+
+    return STRUCTURE_TYPE_LABEL_MAP[value];
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 }

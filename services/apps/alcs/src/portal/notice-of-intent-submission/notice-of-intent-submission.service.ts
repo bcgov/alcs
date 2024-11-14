@@ -3,13 +3,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import {
-  FindOptionsRelations,
-  FindOptionsWhere,
-  IsNull,
-  Not,
-  Repository,
-} from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
@@ -34,6 +28,7 @@ import {
 import {
   NoticeOfIntentSubmission,
   PORTAL_TO_ALCS_STRUCTURE_MAP,
+  PORTAL_TO_ALCS_TAGS_MAP,
 } from './notice-of-intent-submission.entity';
 
 @Injectable()
@@ -92,56 +87,36 @@ export class NoticeOfIntentSubmissionService {
       createdBy,
     });
 
-    const savedSubmission =
-      await this.noticeOfIntentSubmissionRepository.save(noiSubmission);
+    const savedSubmission = await this.noticeOfIntentSubmissionRepository.save(noiSubmission);
 
-    await this.noticeOfIntentSubmissionStatusService.setInitialStatuses(
-      savedSubmission.uuid,
-    );
+    await this.noticeOfIntentSubmissionStatusService.setInitialStatuses(savedSubmission.uuid);
 
     return fileNumber;
   }
 
-  async update(
-    submissionUuid: string,
-    updateDto: NoticeOfIntentSubmissionUpdateDto,
-    user: User,
-  ) {
+  async update(submissionUuid: string, updateDto: NoticeOfIntentSubmissionUpdateDto, user: User) {
     const noticeOfIntentSubmission = await this.getByUuid(submissionUuid, user);
 
     noticeOfIntentSubmission.applicant = updateDto.applicant;
-    noticeOfIntentSubmission.purpose = filterUndefined(
-      updateDto.purpose,
-      noticeOfIntentSubmission.purpose,
-    );
-    noticeOfIntentSubmission.typeCode =
-      updateDto.typeCode || noticeOfIntentSubmission.typeCode;
-    noticeOfIntentSubmission.localGovernmentUuid =
-      updateDto.localGovernmentUuid;
+    noticeOfIntentSubmission.purpose = filterUndefined(updateDto.purpose, noticeOfIntentSubmission.purpose);
+    noticeOfIntentSubmission.typeCode = updateDto.typeCode || noticeOfIntentSubmission.typeCode;
+    noticeOfIntentSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
 
     this.setLandUseFields(noticeOfIntentSubmission, updateDto);
     await this.setSoilFields(noticeOfIntentSubmission, updateDto);
 
-    await this.noticeOfIntentSubmissionRepository.save(
-      noticeOfIntentSubmission,
-    );
+    await this.noticeOfIntentSubmissionRepository.save(noticeOfIntentSubmission);
 
     if (!noticeOfIntentSubmission.isDraft && updateDto.localGovernmentUuid) {
-      await this.noticeOfIntentService.update(
-        noticeOfIntentSubmission.fileNumber,
-        {
-          localGovernmentUuid: updateDto.localGovernmentUuid,
-        },
-      );
+      await this.noticeOfIntentService.update(noticeOfIntentSubmission.fileNumber, {
+        localGovernmentUuid: updateDto.localGovernmentUuid,
+      });
     }
 
     if (!noticeOfIntentSubmission.isDraft && updateDto.typeCode) {
-      await this.noticeOfIntentService.update(
-        noticeOfIntentSubmission.fileNumber,
-        {
-          typeCode: updateDto.typeCode,
-        },
-      );
+      await this.noticeOfIntentService.update(noticeOfIntentSubmission.fileNumber, {
+        typeCode: updateDto.typeCode,
+      });
     }
     return this.getByUuid(submissionUuid, user);
   }
@@ -173,9 +148,7 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async getByFileNumber(fileNumber: string, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles!.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles!.includes(value));
     if (overlappingRoles.length > 0) {
       return await this.getOrFailByFileNumber(fileNumber);
     }
@@ -197,9 +170,7 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async getByUuid(uuid: string, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles!.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles!.includes(value));
     if (overlappingRoles.length > 0) {
       return await this.noticeOfIntentSubmissionRepository.findOneOrFail({
         where: {
@@ -229,10 +200,7 @@ export class NoticeOfIntentSubmissionService {
     });
   }
 
-  private async generateWhereClauses(
-    searchOptions: FindOptionsWhere<NoticeOfIntentSubmission>,
-    user: User,
-  ) {
+  private async generateWhereClauses(searchOptions: FindOptionsWhere<NoticeOfIntentSubmission>, user: User) {
     const searchQueries: FindOptionsWhere<NoticeOfIntentSubmission>[] = [];
 
     searchQueries.push({
@@ -252,8 +220,7 @@ export class NoticeOfIntentSubmissionService {
         isDraft: false,
       });
 
-      const matchingLocalGovernment =
-        await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
+      const matchingLocalGovernment = await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
       if (matchingLocalGovernment) {
         searchQueries.push({
           ...searchOptions,
@@ -275,20 +242,13 @@ export class NoticeOfIntentSubmissionService {
     return submissions.map((noiSubmission) => {
       const isCreator = noiSubmission.createdBy.uuid === user.uuid;
       const isSameAccount =
-        user.bceidBusinessGuid &&
-        noiSubmission.createdBy.bceidBusinessGuid === user.bceidBusinessGuid;
+        user.bceidBusinessGuid && noiSubmission.createdBy.bceidBusinessGuid === user.bceidBusinessGuid;
 
       return {
-        ...this.mapper.map(
-          noiSubmission,
-          NoticeOfIntentSubmission,
-          NoticeOfIntentSubmissionDto,
-        ),
+        ...this.mapper.map(noiSubmission, NoticeOfIntentSubmission, NoticeOfIntentSubmissionDto),
         type: types.find((type) => type.code === noiSubmission.typeCode)!.label,
         canEdit:
-          [NOI_SUBMISSION_STATUS.IN_PROGRESS].includes(
-            noiSubmission.status.statusTypeCode as NOI_SUBMISSION_STATUS,
-          ) &&
+          [NOI_SUBMISSION_STATUS.IN_PROGRESS].includes(noiSubmission.status.statusTypeCode as NOI_SUBMISSION_STATUS) &&
           (isCreator || isSameAccount),
         canView: true,
       };
@@ -297,34 +257,24 @@ export class NoticeOfIntentSubmissionService {
 
   async mapToDetailedDTO(noiSubmission: NoticeOfIntentSubmission, user: User) {
     const types = await this.noticeOfIntentService.listTypes();
-    const mappedApp = this.mapper.map(
-      noiSubmission,
-      NoticeOfIntentSubmission,
-      NoticeOfIntentSubmissionDetailedDto,
-    );
+    const mappedApp = this.mapper.map(noiSubmission, NoticeOfIntentSubmission, NoticeOfIntentSubmissionDetailedDto);
     const isCreator = noiSubmission.createdBy.uuid === user.uuid;
     const isSameAccount =
-      user.bceidBusinessGuid &&
-      noiSubmission.createdBy.bceidBusinessGuid === user.bceidBusinessGuid;
+      user.bceidBusinessGuid && noiSubmission.createdBy.bceidBusinessGuid === user.bceidBusinessGuid;
 
     return {
       ...mappedApp,
       type: types.find((type) => type.code === noiSubmission.typeCode)!.label,
       canEdit:
-        [NOI_SUBMISSION_STATUS.IN_PROGRESS].includes(
-          noiSubmission.status.statusTypeCode as NOI_SUBMISSION_STATUS,
-        ) &&
+        [NOI_SUBMISSION_STATUS.IN_PROGRESS].includes(noiSubmission.status.statusTypeCode as NOI_SUBMISSION_STATUS) &&
         (isCreator || isSameAccount),
       canView: true,
     };
   }
 
-  async submitToAlcs(
-    noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
-    user: User,
-  ) {
+  async submitToAlcs(noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission, user: User) {
     try {
-      const subtypes = this.populateNoiSubtype(noticeOfIntentSubmission);
+      const tags = this.populateNoiTags(noticeOfIntentSubmission);
 
       const submittedNoi = await this.noticeOfIntentService.submit({
         fileNumber: noticeOfIntentSubmission.fileNumber,
@@ -332,7 +282,7 @@ export class NoticeOfIntentSubmissionService {
         localGovernmentUuid: noticeOfIntentSubmission.localGovernmentUuid,
         typeCode: noticeOfIntentSubmission.typeCode,
         dateSubmittedToAlc: new Date(),
-        subtypes,
+        tags: tags,
       });
 
       await this.noticeOfIntentSubmissionStatusService.setStatusDate(
@@ -341,32 +291,27 @@ export class NoticeOfIntentSubmissionService {
         submittedNoi.dateSubmittedToAlc,
       );
 
-      await this.generateNoiSubmissionDocumentService.generateAndAttach(
-        submittedNoi.fileNumber,
-        user,
-      );
+      await this.generateNoiSubmissionDocumentService.generateAndAttach(submittedNoi.fileNumber, user);
 
       return submittedNoi;
     } catch (ex) {
       this.logger.error(ex);
-      throw new BaseServiceException(
-        `Failed to submit notice of intent: ${noticeOfIntentSubmission.fileNumber}`,
-      );
+      throw new BaseServiceException(`Failed to submit notice of intent: ${noticeOfIntentSubmission.fileNumber}`);
     }
   }
 
-  private populateNoiSubtype(
-    noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
-  ) {
+  /**
+   * @deprecated Use `populateNoiTags` instead as tags are being used instead of subtypes
+   */
+  private populateNoiSubtype(noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission) {
     const subtypes: string[] = [];
 
-    const structureTypes =
-      noticeOfIntentSubmission.soilProposedStructures.reduce((map, value) => {
-        if (value.type) {
-          map.add(value.type);
-        }
-        return map;
-      }, new Set<string>());
+    const structureTypes = noticeOfIntentSubmission.soilProposedStructures.reduce((map, value) => {
+      if (value.type) {
+        map.add(value.type);
+      }
+      return map;
+    }, new Set<string>());
 
     for (const type of structureTypes.values()) {
       subtypes.push(PORTAL_TO_ALCS_STRUCTURE_MAP[type]);
@@ -383,17 +328,30 @@ export class NoticeOfIntentSubmissionService {
     return subtypes;
   }
 
-  async updateStatus(
-    uuid: string,
-    statusCode: NOI_SUBMISSION_STATUS,
-    effectiveDate?: Date | null,
-  ) {
+  private populateNoiTags(noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission) {
+    const tags: string[] = [];
+
+    const structureTypes = noticeOfIntentSubmission.soilProposedStructures.reduce((map, value) => {
+      if (value.type) {
+        map.add(value.type);
+      }
+      return map;
+    }, new Set<string>());
+
+    for (const type of structureTypes.values()) {
+      tags.push(PORTAL_TO_ALCS_TAGS_MAP[type]);
+    }
+
+    if (noticeOfIntentSubmission.soilIsAreaWideFilling) {
+      tags.push('Area-Wide Filling');
+    }
+
+    return tags;
+  }
+
+  async updateStatus(uuid: string, statusCode: NOI_SUBMISSION_STATUS, effectiveDate?: Date | null) {
     const submission = await this.loadBarebonesSubmission(uuid);
-    await this.noticeOfIntentSubmissionStatusService.setStatusDate(
-      submission.uuid,
-      statusCode,
-      effectiveDate,
-    );
+    await this.noticeOfIntentSubmissionStatusService.setStatusDate(submission.uuid, statusCode, effectiveDate);
   }
 
   async getStatus(code: NOI_SUBMISSION_STATUS) {
@@ -411,16 +369,10 @@ export class NoticeOfIntentSubmissionService {
     );
   }
 
-  async setPrimaryContact(
-    submissionUuid: string,
-    primaryContactUuid: any,
-    user: User,
-  ) {
+  async setPrimaryContact(submissionUuid: string, primaryContactUuid: any, user: User) {
     const noticeOfIntentSubmission = await this.getByUuid(submissionUuid, user);
     noticeOfIntentSubmission.primaryContactOwnerUuid = primaryContactUuid;
-    await this.noticeOfIntentSubmissionRepository.save(
-      noticeOfIntentSubmission,
-    );
+    await this.noticeOfIntentSubmissionRepository.save(noticeOfIntentSubmission);
   }
 
   private loadBarebonesSubmission(uuid: string) {
@@ -436,24 +388,18 @@ export class NoticeOfIntentSubmissionService {
     noticeOfIntentSubmission: NoticeOfIntentSubmission,
     updateDto: NoticeOfIntentSubmissionUpdateDto,
   ) {
-    noticeOfIntentSubmission.parcelsAgricultureDescription =
-      updateDto.parcelsAgricultureDescription;
+    noticeOfIntentSubmission.parcelsAgricultureDescription = updateDto.parcelsAgricultureDescription;
     noticeOfIntentSubmission.parcelsAgricultureImprovementDescription =
       updateDto.parcelsAgricultureImprovementDescription;
-    noticeOfIntentSubmission.parcelsNonAgricultureUseDescription =
-      updateDto.parcelsNonAgricultureUseDescription;
+    noticeOfIntentSubmission.parcelsNonAgricultureUseDescription = updateDto.parcelsNonAgricultureUseDescription;
     noticeOfIntentSubmission.northLandUseType = updateDto.northLandUseType;
-    noticeOfIntentSubmission.northLandUseTypeDescription =
-      updateDto.northLandUseTypeDescription;
+    noticeOfIntentSubmission.northLandUseTypeDescription = updateDto.northLandUseTypeDescription;
     noticeOfIntentSubmission.eastLandUseType = updateDto.eastLandUseType;
-    noticeOfIntentSubmission.eastLandUseTypeDescription =
-      updateDto.eastLandUseTypeDescription;
+    noticeOfIntentSubmission.eastLandUseTypeDescription = updateDto.eastLandUseTypeDescription;
     noticeOfIntentSubmission.southLandUseType = updateDto.southLandUseType;
-    noticeOfIntentSubmission.southLandUseTypeDescription =
-      updateDto.southLandUseTypeDescription;
+    noticeOfIntentSubmission.southLandUseTypeDescription = updateDto.southLandUseTypeDescription;
     noticeOfIntentSubmission.westLandUseType = updateDto.westLandUseType;
-    noticeOfIntentSubmission.westLandUseTypeDescription =
-      updateDto.westLandUseTypeDescription;
+    noticeOfIntentSubmission.westLandUseTypeDescription = updateDto.westLandUseTypeDescription;
 
     return noticeOfIntentSubmission;
   }
@@ -566,33 +512,30 @@ export class NoticeOfIntentSubmissionService {
       noticeOfIntentSubmission.soilHasSubmittedNotice,
     );
 
-    noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure =
-      filterUndefined(
-        updateDto.soilIsRemovingSoilForNewStructure,
-        noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure,
-      );
+    noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure = filterUndefined(
+      updateDto.soilIsRemovingSoilForNewStructure,
+      noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure,
+    );
 
     noticeOfIntentSubmission.soilStructureFarmUseReason = filterUndefined(
       updateDto.soilStructureFarmUseReason,
       noticeOfIntentSubmission.soilStructureFarmUseReason,
     );
 
-    noticeOfIntentSubmission.soilStructureResidentialUseReason =
-      filterUndefined(
-        updateDto.soilStructureResidentialUseReason,
-        noticeOfIntentSubmission.soilStructureResidentialUseReason,
-      );
+    noticeOfIntentSubmission.soilStructureResidentialUseReason = filterUndefined(
+      updateDto.soilStructureResidentialUseReason,
+      noticeOfIntentSubmission.soilStructureResidentialUseReason,
+    );
 
     noticeOfIntentSubmission.soilAgriParcelActivity = filterUndefined(
       updateDto.soilAgriParcelActivity,
       noticeOfIntentSubmission.soilAgriParcelActivity,
     );
 
-    noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason =
-      filterUndefined(
-        updateDto.soilStructureResidentialAccessoryUseReason,
-        noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason,
-      );
+    noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason = filterUndefined(
+      updateDto.soilStructureResidentialAccessoryUseReason,
+      noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason,
+    );
 
     noticeOfIntentSubmission.soilStructureOtherUseReason = filterUndefined(
       updateDto.soilStructureOtherUseReason,
@@ -604,24 +547,14 @@ export class NoticeOfIntentSubmissionService {
       noticeOfIntentSubmission.soilProposedStructures,
     );
 
-    if (
-      updateDto.soilHasSubmittedNotice === false ||
-      updateDto.soilIsExtractionOrMining === false
-    ) {
-      const noiUuid = await this.noticeOfIntentService.getUuid(
-        noticeOfIntentSubmission.fileNumber,
-      );
-      await this.noticeOfIntentDocumentService.deleteByType(
-        DOCUMENT_TYPE.NOTICE_OF_WORK,
-        noiUuid,
-      );
+    if (updateDto.soilHasSubmittedNotice === false || updateDto.soilIsExtractionOrMining === false) {
+      const noiUuid = await this.noticeOfIntentService.getUuid(noticeOfIntentSubmission.fileNumber);
+      await this.noticeOfIntentDocumentService.deleteByType(DOCUMENT_TYPE.NOTICE_OF_WORK, noiUuid);
     }
   }
 
   async canDeleteDocument(document: NoticeOfIntentDocument, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles!.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles!.includes(value));
     if (overlappingRoles.length > 0) {
       return true;
     }
@@ -629,19 +562,14 @@ export class NoticeOfIntentSubmissionService {
     const documentFlags = await this.getDocumentFlags(document);
 
     const isOwner = user.uuid === documentFlags.ownerUuid;
-    const isGovernmentOnFile =
-      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
-    const isSameAccountAsOwner =
-      !!user.bceidBusinessGuid &&
-      user.bceidBusinessGuid === documentFlags.ownerGuid;
+    const isGovernmentOnFile = user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const isSameAccountAsOwner = !!user.bceidBusinessGuid && user.bceidBusinessGuid === documentFlags.ownerGuid;
 
     return isOwner || isGovernmentOnFile || isSameAccountAsOwner;
   }
 
   async canAccessDocument(document: NoticeOfIntentDocument, user: User) {
-    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
-      user.clientRoles.includes(value),
-    );
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) => user.clientRoles.includes(value));
 
     //If user is ALCS staff
     if (overlappingRoles.length > 0) {
@@ -656,8 +584,7 @@ export class NoticeOfIntentSubmissionService {
     const documentFlags = await this.getDocumentFlags(document);
 
     const applicantFlag =
-      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
-      user.uuid === documentFlags.ownerUuid;
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) && user.uuid === documentFlags.ownerUuid;
     const governmentFlag =
       !!user.bceidBusinessGuid &&
       document.visibilityFlags.includes(VISIBILITY_FLAG.GOVERNMENT) &&
@@ -677,11 +604,7 @@ export class NoticeOfIntentSubmissionService {
       .leftJoin('noticeOfIntent.documents', 'document')
       .leftJoin('submission.createdBy', 'user')
       .leftJoin('noticeOfIntent.localGovernment', 'localGovernment')
-      .select([
-        'user.uuid',
-        'user.bceid_business_guid',
-        'localGovernment.bceidBusinessGuid',
-      ])
+      .select(['user.uuid', 'user.bceid_business_guid', 'localGovernment.bceidBusinessGuid'])
       .where('document.uuid = :uuid', {
         uuid: document.uuid,
       })

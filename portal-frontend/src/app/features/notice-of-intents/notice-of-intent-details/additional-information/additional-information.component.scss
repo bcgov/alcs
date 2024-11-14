@@ -15,3 +15,29 @@
     grid-template-columns: 1fr 1fr 2fr;
   }
 }
+
+.mobile-structure-card {
+  width: 100%;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.mobile-structure-card-border {
+  border-top: rem(1) solid #aaaaaa;
+}
+
+.mobile-structure-title {
+  display: block;
+  margin: 0;
+}
+
+.mobile-structure-label {
+  margin: rem(5) 0 rem(5) 0;
+}
+
+.strong {
+  font-weight: 700;
+}

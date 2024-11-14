@@ -22,7 +22,11 @@ import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcel } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
-import { NoticeOfIntentSubmission } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
+import {
+  NoticeOfIntentSubmission,
+  STRUCTURE_TYPE_LABEL_MAP,
+  STRUCTURE_TYPES,
+} from '../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
 
 export enum NOI_SUBMISSION_TYPES {
@@ -325,9 +329,9 @@ export class GenerateNoiSubmissionDocumentService {
           (structure) =>
             structure.type &&
             [
-              'Residential - Accessory Structure',
-              'Residential - Additional Residence',
-              'Residential - Principal Residence',
+              STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+              STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
+              STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
             ].includes(structure.type),
         ),
       isSoilStructureResidentialAccessoryUseReasonVisible:
@@ -381,7 +385,10 @@ export class GenerateNoiSubmissionDocumentService {
       soilProposedStructures: submission.soilProposedStructures.map(
         (structure, index) => ({
           area: structure.area ?? NO_DATA,
-          type: structure.type ?? NO_DATA,
+          type:
+            STRUCTURE_TYPE_LABEL_MAP[structure.type ?? ''] ??
+            structure.type ??
+            NO_DATA,
           index: index + 1,
         }),
       ),

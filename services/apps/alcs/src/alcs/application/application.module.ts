@@ -45,6 +45,9 @@ import { ApplicationTimeTrackingService } from './application-time-tracking.serv
 import { ApplicationController } from './application.controller';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
+import { ApplicationTagService } from './application-tag/application-tag.service';
+import { ApplicationTagController } from './application-tag/application-tag.controller';
+import { TagModule } from '../tag/tag.module';
 
 @Module({
   imports: [
@@ -74,6 +77,7 @@ import { ApplicationService } from './application.service';
     forwardRef(() => ApplicationSubmissionModule),
     ApplicationSubmissionStatusModule,
     LocalGovernmentModule,
+    TagModule,
   ],
   providers: [
     ApplicationService,
@@ -90,6 +94,7 @@ import { ApplicationService } from './application.service';
     ApplicationSubmissionReviewService,
     ApplicationDecisionMeetingService,
     ApplicationSubmissionProfile,
+    ApplicationTagService,
   ],
   controllers: [
     ApplicationController,
@@ -99,6 +104,7 @@ import { ApplicationService } from './application.service';
     ApplicationSubmissionController,
     ApplicationSubmissionReviewController,
     ApplicationParcelController,
+    ApplicationTagController,
   ],
   exports: [
     ApplicationService,
@@ -110,6 +116,7 @@ import { ApplicationService } from './application.service';
     LocalGovernmentService,
     ApplicationDocumentService,
     ApplicationDecisionMeetingService,
+    ApplicationTagService,
   ],
 })
 export class ApplicationModule {}

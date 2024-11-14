@@ -32,6 +32,7 @@ import { ValidatedApplicationSubmission } from './application-submission-validat
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { ApplicationTagService } from '../../alcs/application/application-tag/application-tag.service';
 
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
@@ -41,6 +42,7 @@ describe('ApplicationSubmissionService', () => {
   >;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockApplicationTagService: DeepMocked<ApplicationTagService>;
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
@@ -54,6 +56,7 @@ describe('ApplicationSubmissionService', () => {
     mockRepository = createMock();
     mockStatusRepository = createMock();
     mockApplicationService = createMock();
+    mockApplicationTagService = createMock();
     mockLGService = createMock();
     mockAppDocService = createMock();
     mockGenerateSubmissionDocumentService = createMock();
@@ -75,6 +78,10 @@ describe('ApplicationSubmissionService', () => {
       providers: [
         ApplicationSubmissionService,
         ApplicationSubmissionProfile,
+        {
+          provide: ApplicationTagService,
+          useValue: mockApplicationTagService,
+        },
         {
           provide: getRepositoryToken(ApplicationSubmission),
           useValue: mockRepository,

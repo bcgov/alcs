@@ -1,0 +1,127 @@
+@use '../../../../../../styles/functions' as *;
+@use '../../../../../../styles/colors';
+
+mat-dialog-title {
+  background-color: aqua;
+}
+
+h2 {
+  font-size: rem(19.5);
+}
+
+.actions {
+  display: flex;
+  padding: rem(16) rem(24);
+  flex-direction: column-reverse;
+  gap: rem(8);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: unset;
+    gap: unset;
+    margin-top: unset;
+  }
+}
+
+.btn-group {
+  width: 100%;
+  display: flex;
+  gap: rem(16);
+
+  button {
+    flex: 1 1 auto;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
+
+    button {
+      flex: unset;
+    }
+  }
+}
+
+:host::ng-deep {
+  .warning-banner {
+    font-size: rem(13);
+  }
+}
+
+.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+  background-color: colors.$primary-color-light;
+}
+
+:host::ng-deep {
+  .field-error {
+    color: colors.$error-color;
+    font-size: rem(15);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-top: rem(4);
+  }
+}
+
+.delete-btn {
+  order: -1;
+  margin-right: auto !important;
+  width: 100%;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
+  }
+}
+
+.warning-icon {
+  padding-right: rem(27);
+}
+
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: rem(25);
+
+  .form-field {
+    flex: 1 1 50%;
+    box-sizing: border-box;
+    display: grid;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 40%;
+    margin-bottom: rem(10) !important;
+  }
+
+  @media screen and (max-width: $tabletBreakpoint) {
+    gap: rem(10);
+    .form-field {
+      width: 100%;
+      flex: 1 1 100%;
+      margin: 0 rem(5);
+    }
+  }
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: rem(15);
+  margin: 0 rem(15) rem(10) 0;
+  button {
+    flex: 0 0 rem(100);
+    padding: rem(10) rem(10);
+  }
+
+  @media screen and (max-width: $tabletBreakpoint) {
+    button {
+      flex: 1 1 48%;
+    }
+  }
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: rem(15) !important;
+  margin-bottom: rem(10);
+}

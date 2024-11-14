@@ -104,6 +104,14 @@ export class SearchRequestDto extends PagingRequestDto {
 
   @IsArray()
   fileTypes: string[];
+
+  @IsArray()
+  @IsOptional()
+  tagIds?: string[];
+
+  @IsArray()
+  @IsOptional()
+  tagCategoryId?: string;
 }
 
 // typeorm does not transform property names for the status

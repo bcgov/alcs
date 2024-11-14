@@ -65,17 +65,29 @@
 
   <ng-container *ngIf="confirmRemovalOfSoil">
     <form [formGroup]="structuresForm">
-      <mat-label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s)</mat-label>
+      <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
       <div class="scrollable">
-        <table mat-table [dataSource]="structuresSource">
+        <div *ngIf="isMobile">
+          <app-structure-mobile-card            
+            *ngFor="let structure of proposedStructures; let last = last; index as i"
+            [structure]="structure"
+            [isLast]="last"
+            [index]="i"
+            [isReviewStep]="false"
+            (removeClicked)="onStructureRemove(structure.id)"
+            (editClicked)="onStructureEdit(structure.id)"
+            >
+          </app-structure-mobile-card>
+        </div>
+        <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
           <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef>#</th>
-            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">{{ i + 1 }}</td>
           </ng-container>
 
           <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
               <mat-form-field appearance="outline">
                 <mat-select
                   [value]="element.type"
@@ -83,8 +95,8 @@
                   [formControlName]="element.id + '-type'"
                   (valueChange)="onChangeStructureType(element.id, $event)"
                 >
-                  <mat-option *ngFor="let type of STRUCTURE_TYPES" [value]="type">
-                    {{ type }}
+                  <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
+                    {{ type.label }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -106,7 +118,7 @@
 
           <ng-container matColumnDef="area">
             <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -117,6 +129,7 @@
                   min="0.01"
                   placeholder="Type area"
                   [formControlName]="element.id + '-area'"
+                  (change)="onChangeArea(element.id, $event)"
                 />
                 <span matTextSuffix>m<sup>2</sup></span>
               </mat-form-field>
@@ -138,7 +151,7 @@
 
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef>Action</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
               <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
                 Remove
               </button>
@@ -147,6 +160,21 @@
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <ng-container matColumnDef="msgWarning">
+            <td colspan="7" mat-cell *matCellDef class="no-top-border">
+              <div class="residential-warning">
+                <div class="residential-warning-text">
+                  The proposed residential structure and its total floor area must be allowed under the ALC Act and/or ALR Use Regulation. 
+                  If not, you may require a 'Non-Adhering Residential Use' application instead. For more info, please see 
+                  <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank">Housing in the ALR</a> 
+                  on the ALC website.
+                </div>
+              </div>              
+            </td>
+          </ng-container>
+
+          <tr mat-row class="row-group" *matRowDef="let row; columns: ['msgWarning']; when: isWarning"></tr>
 
           <tr class="mat-row no-data" *matNoDataRow>
             <td class="text-center" colspan="7">
@@ -181,6 +209,13 @@
 
       <div class="full-row" *ngIf="isSoilStructureFarmUseReasonVisible">
         <label for="soilStructureFarmUseReason">Describe how the structure is necessary for farm use</label>
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#farmstructures" target="_blank"
+            >Farm Structures in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureFarmUseReason"
@@ -206,8 +241,18 @@
 
       <div class="full-row" *ngIf="isSoilStructureResidentialUseReasonVisible">
         <label for="soilStructureResidentialUseReason"
-          >Describe how the structure is necessary for residential use</label
+          >Describe why <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
+          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
+          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required for the
+          residential structure(s)</label
         >
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+            >Housing in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureResidentialUseReason"
@@ -232,7 +277,9 @@
       </div>
 
       <div class="full-row" *ngIf="isSoilAgriParcelActivityVisible">
-        <label for="soilAgriParcelActivity">Describe the current agricultural activity on the parcel(s)</label>
+        <label for="soilAgriParcelActivity"
+          >Describe the current or proposed agricultural activity on the parcel(s)</label
+        >
         <div class="subtext">Include the area, yields, crop types, and farm equipment size and attachments</div>
         <mat-form-field appearance="outline">
           <textarea
@@ -256,8 +303,18 @@
 
       <div class="full-row" *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
         <label for="soilStructureResidentialAccessoryUseReason"
-          >Describe the intended use of the residential accessory structure</label
+          >Describe the intended use of the residential accessory structure(s) and why
+          <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
+          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
+          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required</label
         >
+        <div class="info-banner subtext">
+          Please refer to
+          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+            >Housing in the ALR</a
+          >
+          on the ALC website for more detail.
+        </div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureResidentialAccessoryUseReason"
@@ -282,7 +339,12 @@
       </div>
 
       <div class="full-row" *ngIf="isSoilOtherUseReasonVisible">
-        <label for="soilStructureOtherUseReason"> Describe the intended use of the 'Other' structure </label>
+        <label for="soilStructureOtherUseReason">
+          Describe the intended use of the 'Other' structure(s) and why
+          <ng-container *ngIf="typeCode === 'POFO'">placing fill</ng-container>
+          <ng-container *ngIf="typeCode === 'ROSO'">removing soil</ng-container>
+          <ng-container *ngIf="typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
+        </label>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="soilStructureOtherUseReason"

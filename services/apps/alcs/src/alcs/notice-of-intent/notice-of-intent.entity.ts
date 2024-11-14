@@ -1,16 +1,6 @@
 import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { Card } from '../card/card.entity';
@@ -19,10 +9,10 @@ import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntentDocument } from './notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
+import { Tag } from '../tag/tag.entity';
 
 @Entity({
-  comment:
-    'Base data for Notice of Intents incl. the ID, key dates, and the date of the first decision',
+  comment: 'Base data for Notice of Intents incl. the ID, key dates, and the date of the first decision',
 })
 export class NoticeOfIntent extends Base {
   constructor(data?: Partial<NoticeOfIntent>) {
@@ -171,8 +161,7 @@ export class NoticeOfIntent extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'NOI Id that is applicable only to paper version applications from 70s - 80s',
+    comment: 'NOI Id that is applicable only to paper version applications from 70s - 80s',
     nullable: true,
   })
   legacyId?: string | null;
@@ -247,9 +236,11 @@ export class NoticeOfIntent extends Base {
   typeCode: string;
 
   @AutoMap()
-  @OneToMany(
-    () => NoticeOfIntentDocument,
-    (noiDocument) => noiDocument.noticeOfIntent,
-  )
+  @OneToMany(() => NoticeOfIntentDocument, (noiDocument) => noiDocument.noticeOfIntent)
   documents: NoticeOfIntentDocument[];
+
+  @AutoMap(() => [Tag])
+  @ManyToMany(() => Tag, (tag) => tag.noticeOfIntents)
+  @JoinTable({ name: 'notice_of_intent_tag' })
+  tags: Tag[];
 }

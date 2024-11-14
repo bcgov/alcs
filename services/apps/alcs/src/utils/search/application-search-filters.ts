@@ -40,41 +40,56 @@ export const APP_SEARCH_FILTERS = {
       )
       .getMany();
   },
+  addTagsResults: (searchDto: SearchRequestDto | InboxRequestDto, appRepository: Repository<Application>) => {
+    return appRepository
+      .createQueryBuilder('app')
+      .select('app.fileNumber')
+      .leftJoin('application_tag', 'application_tag', 'application_tag.application_uuid = app.uuid')
+      .where('application_tag.tag_uuid IN (:...tagIds)', {
+        tagIds: searchDto.tagIds,
+      })
+      .groupBy('app.fileNumber')
+      .addGroupBy('app.uuid')
+      .having('count(distinct tag_uuid) = :countCategories', {
+        countCategories: searchDto.tagIds?.length,
+      })
+      .getMany();
+  },
+  addTagCategoryResults: (searchDto: SearchRequestDto | InboxRequestDto, appRepository: Repository<Application>) => {
+    return appRepository
+      .createQueryBuilder('app')
+      .select('app.fileNumber')
+      .leftJoin('application_tag', 'application_tag', 'application_tag.application_uuid = app.uuid')
+      .leftJoin('tag', 'tag', 'tag.uuid = application_tag.tag_uuid')
+      .where('tag.category_uuid IN (:categoryId)', {
+        categoryId: searchDto.tagCategoryId,
+      })
+      .getMany();
+  },
   addNameResults: (
     searchDto: SearchRequestDto | InboxRequestDto,
     applicationSubmissionRepository: Repository<ApplicationSubmission>,
   ) => {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
     return applicationSubmissionRepository
       .createQueryBuilder('appSub')
       .select('appSub.fileNumber')
-      .leftJoin(
-        ApplicationOwner,
-        'application_owner',
-        'application_owner.application_submission_uuid = appSub.uuid',
-      )
+      .leftJoin(ApplicationOwner, 'application_owner', 'application_owner.application_submission_uuid = appSub.uuid')
       .andWhere(
         new Brackets((qb) =>
           qb
-            .where(
-              "LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)",
-              {
-                names: formattedSearchString,
-              },
-            )
+            .where("LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)", {
+              names: formattedSearchString,
+            })
             .orWhere('LOWER(application_owner.first_name) LIKE ANY (:names)', {
               names: formattedSearchString,
             })
             .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
               names: formattedSearchString,
             })
-            .orWhere(
-              'LOWER(application_owner.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
+            .orWhere('LOWER(application_owner.organization_name) LIKE ANY (:names)', {
+              names: formattedSearchString,
+            }),
         ),
       )
       .getMany();
@@ -104,11 +119,7 @@ export const APP_SEARCH_FILTERS = {
     const query = applicationSubmissionRepository
       .createQueryBuilder('appSub')
       .select('appSub.fileNumber')
-      .leftJoin(
-        ApplicationParcel,
-        'parcel',
-        'parcel.application_submission_uuid = appSub.uuid',
-      );
+      .leftJoin(ApplicationParcel, 'parcel', 'parcel.application_submission_uuid = appSub.uuid');
 
     if (searchDto.pid) {
       query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
@@ -142,12 +153,9 @@ export const APP_SEARCH_FILTERS = {
       .where('app.type_code IN (:...typeCodes)', {
         typeCodes: searchDto.fileTypes,
       })
-      .orWhere(
-        'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
-        {
-          typeCodes: searchDto.fileTypes,
-        },
-      );
+      .orWhere('decisionComponent.application_decision_component_type_code IN (:...typeCodes)', {
+        typeCodes: searchDto.fileTypes,
+      });
 
     return query.getMany();
   },

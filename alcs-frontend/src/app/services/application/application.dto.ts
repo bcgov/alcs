@@ -1,6 +1,8 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { CardDto } from '../card/card.dto';
+import { TagDto } from '../tag/tag.dto';
+import { ProposedStructure } from '../notice-of-intent/notice-of-intent.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
@@ -171,6 +173,7 @@ export interface ApplicationSubmissionDto {
   subdProposedLots: ProposedLot[];
 
   //Soil Fields
+  soilIsNewStructure: boolean | null;
   soilIsFollowUp: boolean | null;
   soilFollowUpIDs: string | null;
   soilTypeRemoved: string | null;
@@ -197,6 +200,12 @@ export interface ApplicationSubmissionDto {
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean | null;
   soilHasSubmittedNotice: boolean | null;
+  soilStructureFarmUseReason: string | null;
+  soilStructureResidentialUseReason: string | null;
+  soilAgriParcelActivity: string | null;
+  soilStructureResidentialAccessoryUseReason: string | null;
+  soilStructureOtherUseReason: string | null;
+  soilProposedStructures: ProposedStructure[];
 
   //NARU Fields
   naruWillBeOverFiveHundredM2: boolean | null;
@@ -281,6 +290,7 @@ export interface ApplicationDto {
   proposalEndDate2?: number;
   proposalExpiryDate?: number;
   legacyId?: string;
+  tags?: TagDto[];
 }
 
 export interface UpdateApplicationDto {

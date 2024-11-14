@@ -12,6 +12,7 @@ import { UserDto } from '../../user/user.dto';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { User } from '../../user/user.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
+import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('incoming-files')
@@ -20,6 +21,7 @@ export class IncomingFileController {
   constructor(
     private applicationService: ApplicationService,
     private planningReviewService: PlanningReviewService,
+    private applicationTimeTrackingService: ApplicationTimeTrackingService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -47,6 +49,9 @@ export class IncomingFileController {
   private async getMappedIncomingApplications() {
     const incomingApplications =
       await this.applicationService.getIncomingApplicationFiles();
+    const appIds = incomingApplications.map((app) => app.uuid);
+    const pausedStatuses =
+      await this.applicationTimeTrackingService.getPausedStatusByUuid(appIds);
     return incomingApplications.map((incomingFile): IncomingFileDto => {
       const user = new User();
       user.name = incomingFile.name;
@@ -57,9 +62,12 @@ export class IncomingFileController {
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,
-        assignee: this.mapper.map(user, User, UserDto),
+        assignee: incomingFile.name
+          ? this.mapper.map(user, User, UserDto)
+          : null,
         highPriority: incomingFile.high_priority,
         activeDays: incomingFile.active_days,
+        isPaused: pausedStatuses.get(incomingFile.uuid)!,
       };
     });
   }
@@ -67,6 +75,9 @@ export class IncomingFileController {
   private async getMappedIncomingReconsiderations() {
     const incomingReconsiderations =
       await this.applicationService.getIncomingReconsiderationFiles();
+    const reconIds = incomingReconsiderations.map((recon) => recon.uuid);
+    const pausedStatuses =
+      await this.applicationTimeTrackingService.getPausedStatusByUuid(reconIds);
     return incomingReconsiderations.map((incomingFile): IncomingFileDto => {
       const user = new User();
       user.name = incomingFile.name;
@@ -77,9 +88,12 @@ export class IncomingFileController {
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.APP,
-        assignee: this.mapper.map(user, User, UserDto),
+        assignee: incomingFile.name
+          ? this.mapper.map(user, User, UserDto)
+          : null,
         highPriority: incomingFile.high_priority,
         activeDays: incomingFile.active_days,
+        isPaused: pausedStatuses.get(incomingFile.uuid)!,
       };
     });
   }
@@ -97,9 +111,12 @@ export class IncomingFileController {
         applicant: incomingFile.applicant,
         boardCode: incomingFile.code,
         type: CARD_TYPE.PLAN,
-        assignee: this.mapper.map(user, User, UserDto),
+        assignee: incomingFile.name
+          ? this.mapper.map(user, User, UserDto)
+          : null,
         highPriority: incomingFile.high_priority,
         activeDays: incomingFile.active_days,
+        isPaused: false,
       };
     });
   }

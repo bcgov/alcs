@@ -14,6 +14,7 @@ import { ToastService } from '../../services/toast/toast.service';
 
 import { SearchComponent } from './search.component';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -76,7 +77,7 @@ describe('SearchComponent', () => {
         },
       ],
       declarations: [SearchComponent],
-      imports: [MatAutocompleteModule],
+      imports: [MatAutocompleteModule, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 

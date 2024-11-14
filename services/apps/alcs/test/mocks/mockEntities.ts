@@ -22,6 +22,10 @@ import { Comment } from '../../src/alcs/comment/comment.entity';
 import { CommentMention } from '../../src/alcs/comment/mention/comment-mention.entity';
 import { AssigneeDto, UserDto } from '../../src/user/user.dto';
 import { User } from '../../src/user/user.entity';
+import { TagCategory } from '../../src/alcs/tag/tag-category/tag-category.entity';
+import { Tag } from '../../src/alcs/tag/tag.entity';
+import { NoticeOfIntent } from '../../src/alcs/notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentType } from '../../src/alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 
 const initCardStatusMockEntity = (): CardStatus => {
   const cardStatus = new CardStatus();
@@ -52,10 +56,7 @@ const initCardSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   return subtask;
 };
 
-const initCardGISSubtaskMockEntity = (
-  card: Card,
-  uuid?: string,
-): CardSubtask => {
+const initCardGISSubtaskMockEntity = (card: Card, uuid?: string): CardSubtask => {
   const subtask = new CardSubtask();
   subtask.assignee = initUserMockEntity();
   subtask.uuid = uuid ?? '11111';
@@ -116,6 +117,19 @@ const initApplicationTypeMockEntity = (): ApplicationType => {
   return applicationType;
 };
 
+const initNoticeOfIntentTypeMockEntity = (): NoticeOfIntentType => {
+  const noticeOfIntentType = new NoticeOfIntentType();
+  noticeOfIntentType.code = 'type_1';
+  noticeOfIntentType.description = 'noi desc 1';
+  noticeOfIntentType.label = 'noi_label';
+  noticeOfIntentType.shortLabel = 'short_label';
+  noticeOfIntentType.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentType.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentType.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+
+  return noticeOfIntentType;
+};
+
 const initUserMockEntity = (): User => {
   const user = new User();
   user.familyName = 'familyName';
@@ -162,10 +176,7 @@ const initApplicationReconsiderationMockEntity = (
   return reconsideration;
 };
 
-const initApplicationModificationMockEntity = (
-  application?: Application,
-  card?: Card,
-): ApplicationModification => {
+const initApplicationModificationMockEntity = (application?: Application, card?: Card): ApplicationModification => {
   const app = application ?? initApplicationMockEntity();
   const modification = new ApplicationModification({
     application: app,
@@ -206,11 +217,47 @@ const initApplicationMockEntity = (fileNumber?: string): Application => {
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
   } as ApplicationRegion;
 
-  applicationEntity.reconsiderations = [
-    initApplicationReconsiderationMockEntity(applicationEntity),
-  ];
+  applicationEntity.reconsiderations = [initApplicationReconsiderationMockEntity(applicationEntity)];
 
   return applicationEntity;
+};
+
+const initNoticeOfIntentMockEntity = (fileNumber?: string): NoticeOfIntent => {
+  const noticeOfIntentEntity = new NoticeOfIntent();
+  noticeOfIntentEntity.fileNumber = fileNumber ?? 'app_1';
+  noticeOfIntentEntity.applicant = 'applicant 1';
+  noticeOfIntentEntity.uuid = '1111-1111-1111-1111';
+  noticeOfIntentEntity.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  noticeOfIntentEntity.card = initCardMockEntity();
+  noticeOfIntentEntity.cardUuid = noticeOfIntentEntity.card.uuid;
+  noticeOfIntentEntity.type = initNoticeOfIntentTypeMockEntity();
+  noticeOfIntentEntity.card.highPriority = false;
+  noticeOfIntentEntity.region = {
+    code: 'fake',
+    label: 'fake',
+    auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
+    auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
+  } as ApplicationRegion;
+
+  return noticeOfIntentEntity;
+};
+
+const initApplicationWithTagsMockEntity = (): Application => {
+  const applicationEntity = initApplicationMockEntity();
+  const tagEntity = initTagMockEntity();
+  applicationEntity.tags = [];
+  applicationEntity.tags.push(tagEntity);
+  return applicationEntity;
+};
+
+const initNoticeOfIntentWithTagsMockEntity = (): NoticeOfIntent => {
+  const noticeOfIntentEntity = initNoticeOfIntentMockEntity();
+  const tagEntity = initTagMockEntity();
+  noticeOfIntentEntity.tags = [];
+  noticeOfIntentEntity.tags.push(tagEntity);
+  return noticeOfIntentEntity;
 };
 
 const initMockUserDto = (assignee?: User): UserDto => {
@@ -221,9 +268,7 @@ const initMockUserDto = (assignee?: User): UserDto => {
   userDto.identityProvider = userEntity.identityProvider;
   userDto.name = userEntity.name!;
   userDto.idirUserName = userEntity.idirUserName;
-  userDto.initials =
-    userEntity.givenName!.charAt(0).toUpperCase() +
-    userEntity.familyName.charAt(0).toUpperCase();
+  userDto.initials = userEntity.givenName!.charAt(0).toUpperCase() + userEntity.familyName.charAt(0).toUpperCase();
   userDto.bceidUserName = undefined;
 
   return userDto;
@@ -234,9 +279,7 @@ const initMockAssigneeDto = (assignee?: User): AssigneeDto => {
   const assigneeDto = new AssigneeDto();
   assigneeDto.uuid = userEntity.uuid;
   assigneeDto.name = userEntity.name;
-  assigneeDto.initials =
-    userEntity.givenName!.charAt(0).toUpperCase() +
-    userEntity.familyName.charAt(0).toUpperCase();
+  assigneeDto.initials = userEntity.givenName!.charAt(0).toUpperCase() + userEntity.familyName.charAt(0).toUpperCase();
   assigneeDto.mentionLabel =
     userEntity.givenName!.charAt(0).toUpperCase() +
     userEntity.givenName!.slice(1) +
@@ -268,10 +311,7 @@ const initCommentMock = (author?: any): Comment => {
   return comment;
 };
 
-const initCommentMentionMock = (
-  comment?: Comment,
-  user?: User,
-): CommentMention => {
+const initCommentMentionMock = (comment?: Comment, user?: User): CommentMention => {
   const mention = new CommentMention();
   const commentEntity = comment ?? initCommentMock();
   const userEntity = user ?? initUserMockEntity();
@@ -284,16 +324,12 @@ const initCommentMentionMock = (
   return mention;
 };
 
-const initApplicationDecisionMeetingMock = (
-  application?: Application,
-): ApplicationDecisionMeeting => {
+const initApplicationDecisionMeetingMock = (application?: Application): ApplicationDecisionMeeting => {
   const meeting = new ApplicationDecisionMeeting();
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
   meeting.date = new Date(2022, 1, 1, 1, 1, 1, 1);
-  meeting.applicationUuid = application
-    ? application.uuid
-    : 'fake-application-uuid';
+  meeting.applicationUuid = application ? application.uuid : 'fake-application-uuid';
 
   return meeting;
 };
@@ -322,9 +358,7 @@ const initApplicationMeetingMock = (
   const meeting = new ApplicationMeeting();
   meeting.application = application ?? initApplicationMockEntity();
   meeting.uuid = '11111111';
-  meeting.applicationUuid = application
-    ? application.uuid
-    : 'fake-application-uuid';
+  meeting.applicationUuid = application ? application.uuid : 'fake-application-uuid';
   if (meetingType) {
     meeting.type = meetingType;
   } else {
@@ -339,6 +373,23 @@ const initApplicationMeetingMock = (
   } as ApplicationPaused;
 
   return meeting;
+};
+
+const initTagCategoryMockEntity = (): TagCategory => {
+  const category = new TagCategory();
+  category.name = 'fake-name';
+  return category;
+};
+
+const initTagMockEntity = (): Tag => {
+  const tag = new Tag();
+  tag.uuid = 'tag-uuid';
+  tag.name = 'tag-name';
+  tag.isActive = true;
+  tag.category = initTagCategoryMockEntity();
+  tag.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+
+  return tag;
 };
 
 export {
@@ -360,4 +411,9 @@ export {
   initApplicationDecisionMock,
   initApplicationReconsiderationMockEntity,
   initApplicationModificationMockEntity,
+  initTagCategoryMockEntity,
+  initTagMockEntity,
+  initApplicationWithTagsMockEntity,
+  initNoticeOfIntentMockEntity,
+  initNoticeOfIntentWithTagsMockEntity,
 };

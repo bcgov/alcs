@@ -19,7 +19,7 @@ export class ApplicationDocumentComponent implements OnChanges {
 
   @ViewChild('orderMenu') orderMenu!: TemplateRef<any>;
 
-  displayedColumns: string[] = ['index', 'type', 'fileName', 'source', 'uploadedAt', 'action', 'sorting'];
+  displayedColumns: string[] = ['index', 'source', 'type', 'fileName', 'uploadedAt', 'action', 'sorting'];
   documents: ApplicationDocumentDto[] = [];
   dataSource = new MatTableDataSource<ApplicationDocumentDto>([]);
   overlayRef: OverlayRef | null = null;
@@ -36,7 +36,7 @@ export class ApplicationDocumentComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.loadDocuments();
     if (!this.sortable) {
-      this.displayedColumns = ['index', 'type', 'fileName', 'source', 'uploadedAt', 'action'];
+      this.displayedColumns = ['index', 'source', 'type', 'fileName', 'uploadedAt', 'action'];
     }
   }
 

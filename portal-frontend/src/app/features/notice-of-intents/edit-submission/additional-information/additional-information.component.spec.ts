@@ -149,7 +149,6 @@ describe('AdditionalInformationComponent', () => {
     const mockFilledSubmission: NoticeOfIntentSubmissionDetailedDto = {
       ...emptySubmission,
       soilIsRemovingSoilForNewStructure: true,
-      soilStructureFarmUseReason: 'soilStructureFarmUseReason',
       soilStructureResidentialUseReason: 'soilStructureResidentialUseReason',
       soilProposedStructures: [
         {
@@ -166,9 +165,12 @@ describe('AdditionalInformationComponent', () => {
 
     expect(component.form.controls.isRemovingSoilForNewStructure.value).toEqual('true');
     expect(component.form.controls.soilStructureFarmUseReason.value).toEqual(null);
+    expect(component.form.controls.soilAgriParcelActivity.value).toEqual(null);
     expect(component.form.controls.soilStructureResidentialUseReason.value).toEqual(
       'soilStructureResidentialUseReason',
     );
+    expect(component.form.controls.soilStructureResidentialAccessoryUseReason.value).toEqual(null);
+    expect(component.form.controls.soilStructureOtherUseReason.value).toEqual(null);
     expect(Object.values(component.structuresForm.controls).length).toEqual(2);
     expect(component.isSoilStructureResidentialUseReasonVisible).toBeTruthy();
     expect(component.isSoilAgriParcelActivityVisible).toBeFalsy();
@@ -181,7 +183,7 @@ describe('AdditionalInformationComponent', () => {
       ...emptySubmission,
       soilIsRemovingSoilForNewStructure: true,
       soilStructureFarmUseReason: 'soilStructureFarmUseReason',
-      soilStructureResidentialUseReason: 'soilStructureResidentialUseReason',
+      soilAgriParcelActivity: 'soilAgriParcelActivity',
       soilProposedStructures: [
         {
           type: STRUCTURE_TYPES.FARM_STRUCTURE,
@@ -197,7 +199,10 @@ describe('AdditionalInformationComponent', () => {
 
     expect(component.form.controls.isRemovingSoilForNewStructure.value).toEqual('true');
     expect(component.form.controls.soilStructureFarmUseReason.value).toEqual('soilStructureFarmUseReason');
+    expect(component.form.controls.soilAgriParcelActivity.value).toEqual('soilAgriParcelActivity');
     expect(component.form.controls.soilStructureResidentialUseReason.value).toEqual(null);
+    expect(component.form.controls.soilStructureResidentialAccessoryUseReason.value).toEqual(null);
+    expect(component.form.controls.soilStructureOtherUseReason.value).toEqual(null);
     expect(component.isSoilStructureResidentialUseReasonVisible).toBeFalsy();
     expect(component.isSoilAgriParcelActivityVisible).toBeTruthy();
     expect(component.isSoilOtherUseReasonVisible).toBeFalsy();
@@ -208,8 +213,7 @@ describe('AdditionalInformationComponent', () => {
     const mockFilledSubmission: NoticeOfIntentSubmissionDetailedDto = {
       ...emptySubmission,
       soilIsRemovingSoilForNewStructure: true,
-      soilStructureFarmUseReason: 'soilStructureFarmUseReason',
-      soilStructureResidentialUseReason: 'soilStructureResidentialUseReason',
+      soilStructureOtherUseReason: 'soilStructureOtherUseReason',
       soilProposedStructures: [
         {
           type: STRUCTURE_TYPES.OTHER_STRUCTURE,
@@ -225,7 +229,9 @@ describe('AdditionalInformationComponent', () => {
 
     expect(component.form.controls.isRemovingSoilForNewStructure.value).toEqual('true');
     expect(component.form.controls.soilStructureFarmUseReason.value).toEqual(null);
+    expect(component.form.controls.soilAgriParcelActivity.value).toEqual(null);
     expect(component.form.controls.soilStructureResidentialUseReason.value).toEqual(null);
+    expect(component.form.controls.soilStructureOtherUseReason.value).toEqual('soilStructureOtherUseReason');
     expect(component.isSoilStructureResidentialUseReasonVisible).toBeFalsy();
     expect(component.isSoilAgriParcelActivityVisible).toBeFalsy();
     expect(component.isSoilOtherUseReasonVisible).toBeTruthy();
@@ -236,7 +242,7 @@ describe('AdditionalInformationComponent', () => {
     const mockFilledSubmission: NoticeOfIntentSubmissionDetailedDto = {
       ...emptySubmission,
       soilIsRemovingSoilForNewStructure: true,
-      soilStructureFarmUseReason: 'soilStructureFarmUseReason',
+      soilStructureResidentialAccessoryUseReason: 'soilStructureResidentialAccessoryUseReason',
       soilStructureResidentialUseReason: 'soilStructureResidentialUseReason',
       soilProposedStructures: [
         {
@@ -253,9 +259,14 @@ describe('AdditionalInformationComponent', () => {
 
     expect(component.form.controls.isRemovingSoilForNewStructure.value).toEqual('true');
     expect(component.form.controls.soilStructureFarmUseReason.value).toEqual(null);
+    expect(component.form.controls.soilAgriParcelActivity.value).toEqual(null);
     expect(component.form.controls.soilStructureResidentialUseReason.value).toEqual(
       'soilStructureResidentialUseReason',
     );
+    expect(component.form.controls.soilStructureResidentialAccessoryUseReason.value).toEqual(
+      'soilStructureResidentialAccessoryUseReason',
+    );
+    expect(component.form.controls.soilStructureOtherUseReason.value).toEqual(null);
     expect(component.isSoilStructureResidentialUseReasonVisible).toBeTruthy();
     expect(component.isSoilAgriParcelActivityVisible).toBeFalsy();
     expect(component.isSoilOtherUseReasonVisible).toBeFalsy();

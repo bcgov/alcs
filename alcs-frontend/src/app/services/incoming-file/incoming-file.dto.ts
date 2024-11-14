@@ -9,6 +9,7 @@ export type IncomingFileDto = {
   type: CardType;
   highPriority: boolean;
   activeDays: number;
+  isPaused: boolean;
 };
 
 export type IncomingFileBoardMapDto = Record<string, IncomingFileDto[]>;
