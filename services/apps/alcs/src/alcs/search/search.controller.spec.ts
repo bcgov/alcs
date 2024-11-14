@@ -20,7 +20,6 @@ import { PlanningReviewAdvancedSearchService } from './planning-review/planning-
 import { SearchController } from './search.controller';
 import { SearchRequestDto } from './search.dto';
 import { SearchService } from './search.service';
-import { SearchStatusService } from './status/search-status.service';
 
 describe('SearchController', () => {
   let controller: SearchController;
@@ -30,21 +29,9 @@ describe('SearchController', () => {
   let mockNotificationAdvancedSearchService: DeepMocked<NotificationAdvancedSearchService>;
   let mockPlanningReviewAdvancedSearchService: DeepMocked<PlanningReviewAdvancedSearchService>;
   let mockInquiryAdvancedSearchService: DeepMocked<InquiryAdvancedSearchService>;
-  let mockSearchStatusService: DeepMocked<SearchStatusService>;
   let mockDataSource: DeepMocked<DataSource>;
   let mockQueryRunner: DeepMocked<QueryRunner>;
   let mockAppTypeRepo: DeepMocked<Repository<ApplicationType>>;
-
-  const statusSearchMockedResult = [
-    {
-      fileNumber: 'file1',
-      status: 'status',
-    },
-    {
-      fileNumber: 'file2',
-      status: 'status',
-    },
-  ];
 
   beforeEach(async () => {
     mockSearchService = createMock();
@@ -53,7 +40,6 @@ describe('SearchController', () => {
     mockNotificationAdvancedSearchService = createMock();
     mockPlanningReviewAdvancedSearchService = createMock();
     mockInquiryAdvancedSearchService = createMock();
-    mockSearchStatusService = createMock();
     mockDataSource = createMock();
     mockAppTypeRepo = createMock();
 
@@ -89,10 +75,6 @@ describe('SearchController', () => {
           useValue: mockInquiryAdvancedSearchService,
         },
         {
-          provide: SearchStatusService,
-          useValue: mockSearchStatusService,
-        },
-        {
           provide: DataSource,
           useValue: mockDataSource,
         },
@@ -121,10 +103,12 @@ describe('SearchController', () => {
     mockSearchService.getPlanningReview.mockResolvedValue(new PlanningReview());
     mockSearchService.getInquiry.mockResolvedValue(new Inquiry());
 
-    mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents.mockResolvedValue({
-      data: [],
-      total: 0,
-    });
+    mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents.mockResolvedValue(
+      {
+        data: [],
+        total: 0,
+      },
+    );
 
     mockApplicationAdvancedSearchService.searchApplications.mockResolvedValue({
       data: [],
@@ -145,10 +129,6 @@ describe('SearchController', () => {
       data: [],
       total: 0,
     });
-
-    mockSearchStatusService.searchApplicationStatus.mockResolvedValue(statusSearchMockedResult);
-    mockSearchStatusService.searchNoiStatus.mockResolvedValue(statusSearchMockedResult);
-    mockSearchStatusService.searchNotificationStatus.mockResolvedValue(statusSearchMockedResult);
   });
 
   it('should be defined', () => {
@@ -164,9 +144,13 @@ describe('SearchController', () => {
     expect(mockSearchService.getNoi).toHaveBeenCalledTimes(1);
     expect(mockSearchService.getNoi).toHaveBeenCalledWith(searchString);
     expect(mockSearchService.getPlanningReview).toHaveBeenCalledTimes(1);
-    expect(mockSearchService.getPlanningReview).toHaveBeenCalledWith(searchString);
+    expect(mockSearchService.getPlanningReview).toHaveBeenCalledWith(
+      searchString,
+    );
     expect(mockSearchService.getNotification).toHaveBeenCalledTimes(1);
-    expect(mockSearchService.getNotification).toHaveBeenCalledWith(searchString);
+    expect(mockSearchService.getNotification).toHaveBeenCalledWith(
+      searchString,
+    );
     expect(result).toBeDefined();
     expect(result.length).toBe(5);
   });
@@ -184,21 +168,29 @@ describe('SearchController', () => {
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
 
-    expect(mockApplicationAdvancedSearchService.searchApplications).toHaveBeenCalledTimes(1);
-    expect(mockApplicationAdvancedSearchService.searchApplications).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
-    expect(mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
-    expect(mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(
-      mockSearchRequestDto,
-      {},
-    );
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
 
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
-    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
+      mockSearchRequestDto,
+      {},
+    );
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
@@ -213,11 +205,16 @@ describe('SearchController', () => {
       portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearchApplications(mockSearchRequestDto);
+    const result =
+      await controller.advancedSearchApplications(mockSearchRequestDto);
 
     expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
-    expect(mockApplicationAdvancedSearchService.searchApplications).toHaveBeenCalledTimes(1);
-    expect(mockApplicationAdvancedSearchService.searchApplications).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
     expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
@@ -233,13 +230,15 @@ describe('SearchController', () => {
       portalStatusCodes: [],
     };
 
-    const result = await controller.advancedSearchNoticeOfIntents(mockSearchRequestDto);
+    const result =
+      await controller.advancedSearchNoticeOfIntents(mockSearchRequestDto);
 
-    expect(mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
-    expect(mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(
-      mockSearchRequestDto,
-      {},
-    );
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
@@ -257,8 +256,12 @@ describe('SearchController', () => {
     const result = await controller.advancedSearch(mockSearchRequestDto);
 
     expect(mockDataSource.createQueryRunner).toHaveBeenCalledTimes(1);
-    expect(mockApplicationAdvancedSearchService.searchApplications).toHaveBeenCalledTimes(1);
-    expect(mockApplicationAdvancedSearchService.searchApplications).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
     expect(mockQueryRunner.release).toHaveBeenCalledTimes(1);
@@ -276,11 +279,12 @@ describe('SearchController', () => {
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
 
-    expect(mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents).toHaveBeenCalledTimes(1);
-    expect(mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents).toHaveBeenCalledWith(
-      mockSearchRequestDto,
-      {},
-    );
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toHaveBeenCalledWith(mockSearchRequestDto, {});
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
@@ -298,7 +302,10 @@ describe('SearchController', () => {
     const result = await controller.advancedSearch(mockSearchRequestDto);
 
     expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledTimes(1);
-    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(mockInquiryAdvancedSearchService.search).toHaveBeenCalledWith(
+      mockSearchRequestDto,
+      {},
+    );
     expect(result.inquiries).toBeDefined();
     expect(result.totalInquiries).toBe(0);
   });
@@ -315,36 +322,14 @@ describe('SearchController', () => {
 
     const result = await controller.advancedSearch(mockSearchRequestDto);
 
-    expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledTimes(1);
-    expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledWith(mockSearchRequestDto, {});
+    expect(
+      mockPlanningReviewAdvancedSearchService.search,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockPlanningReviewAdvancedSearchService.search).toHaveBeenCalledWith(
+      mockSearchRequestDto,
+      {},
+    );
     expect(result.inquiries).toBeDefined();
     expect(result.totalInquiries).toBe(0);
-  });
-
-  it('should call application status search', async () => {
-    const fileNumbers = ['file1', 'file2'];
-
-    const result = await controller.advancedSearchApplicationStatus(fileNumbers);
-
-    expect(mockSearchStatusService.searchApplicationStatus).toHaveBeenCalledTimes(1);
-    expect(result).toBeDefined();
-  });
-
-  it('should call noi status search', async () => {
-    const fileNumbers = ['file1', 'file2'];
-
-    const result = await controller.advancedSearchNoiStatus(fileNumbers);
-
-    expect(mockSearchStatusService.searchNoiStatus).toHaveBeenCalledTimes(1);
-    expect(result).toBeDefined();
-  });
-
-  it('should call notification status search', async () => {
-    const fileNumbers = ['file1', 'file2'];
-
-    const result = await controller.advancedSearchNotificationStatus(fileNumbers);
-
-    expect(mockSearchStatusService.searchNotificationStatus).toHaveBeenCalledTimes(1);
-    expect(result).toBeDefined();
   });
 });

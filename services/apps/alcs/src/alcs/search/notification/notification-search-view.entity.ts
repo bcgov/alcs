@@ -1,4 +1,11 @@
-import { DataSource, JoinColumn, ManyToOne, PrimaryColumn, ViewColumn, ViewEntity } from 'typeorm';
+import {
+  DataSource,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  ViewColumn,
+  ViewEntity,
+} from 'typeorm';
 import { NotificationSubmission } from '../../../portal/notification-submission/notification-submission.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { NotificationType } from '../../notification/notification-type/notification-type.entity';
@@ -28,12 +35,27 @@ export class SearchNotificationSubmissionStatusType {
       .addSelect('noti.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('noti.uuid', 'notification_uuid')
       .addSelect('noti.region_code', 'notification_region_code')
-      .addSelect('null', 'status')
+      .addSelect(
+        'alcs.get_current_status_for_notification_submission_by_uuid(noti_sub.uuid)',
+        'status',
+      )
       .from(NotificationSubmission, 'noti_sub')
-      .innerJoin(Notification, 'noti', 'noti.file_number = noti_sub.file_number')
+      .innerJoin(
+        Notification,
+        'noti',
+        'noti.file_number = noti_sub.file_number',
+      )
       .withDeleted()
-      .innerJoinAndSelect(NotificationType, 'notificationType', 'noti_sub.type_code = notificationType.code')
-      .leftJoin(LocalGovernment, 'localGovernment', 'noti.local_government_uuid = localGovernment.uuid'),
+      .innerJoinAndSelect(
+        NotificationType,
+        'notificationType',
+        'noti_sub.type_code = notificationType.code',
+      )
+      .leftJoin(
+        LocalGovernment,
+        'localGovernment',
+        'noti.local_government_uuid = localGovernment.uuid',
+      ),
 })
 export class NotificationSubmissionSearchView {
   @ViewColumn()

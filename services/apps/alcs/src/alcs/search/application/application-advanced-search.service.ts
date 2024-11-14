@@ -13,7 +13,6 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
 import { SEARCH_CACHE_TIME } from '../search.config';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { ApplicationSubmissionSearchView } from './application-search-view.entity';
-import { ApplicationSubmissionStatusSearchView } from '../status/application-search-status-view.entity';
 
 @Injectable()
 export class ApplicationAdvancedSearchService {
@@ -63,20 +62,13 @@ export class ApplicationAdvancedSearchService {
         fileNumbers: [...fileNumbers.values()],
       });
 
-    if (searchDto.sortField === 'status') {
-      query = query.innerJoin(
-        ApplicationSubmissionStatusSearchView,
-        'app_status',
-        'app_status.file_number = "appSearch"."file_number"',
-      );
-    }
-
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
       .orderBy(sortQuery, searchDto.sortDirection, searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
+
     const t0 = performance.now();
     const results = await Promise.all([query.getMany(), query.getCount()]);
     const t1 = performance.now();
@@ -102,8 +94,8 @@ export class ApplicationAdvancedSearchService {
       case 'government':
         return '"appSearch"."local_government_name"';
 
-      case 'status':
-        return `"app_status"."status" ->> 'label' `;
+      case 'portalStatus':
+        return `"appSearch"."status" ->> 'label' `;
 
       default:
       case 'dateSubmitted':

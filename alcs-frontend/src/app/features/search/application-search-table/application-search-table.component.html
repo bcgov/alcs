@@ -46,14 +46,13 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="status">
+    <ng-container matColumnDef="portalStatus">
       <th class="type-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Portal Status</th>
       <td mat-cell class="type-cell" *matCellDef="let element">
         <app-application-submission-status-type-pill
           *ngIf="element.status"
           [type]="element.status"
         ></app-application-submission-status-type-pill>
-        <app-spinner-status *ngIf="!element.status" />
       </td>
     </ng-container>
 

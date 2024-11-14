@@ -27,10 +27,17 @@ export class SearchApplicationSubmissionStatusType {
       .addSelect('app.decision_date', 'decision_date')
       .addSelect('app.uuid', 'application_uuid')
       .addSelect('app.region_code', 'application_region_code')
-      .addSelect('null', 'status')
+      .addSelect(
+        'alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)',
+        'status',
+      )
       .from(ApplicationSubmission, 'app_sub')
       .innerJoin(Application, 'app', 'app.file_number = app_sub.file_number')
-      .leftJoin(LocalGovernment, 'localGovernment', 'app_sub.local_government_uuid = localGovernment.uuid')
+      .leftJoin(
+        LocalGovernment,
+        'localGovernment',
+        'app_sub.local_government_uuid = localGovernment.uuid',
+      )
       .where(`app_sub.is_draft IS NOT TRUE`),
 })
 export class ApplicationSubmissionSearchView {

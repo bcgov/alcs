@@ -43,14 +43,6 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
 
-enum searchTabs {
-  Applications = 0,
-  Nois = 1,
-  Plannings = 2,
-  Notifications = 3,
-  Inquiries = 4,
-}
-
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -354,7 +346,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.applications = result?.data ?? [];
     this.applicationTotal = result?.total ?? 0;
-    this.updateApplicationStatuses();
   }
 
   async onNoticeOfIntentSearch() {
@@ -363,7 +354,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.noticeOfIntents = result?.data ?? [];
     this.noticeOfIntentTotal = result?.total ?? 0;
-    this.updateNoiStatuses();
   }
 
   async onPlanningReviewSearch() {
@@ -380,7 +370,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.notifications = result?.data ?? [];
     this.notificationTotal = result?.total ?? 0;
-    this.updateNotificationStatuses();
   }
 
   async onInquirySearch() {
@@ -415,22 +404,6 @@ export class SearchComponent implements OnInit, OnDestroy {
         break;
       default:
         this.toastService.showErrorToast('Not implemented');
-    }
-  }
-
-  async onTabChanged(index: number) {
-    switch (index) {
-      case searchTabs.Applications:
-        await this.updateApplicationStatuses();
-        break;
-      case searchTabs.Nois:
-        await this.updateNoiStatuses();
-        break;
-      case searchTabs.Notifications:
-        await this.updateNotificationStatuses();
-        break;
-      default:
-        break;
     }
   }
 
@@ -556,7 +529,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     ];
 
     this.tabGroup.selectedIndex = searchCounts.indexOf(Math.max(...searchCounts));
-    this.onTabChanged(this.tabGroup.selectedIndex);
   }
 
   private formatStringSearchParam(value: string | undefined | null) {
@@ -590,50 +562,5 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.allStatuses = result;
     this.allStatuses.sort((a, b) => (a.label > b.label ? 1 : -1));
-  }
-
-  private async updateApplicationStatuses() {
-    const needsUpdate = this.applications.filter((a) => a.status === null).length > 0;
-    if (!needsUpdate) return;
-    const statusUpdates = await this.searchService.advancedSearchApplicationStatusFetch(
-      this.applications.map((a) => a.fileNumber)
-    );
-    this.applications = this.applications.map((a) => {
-      const updatedStatus = statusUpdates ? statusUpdates.find((s) => s.fileNumber === a.fileNumber) : null;
-      return {
-        ...a,
-        status: updatedStatus ? updatedStatus.status : '',
-      }
-    });
-  }
-
-  private async updateNoiStatuses() {
-    const needsUpdate = this.noticeOfIntents.filter((a) => a.status === null).length > 0;
-    if (!needsUpdate) return;
-    const statusUpdates = await this.searchService.advancedSearchNoiStatusFetch(
-      this.noticeOfIntents.map((a) => a.fileNumber)
-    );
-    this.noticeOfIntents = this.noticeOfIntents.map((a) => {
-      const updatedStatus = statusUpdates ? statusUpdates.find((s) => s.fileNumber === a.fileNumber) : null;
-      return {
-        ...a,
-        status: updatedStatus ? updatedStatus.status : '',
-      }
-    });
-  }
-
-  private async updateNotificationStatuses() {
-    const needsUpdate = this.notifications.filter((a) => a.status === null).length > 0;
-    if (!needsUpdate) return;
-    const statusUpdates = await this.searchService.advancedSearchNotificationStatusFetch(
-      this.notifications.map((a) => a.fileNumber)
-    );
-    this.notifications = this.notifications.map((a) => {
-      const updatedStatus = statusUpdates ? statusUpdates.find((s) => s.fileNumber === a.fileNumber) : null;
-      return {
-        ...a,
-        status: updatedStatus ? updatedStatus.status : '',
-      }
-    });
   }
 }

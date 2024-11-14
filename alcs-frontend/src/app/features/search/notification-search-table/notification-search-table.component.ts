@@ -18,7 +18,7 @@ interface SearchResult {
   referenceId: string;
   board?: string;
   class: string;
-  status?: ApplicationSubmissionStatusPill | null;
+  status?: ApplicationSubmissionStatusPill;
 }
 
 @Component({
@@ -41,7 +41,7 @@ export class NotificationSearchTableComponent {
 
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'status'];
+  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
   dataSource: SearchResult[] = [];
   itemsPerPage = 20;
   total = 0;
@@ -97,13 +97,13 @@ export class NotificationSearchTableComponent {
         referenceId: e.referenceId,
         board: e.boardCode,
         class: e.class,
-        status: status ? {
+        status: {
           backgroundColor: status ? status!.alcsBackgroundColor : '',
           textColor: status ? status!.alcsColor : '',
           borderColor: status ? status!.alcsBackgroundColor : '',
           label: status ? status!.label : '',
           shortLabel: status ? status!.label : '',
-        } : null,
+        },
       };
     });
   }

@@ -40,10 +40,8 @@ import {
   PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
-  StatusUpdateSearchResultDto,
 } from './search.dto';
 import { SearchService } from './search.service';
-import { SearchStatusService } from './status/search-status.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -56,7 +54,6 @@ export class SearchController {
     private applicationSearchService: ApplicationAdvancedSearchService,
     private notificationSearchService: NotificationAdvancedSearchService,
     private planningReviewSearchService: PlanningReviewAdvancedSearchService,
-    private searchStatusService: SearchStatusService,
     private inquirySearchService: InquiryAdvancedSearchService,
     @InjectRepository(ApplicationType)
     private appTypeRepo: Repository<ApplicationType>,
@@ -186,18 +183,14 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<NoticeOfIntentSearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    try {
-      const noticeOfIntents = await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto, queryRunner);
+    const noticeOfIntents = await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, noticeOfIntents, null, null, null);
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, noticeOfIntents, null, null, null);
 
-      return {
-        total: mappedSearchResult.totalNoticeOfIntents,
-        data: mappedSearchResult.noticeOfIntents,
-      };
-    } finally {
-      await queryRunner.release();
-    }
+    return {
+      total: mappedSearchResult.totalNoticeOfIntents,
+      data: mappedSearchResult.noticeOfIntents,
+    };
   }
 
   @Post('/advanced/notifications')
@@ -207,75 +200,14 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<NotificationSearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    try {
-      const notifications = await this.notificationSearchService.search(searchDto, queryRunner);
+    const notifications = await this.notificationSearchService.search(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, notifications, null);
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, notifications, null);
 
-      return {
-        total: mappedSearchResult.totalNotifications,
-        data: mappedSearchResult.notifications,
-      };
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  @Post('/advanced/application-status')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async advancedSearchApplicationStatus(@Body() fileNumbers: string[]): Promise<StatusUpdateSearchResultDto[]> {
-    const queryRunner = this.dataSource.createQueryRunner('slave');
-
-    try {
-      const statuses = await this.searchStatusService.searchApplicationStatus(fileNumbers, queryRunner);
-
-      return statuses.map((s) => {
-        return {
-          fileNumber: s.fileNumber,
-          status: s.status,
-        };
-      });
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  @Post('/advanced/noi-status')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async advancedSearchNoiStatus(@Body() fileNumbers: string[]): Promise<StatusUpdateSearchResultDto[]> {
-    const queryRunner = this.dataSource.createQueryRunner('slave');
-
-    try {
-      const statuses = await this.searchStatusService.searchNoiStatus(fileNumbers, queryRunner);
-
-      return statuses.map((s) => {
-        return {
-          fileNumber: s.fileNumber,
-          status: s.status,
-        };
-      });
-    } finally {
-      await queryRunner.release();
-    }
-  }
-
-  @Post('/advanced/notification-status')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async advancedSearchNotificationStatus(@Body() fileNumbers: string[]): Promise<StatusUpdateSearchResultDto[]> {
-    const queryRunner = this.dataSource.createQueryRunner('slave');
-
-    try {
-      const statuses = await this.searchStatusService.searchNotificationStatus(fileNumbers, queryRunner);
-
-      return statuses.map((s) => {
-        return {
-          fileNumber: s.fileNumber,
-          status: s.status,
-        };
-      });
-    } finally {
-      await queryRunner.release();
-    }
+    return {
+      total: mappedSearchResult.totalNotifications,
+      data: mappedSearchResult.notifications,
+    };
   }
 
   @Post('/advanced/planning-reviews')
@@ -285,18 +217,14 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<PlanningReviewSearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    try {
-      const planningReviews = await this.planningReviewSearchService.search(searchDto, queryRunner);
+    const planningReviews = await this.planningReviewSearchService.search(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, planningReviews, null, null);
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, planningReviews, null, null);
 
-      return {
-        total: mappedSearchResult.totalPlanningReviews,
-        data: mappedSearchResult.planningReviews,
-      };
-    } finally {
-      await queryRunner.release();
-    }
+    return {
+      total: mappedSearchResult.totalPlanningReviews,
+      data: mappedSearchResult.planningReviews,
+    };
   }
 
   @Post('/advanced/inquiries')
@@ -306,18 +234,14 @@ export class SearchController {
   ): Promise<AdvancedSearchResultDto<InquirySearchResultDto[]>> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
-    try {
-      const inquiries = await this.inquirySearchService.search(searchDto, queryRunner);
+    const inquiries = await this.inquirySearchService.search(searchDto, queryRunner);
 
-      const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, null, inquiries);
+    const mappedSearchResult = await this.mapAdvancedSearchResults(null, null, null, null, inquiries);
 
-      return {
-        total: mappedSearchResult.totalInquiries,
-        data: mappedSearchResult.inquiries,
-      };
-    } finally {
-      await queryRunner.release();
-    }
+    return {
+      total: mappedSearchResult.totalInquiries,
+      data: mappedSearchResult.inquiries,
+    };
   }
 
   private getEntitiesTypeToSearch(searchDto: SearchRequestDto) {
@@ -510,7 +434,7 @@ export class SearchController {
       localGovernmentName: application.localGovernmentName,
       ownerName: application.applicant,
       class: 'APP',
-      status: application.status && application.status.status_type_code,
+      status: application.status.status_type_code,
     };
   }
 
@@ -525,7 +449,7 @@ export class SearchController {
       localGovernmentName: noi.localGovernmentName,
       ownerName: noi.applicant,
       class: 'NOI',
-      status: noi.status && noi.status.status_type_code,
+      status: noi.status.status_type_code,
     };
   }
 
@@ -540,7 +464,7 @@ export class SearchController {
       localGovernmentName: notification.localGovernmentName,
       ownerName: notification.applicant,
       class: 'NOTI',
-      status: notification.status && notification.status.status_type_code,
+      status: notification.status.status_type_code,
     };
   }
 
