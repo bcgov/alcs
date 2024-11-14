@@ -19,7 +19,7 @@ interface SearchResult {
   referenceId: string;
   board?: string;
   class: string;
-  status?: ApplicationSubmissionStatusPill;
+  status?: ApplicationSubmissionStatusPill | null;
 }
 
 @Component({
@@ -41,7 +41,7 @@ export class NoticeOfIntentSearchTableComponent {
 
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
+  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'status'];
   dataSource: SearchResult[] = [];
 
   itemsPerPage = 20;
@@ -98,13 +98,13 @@ export class NoticeOfIntentSearchTableComponent {
         referenceId: e.referenceId,
         board: e.boardCode,
         class: e.class,
-        status: {
+        status: status ? {
           backgroundColor: status!.alcsBackgroundColor,
           textColor: status!.alcsColor,
           borderColor: status!.alcsBackgroundColor,
           label: status!.label,
           shortLabel: status!.label,
-        },
+        } : null,
       };
     });
   }

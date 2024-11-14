@@ -19,7 +19,7 @@ interface SearchResult {
   referenceId: string;
   board?: string;
   class: string;
-  status?: ApplicationSubmissionStatusPill;
+  status?: ApplicationSubmissionStatusPill | null;
 }
 
 @Component({
@@ -42,7 +42,7 @@ export class ApplicationSearchTableComponent {
 
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
+  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'status'];
   dataSource: SearchResult[] = [];
   itemsPerPage = 20;
   total = 0;
@@ -88,24 +88,22 @@ export class ApplicationSearchTableComponent {
   private mapApplications(applications: ApplicationSearchResultDto[]): SearchResult[] {
     return applications.map((e) => {
       const status = this.statuses.find((st) => st.code === e.status);
-
       return {
         fileNumber: e.fileNumber,
         dateSubmitted: e.dateSubmitted,
         ownerName: e.ownerName,
         type: e.type,
         localGovernmentName: e.localGovernmentName,
-        portalStatus: e.portalStatus,
         referenceId: e.referenceId,
         board: e.boardCode,
         class: e.class,
-        status: {
-          backgroundColor: status?.portalBackgroundColor ?? defaultStatusBackgroundColour,
-          textColor: status?.portalColor ?? defaultStatusColour,
-          borderColor: status?.portalBackgroundColor,
-          label: status?.label,
-          shortLabel: status?.label,
-        },
+        status: status ? {
+          backgroundColor: status.portalBackgroundColor ?? defaultStatusBackgroundColour,
+          textColor: status.portalColor ?? defaultStatusColour,
+          borderColor: status.portalBackgroundColor,
+          label: status.label,
+          shortLabel: status.label,
+        } : null,
       };
     });
   }
