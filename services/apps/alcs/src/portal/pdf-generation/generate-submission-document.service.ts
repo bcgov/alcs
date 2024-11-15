@@ -591,7 +591,7 @@ export class GenerateSubmissionDocumentService {
 
       crossSections: crossSections.map((d) => d.document),
       reclamationPlans: reclamationPlans.map((d) => d.document),
-      buildingPlans: buildingPlans[0]?.document.fileName,
+      buildingPlans: buildingPlans.map((d) => d.document),
       noticesOfWork: noticesOfWork.map((d) => d.document),
       soilIsExtractionOrMining: formatBooleanToYesNoString(
         submission.soilIsExtractionOrMining,
