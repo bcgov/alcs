@@ -160,6 +160,16 @@ export class NotificationAdvancedSearchService {
       this.addSubmittedDateResults(searchDto, promises);
     }
 
+    if (searchDto.tagIds && searchDto.tagIds.length > 0) {
+      const promise = NOTIFICATION_SEARCH_FILTERS.addTagsResults();
+      promises.push(promise);
+    }
+
+    if (searchDto.tagCategoryId) {
+      const promise = NOTIFICATION_SEARCH_FILTERS.addTagCategoryResults();
+      promises.push(promise);
+    }
+
     const t0 = performance.now();
     const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();

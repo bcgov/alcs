@@ -38,12 +38,19 @@ export const NOTIFICATION_SEARCH_FILTERS = {
       )
       .getMany();
   },
+  addTagsResults: () => {
+    // add tags filter when it's implemented
+    return Promise.all([]);
+  },
+  addTagCategoryResults: () => {
+    // add tag category filter when it's implemented
+    return Promise.all([]);
+  },
   addNameResults: (
     searchDto: SearchRequestDto | InboxRequestDto,
     notificationSubRepository: Repository<NotificationSubmission>,
   ) => {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
     return notificationSubRepository
       .createQueryBuilder('notiSub')
       .select('notiSub.fileNumber')
@@ -61,24 +68,15 @@ export const NOTIFICATION_SEARCH_FILTERS = {
                 names: formattedSearchString,
               },
             )
-            .orWhere(
-              'LOWER(notification_transferee.first_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.last_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            )
-            .orWhere(
-              'LOWER(notification_transferee.organization_name) LIKE ANY (:names)',
-              {
-                names: formattedSearchString,
-              },
-            ),
+            .orWhere('LOWER(notification_transferee.first_name) LIKE ANY (:names)', {
+              names: formattedSearchString,
+            })
+            .orWhere('LOWER(notification_transferee.last_name) LIKE ANY (:names)', {
+              names: formattedSearchString,
+            })
+            .orWhere('LOWER(notification_transferee.organization_name) LIKE ANY (:names)', {
+              names: formattedSearchString,
+            }),
         ),
       )
       .getMany();
@@ -108,23 +106,16 @@ export const NOTIFICATION_SEARCH_FILTERS = {
     let query = notificationSubRepository
       .createQueryBuilder('notiSub')
       .select('notiSub.fileNumber')
-      .leftJoin(
-        NotificationParcel,
-        'parcel',
-        'parcel.notification_submission_uuid = notiSub.uuid',
-      );
+      .leftJoin(NotificationParcel, 'parcel', 'parcel.notification_submission_uuid = notiSub.uuid');
 
     if (searchDto.pid) {
       query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
+      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
+        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+      });
     }
 
     return query.getMany();
