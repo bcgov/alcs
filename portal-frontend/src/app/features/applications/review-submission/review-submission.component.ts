@@ -5,7 +5,10 @@ import { BehaviorSubject, Observable, Subject, combineLatest, of, takeUntil } fr
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
-import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
+import {
+  ApplicationSubmissionDto,
+  SUBMISSION_STATUS,
+} from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -16,6 +19,7 @@ import { ReviewOcpComponent } from './review-ocp/review-ocp.component';
 import { ReviewResolutionComponent } from './review-resolution/review-resolution.component';
 import { ReviewZoningComponent } from './review-zoning/review-zoning.component';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
+import { AuthenticationService } from '../../../services/authentication/authentication.service';
 
 export enum ReviewApplicationSteps {
   ContactInformation = 0,
@@ -52,6 +56,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   showValidationErrors = false;
   isOnLastStep = false;
   isDeactivating = false;
+  isLfng = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -69,9 +74,14 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
     private pdfGenerationService: PdfGenerationService,
+    private authenticationService: AuthenticationService,
   ) {}
 
   ngOnInit(): void {
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
+      this.isLfng = user!.isLocalGovernment || user!.isFirstNationGovernment;
+    });
+
     combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
       .pipe(takeUntil(this.$destroy))
       .subscribe(([queryParamMap, paramMap]) => {
@@ -109,6 +119,15 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
+
+      if (
+        (application?.status.code &&
+          ![SUBMISSION_STATUS.IN_REVIEW_BY_LG, SUBMISSION_STATUS.RETURNED_TO_LG].includes(application?.status.code)) ||
+        !this.isLfng
+      ) {
+        this.toastService.showErrorToast('Reviewing is not allowed. Please contact ALC for more details');
+        this.router.navigate(['/home']);
+      }
     });
 
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
