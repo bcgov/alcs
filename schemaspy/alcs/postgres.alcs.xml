@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<database name="postgres" schema="alcs" type="PostgreSQL - 17.0 (Debian 17.0-1.pgdg120+1)">
+<database name="postgres" schema="alcs" type="PostgreSQL - 17.1 (Debian 17.1-1.pgdg120+1)">
    <sequences>
       <sequence increment="1" name="alcs_file_number_seq" startValue="100000"/>
       <sequence increment="1" name="health_check_id_seq" startValue="1"/>
