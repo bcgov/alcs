@@ -3,10 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
 import { QueryRunner, Repository } from 'typeorm';
-import {
-  getNextDayToPacific,
-  getStartOfDayToPacific,
-} from '../../../utils/pacific-date-time-helper';
+import { getNextDayToPacific, getStartOfDayToPacific } from '../../../utils/pacific-date-time-helper';
 import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -47,11 +44,7 @@ export class PlanningReviewAdvancedSearchService {
       fileNumbers = new Set<string>(cachedNumbers);
     } else {
       fileNumbers = await this.searchForFileNumbers(searchDto);
-      await client.setEx(
-        searchKey,
-        SEARCH_CACHE_TIME,
-        JSON.stringify([...fileNumbers.values()]),
-      );
+      await client.setEx(searchKey, SEARCH_CACHE_TIME, JSON.stringify([...fileNumbers.values()]));
     }
 
     if (fileNumbers.size === 0) {
@@ -70,20 +63,14 @@ export class PlanningReviewAdvancedSearchService {
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
-      .orderBy(
-        sortQuery,
-        searchDto.sortDirection,
-        searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST',
-      )
+      .orderBy(sortQuery, searchDto.sortDirection, searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
     const t0 = performance.now();
     const results = await Promise.all([query.getMany(), query.getCount()]);
     const t1 = performance.now();
-    this.logger.debug(
-      `ALCS Planning Review search took ${t1 - t0} milliseconds.`,
-    );
+    this.logger.debug(`ALCS Planning Review search took ${t1 - t0} milliseconds.`);
 
     return {
       data: results[0],
@@ -153,19 +140,22 @@ export class PlanningReviewAdvancedSearchService {
       this.addLegacyIDResults(searchDto, promises);
     }
 
+    if (searchDto.tagIds && searchDto.tagIds.length > 0) {
+      this.addTagsResults(promises);
+    }
+
+    if (searchDto.tagCategoryId) {
+      this.addTagCategoryResults(promises);
+    }
+
     const t0 = performance.now();
     const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
-    this.logger.debug(
-      `ALCS Planning Review pre-search search took ${t1 - t0} milliseconds.`,
-    );
+    this.logger.debug(`ALCS Planning Review pre-search search took ${t1 - t0} milliseconds.`);
     return finalResult;
   }
 
-  private addFileNumberResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addFileNumberResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.planningReviewRepository.find({
       where: {
         fileNumber: searchDto.fileNumber,
@@ -177,10 +167,7 @@ export class PlanningReviewAdvancedSearchService {
     promises.push(promise);
   }
 
-  private async addGovernmentResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private async addGovernmentResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const government = await this.governmentRepository.findOneByOrFail({
       name: searchDto.governmentName,
     });
@@ -196,10 +183,7 @@ export class PlanningReviewAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addRegionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addRegionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.planningReviewRepository.find({
       where: {
         regionCode: searchDto.regionCode,
@@ -211,12 +195,8 @@ export class PlanningReviewAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addNameResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+  private addNameResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
+    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
 
     const promise = this.planningReviewRepository
       .createQueryBuilder('planningReview')
@@ -228,10 +208,7 @@ export class PlanningReviewAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addDecisionResolutionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addDecisionResolutionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const query = this.planningReviewRepository
       .createQueryBuilder('planningReview')
       .select('planningReview.fileNumber')
@@ -255,10 +232,7 @@ export class PlanningReviewAdvancedSearchService {
     promises.push(query.getMany());
   }
 
-  private addFileTypeResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addFileTypeResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const query = this.planningReviewRepository
       .createQueryBuilder('planningReview')
       .select('planningReview.fileNumber')
@@ -269,41 +243,27 @@ export class PlanningReviewAdvancedSearchService {
     promises.push(query.getMany());
   }
 
-  private addSubmittedDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addSubmittedDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const query = this.planningReviewRepository
       .createQueryBuilder('planningReview')
       .select('planningReview.fileNumber')
-      .innerJoin(
-        PlanningReferral,
-        'referral',
-        'planningReview.uuid = referral.planning_review_uuid',
-      );
+      .innerJoin(PlanningReferral, 'referral', 'planningReview.uuid = referral.planning_review_uuid');
 
     if (searchDto.dateSubmittedFrom !== undefined) {
       query.andWhere('referral.submission_date >= :date_submitted_from', {
-        date_submitted_from: getStartOfDayToPacific(
-          searchDto.dateSubmittedFrom
-        ).toISOString(),
+        date_submitted_from: getStartOfDayToPacific(searchDto.dateSubmittedFrom).toISOString(),
       });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
       query.andWhere('referral.submission_date < :date_submitted_to', {
-        date_submitted_to: getNextDayToPacific(
-          searchDto.dateSubmittedTo
-        ).toISOString(),
+        date_submitted_to: getNextDayToPacific(searchDto.dateSubmittedTo).toISOString(),
       });
     }
     promises.push(query.getMany());
   }
 
-  private addDecisionDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addDecisionDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const query = this.planningReviewRepository
       .createQueryBuilder('planningReview')
       .select('planningReview.fileNumber')
@@ -315,26 +275,19 @@ export class PlanningReviewAdvancedSearchService {
 
     if (searchDto.dateDecidedFrom) {
       query.andWhere('decision.date >= :decision_date', {
-        decision_date: getStartOfDayToPacific(
-          searchDto.dateDecidedFrom,
-        ).toISOString(),
+        decision_date: getStartOfDayToPacific(searchDto.dateDecidedFrom).toISOString(),
       });
     }
 
     if (searchDto.dateDecidedTo) {
       query.andWhere('decision.date < :decision_date_to', {
-        decision_date_to: getNextDayToPacific(
-          searchDto.dateDecidedTo,
-        ).toISOString(),
+        decision_date_to: getNextDayToPacific(searchDto.dateDecidedTo).toISOString(),
       });
     }
     promises.push(query.getMany());
   }
 
-  private addLegacyIDResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addLegacyIDResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.planningReviewRepository.find({
       where: {
         legacyId: searchDto.legacyId,
@@ -344,5 +297,17 @@ export class PlanningReviewAdvancedSearchService {
       },
     });
     promises.push(promise);
+  }
+
+  private addTagsResults(promises: Promise<{ fileNumber: string }[]>[]) {
+    // add tags filter when it's implemented
+    const emptyPromise = Promise.all([]);
+    promises.push(emptyPromise);
+  }
+
+  private addTagCategoryResults(promises: Promise<{ fileNumber: string }[]>[]) {
+    // add tag category filter when it's implemented
+    const emptyPromise = Promise.all([]);
+    promises.push(emptyPromise);
   }
 }
