@@ -59,7 +59,6 @@ export class InboxTableComponent {
   }
 
   private getTableType(): string {
-    console.log(this.type);
     switch (this.type) {
       case 'Notice of Intent':
         return 'NOI';
