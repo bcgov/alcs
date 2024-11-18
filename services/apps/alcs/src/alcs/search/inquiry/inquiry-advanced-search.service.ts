@@ -43,11 +43,7 @@ export class InquiryAdvancedSearchService {
       fileNumbers = new Set<string>(cachedNumbers);
     } else {
       fileNumbers = await this.searchForFileNumbers(searchDto);
-      await client.setEx(
-        searchKey,
-        SEARCH_CACHE_TIME,
-        JSON.stringify([...fileNumbers.values()]),
-      );
+      await client.setEx(searchKey, SEARCH_CACHE_TIME, JSON.stringify([...fileNumbers.values()]));
     }
 
     if (fileNumbers.size === 0) {
@@ -59,11 +55,7 @@ export class InquiryAdvancedSearchService {
 
     let query = this.inquirySearchViewRepository
       .createQueryBuilder('inquirySearch', queryRunner)
-      .innerJoinAndMapOne(
-        'inquirySearch.inquiryType',
-        'inquirySearch.inquiryType',
-        'inquiryType',
-      )
+      .innerJoinAndMapOne('inquirySearch.inquiryType', 'inquirySearch.inquiryType', 'inquiryType')
       .andWhere('inquirySearch.fileNumber IN(:...fileNumbers)', {
         fileNumbers: [...fileNumbers.values()],
       });
@@ -71,11 +63,7 @@ export class InquiryAdvancedSearchService {
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
-      .orderBy(
-        sortQuery,
-        searchDto.sortDirection,
-        searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST',
-      )
+      .orderBy(sortQuery, searchDto.sortDirection, searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
@@ -148,19 +136,22 @@ export class InquiryAdvancedSearchService {
       this.addLegacyIDResults(searchDto, promises);
     }
 
+    if (searchDto.tagIds && searchDto.tagIds.length > 0) {
+      this.addTagsResults(promises);
+    }
+
+    if (searchDto.tagCategoryId) {
+      this.addTagCategoryResults(promises);
+    }
+
     const t0 = performance.now();
     const finalResult = await processSearchPromises(promises);
     const t1 = performance.now();
-    this.logger.debug(
-      `ALCS Inquiry pre-search search took ${t1 - t0} milliseconds.`,
-    );
+    this.logger.debug(`ALCS Inquiry pre-search search took ${t1 - t0} milliseconds.`);
     return finalResult;
   }
 
-  private addFileNumberResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addFileNumberResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.inquiryRepository.find({
       where: {
         fileNumber: searchDto.fileNumber,
@@ -172,10 +163,7 @@ export class InquiryAdvancedSearchService {
     promises.push(promise);
   }
 
-  private async addGovernmentResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private async addGovernmentResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const government = await this.governmentRepository.findOneByOrFail({
       name: searchDto.governmentName,
     });
@@ -191,10 +179,7 @@ export class InquiryAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addRegionResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addRegionResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.inquiryRepository.find({
       where: {
         regionCode: searchDto.regionCode,
@@ -206,21 +191,14 @@ export class InquiryAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addNameResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    const formattedSearchString =
-      formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+  private addNameResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
+    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
     const promise = this.inquiryRepository
       .createQueryBuilder('inquiry')
       .select('inquiry.fileNumber')
-      .where(
-        "LOWER(inquiry.inquirer_first_name || ' ' || inquiry.inquirer_last_name) LIKE ANY (:names)",
-        {
-          names: formattedSearchString,
-        },
-      )
+      .where("LOWER(inquiry.inquirer_first_name || ' ' || inquiry.inquirer_last_name) LIKE ANY (:names)", {
+        names: formattedSearchString,
+      })
       .orWhere('LOWER(inquiry.inquirer_first_name) LIKE ANY (:names)', {
         names: formattedSearchString,
       })
@@ -234,10 +212,7 @@ export class InquiryAdvancedSearchService {
     promises.push(promise);
   }
 
-  private addParcelResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addParcelResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     let query = this.inquiryRepository
       .createQueryBuilder('inquiry')
       .select('inquiry.fileNumber')
@@ -248,21 +223,15 @@ export class InquiryAdvancedSearchService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
+      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
+        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+      });
     }
 
     promises.push(query.getMany());
   }
 
-  private addFileTypeResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addFileTypeResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const query = this.inquiryRepository
       .createQueryBuilder('inquiry')
       .select('inquiry.fileNumber')
@@ -273,42 +242,24 @@ export class InquiryAdvancedSearchService {
     promises.push(query.getMany());
   }
 
-  private addSubmittedDateResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
-    let query = this.inquiryRepository
-      .createQueryBuilder('inquiry')
-      .select('inquiry.fileNumber');
+  private addSubmittedDateResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
+    let query = this.inquiryRepository.createQueryBuilder('inquiry').select('inquiry.fileNumber');
 
     if (searchDto.dateSubmittedFrom !== undefined) {
-      query = query.andWhere(
-        'inquiry.date_submitted_to_alc >= :date_submitted_from',
-        {
-          date_submitted_from: getStartOfDayToPacific(
-            searchDto.dateSubmittedFrom
-          ).toISOString(),
-        },
-      );
+      query = query.andWhere('inquiry.date_submitted_to_alc >= :date_submitted_from', {
+        date_submitted_from: getStartOfDayToPacific(searchDto.dateSubmittedFrom).toISOString(),
+      });
     }
 
     if (searchDto.dateSubmittedTo !== undefined) {
-      query = query.andWhere(
-        'inquiry.date_submitted_to_alc < :date_submitted_to',
-        {
-          date_submitted_to: getNextDayToPacific(
-            searchDto.dateSubmittedTo
-          ).toISOString(),
-        },
-      );
+      query = query.andWhere('inquiry.date_submitted_to_alc < :date_submitted_to', {
+        date_submitted_to: getNextDayToPacific(searchDto.dateSubmittedTo).toISOString(),
+      });
     }
     promises.push(query.getMany());
   }
 
-  private addLegacyIDResults(
-    searchDto: SearchRequestDto,
-    promises: Promise<{ fileNumber: string }[]>[],
-  ) {
+  private addLegacyIDResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
     const promise = this.inquiryRepository.find({
       where: {
         legacyId: searchDto.legacyId,
@@ -318,5 +269,17 @@ export class InquiryAdvancedSearchService {
       },
     });
     promises.push(promise);
+  }
+
+  private addTagsResults(promises: Promise<{ fileNumber: string }[]>[]) {
+    // add tags filter when it's implemented
+    const emptyPromise = Promise.all([]);
+    promises.push(emptyPromise);
+  }
+
+  private addTagCategoryResults(promises: Promise<{ fileNumber: string }[]>[]) {
+    // add tag category filter when it's implemented
+    const emptyPromise = Promise.all([]);
+    promises.push(emptyPromise);
   }
 }

@@ -331,7 +331,7 @@
 
 <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
   <h2 class="search-title">Search Results:</h2>
-  <mat-tab-group id="results" mat-align-tabs="start" [mat-stretch-tabs]="isCommissioner" #searchResultTabs>
+  <mat-tab-group id="results" mat-align-tabs="start" [mat-stretch-tabs]="isCommissioner" (selectedTabChange)="onTabChanged($event.index);" #searchResultTabs>
     <mat-tab>
       <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
       <app-application-search-table
