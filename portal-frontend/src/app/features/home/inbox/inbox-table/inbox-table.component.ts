@@ -41,7 +41,7 @@ export class InboxTableComponent {
       itemsPerPage: this.itemsPerPage,
       sortDirection: this.sortDirection,
       sortField: this.sortField,
-      tableType: this.type === 'Notices of Intent' ? 'NOI' : this.type === 'Notifications' ? 'NOTI' : 'APP',
+      tableType: this.getTableType(),
     });
   }
 
@@ -55,6 +55,17 @@ export class InboxTableComponent {
   async onRowClick(link: string) {
     if (link) {
       await this.router.navigateByUrl(link);
+    }
+  }
+
+  private getTableType(): string {
+    switch (this.type) {
+      case 'Notice of Intent':
+        return 'NOI';
+      case 'Notification':
+        return 'NOTI';
+      default:
+        return 'APP';
     }
   }
 }
