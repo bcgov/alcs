@@ -57,6 +57,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   isOnLastStep = false;
   isDeactivating = false;
   isLfng = false;
+  isAllowed = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -90,9 +91,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
         const fileId = paramMap.get('fileId');
         if (fileId) {
           if (this.fileId !== fileId) {
-            this.loadApplication(fileId);
-            this.loadApplicationDocuments(fileId);
-            this.loadApplicationReview(fileId);
+            this.handleApplication(fileId);
           }
 
           this.fileId = fileId;
@@ -119,20 +118,19 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
-
-      if (
-        (application?.status.code &&
-          ![SUBMISSION_STATUS.IN_REVIEW_BY_LG, SUBMISSION_STATUS.RETURNED_TO_LG].includes(application?.status.code)) ||
-        !this.isLfng
-      ) {
-        this.toastService.showErrorToast('Reviewing is not allowed. Please contact ALC for more details');
-        this.router.navigate(['/home']);
-      }
     });
 
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
       this.isFirstNationGovernment = appReview?.isFirstNationGovernment ?? false;
     });
+  }
+
+  async handleApplication(fileId: string) {
+    await this.loadApplication(fileId);
+    if (this.isAllowed) {
+      this.loadApplicationDocuments(fileId);
+      this.loadApplicationReview(fileId);
+    }
   }
 
   async loadApplicationReview(fileId: string) {
@@ -141,6 +139,19 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
 
   async loadApplication(fileId: string) {
     const application = await this.applicationService.getByFileId(fileId);
+
+    if (
+      (application?.status.code &&
+        ![SUBMISSION_STATUS.IN_REVIEW_BY_LG, SUBMISSION_STATUS.RETURNED_TO_LG].includes(application?.status.code)) ||
+      !this.isLfng
+    ) {
+      this.toastService.showErrorToast('Reviewing is not allowed. Please contact ALC for more details');
+      this.isAllowed = false;
+      this.router.navigate(['/home']);
+      return;
+    }
+
+    this.isAllowed = true;
     this.$application.next(application);
   }
 
