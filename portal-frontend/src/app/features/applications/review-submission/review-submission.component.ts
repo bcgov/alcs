@@ -57,7 +57,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   isOnLastStep = false;
   isDeactivating = false;
   isLfng = false;
-  isAllowed = true;
+  isAllowed = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -148,8 +148,10 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
       this.toastService.showErrorToast('Reviewing is not allowed. Please contact ALC for more details');
       this.isAllowed = false;
       this.router.navigate(['/home']);
+      return;
     }
 
+    this.isAllowed = true;
     this.$application.next(application);
   }
 
