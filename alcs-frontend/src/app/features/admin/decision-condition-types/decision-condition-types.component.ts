@@ -6,6 +6,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types-dialog/decision-condition-types-dialog.component';
 import { ApplicationDecisionConditionTypesService } from '../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
+import { NoticeOfIntentDecisionConditionTypeDto } from '../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-decision-condition-types',
@@ -18,7 +19,7 @@ export class DecisionConditionTypesComponent implements OnInit {
 
   destroy = new Subject<void>();
 
-  decisionConditionTypeDtos: ApplicationDecisionConditionTypeDto[] = [];
+  decisionConditionTypeDtos: ApplicationDecisionConditionTypeDto[] | NoticeOfIntentDecisionConditionTypeDto[] = [];
   displayedColumns: string[] = ['label', 'description', 'code', 'actions'];
 
   constructor(
@@ -51,14 +52,14 @@ export class DecisionConditionTypesComponent implements OnInit {
     });
   }
 
-  async onEdit(decisionConditionTypeDto: ApplicationDecisionConditionTypeDto) {
+  async onEdit(dto: ApplicationDecisionConditionTypeDto | NoticeOfIntentDecisionConditionTypeDto) {
     const dialog = this.dialog.open(DecisionConditionTypesDialogComponent, {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
       data: {
         service: this.service,
-        content: decisionConditionTypeDto,
+        content: dto,
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
@@ -68,15 +69,15 @@ export class DecisionConditionTypesComponent implements OnInit {
     });
   }
 
-  async onDelete(decisionConditionTypeDto: ApplicationDecisionConditionTypeDto) {
+  async onDelete(dto: ApplicationDecisionConditionTypeDto | NoticeOfIntentDecisionConditionTypeDto) {
     this.confirmationDialogService
       .openDialog({
-        body: `Are you sure you want to delete ${decisionConditionTypeDto.label}?`,
+        body: `Are you sure you want to delete ${dto.label}?`,
       })
       .subscribe(async (answer) => {
         if (answer) {
           if (!this.service) return;
-          await this.service.delete(decisionConditionTypeDto.code);
+          await this.service.delete(dto.code);
           await this.fetch();
         }
       });
