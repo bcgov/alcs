@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { ApplicationDecisionConditionTypeDto } from '../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionConditionTypesService } from '../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types-dialog/decision-condition-types-dialog.component';
+import { ApplicationDecisionConditionTypesService } from '../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
+import { NoticeofIntentDecisionConditionTypesService } from '../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
 
 @Component({
   selector: 'app-decision-condition-types',
@@ -12,13 +13,15 @@ import { DecisionConditionTypesDialogComponent } from './decision-condition-type
   styleUrls: ['./decision-condition-types.component.scss'],
 })
 export class DecisionConditionTypesComponent implements OnInit {
+
+  @Input() public service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService | undefined;
+
   destroy = new Subject<void>();
 
   decisionConditionTypeDtos: ApplicationDecisionConditionTypeDto[] = [];
   displayedColumns: string[] = ['label', 'description', 'code', 'actions'];
 
   constructor(
-    private decisionConditionTypesService: ApplicationDecisionConditionTypesService,
     public dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService
   ) {}
@@ -28,7 +31,8 @@ export class DecisionConditionTypesComponent implements OnInit {
   }
 
   async fetch() {
-    this.decisionConditionTypeDtos = await this.decisionConditionTypesService.fetch();
+    if (!this.service) return;
+    this.decisionConditionTypeDtos = await this.service.fetch();
   }
 
   async onCreate() {
@@ -36,6 +40,9 @@ export class DecisionConditionTypesComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
+      data: {
+        service: this.service,
+      },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
@@ -49,7 +56,10 @@ export class DecisionConditionTypesComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
-      data: decisionConditionTypeDto,
+      data: {
+        service: this.service,
+        content: decisionConditionTypeDto,
+      },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
@@ -65,7 +75,8 @@ export class DecisionConditionTypesComponent implements OnInit {
       })
       .subscribe(async (answer) => {
         if (answer) {
-          await this.decisionConditionTypesService.delete(decisionConditionTypeDto.code);
+          if (!this.service) return;
+          await this.service.delete(decisionConditionTypeDto.code);
           await this.fetch();
         }
       });
