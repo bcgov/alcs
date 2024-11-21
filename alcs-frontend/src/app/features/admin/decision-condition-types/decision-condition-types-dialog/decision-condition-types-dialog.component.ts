@@ -28,44 +28,44 @@ export class DecisionConditionTypesDialogComponent {
   ) {
     this.service = data?.service;
     this.conditionTypeForm = new FormGroup({
-      description: new FormControl(this.data?.content.description ? this.data?.content.description : '', [
+      description: new FormControl(this.data?.content?.description ? this.data.content.description : '', [
         Validators.required,
       ]),
-      label: new FormControl(this.data?.content.label ? this.data.content.label : '', [Validators.required]),
-      code: new FormControl(this.data?.content.code ? this.data.content.code : '', [Validators.required]),
+      label: new FormControl(this.data?.content?.label ? this.data.content.label : '', [Validators.required]),
+      code: new FormControl(this.data?.content?.code ? this.data.content.code : '', [Validators.required]),
       isComponentToConditionChecked: new FormControl(
-        this.data?.content.isComponentToConditionChecked ? this.data?.content.isComponentToConditionChecked : true,
+        this.data?.content?.isComponentToConditionChecked ? this.data.content.isComponentToConditionChecked : true,
       ),
       isDescriptionChecked: new FormControl(
-        this.data?.content.isDescriptionChecked ? this.data.content.isDescriptionChecked : true,
+        this.data?.content?.isDescriptionChecked ? this.data.content.isDescriptionChecked : true,
       ),
       isAdministrativeFeeAmountChecked: new FormControl(
-        this.data?.content.isAdministrativeFeeAmountChecked
-          ? this.data?.content.isAdministrativeFeeAmountChecked
+        this.data?.content?.isAdministrativeFeeAmountChecked
+          ? this.data.content.isAdministrativeFeeAmountChecked
           : false,
       ),
       isAdministrativeFeeAmountRequired: new FormControl(
-        this.data?.content.isAdministrativeFeeAmountRequired
+        this.data?.content?.isAdministrativeFeeAmountRequired
           ? this.data.content.isAdministrativeFeeAmountRequired
           : false,
       ),
       administrativeFeeAmount: new FormControl(
-        this.data?.content.administrativeFeeAmount ? this.data?.content.administrativeFeeAmount : '',
+        this.data?.content?.administrativeFeeAmount ? this.data.content.administrativeFeeAmount : '',
       ),
       isSingleDateChecked: new FormControl(
-        this.data?.content.isSingleDateChecked ? this.data.content.isSingleDateChecked : false,
+        this.data?.content?.isSingleDateChecked ? this.data.content.isSingleDateChecked : false,
       ),
       isSingleDateRequired: new FormControl(
-        this.data?.content.isSingleDateRequired ? this.data.content.isSingleDateRequired : false,
+        this.data?.content?.isSingleDateRequired ? this.data.content.isSingleDateRequired : false,
       ),
       singleDateLabel: new FormControl(
-        this.data?.content.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
+        this.data?.content?.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
       ),
       isSecurityAmountChecked: new FormControl(
-        this.data?.content.isSecurityAmountChecked ? this.data.content.isSecurityAmountChecked : false,
+        this.data?.content?.isSecurityAmountChecked ? this.data.content.isSecurityAmountChecked : false,
       ),
       isSecurityAmountRequired: new FormControl(
-        this.data?.content.isSecurityAmountRequired ? this.data.content.isSecurityAmountRequired : false,
+        this.data?.content?.isSecurityAmountRequired ? this.data.content.isSecurityAmountRequired : false,
       ),
     });
 
