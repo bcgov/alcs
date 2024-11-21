@@ -27,7 +27,7 @@ export class DecisionConditionTypesDialogComponent {
       this.label = data.content.label;
       this.code = data.content.code;
     }
-    this.isEdit = !!data;
+    this.isEdit = !!data?.content;
   }
 
   async onSubmit() {
