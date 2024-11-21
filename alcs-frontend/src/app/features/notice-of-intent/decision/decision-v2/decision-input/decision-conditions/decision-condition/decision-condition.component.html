@@ -14,20 +14,6 @@
       </mat-select>
     </mat-form-field>
 
-    <div>
-      <mat-label>Approval Dependent*</mat-label>
-      <mat-button-toggle-group
-        [ngClass]="{
-          'error-field-outlined': !approvalDependant.valid && approvalDependant.touched
-        }"
-        required
-        formControlName="approvalDependant"
-      >
-        <mat-button-toggle [value]="true">Yes</mat-button-toggle>
-        <mat-button-toggle [value]="false">No</mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-
     <mat-form-field appearance="outline">
       <mat-label>Security Amount</mat-label>
       <input

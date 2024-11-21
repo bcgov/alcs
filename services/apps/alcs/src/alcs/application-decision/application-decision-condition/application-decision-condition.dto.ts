@@ -76,9 +76,6 @@ export class ApplicationDecisionConditionDto {
   completionDate?: number;
 
   @AutoMap()
-  supersededDate?: number;
-
-  @AutoMap()
   singleDate?: number;
 
   @AutoMap()
@@ -127,10 +124,6 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsNumber()
   completionDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  supersededDate?: number;
 }
 
 export class UpdateApplicationDecisionConditionServiceDto {
@@ -141,7 +134,6 @@ export class UpdateApplicationDecisionConditionServiceDto {
   administrativeFee?: number;
   description?: string;
   completionDate?: Date | null;
-  supersededDate?: Date | null;
 }
 
 export class ApplicationDecisionConditionComponentDto {

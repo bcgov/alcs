@@ -1,12 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  IsArray,
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { NoticeOfIntentDecisionComponentDto } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.dto';
 
@@ -35,9 +28,6 @@ export class NoticeOfIntentDecisionConditionDto {
 
   @AutoMap()
   completionDate?: number;
-
-  @AutoMap()
-  supersededDate?: number;
 
   @AutoMap()
   components?: NoticeOfIntentDecisionComponentDto[];
@@ -85,10 +75,6 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   @IsOptional()
   @IsNumber()
   completionDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  supersededDate?: number;
 }
 
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
@@ -99,5 +85,4 @@ export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   administrativeFee?: number;
   description?: string;
   completionDate?: Date | null;
-  supersededDate?: Date | null;
 }

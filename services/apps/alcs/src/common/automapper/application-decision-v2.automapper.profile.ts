@@ -55,13 +55,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionDto,
         forMember(
           (ad) => ad.documents,
-          mapFrom((a) =>
-            this.mapper.mapArray(
-              a.documents || [],
-              ApplicationDecisionDocument,
-              DecisionDocumentDto,
-            ),
-          ),
+          mapFrom((a) => this.mapper.mapArray(a.documents || [], ApplicationDecisionDocument, DecisionDocumentDto)),
         ),
         forMember(
           (a) => a.reconsiders,
@@ -70,8 +64,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.reconsiders.uuid,
                   linkedResolutions: dec.reconsiders.reconsidersDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -84,8 +77,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -141,11 +133,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (a) => a.components,
           mapFrom((ad) => {
             if (ad.components) {
-              return this.mapper.mapArray(
-                ad.components,
-                ApplicationDecisionComponent,
-                ApplicationDecisionComponentDto,
-              );
+              return this.mapper.mapArray(ad.components, ApplicationDecisionComponent, ApplicationDecisionComponentDto);
             } else {
               return [];
             }
@@ -153,11 +141,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        ApplicationDecisionOutcomeCode,
-        ApplicationDecisionOutcomeCodeDto,
-      );
+      createMap(mapper, ApplicationDecisionOutcomeCode, ApplicationDecisionOutcomeCodeDto);
 
       createMap(mapper, NaruSubtype, NaruSubtypeDto);
       createMap(
@@ -178,39 +162,21 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.naruSubtype,
-          mapFrom((a) =>
-            this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto),
-          ),
+          mapFrom((a) => this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto)),
         ),
         forMember(
           (ad) => ad.lots,
           mapFrom((a) =>
             a.lots
-              ? this.mapper.mapArray(
-                  a.lots,
-                  ApplicationDecisionComponentLot,
-                  ApplicationDecisionComponentLotDto,
-                )
+              ? this.mapper.mapArray(a.lots, ApplicationDecisionComponentLot, ApplicationDecisionComponentLotDto)
               : [],
           ),
         ),
       );
-      createMap(
-        mapper,
-        ApplicationDecisionMakerCode,
-        ApplicationDecisionMakerCodeDto,
-      );
+      createMap(mapper, ApplicationDecisionMakerCode, ApplicationDecisionMakerCodeDto);
       createMap(mapper, ApplicationCeoCriterionCode, CeoCriterionCodeDto);
-      createMap(
-        mapper,
-        ApplicationDecisionComponentType,
-        ApplicationDecisionComponentTypeDto,
-      );
-      createMap(
-        mapper,
-        ApplicationDecisionChairReviewOutcomeType,
-        ChairReviewOutcomeCodeDto,
-      );
+      createMap(mapper, ApplicationDecisionComponentType, ApplicationDecisionComponentTypeDto);
+      createMap(mapper, ApplicationDecisionChairReviewOutcomeType, ChairReviewOutcomeCodeDto);
 
       createMap(
         mapper,
@@ -247,18 +213,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((a) => a.completionDate?.getTime()),
         ),
         forMember(
-          (ad) => ad.supersededDate,
-          mapFrom((a) => a.supersededDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
-              ? this.mapper.mapArray(
-                  a.components,
-                  ApplicationDecisionComponent,
-                  ApplicationDecisionComponentDto,
-                )
+              ? this.mapper.mapArray(a.components, ApplicationDecisionComponent, ApplicationDecisionComponentDto)
               : [],
           ),
         ),
@@ -307,8 +265,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.reconsiders.uuid,
                   linkedResolutions: dec.reconsiders.reconsidersDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -321,8 +278,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -350,17 +306,9 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        ApplicationDecisionConditionToComponentLot,
-        ApplicationDecisionConditionToComponentLotDto,
-      );
+      createMap(mapper, ApplicationDecisionConditionToComponentLot, ApplicationDecisionConditionToComponentLotDto);
 
-      createMap(
-        mapper,
-        ApplicationDecisionConditionComponentPlanNumber,
-        ApplicationDecisionConditionComponentDto,
-      );
+      createMap(mapper, ApplicationDecisionConditionComponentPlanNumber, ApplicationDecisionConditionComponentDto);
 
       createMap(
         mapper,

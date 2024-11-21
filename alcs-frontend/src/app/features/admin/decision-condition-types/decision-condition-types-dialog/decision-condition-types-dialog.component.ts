@@ -5,7 +5,9 @@ import {
   DateLabel,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionTypesService } from '../../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DecisionDialogDataInterface } from '../decision-dialog-data.interface';
+import { NoticeofIntentDecisionConditionTypesService } from '../../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -17,45 +19,60 @@ export class DecisionConditionTypesDialogComponent {
 
   isLoading = false;
   isEdit = false;
-  staticDisabled = true;
+
+  service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService | undefined;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ApplicationDecisionConditionTypeDto | undefined,
+    @Inject(MAT_DIALOG_DATA) public data: DecisionDialogDataInterface | undefined,
     private dialogRef: MatDialogRef<DecisionConditionTypesDialogComponent>,
-    private decisionConditionTypesService: ApplicationDecisionConditionTypesService,
   ) {
+    this.service = data?.service;
     this.conditionTypeForm = new FormGroup({
-      description: new FormControl(this.data?.description ? this.data?.description : '', [Validators.required]),
-      label: new FormControl(this.data?.label ? this.data.label : '', [Validators.required]),
-      code: new FormControl(this.data?.code ? this.data.code : '', [Validators.required]),
+      description: new FormControl(this.data?.content.description ? this.data?.content.description : '', [
+        Validators.required,
+      ]),
+      label: new FormControl(this.data?.content.label ? this.data.content.label : '', [Validators.required]),
+      code: new FormControl(this.data?.content.code ? this.data.content.code : '', [Validators.required]),
       isComponentToConditionChecked: new FormControl(
-        this.data?.isComponentToConditionChecked ? this.data?.isComponentToConditionChecked : true,
+        this.data?.content.isComponentToConditionChecked ? this.data?.content.isComponentToConditionChecked : true,
       ),
-      isDescriptionChecked: new FormControl(this.data?.isDescriptionChecked ? this.data.isDescriptionChecked : true),
+      isDescriptionChecked: new FormControl(
+        this.data?.content.isDescriptionChecked ? this.data.content.isDescriptionChecked : true,
+      ),
       isAdministrativeFeeAmountChecked: new FormControl(
-        this.data?.isAdministrativeFeeAmountChecked ? this.data?.isAdministrativeFeeAmountChecked : false,
+        this.data?.content.isAdministrativeFeeAmountChecked
+          ? this.data?.content.isAdministrativeFeeAmountChecked
+          : false,
       ),
       isAdministrativeFeeAmountRequired: new FormControl(
-        this.data?.isAdministrativeFeeAmountRequired ? this.data.isAdministrativeFeeAmountRequired : false,
+        this.data?.content.isAdministrativeFeeAmountRequired
+          ? this.data.content.isAdministrativeFeeAmountRequired
+          : false,
       ),
       administrativeFeeAmount: new FormControl(
-        this.data?.administrativeFeeAmount ? this.data?.administrativeFeeAmount : '',
+        this.data?.content.administrativeFeeAmount ? this.data?.content.administrativeFeeAmount : '',
       ),
-      isSingleDateChecked: new FormControl(this.data?.isSingleDateChecked ? this.data.isSingleDateChecked : false),
-      isSingleDateRequired: new FormControl(this.data?.isSingleDateRequired ? this.data.isSingleDateRequired : false),
-      singleDateLabel: new FormControl(this.data?.singleDateLabel ? this.data.singleDateLabel : DateLabel.DUE_DATE),
+      isSingleDateChecked: new FormControl(
+        this.data?.content.isSingleDateChecked ? this.data.content.isSingleDateChecked : false,
+      ),
+      isSingleDateRequired: new FormControl(
+        this.data?.content.isSingleDateRequired ? this.data.content.isSingleDateRequired : false,
+      ),
+      singleDateLabel: new FormControl(
+        this.data?.content.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
+      ),
       isSecurityAmountChecked: new FormControl(
-        this.data?.isSecurityAmountChecked ? this.data.isSecurityAmountChecked : false,
+        this.data?.content.isSecurityAmountChecked ? this.data.content.isSecurityAmountChecked : false,
       ),
       isSecurityAmountRequired: new FormControl(
-        this.data?.isSecurityAmountRequired ? this.data.isSecurityAmountRequired : false,
+        this.data?.content.isSecurityAmountRequired ? this.data.content.isSecurityAmountRequired : false,
       ),
     });
 
     this.conditionTypeForm.get('isComponentToConditionChecked')?.disable();
     this.conditionTypeForm.get('isDescriptionChecked')?.disable();
 
-    this.isEdit = !!data;
+    this.isEdit = !!data?.content;
   }
 
   async onSubmit() {
@@ -74,11 +91,11 @@ export class DecisionConditionTypesDialogComponent {
       isSecurityAmountChecked: this.conditionTypeForm.get('isSecurityAmountChecked')?.value,
       isSecurityAmountRequired: this.conditionTypeForm.get('isSecurityAmountRequired')?.value,
     };
-
+    if (!this.service) return;
     if (this.isEdit) {
-      await this.decisionConditionTypesService.update(dto.code, dto);
+      await this.service.update(dto.code, dto);
     } else {
-      await this.decisionConditionTypesService.create(dto);
+      await this.service.create(dto);
     }
     this.isLoading = false;
     this.dialogRef.close(true);

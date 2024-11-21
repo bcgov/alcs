@@ -25,10 +25,7 @@ export class NoticeOfIntentDecisionConditionController {
 
   @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async update(
-    @Param('uuid') uuid: string,
-    @Body() updates: UpdateNoticeOfIntentDecisionConditionDto,
-  ) {
+  async update(@Param('uuid') uuid: string, @Body() updates: UpdateNoticeOfIntentDecisionConditionDto) {
     const condition = await this.conditionService.getOneOrFail(uuid);
 
     const updatedCondition = await this.conditionService.update(condition, {
@@ -37,7 +34,6 @@ export class NoticeOfIntentDecisionConditionController {
       administrativeFee: updates.administrativeFee,
       description: updates.description,
       completionDate: formatIncomingDate(updates.completionDate),
-      supersededDate: formatIncomingDate(updates.supersededDate),
     });
     return await this.mapper.mapAsync(
       updatedCondition,

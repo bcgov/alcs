@@ -4,7 +4,7 @@ import { BoardManagementComponent } from './board-management/board-management.co
 import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
-import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
+import { DecisionConditionContainerComponent } from './decision-condition-types/decision-condition-container.component';
 import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
@@ -41,7 +41,7 @@ export const childRoutes = [
     path: 'dct',
     menuTitle: 'Decision Condition Types',
     icon: 'hvac',
-    component: DecisionConditionTypesComponent,
+    component: DecisionConditionContainerComponent,
   },
   {
     path: 'noi',
