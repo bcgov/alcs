@@ -15,5 +15,28 @@
     .mat-mdc-form-field {
       width: 100%;
     }
+
+    .condition-fields-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .condition-field {
+      display: grid;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    .condition-field-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .condition-field-input {
+      width: 95%;
+      margin-left: 25px;
+    }
   }
 }

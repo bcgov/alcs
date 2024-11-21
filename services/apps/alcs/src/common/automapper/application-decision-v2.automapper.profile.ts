@@ -268,6 +268,28 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionConditionType,
         ApplicationDecisionConditionTypeDto,
+        forMember(
+          (dto) => dto.isAdministrativeFeeAmountRequired,
+          mapFrom((entity) =>
+            entity.isAdministrativeFeeAmountRequired !== null ? entity.isAdministrativeFeeAmountRequired : null,
+          ),
+        ),
+        forMember(
+          (dto) => dto.administrativeFeeAmount,
+          mapFrom((entity) => (entity.administrativeFeeAmount !== null ? entity.administrativeFeeAmount : null)),
+        ),
+        forMember(
+          (dto) => dto.isSingleDateRequired,
+          mapFrom((entity) => (entity.isSingleDateRequired !== null ? entity.isSingleDateRequired : null)),
+        ),
+        forMember(
+          (dto) => dto.singleDateLabel,
+          mapFrom((entity) => (entity.singleDateLabel !== null ? entity.singleDateLabel : null)),
+        ),
+        forMember(
+          (dto) => dto.isSecurityAmountRequired,
+          mapFrom((entity) => (entity.isSecurityAmountRequired !== null ? entity.isSecurityAmountRequired : null)),
+        ),
       );
 
       createMap(

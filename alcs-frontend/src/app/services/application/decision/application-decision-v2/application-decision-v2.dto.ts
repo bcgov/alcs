@@ -216,7 +216,23 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   COVE = 'COVE',
 }
 
-export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export enum DateLabel {
+  DUE_DATE = 'Due Date',
+  END_DATE = 'End Date',
+}
+
+export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  isComponentToConditionChecked?: boolean | null;
+  isDescriptionChecked?: boolean | null;
+  isAdministrativeFeeAmountChecked: boolean;
+  isAdministrativeFeeAmountRequired?: boolean | null;
+  administrativeFeeAmount?: number | null;
+  isSingleDateChecked: boolean;
+  isSingleDateRequired?: boolean | null;
+  singleDateLabel?: DateLabel | null;
+  isSecurityAmountChecked: boolean;
+  isSecurityAmountRequired?: boolean | null;
+}
 
 export interface NaruSubtypesDto extends BaseCodeDto {}
 
