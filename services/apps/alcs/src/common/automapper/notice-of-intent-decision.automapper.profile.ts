@@ -52,11 +52,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.documents,
           mapFrom((a) =>
-            this.mapper.mapArray(
-              a.documents || [],
-              NoticeOfIntentDecisionDocument,
-              NoticeOfIntentDecisionDocumentDto,
-            ),
+            this.mapper.mapArray(a.documents || [], NoticeOfIntentDecisionDocument, NoticeOfIntentDecisionDocumentDto),
           ),
         ),
         forMember(
@@ -82,8 +78,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -120,11 +115,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentSubmissionStatusType,
-        NoticeOfIntentStatusDto,
-      );
+      createMap(mapper, NoticeOfIntentSubmissionStatusType, NoticeOfIntentStatusDto);
 
       createMap(
         mapper,
@@ -144,11 +135,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentDecisionComponentType,
-        NoticeOfIntentDecisionComponentTypeDto,
-      );
+      createMap(mapper, NoticeOfIntentDecisionComponentType, NoticeOfIntentDecisionComponentTypeDto);
 
       createMap(
         mapper,
@@ -159,34 +146,18 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           mapFrom((a) => a.completionDate?.getTime()),
         ),
         forMember(
-          (ad) => ad.supersededDate,
-          mapFrom((a) => a.supersededDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
-              ? this.mapper.mapArray(
-                  a.components,
-                  NoticeOfIntentDecisionComponent,
-                  NoticeOfIntentDecisionComponentDto,
-                )
+              ? this.mapper.mapArray(a.components, NoticeOfIntentDecisionComponent, NoticeOfIntentDecisionComponentDto)
               : [],
           ),
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentDecisionConditionType,
-        NoticeOfIntentDecisionConditionTypeDto,
-      );
+      createMap(mapper, NoticeOfIntentDecisionConditionType, NoticeOfIntentDecisionConditionTypeDto);
 
-      createMap(
-        mapper,
-        NoticeOfIntentDecisionOutcome,
-        NoticeOfIntentDecisionOutcomeCodeDto,
-      );
+      createMap(mapper, NoticeOfIntentDecisionOutcome, NoticeOfIntentDecisionOutcomeCodeDto);
 
       createMap(
         mapper,
@@ -214,11 +185,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentModificationOutcomeType,
-        NoticeOfIntentModificationOutcomeCodeDto,
-      );
+      createMap(mapper, NoticeOfIntentModificationOutcomeType, NoticeOfIntentModificationOutcomeCodeDto);
 
       createMap(
         mapper,
@@ -226,13 +193,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         NoticeOfIntentForModificationDto,
         forMember(
           (a) => a.localGovernment,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.localGovernment,
-              LocalGovernment,
-              LocalGovernmentDto,
-            ),
-          ),
+          mapFrom((a) => this.mapper.map(a.localGovernment, LocalGovernment, LocalGovernmentDto)),
         ),
       );
 
@@ -242,13 +203,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         NoticeOfIntentModificationDto,
         forMember(
           (a) => a.noticeOfIntent,
-          mapFrom((rd) =>
-            this.mapper.map(
-              rd.noticeOfIntent,
-              NoticeOfIntent,
-              NoticeOfIntentForModificationDto,
-            ),
-          ),
+          mapFrom((rd) => this.mapper.map(rd.noticeOfIntent, NoticeOfIntent, NoticeOfIntentForModificationDto)),
         ),
         forMember(
           (a) => a.submittedDate,
@@ -258,11 +213,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           (a) => a.modifiesDecisions,
           mapFrom((rd) =>
             rd.modifiesDecisions
-              ? this.mapper.mapArray(
-                  rd.modifiesDecisions,
-                  NoticeOfIntentDecision,
-                  NoticeOfIntentDecisionDto,
-                )
+              ? this.mapper.mapArray(rd.modifiesDecisions, NoticeOfIntentDecision, NoticeOfIntentDecisionDto)
               : [],
           ),
         ),
@@ -270,11 +221,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           (a) => a.resultingDecision,
           mapFrom((rd) =>
             rd.resultingDecision
-              ? this.mapper.map(
-                  rd.resultingDecision,
-                  NoticeOfIntentDecision,
-                  NoticeOfIntentDecisionDto,
-                )
+              ? this.mapper.map(rd.resultingDecision, NoticeOfIntentDecision, NoticeOfIntentDecisionDto)
               : null,
           ),
         ),
@@ -299,8 +246,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,

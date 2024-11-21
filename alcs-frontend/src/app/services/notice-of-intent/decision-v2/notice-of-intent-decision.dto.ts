@@ -78,7 +78,6 @@ export interface NoticeOfIntentDecisionConditionDto {
   type: NoticeOfIntentDecisionConditionTypeDto;
   componentUuid: string | null;
   completionDate?: number;
-  supersededDate?: number;
   components?: NoticeOfIntentDecisionComponentDto[];
 }
 
@@ -97,7 +96,6 @@ export interface UpdateNoticeOfIntentDecisionConditionDto {
   description?: string | null;
   type?: NoticeOfIntentDecisionConditionTypeDto;
   completionDate?: number | null;
-  supersededDate?: number | null;
 }
 
 export interface NoticeOfIntentDecisionComponentTypeDto extends BaseCodeDto {}

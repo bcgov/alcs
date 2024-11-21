@@ -85,9 +85,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   updateStatus() {
     const today = moment().startOf('day').toDate().getTime();
 
-    if (this.condition.supersededDate && this.condition.supersededDate <= today) {
-      this.conditionStatus = CONDITION_STATUS.SUPERSEDED;
-    } else if (this.condition.completionDate && this.condition.completionDate <= today) {
+    if (this.condition.completionDate && this.condition.completionDate <= today) {
       this.conditionStatus = CONDITION_STATUS.COMPLETE;
     } else {
       this.conditionStatus = CONDITION_STATUS.INCOMPLETE;
