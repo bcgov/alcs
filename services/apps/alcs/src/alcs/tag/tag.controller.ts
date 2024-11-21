@@ -4,7 +4,7 @@ import * as config from 'config';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { TagService } from './tag.service';
-import { AUTH_ROLE } from '../../common/authorization/roles';
+import { ANY_ROLE_BUT_COMMISSIONER, AUTH_ROLE } from '../../common/authorization/roles';
 import { TagDto } from './tag.dto';
 
 @Controller('tag')
@@ -14,7 +14,7 @@ export class TagController {
   constructor(private service: TagService) {}
 
   @Get('')
-  @UserRoles(AUTH_ROLE.ADMIN)
+  @UserRoles(...ANY_ROLE_BUT_COMMISSIONER)
   async fetch(
     @Query('pageIndex') pageIndex: number,
     @Query('itemsPerPage') itemsPerPage: number,
