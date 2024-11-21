@@ -609,7 +609,11 @@ export class ApplicationDecisionV2Service {
         },
       }),
       this.decisionComponentTypeRepository.find(),
-      this.decisionConditionTypeRepository.find(),
+      this.decisionConditionTypeRepository.find({
+        order: {
+          label: 'ASC',
+        },
+      }),
       this.naruNaruSubtypeRepository.find(),
     ]);
 
