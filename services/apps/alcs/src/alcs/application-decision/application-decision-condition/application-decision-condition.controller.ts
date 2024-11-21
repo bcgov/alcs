@@ -27,10 +27,7 @@ export class ApplicationDecisionConditionController {
 
   @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async update(
-    @Param('uuid') uuid: string,
-    @Body() updates: UpdateApplicationDecisionConditionDto,
-  ) {
+  async update(@Param('uuid') uuid: string, @Body() updates: UpdateApplicationDecisionConditionDto) {
     const condition = await this.conditionService.getOneOrFail(uuid);
 
     const updatedCondition = await this.conditionService.update(condition, {
@@ -39,13 +36,8 @@ export class ApplicationDecisionConditionController {
       administrativeFee: updates.administrativeFee,
       description: updates.description,
       completionDate: formatIncomingDate(updates.completionDate),
-      supersededDate: formatIncomingDate(updates.supersededDate),
     });
-    return await this.mapper.mapAsync(
-      updatedCondition,
-      ApplicationDecisionCondition,
-      ApplicationDecisionConditionDto,
-    );
+    return await this.mapper.mapAsync(updatedCondition, ApplicationDecisionCondition, ApplicationDecisionConditionDto);
   }
 
   @Get('/plan-numbers/:uuid')

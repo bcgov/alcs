@@ -11,7 +11,6 @@ import {
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
   DECISION_CONDITION_INCOMPLETE_LABEL,
-  DECISION_CONDITION_SUPERSEDED_LABEL,
 } from '../../../../../shared/application-type-pill/application-type-pill.constants';
 import {
   ApplicationDecisionConditionWithStatus,
@@ -36,7 +35,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
   completeLabel = DECISION_CONDITION_COMPLETE_LABEL;
-  supersededLabel = DECISION_CONDITION_SUPERSEDED_LABEL;
 
   CONDITION_STATUS = CONDITION_STATUS;
 
@@ -158,9 +156,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   updateStatus() {
     const today = moment().startOf('day').toDate().getTime();
 
-    if (this.condition.supersededDate && this.condition.supersededDate <= today) {
-      this.conditionStatus = CONDITION_STATUS.SUPERSEDED;
-    } else if (this.condition.completionDate && this.condition.completionDate <= today) {
+    if (this.condition.completionDate && this.condition.completionDate <= today) {
       this.conditionStatus = CONDITION_STATUS.COMPLETE;
     } else {
       this.conditionStatus = CONDITION_STATUS.INCOMPLETE;

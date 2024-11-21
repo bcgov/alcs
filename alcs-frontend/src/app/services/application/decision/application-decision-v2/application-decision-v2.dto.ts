@@ -228,7 +228,6 @@ export interface ApplicationDecisionConditionDto {
   administrativeFee?: number | null;
   description?: string | null;
   completionDate?: number | null;
-  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
 }
@@ -247,7 +246,6 @@ export interface UpdateApplicationDecisionConditionDto {
   administrativeFee?: number | null;
   description?: string | null;
   completionDate?: number | null;
-  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
 }
 
