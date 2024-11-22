@@ -1,3 +1,5 @@
+@use '../../../../../styles/colors';
+
 .dialog {
   padding: 24px;
 
@@ -6,6 +8,7 @@
     grid-template-columns: 1fr 1fr;
     row-gap: 24px;
     column-gap: 24px;
+    margin-top: 12px;
     margin-bottom: 12px;
 
     .full-width {
@@ -38,5 +41,21 @@
       width: 95%;
       margin-left: 25px;
     }
+  }
+}
+
+.warning {
+  padding: 16px;
+  font-size: 14px;
+  background-color: rgba(colors.$field-warning-bg-color, 0.5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  color: colors.$dark-contrast-text;
+  margin-top: 18px;
+
+  mat-icon {
+    color: colors.$dark-contrast-text;
+    margin-right: 16px;
   }
 }

@@ -114,6 +114,11 @@
       <div class="condition-field">
         <mat-checkbox formControlName="isDescriptionChecked">Description</mat-checkbox>
       </div>
+      <div class="warning-section">
+        <div class="warning" *ngIf="showWarning">
+          <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Changes made here will apply to all instances of this condition
+        </div>
+      </div>
     </div>
   </form>
 

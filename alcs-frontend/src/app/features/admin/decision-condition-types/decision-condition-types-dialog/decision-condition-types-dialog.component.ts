@@ -19,6 +19,7 @@ export class DecisionConditionTypesDialogComponent {
 
   isLoading = false;
   isEdit = false;
+  showWarning = false;
 
   service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService | undefined;
 
@@ -27,6 +28,7 @@ export class DecisionConditionTypesDialogComponent {
     private dialogRef: MatDialogRef<DecisionConditionTypesDialogComponent>,
   ) {
     this.service = data?.service;
+    this.isEdit = !!data?.content;
     this.conditionTypeForm = new FormGroup({
       description: new FormControl(this.data?.content?.description ? this.data.content.description : '', [
         Validators.required,
@@ -71,14 +73,18 @@ export class DecisionConditionTypesDialogComponent {
 
     this.conditionTypeForm.get('isComponentToConditionChecked')?.disable();
     this.conditionTypeForm.get('isDescriptionChecked')?.disable();
+  }
 
-    this.isEdit = !!data?.content;
+  ngOnInit(): void {
+    this.conditionTypeForm.valueChanges.subscribe( () => {
+      this.showWarning = this.isEdit ? true : false;
+    });
   }
 
   async onSubmit() {
     this.isLoading = true;
 
-    const dto: ApplicationDecisionConditionTypeDto = {
+    const dto: ApplicationDecisionConditionTypeDto | NoticeofIntentDecisionConditionTypesService = {
       code: this.conditionTypeForm.get('code')?.value,
       label: this.conditionTypeForm.get('label')?.value,
       description: this.conditionTypeForm.get('description')?.value,
