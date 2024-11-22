@@ -500,7 +500,11 @@ export class NoticeOfIntentDecisionV2Service {
     const values = await Promise.all([
       this.decisionOutcomeRepository.find(),
       this.decisionComponentTypeRepository.find(),
-      this.decisionConditionTypeRepository.find(),
+      this.decisionConditionTypeRepository.find({
+        order: {
+          label: 'ASC',
+        },
+      }),
     ]);
 
     return {
