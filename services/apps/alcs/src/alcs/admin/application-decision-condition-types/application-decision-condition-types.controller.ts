@@ -28,7 +28,6 @@ export class ApplicationDecisionConditionTypesController {
   @Post('')
   @UserRoles(AUTH_ROLE.ADMIN)
   async create(@Body() createDto: ApplicationDecisionConditionTypeDto) {
-    console.log(createDto);
     return await this.applicationDecisionConditionTypesService.create(createDto);
   }
 }
