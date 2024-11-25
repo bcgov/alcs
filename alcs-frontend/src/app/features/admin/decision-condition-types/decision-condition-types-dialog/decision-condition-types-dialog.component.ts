@@ -13,6 +13,7 @@ export class DecisionConditionTypesDialogComponent {
   description = '';
   label = '';
   code = '';
+  isActive = true;
 
   isLoading = false;
   isEdit = false;
@@ -26,6 +27,7 @@ export class DecisionConditionTypesDialogComponent {
       this.description = data.content.description;
       this.label = data.content.label;
       this.code = data.content.code;
+      this.isActive = data.content.isActive;
     }
     this.isEdit = !!data?.content;
   }
@@ -37,6 +39,7 @@ export class DecisionConditionTypesDialogComponent {
       code: this.code,
       label: this.label,
       description: this.description,
+      isActive: this.isActive,
     };
     if (!this.service) return;
     if (this.isEdit) {

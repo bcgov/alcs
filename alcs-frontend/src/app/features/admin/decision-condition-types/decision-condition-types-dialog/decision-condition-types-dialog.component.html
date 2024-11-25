@@ -32,6 +32,14 @@
         <input required matInput id="description" [(ngModel)]="description" name="description" />
       </mat-form-field>
     </div>
+
+    <div class="dialog-field full-width">
+      <mat-label>Status *</mat-label>
+      <mat-button-toggle-group required id="isActive" [(ngModel)]="isActive" name="isActive">
+        <mat-button-toggle [value]="true">Active</mat-button-toggle>
+        <mat-button-toggle [value]="false">Inactive</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
   </form>
 
   <mat-dialog-actions align="end">
