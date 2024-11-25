@@ -14,7 +14,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="showAdmFeeField">
       <mat-label>Administrative Fee Amount</mat-label>
       <input
         matInput
@@ -25,21 +25,20 @@
       />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="date-picker">
+    <mat-form-field appearance="outline" class="date-picker" *ngIf="showSingleDateField">
       <mat-label>{{ singleDateLabel }}</mat-label>
       <input
         matInput
         (click)="datePicker.open()"
         [matDatepicker]="datePicker"
-        formControlName="singleDate"
-        name="singleDate"
         [min]="minDate | startOfDay"
+        formControlName="singleDate"
       />
       <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
       <mat-datepicker #datePicker type="date"></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="showSecurityAmountField">
       <mat-label>Security Amount</mat-label>
       <input
         matInput
