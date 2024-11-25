@@ -3,7 +3,11 @@ import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, IsUUID } from 'clas
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { NoticeOfIntentDecisionComponentDto } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.dto';
 
-export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {}
+export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
+  @IsBoolean()
+  isActive: boolean;
+}
+
 export class NoticeOfIntentDecisionConditionDto {
   @AutoMap()
   uuid: string;

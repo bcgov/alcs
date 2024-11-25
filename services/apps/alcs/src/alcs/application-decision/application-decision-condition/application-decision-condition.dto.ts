@@ -3,7 +3,11 @@ import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, IsUUID } from 'clas
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { ApplicationDecisionComponentDto } from '../application-decision-v2/application-decision/component/application-decision-component.dto';
 
-export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  @IsBoolean()
+  isActive: boolean;
+}
+
 export class ApplicationDecisionConditionDto {
   @AutoMap()
   uuid: string;
