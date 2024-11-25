@@ -8,11 +8,11 @@ import { NoticeOfIntentDecisionConditionTypeDto } from '../../notice-of-intent-d
 export class NoticeofIntentDecisionConditionTypesService {
   constructor(
     @InjectRepository(NoticeOfIntentDecisionConditionType)
-    private noiDecisionMakerCodeRepository: Repository<NoticeOfIntentDecisionConditionType>,
+    private noiDecisionConditionTypeRepository: Repository<NoticeOfIntentDecisionConditionType>,
   ) {}
 
   async fetch() {
-    return await this.noiDecisionMakerCodeRepository.find({
+    return await this.noiDecisionConditionTypeRepository.find({
       order: { label: 'ASC' },
       select: {
         code: true,
@@ -24,7 +24,7 @@ export class NoticeofIntentDecisionConditionTypesService {
   }
 
   async getOneOrFail(code: string) {
-    return await this.noiDecisionMakerCodeRepository.findOneOrFail({
+    return await this.noiDecisionConditionTypeRepository.findOneOrFail({
       where: { code },
     });
   }
@@ -36,17 +36,21 @@ export class NoticeofIntentDecisionConditionTypesService {
     decisionMakerCode.label = updateDto.label;
     decisionMakerCode.isActive = updateDto.isActive;
 
-    return await this.noiDecisionMakerCodeRepository.save(decisionMakerCode);
+    return await this.noiDecisionConditionTypeRepository.save(decisionMakerCode);
   }
 
   async create(createDto: NoticeOfIntentDecisionConditionTypeDto) {
-    const decisionMakerCode = new NoticeOfIntentDecisionConditionType();
+    const type = new NoticeOfIntentDecisionConditionType();
 
-    decisionMakerCode.code = createDto.code;
-    decisionMakerCode.description = createDto.description;
-    decisionMakerCode.label = createDto.label;
-    decisionMakerCode.isActive = createDto.isActive;
+    type.code = createDto.code;
+    type.description = createDto.description;
+    type.label = createDto.label;
+    type.isActive = createDto.isActive;
 
-    return await this.noiDecisionMakerCodeRepository.save(decisionMakerCode);
+    return await this.noiDecisionConditionTypeRepository.save(type);
+  }
+
+  async delete(code: string) {
+    return await this.noiDecisionConditionTypeRepository.delete(code);
   }
 }

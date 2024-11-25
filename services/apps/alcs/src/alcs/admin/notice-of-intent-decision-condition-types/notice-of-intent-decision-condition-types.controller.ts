@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { AUTH_ROLE } from '../../../common/authorization/roles';
@@ -23,6 +23,12 @@ export class NoticeofIntentDecisionConditionTypesController {
   @UserRoles(AUTH_ROLE.ADMIN)
   async update(@Param('code') code: string, @Body() updateDto: ApplicationDecisionConditionTypeDto) {
     return await this.noiDecisionConditionTypesService.update(code, updateDto);
+  }
+
+  @Delete('/:code')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async delete(@Param('code') code: string) {
+    return await this.noiDecisionConditionTypesService.delete(code);
   }
 
   @Post('')

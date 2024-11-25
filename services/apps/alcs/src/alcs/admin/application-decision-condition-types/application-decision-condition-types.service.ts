@@ -8,11 +8,11 @@ import { ApplicationDecisionConditionTypeDto } from '../../application-decision/
 export class ApplicationDecisionConditionTypesService {
   constructor(
     @InjectRepository(ApplicationDecisionConditionType)
-    private applicationDecisionMakerCodeRepository: Repository<ApplicationDecisionConditionType>,
+    private applicationDecisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
   ) {}
 
   async fetch() {
-    return await this.applicationDecisionMakerCodeRepository.find({
+    return await this.applicationDecisionConditionTypeRepository.find({
       order: { label: 'ASC' },
       select: {
         code: true,
@@ -24,7 +24,7 @@ export class ApplicationDecisionConditionTypesService {
   }
 
   async getOneOrFail(code: string) {
-    return await this.applicationDecisionMakerCodeRepository.findOneOrFail({
+    return await this.applicationDecisionConditionTypeRepository.findOneOrFail({
       where: { code },
     });
   }
@@ -36,17 +36,21 @@ export class ApplicationDecisionConditionTypesService {
     decisionMakerCode.label = updateDto.label;
     decisionMakerCode.isActive = updateDto.isActive;
 
-    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
+    return await this.applicationDecisionConditionTypeRepository.save(decisionMakerCode);
   }
 
   async create(createDto: ApplicationDecisionConditionTypeDto) {
-    const decisionMakerCode = new ApplicationDecisionConditionType();
+    const type = new ApplicationDecisionConditionType();
 
-    decisionMakerCode.code = createDto.code;
-    decisionMakerCode.description = createDto.description;
-    decisionMakerCode.label = createDto.label;
-    decisionMakerCode.isActive = createDto.isActive;
+    type.code = createDto.code;
+    type.description = createDto.description;
+    type.label = createDto.label;
+    type.isActive = createDto.isActive;
 
-    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
+    return await this.applicationDecisionConditionTypeRepository.save(type);
+  }
+
+  async delete(code: string) {
+    return await this.applicationDecisionConditionTypeRepository.softDelete(code);
   }
 }
