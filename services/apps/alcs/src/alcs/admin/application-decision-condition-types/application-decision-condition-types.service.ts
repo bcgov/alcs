@@ -18,6 +18,7 @@ export class ApplicationDecisionConditionTypesService {
         code: true,
         label: true,
         description: true,
+        isActive: true,
       },
     });
   }
@@ -33,10 +34,9 @@ export class ApplicationDecisionConditionTypesService {
 
     decisionMakerCode.description = updateDto.description;
     decisionMakerCode.label = updateDto.label;
+    decisionMakerCode.isActive = updateDto.isActive;
 
-    return await this.applicationDecisionMakerCodeRepository.save(
-      decisionMakerCode,
-    );
+    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
   }
 
   async create(createDto: ApplicationDecisionConditionTypeDto) {
@@ -45,9 +45,8 @@ export class ApplicationDecisionConditionTypesService {
     decisionMakerCode.code = createDto.code;
     decisionMakerCode.description = createDto.description;
     decisionMakerCode.label = createDto.label;
+    decisionMakerCode.isActive = createDto.isActive;
 
-    return await this.applicationDecisionMakerCodeRepository.save(
-      decisionMakerCode,
-    );
+    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
   }
 }

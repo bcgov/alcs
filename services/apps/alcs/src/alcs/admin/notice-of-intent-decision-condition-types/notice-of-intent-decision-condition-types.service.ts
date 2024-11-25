@@ -18,6 +18,7 @@ export class NoticeofIntentDecisionConditionTypesService {
         code: true,
         label: true,
         description: true,
+        isActive: true,
       },
     });
   }
@@ -33,6 +34,7 @@ export class NoticeofIntentDecisionConditionTypesService {
 
     decisionMakerCode.description = updateDto.description;
     decisionMakerCode.label = updateDto.label;
+    decisionMakerCode.isActive = updateDto.isActive;
 
     return await this.noiDecisionMakerCodeRepository.save(decisionMakerCode);
   }
@@ -43,6 +45,7 @@ export class NoticeofIntentDecisionConditionTypesService {
     decisionMakerCode.code = createDto.code;
     decisionMakerCode.description = createDto.description;
     decisionMakerCode.label = createDto.label;
+    decisionMakerCode.isActive = createDto.isActive;
 
     return await this.noiDecisionMakerCodeRepository.save(decisionMakerCode);
   }
