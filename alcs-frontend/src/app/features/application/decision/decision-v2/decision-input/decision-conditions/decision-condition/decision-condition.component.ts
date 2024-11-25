@@ -14,16 +14,21 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   @Input() selectableComponents: SelectableComponent[] = [];
 
+  singleDateLabel = 'End Date';
+
   componentsToCondition = new FormControl<string[] | null>(null, [Validators.required]);
   approvalDependant = new FormControl<boolean | null>(null, [Validators.required]);
 
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
   description = new FormControl<string | null>(null, [Validators.required]);
+  singleDate = new FormControl<Date | null>(null, [Validators.required]);
+  minDate = new Date(0);
 
   form = new FormGroup({
     approvalDependant: this.approvalDependant,
     securityAmount: this.securityAmount,
+    singleDate: this.singleDate,
     administrativeFee: this.administrativeFee,
     description: this.description,
     componentsToCondition: this.componentsToCondition,
@@ -31,6 +36,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.data) {
+      this.singleDateLabel = this.data.type?.singleDateLabel ? this.data.type?.singleDateLabel : 'End Date';
       const selectedOptions = this.selectableComponents
         .filter((component) => this.data.componentsToCondition?.map((e) => e.tempId)?.includes(component.tempId))
         .map((e) => ({
@@ -44,7 +50,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       this.form.patchValue({
         approvalDependant: this.data.approvalDependant,
         securityAmount: this.data.securityAmount?.toString() ?? null,
-        administrativeFee: this.data.administrativeFee?.toString() ?? null,
+        administrativeFee: this.data.administrativeFee !== null ? this.data.administrativeFee?.toString() : this.data.type?.administrativeFeeAmount?.toString(),
         description: this.data.description ?? null,
       });
     }

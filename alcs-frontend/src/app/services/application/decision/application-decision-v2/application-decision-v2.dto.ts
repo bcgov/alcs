@@ -246,6 +246,7 @@ export interface ApplicationDecisionConditionDto {
   completionDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
+  singleDate?: number | null;
 }
 
 export interface ComponentToCondition {
@@ -263,6 +264,7 @@ export interface UpdateApplicationDecisionConditionDto {
   description?: string | null;
   completionDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  singleDate?: number | null;
 }
 
 export interface ApplicationDecisionComponentToConditionLotDto {

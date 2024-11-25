@@ -124,6 +124,10 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsNumber()
   completionDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  singleDate?: number;
 }
 
 export class UpdateApplicationDecisionConditionServiceDto {
@@ -134,6 +138,7 @@ export class UpdateApplicationDecisionConditionServiceDto {
   administrativeFee?: number;
   description?: string;
   completionDate?: Date | null;
+  singleDate?: Date | null;
 }
 
 export class ApplicationDecisionConditionComponentDto {

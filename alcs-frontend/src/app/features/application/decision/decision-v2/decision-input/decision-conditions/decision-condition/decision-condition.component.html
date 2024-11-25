@@ -15,17 +15,6 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Security Amount</mat-label>
-      <input
-        matInput
-        mask="separator.2"
-        thousandSeparator=","
-        separatorLimit="99999999"
-        formControlName="securityAmount"
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
       <mat-label>Administrative Fee Amount</mat-label>
       <input
         matInput
@@ -33,6 +22,31 @@
         thousandSeparator=","
         separatorLimit="99999999"
         formControlName="administrativeFee"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>{{ singleDateLabel }}</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        formControlName="singleDate"
+        name="singleDate"
+        [min]="minDate | startOfDay"
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Security Amount</mat-label>
+      <input
+        matInput
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="99999999"
+        formControlName="securityAmount"
       />
     </mat-form-field>
 
