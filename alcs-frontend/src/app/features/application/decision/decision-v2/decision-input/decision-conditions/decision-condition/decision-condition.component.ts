@@ -22,6 +22,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   isAdmFeeFieldRequired = false;
   showSecurityAmountField = false;
   isSecurityAmountFieldRequired = false;
+  numberOfSelectedConditions = 0;
 
   componentsToCondition = new FormControl<string[] | null>(null, [Validators.required]);
   approvalDependant = new FormControl<boolean | null>(null, [Validators.required]);
@@ -69,6 +70,16 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       } else {
         this.securityAmount.removeValidators(Validators.required);
         this.isSecurityAmountFieldRequired = false;
+      }
+
+      if (this.showSingleDateField) {
+        this.numberOfSelectedConditions++;
+      }
+      if (this.showAdmFeeField) {
+        this.numberOfSelectedConditions++;
+      }
+      if (this.showSecurityAmountField) {
+        this.numberOfSelectedConditions++;
       }
 
       const selectedOptions = this.selectableComponents
