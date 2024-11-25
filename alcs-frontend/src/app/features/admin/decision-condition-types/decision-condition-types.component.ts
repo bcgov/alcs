@@ -14,17 +14,19 @@ import { NoticeOfIntentDecisionConditionTypeDto } from '../../../services/notice
   styleUrls: ['./decision-condition-types.component.scss'],
 })
 export class DecisionConditionTypesComponent implements OnInit {
-
-  @Input() public service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService | undefined;
+  @Input() public service:
+    | ApplicationDecisionConditionTypesService
+    | NoticeofIntentDecisionConditionTypesService
+    | undefined;
 
   destroy = new Subject<void>();
 
   decisionConditionTypeDtos: ApplicationDecisionConditionTypeDto[] | NoticeOfIntentDecisionConditionTypeDto[] = [];
-  displayedColumns: string[] = ['label', 'description', 'code', 'actions'];
+  displayedColumns: string[] = ['label', 'description', 'code', 'isActive', 'actions'];
 
   constructor(
     public dialog: MatDialog,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
