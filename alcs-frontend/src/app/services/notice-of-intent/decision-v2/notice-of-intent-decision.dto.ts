@@ -67,7 +67,9 @@ export interface NoticeOfIntentDecisionDocumentDto {
 
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
 
-export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {}
+export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
+}
 
 export interface NoticeOfIntentDecisionConditionDto {
   uuid: string;

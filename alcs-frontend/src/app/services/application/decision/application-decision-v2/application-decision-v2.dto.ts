@@ -216,7 +216,9 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   COVE = 'COVE',
 }
 
-export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
+}
 
 export interface NaruSubtypesDto extends BaseCodeDto {}
 
