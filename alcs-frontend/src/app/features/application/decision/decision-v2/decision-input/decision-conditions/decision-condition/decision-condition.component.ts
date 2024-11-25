@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SelectableComponent, TempApplicationDecisionConditionDto } from '../decision-conditions.component';
+import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 
 @Component({
   selector: 'app-app-decision-condition',
@@ -85,7 +86,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         securityAmount: this.data.securityAmount?.toString() ?? null,
         administrativeFee: this.data.administrativeFee !== null ? this.data.administrativeFee?.toString() : this.data.type?.administrativeFeeAmount?.toString(),
         description: this.data.description ?? null,
-        singleDate: new Date() ?? null,
+        singleDate: this.data.singleDate ? new Date(this.data.singleDate) : undefined,
       });
     }
 
@@ -97,7 +98,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
           componentToConditionType: e.code,
           tempId: e.tempId,
         }));
-
+      const singleDate = this.singleDate.value;
       this.dataChange.emit({
         type: this.data.type,
         tempUuid: this.data.tempUuid,
@@ -107,7 +108,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,
         componentsToCondition: selectedOptions,
-        singleDate: this.singleDate.value !== null ? this.singleDate.value.getTime() : undefined,
+        singleDate: singleDate ? formatDateForApi(singleDate) : undefined,
       });
     });
   }

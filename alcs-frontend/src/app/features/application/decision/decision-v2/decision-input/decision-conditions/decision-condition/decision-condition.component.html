@@ -31,8 +31,9 @@
         matInput
         (click)="datePicker.open()"
         [matDatepicker]="datePicker"
-        [min]="minDate | startOfDay"
         formControlName="singleDate"
+        name="singleDate"
+        [min]="minDate | startOfDay"
       />
       <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
       <mat-datepicker #datePicker type="date"></mat-datepicker>
