@@ -28,7 +28,7 @@ export class NoticeofIntentDecisionConditionTypesService {
       return await firstValueFrom(this.http.post<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}`, createDto));
     } catch (e) {
       this.toastService.showErrorToast('Failed to create decision condition type');
-      console.log(e);
+      console.error(e);
     }
     return;
   }
@@ -40,7 +40,7 @@ export class NoticeofIntentDecisionConditionTypesService {
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');
-      console.log(e);
+      console.error(e);
     }
     return;
   }
@@ -54,7 +54,7 @@ export class NoticeofIntentDecisionConditionTypesService {
       } else {
         this.toastService.showErrorToast('Failed to delete decision condition type');
       }
-      console.log(e);
+      console.error(e);
     }
     return;
   }
