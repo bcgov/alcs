@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
+import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
@@ -62,6 +63,7 @@ export class ApplicationDecisionConditionService {
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
       condition.approvalDependant = updateDto.approvalDependant ?? null;
+      condition.singleDate = updateDto.singleDate ? formatIncomingDate(updateDto.singleDate) : null;
 
       if (
         updateDto.componentsToCondition !== undefined &&

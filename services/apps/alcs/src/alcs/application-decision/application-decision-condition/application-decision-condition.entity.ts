@@ -85,4 +85,12 @@ export class ApplicationDecisionCondition extends Base {
     cascade: ['insert', 'update', 'remove'],
   })
   conditionToComponentsWithPlanNumber: ApplicationDecisionConditionComponentPlanNumber[] | null;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    comment: 'Condition single end/due date',
+    nullable: true,
+  })
+  singleDate?: Date | null;
 }

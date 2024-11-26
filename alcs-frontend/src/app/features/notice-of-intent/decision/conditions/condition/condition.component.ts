@@ -8,6 +8,7 @@ import {
   DECISION_CONDITION_SUPERSEDED_LABEL,
 } from '../../../../../shared/application-type-pill/application-type-pill.constants';
 import { CONDITION_STATUS, ConditionComponentLabels, DecisionConditionWithStatus } from '../conditions.component';
+import { environment } from '../../../../../../environments/environment';
 
 type Condition = DecisionConditionWithStatus & {
   componentLabelsStr?: string;
@@ -28,6 +29,12 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   completeLabel = DECISION_CONDITION_COMPLETE_LABEL;
   supersededLabel = DECISION_CONDITION_SUPERSEDED_LABEL;
 
+  singleDateLabel = 'End Date';
+  showSingleDateField = false;
+  showAdmFeeField = false;
+  showSecurityAmountField = false;
+  singleDateFormated: string | undefined = undefined;
+
   CONDITION_STATUS = CONDITION_STATUS;
 
   isReadMoreClicked = false;
@@ -39,6 +46,11 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.updateStatus();
     if (this.condition) {
+      this.singleDateFormated = this.condition.singleDate ? moment(this.condition.singleDate).format(environment.dateFormat) : undefined;
+      this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
+      this.showSingleDateField = this.condition.type?.isSingleDateChecked ? this.condition.type?.isSingleDateChecked : false;
+      this.showAdmFeeField = this.condition.type?.isAdministrativeFeeAmountChecked ? this.condition.type?.isAdministrativeFeeAmountChecked : false;
+      this.showSecurityAmountField = this.condition.type?.isSecurityAmountChecked ? this.condition.type?.isSecurityAmountChecked : false;
       this.condition = {
         ...this.condition,
         componentLabelsStr: this.condition.conditionComponentsLabels?.flatMap((e) => e.label).join(';\n'),

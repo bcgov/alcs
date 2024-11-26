@@ -18,6 +18,16 @@ export class ApplicationDecisionConditionTypesService {
         code: true,
         label: true,
         description: true,
+        isComponentToConditionChecked: true,
+        isDescriptionChecked: true,
+        isAdministrativeFeeAmountChecked: true,
+        isAdministrativeFeeAmountRequired: true,
+        administrativeFeeAmount: true,
+        isSingleDateChecked: true,
+        isSingleDateRequired: true,
+        singleDateLabel: true,
+        isSecurityAmountChecked: true,
+        isSecurityAmountRequired: true,
       },
     });
   }
@@ -34,9 +44,24 @@ export class ApplicationDecisionConditionTypesService {
     decisionMakerCode.description = updateDto.description;
     decisionMakerCode.label = updateDto.label;
 
-    return await this.applicationDecisionMakerCodeRepository.save(
-      decisionMakerCode,
-    );
+    decisionMakerCode.isAdministrativeFeeAmountChecked = updateDto.isAdministrativeFeeAmountChecked;
+    decisionMakerCode.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
+      ? updateDto.isAdministrativeFeeAmountRequired
+      : null;
+    decisionMakerCode.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
+      ? updateDto.administrativeFeeAmount
+      : null;
+
+    decisionMakerCode.isSingleDateChecked = updateDto.isSingleDateChecked;
+    decisionMakerCode.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
+    decisionMakerCode.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
+
+    decisionMakerCode.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
+    decisionMakerCode.isSecurityAmountRequired = updateDto.isSecurityAmountChecked
+      ? updateDto.isSecurityAmountRequired
+      : null;
+
+    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
   }
 
   async create(createDto: ApplicationDecisionConditionTypeDto) {
@@ -46,8 +71,23 @@ export class ApplicationDecisionConditionTypesService {
     decisionMakerCode.description = createDto.description;
     decisionMakerCode.label = createDto.label;
 
-    return await this.applicationDecisionMakerCodeRepository.save(
-      decisionMakerCode,
-    );
+    decisionMakerCode.isAdministrativeFeeAmountChecked = createDto.isAdministrativeFeeAmountChecked;
+    decisionMakerCode.isAdministrativeFeeAmountRequired = createDto.isAdministrativeFeeAmountChecked
+      ? createDto.isAdministrativeFeeAmountRequired
+      : null;
+    decisionMakerCode.administrativeFeeAmount = createDto.isAdministrativeFeeAmountChecked
+      ? createDto.administrativeFeeAmount
+      : null;
+
+    decisionMakerCode.isSingleDateChecked = createDto.isSingleDateChecked;
+    decisionMakerCode.isSingleDateRequired = createDto.isSingleDateChecked ? createDto.isSingleDateRequired : null;
+    decisionMakerCode.singleDateLabel = createDto.isSingleDateChecked ? createDto.singleDateLabel : null;
+
+    decisionMakerCode.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
+    decisionMakerCode.isSecurityAmountRequired = createDto.isSecurityAmountChecked
+      ? createDto.isSecurityAmountRequired
+      : null;
+
+    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
   }
 }

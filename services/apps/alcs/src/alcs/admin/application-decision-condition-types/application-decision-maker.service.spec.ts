@@ -4,7 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationDecisionConditionType } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
+import {
+  ApplicationDecisionConditionType,
+  DateLabel,
+} from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types.service';
 
 describe('ApplicationDecisionConditionTypesService', () => {
@@ -31,9 +34,7 @@ describe('ApplicationDecisionConditionTypesService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationDecisionConditionTypesService>(
-      ApplicationDecisionConditionTypesService,
-    );
+    service = module.get<ApplicationDecisionConditionTypesService>(ApplicationDecisionConditionTypesService);
   });
 
   it('should be defined', () => {
@@ -41,14 +42,22 @@ describe('ApplicationDecisionConditionTypesService', () => {
   });
 
   it('should successfully create decision maker entry', async () => {
-    mockRepository.save.mockResolvedValue(
-      new ApplicationDecisionConditionType(),
-    );
+    mockRepository.save.mockResolvedValue(new ApplicationDecisionConditionType());
 
     const result = await service.create({
       code: '',
       description: '',
       label: '',
+      isComponentToConditionChecked: true,
+      isDescriptionChecked: true,
+      isAdministrativeFeeAmountChecked: false,
+      isAdministrativeFeeAmountRequired: false,
+      administrativeFeeAmount: null,
+      isSingleDateChecked: false,
+      isSingleDateRequired: false,
+      singleDateLabel: DateLabel.DUE_DATE,
+      isSecurityAmountChecked: false,
+      isSecurityAmountRequired: false,
     });
 
     expect(mockRepository.save).toBeCalledTimes(1);
@@ -63,6 +72,16 @@ describe('ApplicationDecisionConditionTypesService', () => {
       code: '',
       description: '',
       label: '',
+      isComponentToConditionChecked: true,
+      isDescriptionChecked: true,
+      isAdministrativeFeeAmountChecked: false,
+      isAdministrativeFeeAmountRequired: false,
+      administrativeFeeAmount: null,
+      isSingleDateChecked: false,
+      isSingleDateRequired: false,
+      singleDateLabel: DateLabel.DUE_DATE,
+      isSecurityAmountChecked: false,
+      isSecurityAmountRequired: false,
     });
 
     expect(mockRepository.save).toBeCalledTimes(1);

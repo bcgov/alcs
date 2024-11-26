@@ -146,6 +146,10 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           mapFrom((a) => a.completionDate?.getTime()),
         ),
         forMember(
+          (ad) => ad.singleDate,
+          mapFrom((a) => a.singleDate?.getTime()),
+        ),
+        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
@@ -155,7 +159,33 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(mapper, NoticeOfIntentDecisionConditionType, NoticeOfIntentDecisionConditionTypeDto);
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionType,
+        NoticeOfIntentDecisionConditionTypeDto,
+        forMember(
+          (dto) => dto.isAdministrativeFeeAmountRequired,
+          mapFrom((entity) =>
+            entity.isAdministrativeFeeAmountRequired !== null ? entity.isAdministrativeFeeAmountRequired : null,
+          ),
+        ),
+        forMember(
+          (dto) => dto.administrativeFeeAmount,
+          mapFrom((entity) => (entity.administrativeFeeAmount !== null ? entity.administrativeFeeAmount : null)),
+        ),
+        forMember(
+          (dto) => dto.isSingleDateRequired,
+          mapFrom((entity) => (entity.isSingleDateRequired !== null ? entity.isSingleDateRequired : null)),
+        ),
+        forMember(
+          (dto) => dto.singleDateLabel,
+          mapFrom((entity) => (entity.singleDateLabel !== null ? entity.singleDateLabel : null)),
+        ),
+        forMember(
+          (dto) => dto.isSecurityAmountRequired,
+          mapFrom((entity) => (entity.isSecurityAmountRequired !== null ? entity.isSecurityAmountRequired : null)),
+        ),
+      );
 
       createMap(mapper, NoticeOfIntentDecisionOutcome, NoticeOfIntentDecisionOutcomeCodeDto);
 
