@@ -18,7 +18,7 @@ describe('DecisionConditionComponent', () => {
     component = fixture.componentInstance;
     component.data = {
       type: {
-        code: 'A',
+        code: '',
         label: '',
         description: '',
         isAdministrativeFeeAmountChecked: false,
