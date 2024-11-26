@@ -14,26 +14,24 @@
     <app-no-data *ngIf="!condition.componentLabelsStr"></app-no-data>
   </div>
 
-  <div *ngIf="showSecurityAmountField">
-    <div class="subheading2">Security Amount</div>
-    {{ condition.securityAmount }}
-    <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
-  </div>
-
   <div *ngIf="showAdmFeeField">
-    <div class="subheading2">Admin Fee</div>
+    <div class="subheading2">Administrative Fee Amount</div>
     {{ condition.administrativeFee }}
     <app-no-data
       *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
     ></app-no-data>
   </div>
 
+  <div *ngIf="showSecurityAmountField">
+    <div class="subheading2">Security Amount</div>
+    {{ condition.securityAmount }}
+    <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
+  </div>
+
   <div *ngIf="showSingleDateField">
     <div class="subheading2">{{ singleDateLabel }}</div>
     {{ singleDateFormated }}
-    <app-no-data
-      *ngIf="condition.singleDate === null || condition.singleDate === undefined"
-    ></app-no-data>
+    <app-no-data *ngIf="condition.singleDate === null || condition.singleDate === undefined"></app-no-data>
   </div>
 
   <div>

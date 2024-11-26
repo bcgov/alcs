@@ -34,7 +34,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   minDate = new Date(0);
 
   form = new FormGroup({
-    approvalDependant: this.approvalDependant,
     securityAmount: this.securityAmount,
     singleDate: this.singleDate,
     administrativeFee: this.administrativeFee,
@@ -54,7 +53,9 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         this.isShowSingleDateRequired = false;
       }
 
-      this.showAdmFeeField = this.data.type?.isAdministrativeFeeAmountChecked ? this.data.type?.isAdministrativeFeeAmountChecked : false;
+      this.showAdmFeeField = this.data.type?.isAdministrativeFeeAmountChecked
+        ? this.data.type?.isAdministrativeFeeAmountChecked
+        : false;
       if (this.data.type?.isAdministrativeFeeAmountRequired) {
         this.administrativeFee.addValidators(Validators.required);
         this.isAdmFeeFieldRequired = true;
@@ -63,7 +64,9 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         this.isAdmFeeFieldRequired = false;
       }
 
-      this.showSecurityAmountField = this.data.type?.isSecurityAmountChecked ? this.data.type?.isSecurityAmountChecked : false;
+      this.showSecurityAmountField = this.data.type?.isSecurityAmountChecked
+        ? this.data.type?.isSecurityAmountChecked
+        : false;
       if (this.data.type?.isSecurityAmountRequired) {
         this.securityAmount.addValidators(Validators.required);
         this.isSecurityAmountFieldRequired = true;
@@ -93,9 +96,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       this.componentsToCondition.setValue(selectedOptions.map((e) => e.tempId) ?? null);
 
       this.form.patchValue({
-        approvalDependant: this.data.approvalDependant,
         securityAmount: this.data.securityAmount?.toString() ?? null,
-        administrativeFee: this.data.administrativeFee ? this.data.administrativeFee?.toString() : this.data.type?.administrativeFeeAmount?.toString(),
+        administrativeFee: this.data.administrativeFee
+          ? this.data.administrativeFee?.toString()
+          : this.data.type?.administrativeFeeAmount?.toString(),
         description: this.data.description ?? null,
         singleDate: this.data.singleDate ? new Date(this.data.singleDate) : undefined,
       });

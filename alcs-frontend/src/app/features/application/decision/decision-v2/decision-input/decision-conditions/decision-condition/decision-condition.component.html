@@ -5,7 +5,10 @@
 
 <form [formGroup]="form">
   <div class="condition">
-    <mat-form-field appearance="outline" [class.condition-full-width]="numberOfSelectedConditions === 2">
+    <mat-form-field
+      appearance="outline"
+      [class.condition-full-width]="numberOfSelectedConditions === 2 || numberOfSelectedConditions === 0"
+    >
       <mat-label>Component to Condition</mat-label>
       <mat-select [formControl]="componentsToCondition" multiple>
         <mat-option *ngFor="let component of selectableComponents" [value]="component.tempId">{{
