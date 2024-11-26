@@ -123,6 +123,10 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   @IsOptional()
   @IsNumber()
   completionDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  singleDate?: number;
 }
 
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
@@ -133,4 +137,5 @@ export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   administrativeFee?: number;
   description?: string;
   completionDate?: Date | null;
+  singleDate?: Date | null;
 }

@@ -95,7 +95,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       this.form.patchValue({
         approvalDependant: this.data.approvalDependant,
         securityAmount: this.data.securityAmount?.toString() ?? null,
-        administrativeFee: this.data.administrativeFee !== null ? this.data.administrativeFee?.toString() : this.data.type?.administrativeFeeAmount?.toString(),
+        administrativeFee: this.data.administrativeFee ? this.data.administrativeFee?.toString() : this.data.type?.administrativeFeeAmount?.toString(),
         description: this.data.description ?? null,
         singleDate: this.data.singleDate ? new Date(this.data.singleDate) : undefined,
       });
@@ -109,7 +109,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
           componentToConditionType: e.code,
           tempId: e.tempId,
         }));
-      const singleDate = this.singleDate.value;
       this.dataChange.emit({
         type: this.data.type,
         tempUuid: this.data.tempUuid,
@@ -119,7 +118,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,
         componentsToCondition: selectedOptions,
-        singleDate: singleDate ? formatDateForApi(singleDate) : undefined,
+        singleDate: this.singleDate.value ? formatDateForApi(this.singleDate.value) : undefined,
       });
     });
   }
