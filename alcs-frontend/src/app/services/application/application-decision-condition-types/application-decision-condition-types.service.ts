@@ -48,8 +48,12 @@ export class ApplicationDecisionConditionTypesService {
   async delete(code: string) {
     try {
       return await firstValueFrom(this.http.delete<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`));
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to delete decision condition type');
+    } catch (e: any) {
+      if (e && e.error && e.error.message) {
+        this.toastService.showErrorToast(e.error.message);
+      } else {
+        this.toastService.showErrorToast('Failed to delete decision condition type');
+      }
       console.log(e);
     }
     return;
