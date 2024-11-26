@@ -36,14 +36,4 @@ export class NoticeOfIntentDecisionConditionService {
       throw e;
     }
   }
-
-  async delete(code: string) {
-    try {
-      return await firstValueFrom(this.http.delete<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}/${code}`));
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to delete decision condition type');
-      console.log(e);
-    }
-    return;
-  }
 }
