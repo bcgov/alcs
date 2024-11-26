@@ -44,6 +44,9 @@ describe('DecisionConditionTypesService', () => {
       code: '',
       label: '',
       description: '',
+      isAdministrativeFeeAmountChecked: false,
+      isSingleDateChecked: false,
+      isSecurityAmountChecked: false
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
@@ -62,6 +65,9 @@ describe('DecisionConditionTypesService', () => {
       code: '',
       label: '',
       description: '',
+      isAdministrativeFeeAmountChecked: false,
+      isSingleDateChecked: false,
+      isSecurityAmountChecked: false
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
@@ -80,6 +86,9 @@ describe('DecisionConditionTypesService', () => {
       code: '',
       label: '',
       description: '',
+      isAdministrativeFeeAmountChecked: false,
+      isSingleDateChecked: false,
+      isSecurityAmountChecked: false
     });
 
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
@@ -98,6 +107,9 @@ describe('DecisionConditionTypesService', () => {
       code: '',
       label: '',
       description: '',
+      isAdministrativeFeeAmountChecked: false,
+      isSingleDateChecked: false,
+      isSecurityAmountChecked: false
     });
 
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
