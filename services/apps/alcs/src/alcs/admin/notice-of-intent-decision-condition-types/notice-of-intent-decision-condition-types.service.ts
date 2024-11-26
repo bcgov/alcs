@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentDecisionConditionType } from '../../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-code.entity';
 import { NoticeOfIntentDecisionConditionTypeDto } from '../../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class NoticeofIntentDecisionConditionTypesService {
@@ -51,6 +52,25 @@ export class NoticeofIntentDecisionConditionTypesService {
   }
 
   async delete(code: string) {
-    return await this.noiDecisionConditionTypeRepository.delete(code);
+    const type = await this.noiDecisionConditionTypeRepository.findOne({
+      where: { code },
+      relations: ['conditions', 'conditions.decision'],
+    });
+
+    if (!type) {
+      throw new ServiceNotFoundException('Condition type not found');
+    }
+
+    const undeletedDecisions = type.conditions.map((condition) => condition.decision).filter((decision) => decision);
+
+    if (undeletedDecisions.length > 0) {
+      throw new ServiceNotFoundException('Condition is associated with a decision. Unable to delete.');
+    }
+
+    try {
+      return await this.noiDecisionConditionTypeRepository.delete(code);
+    } catch (e) {
+      throw new ServiceNotFoundException('Unable to delete.');
+    }
   }
 }
