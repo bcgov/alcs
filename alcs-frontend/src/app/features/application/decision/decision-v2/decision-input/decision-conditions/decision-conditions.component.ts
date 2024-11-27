@@ -13,9 +13,9 @@ import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
-  ApplicationDecisionCodesDto,
   ApplicationDecisionComponentDto,
   UpdateApplicationDecisionConditionDto,
+  ApplicationDecisionConditionTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -32,7 +32,10 @@ export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid:
 export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() codes!: ApplicationDecisionCodesDto;
+  activeTypes!: ApplicationDecisionConditionTypeDto[];
+  @Input() set types(types: ApplicationDecisionConditionTypeDto[]) {
+    this.activeTypes = types.filter((type) => type.isActive);
+  }
   @Input() components: ApplicationDecisionComponentDto[] = [];
   @Input() conditions: ApplicationDecisionConditionDto[] = [];
   @Input() showError = false;
@@ -91,7 +94,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   onAddNewCondition(typeCode: string) {
-    const matchingType = this.codes.decisionConditionTypes.find((code) => code.code === typeCode);
+    const matchingType = this.activeTypes.find((type) => type.code === typeCode);
     this.mappedConditions.unshift({
       type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
@@ -177,8 +180,8 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
     decisionYear: number | null
   ) {
     return components.map((component) => {
-      const matchingType = this.codes.decisionComponentTypes.find(
-        (type) => type.code === component.applicationDecisionComponentTypeCode
+      const matchingType = this.activeTypes.find(
+        (type) => type.code === component.applicationDecisionComponentTypeCode,
       );
       return {
         uuid: component.uuid,

@@ -202,7 +202,7 @@
   <div>
     <app-app-decision-conditions
       *ngIf="codes && showComponents && showConditions"
-      [codes]="codes"
+      [types]="codes.decisionConditionTypes"
       [components]="components"
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
