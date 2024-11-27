@@ -6,6 +6,7 @@ import { ApplicationDecisionConditionTypesService } from '../../../../services/a
 
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 
 describe('DecisionConditionTypesDialogComponent', () => {
   let component: DecisionConditionTypesDialogComponent;
@@ -13,7 +14,7 @@ describe('DecisionConditionTypesDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, MatCheckboxModule],
+      imports: [ReactiveFormsModule, FormsModule, MatCheckboxModule, MatButtonToggleGroup],
       declarations: [DecisionConditionTypesDialogComponent],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: undefined },

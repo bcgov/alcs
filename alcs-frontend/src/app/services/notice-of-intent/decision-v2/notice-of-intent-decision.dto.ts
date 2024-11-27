@@ -69,6 +69,7 @@ export interface NoticeOfIntentDecisionDocumentDto {
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
 
 export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
   isComponentToConditionChecked?: boolean | null;
   isDescriptionChecked?: boolean | null;
   isAdministrativeFeeAmountChecked: boolean;

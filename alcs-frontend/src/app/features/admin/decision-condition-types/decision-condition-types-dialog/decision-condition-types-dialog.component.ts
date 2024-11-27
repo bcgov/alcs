@@ -35,6 +35,9 @@ export class DecisionConditionTypesDialogComponent {
       ]),
       label: new FormControl(this.data?.content?.label ? this.data.content.label : '', [Validators.required]),
       code: new FormControl(this.data?.content?.code ? this.data.content.code : '', [Validators.required]),
+      isActive: new FormControl<boolean>(this.data && this.data.content ? this.data.content.isActive : true, [
+        Validators.required,
+      ]),
       isComponentToConditionChecked: new FormControl(
         this.data?.content?.isComponentToConditionChecked ? this.data.content.isComponentToConditionChecked : true,
       ),
@@ -76,7 +79,7 @@ export class DecisionConditionTypesDialogComponent {
   }
 
   ngOnInit(): void {
-    this.conditionTypeForm.valueChanges.subscribe( () => {
+    this.conditionTypeForm.valueChanges.subscribe(() => {
       this.showWarning = this.isEdit ? true : false;
     });
   }
@@ -88,6 +91,7 @@ export class DecisionConditionTypesDialogComponent {
       code: this.conditionTypeForm.get('code')?.value,
       label: this.conditionTypeForm.get('label')?.value,
       description: this.conditionTypeForm.get('description')?.value,
+      isActive: this.conditionTypeForm.get('isActive')?.value,
       isAdministrativeFeeAmountChecked: this.conditionTypeForm.get('isAdministrativeFeeAmountChecked')?.value,
       isAdministrativeFeeAmountRequired: this.conditionTypeForm.get('isAdministrativeFeeAmountRequired')?.value,
       administrativeFeeAmount: this.conditionTypeForm.get('administrativeFeeAmount')?.value,

@@ -3,21 +3,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationDecisionConditionType } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionTypeDto } from '../../application-decision/application-decision-condition/application-decision-condition.dto';
+import {
+  ServiceNotFoundException,
+  ServiceConflictException,
+  BaseServiceException,
+} from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class ApplicationDecisionConditionTypesService {
   constructor(
     @InjectRepository(ApplicationDecisionConditionType)
-    private applicationDecisionMakerCodeRepository: Repository<ApplicationDecisionConditionType>,
+    private applicationDecisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
   ) {}
 
   async fetch() {
-    return await this.applicationDecisionMakerCodeRepository.find({
+    return await this.applicationDecisionConditionTypeRepository.find({
       order: { label: 'ASC' },
       select: {
         code: true,
         label: true,
         description: true,
+        isActive: true,
         isComponentToConditionChecked: true,
         isDescriptionChecked: true,
         isAdministrativeFeeAmountChecked: true,
@@ -33,61 +39,81 @@ export class ApplicationDecisionConditionTypesService {
   }
 
   async getOneOrFail(code: string) {
-    return await this.applicationDecisionMakerCodeRepository.findOneOrFail({
+    return await this.applicationDecisionConditionTypeRepository.findOneOrFail({
       where: { code },
     });
   }
 
   async update(code: string, updateDto: ApplicationDecisionConditionTypeDto) {
-    const decisionMakerCode = await this.getOneOrFail(code);
+    const type = await this.getOneOrFail(code);
 
-    decisionMakerCode.description = updateDto.description;
-    decisionMakerCode.label = updateDto.label;
+    type.description = updateDto.description;
+    type.label = updateDto.label;
+    type.isActive = updateDto.isActive;
 
-    decisionMakerCode.isAdministrativeFeeAmountChecked = updateDto.isAdministrativeFeeAmountChecked;
-    decisionMakerCode.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
+    type.isAdministrativeFeeAmountChecked = updateDto.isAdministrativeFeeAmountChecked;
+    type.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
       ? updateDto.isAdministrativeFeeAmountRequired
       : null;
-    decisionMakerCode.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
+    type.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
       ? updateDto.administrativeFeeAmount
       : null;
 
-    decisionMakerCode.isSingleDateChecked = updateDto.isSingleDateChecked;
-    decisionMakerCode.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
-    decisionMakerCode.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
+    type.isSingleDateChecked = updateDto.isSingleDateChecked;
+    type.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
+    type.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
 
-    decisionMakerCode.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
-    decisionMakerCode.isSecurityAmountRequired = updateDto.isSecurityAmountChecked
-      ? updateDto.isSecurityAmountRequired
-      : null;
+    type.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
+    type.isSecurityAmountRequired = updateDto.isSecurityAmountChecked ? updateDto.isSecurityAmountRequired : null;
 
-    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
+    return await this.applicationDecisionConditionTypeRepository.save(type);
   }
 
   async create(createDto: ApplicationDecisionConditionTypeDto) {
-    const decisionMakerCode = new ApplicationDecisionConditionType();
+    const type = new ApplicationDecisionConditionType();
 
-    decisionMakerCode.code = createDto.code;
-    decisionMakerCode.description = createDto.description;
-    decisionMakerCode.label = createDto.label;
-
-    decisionMakerCode.isAdministrativeFeeAmountChecked = createDto.isAdministrativeFeeAmountChecked;
-    decisionMakerCode.isAdministrativeFeeAmountRequired = createDto.isAdministrativeFeeAmountChecked
+    type.code = createDto.code;
+    type.description = createDto.description;
+    type.label = createDto.label;
+    type.isActive = createDto.isActive;
+    type.isAdministrativeFeeAmountChecked = createDto.isAdministrativeFeeAmountChecked;
+    type.isAdministrativeFeeAmountRequired = createDto.isAdministrativeFeeAmountChecked
       ? createDto.isAdministrativeFeeAmountRequired
       : null;
-    decisionMakerCode.administrativeFeeAmount = createDto.isAdministrativeFeeAmountChecked
+    type.administrativeFeeAmount = createDto.isAdministrativeFeeAmountChecked
       ? createDto.administrativeFeeAmount
       : null;
 
-    decisionMakerCode.isSingleDateChecked = createDto.isSingleDateChecked;
-    decisionMakerCode.isSingleDateRequired = createDto.isSingleDateChecked ? createDto.isSingleDateRequired : null;
-    decisionMakerCode.singleDateLabel = createDto.isSingleDateChecked ? createDto.singleDateLabel : null;
+    type.isSingleDateChecked = createDto.isSingleDateChecked;
+    type.isSingleDateRequired = createDto.isSingleDateChecked ? createDto.isSingleDateRequired : null;
+    type.singleDateLabel = createDto.isSingleDateChecked ? createDto.singleDateLabel : null;
 
-    decisionMakerCode.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
-    decisionMakerCode.isSecurityAmountRequired = createDto.isSecurityAmountChecked
-      ? createDto.isSecurityAmountRequired
-      : null;
+    type.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
+    type.isSecurityAmountRequired = createDto.isSecurityAmountChecked ? createDto.isSecurityAmountRequired : null;
 
-    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
+    return await this.applicationDecisionConditionTypeRepository.save(type);
+  }
+
+  async delete(code: string) {
+    const type = await this.applicationDecisionConditionTypeRepository.findOne({
+      where: { code },
+      relations: ['conditions', 'conditions.decision'],
+    });
+
+    if (!type) {
+      throw new ServiceNotFoundException('Condition type not found');
+    }
+
+    const undeletedDecisions = type.conditions.map((condition) => condition.decision).filter((decision) => decision);
+
+    if (undeletedDecisions.length > 0) {
+      throw new ServiceConflictException('Condition is associated with a decision. Unable to delete.');
+    }
+
+    try {
+      return await this.applicationDecisionConditionTypeRepository.softDelete(code);
+    } catch (e) {
+      throw new BaseServiceException('Unable to delete.');
+    }
   }
 }

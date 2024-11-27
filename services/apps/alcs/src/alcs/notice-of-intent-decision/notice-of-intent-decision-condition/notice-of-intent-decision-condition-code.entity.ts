@@ -1,13 +1,21 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 import { AutoMap } from 'automapper-classes';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
+import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
 import { DateLabel } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 
 @Entity({
   comment: 'Decision Condition Types Code Table for Notice of Intents',
 })
 export class NoticeOfIntentDecisionConditionType extends BaseCodeEntity {
+  @AutoMap()
+  @Column({ default: true })
+  isActive: boolean;
+
+  @OneToMany(() => NoticeOfIntentDecisionCondition, (condition) => condition.type)
+  conditions: NoticeOfIntentDecisionCondition[];
+
   @AutoMap()
   @Column({ default: true, type: 'boolean' })
   isComponentToConditionChecked: boolean;

@@ -6,6 +6,9 @@ import { DateLabel } from './application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  @IsBoolean()
+  isActive: boolean;
+
   @AutoMap()
   @IsBoolean()
   @IsOptional()

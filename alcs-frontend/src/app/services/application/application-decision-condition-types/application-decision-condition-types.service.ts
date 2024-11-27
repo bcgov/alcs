@@ -31,7 +31,7 @@ export class ApplicationDecisionConditionTypesService {
       return await firstValueFrom(this.http.post<ApplicationDecisionConditionTypeDto>(`${this.url}`, createDto));
     } catch (e) {
       this.toastService.showErrorToast('Failed to create decision condition type');
-      console.log(e);
+      console.error(e);
     }
     return;
   }
@@ -43,7 +43,7 @@ export class ApplicationDecisionConditionTypesService {
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');
-      console.log(e);
+      console.error(e);
     }
     return;
   }
@@ -51,9 +51,13 @@ export class ApplicationDecisionConditionTypesService {
   async delete(code: string) {
     try {
       return await firstValueFrom(this.http.delete<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`));
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to delete decision condition type');
-      console.log(e);
+    } catch (e: any) {
+      if (e && e.error && e.error.message) {
+        this.toastService.showErrorToast(e.error.message);
+      } else {
+        this.toastService.showErrorToast('Failed to delete decision condition type');
+      }
+      console.error(e);
     }
     return;
   }

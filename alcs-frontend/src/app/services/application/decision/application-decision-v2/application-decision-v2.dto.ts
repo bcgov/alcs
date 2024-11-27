@@ -222,6 +222,7 @@ export enum DateLabel {
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
   isComponentToConditionChecked?: boolean | null;
   isDescriptionChecked?: boolean | null;
   isAdministrativeFeeAmountChecked: boolean;

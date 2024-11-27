@@ -33,6 +33,14 @@
       </mat-form-field>
     </div>
 
+    <div class="dialog-field full-width">
+      <mat-label>Status *</mat-label>
+      <mat-button-toggle-group required id="isActive" formControlName="isActive" name="isActive">
+        <mat-button-toggle [value]="true">Active</mat-button-toggle>
+        <mat-button-toggle [value]="false">Inactive</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
     <div class="condition-fields-container full-width">
       <span>Click to select fields</span>
 
@@ -116,7 +124,8 @@
       </div>
       <div class="warning-section">
         <div class="warning" *ngIf="showWarning">
-          <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Changes made here will apply to all instances of this condition
+          <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Changes made here will apply to all instances of this
+          condition
         </div>
       </div>
     </div>

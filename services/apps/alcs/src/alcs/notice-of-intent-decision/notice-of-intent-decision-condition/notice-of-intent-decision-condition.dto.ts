@@ -6,6 +6,9 @@ import { DateLabel } from '../../application-decision/application-decision-condi
 import { Type } from 'class-transformer';
 
 export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
+  @IsBoolean()
+  isActive: boolean;
+
   @AutoMap()
   @IsBoolean()
   @IsOptional()
@@ -49,6 +52,7 @@ export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
   isSecurityAmountRequired: boolean | null;
 }
+
 export class NoticeOfIntentDecisionConditionDto {
   @AutoMap()
   uuid: string;
