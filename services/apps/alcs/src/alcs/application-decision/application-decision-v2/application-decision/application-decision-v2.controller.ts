@@ -1,15 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
@@ -54,17 +43,9 @@ export class ApplicationDecisionV2Controller {
 
   @Get('/application/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getByFileNumber(
-    @Param('fileNumber') fileNumber,
-  ): Promise<ApplicationDecisionDto[]> {
-    const decisions =
-      await this.appDecisionService.getByAppFileNumber(fileNumber);
-
-    return await this.mapper.mapArrayAsync(
-      decisions,
-      ApplicationDecision,
-      ApplicationDecisionDto,
-    );
+  async getByFileNumber(@Param('fileNumber') fileNumber): Promise<ApplicationDecisionDto[]> {
+    const decisions = await this.appDecisionService.getByAppFileNumber(fileNumber);
+    return await this.mapper.mapArrayAsync(decisions, ApplicationDecision, ApplicationDecisionDto);
   }
 
   @Get('/codes')
@@ -97,11 +78,7 @@ export class ApplicationDecisionV2Controller {
         ApplicationDecisionConditionType,
         ApplicationDecisionConditionTypeDto,
       ),
-      naruSubtypes: await this.mapper.mapArrayAsync(
-        codes.naruSubtypes,
-        NaruSubtype,
-        NaruSubtypeDto,
-      ),
+      naruSubtypes: await this.mapper.mapArrayAsync(codes.naruSubtypes, NaruSubtype, NaruSubtypeDto),
     };
   }
 
@@ -110,27 +87,17 @@ export class ApplicationDecisionV2Controller {
   async get(@Param('uuid') uuid: string): Promise<ApplicationDecisionDto> {
     const decision = await this.appDecisionService.get(uuid);
 
-    return this.mapper.mapAsync(
-      decision,
-      ApplicationDecision,
-      ApplicationDecisionDto,
-    );
+    return this.mapper.mapAsync(decision, ApplicationDecision, ApplicationDecisionDto);
   }
 
   @Post()
   @UserRoles(...ANY_AUTH_ROLE)
-  async create(
-    @Body() createDto: CreateApplicationDecisionDto,
-  ): Promise<ApplicationDecisionDto> {
+  async create(@Body() createDto: CreateApplicationDecisionDto): Promise<ApplicationDecisionDto> {
     if (createDto.modifiesUuid && createDto.reconsidersUuid) {
-      throw new BadRequestException(
-        'Cannot create a Decision linked to both a modification and a reconsideration',
-      );
+      throw new BadRequestException('Cannot create a Decision linked to both a modification and a reconsideration');
     }
 
-    const application = await this.applicationService.getOrFail(
-      createDto.applicationFileNumber,
-    );
+    const application = await this.applicationService.getOrFail(createDto.applicationFileNumber);
 
     const modification = createDto.modifiesUuid
       ? await this.modificationService.getByUuid(createDto.modifiesUuid)
@@ -148,11 +115,7 @@ export class ApplicationDecisionV2Controller {
       createDto.decisionToCopy,
     );
 
-    return this.mapper.mapAsync(
-      newDecision,
-      ApplicationDecision,
-      ApplicationDecisionDto,
-    );
+    return this.mapper.mapAsync(newDecision, ApplicationDecision, ApplicationDecisionDto);
   }
 
   @Patch('/:uuid')
@@ -162,41 +125,24 @@ export class ApplicationDecisionV2Controller {
     @Body() updateDto: UpdateApplicationDecisionDto,
   ): Promise<ApplicationDecisionDto> {
     if (updateDto.modifiesUuid && updateDto.reconsidersUuid) {
-      throw new BadRequestException(
-        'Cannot create a Decision linked to both a modification and a reconsideration',
-      );
+      throw new BadRequestException('Cannot create a Decision linked to both a modification and a reconsideration');
     }
 
     let modifies;
     if (updateDto.modifiesUuid) {
-      modifies = await this.modificationService.getByUuid(
-        updateDto.modifiesUuid,
-      );
+      modifies = await this.modificationService.getByUuid(updateDto.modifiesUuid);
     } else if (updateDto.modifiesUuid === null) {
       modifies = null;
     }
 
     let reconsiders;
     if (updateDto.reconsidersUuid) {
-      reconsiders = await this.reconsiderationService.getByUuid(
-        updateDto.reconsidersUuid,
-      );
+      reconsiders = await this.reconsiderationService.getByUuid(updateDto.reconsidersUuid);
     } else if (updateDto.reconsidersUuid === null) {
       reconsiders = null;
     }
-
-    const updatedDecision = await this.appDecisionService.update(
-      uuid,
-      updateDto,
-      modifies,
-      reconsiders,
-    );
-
-    return this.mapper.mapAsync(
-      updatedDecision,
-      ApplicationDecision,
-      ApplicationDecisionDto,
-    );
+    const updatedDecision = await this.appDecisionService.update(uuid, updateDto, modifies, reconsiders);
+    return this.mapper.mapAsync(updatedDecision, ApplicationDecision, ApplicationDecisionDto);
   }
 
   @Delete('/:uuid')
@@ -213,11 +159,7 @@ export class ApplicationDecisionV2Controller {
     }
 
     const file = req.body.file;
-    await this.appDecisionService.attachDocument(
-      decisionUuid,
-      file,
-      req.user.entity,
-    );
+    await this.appDecisionService.attachDocument(decisionUuid, file, req.user.entity);
     return {
       uploaded: true,
     };
@@ -238,12 +180,8 @@ export class ApplicationDecisionV2Controller {
 
   @Get('/:uuid/file/:fileUuid/download')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getDownloadUrl(
-    @Param('uuid') decisionUuid: string,
-    @Param('fileUuid') documentUuid: string,
-  ) {
-    const downloadUrl =
-      await this.appDecisionService.getDownloadUrl(documentUuid);
+  async getDownloadUrl(@Param('uuid') decisionUuid: string, @Param('fileUuid') documentUuid: string) {
+    const downloadUrl = await this.appDecisionService.getDownloadUrl(documentUuid);
     return {
       url: downloadUrl,
     };
@@ -251,14 +189,8 @@ export class ApplicationDecisionV2Controller {
 
   @Get('/:uuid/file/:fileUuid/open')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getOpenUrl(
-    @Param('uuid') decisionUuid: string,
-    @Param('fileUuid') documentUuid: string,
-  ) {
-    const downloadUrl = await this.appDecisionService.getDownloadUrl(
-      documentUuid,
-      true,
-    );
+  async getOpenUrl(@Param('uuid') decisionUuid: string, @Param('fileUuid') documentUuid: string) {
+    const downloadUrl = await this.appDecisionService.getDownloadUrl(documentUuid, true);
     return {
       url: downloadUrl,
     };
@@ -266,19 +198,14 @@ export class ApplicationDecisionV2Controller {
 
   @Delete('/:uuid/file/:fileUuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async deleteDocument(
-    @Param('uuid') decisionUuid: string,
-    @Param('fileUuid') documentUuid: string,
-  ) {
+  async deleteDocument(@Param('uuid') decisionUuid: string, @Param('fileUuid') documentUuid: string) {
     await this.appDecisionService.deleteDocument(documentUuid);
     return {};
   }
 
   @Get('next-resolution-number/:resolutionYear')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getNextAvailableResolutionNumber(
-    @Param('resolutionYear') resolutionYear: number,
-  ) {
+  async getNextAvailableResolutionNumber(@Param('resolutionYear') resolutionYear: number) {
     return this.appDecisionService.generateResolutionNumber(resolutionYear);
   }
 }

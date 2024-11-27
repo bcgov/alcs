@@ -20,6 +20,16 @@ export class NoticeofIntentDecisionConditionTypesService {
         label: true,
         description: true,
         isActive: true,
+        isComponentToConditionChecked: true,
+        isDescriptionChecked: true,
+        isAdministrativeFeeAmountChecked: true,
+        isAdministrativeFeeAmountRequired: true,
+        administrativeFeeAmount: true,
+        isSingleDateChecked: true,
+        isSingleDateRequired: true,
+        singleDateLabel: true,
+        isSecurityAmountChecked: true,
+        isSecurityAmountRequired: true,
       },
     });
   }
@@ -37,6 +47,23 @@ export class NoticeofIntentDecisionConditionTypesService {
     decisionMakerCode.label = updateDto.label;
     decisionMakerCode.isActive = updateDto.isActive;
 
+    decisionMakerCode.isAdministrativeFeeAmountChecked = updateDto.isAdministrativeFeeAmountChecked;
+    decisionMakerCode.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
+      ? updateDto.isAdministrativeFeeAmountRequired
+      : null;
+    decisionMakerCode.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
+      ? updateDto.administrativeFeeAmount
+      : null;
+
+    decisionMakerCode.isSingleDateChecked = updateDto.isSingleDateChecked;
+    decisionMakerCode.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
+    decisionMakerCode.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
+
+    decisionMakerCode.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
+    decisionMakerCode.isSecurityAmountRequired = updateDto.isSecurityAmountChecked
+      ? updateDto.isSecurityAmountRequired
+      : null;
+
     return await this.noiDecisionConditionTypeRepository.save(decisionMakerCode);
   }
 
@@ -47,6 +74,20 @@ export class NoticeofIntentDecisionConditionTypesService {
     type.description = createDto.description;
     type.label = createDto.label;
     type.isActive = createDto.isActive;
+    type.isAdministrativeFeeAmountChecked = createDto.isAdministrativeFeeAmountChecked;
+    type.isAdministrativeFeeAmountRequired = createDto.isAdministrativeFeeAmountChecked
+      ? createDto.isAdministrativeFeeAmountRequired
+      : null;
+    type.administrativeFeeAmount = createDto.isAdministrativeFeeAmountChecked
+      ? createDto.administrativeFeeAmount
+      : null;
+
+    type.isSingleDateChecked = createDto.isSingleDateChecked;
+    type.isSingleDateRequired = createDto.isSingleDateChecked ? createDto.isSingleDateRequired : null;
+    type.singleDateLabel = createDto.isSingleDateChecked ? createDto.singleDateLabel : null;
+
+    type.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
+    type.isSecurityAmountRequired = createDto.isSecurityAmountChecked ? createDto.isSecurityAmountRequired : null;
 
     return await this.noiDecisionConditionTypeRepository.save(type);
   }

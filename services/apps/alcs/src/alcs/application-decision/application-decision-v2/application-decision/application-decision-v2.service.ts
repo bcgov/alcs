@@ -7,10 +7,7 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../../../../../../libs/common/src/exceptions/base.exception';
-import {
-  DOCUMENT_SOURCE,
-  DOCUMENT_SYSTEM,
-} from '../../../../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../../../document/document.dto';
 import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { User } from '../../../../user/user.entity';
@@ -30,10 +27,7 @@ import { ApplicationDecisionOutcomeCode } from '../../application-decision-outco
 import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModification } from '../../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
-import {
-  CreateApplicationDecisionDto,
-  UpdateApplicationDecisionDto,
-} from './application-decision.dto';
+import { CreateApplicationDecisionDto, UpdateApplicationDecisionDto } from './application-decision.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
@@ -160,13 +154,9 @@ export class ApplicationDecisionV2Service {
     });
 
     for (const decision of decisions) {
-      decision.reconsideredBy =
-        decisionsWithReconsideredBy.find((r) => r.uuid === decision.uuid)
-          ?.reconsideredBy || [];
+      decision.reconsideredBy = decisionsWithReconsideredBy.find((r) => r.uuid === decision.uuid)?.reconsideredBy || [];
 
-      decision.modifiedBy =
-        decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)
-          ?.modifiedBy || [];
+      decision.modifiedBy = decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)?.modifiedBy || [];
     }
 
     //Query Documents separately as when added to the above joins caused performance issues
@@ -217,14 +207,10 @@ export class ApplicationDecisionV2Service {
     });
 
     if (!decision) {
-      throw new ServiceNotFoundException(
-        `Failed to load decision with uuid ${uuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to load decision with uuid ${uuid}`);
     }
 
-    decision.documents = decision.documents.filter(
-      (document) => !!document.document,
-    );
+    decision.documents = decision.documents.filter((document) => !!document.document);
 
     return decision;
   }
@@ -235,22 +221,15 @@ export class ApplicationDecisionV2Service {
     modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
-    const existingDecision: Partial<ApplicationDecision> =
-      await this.getOrFail(uuid);
+    const existingDecision: Partial<ApplicationDecision> = await this.getOrFail(uuid);
 
     const componentCodes = existingDecision.components
-      ? existingDecision.components.map(
-          (component) => component.applicationDecisionComponentTypeCode,
-        )
+      ? existingDecision.components.map((component) => component.applicationDecisionComponentTypeCode)
       : [];
-    const duplicateComponentCodes = componentCodes.filter(
-      (item, index) => componentCodes.indexOf(item) !== index,
-    );
+    const duplicateComponentCodes = componentCodes.filter((item, index) => componentCodes.indexOf(item) !== index);
 
     if (duplicateComponentCodes.length > 0) {
-      throw new ServiceValidationException(
-        'Cannot revert to Draft Decisions with Duplicate Component Codes',
-      );
+      throw new ServiceValidationException('Cannot revert to Draft Decisions with Duplicate Component Codes');
     }
 
     await this.validateDecisionChanges(updateDto);
@@ -262,23 +241,17 @@ export class ApplicationDecisionV2Service {
       (existingDecision.resolutionNumber !== updateDto.resolutionNumber ||
         existingDecision.resolutionYear !== updateDto.resolutionYear)
     ) {
-      await this.validateResolutionNumber(
-        updateDto.resolutionNumber,
-        updateDto.resolutionYear,
-      );
+      await this.validateResolutionNumber(updateDto.resolutionNumber, updateDto.resolutionYear);
     }
 
-    const isChangingDraftStatus =
-      existingDecision.isDraft !== updateDto.isDraft;
+    const isChangingDraftStatus = existingDecision.isDraft !== updateDto.isDraft;
 
     existingDecision.decisionMakerCode = updateDto.decisionMakerCode;
     existingDecision.ceoCriterionCode = updateDto.ceoCriterionCode;
     existingDecision.isTimeExtension = updateDto.isTimeExtension;
     existingDecision.isOther = updateDto.isOther;
     existingDecision.auditDate = formatIncomingDate(updateDto.auditDate);
-    existingDecision.chairReviewDate = formatIncomingDate(
-      updateDto.chairReviewDate,
-    );
+    existingDecision.chairReviewDate = formatIncomingDate(updateDto.chairReviewDate);
     existingDecision.chairReviewOutcomeCode = updateDto.chairReviewOutcomeCode;
     existingDecision.modifies = modifies;
     existingDecision.reconsiders = reconsiders;
@@ -287,24 +260,15 @@ export class ApplicationDecisionV2Service {
     existingDecision.isSubjectToConditions = updateDto.isSubjectToConditions;
     existingDecision.decisionDescription = updateDto.decisionDescription;
     existingDecision.isDraft = updateDto.isDraft;
-    existingDecision.rescindedDate = formatIncomingDate(
-      updateDto.rescindedDate,
-    );
+    existingDecision.rescindedDate = formatIncomingDate(updateDto.rescindedDate);
     existingDecision.rescindedComment = updateDto.rescindedComment;
-    existingDecision.wasReleased =
-      existingDecision.wasReleased || !updateDto.isDraft;
-    existingDecision.linkedResolutionOutcomeCode =
-      updateDto.linkedResolutionOutcomeCode;
+    existingDecision.wasReleased = existingDecision.wasReleased || !updateDto.isDraft;
+    existingDecision.linkedResolutionOutcomeCode = updateDto.linkedResolutionOutcomeCode;
     existingDecision.emailSent = updateDto.emailSent;
-    existingDecision.ccEmails = filterUndefined(
-      updateDto.ccEmails,
-      existingDecision.ccEmails,
-    );
+    existingDecision.ccEmails = filterUndefined(updateDto.ccEmails, existingDecision.ccEmails);
 
     if (updateDto.outcomeCode) {
-      existingDecision.outcome = await this.getOutcomeByCode(
-        updateDto.outcomeCode,
-      );
+      existingDecision.outcome = await this.getOutcomeByCode(updateDto.outcomeCode);
     }
 
     if (updateDto.chairReviewRequired !== undefined) {
@@ -316,10 +280,7 @@ export class ApplicationDecisionV2Service {
     }
 
     let dateHasChanged = false;
-    if (
-      updateDto.date !== undefined &&
-      existingDecision.date !== formatIncomingDate(updateDto.date)
-    ) {
+    if (updateDto.date !== undefined && existingDecision.date !== formatIncomingDate(updateDto.date)) {
       dateHasChanged = true;
       existingDecision.date = formatIncomingDate(updateDto.date);
     }
@@ -329,8 +290,7 @@ export class ApplicationDecisionV2Service {
     //Must be called after update components
     await this.updateConditions(updateDto, existingDecision);
 
-    const updatedDecision =
-      await this.appDecisionRepository.save(existingDecision);
+    const updatedDecision = await this.appDecisionRepository.save(existingDecision);
 
     if (dateHasChanged || isChangingDraftStatus) {
       await this.updateApplicationDecisionDates(updatedDecision);
@@ -689,27 +649,22 @@ export class ApplicationDecisionV2Service {
     if (updateDto.conditions) {
       if (existingDecision.applicationUuid && existingDecision.conditions) {
         const conditionsToRemove = existingDecision.conditions.filter(
-          (condition) =>
-            !updateDto.conditions?.some(
-              (conditionDto) => conditionDto.uuid === condition.uuid,
-            ),
+          (condition) => !updateDto.conditions?.some((conditionDto) => conditionDto.uuid === condition.uuid),
         );
 
         await this.decisionConditionService.remove(conditionsToRemove);
       }
 
-      const existingComponents =
-        await this.decisionComponentService.getAllByApplicationUuid(
-          existingDecision.applicationUuid!,
-        );
+      const existingComponents = await this.decisionComponentService.getAllByApplicationUuid(
+        existingDecision.applicationUuid!,
+      );
 
-      existingDecision.conditions =
-        await this.decisionConditionService.createOrUpdate(
-          updateDto.conditions,
-          existingComponents,
-          existingDecision.components ?? [],
-          false,
-        );
+      existingDecision.conditions = await this.decisionConditionService.createOrUpdate(
+        updateDto.conditions,
+        existingComponents,
+        existingDecision.components ?? [],
+        false,
+      );
     } else if (updateDto.conditions === null && existingDecision.conditions) {
       await this.decisionConditionService.remove(existingDecision.conditions);
     }

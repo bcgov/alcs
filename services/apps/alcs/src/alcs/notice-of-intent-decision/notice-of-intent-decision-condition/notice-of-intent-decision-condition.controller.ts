@@ -34,6 +34,7 @@ export class NoticeOfIntentDecisionConditionController {
       administrativeFee: updates.administrativeFee,
       description: updates.description,
       completionDate: formatIncomingDate(updates.completionDate),
+      singleDate: formatIncomingDate(updates.singleDate),
     });
     return await this.mapper.mapAsync(
       updatedCondition,

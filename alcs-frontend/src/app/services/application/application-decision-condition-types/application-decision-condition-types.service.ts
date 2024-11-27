@@ -11,7 +11,10 @@ import { ToastService } from '../../toast/toast.service';
 export class ApplicationDecisionConditionTypesService {
   private url = `${environment.apiUrl}/decision-condition-types`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch() {
     try {
@@ -36,7 +39,7 @@ export class ApplicationDecisionConditionTypesService {
   async update(code: string, updateDto: ApplicationDecisionConditionTypeDto) {
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto)
+        this.http.patch<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto),
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');

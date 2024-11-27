@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DecisionConditionComponent } from './decision-condition.component';
+import { StartOfDayPipe } from '../../../../../../../shared/pipes/startOfDay.pipe';
 
 describe('DecisionConditionComponent', () => {
   let component: DecisionConditionComponent;
@@ -9,7 +10,7 @@ describe('DecisionConditionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DecisionConditionComponent],
+      declarations: [DecisionConditionComponent, StartOfDayPipe],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
@@ -20,6 +21,9 @@ describe('DecisionConditionComponent', () => {
         code: '',
         label: '',
         description: '',
+        isAdministrativeFeeAmountChecked: false,
+        isSingleDateChecked: false,
+        isSecurityAmountChecked: false,
       },
     };
     fixture.detectChanges();
