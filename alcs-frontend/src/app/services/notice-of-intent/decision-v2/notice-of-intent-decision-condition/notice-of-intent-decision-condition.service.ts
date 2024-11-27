@@ -5,7 +5,6 @@ import { environment } from '../../../../../environments/environment';
 import { ToastService } from '../../../toast/toast.service';
 import {
   NoticeOfIntentDecisionConditionDto,
-  NoticeOfIntentDecisionConditionTypeDto,
   UpdateNoticeOfIntentDecisionConditionDto,
 } from '../notice-of-intent-decision.dto';
 
