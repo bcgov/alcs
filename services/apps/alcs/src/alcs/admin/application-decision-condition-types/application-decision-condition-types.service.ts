@@ -41,30 +41,28 @@ export class ApplicationDecisionConditionTypesService {
   }
 
   async update(code: string, updateDto: ApplicationDecisionConditionTypeDto) {
-    const decisionMakerCode = await this.getOneOrFail(code);
+    const type = await this.getOneOrFail(code);
 
-    decisionMakerCode.description = updateDto.description;
-    decisionMakerCode.label = updateDto.label;
-    decisionMakerCode.isActive = updateDto.isActive;
+    type.description = updateDto.description;
+    type.label = updateDto.label;
+    type.isActive = updateDto.isActive;
 
-    decisionMakerCode.isAdministrativeFeeAmountChecked = updateDto.isAdministrativeFeeAmountChecked;
-    decisionMakerCode.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
+    type.isAdministrativeFeeAmountChecked = updateDto.isAdministrativeFeeAmountChecked;
+    type.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
       ? updateDto.isAdministrativeFeeAmountRequired
       : null;
-    decisionMakerCode.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
+    type.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
       ? updateDto.administrativeFeeAmount
       : null;
 
-    decisionMakerCode.isSingleDateChecked = updateDto.isSingleDateChecked;
-    decisionMakerCode.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
-    decisionMakerCode.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
+    type.isSingleDateChecked = updateDto.isSingleDateChecked;
+    type.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
+    type.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
 
-    decisionMakerCode.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
-    decisionMakerCode.isSecurityAmountRequired = updateDto.isSecurityAmountChecked
-      ? updateDto.isSecurityAmountRequired
-      : null;
+    type.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
+    type.isSecurityAmountRequired = updateDto.isSecurityAmountChecked ? updateDto.isSecurityAmountRequired : null;
 
-    return await this.applicationDecisionConditionTypeRepository.save(decisionMakerCode);
+    return await this.applicationDecisionConditionTypeRepository.save(type);
   }
 
   async create(createDto: ApplicationDecisionConditionTypeDto) {
