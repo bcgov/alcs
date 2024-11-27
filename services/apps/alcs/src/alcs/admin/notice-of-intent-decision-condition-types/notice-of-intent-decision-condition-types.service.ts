@@ -107,7 +107,7 @@ export class NoticeofIntentDecisionConditionTypesService {
     }
 
     try {
-      return await this.noiDecisionConditionTypeRepository.delete(code);
+      return await this.noiDecisionConditionTypeRepository.softDelete(code);
     } catch (e) {
       throw new ServiceNotFoundException('Unable to delete.');
     }

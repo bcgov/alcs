@@ -107,7 +107,7 @@ export class ApplicationDecisionConditionTypesService {
     }
 
     try {
-      return await this.applicationDecisionConditionTypeRepository.delete(code);
+      return await this.applicationDecisionConditionTypeRepository.softDelete(code);
     } catch (e) {
       throw new ServiceNotFoundException('Unable to delete.');
     }
