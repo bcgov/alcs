@@ -8,6 +8,7 @@ export class AddDueDateToConditions1732821130867 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        // N/A
     }
 
 }
