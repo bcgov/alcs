@@ -28,7 +28,7 @@ export class SubdDetailsComponent {
 
       this.totalAcres = applicationSubmission.subdProposedLots
         .reduce((total, lot) => total + (lot.size !== null ? lot.size : 0), 0)
-        .toFixed(2);
+        .toFixed(5);
     }
   }
 
