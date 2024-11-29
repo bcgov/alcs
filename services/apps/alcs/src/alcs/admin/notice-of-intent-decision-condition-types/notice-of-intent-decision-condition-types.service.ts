@@ -29,9 +29,11 @@ export class NoticeofIntentDecisionConditionTypesService {
         isAdministrativeFeeAmountChecked: true,
         isAdministrativeFeeAmountRequired: true,
         administrativeFeeAmount: true,
+        isDateChecked: true,
+        isDateRequired: true,
         isSingleDateChecked: true,
-        isSingleDateRequired: true,
         singleDateLabel: true,
+        isMultipleDateChecked: true,
         isSecurityAmountChecked: true,
         isSecurityAmountRequired: true,
       },
@@ -59,9 +61,13 @@ export class NoticeofIntentDecisionConditionTypesService {
       ? updateDto.administrativeFeeAmount
       : null;
 
-    type.isSingleDateChecked = updateDto.isSingleDateChecked;
-    type.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
+    type.isDateChecked = updateDto.isDateChecked;
+    type.isDateRequired = updateDto.isDateChecked ? updateDto.isDateRequired : null;
+
+    type.isSingleDateChecked = updateDto.isDateChecked ? updateDto.isSingleDateChecked : null;
     type.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
+
+    type.isMultipleDateChecked = updateDto.isDateChecked ? updateDto.isMultipleDateChecked : null;
 
     type.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = updateDto.isSecurityAmountChecked ? updateDto.isSecurityAmountRequired : null;
@@ -84,9 +90,13 @@ export class NoticeofIntentDecisionConditionTypesService {
       ? createDto.administrativeFeeAmount
       : null;
 
-    type.isSingleDateChecked = createDto.isSingleDateChecked;
-    type.isSingleDateRequired = createDto.isSingleDateChecked ? createDto.isSingleDateRequired : null;
+    type.isDateChecked = createDto.isDateChecked;
+    type.isDateRequired = createDto.isDateChecked ? createDto.isDateRequired : null;
+
+    type.isSingleDateChecked = createDto.isDateChecked ? createDto.isSingleDateChecked : null;
     type.singleDateLabel = createDto.isSingleDateChecked ? createDto.singleDateLabel : null;
+
+    type.isMultipleDateChecked = createDto.isDateChecked ? createDto.isMultipleDateChecked : null;
 
     type.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = createDto.isSecurityAmountChecked ? createDto.isSecurityAmountRequired : null;

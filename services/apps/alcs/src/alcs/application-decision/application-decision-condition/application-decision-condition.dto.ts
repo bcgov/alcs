@@ -34,15 +34,23 @@ export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
 
   @AutoMap()
   @IsBoolean()
-  isSingleDateChecked: boolean;
+  isDateChecked: boolean;
 
   @AutoMap()
   @IsBoolean()
-  isSingleDateRequired: boolean | null;
+  isDateRequired: boolean | null;
+
+  @AutoMap()
+  @IsBoolean()
+  isSingleDateChecked: boolean | null;
 
   @AutoMap()
   @IsEnum(DateLabel)
   singleDateLabel: DateLabel | null;
+
+  @AutoMap()
+  @IsBoolean()
+  isMultipleDateChecked: boolean | null;
 
   @AutoMap()
   @IsBoolean()

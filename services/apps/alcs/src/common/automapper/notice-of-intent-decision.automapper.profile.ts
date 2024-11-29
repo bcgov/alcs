@@ -174,12 +174,20 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           mapFrom((entity) => (entity.administrativeFeeAmount !== null ? entity.administrativeFeeAmount : null)),
         ),
         forMember(
-          (dto) => dto.isSingleDateRequired,
-          mapFrom((entity) => (entity.isSingleDateRequired !== null ? entity.isSingleDateRequired : null)),
+          (dto) => dto.isDateRequired,
+          mapFrom((entity) => (entity.isDateRequired !== null ? entity.isDateRequired : null)),
+        ),
+        forMember(
+          (dto) => dto.isSingleDateChecked,
+          mapFrom((entity) => (entity.isSingleDateChecked !== null ? entity.isSingleDateChecked : null)),
         ),
         forMember(
           (dto) => dto.singleDateLabel,
           mapFrom((entity) => (entity.singleDateLabel !== null ? entity.singleDateLabel : null)),
+        ),
+        forMember(
+          (dto) => dto.isMultipleDateChecked,
+          mapFrom((entity) => (entity.isMultipleDateChecked !== null ? entity.isMultipleDateChecked : null)),
         ),
         forMember(
           (dto) => dto.isSecurityAmountRequired,

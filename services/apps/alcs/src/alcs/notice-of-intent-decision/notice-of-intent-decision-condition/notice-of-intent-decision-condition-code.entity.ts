@@ -38,15 +38,23 @@ export class NoticeOfIntentDecisionConditionType extends BaseCodeEntity {
 
   @AutoMap()
   @Column({ default: false, type: 'boolean' })
-  isSingleDateChecked: boolean;
+  isDateChecked: boolean;
 
   @AutoMap()
   @Column({ nullable: true, type: 'boolean' })
-  isSingleDateRequired: boolean | null;
+  isDateRequired: boolean | null;
+
+  @AutoMap()
+  @Column({ nullable: true, type: 'boolean' })
+  isSingleDateChecked: boolean | null;
 
   @AutoMap()
   @Column({ type: 'enum', enum: DateLabel, nullable: true })
   singleDateLabel: DateLabel | null;
+
+  @AutoMap()
+  @Column({ nullable: true, type: 'boolean' })
+  isMultipleDateChecked: boolean | null;
 
   @AutoMap()
   @Column({ default: false, type: 'boolean' })
