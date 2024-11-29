@@ -250,12 +250,6 @@ export interface ApplicationDecisionConditionDto {
   singleDate?: number | null;
 }
 
-export interface ComponentToCondition {
-  componentDecisionUuid?: string;
-  componentToConditionType?: string;
-  tempId: string;
-}
-
 export interface UpdateApplicationDecisionConditionDto {
   uuid?: string;
   componentsToCondition?: ComponentToCondition[] | null;
@@ -266,6 +260,19 @@ export interface UpdateApplicationDecisionConditionDto {
   completionDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   singleDate?: number | null;
+}
+
+export interface ComponentToCondition {
+  componentDecisionUuid?: string;
+  componentToConditionType?: string;
+  tempId: string;
+}
+
+export interface ApplicationDecisionConditionDateDto {
+  uuid: string;
+  date?: Date;
+  comment?: Date;
+  condition: ApplicationDecisionConditionDto;
 }
 
 export interface ApplicationDecisionComponentToConditionLotDto {
