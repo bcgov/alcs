@@ -74,6 +74,10 @@ export class DecisionConditionTypesDialogComponent {
       ),
     });
 
+    if (this.isEdit) {
+      this.conditionTypeForm.get('code')?.disable();
+    }
+
     this.conditionTypeForm.get('isComponentToConditionChecked')?.disable();
     this.conditionTypeForm.get('isDescriptionChecked')?.disable();
   }
@@ -94,13 +98,17 @@ export class DecisionConditionTypesDialogComponent {
       isActive: this.conditionTypeForm.get('isActive')?.value,
       isAdministrativeFeeAmountChecked: this.conditionTypeForm.get('isAdministrativeFeeAmountChecked')?.value,
       isAdministrativeFeeAmountRequired: this.conditionTypeForm.get('isAdministrativeFeeAmountRequired')?.value,
-      administrativeFeeAmount: this.conditionTypeForm.get('administrativeFeeAmount')?.value,
       isSingleDateChecked: this.conditionTypeForm.get('isSingleDateChecked')?.value,
       isSingleDateRequired: this.conditionTypeForm.get('isSingleDateRequired')?.value,
       singleDateLabel: this.conditionTypeForm.get('singleDateLabel')?.value,
       isSecurityAmountChecked: this.conditionTypeForm.get('isSecurityAmountChecked')?.value,
       isSecurityAmountRequired: this.conditionTypeForm.get('isSecurityAmountRequired')?.value,
     };
+
+    if (this.conditionTypeForm.get('administrativeFeeAmount')?.value !== '') {
+      dto.administrativeFeeAmount = this.conditionTypeForm.get('administrativeFeeAmount')?.value;
+    }
+
     if (!this.service) return;
     if (this.isEdit) {
       await this.service.update(dto.code, dto);
