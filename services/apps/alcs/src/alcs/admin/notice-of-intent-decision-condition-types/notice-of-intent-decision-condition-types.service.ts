@@ -57,9 +57,11 @@ export class NoticeofIntentDecisionConditionTypesService {
     type.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
       ? updateDto.isAdministrativeFeeAmountRequired
       : null;
-    type.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
-      ? updateDto.administrativeFeeAmount
-      : null;
+
+    type.administrativeFeeAmount =
+      updateDto.isAdministrativeFeeAmountChecked && updateDto.administrativeFeeAmount
+        ? updateDto.administrativeFeeAmount
+        : null;
 
     type.isDateChecked = updateDto.isDateChecked;
     type.isDateRequired = updateDto.isDateChecked ? updateDto.isDateRequired : null;
@@ -86,9 +88,11 @@ export class NoticeofIntentDecisionConditionTypesService {
     type.isAdministrativeFeeAmountRequired = createDto.isAdministrativeFeeAmountChecked
       ? createDto.isAdministrativeFeeAmountRequired
       : null;
-    type.administrativeFeeAmount = createDto.isAdministrativeFeeAmountChecked
-      ? createDto.administrativeFeeAmount
-      : null;
+
+    type.administrativeFeeAmount =
+      createDto.isAdministrativeFeeAmountChecked && createDto.administrativeFeeAmount
+        ? createDto.administrativeFeeAmount
+        : null;
 
     type.isDateChecked = createDto.isDateChecked;
     type.isDateRequired = createDto.isDateChecked ? createDto.isDateRequired : null;

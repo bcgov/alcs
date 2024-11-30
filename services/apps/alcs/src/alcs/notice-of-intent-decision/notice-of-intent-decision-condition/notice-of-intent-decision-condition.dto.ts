@@ -30,6 +30,7 @@ export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   @AutoMap(() => Number)
   @IsNumber()
   @Type(() => Number)
+  @IsOptional()
   administrativeFeeAmount: number | null;
 
   @AutoMap()

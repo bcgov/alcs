@@ -71,6 +71,10 @@ export class DecisionConditionTypesDialogComponent {
       ),
     });
 
+    if (this.isEdit) {
+      this.conditionTypeForm.get('code')?.disable();
+    }
+
     this.conditionTypeForm.get('isComponentToConditionChecked')?.disable();
     this.conditionTypeForm.get('isDescriptionChecked')?.disable();
   }
@@ -104,6 +108,9 @@ export class DecisionConditionTypesDialogComponent {
       isSecurityAmountRequired: this.conditionTypeForm.get('isSecurityAmountRequired')?.value,
     };
 
+    if (this.conditionTypeForm.get('administrativeFeeAmount')?.value !== '') {
+      dto.administrativeFeeAmount = this.conditionTypeForm.get('administrativeFeeAmount')?.value;
+    }
     if (!this.service) return;
     if (this.isEdit) {
       await this.service.update(dto.code, dto);
