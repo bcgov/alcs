@@ -46,6 +46,7 @@ export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
 
   @AutoMap()
   @IsEnum(DateLabel)
+  @IsOptional()
   singleDateLabel: DateLabel | null;
 
   @AutoMap()

@@ -81,23 +81,35 @@
 
       <div class="condition-field">
         <div class="condition-field-header">
-          <mat-checkbox formControlName="isSingleDateChecked">Single Date - Select date label</mat-checkbox>
+          <mat-checkbox formControlName="isDateChecked">Date</mat-checkbox>
 
-          <div class="toggle" *ngIf="conditionTypeForm.get('isSingleDateChecked')?.value">
-            <mat-label [ngClass]="{ inactive: conditionTypeForm.get('isSingleDateRequired')?.value ?? false }"
+          <div class="toggle" *ngIf="conditionTypeForm.get('isDateChecked')?.value">
+            <mat-label [ngClass]="{ inactive: conditionTypeForm.get('isDateRequired')?.value ?? false }"
               >Mark Field as Required (*)
             </mat-label>
-            <mat-slide-toggle
-              formControlName="isSingleDateRequired"
-              aria-labelledby="isSingleDateRequiredLabel"
-            ></mat-slide-toggle>
+            <mat-slide-toggle formControlName="isDateRequired" aria-labelledby="isDateRequiredLabel"></mat-slide-toggle>
           </div>
         </div>
-        <div *ngIf="conditionTypeForm.get('isSingleDateChecked')?.value">
-          <mat-button-toggle-group id="singleDateLabelId" formControlName="singleDateLabel" name="singleDateLabel">
-            <mat-button-toggle value="Due Date">Due Date</mat-button-toggle>
-            <mat-button-toggle value="End Date">End Date</mat-button-toggle>
-          </mat-button-toggle-group>
+        <div>
+          <mat-radio-group
+            formControlName="dateType"
+            *ngIf="conditionTypeForm.get('isDateChecked')?.value"
+            class="condition-date-types"
+          >
+            <mat-radio-button value="single">Single- Select date label </mat-radio-button>
+            <div class="condition-fields-container" *ngIf="conditionTypeForm.value.dateType === 'single'">
+              <mat-button-toggle-group
+                id="singleDateLabelId"
+                formControlName="singleDateLabel"
+                name="singleDateLabel"
+                class="single-date-label-toggle"
+              >
+                <mat-button-toggle value="Due Date">Due Date</mat-button-toggle>
+                <mat-button-toggle value="End Date">End Date</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <mat-radio-button value="multiple">Multiple - Date label will be 'Due Date'</mat-radio-button>
+          </mat-radio-group>
         </div>
       </div>
 

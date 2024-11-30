@@ -46,6 +46,7 @@ export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
 
   @AutoMap()
   @IsEnum(DateLabel)
+  @IsOptional()
   singleDateLabel: DateLabel | null;
 
   @AutoMap()

@@ -228,9 +228,11 @@ export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   isAdministrativeFeeAmountChecked: boolean;
   isAdministrativeFeeAmountRequired?: boolean | null;
   administrativeFeeAmount?: number | null;
-  isSingleDateChecked: boolean;
-  isSingleDateRequired?: boolean | null;
+  isDateChecked: boolean;
+  isDateRequired?: boolean | null;
+  isSingleDateChecked?: boolean | null;
   singleDateLabel?: DateLabel | null;
+  isMultipleDateChecked?: boolean | null;
   isSecurityAmountChecked: boolean;
   isSecurityAmountRequired?: boolean | null;
 }

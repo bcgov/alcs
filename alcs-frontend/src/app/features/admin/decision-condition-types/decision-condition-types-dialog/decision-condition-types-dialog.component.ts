@@ -57,12 +57,9 @@ export class DecisionConditionTypesDialogComponent {
       administrativeFeeAmount: new FormControl(
         this.data?.content?.administrativeFeeAmount ? this.data.content.administrativeFeeAmount : '',
       ),
-      isSingleDateChecked: new FormControl(
-        this.data?.content?.isSingleDateChecked ? this.data.content.isSingleDateChecked : false,
-      ),
-      isSingleDateRequired: new FormControl(
-        this.data?.content?.isSingleDateRequired ? this.data.content.isSingleDateRequired : false,
-      ),
+      isDateChecked: new FormControl(this.data?.content?.isDateChecked ? this.data.content.isDateChecked : false),
+      isDateRequired: new FormControl(this.data?.content?.isDateRequired ? this.data.content.isDateRequired : false),
+      dateType: new FormControl(this.data?.content?.isMultipleDateChecked ? 'multiple' : 'single'),
       singleDateLabel: new FormControl(
         this.data?.content?.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
       ),
@@ -95,12 +92,18 @@ export class DecisionConditionTypesDialogComponent {
       isAdministrativeFeeAmountChecked: this.conditionTypeForm.get('isAdministrativeFeeAmountChecked')?.value,
       isAdministrativeFeeAmountRequired: this.conditionTypeForm.get('isAdministrativeFeeAmountRequired')?.value,
       administrativeFeeAmount: this.conditionTypeForm.get('administrativeFeeAmount')?.value,
-      isSingleDateChecked: this.conditionTypeForm.get('isSingleDateChecked')?.value,
-      isSingleDateRequired: this.conditionTypeForm.get('isSingleDateRequired')?.value,
-      singleDateLabel: this.conditionTypeForm.get('singleDateLabel')?.value,
+      isDateChecked: this.conditionTypeForm.get('isDateChecked')?.value,
+      isDateRequired: this.conditionTypeForm.get('isDateRequired')?.value,
+      isSingleDateChecked: this.conditionTypeForm.value.dateType === 'single' ? true : false,
+      singleDateLabel:
+        this.conditionTypeForm.value.dateType === 'single'
+          ? this.conditionTypeForm.get('singleDateLabel')?.value
+          : null,
+      isMultipleDateChecked: this.conditionTypeForm.value.dateType === 'multiple' ? true : false,
       isSecurityAmountChecked: this.conditionTypeForm.get('isSecurityAmountChecked')?.value,
       isSecurityAmountRequired: this.conditionTypeForm.get('isSecurityAmountRequired')?.value,
     };
+
     if (!this.service) return;
     if (this.isEdit) {
       await this.service.update(dto.code, dto);

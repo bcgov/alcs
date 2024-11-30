@@ -53,7 +53,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
       this.singleDateLabel = this.data.type?.singleDateLabel ? this.data.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.data.type?.isSingleDateChecked ? this.data.type?.isSingleDateChecked : false;
-      if (this.data.type?.isSingleDateRequired) {
+      if (this.data.type?.isDateRequired) {
         this.singleDate.addValidators(Validators.required);
         this.isShowSingleDateRequired = true;
       } else {
