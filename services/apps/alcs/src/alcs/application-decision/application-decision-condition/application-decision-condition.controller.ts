@@ -6,7 +6,6 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import {
   ApplicationDecisionConditionComponentDto,
@@ -35,8 +34,6 @@ export class ApplicationDecisionConditionController {
       securityAmount: updates.securityAmount,
       administrativeFee: updates.administrativeFee,
       description: updates.description,
-      completionDate: formatIncomingDate(updates.completionDate),
-      singleDate: formatIncomingDate(updates.singleDate),
     });
     return await this.mapper.mapAsync(updatedCondition, ApplicationDecisionCondition, ApplicationDecisionConditionDto);
   }

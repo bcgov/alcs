@@ -9,7 +9,6 @@ import {
   UpdateNoticeOfIntentDecisionConditionServiceDto,
 } from './notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 
 @Injectable()
 export class NoticeOfIntentDecisionConditionService {
@@ -57,20 +56,14 @@ export class NoticeOfIntentDecisionConditionService {
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
       condition.approvalDependant = updateDto.approvalDependant ?? null;
-      condition.singleDate = updateDto.singleDate ? formatIncomingDate(updateDto.singleDate) : null;
 
-      if (
-        updateDto.componentsToCondition !== undefined &&
-        updateDto.componentsToCondition.length > 0
-      ) {
+      if (updateDto.componentsToCondition !== undefined && updateDto.componentsToCondition.length > 0) {
         const mappedComponents: NoticeOfIntentDecisionComponent[] = [];
         for (const componentToCondition of updateDto.componentsToCondition) {
           const matchingComponent = allComponents.find(
             (component) =>
-              componentToCondition.componentDecisionUuid ===
-                component.noticeOfIntentDecisionUuid &&
-              componentToCondition.componentToConditionType ===
-                component.noticeOfIntentDecisionComponentTypeCode,
+              componentToCondition.componentDecisionUuid === component.noticeOfIntentDecisionUuid &&
+              componentToCondition.componentToConditionType === component.noticeOfIntentDecisionComponentTypeCode,
           );
 
           if (matchingComponent) {
@@ -81,8 +74,7 @@ export class NoticeOfIntentDecisionConditionService {
 
           const matchingComponent2 = newComponents.find(
             (component) =>
-              componentToCondition.componentToConditionType ===
-              component.noticeOfIntentDecisionComponentTypeCode,
+              componentToCondition.componentToConditionType === component.noticeOfIntentDecisionComponentTypeCode,
           );
 
           if (matchingComponent2) {
@@ -90,9 +82,7 @@ export class NoticeOfIntentDecisionConditionService {
             updatedConditions.push(condition);
             continue;
           }
-          throw new ServiceValidationException(
-            'Failed to find matching component',
-          );
+          throw new ServiceValidationException('Failed to find matching component');
         }
 
         condition.components = mappedComponents;

@@ -86,12 +86,6 @@ export class NoticeOfIntentDecisionConditionDto {
   componentUuid: string | null;
 
   @AutoMap()
-  completionDate?: number;
-
-  @AutoMap()
-  singleDate?: number;
-
-  @AutoMap()
   components?: NoticeOfIntentDecisionComponentDto[];
 }
 
@@ -133,14 +127,6 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   @IsOptional()
   @IsString()
   type?: NoticeOfIntentDecisionConditionTypeDto;
-
-  @IsOptional()
-  @IsNumber()
-  completionDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  singleDate?: number;
 }
 
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
@@ -150,6 +136,4 @@ export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;
-  completionDate?: Date | null;
-  singleDate?: Date | null;
 }

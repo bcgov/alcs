@@ -6,7 +6,6 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import {
   NoticeOfIntentDecisionConditionDto,
   UpdateNoticeOfIntentDecisionConditionDto,
@@ -33,8 +32,6 @@ export class NoticeOfIntentDecisionConditionController {
       securityAmount: updates.securityAmount,
       administrativeFee: updates.administrativeFee,
       description: updates.description,
-      completionDate: formatIncomingDate(updates.completionDate),
-      singleDate: formatIncomingDate(updates.singleDate),
     });
     return await this.mapper.mapAsync(
       updatedCondition,

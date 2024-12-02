@@ -83,12 +83,6 @@ export class ApplicationDecisionConditionDto {
   componentUuid: string | null;
 
   @AutoMap()
-  completionDate?: number;
-
-  @AutoMap()
-  singleDate?: number;
-
-  @AutoMap()
   components?: ApplicationDecisionComponentDto[];
 }
 
@@ -130,14 +124,6 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsString()
   type?: ApplicationDecisionConditionTypeDto;
-
-  @IsOptional()
-  @IsNumber()
-  completionDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  singleDate?: number;
 }
 
 export class UpdateApplicationDecisionConditionServiceDto {
@@ -147,8 +133,6 @@ export class UpdateApplicationDecisionConditionServiceDto {
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;
-  completionDate?: Date | null;
-  singleDate?: Date | null;
 }
 
 export class ApplicationDecisionConditionComponentDto {
