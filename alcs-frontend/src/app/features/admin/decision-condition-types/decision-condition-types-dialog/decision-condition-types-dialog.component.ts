@@ -8,6 +8,7 @@ import { ApplicationDecisionConditionTypesService } from '../../../../services/a
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DecisionDialogDataInterface } from '../decision-dialog-data.interface';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
+import { NoticeOfIntentDecisionConditionTypeDto } from 'src/app/services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -88,7 +89,7 @@ export class DecisionConditionTypesDialogComponent {
   async onSubmit() {
     this.isLoading = true;
 
-    const dto: ApplicationDecisionConditionTypeDto | NoticeofIntentDecisionConditionTypesService = {
+    const dto: ApplicationDecisionConditionTypeDto | NoticeOfIntentDecisionConditionTypeDto = {
       code: this.conditionTypeForm.get('code')?.value,
       label: this.conditionTypeForm.get('label')?.value,
       description: this.conditionTypeForm.get('description')?.value,
