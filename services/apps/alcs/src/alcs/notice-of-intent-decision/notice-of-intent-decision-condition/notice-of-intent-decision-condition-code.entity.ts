@@ -3,7 +3,10 @@ import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 import { AutoMap } from 'automapper-classes';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
-import { DateLabel } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
+import {
+  DateLabel,
+  DateType,
+} from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 
 @Entity({
   comment: 'Decision Condition Types Code Table for Notice of Intents',
@@ -45,16 +48,12 @@ export class NoticeOfIntentDecisionConditionType extends BaseCodeEntity {
   isDateRequired: boolean | null;
 
   @AutoMap()
-  @Column({ nullable: true, type: 'boolean' })
-  isSingleDateChecked: boolean | null;
+  @Column({ type: 'enum', enum: DateType, nullable: true })
+  dateType: DateType | null;
 
   @AutoMap()
   @Column({ type: 'enum', enum: DateLabel, nullable: true })
   singleDateLabel: DateLabel | null;
-
-  @AutoMap()
-  @Column({ nullable: true, type: 'boolean' })
-  isMultipleDateChecked: boolean | null;
 
   @AutoMap()
   @Column({ default: false, type: 'boolean' })

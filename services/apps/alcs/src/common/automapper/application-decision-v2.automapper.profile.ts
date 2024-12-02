@@ -245,16 +245,12 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((entity) => (entity.isDateRequired !== null ? entity.isDateRequired : null)),
         ),
         forMember(
-          (dto) => dto.isSingleDateChecked,
-          mapFrom((entity) => (entity.isSingleDateChecked !== null ? entity.isSingleDateChecked : null)),
+          (dto) => dto.dateType,
+          mapFrom((entity) => (entity.dateType !== null ? entity.dateType : null)),
         ),
         forMember(
           (dto) => dto.singleDateLabel,
           mapFrom((entity) => (entity.singleDateLabel !== null ? entity.singleDateLabel : null)),
-        ),
-        forMember(
-          (dto) => dto.isMultipleDateChecked,
-          mapFrom((entity) => (entity.isMultipleDateChecked !== null ? entity.isMultipleDateChecked : null)),
         ),
         forMember(
           (dto) => dto.isSecurityAmountRequired,

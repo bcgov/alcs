@@ -1,5 +1,5 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
-import { DateLabel } from '../../application/decision/application-decision-v2/application-decision-v2.dto';
+import { DateLabel, DateType } from '../../application/decision/application-decision-v2/application-decision-v2.dto';
 
 export interface UpdateNoticeOfIntentDecisionDto {
   resolutionNumber?: number;
@@ -77,9 +77,8 @@ export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   administrativeFeeAmount?: number | null;
   isDateChecked: boolean;
   isDateRequired?: boolean | null;
-  isSingleDateChecked?: boolean | null;
+  dateType?: DateType | null;
   singleDateLabel?: DateLabel | null;
-  isMultipleDateChecked?: boolean | null;
   isSecurityAmountChecked: boolean;
   isSecurityAmountRequired?: boolean | null;
 }

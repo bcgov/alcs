@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   ApplicationDecisionConditionTypeDto,
   DateLabel,
+  DateType,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionTypesService } from '../../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -16,6 +17,9 @@ import { NoticeOfIntentDecisionConditionTypeDto } from 'src/app/services/notice-
   styleUrls: ['./decision-condition-types-dialog.component.scss'],
 })
 export class DecisionConditionTypesDialogComponent {
+  // Reference for use in templates
+  DateType = DateType;
+
   conditionTypeForm: FormGroup;
 
   isLoading = false;
@@ -60,7 +64,7 @@ export class DecisionConditionTypesDialogComponent {
       ),
       isDateChecked: new FormControl(this.data?.content?.isDateChecked ? this.data.content.isDateChecked : false),
       isDateRequired: new FormControl(this.data?.content?.isDateRequired ? this.data.content.isDateRequired : false),
-      dateType: new FormControl(this.data?.content?.isMultipleDateChecked ? 'multiple' : 'single'),
+      dateType: new FormControl(this.data?.content?.dateType),
       singleDateLabel: new FormControl(
         this.data?.content?.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
       ),
@@ -99,12 +103,11 @@ export class DecisionConditionTypesDialogComponent {
       administrativeFeeAmount: this.conditionTypeForm.get('administrativeFeeAmount')?.value,
       isDateChecked: this.conditionTypeForm.get('isDateChecked')?.value,
       isDateRequired: this.conditionTypeForm.get('isDateRequired')?.value,
-      isSingleDateChecked: this.conditionTypeForm.value.dateType === 'single' ? true : false,
+      dateType: this.conditionTypeForm.get('dateType')?.value,
       singleDateLabel:
-        this.conditionTypeForm.value.dateType === 'single'
+        this.conditionTypeForm.get('dateType')?.value === DateType.SINGLE
           ? this.conditionTypeForm.get('singleDateLabel')?.value
           : null,
-      isMultipleDateChecked: this.conditionTypeForm.value.dateType === 'multiple' ? true : false,
       isSecurityAmountChecked: this.conditionTypeForm.get('isSecurityAmountChecked')?.value,
       isSecurityAmountRequired: this.conditionTypeForm.get('isSecurityAmountRequired')?.value,
     };

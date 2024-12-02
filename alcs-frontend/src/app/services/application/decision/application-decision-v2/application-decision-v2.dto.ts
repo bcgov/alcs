@@ -221,6 +221,11 @@ export enum DateLabel {
   END_DATE = 'End Date',
 }
 
+export enum DateType {
+  SINGLE = 'Single',
+  MULTIPLE = 'Multiple',
+}
+
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   isActive: boolean;
   isComponentToConditionChecked?: boolean | null;
@@ -230,9 +235,8 @@ export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   administrativeFeeAmount?: number | null;
   isDateChecked: boolean;
   isDateRequired?: boolean | null;
-  isSingleDateChecked?: boolean | null;
+  dateType?: DateType | null;
   singleDateLabel?: DateLabel | null;
-  isMultipleDateChecked?: boolean | null;
   isSecurityAmountChecked: boolean;
   isSecurityAmountRequired?: boolean | null;
 }

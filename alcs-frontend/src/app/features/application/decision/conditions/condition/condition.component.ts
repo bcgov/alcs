@@ -7,6 +7,7 @@ import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   ApplicationDecisionComponentDto,
   UpdateApplicationDecisionConditionDto,
+  DateType,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
@@ -18,7 +19,6 @@ import {
   CONDITION_STATUS,
 } from '../conditions.component';
 import { environment } from '../../../../../../environments/environment';
-
 
 type Condition = ApplicationDecisionConditionWithStatus & {
   componentLabelsStr?: string;
@@ -55,17 +55,23 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   constructor(
     private conditionService: ApplicationDecisionConditionService,
-    private conditionLotService: ApplicationDecisionComponentToConditionLotService
+    private conditionLotService: ApplicationDecisionComponentToConditionLotService,
   ) {}
 
   ngOnInit() {
     this.updateStatus();
     if (this.condition) {
-      this.singleDateFormated = this.condition.singleDate ? moment(this.condition.singleDate).format(environment.dateFormat) : undefined;
+      this.singleDateFormated = this.condition.singleDate
+        ? moment(this.condition.singleDate).format(environment.dateFormat)
+        : undefined;
       this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
-      this.showSingleDateField = this.condition.type?.isSingleDateChecked ? this.condition.type?.isSingleDateChecked : false;
-      this.showAdmFeeField = this.condition.type?.isAdministrativeFeeAmountChecked ? this.condition.type?.isAdministrativeFeeAmountChecked : false;
-      this.showSecurityAmountField = this.condition.type?.isSecurityAmountChecked ? this.condition.type?.isSecurityAmountChecked : false;
+      this.showSingleDateField = this.condition.type?.dateType === DateType.SINGLE;
+      this.showAdmFeeField = this.condition.type?.isAdministrativeFeeAmountChecked
+        ? this.condition.type?.isAdministrativeFeeAmountChecked
+        : false;
+      this.showSecurityAmountField = this.condition.type?.isSecurityAmountChecked
+        ? this.condition.type?.isSecurityAmountChecked
+        : false;
       this.condition = {
         ...this.condition,
         componentLabelsStr: this.condition.conditionComponentsLabels?.flatMap((e) => e.label).join(';\n'),
@@ -80,7 +86,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   async loadLots() {
     if (this.condition.components) {
       const subdComponent = this.condition.components.find(
-        (component) => component.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+        (component) => component.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.SUBD,
       );
       if (subdComponent && subdComponent.uuid) {
         const planNumbers = await this.conditionLotService.fetchConditionLots(this.condition.uuid, subdComponent.uuid);
@@ -99,23 +105,23 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   async loadPlanNumber() {
     const subdComponent = this.condition.components?.find(
-      (component) => component.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+      (component) => component.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.SUBD,
     );
     if (
       this.condition.components &&
       this.condition.components.some(
-        (component) => component.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+        (component) => component.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD,
       ) &&
       this.isRequireSurveyPlan
     ) {
       const planNumbers = (await this.conditionService.fetchPlanNumbers(this.condition.uuid)).filter(
-        (planNumber) => planNumber.applicationDecisionComponentUuid !== subdComponent?.uuid
+        (planNumber) => planNumber.applicationDecisionComponentUuid !== subdComponent?.uuid,
       );
 
       this.planNumbers =
         this.condition.components
           ?.filter(
-            (component) => component.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+            (component) => component.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD,
           )
           .map(
             (component) =>
@@ -123,9 +129,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
                 applicationDecisionComponentUuid: component.uuid,
                 applicationDecisionConditionUuid: this.condition.uuid,
                 planNumbers: planNumbers.find(
-                  (planNumber) => planNumber.applicationDecisionComponentUuid === component.uuid
+                  (planNumber) => planNumber.applicationDecisionComponentUuid === component.uuid,
                 )?.planNumbers,
-              } as ApplicationDecisionConditionToComponentPlanNumberDto)
+              }) as ApplicationDecisionConditionToComponentPlanNumberDto,
           ) ?? [];
     }
   }
@@ -136,7 +142,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   async onUpdateCondition(
     field: keyof UpdateApplicationDecisionConditionDto,
-    value: string[] | string | number | null
+    value: string[] | string | number | null,
   ) {
     const condition = this.condition;
 

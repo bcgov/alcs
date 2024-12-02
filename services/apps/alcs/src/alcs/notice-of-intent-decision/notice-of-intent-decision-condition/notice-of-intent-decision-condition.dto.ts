@@ -2,7 +2,10 @@ import { AutoMap } from 'automapper-classes';
 import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { NoticeOfIntentDecisionComponentDto } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.dto';
-import { DateLabel } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
+import {
+  DateLabel,
+  DateType,
+} from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
 
 export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
@@ -42,17 +45,14 @@ export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   isDateRequired: boolean | null;
 
   @AutoMap()
-  @IsBoolean()
-  isSingleDateChecked: boolean | null;
-
-  @AutoMap()
   @IsEnum(DateLabel)
   @IsOptional()
   singleDateLabel: DateLabel | null;
 
   @AutoMap()
-  @IsBoolean()
-  isMultipleDateChecked: boolean | null;
+  @IsEnum(DateType)
+  @IsOptional()
+  dateType: DateType | null;
 
   @AutoMap()
   @IsBoolean()

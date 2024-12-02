@@ -8,6 +8,7 @@ import {
   ServiceConflictException,
   BaseServiceException,
 } from '@app/common/exceptions/base.exception';
+import { DateType } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 
 @Injectable()
 export class NoticeofIntentDecisionConditionTypesService {
@@ -31,9 +32,8 @@ export class NoticeofIntentDecisionConditionTypesService {
         administrativeFeeAmount: true,
         isDateChecked: true,
         isDateRequired: true,
-        isSingleDateChecked: true,
+        dateType: true,
         singleDateLabel: true,
-        isMultipleDateChecked: true,
         isSecurityAmountChecked: true,
         isSecurityAmountRequired: true,
       },
@@ -66,10 +66,8 @@ export class NoticeofIntentDecisionConditionTypesService {
     type.isDateChecked = updateDto.isDateChecked;
     type.isDateRequired = updateDto.isDateChecked ? updateDto.isDateRequired : null;
 
-    type.isSingleDateChecked = updateDto.isDateChecked ? updateDto.isSingleDateChecked : null;
-    type.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
-
-    type.isMultipleDateChecked = updateDto.isDateChecked ? updateDto.isMultipleDateChecked : null;
+    type.dateType = updateDto.isDateChecked ? updateDto.dateType : null;
+    type.singleDateLabel = updateDto.dateType === DateType.SINGLE ? updateDto.singleDateLabel : null;
 
     type.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = updateDto.isSecurityAmountChecked ? updateDto.isSecurityAmountRequired : null;
@@ -97,10 +95,8 @@ export class NoticeofIntentDecisionConditionTypesService {
     type.isDateChecked = createDto.isDateChecked;
     type.isDateRequired = createDto.isDateChecked ? createDto.isDateRequired : null;
 
-    type.isSingleDateChecked = createDto.isDateChecked ? createDto.isSingleDateChecked : null;
-    type.singleDateLabel = createDto.isSingleDateChecked ? createDto.singleDateLabel : null;
-
-    type.isMultipleDateChecked = createDto.isDateChecked ? createDto.isMultipleDateChecked : null;
+    type.dateType = createDto.isDateChecked ? createDto.dateType : null;
+    type.singleDateLabel = createDto.dateType === DateType.SINGLE ? createDto.singleDateLabel : null;
 
     type.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = createDto.isSecurityAmountChecked ? createDto.isSecurityAmountRequired : null;

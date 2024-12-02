@@ -9,6 +9,11 @@ export enum DateLabel {
   END_DATE = 'End Date',
 }
 
+export enum DateType {
+  SINGLE = 'Single',
+  MULTIPLE = 'Multiple',
+}
+
 @Entity({
   comment: 'Code table for the possible application decision condition types',
 })
@@ -49,16 +54,12 @@ export class ApplicationDecisionConditionType extends BaseCodeEntity {
   isDateRequired: boolean | null;
 
   @AutoMap()
-  @Column({ nullable: true, type: 'boolean' })
-  isSingleDateChecked: boolean | null;
+  @Column({ type: 'enum', enum: DateType, nullable: true })
+  dateType: DateType | null;
 
   @AutoMap()
   @Column({ type: 'enum', enum: DateLabel, nullable: true })
   singleDateLabel: DateLabel | null;
-
-  @AutoMap()
-  @Column({ nullable: true, type: 'boolean' })
-  isMultipleDateChecked: boolean | null;
 
   @AutoMap()
   @Column({ default: false, type: 'boolean' })
