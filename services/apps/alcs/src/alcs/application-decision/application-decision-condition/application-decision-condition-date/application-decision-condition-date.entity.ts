@@ -17,8 +17,8 @@ export class ApplicationDecisionConditionDate extends Base {
   date: Date;
 
   @AutoMap()
-  @Column({ type: 'timestamptz' })
-  completedDate: Date;
+  @Column({ type: 'timestamptz', nullable: true })
+  completedDate: Date | null;
 
   @AutoMap()
   @ManyToOne(() => ApplicationDecisionCondition, {

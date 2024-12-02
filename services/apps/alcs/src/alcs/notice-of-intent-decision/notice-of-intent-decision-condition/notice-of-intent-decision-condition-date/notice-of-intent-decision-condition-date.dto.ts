@@ -8,7 +8,7 @@ export class NoticeOfIntentDecisionConditionDateDto {
   date?: Date;
 
   @IsDate()
-  completedDate?: Date;
+  completedDate?: Date | null;
 
   @IsString()
   comment?: string;
