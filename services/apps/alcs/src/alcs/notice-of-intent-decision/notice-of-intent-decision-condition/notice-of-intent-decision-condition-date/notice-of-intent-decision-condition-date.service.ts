@@ -77,6 +77,7 @@ export class NoticeOfIntentDecisionConditionDateService {
     }
 
     date.date = dto.date ?? date.date;
+    date.completedDate = dto.completedDate ?? date.completedDate;
     date.comment = dto.comment ?? date.comment;
 
     return await this.repository.save(date);

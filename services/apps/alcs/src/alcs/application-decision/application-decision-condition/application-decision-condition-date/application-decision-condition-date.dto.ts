@@ -7,6 +7,9 @@ export class ApplicationDecisionConditionDateDto {
   @IsDate()
   date?: Date;
 
+  @IsDate()
+  completedDate?: Date;
+
   @IsString()
   comment?: string;
 }

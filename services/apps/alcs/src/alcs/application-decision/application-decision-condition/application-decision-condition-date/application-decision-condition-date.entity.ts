@@ -17,6 +17,10 @@ export class ApplicationDecisionConditionDate extends Base {
   date: Date;
 
   @AutoMap()
+  @Column({ type: 'timestamptz' })
+  completedDate: Date;
+
+  @AutoMap()
   @ManyToOne(() => ApplicationDecisionCondition, {
     cascade: true,
     onDelete: 'CASCADE',

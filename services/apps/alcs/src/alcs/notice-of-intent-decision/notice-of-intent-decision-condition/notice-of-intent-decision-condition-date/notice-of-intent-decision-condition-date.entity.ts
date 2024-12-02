@@ -17,6 +17,10 @@ export class NoticeOfIntentDecisionConditionDate extends Base {
   date: Date;
 
   @AutoMap()
+  @Column({ type: 'timestamptz' })
+  completedDate: Date;
+
+  @AutoMap()
   @ManyToOne(() => NoticeOfIntentDecisionCondition, {
     cascade: true,
     onDelete: 'CASCADE',
