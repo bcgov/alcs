@@ -1,9 +1,4 @@
 <ng-content></ng-content>
-<div>
-  <div class="subheading2">Use End Date</div>
-  {{ component.endDate | date }}
-  <app-no-data *ngIf="component.endDate === null || component.endDate === undefined"></app-no-data>
-</div>
 <div class="full-width">
   <div class="subheading2">Type of soil approved to be removed</div>
   <div class="pre-wrapped-text">{{ component.soilTypeRemoved }}</div>
