@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ToastService } from '../../../toast/toast.service';
 import {
+  NoticeOfIntentDecisionConditionDateDto,
   NoticeOfIntentDecisionConditionDto,
   UpdateNoticeOfIntentDecisionConditionDto,
 } from '../notice-of-intent-decision.dto';
@@ -32,6 +33,51 @@ export class NoticeOfIntentDecisionConditionService {
       } else {
         this.toastService.showErrorToast('Failed to update condition');
       }
+      throw e;
+    }
+  }
+
+  async getDates(conditionUuid: string): Promise<NoticeOfIntentDecisionConditionDateDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<NoticeOfIntentDecisionConditionDateDto[]>(`${this.url}/date?conditionUuid=${conditionUuid}`),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'No dates found');
+      throw e;
+    }
+  }
+
+  async createDate(conditionUuid: string, dateDto: NoticeOfIntentDecisionConditionDateDto) {
+    try {
+      await firstValueFrom(
+        this.http.post<NoticeOfIntentDecisionConditionDateDto>(
+          `${this.url}/date?conditionUuid=${conditionUuid}`,
+          dateDto,
+        ),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to create date');
+      throw e;
+    }
+  }
+
+  async updateDate(dateUuid: string, dateDto: NoticeOfIntentDecisionConditionDateDto) {
+    try {
+      await firstValueFrom(
+        this.http.patch<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
+      throw e;
+    }
+  }
+
+  async deleteDate(dateUuid: string) {
+    try {
+      await firstValueFrom(this.http.delete<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`));
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to delete date');
       throw e;
     }
   }

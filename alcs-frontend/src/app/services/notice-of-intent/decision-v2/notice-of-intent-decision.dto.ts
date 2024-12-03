@@ -100,6 +100,14 @@ export interface ComponentToCondition {
   tempId: string;
 }
 
+export interface NoticeOfIntentDecisionConditionDateDto {
+  uuid: string;
+  date?: number;
+  completedDate?: number | null;
+  comment?: string;
+  condition: NoticeOfIntentDecisionConditionDto;
+}
+
 export interface UpdateNoticeOfIntentDecisionConditionDto {
   uuid?: string;
   componentsToCondition?: ComponentToCondition[];
