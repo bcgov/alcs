@@ -5,6 +5,7 @@ import { ApplicationDecisionConditionDate } from './application-decision-conditi
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { ApplicationDecisionCondition } from '../application-decision-condition.entity';
 import { ApplicationDecisionConditionDateDto } from './application-decision-condition-date.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ApplicationDecisionConditionDateService {
@@ -15,7 +16,7 @@ export class ApplicationDecisionConditionDateService {
     private conditionRepository: Repository<ApplicationDecisionCondition>,
   ) {}
 
-  async fetchByCondition(conditionUuid: string): Promise<ApplicationDecisionConditionDate[]> {
+  async fetchByCondition(conditionUuid: string): Promise<ApplicationDecisionConditionDateDto[]> {
     const condition = await this.conditionRepository.findOne({
       where: {
         uuid: conditionUuid,
@@ -26,7 +27,7 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException('Condition not found.');
     }
 
-    const dates = await this.repository.find({
+    const entities = await this.repository.find({
       where: {
         condition: {
           uuid: condition.uuid,
@@ -34,13 +35,15 @@ export class ApplicationDecisionConditionDateService {
       },
     });
 
-    return dates;
+    const dtos = plainToInstance(ApplicationDecisionConditionDateDto, entities);
+
+    return dtos;
   }
 
   async create(
     conditionUuid: string,
     dto: ApplicationDecisionConditionDateDto,
-  ): Promise<ApplicationDecisionConditionDate> {
+  ): Promise<ApplicationDecisionConditionDateDto> {
     if (!dto.date) {
       throw new ServiceValidationException('Must supply date');
     }
@@ -56,28 +59,44 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException('No condition found.');
     }
 
-    const newDate = new ApplicationDecisionConditionDate({
-      date: dto.date,
+    if (!dto.date) {
+      throw new ServiceValidationException('Must specify date');
+    }
+
+    const entity = new ApplicationDecisionConditionDate({
+      date: new Date(dto.date),
       condition: condition,
     });
 
-    return this.repository.save(newDate);
+    const createdEntity = this.repository.save(entity);
+
+    return plainToInstance(ApplicationDecisionConditionDateDto, createdEntity);
   }
 
-  async update(uuid: string, dto: ApplicationDecisionConditionDateDto): Promise<ApplicationDecisionConditionDate> {
-    const date = await this.repository.findOneOrFail({
+  async update(uuid: string, dto: ApplicationDecisionConditionDateDto): Promise<ApplicationDecisionConditionDateDto> {
+    const entity = await this.repository.findOneOrFail({
       where: { uuid },
     });
 
-    if (!date) {
+    if (!entity) {
       throw new ServiceNotFoundException('Date not found.');
     }
 
-    date.date = dto.date ?? date.date;
-    date.completedDate = dto.completedDate === undefined ? date.completedDate : dto.completedDate;
-    date.comment = dto.comment ?? date.comment;
+    if (dto.date) {
+      entity.date = new Date(dto.date);
+    }
+    if (dto.completedDate) {
+      entity.completedDate = new Date(dto.completedDate);
+    } else if (dto.completedDate === null) {
+      entity.completedDate = null;
+    }
+    if (dto.comment) {
+      entity.comment = dto.comment;
+    }
 
-    return await this.repository.save(date);
+    const updatedEntity = await this.repository.save(entity);
+
+    return plainToInstance(ApplicationDecisionConditionDateDto, updatedEntity);
   }
 
   async delete(uuid: string) {

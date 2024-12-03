@@ -16,7 +16,7 @@ export class NoticeOfIntentDecisionConditionDateController {
 
   @Get('')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async fetch(@Query('conditionUuid') conditionUuid): Promise<NoticeOfIntentDecisionConditionDate[]> {
+  async fetch(@Query('conditionUuid') conditionUuid): Promise<NoticeOfIntentDecisionConditionDateDto[]> {
     return await this.service.fetchByCondition(conditionUuid);
   }
 
@@ -25,7 +25,7 @@ export class NoticeOfIntentDecisionConditionDateController {
   async create(
     @Query('conditionUuid') conditionUuid,
     @Body() dto: NoticeOfIntentDecisionConditionDateDto,
-  ): Promise<NoticeOfIntentDecisionConditionDate> {
+  ): Promise<NoticeOfIntentDecisionConditionDateDto> {
     return await this.service.create(conditionUuid, dto);
   }
 
@@ -34,7 +34,7 @@ export class NoticeOfIntentDecisionConditionDateController {
   async update(
     @Param('uuid') uuid: string,
     @Body() dto: NoticeOfIntentDecisionConditionDateDto,
-  ): Promise<NoticeOfIntentDecisionConditionDate> {
+  ): Promise<NoticeOfIntentDecisionConditionDateDto> {
     return await this.service.update(uuid, dto);
   }
 

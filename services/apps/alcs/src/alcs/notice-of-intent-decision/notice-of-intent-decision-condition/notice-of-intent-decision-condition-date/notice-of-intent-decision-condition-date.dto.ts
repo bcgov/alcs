@@ -1,14 +1,17 @@
-import { IsDate, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsString } from 'class-validator';
 
 export class NoticeOfIntentDecisionConditionDateDto {
   @IsString()
   uuid?: string;
 
-  @IsDate()
-  date?: Date;
+  @Transform(({ value }) => value.getTime())
+  @IsNumber()
+  date?: number;
 
-  @IsDate()
-  completedDate?: Date | null;
+  @Transform(({ value }) => value && value.getTime())
+  @IsNumber()
+  completedDate?: number | null;
 
   @IsString()
   comment?: string;

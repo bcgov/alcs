@@ -16,7 +16,7 @@ export class ApplicationDecisionConditionDateController {
 
   @Get('')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async fetch(@Query('conditionUuid') conditionUuid): Promise<ApplicationDecisionConditionDate[]> {
+  async fetch(@Query('conditionUuid') conditionUuid): Promise<ApplicationDecisionConditionDateDto[]> {
     return await this.service.fetchByCondition(conditionUuid);
   }
 
@@ -25,7 +25,7 @@ export class ApplicationDecisionConditionDateController {
   async create(
     @Query('conditionUuid') conditionUuid,
     @Body() dto: ApplicationDecisionConditionDateDto,
-  ): Promise<ApplicationDecisionConditionDate> {
+  ): Promise<ApplicationDecisionConditionDateDto> {
     return await this.service.create(conditionUuid, dto);
   }
 
@@ -34,7 +34,7 @@ export class ApplicationDecisionConditionDateController {
   async update(
     @Param('uuid') uuid: string,
     @Body() dto: ApplicationDecisionConditionDateDto,
-  ): Promise<ApplicationDecisionConditionDate> {
+  ): Promise<ApplicationDecisionConditionDateDto> {
     return await this.service.update(uuid, dto);
   }
 
