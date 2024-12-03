@@ -272,8 +272,9 @@ export interface ComponentToCondition {
 
 export interface ApplicationDecisionConditionDateDto {
   uuid: string;
-  date?: Date;
-  comment?: Date;
+  date?: number;
+  completedDate?: number | null;
+  comment?: string;
   condition: ApplicationDecisionConditionDto;
 }
 
