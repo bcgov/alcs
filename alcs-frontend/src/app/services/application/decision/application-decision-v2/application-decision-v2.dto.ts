@@ -250,10 +250,8 @@ export interface ApplicationDecisionConditionDto {
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
-  completionDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
-  singleDate?: number | null;
 }
 
 export interface UpdateApplicationDecisionConditionDto {
@@ -263,9 +261,7 @@ export interface UpdateApplicationDecisionConditionDto {
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
-  completionDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
-  singleDate?: number | null;
 }
 
 export interface ComponentToCondition {
