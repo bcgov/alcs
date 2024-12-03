@@ -142,14 +142,6 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         NoticeOfIntentDecisionCondition,
         NoticeOfIntentDecisionConditionDto,
         forMember(
-          (ad) => ad.completionDate,
-          mapFrom((a) => a.completionDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.singleDate,
-          mapFrom((a) => a.singleDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
