@@ -18,6 +18,7 @@ import {
   CONDITION_STATUS,
 } from '../conditions.component';
 import { environment } from '../../../../../../environments/environment';
+import { countToString } from '../../../../../shared/utils/count-to-string';
 
 
 type Condition = ApplicationDecisionConditionWithStatus & {
@@ -34,6 +35,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() condition!: Condition;
   @Input() isDraftDecision!: boolean;
   @Input() fileNumber!: string;
+  @Input() index!: number;
 
   incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
   completeLabel = DECISION_CONDITION_COMPLETE_LABEL;
@@ -43,6 +45,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   showAdmFeeField = false;
   showSecurityAmountField = false;
   singleDateFormated: string | undefined = undefined;
+  stringIndex: string = '';
 
   CONDITION_STATUS = CONDITION_STATUS;
 
@@ -60,6 +63,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.updateStatus();
+    this.stringIndex = countToString(this.index);
     if (this.condition) {
       this.singleDateFormated = this.condition.singleDate ? moment(this.condition.singleDate).format(environment.dateFormat) : undefined;
       this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
