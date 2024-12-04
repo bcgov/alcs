@@ -2,6 +2,11 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SelectableComponent, TempApplicationDecisionConditionDto } from '../decision-conditions.component';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
+import {
+  ApplicationDecisionConditionDateDto,
+  DateType,
+} from 'src/app/services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionConditionService } from 'src/app/services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 
 @Component({
   selector: 'app-app-decision-condition',
@@ -14,6 +19,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   @Output() remove = new EventEmitter<void>();
 
   @Input() selectableComponents: SelectableComponent[] = [];
+
+  dates: ApplicationDecisionConditionDateDto[] = [];
 
   singleDateLabel = 'End Date';
   showSingleDateField = false;
@@ -41,11 +48,15 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     componentsToCondition: this.componentsToCondition,
   });
 
+  constructor(private decisionConditionService: ApplicationDecisionConditionService) {}
+
   ngOnInit(): void {
     if (this.data) {
+      this.fetchDates(this.data.uuid);
+
       this.singleDateLabel = this.data.type?.singleDateLabel ? this.data.type?.singleDateLabel : 'End Date';
-      this.showSingleDateField = this.data.type?.isSingleDateChecked ? this.data.type?.isSingleDateChecked : false;
-      if (this.data.type?.isSingleDateRequired) {
+      this.showSingleDateField = this.data.type?.dateType === DateType.SINGLE;
+      if (this.data.type?.isDateRequired) {
         this.singleDate.addValidators(Validators.required);
         this.isShowSingleDateRequired = true;
       } else {
@@ -144,5 +155,13 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   onRemove() {
     this.remove.emit();
+  }
+
+  async fetchDates(uuid: string | undefined) {
+    if (!uuid) {
+      return;
+    }
+
+    this.dates = await this.decisionConditionService.getDates(uuid);
   }
 }
