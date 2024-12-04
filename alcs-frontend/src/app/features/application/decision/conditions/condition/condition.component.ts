@@ -8,6 +8,7 @@ import {
   ApplicationDecisionComponentDto,
   UpdateApplicationDecisionConditionDto,
   DateType,
+  ApplicationDecisionConditionDateDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
@@ -35,6 +36,10 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() isDraftDecision!: boolean;
   @Input() fileNumber!: string;
 
+  DateType = DateType;
+
+  dates: ApplicationDecisionConditionDateDto[] = [];
+
   incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
   completeLabel = DECISION_CONDITION_COMPLETE_LABEL;
 
@@ -48,7 +53,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   isReadMoreClicked = false;
   isReadMoreVisible = false;
-  conditionStatus: string = '';
   isRequireSurveyPlan = false;
   subdComponent?: ApplicationDecisionComponentDto;
   planNumbers: ApplicationDecisionConditionToComponentPlanNumberDto[] = [];
@@ -59,11 +63,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.updateStatus();
     if (this.condition) {
-      this.singleDateFormated = this.condition.singleDate
-        ? moment(this.condition.singleDate).format(environment.dateFormat)
-        : undefined;
+      this.fetchDates(this.condition.uuid);
+
       this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.condition.type?.dateType === DateType.SINGLE;
       this.showAdmFeeField = this.condition.type?.isAdministrativeFeeAmountChecked
@@ -153,8 +155,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       const labels = this.condition.componentLabelsStr;
       this.condition = { ...update, componentLabelsStr: labels } as Condition;
-
-      this.updateStatus();
     }
   }
 
@@ -172,16 +172,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     return this.isReadMoreClicked || this.isEllipsisActive(this.condition.uuid + 'Description');
   }
 
-  updateStatus() {
-    const today = moment().startOf('day').toDate().getTime();
-
-    if (this.condition.completionDate && this.condition.completionDate <= today) {
-      this.conditionStatus = CONDITION_STATUS.COMPLETE;
-    } else {
-      this.conditionStatus = CONDITION_STATUS.INCOMPLETE;
-    }
-  }
-
   async savePlanNumbers(lotUuid: string, conditionUuid: string, planNumbers: string | null) {
     if (this.subdComponent && this.subdComponent.uuid && this.subdComponent?.lots) {
       await this.conditionLotService.update(lotUuid, conditionUuid, planNumbers);
@@ -196,5 +186,16 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   getComponentLabel(componentUuid: string) {
     return this.condition.conditionComponentsLabels?.find((e) => e.componentUuid === componentUuid)?.label;
+  }
+
+  async fetchDates(uuid: string | undefined) {
+    if (!uuid) {
+      return;
+    }
+
+    this.dates = await this.conditionService.getDates(uuid);
+
+    this.singleDateFormated =
+      this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
   }
 }

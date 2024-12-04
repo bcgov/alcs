@@ -1,7 +1,10 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import moment from 'moment';
 import { NoticeOfIntentDecisionConditionService } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
-import { UpdateNoticeOfIntentDecisionConditionDto } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import {
+  NoticeOfIntentDecisionConditionDateDto,
+  UpdateNoticeOfIntentDecisionConditionDto,
+} from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
   DECISION_CONDITION_INCOMPLETE_LABEL,
@@ -26,6 +29,10 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() isDraftDecision!: boolean;
   @Input() fileNumber!: string;
 
+  DateType = DateType;
+
+  dates: NoticeOfIntentDecisionConditionDateDto[] = [];
+
   incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
   completeLabel = DECISION_CONDITION_COMPLETE_LABEL;
   supersededLabel = DECISION_CONDITION_SUPERSEDED_LABEL;
@@ -45,11 +52,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   constructor(private conditionService: NoticeOfIntentDecisionConditionService) {}
 
   ngOnInit() {
-    this.updateStatus();
     if (this.condition) {
-      this.singleDateFormated = this.condition.singleDate
-        ? moment(this.condition.singleDate).format(environment.dateFormat)
-        : undefined;
+      this.fetchDates(this.condition.uuid);
+
       this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.condition.type?.dateType === DateType.SINGLE;
       this.showAdmFeeField = this.condition.type?.isAdministrativeFeeAmountChecked
@@ -82,8 +87,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       const labels = this.condition.componentLabelsStr;
       this.condition = { ...update, componentLabelsStr: labels } as Condition;
-
-      this.updateStatus();
     }
   }
 
@@ -101,13 +104,15 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     return this.isReadMoreClicked || this.isEllipsisActive(this.condition.uuid + 'Description');
   }
 
-  updateStatus() {
-    const today = moment().startOf('day').toDate().getTime();
-
-    if (this.condition.completionDate && this.condition.completionDate <= today) {
-      this.conditionStatus = CONDITION_STATUS.COMPLETE;
-    } else {
-      this.conditionStatus = CONDITION_STATUS.INCOMPLETE;
+  async fetchDates(uuid: string | undefined) {
+    if (!uuid) {
+      return;
     }
+
+    this.dates = await this.conditionService.getDates(uuid);
+
+    this.singleDateFormated = this.dates[0].date
+      ? moment(this.dates[0].date).format(environment.dateFormat)
+      : undefined;
   }
 }
