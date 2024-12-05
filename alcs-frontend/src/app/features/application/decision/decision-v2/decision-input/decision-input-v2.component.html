@@ -27,7 +27,7 @@
           color="primary"
           (click)="onGenerateResolutionNumber()"
           [ngClass]="{
-            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
+            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched,
           }"
         >
           Get Resolution Number
@@ -142,7 +142,7 @@
           (change)="onChangeSubjectToConditions($event)"
           [ngClass]="{
             'error-field-outlined':
-              !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched
+              !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched,
           }"
         >
           <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -203,6 +203,7 @@
     <app-app-decision-conditions
       *ngIf="codes && showComponents && showConditions"
       [types]="codes.decisionConditionTypes"
+      [componentTypes]="codes.decisionComponentTypes"
       [components]="components"
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
