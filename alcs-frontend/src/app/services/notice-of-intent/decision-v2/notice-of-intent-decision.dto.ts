@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
+import { DateLabel } from '../../application/decision/application-decision-v2/application-decision-v2.dto';
 
 export interface UpdateNoticeOfIntentDecisionDto {
   resolutionNumber?: number;
@@ -67,7 +68,19 @@ export interface NoticeOfIntentDecisionDocumentDto {
 
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
 
-export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {}
+export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
+  isComponentToConditionChecked?: boolean | null;
+  isDescriptionChecked?: boolean | null;
+  isAdministrativeFeeAmountChecked: boolean;
+  isAdministrativeFeeAmountRequired?: boolean | null;
+  administrativeFeeAmount?: number | null;
+  isSingleDateChecked: boolean;
+  isSingleDateRequired?: boolean | null;
+  singleDateLabel?: DateLabel | null;
+  isSecurityAmountChecked: boolean;
+  isSecurityAmountRequired?: boolean | null;
+}
 
 export interface NoticeOfIntentDecisionConditionDto {
   uuid: string;
@@ -78,8 +91,8 @@ export interface NoticeOfIntentDecisionConditionDto {
   type: NoticeOfIntentDecisionConditionTypeDto;
   componentUuid: string | null;
   completionDate?: number;
-  supersededDate?: number;
   components?: NoticeOfIntentDecisionComponentDto[];
+  singleDate?: number | null;
 }
 
 export interface ComponentToCondition {
@@ -97,7 +110,7 @@ export interface UpdateNoticeOfIntentDecisionConditionDto {
   description?: string | null;
   type?: NoticeOfIntentDecisionConditionTypeDto;
   completionDate?: number | null;
-  supersededDate?: number | null;
+  singleDate?: number | null;
 }
 
 export interface NoticeOfIntentDecisionComponentTypeDto extends BaseCodeDto {}

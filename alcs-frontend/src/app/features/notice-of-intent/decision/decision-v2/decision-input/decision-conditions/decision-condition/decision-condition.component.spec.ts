@@ -20,6 +20,10 @@ describe('DecisionConditionComponent', () => {
         code: '',
         label: '',
         description: '',
+        isActive: true,
+        isAdministrativeFeeAmountChecked: false,
+        isSingleDateChecked: false,
+        isSecurityAmountChecked: false,
       },
     };
     fixture.detectChanges();

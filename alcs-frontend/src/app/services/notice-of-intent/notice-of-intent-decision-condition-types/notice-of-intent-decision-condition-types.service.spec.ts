@@ -3,10 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types.service';
+import { NoticeofIntentDecisionConditionTypesService } from './notice-of-intent-decision-condition-types.service';
 
 describe('DecisionConditionTypesService', () => {
-  let service: ApplicationDecisionConditionTypesService;
+  let service: NoticeofIntentDecisionConditionTypesService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
@@ -26,7 +26,7 @@ describe('DecisionConditionTypesService', () => {
         },
       ],
     });
-    service = TestBed.inject(ApplicationDecisionConditionTypesService);
+    service = TestBed.inject(NoticeofIntentDecisionConditionTypesService);
   });
 
   it('should be created', () => {

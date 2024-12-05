@@ -16,13 +16,9 @@
   </div>
 
   <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
-    <button
-      *ngFor="let conditionType of codes.decisionConditionTypes"
-      mat-menu-item
-      (click)="onAddNewCondition(conditionType.code)"
-    >
+    <button *ngFor="let type of activeTypes" mat-menu-item (click)="onAddNewCondition(type.code)">
       <div class="board-menu-item">
-        <span>{{ conditionType.label }}</span>
+        <span>{{ type.label }}</span>
       </div>
     </button>
   </mat-menu>

@@ -1,3 +1,5 @@
+@use '../../../../../styles/colors';
+
 .dialog {
   padding: 24px;
 
@@ -6,6 +8,7 @@
     grid-template-columns: 1fr 1fr;
     row-gap: 24px;
     column-gap: 24px;
+    margin-top: 12px;
     margin-bottom: 12px;
 
     .full-width {
@@ -15,5 +18,66 @@
     .mat-mdc-form-field {
       width: 100%;
     }
+
+    .condition-fields-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .condition-field {
+      display: grid;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    .condition-field-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .condition-field-input {
+      width: 95%;
+      margin-left: 25px;
+    }
+
+    ::ng-deep .mdc-checkbox {
+      --mdc-checkbox-selected-icon-color: #{colors.$primary-color};
+      --mdc-checkbox-selected-focus-icon-color: #{colors.$primary-color};
+      --mdc-checkbox-selected-focus-icon-color: #{colors.$primary-color};
+      --mdc-checkbox-selected-hover-icon-color: #{colors.$primary-color};
+      --mdc-checkbox-selected-pressed-icon-color: #{colors.$primary-color};
+    }
+
+    ::ng-deep .mat-mdc-slide-toggle.mat-accent {
+      --mdc-switch-selected-focus-state-layer-color: #{colors.$primary-color};
+      --mdc-switch-selected-handle-color: #{colors.$primary-color};
+      --mdc-switch-selected-hover-state-layer-color: #{colors.$primary-color};
+      --mdc-switch-selected-pressed-state-layer-color: #{colors.$primary-color};
+      --mdc-switch-selected-focus-handle-color: #{colors.$primary-color};
+      --mdc-switch-selected-hover-handle-color: #{colors.$primary-color};
+      --mdc-switch-selected-pressed-handle-color: #{colors.$primary-color};
+      --mdc-switch-selected-focus-track-color: #94c6ac61;
+      --mdc-switch-selected-hover-track-color: #94c6ac61;
+      --mdc-switch-selected-pressed-track-color: #94c6ac61;
+      --mdc-switch-selected-track-color: #94c6ac61;
+    }
+  }
+}
+
+.warning {
+  padding: 16px;
+  font-size: 14px;
+  background-color: rgba(colors.$field-warning-bg-color, 0.5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  color: colors.$dark-contrast-text;
+  margin-top: 18px;
+
+  mat-icon {
+    color: colors.$dark-contrast-text;
+    margin-right: 16px;
   }
 }

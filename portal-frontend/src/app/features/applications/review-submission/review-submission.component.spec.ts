@@ -12,6 +12,8 @@ import { ApplicationSubmissionService } from '../../../services/application-subm
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ReviewSubmissionComponent } from './review-submission.component';
+import { AuthenticationService } from '../../../services/authentication/authentication.service';
+import { UserDto } from '../../../services/authentication/authentication.dto';
 
 describe('ReviewSubmissionComponent', () => {
   let component: ReviewSubmissionComponent;
@@ -20,6 +22,7 @@ describe('ReviewSubmissionComponent', () => {
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
+  let mockAuthenticationService: DeepMocked<AuthenticationService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockRoute;
 
@@ -30,11 +33,13 @@ describe('ReviewSubmissionComponent', () => {
   beforeEach(async () => {
     mockAppReviewService = createMock();
     mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
+      undefined,
     );
     mockAppService = createMock();
     mockRoute = createMock();
     mockPdfGenerationService = createMock();
+    mockAuthenticationService = createMock();
+    mockAuthenticationService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     routeParamMap = new BehaviorSubject(new Map());
     mockRoute.paramMap = routeParamMap;
@@ -68,6 +73,10 @@ describe('ReviewSubmissionComponent', () => {
         {
           provide: ToastService,
           useValue: createMock<DeepMocked<ToastService>>(),
+        },
+        {
+          provide: AuthenticationService,
+          useValue: mockAuthenticationService,
         },
       ],
       declarations: [ReviewSubmissionComponent],

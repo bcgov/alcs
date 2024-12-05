@@ -53,14 +53,6 @@ export class NoticeOfIntentDecisionCondition extends Base {
   })
   completionDate?: Date | null;
 
-  @AutoMap()
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition Superseded date',
-    nullable: true,
-  })
-  supersededDate?: Date | null;
-
   @ManyToOne(() => NoticeOfIntentDecisionConditionType)
   type: NoticeOfIntentDecisionConditionType;
 
@@ -75,11 +67,7 @@ export class NoticeOfIntentDecisionCondition extends Base {
   @Column()
   decisionUuid: string;
 
-  @ManyToMany(
-    () => NoticeOfIntentDecisionComponent,
-    (component) => component.conditions,
-    { nullable: true },
-  )
+  @ManyToMany(() => NoticeOfIntentDecisionComponent, (component) => component.conditions, { nullable: true })
   @JoinTable({
     name: 'notice_of_intent_decision_condition_component',
   })
@@ -93,4 +81,12 @@ export class NoticeOfIntentDecisionCondition extends Base {
       'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.notice_of_intent_decision_condition.',
   })
   oatsConditionId: number;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    comment: 'Condition single end/due date',
+    nullable: true,
+  })
+  singleDate?: Date | null;
 }

@@ -16,6 +16,7 @@ import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { MaintenanceBannerConfirmationDialogComponent } from './configuration/maintenance-banner-confirmation-dialog/maintenance-banner-confirmation-dialog.component';
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types/decision-condition-types-dialog/decision-condition-types-dialog.component';
+import { DecisionConditionContainerComponent } from './decision-condition-types/decision-condition-container.component';
 import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
 import { DecisionMakerDialogComponent } from './decision-maker/decision-maker-dialog/decision-maker-dialog.component';
 import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
@@ -54,8 +55,8 @@ const routes: Routes = [
     UnarchiveComponent,
     DecisionMakerComponent,
     DecisionMakerDialogComponent,
-    DecisionConditionTypesComponent,
     DecisionConditionTypesDialogComponent,
+    DecisionConditionTypesComponent,
     CardStatusComponent,
     CardStatusDialogComponent,
     BoardManagementComponent,
@@ -67,6 +68,7 @@ const routes: Routes = [
     TagComponent,
     TagDialogComponent,
     TagContainerComponent,
+    DecisionConditionContainerComponent,
   ],
   imports: [
     CommonModule,

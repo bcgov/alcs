@@ -216,7 +216,24 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   COVE = 'COVE',
 }
 
-export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export enum DateLabel {
+  DUE_DATE = 'Due Date',
+  END_DATE = 'End Date',
+}
+
+export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
+  isComponentToConditionChecked?: boolean | null;
+  isDescriptionChecked?: boolean | null;
+  isAdministrativeFeeAmountChecked: boolean;
+  isAdministrativeFeeAmountRequired?: boolean | null;
+  administrativeFeeAmount?: number | null;
+  isSingleDateChecked: boolean;
+  isSingleDateRequired?: boolean | null;
+  singleDateLabel?: DateLabel | null;
+  isSecurityAmountChecked: boolean;
+  isSecurityAmountRequired?: boolean | null;
+}
 
 export interface NaruSubtypesDto extends BaseCodeDto {}
 
@@ -228,9 +245,9 @@ export interface ApplicationDecisionConditionDto {
   administrativeFee?: number | null;
   description?: string | null;
   completionDate?: number | null;
-  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
+  singleDate?: number | null;
 }
 
 export interface ComponentToCondition {
@@ -247,8 +264,8 @@ export interface UpdateApplicationDecisionConditionDto {
   administrativeFee?: number | null;
   description?: string | null;
   completionDate?: number | null;
-  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  singleDate?: number | null;
 }
 
 export interface ApplicationDecisionComponentToConditionLotDto {

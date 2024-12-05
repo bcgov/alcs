@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationDecisionConditionType } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
-import { ApplicationDecisionConditionTypeDto } from '../../application-decision/application-decision-condition/application-decision-condition.dto';
+import { NoticeOfIntentDecisionConditionType } from '../../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-code.entity';
+import { NoticeOfIntentDecisionConditionTypeDto } from '../../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
 import {
   ServiceNotFoundException,
   ServiceConflictException,
@@ -10,14 +10,14 @@ import {
 } from '@app/common/exceptions/base.exception';
 
 @Injectable()
-export class ApplicationDecisionConditionTypesService {
+export class NoticeofIntentDecisionConditionTypesService {
   constructor(
-    @InjectRepository(ApplicationDecisionConditionType)
-    private applicationDecisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
+    @InjectRepository(NoticeOfIntentDecisionConditionType)
+    private noiDecisionConditionTypeRepository: Repository<NoticeOfIntentDecisionConditionType>,
   ) {}
 
   async fetch() {
-    return await this.applicationDecisionConditionTypeRepository.find({
+    return await this.noiDecisionConditionTypeRepository.find({
       order: { label: 'ASC' },
       select: {
         code: true,
@@ -39,12 +39,12 @@ export class ApplicationDecisionConditionTypesService {
   }
 
   async getOneOrFail(code: string) {
-    return await this.applicationDecisionConditionTypeRepository.findOneOrFail({
+    return await this.noiDecisionConditionTypeRepository.findOneOrFail({
       where: { code },
     });
   }
 
-  async update(code: string, updateDto: ApplicationDecisionConditionTypeDto) {
+  async update(code: string, updateDto: NoticeOfIntentDecisionConditionTypeDto) {
     const type = await this.getOneOrFail(code);
 
     type.description = updateDto.description;
@@ -68,11 +68,11 @@ export class ApplicationDecisionConditionTypesService {
     type.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = updateDto.isSecurityAmountChecked ? updateDto.isSecurityAmountRequired : null;
 
-    return await this.applicationDecisionConditionTypeRepository.save(type);
+    return await this.noiDecisionConditionTypeRepository.save(type);
   }
 
-  async create(createDto: ApplicationDecisionConditionTypeDto) {
-    const type = new ApplicationDecisionConditionType();
+  async create(createDto: NoticeOfIntentDecisionConditionTypeDto) {
+    const type = new NoticeOfIntentDecisionConditionType();
 
     type.code = createDto.code;
     type.description = createDto.description;
@@ -95,11 +95,11 @@ export class ApplicationDecisionConditionTypesService {
     type.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = createDto.isSecurityAmountChecked ? createDto.isSecurityAmountRequired : null;
 
-    return await this.applicationDecisionConditionTypeRepository.save(type);
+    return await this.noiDecisionConditionTypeRepository.save(type);
   }
 
   async delete(code: string) {
-    const type = await this.applicationDecisionConditionTypeRepository.findOne({
+    const type = await this.noiDecisionConditionTypeRepository.findOne({
       where: { code },
       relations: ['conditions', 'conditions.decision'],
     });
@@ -115,7 +115,7 @@ export class ApplicationDecisionConditionTypesService {
     }
 
     try {
-      return await this.applicationDecisionConditionTypeRepository.softDelete(code);
+      return await this.noiDecisionConditionTypeRepository.softDelete(code);
     } catch (e) {
       throw new BaseServiceException('Unable to delete.');
     }

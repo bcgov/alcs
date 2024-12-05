@@ -2,23 +2,20 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { ApplicationDecisionConditionTypeDto } from '../decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../toast/toast.service';
+import { NoticeOfIntentDecisionConditionTypeDto } from '../decision-v2/notice-of-intent-decision.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationDecisionConditionTypesService {
-  private url = `${environment.apiUrl}/decision-condition-types`;
+export class NoticeofIntentDecisionConditionTypesService {
+  private url = `${environment.apiUrl}/noi-decision-condition-types`;
 
-  constructor(
-    private http: HttpClient,
-    private toastService: ToastService,
-  ) {}
+  constructor(private http: HttpClient, private toastService: ToastService) {}
 
   async fetch() {
     try {
-      return await firstValueFrom(this.http.get<ApplicationDecisionConditionTypeDto[]>(`${this.url}`));
+      return await firstValueFrom(this.http.get<NoticeOfIntentDecisionConditionTypeDto[]>(`${this.url}`));
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch decision condition types');
@@ -26,9 +23,9 @@ export class ApplicationDecisionConditionTypesService {
     return [];
   }
 
-  async create(createDto: ApplicationDecisionConditionTypeDto) {
+  async create(createDto: NoticeOfIntentDecisionConditionTypeDto) {
     try {
-      return await firstValueFrom(this.http.post<ApplicationDecisionConditionTypeDto>(`${this.url}`, createDto));
+      return await firstValueFrom(this.http.post<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}`, createDto));
     } catch (e) {
       this.toastService.showErrorToast('Failed to create decision condition type');
       console.error(e);
@@ -36,10 +33,10 @@ export class ApplicationDecisionConditionTypesService {
     return;
   }
 
-  async update(code: string, updateDto: ApplicationDecisionConditionTypeDto) {
+  async update(code: string, updateDto: NoticeOfIntentDecisionConditionTypeDto) {
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto),
+        this.http.patch<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto)
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');
@@ -48,13 +45,9 @@ export class ApplicationDecisionConditionTypesService {
     return;
   }
 
-  async delete(code: string): Promise<ApplicationDecisionConditionTypeDto | undefined> {
+  async delete(code: string) {
     try {
-      const response = await firstValueFrom(
-        this.http.delete<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`),
-      );
-      this.toastService.showSuccessToast('Condition successfully deleted.');
-      return response;
+      return await firstValueFrom(this.http.delete<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}/${code}`));
     } catch (e: any) {
       if (e && e.error && e.error.message) {
         this.toastService.showErrorToast(e.error.message);

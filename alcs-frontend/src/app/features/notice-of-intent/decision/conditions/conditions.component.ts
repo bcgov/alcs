@@ -34,7 +34,6 @@ export type DecisionWithConditionComponentLabels = NoticeOfIntentDecisionWithLin
 export const CONDITION_STATUS = {
   INCOMPLETE: 'incomplete',
   COMPLETE: 'complete',
-  SUPERSEDED: 'superseded',
 };
 
 @Component({
@@ -101,7 +100,7 @@ export class ConditionsComponent implements OnInit {
     conditions: DecisionConditionWithStatus[],
   ) {
     decision.conditions = conditions.sort((a, b) => {
-      const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE, CONDITION_STATUS.SUPERSEDED];
+      const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE];
       if (a.status === b.status) {
         if (a.type && b.type) {
           return a.type?.label.localeCompare(b.type.label);
@@ -151,9 +150,7 @@ export class ConditionsComponent implements OnInit {
     decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
   ) {
     let status = '';
-    if (condition.supersededDate && condition.supersededDate <= this.today) {
-      status = CONDITION_STATUS.SUPERSEDED;
-    } else if (condition.completionDate && condition.completionDate <= this.today) {
+    if (condition.completionDate && condition.completionDate <= this.today) {
       status = CONDITION_STATUS.COMPLETE;
     } else if (!decision.isDraft) {
       status = CONDITION_STATUS.INCOMPLETE;

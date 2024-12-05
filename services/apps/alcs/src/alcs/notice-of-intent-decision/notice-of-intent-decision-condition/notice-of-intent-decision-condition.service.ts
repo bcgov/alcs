@@ -9,6 +9,7 @@ import {
   UpdateNoticeOfIntentDecisionConditionServiceDto,
 } from './notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
+import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 
 @Injectable()
 export class NoticeOfIntentDecisionConditionService {
@@ -56,6 +57,7 @@ export class NoticeOfIntentDecisionConditionService {
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
       condition.approvalDependant = updateDto.approvalDependant ?? null;
+      condition.singleDate = updateDto.singleDate ? formatIncomingDate(updateDto.singleDate) : null;
 
       if (
         updateDto.componentsToCondition !== undefined &&

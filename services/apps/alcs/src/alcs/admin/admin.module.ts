@@ -32,6 +32,9 @@ import { NoiSubtypeController } from './noi-subtype/noi-subtype.controller';
 import { NoiSubtypeService } from './noi-subtype/noi-subtype.service';
 import { UnarchiveCardController } from './unarchive-card/unarchive-card.controller';
 import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
+import { NoticeofIntentDecisionConditionTypesService } from './notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
+import { NoticeofIntentDecisionConditionTypesController } from './notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.controller';
+import { NoticeOfIntentDecisionConditionType } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-code.entity';
 
 @Module({
   imports: [
@@ -41,6 +44,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
       ApplicationDecisionMakerCode,
       NoticeOfIntentSubtype,
       ApplicationDecisionConditionType,
+      NoticeOfIntentDecisionConditionType,
       Configuration,
     ]),
     ApplicationModule,
@@ -63,6 +67,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     NoiSubtypeController,
     ApplicationDecisionMakerController,
     ApplicationDecisionConditionTypesController,
+    NoticeofIntentDecisionConditionTypesController,
     CardStatusController,
     BoardManagementController,
     ConfigurationController,
@@ -74,6 +79,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     UnarchiveCardService,
     NoiSubtypeService,
     ApplicationDecisionConditionTypesService,
+    NoticeofIntentDecisionConditionTypesService,
     ConfigurationService,
   ],
   exports: [HolidayService],
