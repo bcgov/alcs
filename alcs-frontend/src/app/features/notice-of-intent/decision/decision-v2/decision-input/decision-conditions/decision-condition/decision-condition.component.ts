@@ -31,12 +31,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
   description = new FormControl<string | null>(null, [Validators.required]);
-  singleDate = new FormControl<Date | null>(null, [Validators.required]);
   minDate = new Date(0);
 
   form = new FormGroup({
     securityAmount: this.securityAmount,
-    singleDate: this.singleDate,
     administrativeFee: this.administrativeFee,
     description: this.description,
     componentsToCondition: this.componentsToCondition,
@@ -47,10 +45,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       this.singleDateLabel = this.data.type?.singleDateLabel ? this.data.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.data.type?.dateType === DateType.SINGLE;
       if (this.data.type?.isDateRequired) {
-        this.singleDate.addValidators(Validators.required);
         this.isShowSingleDateRequired = true;
       } else {
-        this.singleDate.removeValidators(Validators.required);
         this.isShowSingleDateRequired = false;
       }
 
@@ -102,7 +98,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
           ? this.data.administrativeFee?.toString()
           : this.data.type?.administrativeFeeAmount?.toString(),
         description: this.data.description ?? null,
-        singleDate: this.data.singleDate ? new Date(this.data.singleDate) : undefined,
       });
     }
 
@@ -124,7 +119,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,
         componentsToCondition: selectedOptions,
-        singleDate: this.singleDate.value ? formatDateForApi(this.singleDate.value) : undefined,
       });
     });
   }

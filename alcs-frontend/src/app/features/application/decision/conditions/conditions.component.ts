@@ -36,8 +36,11 @@ export type ApplicationDecisionWithConditionComponentLabels = ApplicationDecisio
 };
 
 export const CONDITION_STATUS = {
-  INCOMPLETE: 'incomplete',
   COMPLETE: 'complete',
+  ONGOING: 'ongoing',
+  PENDING: 'pending',
+  PASTDUE: 'pastdue',
+  EXPIRED: 'expired',
 };
 
 @Component({
@@ -133,7 +136,7 @@ export class ConditionsComponent implements OnInit {
     conditions: ApplicationDecisionConditionWithStatus[],
   ) {
     decision.conditions = conditions.sort((a, b) => {
-      const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE];
+      const order = [CONDITION_STATUS.ONGOING, CONDITION_STATUS.COMPLETE];
       if (a.status === b.status) {
         if (a.type && b.type) {
           return a.type?.label.localeCompare(b.type.label);
@@ -189,7 +192,7 @@ export class ConditionsComponent implements OnInit {
     if (dates.length > 0 && dates.every((date) => date.completedDate && date.completedDate <= this.today)) {
       status = CONDITION_STATUS.COMPLETE;
     } else if (decision.isDraft === false) {
-      status = CONDITION_STATUS.INCOMPLETE;
+      status = CONDITION_STATUS.ONGOING;
     } else {
       status = '';
     }

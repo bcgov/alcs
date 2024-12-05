@@ -1,10 +1,7 @@
 <div class="header">
   <h4 *ngIf="condition.type">{{ stringIndex }}. {{ condition.type.label }}</h4>
-  <ng-container *ngIf="condition.status === CONDITION_STATUS.INCOMPLETE">
-    <app-application-type-pill [type]="incompleteLabel"></app-application-type-pill>
-  </ng-container>
-  <ng-container *ngIf="condition.status === CONDITION_STATUS.COMPLETE">
-    <app-application-type-pill [type]="completeLabel"></app-application-type-pill>
+  <ng-container *ngIf="condition.status !== ''">
+    <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
   </ng-container>
 </div>
 <div class="grid-3">
