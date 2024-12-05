@@ -16,6 +16,7 @@ import {
   ApplicationDecisionComponentDto,
   UpdateApplicationDecisionConditionDto,
   ApplicationDecisionConditionTypeDto,
+  DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -36,6 +37,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   @Input() set types(types: ApplicationDecisionConditionTypeDto[]) {
     this.activeTypes = types.filter((type) => type.isActive);
   }
+  @Input() componentTypes!: DecisionComponentTypeDto[];
   @Input() components: ApplicationDecisionComponentDto[] = [];
   @Input() conditions: ApplicationDecisionConditionDto[] = [];
   @Input() showError = false;
@@ -52,7 +54,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   constructor(
     private decisionService: ApplicationDecisionV2Service,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -66,10 +68,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
             decision.uuid,
             decision.components,
             decision.resolutionNumber,
-            decision.resolutionYear
+            decision.resolutionYear,
           );
           const otherDecisionsComponents = mappedComponents.filter(
-            (component) => component.decisionUuid !== selectedDecision?.uuid
+            (component) => component.decisionUuid !== selectedDecision?.uuid,
           );
           otherDecisionComponents.push(...otherDecisionsComponents);
         }
@@ -81,7 +83,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
             selectedDecision.uuid,
             this.components,
             selectedDecision.resolutionNumber,
-            selectedDecision.resolutionYear
+            selectedDecision.resolutionYear,
           );
           this.selectableComponents = [...this.allComponents, ...updatedComponents];
 
@@ -131,7 +133,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
         this.decision.uuid,
         this.components,
         this.decision.resolutionNumber,
-        this.decision.resolutionYear
+        this.decision.resolutionYear,
       );
       this.selectableComponents = [...this.allComponents, ...updatedComponents];
       const validComponentIds = this.selectableComponents.map((component) => component.tempId);
@@ -139,7 +141,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       this.mappedConditions = this.mappedConditions.map((condition) => {
         if (condition.componentsToCondition) {
           condition.componentsToCondition = condition.componentsToCondition.filter((component) =>
-            validComponentIds.includes(component.tempId)
+            validComponentIds.includes(component.tempId),
           );
         }
         return condition;
@@ -157,7 +159,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
     this.mappedConditions = conditions.map((condition) => {
       const selectedComponents = this.selectableComponents
         .filter((component) =>
-          condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid)
+          condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid),
         )
         .map((e) => ({
           componentDecisionUuid: e.decisionUuid,
@@ -177,10 +179,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
     decisionUuid: string,
     components: ApplicationDecisionComponentDto[],
     decisionNumber: number | null,
-    decisionYear: number | null
+    decisionYear: number | null,
   ) {
     return components.map((component) => {
-      const matchingType = this.activeTypes.find(
+      const matchingType = this.componentTypes.find(
         (type) => type.code === component.applicationDecisionComponentTypeCode,
       );
       return {
