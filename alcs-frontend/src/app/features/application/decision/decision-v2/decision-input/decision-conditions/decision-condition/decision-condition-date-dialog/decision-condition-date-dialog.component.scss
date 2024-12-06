@@ -1,0 +1,16 @@
+@use '../../../../../../../../../styles/colors.scss';
+
+.date-table {
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    border: 0;
+  }
+}
+
+.remove-button {
+  color: colors.$error-color;
+}
+
+.add-button {
+  margin-top: 16px !important;
+}
