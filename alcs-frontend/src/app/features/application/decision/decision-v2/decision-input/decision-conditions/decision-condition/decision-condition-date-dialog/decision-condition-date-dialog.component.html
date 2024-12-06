@@ -33,9 +33,11 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Action</th>
         <td mat-cell *matCellDef="let i = dataIndex">
-          <button class="remove-button" *ngIf="i !== 0" mat-flat-button (click)="removeDueDate(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <ng-container *ngIf="!isRequired || dates.length > 1">
+            <button class="remove-button" mat-flat-button (click)="removeDueDate(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
         </td>
       </ng-container>
 

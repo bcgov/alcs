@@ -21,12 +21,14 @@ export class DecisionConditionDateDialogComponent {
   dates: DueDate[] = [];
   tableData = new MatTableDataSource<DueDate, MatPaginator>([]);
   isAdding: boolean = false;
+  isRequired: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
       dates: ApplicationDecisionConditionDateDto[] | NoticeOfIntentDecisionConditionDateDto[];
       isAdding: boolean;
+      isRequired: boolean;
     },
     private dialogRef: MatDialogRef<DecisionConditionDateDialogComponent>,
   ) {
@@ -40,6 +42,7 @@ export class DecisionConditionDateDialogComponent {
           : [{}];
       this.tableData = new MatTableDataSource(this.dates);
       this.isAdding = data.isAdding;
+      this.isRequired = data.isRequired;
     }
   }
 
