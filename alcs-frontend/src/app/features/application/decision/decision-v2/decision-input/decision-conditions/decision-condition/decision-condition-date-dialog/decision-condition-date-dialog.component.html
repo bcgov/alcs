@@ -45,15 +45,19 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <button type="button" class="add-button" mat-stroked-button color="primary" (click)="addDueDate()">
-      + Another Due Date
-    </button>
+    <ng-container *ngIf="isAdding">
+      <button type="button" class="add-button" mat-stroked-button color="primary" (click)="addDueDate()">
+        + Another Due Date
+      </button>
+    </ng-container>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
     <div class="button-container">
       <button mat-stroked-button color="primary" mat-dialog-close="false">Cancel</button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">Add</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">
+        {{ isAdding ? 'Add' : 'Save' }}
+      </button>
     </div>
   </mat-dialog-actions>
 </form>
