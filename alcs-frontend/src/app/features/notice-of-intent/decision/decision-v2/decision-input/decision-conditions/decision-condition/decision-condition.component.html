@@ -1,6 +1,11 @@
 <div class="split">
   <h5>{{ data.type?.label }}</h5>
-  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+  <div class="buttons">
+    <button type="button" class="remove-button" mat-flat-button color="primary" (click)="openDateDialog()">
+      + Due Dates
+    </button>
+    <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+  </div>
 </div>
 
 <form [formGroup]="form">

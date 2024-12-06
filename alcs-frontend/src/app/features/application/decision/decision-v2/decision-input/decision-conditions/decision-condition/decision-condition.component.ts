@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SelectableComponent, TempApplicationDecisionConditionDto } from '../decision-conditions.component';
-import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 import {
   ApplicationDecisionConditionDateDto,
   DateType,
-} from 'src/app/services/application/decision/application-decision-v2/application-decision-v2.dto';
+} from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionService } from 'src/app/services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DecisionConditionDateDialogComponent } from './decision-condition-date-dialog/decision-condition-date-dialog.component';
 
 @Component({
   selector: 'app-app-decision-condition',
@@ -37,7 +38,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
   description = new FormControl<string | null>(null, [Validators.required]);
-  singleDate = new FormControl<Date | null>(null, [Validators.required]);
+  singleDate = new FormControl<Date | null>(null);
   minDate = new Date(0);
 
   form = new FormGroup({
@@ -48,7 +49,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     componentsToCondition: this.componentsToCondition,
   });
 
-  constructor(private decisionConditionService: ApplicationDecisionConditionService) {}
+  constructor(
+    private decisionConditionService: ApplicationDecisionConditionService,
+    protected dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
     if (this.data) {
@@ -112,7 +116,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
           ? this.data.administrativeFee?.toString()
           : this.data.type?.administrativeFeeAmount?.toString(),
         description: this.data.description ?? null,
-        singleDate: this.data.singleDate ? new Date(this.data.singleDate) : undefined,
+        singleDate: this.dates.length > 0 && this.dates[0].date ? new Date(this.dates[0].date) : null,
       });
     }
 
@@ -133,7 +137,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,
         componentsToCondition: selectedOptions,
-        singleDate: this.singleDate.value ? formatDateForApi(this.singleDate.value) : undefined,
       });
     });
   }
@@ -163,5 +166,20 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     }
 
     this.dates = await this.decisionConditionService.getDates(uuid);
+  }
+
+  openDateDialog() {
+    this.dialog
+      .open(DecisionConditionDateDialogComponent, {
+        maxHeight: '80vh',
+        data: {
+          dates: this.dates,
+          isAdding: true,
+        },
+      })
+      .beforeClosed()
+      .subscribe((data) => {
+        // TODO: Handle save
+      });
   }
 }

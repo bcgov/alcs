@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SelectableComponent, TempNoticeOfIntentDecisionConditionDto } from '../decision-conditions.component';
-import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
-import { DateType } from 'src/app/services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { DateType } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { NoticeOfIntentDecisionConditionDateDto } from '../../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionConditionService } from '../../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DecisionConditionDateDialogComponent } from '../../../../../../application/decision/decision-v2/decision-input/decision-conditions/decision-condition/decision-condition-date-dialog/decision-condition-date-dialog.component';
 
 @Component({
   selector: 'app-noi-decision-condition',
@@ -15,6 +18,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   @Output() remove = new EventEmitter<void>();
 
   @Input() selectableComponents: SelectableComponent[] = [];
+
+  dates: NoticeOfIntentDecisionConditionDateDto[] = [];
 
   singleDateLabel = 'End Date';
   showSingleDateField = false;
@@ -31,7 +36,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
   description = new FormControl<string | null>(null, [Validators.required]);
-  singleDate = new FormControl<Date | null>(null, [Validators.required]);
+  singleDate = new FormControl<Date | null>(null);
   minDate = new Date(0);
 
   form = new FormGroup({
@@ -42,8 +47,15 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     componentsToCondition: this.componentsToCondition,
   });
 
+  constructor(
+    private decisionConditionService: NoticeOfIntentDecisionConditionService,
+    protected dialog: MatDialog,
+  ) {}
+
   ngOnInit(): void {
     if (this.data) {
+      this.fetchDates(this.data.uuid);
+
       this.singleDateLabel = this.data.type?.singleDateLabel ? this.data.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.data.type?.dateType === DateType.SINGLE;
       if (this.data.type?.isDateRequired) {
@@ -102,7 +114,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
           ? this.data.administrativeFee?.toString()
           : this.data.type?.administrativeFeeAmount?.toString(),
         description: this.data.description ?? null,
-        singleDate: this.data.singleDate ? new Date(this.data.singleDate) : undefined,
+        singleDate: this.dates.length > 0 && this.dates[0].date ? new Date(this.dates[0].date) : null,
       });
     }
 
@@ -124,7 +136,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,
         componentsToCondition: selectedOptions,
-        singleDate: this.singleDate.value ? formatDateForApi(this.singleDate.value) : undefined,
       });
     });
   }
@@ -146,5 +157,28 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   onRemove() {
     this.remove.emit();
+  }
+
+  async fetchDates(uuid: string | undefined) {
+    if (!uuid) {
+      return;
+    }
+
+    this.dates = await this.decisionConditionService.getDates(uuid);
+  }
+
+  openDateDialog() {
+    this.dialog
+      .open(DecisionConditionDateDialogComponent, {
+        maxHeight: '80vh',
+        data: {
+          dates: this.dates,
+          isAdding: true,
+        },
+      })
+      .beforeClosed()
+      .subscribe((data) => {
+        // TODO: Handle save
+      });
   }
 }
