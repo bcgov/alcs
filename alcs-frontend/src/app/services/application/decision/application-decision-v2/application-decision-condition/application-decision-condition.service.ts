@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ToastService } from '../../../../toast/toast.service';
 import {
+  ApplicationDecisionConditionDateDto,
   ApplicationDecisionConditionDto,
   ApplicationDecisionConditionToComponentPlanNumberDto,
   UpdateApplicationDecisionConditionDto,
@@ -60,6 +61,48 @@ export class ApplicationDecisionConditionService {
       } else {
         this.toastService.showErrorToast('Failed to update condition');
       }
+      throw e;
+    }
+  }
+
+  async getDates(conditionUuid: string): Promise<ApplicationDecisionConditionDateDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<ApplicationDecisionConditionDateDto[]>(`${this.url}/date?conditionUuid=${conditionUuid}`),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'No dates found');
+      throw e;
+    }
+  }
+
+  async createDate(conditionUuid: string, dateDto: ApplicationDecisionConditionDateDto) {
+    try {
+      await firstValueFrom(
+        this.http.post<ApplicationDecisionConditionDateDto>(`${this.url}/date?conditionUuid=${conditionUuid}`, dateDto),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to create date');
+      throw e;
+    }
+  }
+
+  async updateDate(dateUuid: string, dateDto: ApplicationDecisionConditionDateDto) {
+    try {
+      await firstValueFrom(
+        this.http.patch<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
+      throw e;
+    }
+  }
+
+  async deleteDate(dateUuid: string) {
+    try {
+      await firstValueFrom(this.http.delete<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`));
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to delete date');
       throw e;
     }
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
-import { Subject, takeUntil } from 'rxjs';
+import { from, map, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import {
@@ -9,6 +9,7 @@ import {
   ApplicationDecisionDto,
   ApplicationDecisionWithLinkedResolutionDto,
   ApplicationDecisionCodesDto,
+  ApplicationDecisionConditionDateDto,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import {
@@ -17,6 +18,7 @@ import {
   RECON_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
+import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -63,7 +65,8 @@ export class ConditionsComponent implements OnInit {
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private decisionService: ApplicationDecisionV2Service,
-    private activatedRouter: ActivatedRoute
+    private conditionService: ApplicationDecisionConditionService,
+    private activatedRouter: ActivatedRoute,
   ) {
     this.today = moment().startOf('day').toDate().getTime();
   }
@@ -82,26 +85,52 @@ export class ConditionsComponent implements OnInit {
 
   async loadDecisions(fileNumber: string) {
     this.codes = await this.decisionService.fetchCodes();
-    this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      this.decisions = decisions.map((decision) => {
-        if (decision.uuid === this.decisionUuid) {
-          const conditions = this.mapConditions(decision, decisions);
+    this.decisionService.$decisions
+      .pipe(takeUntil(this.$destroy))
+      .pipe(
+        switchMap((decisions) =>
+          from(this.getDatesByConditionUuid(decisions)).pipe(
+            map((datesByConditionUuid) => ({
+              decisions,
+              datesByConditionUuid,
+            })),
+          ),
+        ),
+      )
+      .subscribe(({ decisions, datesByConditionUuid }) => {
+        this.decisions = decisions.map((decision) => {
+          if (decision.uuid === this.decisionUuid) {
+            const conditions = this.mapConditions(decision, datesByConditionUuid, decisions);
 
-          this.sortConditions(decision, conditions);
+            this.sortConditions(decision, conditions);
 
-          this.decision = decision as ApplicationDecisionWithConditionComponentLabels;
-        }
+            this.decision = decision as ApplicationDecisionWithConditionComponentLabels;
+          }
 
-        return decision as ApplicationDecisionWithConditionComponentLabels;
+          return decision as ApplicationDecisionWithConditionComponentLabels;
+        });
       });
-    });
 
     this.decisionService.loadDecisions(fileNumber);
   }
 
+  private async getDatesByConditionUuid(
+    decisions: ApplicationDecisionWithLinkedResolutionDto[],
+  ): Promise<Map<string, ApplicationDecisionConditionDateDto[]>> {
+    let datesByConditionUuid = new Map<string, ApplicationDecisionConditionDateDto[]>();
+
+    for (const decision of decisions) {
+      for (const condition of decision.conditions) {
+        datesByConditionUuid.set(condition.uuid, await this.conditionService.getDates(condition.uuid));
+      }
+    }
+
+    return datesByConditionUuid;
+  }
+
   private sortConditions(
     decision: ApplicationDecisionWithLinkedResolutionDto,
-    conditions: ApplicationDecisionConditionWithStatus[]
+    conditions: ApplicationDecisionConditionWithStatus[],
   ) {
     decision.conditions = conditions.sort((a, b) => {
       const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE];
@@ -119,17 +148,19 @@ export class ConditionsComponent implements OnInit {
 
   private mapConditions(
     decision: ApplicationDecisionWithLinkedResolutionDto,
-    decisions: ApplicationDecisionWithLinkedResolutionDto[]
+    datesByConditionUuid: Map<string, ApplicationDecisionConditionDateDto[]>,
+    decisions: ApplicationDecisionWithLinkedResolutionDto[],
   ) {
     return decision.conditions.map((condition) => {
-      const status = this.getStatus(condition, decision);
+      const dates = datesByConditionUuid.get(condition.uuid) ?? [];
+      const status = this.getStatus(dates, decision);
 
       return {
         ...condition,
         status,
         conditionComponentsLabels: condition.components?.map((c) => {
           const matchingType = this.codes.decisionComponentTypes.find(
-            (type) => type.code === c.applicationDecisionComponentTypeCode
+            (type) => type.code === c.applicationDecisionComponentTypeCode,
           );
 
           const componentsDecision = decisions.find((d) => d.uuid === c.applicationDecisionUuid);
@@ -149,9 +180,13 @@ export class ConditionsComponent implements OnInit {
     });
   }
 
-  private getStatus(condition: ApplicationDecisionConditionDto, decision: ApplicationDecisionWithLinkedResolutionDto) {
+  private getStatus(
+    dates: ApplicationDecisionConditionDateDto[],
+    decision: ApplicationDecisionWithLinkedResolutionDto,
+  ) {
     let status = '';
-    if (condition.completionDate && condition.completionDate <= this.today) {
+    status = CONDITION_STATUS.COMPLETE;
+    if (dates.length > 0 && dates.every((date) => date.completedDate && date.completedDate <= this.today)) {
       status = CONDITION_STATUS.COMPLETE;
     } else if (decision.isDraft === false) {
       status = CONDITION_STATUS.INCOMPLETE;

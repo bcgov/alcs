@@ -44,14 +44,6 @@ export class ApplicationDecisionCondition extends Base {
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @AutoMap(() => String)
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition Completion date',
-    nullable: true,
-  })
-  completionDate?: Date | null;
-
   @ManyToOne(() => ApplicationDecisionConditionType)
   type: ApplicationDecisionConditionType;
 
@@ -85,12 +77,4 @@ export class ApplicationDecisionCondition extends Base {
     cascade: ['insert', 'update', 'remove'],
   })
   conditionToComponentsWithPlanNumber: ApplicationDecisionConditionComponentPlanNumber[] | null;
-
-  @AutoMap()
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition single end/due date',
-    nullable: true,
-  })
-  singleDate?: Date | null;
 }

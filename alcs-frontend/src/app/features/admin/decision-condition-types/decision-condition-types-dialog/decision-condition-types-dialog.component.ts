@@ -3,11 +3,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   ApplicationDecisionConditionTypeDto,
   DateLabel,
+  DateType,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionTypesService } from '../../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DecisionDialogDataInterface } from '../decision-dialog-data.interface';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
+import { NoticeOfIntentDecisionConditionTypeDto } from 'src/app/services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -15,6 +17,9 @@ import { NoticeofIntentDecisionConditionTypesService } from '../../../../service
   styleUrls: ['./decision-condition-types-dialog.component.scss'],
 })
 export class DecisionConditionTypesDialogComponent {
+  // Reference for use in templates
+  DateType = DateType;
+
   conditionTypeForm: FormGroup;
 
   isLoading = false;
@@ -57,12 +62,9 @@ export class DecisionConditionTypesDialogComponent {
       administrativeFeeAmount: new FormControl(
         this.data?.content?.administrativeFeeAmount ? this.data.content.administrativeFeeAmount : '',
       ),
-      isSingleDateChecked: new FormControl(
-        this.data?.content?.isSingleDateChecked ? this.data.content.isSingleDateChecked : false,
-      ),
-      isSingleDateRequired: new FormControl(
-        this.data?.content?.isSingleDateRequired ? this.data.content.isSingleDateRequired : false,
-      ),
+      isDateChecked: new FormControl(this.data?.content?.isDateChecked ? this.data.content.isDateChecked : false),
+      isDateRequired: new FormControl(this.data?.content?.isDateRequired ? this.data.content.isDateRequired : false),
+      dateType: new FormControl(this.data?.content?.dateType),
       singleDateLabel: new FormControl(
         this.data?.content?.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
       ),
@@ -91,16 +93,21 @@ export class DecisionConditionTypesDialogComponent {
   async onSubmit() {
     this.isLoading = true;
 
-    const dto: ApplicationDecisionConditionTypeDto | NoticeofIntentDecisionConditionTypesService = {
+    const dto: ApplicationDecisionConditionTypeDto | NoticeOfIntentDecisionConditionTypeDto = {
       code: this.conditionTypeForm.get('code')?.value,
       label: this.conditionTypeForm.get('label')?.value,
       description: this.conditionTypeForm.get('description')?.value,
       isActive: this.conditionTypeForm.get('isActive')?.value,
       isAdministrativeFeeAmountChecked: this.conditionTypeForm.get('isAdministrativeFeeAmountChecked')?.value,
       isAdministrativeFeeAmountRequired: this.conditionTypeForm.get('isAdministrativeFeeAmountRequired')?.value,
-      isSingleDateChecked: this.conditionTypeForm.get('isSingleDateChecked')?.value,
-      isSingleDateRequired: this.conditionTypeForm.get('isSingleDateRequired')?.value,
-      singleDateLabel: this.conditionTypeForm.get('singleDateLabel')?.value,
+      administrativeFeeAmount: this.conditionTypeForm.get('administrativeFeeAmount')?.value,
+      isDateChecked: this.conditionTypeForm.get('isDateChecked')?.value,
+      isDateRequired: this.conditionTypeForm.get('isDateRequired')?.value,
+      dateType: this.conditionTypeForm.get('dateType')?.value,
+      singleDateLabel:
+        this.conditionTypeForm.get('dateType')?.value === DateType.SINGLE
+          ? this.conditionTypeForm.get('singleDateLabel')?.value
+          : null,
       isSecurityAmountChecked: this.conditionTypeForm.get('isSecurityAmountChecked')?.value,
       isSecurityAmountRequired: this.conditionTypeForm.get('isSecurityAmountRequired')?.value,
     };
@@ -108,7 +115,6 @@ export class DecisionConditionTypesDialogComponent {
     if (this.conditionTypeForm.get('administrativeFeeAmount')?.value !== '') {
       dto.administrativeFeeAmount = this.conditionTypeForm.get('administrativeFeeAmount')?.value;
     }
-
     if (!this.service) return;
     if (this.isEdit) {
       await this.service.update(dto.code, dto);
