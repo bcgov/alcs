@@ -3,11 +3,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SelectableComponent, TempApplicationDecisionConditionDto } from '../decision-conditions.component';
 import {
   ApplicationDecisionConditionDateDto,
+  ApplicationDecisionConditionTypeDto,
   DateType,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionService } from 'src/app/services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DecisionConditionDateDialogComponent } from './decision-condition-date-dialog/decision-condition-date-dialog.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-app-decision-condition',
@@ -25,7 +27,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   singleDateLabel = 'End Date';
   showSingleDateField = false;
-  isShowSingleDateRequired = false;
+  showMultiDateUi = false;
+  isDateRequired = false;
   showAdmFeeField = false;
   isAdmFeeFieldRequired = false;
   showSecurityAmountField = false;
@@ -55,70 +58,22 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    if (this.data) {
-      this.fetchDates(this.data.uuid);
+    this.fetchDates(this.data.uuid);
 
-      this.singleDateLabel = this.data.type?.singleDateLabel ? this.data.type?.singleDateLabel : 'End Date';
-      this.showSingleDateField = this.data.type?.dateType === DateType.SINGLE;
-      if (this.data.type?.isDateRequired) {
-        this.singleDate.addValidators(Validators.required);
-        this.isShowSingleDateRequired = true;
-      } else {
-        this.singleDate.removeValidators(Validators.required);
-        this.isShowSingleDateRequired = false;
-      }
-
-      this.showAdmFeeField = this.data.type?.isAdministrativeFeeAmountChecked
-        ? this.data.type?.isAdministrativeFeeAmountChecked
-        : false;
-      if (this.data.type?.isAdministrativeFeeAmountRequired) {
-        this.administrativeFee.addValidators(Validators.required);
-        this.isAdmFeeFieldRequired = true;
-      } else {
-        this.administrativeFee.removeValidators(Validators.required);
-        this.isAdmFeeFieldRequired = false;
-      }
-
-      this.showSecurityAmountField = this.data.type?.isSecurityAmountChecked
-        ? this.data.type?.isSecurityAmountChecked
-        : false;
-      if (this.data.type?.isSecurityAmountRequired) {
-        this.securityAmount.addValidators(Validators.required);
-        this.isSecurityAmountFieldRequired = true;
-      } else {
-        this.securityAmount.removeValidators(Validators.required);
-        this.isSecurityAmountFieldRequired = false;
-      }
-
-      if (this.showSingleDateField) {
-        this.numberOfSelectedConditions++;
-      }
-      if (this.showAdmFeeField) {
-        this.numberOfSelectedConditions++;
-      }
-      if (this.showSecurityAmountField) {
-        this.numberOfSelectedConditions++;
-      }
-
-      const selectedOptions = this.selectableComponents
-        .filter((component) => this.data.componentsToCondition?.map((e) => e.tempId)?.includes(component.tempId))
-        .map((e) => ({
-          componentDecisionUuid: e.decisionUuid,
-          componentToConditionType: e.code,
-          tempId: e.tempId,
-        }));
-
-      this.componentsToCondition.setValue(selectedOptions.map((e) => e.tempId) ?? null);
-
-      this.form.patchValue({
-        securityAmount: this.data.securityAmount?.toString() ?? null,
-        administrativeFee: this.data.administrativeFee
-          ? this.data.administrativeFee?.toString()
-          : this.data.type?.administrativeFeeAmount?.toString(),
-        description: this.data.description ?? null,
-        singleDate: this.dates.length > 0 && this.dates[0].date ? new Date(this.dates[0].date) : null,
-      });
+    if (this.data.type) {
+      this.initDateUi(this.data.type);
+      this.initOptionalFields(this.data.type);
     }
+
+    this.initComponentField(this.data);
+
+    this.form.patchValue({
+      securityAmount: this.data.securityAmount?.toString() ?? null,
+      administrativeFee: this.data.administrativeFee
+        ? this.data.administrativeFee?.toString()
+        : this.data.type?.administrativeFeeAmount?.toString(),
+      description: this.data.description ?? null,
+    });
 
     this.form.valueChanges.subscribe((changes) => {
       const selectedOptions = this.selectableComponents
@@ -139,6 +94,57 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         componentsToCondition: selectedOptions,
       });
     });
+  }
+
+  initDateUi(type: ApplicationDecisionConditionTypeDto) {
+    if (!type.isDateChecked) {
+      return;
+    }
+
+    this.showSingleDateField = type.dateType === DateType.SINGLE;
+    this.showMultiDateUi = type.dateType === DateType.MULTIPLE;
+
+    if (this.showSingleDateField) {
+      this.singleDateLabel = type.singleDateLabel ? type.singleDateLabel : 'End Date';
+      this.isDateRequired = type.isDateRequired ?? false;
+
+      if (this.isDateRequired) {
+        this.singleDate.addValidators(Validators.required);
+      }
+    }
+  }
+
+  initOptionalFields(type: ApplicationDecisionConditionTypeDto) {
+    this.showAdmFeeField = type.isAdministrativeFeeAmountChecked ?? false;
+    this.isAdmFeeFieldRequired = type.isAdministrativeFeeAmountRequired ?? false;
+    this.showSecurityAmountField = type.isSecurityAmountChecked ? type.isSecurityAmountChecked : false;
+    this.isSecurityAmountFieldRequired = type.isSecurityAmountRequired ?? false;
+
+    if (this.isAdmFeeFieldRequired) {
+      this.administrativeFee.addValidators(Validators.required);
+    }
+
+    if (this.isSecurityAmountFieldRequired) {
+      this.securityAmount.addValidators(Validators.required);
+    }
+
+    this.numberOfSelectedConditions += [
+      this.showSingleDateField,
+      this.showAdmFeeField,
+      this.showSecurityAmountField,
+    ].reduce((sum, flag) => sum + (flag ? 1 : 0), 0);
+  }
+
+  initComponentField(condition: TempApplicationDecisionConditionDto) {
+    const selectedOptions = this.selectableComponents
+      .filter((component) => condition.componentsToCondition?.map((e) => e.tempId)?.includes(component.tempId))
+      .map((e) => ({
+        componentDecisionUuid: e.decisionUuid,
+        componentToConditionType: e.code,
+        tempId: e.tempId,
+      }));
+
+    this.componentsToCondition.setValue(selectedOptions.map((e) => e.tempId) ?? null);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -166,15 +172,27 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     }
 
     this.dates = await this.decisionConditionService.getDates(uuid);
+
+    if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
+      this.form.patchValue({ singleDate: new Date(this.dates[0].date) });
+    }
   }
 
-  openDateDialog() {
+  formatDate(timestamp: number | undefined): string {
+    if (!timestamp) {
+      return '';
+    }
+    return moment(timestamp).format('YYYY-MMM-DD');
+  }
+
+  openDateDialog(isAdding: boolean) {
     this.dialog
       .open(DecisionConditionDateDialogComponent, {
         maxHeight: '80vh',
         data: {
           dates: this.dates,
-          isAdding: true,
+          isAdding,
+          isRequired: this.isDateRequired,
         },
       })
       .beforeClosed()

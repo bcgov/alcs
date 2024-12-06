@@ -1,9 +1,11 @@
 <div class="split">
   <h5>{{ data.type?.label }}</h5>
   <div class="buttons">
-    <button type="button" class="remove-button" mat-flat-button color="primary" (click)="openDateDialog()">
-      + Due Dates
-    </button>
+    <ng-container *ngIf="showMultiDateUi">
+      <button type="button" class="remove-button" mat-flat-button color="primary" (click)="openDateDialog(true)">
+        + Due Dates
+      </button>
+    </ng-container>
     <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
   </div>
 </div>
@@ -64,3 +66,13 @@
     </mat-form-field>
   </div>
 </form>
+
+<ng-container *ngIf="showMultiDateUi && dates.length > 0">
+  <div class="date-list">
+    <strong>Due Dates:</strong>
+    <div class="date-chip" *ngFor="let date of dates">{{ formatDate(date.date) }}</div>
+    <button type="button" mat-icon-button class="edit-date-button" (click)="openDateDialog(false)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+</ng-container>
