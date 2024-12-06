@@ -36,7 +36,6 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   activeTypes!: NoticeOfIntentDecisionConditionTypeDto[];
   @Input() set types(types: NoticeOfIntentDecisionConditionTypeDto[]) {
     this.activeTypes = types.filter((type) => type.isActive);
-    console.log(this.activeTypes);
   }
   @Input() componentTypes!: DecisionComponentTypeDto[];
   @Input() components: NoticeOfIntentDecisionComponentDto[] = [];
