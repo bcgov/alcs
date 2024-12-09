@@ -1,10 +1,5 @@
 <ng-content></ng-content>
 <div>
-  <div class="subheading2">Expiry Date</div>
-  {{ component.expiryDate | date }}
-  <app-no-data *ngIf="component.expiryDate === null || component.expiryDate === undefined"></app-no-data>
-</div>
-<div>
   <div class="subheading2">Total Number of Lots Approved</div>
   {{ component.lots?.length }}
   <app-no-data *ngIf="component.lots === null || component.lots === undefined"></app-no-data>

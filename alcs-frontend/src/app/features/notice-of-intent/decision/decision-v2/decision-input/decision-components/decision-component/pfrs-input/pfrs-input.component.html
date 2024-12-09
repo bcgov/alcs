@@ -10,33 +10,6 @@
       required
     />
   </mat-form-field>
-  <div class="grid-2">
-    <mat-form-field appearance="outline" class="date-picker">
-      <mat-label>Use End Date (Placement of Fill)</mat-label>
-      <input
-        matInput
-        (click)="endDatePicker2.open()"
-        [matDatepicker]="endDatePicker2"
-        formControlName="endDate2"
-        name="date"
-      />
-      <mat-datepicker-toggle matSuffix [for]="endDatePicker2"></mat-datepicker-toggle>
-      <mat-datepicker #endDatePicker2 type="date"></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="date-picker">
-      <mat-label>Use End Date (Removal of Soil)</mat-label>
-      <input
-        matInput
-        (click)="endDatePicker.open()"
-        [matDatepicker]="endDatePicker"
-        formControlName="endDate"
-        name="date"
-      />
-      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #endDatePicker type="date"></mat-datepicker>
-    </mat-form-field>
-  </div>
 
   <mat-form-field appearance="outline" class="row">
     <mat-label>Type of soil approved to be removed</mat-label>
