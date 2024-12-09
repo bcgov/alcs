@@ -60,17 +60,7 @@ export class NoticeOfIntentDecisionConditionDateService {
         throw new ServiceValidationException('Must supply UUID of existing date or date.');
       }
 
-      if (dto.date) {
-        entity.date = new Date(dto.date);
-      }
-      if (dto.completedDate) {
-        entity.completedDate = new Date(dto.completedDate);
-      } else if (dto.completedDate === null) {
-        entity.completedDate = null;
-      }
-      if (dto.comment) {
-        entity.comment = dto.comment;
-      }
+      this.map(dto, entity);
 
       return entity;
     });
@@ -94,17 +84,7 @@ export class NoticeOfIntentDecisionConditionDateService {
       throw new ServiceNotFoundException('Date not found.');
     }
 
-    if (dto.date) {
-      entity.date = new Date(dto.date);
-    }
-    if (dto.completedDate) {
-      entity.completedDate = new Date(dto.completedDate);
-    } else if (dto.completedDate === null) {
-      entity.completedDate = null;
-    }
-    if (dto.comment) {
-      entity.comment = dto.comment;
-    }
+    this.map(dto, entity);
 
     const updatedEntity = await this.repository.save(entity);
 
@@ -113,5 +93,17 @@ export class NoticeOfIntentDecisionConditionDateService {
 
   async delete(uuid: string) {
     return await this.repository.delete(uuid);
+  }
+
+  map(dto: NoticeOfIntentDecisionConditionDateDto, entity: NoticeOfIntentDecisionConditionDate) {
+    if (dto.date) {
+      entity.date = new Date(dto.date);
+    }
+    if (dto.completedDate) {
+      entity.completedDate = new Date(dto.completedDate);
+    }
+    if (dto.comment) {
+      entity.comment = dto.comment;
+    }
   }
 }

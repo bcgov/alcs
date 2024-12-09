@@ -46,7 +46,7 @@ export class ApplicationDecisionConditionDateService {
   ): Promise<ApplicationDecisionConditionDateDto[]> {
     const condition = await this.conditionRepository.findOne({
       where: { uuid: conditionUuid },
-      relations: { dates: true },
+      relations: ['dates'],
     });
 
     if (!condition) {
@@ -54,7 +54,7 @@ export class ApplicationDecisionConditionDateService {
     }
 
     const dateEntities = dtos.map((dto) => {
-      const entity = new ApplicationDecisionConditionDate();
+      const entity = this.repository.create();
 
       if (!dto.uuid && !dto.date) {
         throw new ServiceValidationException('Must supply UUID of existing date or date.');
@@ -63,17 +63,8 @@ export class ApplicationDecisionConditionDateService {
       if (dto.uuid) {
         entity.uuid = dto.uuid;
       }
-      if (dto.date) {
-        entity.date = new Date(dto.date);
-      }
-      if (dto.completedDate) {
-        entity.completedDate = new Date(dto.completedDate);
-      } else if (dto.completedDate === null) {
-        entity.completedDate = null;
-      }
-      if (dto.comment) {
-        entity.comment = dto.comment;
-      }
+
+      this.map(dto, entity);
 
       return entity;
     });
@@ -94,17 +85,7 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException('Date not found.');
     }
 
-    if (dto.date) {
-      entity.date = new Date(dto.date);
-    }
-    if (dto.completedDate) {
-      entity.completedDate = new Date(dto.completedDate);
-    } else if (dto.completedDate === null) {
-      entity.completedDate = null;
-    }
-    if (dto.comment) {
-      entity.comment = dto.comment;
-    }
+    this.map(dto, entity);
 
     const updatedEntity = await this.repository.save(entity);
 
@@ -113,5 +94,17 @@ export class ApplicationDecisionConditionDateService {
 
   async delete(uuid: string) {
     return await this.repository.delete(uuid);
+  }
+
+  map(dto: ApplicationDecisionConditionDateDto, entity: ApplicationDecisionConditionDate) {
+    if (dto.date) {
+      entity.date = new Date(dto.date);
+    }
+    if (dto.completedDate) {
+      entity.completedDate = new Date(dto.completedDate);
+    }
+    if (dto.comment) {
+      entity.comment = dto.comment;
+    }
   }
 }

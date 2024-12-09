@@ -28,6 +28,6 @@ export class ApplicationDecisionConditionDate extends Base {
   condition: ApplicationDecisionCondition;
 
   @AutoMap()
-  @Column({ type: 'text', default: '' })
-  comment: string;
+  @Column({ type: 'text', nullable: true })
+  comment: string | null;
 }

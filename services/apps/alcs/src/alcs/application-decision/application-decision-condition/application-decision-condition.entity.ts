@@ -79,6 +79,6 @@ export class ApplicationDecisionCondition extends Base {
   })
   conditionToComponentsWithPlanNumber: ApplicationDecisionConditionComponentPlanNumber[] | null;
 
-  @OneToMany(() => ApplicationDecisionConditionDate, (d) => d.condition)
+  @OneToMany(() => ApplicationDecisionConditionDate, (d) => d.condition, { cascade: ['insert', 'update'] })
   dates: ApplicationDecisionConditionDate[];
 }
