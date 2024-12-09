@@ -12,6 +12,7 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision-v2.dto';
+import { ApplicationDecisionStatus } from './application-condition-status.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +39,15 @@ export class ApplicationDecisionV2Service {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
     return decisions;
+  }
+
+  async getStatus(conditionUuid: string): Promise<ApplicationDecisionStatus> {
+    try {
+      return await firstValueFrom(this.http.get<ApplicationDecisionStatus>(`${this.url}/condition/${conditionUuid}`));
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'No status found');
+      throw e;
+    }
   }
 
   async fetchCodes(): Promise<ApplicationDecisionCodesDto> {

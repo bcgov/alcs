@@ -5,7 +5,7 @@ import {
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, LessThan, Repository } from 'typeorm';
+import { In, IsNull, LessThan, Repository, DataSource } from 'typeorm';
 import { v4 } from 'uuid';
 import {
   DOCUMENT_SOURCE,
@@ -51,6 +51,7 @@ export class NoticeOfIntentDecisionV2Service {
     private decisionComponentService: NoticeOfIntentDecisionComponentService,
     private decisionConditionService: NoticeOfIntentDecisionConditionService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private dataSource: DataSource,
   ) {}
 
   async getForPortal(fileNumber: string) {
@@ -711,5 +712,9 @@ export class NoticeOfIntentDecisionV2Service {
         noticeOfIntent: true,
       },
     });
+  }
+
+  async getDecisionConditionStatus(uuid: string) {
+    return await this.dataSource.query('SELECT alcs.get_current_status_for_noi_condition($1)', [uuid]);
   }
 }

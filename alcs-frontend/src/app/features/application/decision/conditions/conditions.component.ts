@@ -36,11 +36,11 @@ export type ApplicationDecisionWithConditionComponentLabels = ApplicationDecisio
 };
 
 export const CONDITION_STATUS = {
-  COMPLETE: 'complete',
-  ONGOING: 'ongoing',
-  PENDING: 'pending',
-  PASTDUE: 'pastdue',
-  EXPIRED: 'expired',
+  COMPLETE: 'COMPLETE',
+  ONGOING: 'ONGOING',
+  PENDING: 'PENDING',
+  PASTDUE: 'PASTDUE',
+  EXPIRED: 'EXPIRED',
 };
 
 @Component({

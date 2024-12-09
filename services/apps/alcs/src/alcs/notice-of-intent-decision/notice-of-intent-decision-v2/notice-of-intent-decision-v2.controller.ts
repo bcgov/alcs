@@ -32,6 +32,7 @@ import {
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDecisionV2Service } from './notice-of-intent-decision-v2.service';
+import { NoticeOfIntentConditionStatus } from './notice-of-intent-condition-status.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notice-of-intent-decision/v2')
@@ -57,6 +58,16 @@ export class NoticeOfIntentDecisionV2Controller {
       NoticeOfIntentDecision,
       NoticeOfIntentDecisionDto,
     );
+  }
+
+  @Get('/condition/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getConditionStatus(@Param('uuid') uuid): Promise<NoticeOfIntentConditionStatus> {
+    const status = await this.noticeOfIntentDecisionV2Service.getDecisionConditionStatus(uuid);
+    return {
+      uuid: uuid,
+      status: status && status.length > 0 ? status[0]['get_current_status_for_noi_condition'] : '',
+    };
   }
 
   @Get('/codes')

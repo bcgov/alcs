@@ -1,8 +1,6 @@
 <div class="header">
   <h4 *ngIf="condition.type">{{ stringIndex }}. {{ condition.type.label }}</h4>
-  <ng-container *ngIf="condition.status !== ''">
-    <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
-  </ng-container>
+  <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
 </div>
 <div class="grid-3">
   <div>

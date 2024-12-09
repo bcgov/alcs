@@ -28,6 +28,7 @@ import {
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
+import { ApplicationConditionStatus } from './application-condition-status.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -46,6 +47,16 @@ export class ApplicationDecisionV2Controller {
   async getByFileNumber(@Param('fileNumber') fileNumber): Promise<ApplicationDecisionDto[]> {
     const decisions = await this.appDecisionService.getByAppFileNumber(fileNumber);
     return await this.mapper.mapArrayAsync(decisions, ApplicationDecision, ApplicationDecisionDto);
+  }
+
+  @Get('/condition/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getConditionStatus(@Param('uuid') uuid): Promise<ApplicationConditionStatus> {
+    const status = await this.appDecisionService.getDecisionConditionStatus(uuid);
+    return {
+      uuid: uuid,
+      status: status && status.length > 0 ? status[0]['get_current_status_for_application_condition'] : '',
+    };
   }
 
   @Get('/codes')

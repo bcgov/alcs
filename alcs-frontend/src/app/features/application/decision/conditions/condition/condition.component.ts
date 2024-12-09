@@ -24,6 +24,7 @@ import {
 } from '../conditions.component';
 import { environment } from '../../../../../../environments/environment';
 import { countToString } from '../../../../../shared/utils/count-to-string';
+import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 
 type Condition = ApplicationDecisionConditionWithStatus & {
   componentLabelsStr?: string;
@@ -66,6 +67,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   constructor(
     private conditionService: ApplicationDecisionConditionService,
     private conditionLotService: ApplicationDecisionComponentToConditionLotService,
+    private decisionService: ApplicationDecisionV2Service,
   ) {
     this.today = moment().startOf('day').toDate().getTime();
   }
@@ -197,70 +199,26 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     return this.condition.conditionComponentsLabels?.find((e) => e.componentUuid === componentUuid)?.label;
   }
 
-  calcStatus() {
-    if (this.dates && this.dates.length > 0) {
-      if (this.dates.every((date) => date.completedDate && date.completedDate <= this.today)) {
-        this.condition.status = CONDITION_STATUS.COMPLETE;
-      } else {
-        if (this.checkExpired()) {
-          this.condition.status = CONDITION_STATUS.EXPIRED;
-        } else if (this.checkPending()) {
-          this.condition.status = CONDITION_STATUS.PASTDUE;
-        } else if (this.checkPastDue()) {
-          this.condition.status = CONDITION_STATUS.PENDING;
-        }
-      }
-    } else {
-      this.condition.status = CONDITION_STATUS.ONGOING;
-    }
-    this.setPillLabel();
+  async calcStatus() {
+    const conditionStatus = await this.decisionService.getStatus(this.condition.uuid);
+    this.setPillLabel(conditionStatus.status);
   }
 
-  private checkExpired(): boolean {
-    const expiredDates = this.dates.filter((d) => {
-      if (d.date) {
-        return d.date <= this.today && !d.completedDate;
-      }
-      return false;
-    });
-    return this.condition.type?.singleDateLabel === 'End Date' && expiredDates.length > 0;
-  }
-
-  private checkPastDue(): boolean {
-    const expiredDates = this.dates.filter((d) => {
-      if (d.date) {
-        return d.date <= this.today && !d.completedDate;
-      }
-      return false;
-    });
-    return this.condition.type?.singleDateLabel === 'Due Date' && expiredDates.length > 0;
-  }
-
-  private checkPending(): boolean {
-    const dueDates = this.dates.filter((d) => {
-      if (d.date) {
-        return d.date >= this.today && !d.completedDate;
-      }
-      return false;
-    });
-    return dueDates.length > 0;
-  }
-
-  private setPillLabel() {
-    switch (this.condition.status) {
-      case CONDITION_STATUS.ONGOING:
+  private setPillLabel(status: string) {
+    switch (status) {
+      case 'ONGOING':
         this.statusLabel = DECISION_CONDITION_ONGOING_LABEL;
         break;
-      case CONDITION_STATUS.COMPLETE:
+      case 'COMPLETED':
           this.statusLabel = DECISION_CONDITION_COMPLETE_LABEL;
           break;
-      case CONDITION_STATUS.PASTDUE:
+      case 'PASTDUE':
         this.statusLabel = DECISION_CONDITION_PASTDUE_LABEL;
         break;
-      case CONDITION_STATUS.PENDING:
+      case 'PENDING':
         this.statusLabel = DECISION_CONDITION_PENDING_LABEL;
         break;
-      case CONDITION_STATUS.EXPIRED:
+      case 'EXPIRED':
         this.statusLabel = DECISION_CONDITION_EXPIRED_LABEL;
         break;
       default:

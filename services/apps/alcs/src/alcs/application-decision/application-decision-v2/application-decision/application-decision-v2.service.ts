@@ -1,7 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, LessThan, Repository } from 'typeorm';
+import { In, IsNull, LessThan, Repository, DataSource } from 'typeorm';
 import { v4 } from 'uuid';
 import {
   ServiceNotFoundException,
@@ -56,6 +56,7 @@ export class ApplicationDecisionV2Service {
     private decisionComponentService: ApplicationDecisionComponentService,
     private decisionConditionService: ApplicationDecisionConditionService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    private dataSource: DataSource,
   ) {}
 
   async getForPortal(fileNumber: string) {
@@ -796,5 +797,9 @@ export class ApplicationDecisionV2Service {
         application: true,
       },
     });
+  }
+
+  async getDecisionConditionStatus(uuid: string) {
+    return await this.dataSource.query('SELECT alcs.get_current_status_for_application_condition($1)', [uuid]);
   }
 }
