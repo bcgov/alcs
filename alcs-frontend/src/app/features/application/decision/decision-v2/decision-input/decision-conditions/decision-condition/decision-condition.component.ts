@@ -23,6 +23,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   @Input() selectableComponents: SelectableComponent[] = [];
 
+  uuid: string | undefined;
+
   dates: ApplicationDecisionConditionDateDto[] = [];
 
   singleDateLabel = 'End Date';
@@ -58,7 +60,9 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.fetchDates(this.data.uuid);
+    this.uuid = this.data.uuid;
+
+    this.fetchDates(this.uuid);
 
     if (this.data.type) {
       this.initDateUi(this.data.type);
@@ -196,8 +200,11 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         },
       })
       .beforeClosed()
-      .subscribe((data) => {
-        // TODO: Handle save
+      .subscribe(async (dates) => {
+        if (!this.uuid) {
+          return;
+        }
+        this.dates = await this.decisionConditionService.setDates(this.uuid, dates);
       });
   }
 }

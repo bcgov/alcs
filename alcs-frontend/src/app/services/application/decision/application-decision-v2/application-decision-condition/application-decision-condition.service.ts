@@ -76,21 +76,16 @@ export class ApplicationDecisionConditionService {
     }
   }
 
-  async createDate(conditionUuid: string, dateDto: ApplicationDecisionConditionDateDto) {
+  async setDates(
+    conditionUuid: string,
+    dateDtos: ApplicationDecisionConditionDateDto[],
+  ): Promise<ApplicationDecisionConditionDateDto[]> {
     try {
-      await firstValueFrom(
-        this.http.post<ApplicationDecisionConditionDateDto>(`${this.url}/date?conditionUuid=${conditionUuid}`, dateDto),
-      );
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to create date');
-      throw e;
-    }
-  }
-
-  async updateDate(dateUuid: string, dateDto: ApplicationDecisionConditionDateDto) {
-    try {
-      await firstValueFrom(
-        this.http.patch<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
+      return await firstValueFrom(
+        this.http.put<ApplicationDecisionConditionDateDto[]>(
+          `${this.url}/date?conditionUuid=${conditionUuid}`,
+          dateDtos,
+        ),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');

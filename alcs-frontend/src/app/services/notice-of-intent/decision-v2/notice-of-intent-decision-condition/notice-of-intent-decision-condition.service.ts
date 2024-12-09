@@ -48,24 +48,16 @@ export class NoticeOfIntentDecisionConditionService {
     }
   }
 
-  async createDate(conditionUuid: string, dateDto: NoticeOfIntentDecisionConditionDateDto) {
+  async setDates(
+    conditionUuid: string,
+    dateDtos: NoticeOfIntentDecisionConditionDateDto[],
+  ): Promise<NoticeOfIntentDecisionConditionDateDto[]> {
     try {
-      await firstValueFrom(
-        this.http.post<NoticeOfIntentDecisionConditionDateDto>(
+      return await firstValueFrom(
+        this.http.put<NoticeOfIntentDecisionConditionDateDto[]>(
           `${this.url}/date?conditionUuid=${conditionUuid}`,
-          dateDto,
+          dateDtos,
         ),
-      );
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to create date');
-      throw e;
-    }
-  }
-
-  async updateDate(dateUuid: string, dateDto: NoticeOfIntentDecisionConditionDateDto) {
-    try {
-      await firstValueFrom(
-        this.http.patch<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');

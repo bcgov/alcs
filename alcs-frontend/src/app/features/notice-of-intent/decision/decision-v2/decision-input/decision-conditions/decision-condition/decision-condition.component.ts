@@ -23,6 +23,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   @Input() selectableComponents: SelectableComponent[] = [];
 
+  uuid: string | undefined;
+
   dates: NoticeOfIntentDecisionConditionDateDto[] = [];
 
   singleDateLabel = 'End Date';
@@ -58,6 +60,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
+    this.uuid = this.data.uuid;
+
     this.fetchDates(this.data.uuid);
 
     if (this.data.type) {
@@ -206,8 +210,11 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         },
       })
       .beforeClosed()
-      .subscribe((data) => {
-        // TODO: Handle save
+      .subscribe(async (dates) => {
+        if (!this.uuid) {
+          return;
+        }
+        this.dates = await this.decisionConditionService.setDates(this.uuid, dates);
       });
   }
 }
