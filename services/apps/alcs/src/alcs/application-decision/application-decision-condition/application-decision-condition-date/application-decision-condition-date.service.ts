@@ -85,6 +85,32 @@ export class ApplicationDecisionConditionDateService {
     return plainToInstance(ApplicationDecisionConditionDateDto, updatedCondition.dates);
   }
 
+  async update(uuid: string, dto: ApplicationDecisionConditionDateDto): Promise<ApplicationDecisionConditionDateDto> {
+    const entity = await this.repository.findOneOrFail({
+      where: { uuid },
+    });
+
+    if (!entity) {
+      throw new ServiceNotFoundException('Date not found.');
+    }
+
+    if (dto.date) {
+      entity.date = new Date(dto.date);
+    }
+    if (dto.completedDate) {
+      entity.completedDate = new Date(dto.completedDate);
+    } else if (dto.completedDate === null) {
+      entity.completedDate = null;
+    }
+    if (dto.comment) {
+      entity.comment = dto.comment;
+    }
+
+    const updatedEntity = await this.repository.save(entity);
+
+    return plainToInstance(ApplicationDecisionConditionDateDto, updatedEntity);
+  }
+
   async delete(uuid: string) {
     return await this.repository.delete(uuid);
   }

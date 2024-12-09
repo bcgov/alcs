@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
@@ -26,6 +26,15 @@ export class NoticeOfIntentDecisionConditionDateController {
     @Body() dtos: NoticeOfIntentDecisionConditionDateDto[],
   ): Promise<NoticeOfIntentDecisionConditionDateDto[]> {
     return await this.service.set(conditionUuid, dtos);
+  }
+
+  @Patch('/:uuid')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async update(
+    @Param('uuid') uuid: string,
+    @Body() dto: NoticeOfIntentDecisionConditionDateDto,
+  ): Promise<NoticeOfIntentDecisionConditionDateDto> {
+    return await this.service.update(uuid, dto);
   }
 
   @Delete('/:uuid')
