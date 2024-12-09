@@ -93,6 +93,20 @@ export class ApplicationDecisionConditionService {
     }
   }
 
+  async updateDate(
+    dateUuid: string,
+    dateDto: ApplicationDecisionConditionDateDto,
+  ): Promise<ApplicationDecisionConditionDateDto> {
+    try {
+      return await firstValueFrom(
+        this.http.patch<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
+      throw e;
+    }
+  }
+
   async deleteDate(dateUuid: string) {
     try {
       await firstValueFrom(this.http.delete<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`));
