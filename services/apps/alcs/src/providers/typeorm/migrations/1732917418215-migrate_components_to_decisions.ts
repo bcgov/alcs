@@ -26,20 +26,27 @@ export class MigrateComponentsToDecisions1732917418215 implements MigrationInter
                     END
                 END AS single_date
                 FROM alcs.application_decision_component
-                WHERE (end_date IS NOT NULL OR end_date2 IS NOT NULL OR expiry_date IS NOT NULL)
+                WHERE (end_date IS NOT NULL OR end_date2 IS NOT NULL OR expiry_date IS NOT NULL) AND audit_deleted_date_at IS NULL
             ),
             new_conditions AS (
-                INSERT INTO alcs.application_decision_condition ("audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid", "single_date")
+                INSERT INTO alcs.application_decision_condition ("audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid")
                 SELECT 
-                "audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid", "single_date"
+                "audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid"
                 FROM selected_components
                 RETURNING uuid
             ),
             selected_components_rows AS (
-                SELECT component_uuid, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS rn FROM selected_components
+                SELECT component_uuid, single_date, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS rn FROM selected_components
             ),
             new_conditions_rows AS (
                 SELECT uuid AS condition_uuid, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS rn FROM new_conditions
+            ),
+			new_dates AS (				
+				INSERT INTO alcs.application_decision_condition_date ("audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "condition_uuid", "date")
+	            SELECT now(), now(), 'migration_seed', 'migration_seed', q2.condition_uuid, q1.single_date
+	            FROM selected_components_rows q1
+	            FULL OUTER JOIN new_conditions_rows q2
+	            ON q1.rn = q2.rn
             )
             INSERT INTO alcs.application_decision_condition_component (application_decision_component_uuid, application_decision_condition_uuid)
             SELECT q1.component_uuid, q2.condition_uuid
@@ -70,20 +77,27 @@ export class MigrateComponentsToDecisions1732917418215 implements MigrationInter
                     END
                 END AS single_date
                 FROM alcs.notice_of_intent_decision_component
-                WHERE (end_date IS NOT NULL OR end_date2 IS NOT NULL OR expiry_date IS NOT NULL)
+                WHERE (end_date IS NOT NULL OR end_date2 IS NOT NULL OR expiry_date IS NOT NULL) AND audit_deleted_date_at IS NULL
             ),
             new_conditions AS (
-                INSERT INTO alcs.notice_of_intent_decision_condition ("audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid", "single_date")
+                INSERT INTO alcs.notice_of_intent_decision_condition ("audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid")
                 SELECT 
-                "audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid", "single_date"
+                "audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "description", "type_code", "decision_uuid"
                 FROM selected_components
                 RETURNING uuid
             ),
             selected_components_rows AS (
-                SELECT component_uuid, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS rn FROM selected_components
+                SELECT component_uuid, single_date, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS rn FROM selected_components
             ),
             new_conditions_rows AS (
                 SELECT uuid AS condition_uuid, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS rn FROM new_conditions
+            ),
+			new_dates AS (				
+				INSERT INTO alcs.notice_of_intent_decision_condition_date ("audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "condition_uuid", "date")
+	            SELECT now(), now(), 'migration_seed', 'migration_seed', q2.condition_uuid, q1.single_date
+	            FROM selected_components_rows q1
+	            FULL OUTER JOIN new_conditions_rows q2
+	            ON q1.rn = q2.rn
             )
             INSERT INTO alcs.notice_of_intent_decision_condition_component (notice_of_intent_decision_component_uuid, notice_of_intent_decision_condition_uuid)
             SELECT q1.component_uuid, q2.condition_uuid
