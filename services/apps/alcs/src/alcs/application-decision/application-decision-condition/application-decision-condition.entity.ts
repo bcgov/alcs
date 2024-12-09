@@ -6,6 +6,7 @@ import { ApplicationDecisionConditionComponentPlanNumber } from '../application-
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
+import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 
 @Entity({ comment: 'Fields present on the application decision conditions' })
 export class ApplicationDecisionCondition extends Base {
@@ -77,4 +78,7 @@ export class ApplicationDecisionCondition extends Base {
     cascade: ['insert', 'update', 'remove'],
   })
   conditionToComponentsWithPlanNumber: ApplicationDecisionConditionComponentPlanNumber[] | null;
+
+  @OneToMany(() => ApplicationDecisionConditionDate, (d) => d.condition)
+  dates: ApplicationDecisionConditionDate[];
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date.entity';
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
@@ -40,63 +40,49 @@ export class ApplicationDecisionConditionDateService {
     return dtos;
   }
 
-  async create(
+  async set(
     conditionUuid: string,
-    dto: ApplicationDecisionConditionDateDto,
-  ): Promise<ApplicationDecisionConditionDateDto> {
-    if (!dto.date) {
-      throw new ServiceValidationException('Must supply date');
-    }
-
+    dtos: ApplicationDecisionConditionDateDto[],
+  ): Promise<ApplicationDecisionConditionDateDto[]> {
     const condition = await this.conditionRepository.findOne({
-      where: {
-        uuid: conditionUuid,
-      },
+      where: { uuid: conditionUuid },
+      relations: { dates: true },
     });
 
-    // Dates must be associated with a condition
     if (!condition) {
-      throw new ServiceNotFoundException('No condition found.');
+      throw new ServiceValidationException('Dates must be associated with a condtion');
     }
 
-    if (!dto.date) {
-      throw new ServiceValidationException('Must specify date');
-    }
+    const dateEntities = dtos.map((dto) => {
+      const entity = new ApplicationDecisionConditionDate();
 
-    const entity = new ApplicationDecisionConditionDate({
-      date: new Date(dto.date),
-      condition: condition,
+      if (!dto.uuid && !dto.date) {
+        throw new ServiceValidationException('Must supply UUID of existing date or date.');
+      }
+
+      if (dto.uuid) {
+        entity.uuid = dto.uuid;
+      }
+      if (dto.date) {
+        entity.date = new Date(dto.date);
+      }
+      if (dto.completedDate) {
+        entity.completedDate = new Date(dto.completedDate);
+      } else if (dto.completedDate === null) {
+        entity.completedDate = null;
+      }
+      if (dto.comment) {
+        entity.comment = dto.comment;
+      }
+
+      return entity;
     });
 
-    const createdEntity = this.repository.save(entity);
+    condition.dates = dateEntities;
 
-    return plainToInstance(ApplicationDecisionConditionDateDto, createdEntity);
-  }
+    const updatedCondition = await condition.save();
 
-  async update(uuid: string, dto: ApplicationDecisionConditionDateDto): Promise<ApplicationDecisionConditionDateDto> {
-    const entity = await this.repository.findOneOrFail({
-      where: { uuid },
-    });
-
-    if (!entity) {
-      throw new ServiceNotFoundException('Date not found.');
-    }
-
-    if (dto.date) {
-      entity.date = new Date(dto.date);
-    }
-    if (dto.completedDate) {
-      entity.completedDate = new Date(dto.completedDate);
-    } else if (dto.completedDate === null) {
-      entity.completedDate = null;
-    }
-    if (dto.comment) {
-      entity.comment = dto.comment;
-    }
-
-    const updatedEntity = await this.repository.save(entity);
-
-    return plainToInstance(ApplicationDecisionConditionDateDto, updatedEntity);
+    return plainToInstance(ApplicationDecisionConditionDateDto, updatedCondition.dates);
   }
 
   async delete(uuid: string) {
