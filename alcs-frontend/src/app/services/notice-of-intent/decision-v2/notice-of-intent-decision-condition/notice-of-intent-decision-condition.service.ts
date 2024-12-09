@@ -60,7 +60,7 @@ export class NoticeOfIntentDecisionConditionService {
         ),
       );
     } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to set dates');
       throw e;
     }
   }
