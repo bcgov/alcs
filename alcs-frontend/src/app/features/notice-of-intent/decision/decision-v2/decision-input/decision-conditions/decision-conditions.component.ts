@@ -41,6 +41,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   @Input() components: NoticeOfIntentDecisionComponentDto[] = [];
   @Input() conditions: NoticeOfIntentDecisionConditionDto[] = [];
   @Input() showError = false;
+  @Input() showDateErrors = false;
   @ViewChildren(DecisionConditionComponent) conditionComponents: DecisionConditionComponent[] = [];
 
   @Output() conditionsChange = new EventEmitter<{

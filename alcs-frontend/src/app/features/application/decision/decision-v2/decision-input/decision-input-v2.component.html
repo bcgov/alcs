@@ -208,6 +208,7 @@
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
       [showError]="showErrors && conditionUpdates.length < 1 && showConditions"
+      [showDateErrors]="showErrors && requiredDatesAreMissing()"
     ></app-app-decision-conditions>
   </div>
 

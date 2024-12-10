@@ -2,9 +2,18 @@
   <h5>{{ data.type?.label }}</h5>
   <div class="buttons">
     <ng-container *ngIf="showMultiDateUi">
-      <button type="button" class="remove-button" mat-flat-button color="primary" (click)="openDateDialog(true)">
-        + Due Dates
-      </button>
+      <div class="add-date-button-wrapper">
+        <button
+          type="button"
+          [ngClass]="{ 'add-date-button': true, 'error-field-outlined ng-invalid': showDateError }"
+          mat-flat-button
+          color="primary"
+          (click)="openDateDialog(true)"
+        >
+          + Due Dates
+        </button>
+        <app-error-message *ngIf="showDateError"></app-error-message>
+      </div>
     </ng-container>
     <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
   </div>

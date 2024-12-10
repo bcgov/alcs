@@ -20,6 +20,13 @@ import moment, { Moment } from 'moment';
 })
 export class DecisionConditionComponent implements OnInit, OnChanges {
   @Input() data!: TempApplicationDecisionConditionDto;
+  _showDateError = false;
+  @Input() set showDateError(value: boolean) {
+    this._showDateError = value;
+  }
+  get showDateError(): boolean {
+    return this._showDateError && this.isDateRequired && (!this.dates || this.dates.length === 0);
+  }
   @Output() dataChange = new EventEmitter<TempApplicationDecisionConditionDto>();
   @Output() remove = new EventEmitter<void>();
 
