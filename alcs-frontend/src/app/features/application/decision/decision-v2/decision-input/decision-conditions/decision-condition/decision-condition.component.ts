@@ -6,7 +6,6 @@ import {
   ApplicationDecisionConditionTypeDto,
   DateType,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionConditionService } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { MatDialog } from '@angular/material/dialog';
 import {
   DecisionConditionDateDialogComponent,
@@ -57,15 +56,11 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     componentsToCondition: this.componentsToCondition,
   });
 
-  constructor(
-    private decisionConditionService: ApplicationDecisionConditionService,
-    protected dialog: MatDialog,
-  ) {}
+  constructor(protected dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.uuid = this.data.uuid;
-
-    this.fetchDates(this.uuid);
+    this.dates = this.data.dates ?? [];
 
     if (this.data.type) {
       this.initDateUi(this.data.type);
@@ -81,6 +76,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         : this.data.type?.administrativeFeeAmount?.toString(),
       description: this.data.description ?? null,
     });
+
+    if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
+      this.form.patchValue({ singleDate: moment(this.dates[0].date) });
+    }
 
     this.form.valueChanges.subscribe(this.emitChanges.bind(this));
   }
@@ -188,18 +187,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   onRemove() {
     this.remove.emit();
-  }
-
-  async fetchDates(uuid: string | undefined) {
-    if (!uuid) {
-      return;
-    }
-
-    this.dates = await this.decisionConditionService.getDates(uuid);
-
-    if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
-      this.form.patchValue({ singleDate: moment(this.dates[0].date) });
-    }
   }
 
   formatDate(timestamp: number | undefined): string {
