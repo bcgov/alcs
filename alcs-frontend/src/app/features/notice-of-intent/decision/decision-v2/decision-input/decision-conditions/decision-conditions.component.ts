@@ -20,7 +20,7 @@ import {
 } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
-import { DecisionComponentTypeDto } from 'src/app/services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { DecisionComponentTypeDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 export type TempNoticeOfIntentDecisionConditionDto = UpdateNoticeOfIntentDecisionConditionDto & { tempUuid?: string };
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };

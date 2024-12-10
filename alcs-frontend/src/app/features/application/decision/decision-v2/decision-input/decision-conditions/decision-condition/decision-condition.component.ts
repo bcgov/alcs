@@ -6,7 +6,7 @@ import {
   ApplicationDecisionConditionTypeDto,
   DateType,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionConditionService } from 'src/app/services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
+import { ApplicationDecisionConditionService } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { MatDialog } from '@angular/material/dialog';
 import {
   DecisionConditionDateDialogComponent,

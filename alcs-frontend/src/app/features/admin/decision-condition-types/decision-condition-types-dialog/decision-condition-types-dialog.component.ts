@@ -9,7 +9,7 @@ import { ApplicationDecisionConditionTypesService } from '../../../../services/a
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DecisionDialogDataInterface } from '../decision-dialog-data.interface';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
-import { NoticeOfIntentDecisionConditionTypeDto } from 'src/app/services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionConditionTypeDto } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',

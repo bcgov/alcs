@@ -12,7 +12,7 @@ import {
 } from '../../../../../shared/application-type-pill/application-type-pill.constants';
 import { CONDITION_STATUS, ConditionComponentLabels, DecisionConditionWithStatus } from '../conditions.component';
 import { environment } from '../../../../../../environments/environment';
-import { DateType } from 'src/app/services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { DateType } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 type Condition = DecisionConditionWithStatus & {
   componentLabelsStr?: string;
