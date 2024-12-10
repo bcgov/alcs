@@ -12,7 +12,7 @@ import {
   DecisionConditionDateDialogComponent,
   DueDate,
 } from '../../../../../../application/decision/decision-v2/decision-input/decision-conditions/decision-condition/decision-condition-date-dialog/decision-condition-date-dialog.component';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 @Component({
   selector: 'app-noi-decision-condition',
@@ -46,7 +46,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
   description = new FormControl<string | null>(null, [Validators.required]);
-  singleDate = new FormControl<Date | null>(null);
+  singleDate = new FormControl<Moment | null>(null);
   minDate = new Date(0);
 
   form = new FormGroup({
@@ -82,15 +82,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       description: this.data.description ?? null,
     });
 
-    this.form.patchValue({
-      securityAmount: this.data.securityAmount?.toString() ?? null,
-      administrativeFee: this.data.administrativeFee
-        ? this.data.administrativeFee?.toString()
-        : this.data.type?.administrativeFeeAmount?.toString(),
-      description: this.data.description ?? null,
-      singleDate: this.dates.length > 0 && this.dates[0].date ? new Date(this.dates[0].date) : null,
-    });
-
     this.form.valueChanges.subscribe(this.emitChanges.bind(this));
   }
 
@@ -103,7 +94,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         tempId: e.tempId,
       }));
 
-    this.dataChange.emit({
+    const conditionDto: TempNoticeOfIntentDecisionConditionDto = {
       type: this.data.type,
       tempUuid: this.data.tempUuid,
       uuid: this.data.uuid,
@@ -112,8 +103,21 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
       description: this.description.value ?? undefined,
       componentsToCondition: selectedOptions,
-      dates: this.dates,
-    });
+    };
+
+    if (this.showSingleDateField) {
+      const singleDateDto: NoticeOfIntentDecisionConditionDateDto = {};
+
+      if (this.singleDate.value) {
+        singleDateDto.date = this.singleDate.value.toDate().getTime();
+      }
+
+      conditionDto.dates = [singleDateDto];
+    } else {
+      conditionDto.dates = this.dates;
+    }
+
+    this.dataChange.emit(conditionDto);
   }
 
   initDateUi(type: NoticeOfIntentDecisionConditionTypeDto) {
@@ -194,7 +198,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     this.dates = await this.decisionConditionService.getDates(uuid);
 
     if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
-      this.form.patchValue({ singleDate: new Date(this.dates[0].date) });
+      this.form.patchValue({ singleDate: moment(this.dates[0].date) });
     }
   }
 

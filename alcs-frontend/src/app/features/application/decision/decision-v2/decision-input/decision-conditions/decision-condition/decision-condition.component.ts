@@ -12,7 +12,7 @@ import {
   DecisionConditionDateDialogComponent,
   DueDate,
 } from './decision-condition-date-dialog/decision-condition-date-dialog.component';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 @Component({
   selector: 'app-app-decision-condition',
@@ -46,7 +46,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
   description = new FormControl<string | null>(null, [Validators.required]);
-  singleDate = new FormControl<Date | null>(null);
+  singleDate = new FormControl<Moment | null>(null);
   minDate = new Date(0);
 
   form = new FormGroup({
@@ -93,7 +93,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         componentToConditionType: e.code,
         tempId: e.tempId,
       }));
-    this.dataChange.emit({
+
+    const conditionDto: TempApplicationDecisionConditionDto = {
       type: this.data.type,
       tempUuid: this.data.tempUuid,
       uuid: this.data.uuid,
@@ -102,8 +103,21 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
       description: this.description.value ?? undefined,
       componentsToCondition: selectedOptions,
-      dates: this.dates,
-    });
+    };
+
+    if (this.showSingleDateField) {
+      const singleDateDto: ApplicationDecisionConditionDateDto = {};
+
+      if (this.singleDate.value) {
+        singleDateDto.date = this.singleDate.value.toDate().getTime();
+      }
+
+      conditionDto.dates = [singleDateDto];
+    } else {
+      conditionDto.dates = this.dates;
+    }
+
+    this.dataChange.emit(conditionDto);
   }
 
   initDateUi(type: ApplicationDecisionConditionTypeDto) {
@@ -184,7 +198,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     this.dates = await this.decisionConditionService.getDates(uuid);
 
     if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
-      this.form.patchValue({ singleDate: new Date(this.dates[0].date) });
+      this.form.patchValue({ singleDate: moment(this.dates[0].date) });
     }
   }
 
