@@ -31,6 +31,7 @@ export class ApplicationDecisionConditionService {
       where: { uuid },
       relations: {
         type: true,
+        dates: true,
       },
     });
   }
