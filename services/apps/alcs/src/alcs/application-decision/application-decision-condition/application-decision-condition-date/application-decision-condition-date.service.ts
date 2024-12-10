@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date.entity';
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
@@ -40,42 +40,6 @@ export class ApplicationDecisionConditionDateService {
     return dtos;
   }
 
-  async set(
-    conditionUuid: string,
-    dtos: ApplicationDecisionConditionDateDto[],
-  ): Promise<ApplicationDecisionConditionDateDto[]> {
-    const condition = await this.conditionRepository.findOne({
-      where: { uuid: conditionUuid },
-      relations: ['dates'],
-    });
-
-    if (!condition) {
-      throw new ServiceValidationException('Dates must be associated with a condtion');
-    }
-
-    const dateEntities = dtos.map((dto) => {
-      const entity = this.repository.create();
-
-      if (!dto.uuid && !dto.date) {
-        throw new ServiceValidationException('Must supply UUID of existing date or date.');
-      }
-
-      if (dto.uuid) {
-        entity.uuid = dto.uuid;
-      }
-
-      this.map(dto, entity);
-
-      return entity;
-    });
-
-    condition.dates = dateEntities;
-
-    const updatedCondition = await condition.save();
-
-    return plainToInstance(ApplicationDecisionConditionDateDto, updatedCondition.dates);
-  }
-
   async update(uuid: string, dto: ApplicationDecisionConditionDateDto): Promise<ApplicationDecisionConditionDateDto> {
     const entity = await this.repository.findOneOrFail({
       where: { uuid },
@@ -90,10 +54,6 @@ export class ApplicationDecisionConditionDateService {
     const updatedEntity = await this.repository.save(entity);
 
     return plainToInstance(ApplicationDecisionConditionDateDto, updatedEntity);
-  }
-
-  async delete(uuid: string) {
-    return await this.repository.delete(uuid);
   }
 
   map(dto: ApplicationDecisionConditionDateDto, entity: ApplicationDecisionConditionDate) {

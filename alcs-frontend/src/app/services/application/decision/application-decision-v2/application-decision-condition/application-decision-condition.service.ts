@@ -16,7 +16,10 @@ import {
 export class ApplicationDecisionConditionService {
   private url = `${environment.apiUrl}/v2/application-decision-condition`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async update(uuid: string, data: UpdateApplicationDecisionConditionDto) {
     try {
@@ -36,7 +39,7 @@ export class ApplicationDecisionConditionService {
   async fetchPlanNumbers(uuid: string) {
     try {
       const res = await firstValueFrom(
-        this.http.get<ApplicationDecisionConditionToComponentPlanNumberDto[]>(`${this.url}/plan-numbers/${uuid}`)
+        this.http.get<ApplicationDecisionConditionToComponentPlanNumberDto[]>(`${this.url}/plan-numbers/${uuid}`),
       );
       return res;
     } catch (e) {
@@ -50,8 +53,8 @@ export class ApplicationDecisionConditionService {
       const res = await firstValueFrom(
         this.http.patch<ApplicationDecisionConditionDto>(
           `${this.url}/plan-numbers/condition/${conditionUuid}/component/${componentUuid}`,
-          planNumbers
-        )
+          planNumbers,
+        ),
       );
       this.toastService.showSuccessToast('Condition updated');
       return res;
@@ -72,23 +75,6 @@ export class ApplicationDecisionConditionService {
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'No dates found');
-      throw e;
-    }
-  }
-
-  async setDates(
-    conditionUuid: string,
-    dateDtos: ApplicationDecisionConditionDateDto[],
-  ): Promise<ApplicationDecisionConditionDateDto[]> {
-    try {
-      return await firstValueFrom(
-        this.http.put<ApplicationDecisionConditionDateDto[]>(
-          `${this.url}/date?conditionUuid=${conditionUuid}`,
-          dateDtos,
-        ),
-      );
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to set dates');
       throw e;
     }
   }

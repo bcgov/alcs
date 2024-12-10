@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition-date.entity';
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
@@ -40,38 +40,6 @@ export class NoticeOfIntentDecisionConditionDateService {
     return dtos;
   }
 
-  async set(
-    conditionUuid: string,
-    dtos: NoticeOfIntentDecisionConditionDateDto[],
-  ): Promise<NoticeOfIntentDecisionConditionDateDto[]> {
-    const condition = await this.conditionRepository.findOne({
-      where: { uuid: conditionUuid },
-      relations: { dates: true },
-    });
-
-    if (!condition) {
-      throw new ServiceValidationException('Dates must be associated with a condtion');
-    }
-
-    const dates = dtos.map((dto) => {
-      const entity = new NoticeOfIntentDecisionConditionDate({ condition });
-
-      if (!dto.uuid && !dto.date) {
-        throw new ServiceValidationException('Must supply UUID of existing date or date.');
-      }
-
-      this.map(dto, entity);
-
-      return entity;
-    });
-
-    condition.dates = dates;
-
-    const updatedCondition = await condition.save();
-
-    return plainToInstance(NoticeOfIntentDecisionConditionDateDto, updatedCondition.dates);
-  }
-
   async update(
     uuid: string,
     dto: NoticeOfIntentDecisionConditionDateDto,
@@ -89,10 +57,6 @@ export class NoticeOfIntentDecisionConditionDateService {
     const updatedEntity = await this.repository.save(entity);
 
     return plainToInstance(NoticeOfIntentDecisionConditionDateDto, updatedEntity);
-  }
-
-  async delete(uuid: string) {
-    return await this.repository.delete(uuid);
   }
 
   map(dto: NoticeOfIntentDecisionConditionDateDto, entity: NoticeOfIntentDecisionConditionDate) {
