@@ -7,6 +7,7 @@ import {
   ServiceNotFoundException,
   ServiceConflictException,
   BaseServiceException,
+  ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
 
 @Injectable()
@@ -72,6 +73,10 @@ export class NoticeofIntentDecisionConditionTypesService {
   }
 
   async create(createDto: NoticeOfIntentDecisionConditionTypeDto) {
+    if (await this.noiDecisionConditionTypeRepository.exists({ where: { code: createDto.code } })) {
+      throw new ServiceValidationException(`${createDto.code} code already in use or deleted.`);
+    }
+
     const type = new NoticeOfIntentDecisionConditionType();
 
     type.code = createDto.code;

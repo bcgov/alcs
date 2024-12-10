@@ -1,4 +1,4 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
@@ -45,9 +45,7 @@ export class BoardService {
   async changeBoard(cardUuid: string, code: string) {
     const card = await this.cardService.get(cardUuid);
     if (!card) {
-      throw new ServiceNotFoundException(
-        `Failed to find card with uuid ${cardUuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find card with uuid ${cardUuid}`);
     }
 
     const board = await this.boardRepository.findOne({
@@ -57,9 +55,7 @@ export class BoardService {
       relations: this.DEFAULT_RELATIONS,
     });
     if (!board) {
-      throw new ServiceNotFoundException(
-        `Failed to find Board with code ${code}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find Board with code ${code}`);
     }
 
     const initialStatus = board.statuses.find((status) => status.order === 0);
@@ -111,6 +107,9 @@ export class BoardService {
   }
 
   async create(createDto: BoardDto) {
+    if (await this.boardRepository.exists({ where: { code: createDto.code } })) {
+      throw new ServiceValidationException(`${createDto.code} code already in use.`);
+    }
     await this.saveUpdates(
       new Board({
         code: createDto.code,
