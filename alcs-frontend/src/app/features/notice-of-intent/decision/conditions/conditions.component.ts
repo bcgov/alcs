@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
-import { Subject, takeUntil } from 'rxjs';
+import { from, map, Subject, switchMap, takeUntil } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import {
   NoticeOfIntentDecisionCodesDto,
+  NoticeOfIntentDecisionConditionDateDto,
   NoticeOfIntentDecisionConditionDto,
   NoticeOfIntentDecisionWithLinkedResolutionDto,
 } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
@@ -15,6 +16,7 @@ import {
   MODIFICATION_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
+import { NoticeOfIntentDecisionConditionService } from 'src/app/services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -59,6 +61,7 @@ export class ConditionsComponent implements OnInit {
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private decisionService: NoticeOfIntentDecisionV2Service,
+    private conditionService: NoticeOfIntentDecisionConditionService,
     private activatedRouter: ActivatedRoute,
   ) {
     this.today = moment().startOf('day').toDate().getTime();
@@ -78,21 +81,47 @@ export class ConditionsComponent implements OnInit {
 
   async loadDecisions(fileNumber: string) {
     this.codes = await this.decisionService.fetchCodes();
-    this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      this.decisions = decisions.map((decision) => {
-        if (decision.uuid === this.decisionUuid) {
-          const conditions = this.mapConditions(decision, decisions);
+    this.decisionService.$decisions
+      .pipe(takeUntil(this.$destroy))
+      .pipe(
+        switchMap((decisions) =>
+          from(this.getDatesByConditionUuid(decisions)).pipe(
+            map((datesByConditionUuid) => ({
+              decisions,
+              datesByConditionUuid,
+            })),
+          ),
+        ),
+      )
+      .subscribe(({ decisions, datesByConditionUuid }) => {
+        this.decisions = decisions.map((decision) => {
+          if (decision.uuid === this.decisionUuid) {
+            const conditions = this.mapConditions(decision, datesByConditionUuid, decisions);
 
-          this.sortConditions(decision, conditions);
+            this.sortConditions(decision, conditions);
 
-          this.decision = decision as DecisionWithConditionComponentLabels;
-        }
+            this.decision = decision as DecisionWithConditionComponentLabels;
+          }
 
-        return decision as DecisionWithConditionComponentLabels;
+          return decision as DecisionWithConditionComponentLabels;
+        });
       });
-    });
 
     this.decisionService.loadDecisions(fileNumber);
+  }
+
+  private async getDatesByConditionUuid(
+    decisions: NoticeOfIntentDecisionWithLinkedResolutionDto[],
+  ): Promise<Map<string, NoticeOfIntentDecisionConditionDateDto[]>> {
+    let datesByConditionUuid = new Map<string, NoticeOfIntentDecisionConditionDateDto[]>();
+
+    for (const decision of decisions) {
+      for (const condition of decision.conditions) {
+        datesByConditionUuid.set(condition.uuid, await this.conditionService.getDates(condition.uuid));
+      }
+    }
+
+    return datesByConditionUuid;
   }
 
   private sortConditions(
@@ -115,10 +144,12 @@ export class ConditionsComponent implements OnInit {
 
   private mapConditions(
     decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
+    datesByConditionUuid: Map<string, NoticeOfIntentDecisionConditionDateDto[]>,
     decisions: NoticeOfIntentDecisionWithLinkedResolutionDto[],
   ) {
     return decision.conditions.map((condition) => {
-      const status = this.getStatus(condition, decision);
+      const dates = datesByConditionUuid.get(condition.uuid) ?? [];
+      const status = this.getStatus(dates, decision);
 
       return {
         ...condition,
@@ -146,13 +177,14 @@ export class ConditionsComponent implements OnInit {
   }
 
   private getStatus(
-    condition: NoticeOfIntentDecisionConditionDto,
+    dates: NoticeOfIntentDecisionConditionDateDto[],
     decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
   ) {
     let status = '';
-    if (condition.completionDate && condition.completionDate <= this.today) {
+    status = CONDITION_STATUS.COMPLETE;
+    if (dates.length > 0 && dates.every((date) => date.completedDate && date.completedDate <= this.today)) {
       status = CONDITION_STATUS.COMPLETE;
-    } else if (!decision.isDraft) {
+    } else if (decision.isDraft === false) {
       status = CONDITION_STATUS.INCOMPLETE;
     } else {
       status = '';

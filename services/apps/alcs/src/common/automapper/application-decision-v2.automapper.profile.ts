@@ -209,14 +209,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionCondition,
         ApplicationDecisionConditionDto,
         forMember(
-          (ad) => ad.completionDate,
-          mapFrom((a) => a.completionDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.singleDate,
-          mapFrom((a) => a.singleDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
@@ -241,8 +233,12 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((entity) => (entity.administrativeFeeAmount !== null ? entity.administrativeFeeAmount : null)),
         ),
         forMember(
-          (dto) => dto.isSingleDateRequired,
-          mapFrom((entity) => (entity.isSingleDateRequired !== null ? entity.isSingleDateRequired : null)),
+          (dto) => dto.isDateRequired,
+          mapFrom((entity) => (entity.isDateRequired !== null ? entity.isDateRequired : null)),
+        ),
+        forMember(
+          (dto) => dto.dateType,
+          mapFrom((entity) => (entity.dateType !== null ? entity.dateType : null)),
         ),
         forMember(
           (dto) => dto.singleDateLabel,
