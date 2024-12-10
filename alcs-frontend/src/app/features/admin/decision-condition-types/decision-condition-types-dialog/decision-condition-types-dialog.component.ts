@@ -8,6 +8,7 @@ import { ApplicationDecisionConditionTypesService } from '../../../../services/a
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DecisionDialogDataInterface } from '../decision-dialog-data.interface';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
+import { codeExistsValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -34,7 +35,10 @@ export class DecisionConditionTypesDialogComponent {
         Validators.required,
       ]),
       label: new FormControl(this.data?.content?.label ? this.data.content.label : '', [Validators.required]),
-      code: new FormControl(this.data?.content?.code ? this.data.content.code : '', [Validators.required]),
+      code: new FormControl(this.data?.content?.code ? this.data.content.code : '', [
+        Validators.required,
+        codeExistsValidator(this.data?.existingCodes ? this.data.existingCodes : []),
+      ]),
       isActive: new FormControl<boolean>(this.data && this.data.content ? this.data.content.isActive : true, [
         Validators.required,
       ]),

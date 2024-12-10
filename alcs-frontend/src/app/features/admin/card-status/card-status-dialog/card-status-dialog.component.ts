@@ -2,6 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CardStatusDto } from '../../../../services/application/application-code.dto';
 import { CardStatusService } from '../../../../services/card/card-status/card-status.service';
+import { NgModel } from '@angular/forms';
+import { codeExistsDirectiveValidator } from 'src/app/shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -19,16 +21,20 @@ export class CardStatusDialogComponent implements OnInit {
   canDeleteReason = '';
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: CardStatusDto | undefined,
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      cardStatus: CardStatusDto | undefined;
+      existingCodes: string[];
+    },
     private dialogRef: MatDialogRef<CardStatusDialogComponent>,
-    private cardStatusService: CardStatusService
+    private cardStatusService: CardStatusService,
   ) {
-    if (data) {
-      this.description = data.description;
-      this.label = data.label;
-      this.code = data.code;
+    if (data.cardStatus) {
+      this.description = data.cardStatus.description;
+      this.label = data.cardStatus.label;
+      this.code = data.cardStatus.code;
     }
-    this.isEdit = !!data;
+    this.isEdit = !!data.cardStatus;
   }
 
   async onSubmit() {
@@ -64,5 +70,9 @@ export class CardStatusDialogComponent implements OnInit {
   async onDelete() {
     await this.cardStatusService.delete(this.code);
     this.dialogRef.close(true);
+  }
+
+  isCodeExisiting(model: NgModel) {
+    return codeExistsDirectiveValidator(model, this.data.existingCodes, this.code);
   }
 }
