@@ -40,11 +40,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   numberOfSelectedConditions = 0;
 
   componentsToCondition = new FormControl<string[] | null>(null, [Validators.required]);
-  approvalDependant = new FormControl<boolean | null>(null, [Validators.required]);
+  description = new FormControl<string | null>(null, [Validators.required]);
 
   securityAmount = new FormControl<string | null>(null);
   administrativeFee = new FormControl<string | null>(null);
-  description = new FormControl<string | null>(null, [Validators.required]);
   singleDate = new FormControl<Moment | null>(null);
   minDate = new Date(0);
 
@@ -97,7 +96,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       type: this.data.type,
       tempUuid: this.data.tempUuid,
       uuid: this.data.uuid,
-      approvalDependant: this.approvalDependant.value,
       securityAmount: this.securityAmount.value !== null ? parseFloat(this.securityAmount.value) : undefined,
       administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
       description: this.description.value ?? undefined,
