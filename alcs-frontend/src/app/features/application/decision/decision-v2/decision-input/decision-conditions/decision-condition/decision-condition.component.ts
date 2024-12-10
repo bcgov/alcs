@@ -8,7 +8,10 @@ import {
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionService } from 'src/app/services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DecisionConditionDateDialogComponent } from './decision-condition-date-dialog/decision-condition-date-dialog.component';
+import {
+  DecisionConditionDateDialogComponent,
+  DueDate,
+} from './decision-condition-date-dialog/decision-condition-date-dialog.component';
 import moment from 'moment';
 
 @Component({
@@ -79,24 +82,27 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       description: this.data.description ?? null,
     });
 
-    this.form.valueChanges.subscribe((changes) => {
-      const selectedOptions = this.selectableComponents
-        .filter((component) => this.componentsToCondition.value?.includes(component.tempId))
-        .map((e) => ({
-          componentDecisionUuid: e.decisionUuid,
-          componentToConditionType: e.code,
-          tempId: e.tempId,
-        }));
-      this.dataChange.emit({
-        type: this.data.type,
-        tempUuid: this.data.tempUuid,
-        uuid: this.data.uuid,
-        approvalDependant: this.approvalDependant.value,
-        securityAmount: this.securityAmount.value !== null ? parseFloat(this.securityAmount.value) : undefined,
-        administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
-        description: this.description.value ?? undefined,
-        componentsToCondition: selectedOptions,
-      });
+    this.form.valueChanges.subscribe(this.emitChanges.bind(this));
+  }
+
+  emitChanges() {
+    const selectedOptions = this.selectableComponents
+      .filter((component) => this.componentsToCondition.value?.includes(component.tempId))
+      .map((e) => ({
+        componentDecisionUuid: e.decisionUuid,
+        componentToConditionType: e.code,
+        tempId: e.tempId,
+      }));
+    this.dataChange.emit({
+      type: this.data.type,
+      tempUuid: this.data.tempUuid,
+      uuid: this.data.uuid,
+      approvalDependant: this.approvalDependant.value,
+      securityAmount: this.securityAmount.value !== null ? parseFloat(this.securityAmount.value) : undefined,
+      administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
+      description: this.description.value ?? undefined,
+      componentsToCondition: selectedOptions,
+      dates: this.dates,
     });
   }
 
@@ -200,11 +206,15 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         },
       })
       .beforeClosed()
-      .subscribe(async (dates) => {
+      .subscribe(async (dates: DueDate[]) => {
         if (!this.uuid) {
           return;
         }
-        this.dates = await this.decisionConditionService.setDates(this.uuid, dates);
+        this.dates = dates.map((date) => ({
+          uuid: date.uuid,
+          date: date.date?.toDate().getTime(),
+        }));
+        this.emitChanges();
       });
   }
 }

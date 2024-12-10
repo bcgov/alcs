@@ -92,6 +92,7 @@ export interface NoticeOfIntentDecisionConditionDto {
   type: NoticeOfIntentDecisionConditionTypeDto;
   componentUuid: string | null;
   components?: NoticeOfIntentDecisionComponentDto[];
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export interface ComponentToCondition {
@@ -101,11 +102,10 @@ export interface ComponentToCondition {
 }
 
 export interface NoticeOfIntentDecisionConditionDateDto {
-  uuid: string;
+  uuid?: string;
   date?: number;
   completedDate?: number | null;
-  comment?: string;
-  condition: NoticeOfIntentDecisionConditionDto;
+  comment?: string | null;
 }
 
 export interface UpdateNoticeOfIntentDecisionConditionDto {
@@ -116,6 +116,7 @@ export interface UpdateNoticeOfIntentDecisionConditionDto {
   administrativeFee?: number | null;
   description?: string | null;
   type?: NoticeOfIntentDecisionConditionTypeDto;
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export interface NoticeOfIntentDecisionComponentTypeDto extends BaseCodeDto {}

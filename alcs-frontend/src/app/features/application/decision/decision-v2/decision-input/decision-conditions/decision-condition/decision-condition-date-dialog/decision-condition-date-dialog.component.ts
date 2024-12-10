@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import moment, { Moment } from 'moment';
 
-interface DueDate {
+export interface DueDate {
   uuid?: string;
   date?: Moment;
 }

@@ -4,6 +4,7 @@ import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { ApplicationDecisionComponentDto } from '../application-decision-v2/application-decision/component/application-decision-component.dto';
 import { DateLabel, DateType } from './application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
+import { ApplicationDecisionConditionDateDto } from './application-decision-condition-date/application-decision-condition-date.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -84,6 +85,9 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap()
   components?: ApplicationDecisionComponentDto[];
+
+  @AutoMap()
+  dates: ApplicationDecisionConditionDateDto[];
 }
 
 export class ComponentToConditionDto {
@@ -124,6 +128,10 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsString()
   type?: ApplicationDecisionConditionTypeDto;
+
+  @IsOptional()
+  @IsArray()
+  dates?: ApplicationDecisionConditionDateDto[];
 }
 
 export class UpdateApplicationDecisionConditionServiceDto {
@@ -133,6 +141,7 @@ export class UpdateApplicationDecisionConditionServiceDto {
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;
+  dates?: ApplicationDecisionConditionDateDto[];
 }
 
 export class ApplicationDecisionConditionComponentDto {

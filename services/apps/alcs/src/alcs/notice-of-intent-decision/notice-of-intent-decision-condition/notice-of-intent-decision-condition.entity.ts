@@ -75,6 +75,8 @@ export class NoticeOfIntentDecisionCondition extends Base {
   })
   oatsConditionId: number;
 
-  @OneToMany(() => NoticeOfIntentDecisionConditionDate, (d) => d.condition)
+  @OneToMany(() => NoticeOfIntentDecisionConditionDate, (d) => d.condition, {
+    cascade: ['insert', 'update'],
+  })
   dates: NoticeOfIntentDecisionConditionDate[];
 }
