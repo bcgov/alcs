@@ -61,13 +61,4 @@ export class NoticeOfIntentDecisionConditionService {
       throw e;
     }
   }
-
-  async deleteDate(dateUuid: string) {
-    try {
-      await firstValueFrom(this.http.delete<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`));
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to delete date');
-      throw e;
-    }
-  }
 }
