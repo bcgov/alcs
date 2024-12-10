@@ -43,7 +43,7 @@ export class ApplicationDecisionV2Service {
 
   async getStatus(conditionUuid: string): Promise<ApplicationDecisionStatus> {
     try {
-      return await firstValueFrom(this.http.get<ApplicationDecisionStatus>(`${this.url}/condition/${conditionUuid}`));
+      return await firstValueFrom(this.http.get<ApplicationDecisionStatus>(`${this.url}/condition/${conditionUuid}/status`));
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'No status found');
       throw e;

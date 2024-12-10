@@ -60,7 +60,7 @@ export class NoticeOfIntentDecisionV2Controller {
     );
   }
 
-  @Get('/condition/:uuid')
+  @Get('/condition/:uuid/status')
   @UserRoles(...ANY_AUTH_ROLE)
   async getConditionStatus(@Param('uuid') uuid): Promise<NoticeOfIntentConditionStatus> {
     const status = await this.noticeOfIntentDecisionV2Service.getDecisionConditionStatus(uuid);

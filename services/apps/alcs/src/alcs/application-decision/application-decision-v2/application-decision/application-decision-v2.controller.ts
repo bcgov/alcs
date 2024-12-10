@@ -49,7 +49,7 @@ export class ApplicationDecisionV2Controller {
     return await this.mapper.mapArrayAsync(decisions, ApplicationDecision, ApplicationDecisionDto);
   }
 
-  @Get('/condition/:uuid')
+  @Get('/condition/:uuid/status')
   @UserRoles(...ANY_AUTH_ROLE)
   async getConditionStatus(@Param('uuid') uuid): Promise<ApplicationConditionStatus> {
     const status = await this.appDecisionService.getDecisionConditionStatus(uuid);
