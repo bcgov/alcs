@@ -6,6 +6,7 @@ import { ApplicationDecisionConditionComponentPlanNumber } from '../application-
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
+import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 
 @Entity({ comment: 'Fields present on the application decision conditions' })
 export class ApplicationDecisionCondition extends Base {
@@ -44,14 +45,6 @@ export class ApplicationDecisionCondition extends Base {
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @AutoMap(() => String)
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition Completion date',
-    nullable: true,
-  })
-  completionDate?: Date | null;
-
   @ManyToOne(() => ApplicationDecisionConditionType)
   type: ApplicationDecisionConditionType;
 
@@ -86,11 +79,6 @@ export class ApplicationDecisionCondition extends Base {
   })
   conditionToComponentsWithPlanNumber: ApplicationDecisionConditionComponentPlanNumber[] | null;
 
-  @AutoMap()
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition single end/due date',
-    nullable: true,
-  })
-  singleDate?: Date | null;
+  @OneToMany(() => ApplicationDecisionConditionDate, (d) => d.condition, { cascade: ['insert', 'update'] })
+  dates: ApplicationDecisionConditionDate[];
 }

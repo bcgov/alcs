@@ -187,6 +187,7 @@
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
       [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
+      [showDateErrors]="form.touched && requiredDatesAreMissing()"
     ></app-noi-decision-conditions>
   </div>
 

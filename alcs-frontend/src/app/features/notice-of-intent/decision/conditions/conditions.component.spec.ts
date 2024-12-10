@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ConditionsComponent } from './conditions.component';
 
@@ -42,6 +43,7 @@ describe('ConditionsComponent', () => {
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
+      imports: [HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConditionsComponent);

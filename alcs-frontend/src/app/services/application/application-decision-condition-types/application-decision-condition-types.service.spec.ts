@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types.service';
+import { DateType } from '../decision/application-decision-v2/application-decision-v2.dto';
 
 describe('DecisionConditionTypesService', () => {
   let service: ApplicationDecisionConditionTypesService;
@@ -46,7 +47,9 @@ describe('DecisionConditionTypesService', () => {
       description: '',
       isActive: true,
       isAdministrativeFeeAmountChecked: false,
-      isSingleDateChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       isSecurityAmountChecked: false,
     });
 
@@ -68,7 +71,9 @@ describe('DecisionConditionTypesService', () => {
       description: '',
       isActive: true,
       isAdministrativeFeeAmountChecked: false,
-      isSingleDateChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       isSecurityAmountChecked: false,
     });
 
@@ -90,7 +95,9 @@ describe('DecisionConditionTypesService', () => {
       description: '',
       isActive: true,
       isAdministrativeFeeAmountChecked: false,
-      isSingleDateChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       isSecurityAmountChecked: false,
     });
 
@@ -112,7 +119,9 @@ describe('DecisionConditionTypesService', () => {
       description: '',
       isActive: true,
       isAdministrativeFeeAmountChecked: false,
-      isSingleDateChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       isSecurityAmountChecked: false,
     });
 

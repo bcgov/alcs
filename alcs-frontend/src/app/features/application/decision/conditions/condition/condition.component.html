@@ -1,9 +1,9 @@
 <div class="header">
   <h4 *ngIf="condition.type">{{ condition.type.label }}</h4>
-  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.INCOMPLETE">
+  <ng-container *ngIf="condition.status === CONDITION_STATUS.INCOMPLETE">
     <app-application-type-pill [type]="incompleteLabel"></app-application-type-pill>
   </ng-container>
-  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.COMPLETE">
+  <ng-container *ngIf="condition.status === CONDITION_STATUS.COMPLETE">
     <app-application-type-pill [type]="completeLabel"></app-application-type-pill>
   </ng-container>
 </div>
@@ -26,20 +26,6 @@
     <div class="subheading2">Security Amount</div>
     {{ condition.securityAmount }}
     <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
-  </div>
-
-  <div *ngIf="showSingleDateField">
-    <div class="subheading2">{{ singleDateLabel }}</div>
-    {{ singleDateFormated }}
-    <app-no-data *ngIf="condition.singleDate === null || condition.singleDate === undefined"></app-no-data>
-  </div>
-
-  <div>
-    <div class="subheading2">Completion Date</div>
-    <app-inline-datepicker
-      [value]="condition.completionDate ?? undefined"
-      (save)="onUpdateCondition('completionDate', $event)"
-    ></app-inline-datepicker>
   </div>
 
   <div *ngIf="isRequireSurveyPlan && planNumbers.length > 0" class="full-width grid-3">

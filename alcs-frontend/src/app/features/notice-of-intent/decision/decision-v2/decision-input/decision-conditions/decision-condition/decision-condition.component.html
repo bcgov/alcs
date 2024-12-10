@@ -1,6 +1,22 @@
 <div class="split">
   <h5>{{ data.type?.label }}</h5>
-  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+  <div class="buttons">
+    <ng-container *ngIf="showMultiDateUi">
+      <div class="add-date-button-wrapper">
+        <button
+          type="button"
+          [ngClass]="{ 'add-date-button': true, 'error-field-outlined ng-invalid': showDateError }"
+          mat-flat-button
+          color="primary"
+          (click)="openDateDialog(true)"
+        >
+          + Due Dates
+        </button>
+        <app-error-message *ngIf="showDateError"></app-error-message>
+      </div>
+    </ng-container>
+    <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+  </div>
 </div>
 
 <form [formGroup]="form">
@@ -59,3 +75,13 @@
     </mat-form-field>
   </div>
 </form>
+
+<ng-container *ngIf="showMultiDateUi && dates.length > 0">
+  <div class="date-list">
+    <strong>Due Dates:</strong>
+    <div class="date-chip" *ngFor="let date of dates">{{ formatDate(date.date) }}</div>
+    <button type="button" mat-icon-button class="edit-date-button" (click)="openDateDialog(false)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+</ng-container>

@@ -47,7 +47,7 @@ describe('AdminBoardManagementService', () => {
     mockHttpClient.post.mockReturnValue(
       of({
         uuid: 'fake',
-      })
+      }),
     );
 
     await service.create(mockBoard);
@@ -59,7 +59,7 @@ describe('AdminBoardManagementService', () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.create(mockBoard);
@@ -72,7 +72,7 @@ describe('AdminBoardManagementService', () => {
     mockHttpClient.put.mockReturnValue(
       of({
         uuid: 'fake',
-      })
+      }),
     );
 
     await service.update('fake', mockBoard);
@@ -84,7 +84,7 @@ describe('AdminBoardManagementService', () => {
     mockHttpClient.put.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.update('mock', mockBoard);
@@ -97,7 +97,7 @@ describe('AdminBoardManagementService', () => {
     mockHttpClient.get.mockReturnValue(
       of({
         uuid: 'fake',
-      })
+      }),
     );
 
     await service.canDelete('fake');
@@ -109,7 +109,7 @@ describe('AdminBoardManagementService', () => {
     mockHttpClient.get.mockReturnValue(
       of({
         uuid: 'fake',
-      })
+      }),
     );
 
     await service.getCardTypes();
@@ -121,7 +121,7 @@ describe('AdminBoardManagementService', () => {
     mockHttpClient.get.mockReturnValue(
       of({
         uuid: 'fake',
-      })
+      }),
     );
 
     await service.getCardCounts('board');

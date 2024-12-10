@@ -55,7 +55,6 @@ describe('ApplicationDecisionConditionController', () => {
         securityAmount: 1000,
         administrativeFee: 50,
         description: 'example description',
-        completionDate: date.getTime(),
       };
 
       const condition = new ApplicationDecisionCondition({
@@ -64,7 +63,6 @@ describe('ApplicationDecisionConditionController', () => {
         securityAmount: 500,
         administrativeFee: 25,
         description: 'existing description',
-        completionDate: new Date(),
       });
 
       const updated = new ApplicationDecisionCondition({
@@ -73,7 +71,6 @@ describe('ApplicationDecisionConditionController', () => {
         securityAmount: updates.securityAmount,
         administrativeFee: updates.administrativeFee,
         description: updates.description,
-        completionDate: date,
       });
 
       mockApplicationDecisionConditionService.getOneOrFail.mockResolvedValue(condition);
@@ -84,9 +81,7 @@ describe('ApplicationDecisionConditionController', () => {
       expect(mockApplicationDecisionConditionService.getOneOrFail).toHaveBeenCalledWith(uuid);
       expect(mockApplicationDecisionConditionService.update).toHaveBeenCalledWith(condition, {
         ...updates,
-        completionDate: date,
       });
-      expect(new Date(result.completionDate!)).toEqual(updated.completionDate);
       expect(result.description).toEqual(updated.description);
       expect(result.administrativeFee).toEqual(updated.administrativeFee);
       expect(result.securityAmount).toEqual(updated.securityAmount);
