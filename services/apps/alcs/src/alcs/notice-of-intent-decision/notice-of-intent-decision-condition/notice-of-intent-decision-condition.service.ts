@@ -20,6 +20,16 @@ export class NoticeOfIntentDecisionConditionService {
     private typeRepository: Repository<NoticeOfIntentDecisionConditionType>,
   ) {}
 
+  async getByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        type: {
+          code: typeCode,
+        },
+      },
+    });
+  }
+
   async getOneOrFail(uuid: string) {
     return this.repository.findOneOrFail({
       where: { uuid },

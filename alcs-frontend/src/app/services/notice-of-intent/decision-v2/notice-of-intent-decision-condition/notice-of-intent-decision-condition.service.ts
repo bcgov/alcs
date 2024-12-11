@@ -20,6 +20,17 @@ export class NoticeOfIntentDecisionConditionService {
     private toastService: ToastService,
   ) {}
 
+  async fetchByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionConditionDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<NoticeOfIntentDecisionConditionDto[]>(`${this.url}?type_code=${typeCode}`),
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load conditions');
+      throw e;
+    }
+  }
+
   async update(uuid: string, data: UpdateNoticeOfIntentDecisionConditionDto) {
     try {
       const res = await firstValueFrom(

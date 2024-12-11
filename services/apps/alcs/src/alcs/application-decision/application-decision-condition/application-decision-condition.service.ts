@@ -26,6 +26,16 @@ export class ApplicationDecisionConditionService {
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
   ) {}
 
+  async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        type: {
+          code: typeCode,
+        },
+      },
+    });
+  }
+
   async getOneOrFail(uuid: string) {
     return this.repository.findOneOrFail({
       where: { uuid },

@@ -21,6 +21,17 @@ export class ApplicationDecisionConditionService {
     private toastService: ToastService,
   ) {}
 
+  async fetchByTypeCode(typeCode: string): Promise<ApplicationDecisionConditionDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<ApplicationDecisionConditionDto[]>(`${this.url}?type_code=${typeCode}`),
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load conditions');
+      throw e;
+    }
+  }
+
   async update(uuid: string, data: UpdateApplicationDecisionConditionDto) {
     try {
       const res = await firstValueFrom(this.http.patch<ApplicationDecisionConditionDto>(`${this.url}/${uuid}`, data));

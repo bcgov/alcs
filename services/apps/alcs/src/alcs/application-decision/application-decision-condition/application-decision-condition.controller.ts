@@ -1,6 +1,6 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
@@ -23,6 +23,12 @@ export class ApplicationDecisionConditionController {
     private conditionService: ApplicationDecisionConditionService,
     @InjectMapper() private mapper: Mapper,
   ) {}
+
+  @Get()
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getByTypeCode(@Query('type_code') typeCode: string) {
+    return await this.conditionService.getByTypeCode(typeCode);
+  }
 
   @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
