@@ -16,7 +16,21 @@ import {
 export class ApplicationDecisionConditionService {
   private url = `${environment.apiUrl}/v2/application-decision-condition`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
+
+  async fetchByTypeCode(typeCode: string): Promise<ApplicationDecisionConditionDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<ApplicationDecisionConditionDto[]>(`${this.url}?type_code=${typeCode}`),
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load conditions');
+      throw e;
+    }
+  }
 
   async update(uuid: string, data: UpdateApplicationDecisionConditionDto) {
     try {
@@ -36,7 +50,7 @@ export class ApplicationDecisionConditionService {
   async fetchPlanNumbers(uuid: string) {
     try {
       const res = await firstValueFrom(
-        this.http.get<ApplicationDecisionConditionToComponentPlanNumberDto[]>(`${this.url}/plan-numbers/${uuid}`)
+        this.http.get<ApplicationDecisionConditionToComponentPlanNumberDto[]>(`${this.url}/plan-numbers/${uuid}`),
       );
       return res;
     } catch (e) {
@@ -50,8 +64,8 @@ export class ApplicationDecisionConditionService {
       const res = await firstValueFrom(
         this.http.patch<ApplicationDecisionConditionDto>(
           `${this.url}/plan-numbers/condition/${conditionUuid}/component/${componentUuid}`,
-          planNumbers
-        )
+          planNumbers,
+        ),
       );
       this.toastService.showSuccessToast('Condition updated');
       return res;
@@ -76,33 +90,16 @@ export class ApplicationDecisionConditionService {
     }
   }
 
-  async createDate(conditionUuid: string, dateDto: ApplicationDecisionConditionDateDto) {
+  async updateDate(
+    dateUuid: string,
+    dateDto: ApplicationDecisionConditionDateDto,
+  ): Promise<ApplicationDecisionConditionDateDto> {
     try {
-      await firstValueFrom(
-        this.http.post<ApplicationDecisionConditionDateDto>(`${this.url}/date?conditionUuid=${conditionUuid}`, dateDto),
-      );
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to create date');
-      throw e;
-    }
-  }
-
-  async updateDate(dateUuid: string, dateDto: ApplicationDecisionConditionDateDto) {
-    try {
-      await firstValueFrom(
+      return await firstValueFrom(
         this.http.patch<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
-      throw e;
-    }
-  }
-
-  async deleteDate(dateUuid: string) {
-    try {
-      await firstValueFrom(this.http.delete<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`));
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to delete date');
       throw e;
     }
   }

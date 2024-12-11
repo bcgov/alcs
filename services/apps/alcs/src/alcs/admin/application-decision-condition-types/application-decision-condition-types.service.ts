@@ -10,6 +10,7 @@ import {
   ServiceNotFoundException,
   ServiceConflictException,
   BaseServiceException,
+  ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
 
 @Injectable()
@@ -78,6 +79,10 @@ export class ApplicationDecisionConditionTypesService {
   }
 
   async create(createDto: ApplicationDecisionConditionTypeDto) {
+    if (await this.applicationDecisionConditionTypeRepository.exists({ where: { code: createDto.code } })) {
+      throw new ServiceValidationException(`${createDto.code} code already in use or deleted.`);
+    }
+
     const type = new ApplicationDecisionConditionType();
 
     type.code = createDto.code;

@@ -252,6 +252,7 @@ export interface ApplicationDecisionConditionDto {
   description?: string | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
+  dates?: ApplicationDecisionConditionDateDto[];
 }
 
 export interface UpdateApplicationDecisionConditionDto {
@@ -262,6 +263,7 @@ export interface UpdateApplicationDecisionConditionDto {
   administrativeFee?: number | null;
   description?: string | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  dates?: ApplicationDecisionConditionDateDto[];
 }
 
 export interface ComponentToCondition {
@@ -271,11 +273,10 @@ export interface ComponentToCondition {
 }
 
 export interface ApplicationDecisionConditionDateDto {
-  uuid: string;
+  uuid?: string;
   date?: number;
   completedDate?: number | null;
-  comment?: string;
-  condition: ApplicationDecisionConditionDto;
+  comment?: string | null;
 }
 
 export interface ApplicationDecisionComponentToConditionLotDto {

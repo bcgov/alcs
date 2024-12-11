@@ -7,6 +7,7 @@ import {
   DateType,
 } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
+import { NoticeOfIntentDecisionConditionDateDto } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
 
 export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -87,6 +88,9 @@ export class NoticeOfIntentDecisionConditionDto {
 
   @AutoMap()
   components?: NoticeOfIntentDecisionComponentDto[];
+
+  @AutoMap()
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export class ComponentToConditionDto {
@@ -127,6 +131,10 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   @IsOptional()
   @IsString()
   type?: NoticeOfIntentDecisionConditionTypeDto;
+
+  @IsOptional()
+  @AutoMap()
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
@@ -136,4 +144,5 @@ export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }

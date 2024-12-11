@@ -114,6 +114,7 @@ export class ApplicationDecisionV2Service {
           components: {
             lots: true,
           },
+          dates: true,
         },
       },
     });
@@ -202,6 +203,7 @@ export class ApplicationDecisionV2Service {
         conditions: {
           type: true,
           components: true,
+          dates: true,
         },
         chairReviewOutcome: true,
       },
@@ -679,7 +681,9 @@ export class ApplicationDecisionV2Service {
       relations: {
         application: true,
         components: true,
-        conditions: true,
+        conditions: {
+          dates: true,
+        },
       },
     });
 

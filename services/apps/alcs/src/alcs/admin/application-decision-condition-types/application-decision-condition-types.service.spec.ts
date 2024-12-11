@@ -7,8 +7,10 @@ import { Repository } from 'typeorm';
 import {
   ApplicationDecisionConditionType,
   DateLabel,
+  DateType,
 } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types.service';
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 describe('ApplicationDecisionConditionTypesService', () => {
   let service: ApplicationDecisionConditionTypesService;
@@ -43,6 +45,7 @@ describe('ApplicationDecisionConditionTypesService', () => {
 
   it('should successfully create decision condition type entry', async () => {
     mockRepository.save.mockResolvedValue(new ApplicationDecisionConditionType());
+    mockRepository.exists.mockResolvedValue(false);
 
     const result = await service.create({
       code: '',
@@ -54,8 +57,9 @@ describe('ApplicationDecisionConditionTypesService', () => {
       isAdministrativeFeeAmountChecked: false,
       isAdministrativeFeeAmountRequired: false,
       administrativeFeeAmount: null,
-      isSingleDateChecked: false,
-      isSingleDateRequired: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       singleDateLabel: DateLabel.DUE_DATE,
       isSecurityAmountChecked: false,
       isSecurityAmountRequired: false,
@@ -63,6 +67,30 @@ describe('ApplicationDecisionConditionTypesService', () => {
 
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(result).toBeDefined();
+  });
+
+  it('should throw an error if code already exists when creating decision condition type', async () => {
+    mockRepository.exists.mockResolvedValue(true);
+
+    await expect(
+      service.create({
+        code: 'SAMPLE',
+        description: '',
+        label: '',
+        isActive: true,
+        isComponentToConditionChecked: true,
+        isDescriptionChecked: true,
+        isAdministrativeFeeAmountChecked: false,
+        isAdministrativeFeeAmountRequired: false,
+        administrativeFeeAmount: null,
+        isDateChecked: false,
+        isDateRequired: false,
+        dateType: DateType.SINGLE,
+        singleDateLabel: DateLabel.DUE_DATE,
+        isSecurityAmountChecked: false,
+        isSecurityAmountRequired: false,
+      }),
+    ).rejects.toThrow(ServiceValidationException);
   });
 
   it('should successfully update decision condition type entry if it exists', async () => {
@@ -79,8 +107,9 @@ describe('ApplicationDecisionConditionTypesService', () => {
       isAdministrativeFeeAmountChecked: false,
       isAdministrativeFeeAmountRequired: false,
       administrativeFeeAmount: null,
-      isSingleDateChecked: false,
-      isSingleDateRequired: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       singleDateLabel: DateLabel.DUE_DATE,
       isSecurityAmountChecked: false,
       isSecurityAmountRequired: false,

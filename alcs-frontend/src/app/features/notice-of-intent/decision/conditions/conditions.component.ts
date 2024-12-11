@@ -16,7 +16,7 @@ import {
   MODIFICATION_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
-import { NoticeOfIntentDecisionConditionService } from 'src/app/services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
+import { NoticeOfIntentDecisionConditionService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 
 export type ConditionComponentLabels = {
   label: string[];

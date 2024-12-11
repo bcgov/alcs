@@ -40,6 +40,8 @@ import { ApplicationDecisionConditionToComponentLotDto } from '../../alcs/applic
 import { ApplicationDecisionConditionToComponentLot } from '../../alcs/application-decision/application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/application-decision/application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { CommissionerDecisionDto } from '../../alcs/commissioner/commissioner.dto';
+import { ApplicationDecisionConditionDate } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationDecisionConditionDateDto } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -215,6 +217,32 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? this.mapper.mapArray(a.components, ApplicationDecisionComponent, ApplicationDecisionComponentDto)
               : [],
           ),
+        ),
+        forMember(
+          (dto) => dto.dates,
+          mapFrom((entity) =>
+            entity.dates
+              ? this.mapper.mapArray(
+                  entity.dates,
+                  ApplicationDecisionConditionDate,
+                  ApplicationDecisionConditionDateDto,
+                )
+              : [],
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionDate,
+        ApplicationDecisionConditionDateDto,
+        forMember(
+          (dto) => dto.date,
+          mapFrom((entity) => entity.date.getTime()),
+        ),
+        forMember(
+          (dto) => dto.completedDate,
+          mapFrom((entity) => entity.completedDate && entity.completedDate.getTime()),
         ),
       );
 

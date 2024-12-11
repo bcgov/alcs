@@ -14,5 +14,5 @@ export class ApplicationDecisionConditionDateDto {
   completedDate?: number | null;
 
   @IsString()
-  comment?: string;
+  comment?: string | null;
 }

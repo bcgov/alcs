@@ -11,6 +11,7 @@ import {
   UpdateApplicationDecisionConditionServiceDto,
 } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
+import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
@@ -25,11 +26,23 @@ export class ApplicationDecisionConditionService {
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
   ) {}
 
+  async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        type: {
+          code: typeCode,
+        },
+      },
+      relations: ['dates'],
+    });
+  }
+
   async getOneOrFail(uuid: string) {
     return this.repository.findOneOrFail({
       where: { uuid },
       relations: {
         type: true,
+        dates: true,
       },
     });
   }
@@ -62,6 +75,23 @@ export class ApplicationDecisionConditionService {
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
       condition.approvalDependant = updateDto.approvalDependant ?? null;
+      if (updateDto.dates) {
+        condition.dates = updateDto.dates.map((dateDto) => {
+          const dateEntity = new ApplicationDecisionConditionDate();
+
+          if (dateDto.date) {
+            dateEntity.date = new Date(dateDto.date);
+          }
+          if (dateDto.completedDate) {
+            dateEntity.completedDate = new Date(dateDto.completedDate);
+          }
+          if (dateDto.comment) {
+            dateEntity.comment = dateDto.comment;
+          }
+
+          return dateEntity;
+        });
+      }
 
       if (updateDto.componentsToCondition !== undefined && updateDto.componentsToCondition.length > 0) {
         const mappedComponents: ApplicationDecisionComponent[] = [];

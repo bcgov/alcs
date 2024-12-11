@@ -9,6 +9,7 @@ import {
   UpdateNoticeOfIntentDecisionConditionServiceDto,
 } from './notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
+import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 
 @Injectable()
 export class NoticeOfIntentDecisionConditionService {
@@ -18,6 +19,17 @@ export class NoticeOfIntentDecisionConditionService {
     @InjectRepository(NoticeOfIntentDecisionConditionType)
     private typeRepository: Repository<NoticeOfIntentDecisionConditionType>,
   ) {}
+
+  async getByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        type: {
+          code: typeCode,
+        },
+      },
+      relations: ['dates'],
+    });
+  }
 
   async getOneOrFail(uuid: string) {
     return this.repository.findOneOrFail({
@@ -56,6 +68,23 @@ export class NoticeOfIntentDecisionConditionService {
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
       condition.approvalDependant = updateDto.approvalDependant ?? null;
+      if (updateDto.dates) {
+        condition.dates = updateDto.dates.map((dateDto) => {
+          const dateEntity = new NoticeOfIntentDecisionConditionDate();
+
+          if (dateDto.date) {
+            dateEntity.date = new Date(dateDto.date);
+          }
+          if (dateDto.completedDate) {
+            dateEntity.completedDate = new Date(dateDto.completedDate);
+          }
+          if (dateDto.comment) {
+            dateEntity.comment = dateDto.comment;
+          }
+
+          return dateEntity;
+        });
+      }
 
       if (updateDto.componentsToCondition !== undefined && updateDto.componentsToCondition.length > 0) {
         const mappedComponents: NoticeOfIntentDecisionComponent[] = [];

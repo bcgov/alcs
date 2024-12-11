@@ -28,6 +28,6 @@ export class NoticeOfIntentDecisionConditionDate extends Base {
   condition: NoticeOfIntentDecisionCondition;
 
   @AutoMap()
-  @Column({ type: 'text', default: '' })
-  comment: string;
+  @Column({ type: 'text', nullable: true })
+  comment: string | null;
 }

@@ -8,6 +8,9 @@
         <mat-label>Code</mat-label>
         <input required maxlength="4" minlength="4" matInput id="code" formControlName="code" name="code" />
       </mat-form-field>
+      <div *ngIf="conditionTypeForm.get('code')?.hasError('codeExists')">
+        <app-error-message message="Code already in use or deteled, pick a different code."></app-error-message>
+      </div>
     </div>
 
     <div class="full-width">
@@ -72,7 +75,13 @@
 
       <div class="condition-field">
         <div class="condition-field-header">
-          <mat-checkbox formControlName="isDateChecked">Date</mat-checkbox>
+          <div>
+            <mat-checkbox formControlName="isDateChecked"> Date </mat-checkbox>
+            <app-error-message
+              *ngIf="!conditionTypeForm.controls['isDateChecked'].valid"
+              [message]="'Field contains data, cannot be removed'"
+            ></app-error-message>
+          </div>
 
           <div class="toggle" *ngIf="conditionTypeForm.get('isDateChecked')?.value">
             <mat-label [ngClass]="{ inactive: conditionTypeForm.get('isDateRequired')?.value ?? false }"
@@ -87,7 +96,7 @@
             *ngIf="conditionTypeForm.get('isDateChecked')?.value"
             class="condition-date-types"
           >
-            <mat-radio-button [value]="DateType.SINGLE">Single- Select date label </mat-radio-button>
+            <mat-radio-button [value]="DateType.SINGLE">Single - Select date label </mat-radio-button>
             <div class="condition-fields-container" *ngIf="conditionTypeForm.value.dateType === 'single'">
               <mat-button-toggle-group
                 id="singleDateLabelId"

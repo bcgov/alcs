@@ -36,6 +36,8 @@ import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentPortalDecisionDto } from '../../portal/public/notice-of-intent/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionConditionDate } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
+import { NoticeOfIntentDecisionConditionDateDto } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
 
 @Injectable()
 export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
@@ -148,6 +150,32 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               ? this.mapper.mapArray(a.components, NoticeOfIntentDecisionComponent, NoticeOfIntentDecisionComponentDto)
               : [],
           ),
+        ),
+        forMember(
+          (dto) => dto.dates,
+          mapFrom((entity) =>
+            entity.dates
+              ? this.mapper.mapArray(
+                  entity.dates,
+                  NoticeOfIntentDecisionConditionDate,
+                  NoticeOfIntentDecisionConditionDateDto,
+                )
+              : [],
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionDate,
+        NoticeOfIntentDecisionConditionDateDto,
+        forMember(
+          (dto) => dto.date,
+          mapFrom((entity) => entity.date.getTime()),
+        ),
+        forMember(
+          (dto) => dto.completedDate,
+          mapFrom((entity) => entity.completedDate && entity.completedDate.getTime()),
         ),
       );
 

@@ -95,6 +95,7 @@ export class NoticeOfIntentDecisionV2Service {
         conditions: {
           type: true,
           components: true,
+          dates: true,
         },
       },
     });
@@ -160,6 +161,7 @@ export class NoticeOfIntentDecisionV2Service {
         conditions: {
           type: true,
           components: true,
+          dates: true,
         },
       },
     });
@@ -606,17 +608,18 @@ export class NoticeOfIntentDecisionV2Service {
   }
 
   private async getOrFail(uuid: string) {
-    const existingDecision =
-      await this.noticeOfIntentDecisionRepository.findOne({
-        where: {
-          uuid,
+    const existingDecision = await this.noticeOfIntentDecisionRepository.findOne({
+      where: {
+        uuid,
+      },
+      relations: {
+        noticeOfIntent: true,
+        components: true,
+        conditions: {
+          dates: true,
         },
-        relations: {
-          noticeOfIntent: true,
-          components: true,
-          conditions: true,
-        },
-      });
+      },
+    });
 
     if (!existingDecision) {
       throw new ServiceNotFoundException(

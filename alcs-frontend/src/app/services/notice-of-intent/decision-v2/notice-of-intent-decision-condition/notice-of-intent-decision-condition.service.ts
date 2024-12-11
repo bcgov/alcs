@@ -20,6 +20,17 @@ export class NoticeOfIntentDecisionConditionService {
     private toastService: ToastService,
   ) {}
 
+  async fetchByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionConditionDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<NoticeOfIntentDecisionConditionDto[]>(`${this.url}?type_code=${typeCode}`),
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load conditions');
+      throw e;
+    }
+  }
+
   async update(uuid: string, data: UpdateNoticeOfIntentDecisionConditionDto) {
     try {
       const res = await firstValueFrom(
@@ -48,36 +59,16 @@ export class NoticeOfIntentDecisionConditionService {
     }
   }
 
-  async createDate(conditionUuid: string, dateDto: NoticeOfIntentDecisionConditionDateDto) {
+  async updateDate(
+    dateUuid: string,
+    dateDto: NoticeOfIntentDecisionConditionDateDto,
+  ): Promise<NoticeOfIntentDecisionConditionDateDto> {
     try {
-      await firstValueFrom(
-        this.http.post<NoticeOfIntentDecisionConditionDateDto>(
-          `${this.url}/date?conditionUuid=${conditionUuid}`,
-          dateDto,
-        ),
-      );
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to create date');
-      throw e;
-    }
-  }
-
-  async updateDate(dateUuid: string, dateDto: NoticeOfIntentDecisionConditionDateDto) {
-    try {
-      await firstValueFrom(
+      return await firstValueFrom(
         this.http.patch<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
-      throw e;
-    }
-  }
-
-  async deleteDate(dateUuid: string) {
-    try {
-      await firstValueFrom(this.http.delete<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`));
-    } catch (e: any) {
-      this.toastService.showErrorToast(e.error?.message ?? 'Failed to delete date');
       throw e;
     }
   }

@@ -40,39 +40,6 @@ export class ApplicationDecisionConditionDateService {
     return dtos;
   }
 
-  async create(
-    conditionUuid: string,
-    dto: ApplicationDecisionConditionDateDto,
-  ): Promise<ApplicationDecisionConditionDateDto> {
-    if (!dto.date) {
-      throw new ServiceValidationException('Must supply date');
-    }
-
-    const condition = await this.conditionRepository.findOne({
-      where: {
-        uuid: conditionUuid,
-      },
-    });
-
-    // Dates must be associated with a condition
-    if (!condition) {
-      throw new ServiceNotFoundException('No condition found.');
-    }
-
-    if (!dto.date) {
-      throw new ServiceValidationException('Must specify date');
-    }
-
-    const entity = new ApplicationDecisionConditionDate({
-      date: new Date(dto.date),
-      condition: condition,
-    });
-
-    const createdEntity = this.repository.save(entity);
-
-    return plainToInstance(ApplicationDecisionConditionDateDto, createdEntity);
-  }
-
   async update(uuid: string, dto: ApplicationDecisionConditionDateDto): Promise<ApplicationDecisionConditionDateDto> {
     const entity = await this.repository.findOneOrFail({
       where: { uuid },
@@ -82,24 +49,22 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException('Date not found.');
     }
 
-    if (dto.date) {
-      entity.date = new Date(dto.date);
-    }
-    if (dto.completedDate) {
-      entity.completedDate = new Date(dto.completedDate);
-    } else if (dto.completedDate === null) {
-      entity.completedDate = null;
-    }
-    if (dto.comment) {
-      entity.comment = dto.comment;
-    }
+    this.map(dto, entity);
 
     const updatedEntity = await this.repository.save(entity);
 
     return plainToInstance(ApplicationDecisionConditionDateDto, updatedEntity);
   }
 
-  async delete(uuid: string) {
-    return await this.repository.delete(uuid);
+  map(dto: ApplicationDecisionConditionDateDto, entity: ApplicationDecisionConditionDate) {
+    if (dto.date) {
+      entity.date = new Date(dto.date);
+    }
+    if (dto.completedDate) {
+      entity.completedDate = new Date(dto.completedDate);
+    }
+    if (dto.comment) {
+      entity.comment = dto.comment;
+    }
   }
 }

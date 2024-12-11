@@ -14,5 +14,5 @@ export class NoticeOfIntentDecisionConditionDateDto {
   completedDate?: number | null;
 
   @IsString()
-  comment?: string;
+  comment?: string | null;
 }
