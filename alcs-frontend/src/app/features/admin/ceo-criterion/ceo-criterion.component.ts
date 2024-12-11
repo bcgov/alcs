@@ -36,6 +36,9 @@ export class CeoCriterionComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
+      data: {
+        existingCodes: this.ceoCriterion.map((cc) => cc.code.toLocaleLowerCase()),
+      },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
@@ -49,7 +52,7 @@ export class CeoCriterionComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
-      data: ceoCriterion,
+      data: { ceoCriterion: ceoCriterion, existingCodes: this.ceoCriterion.map((cc) => cc.code) },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {

@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ToastService } from '../../../toast/toast.service';
 import {
+  NoticeOfIntentDecisionConditionDateDto,
   NoticeOfIntentDecisionConditionDto,
   UpdateNoticeOfIntentDecisionConditionDto,
 } from '../notice-of-intent-decision.dto';
@@ -19,6 +20,17 @@ export class NoticeOfIntentDecisionConditionService {
     private toastService: ToastService,
   ) {}
 
+  async fetchByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionConditionDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<NoticeOfIntentDecisionConditionDto[]>(`${this.url}?type_code=${typeCode}`),
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to load conditions');
+      throw e;
+    }
+  }
+
   async update(uuid: string, data: UpdateNoticeOfIntentDecisionConditionDto) {
     try {
       const res = await firstValueFrom(
@@ -32,6 +44,31 @@ export class NoticeOfIntentDecisionConditionService {
       } else {
         this.toastService.showErrorToast('Failed to update condition');
       }
+      throw e;
+    }
+  }
+
+  async getDates(conditionUuid: string): Promise<NoticeOfIntentDecisionConditionDateDto[]> {
+    try {
+      return await firstValueFrom(
+        this.http.get<NoticeOfIntentDecisionConditionDateDto[]>(`${this.url}/date?conditionUuid=${conditionUuid}`),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'No dates found');
+      throw e;
+    }
+  }
+
+  async updateDate(
+    dateUuid: string,
+    dateDto: NoticeOfIntentDecisionConditionDateDto,
+  ): Promise<NoticeOfIntentDecisionConditionDateDto> {
+    try {
+      return await firstValueFrom(
+        this.http.patch<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
       throw e;
     }
   }

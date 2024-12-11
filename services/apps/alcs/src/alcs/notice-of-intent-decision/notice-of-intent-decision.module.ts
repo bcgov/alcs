@@ -24,6 +24,9 @@ import { NoticeOfIntentModificationOutcomeType } from './notice-of-intent-modifi
 import { NoticeOfIntentModificationController } from './notice-of-intent-modification/notice-of-intent-modification.controller';
 import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentModificationService } from './notice-of-intent-modification/notice-of-intent-modification.service';
+import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
+import { NoticeOfIntentDecisionConditionDateService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
+import { NoticeOfIntentDecisionConditionDateController } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.controller';
 
 @Module({
   imports: [
@@ -37,6 +40,7 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
       NoticeOfIntentDecisionComponentType,
       NoticeOfIntentDecisionCondition,
       NoticeOfIntentDecisionConditionType,
+      NoticeOfIntentDecisionConditionDate,
     ]),
     forwardRef(() => BoardModule),
     CardModule,
@@ -49,6 +53,7 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
     NoticeOfIntentDecisionV2Service,
     NoticeOfIntentDecisionComponentService,
     NoticeOfIntentDecisionConditionService,
+    NoticeOfIntentDecisionConditionDateService,
     NoticeOfIntentDecisionProfile,
     NoticeOfIntentModificationService,
   ],
@@ -57,6 +62,7 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
     NoticeOfIntentModificationController,
     NoticeOfIntentDecisionComponentController,
     NoticeOfIntentDecisionConditionController,
+    NoticeOfIntentDecisionConditionDateController,
   ],
   exports: [NoticeOfIntentModificationService, NoticeOfIntentDecisionV2Service],
 })

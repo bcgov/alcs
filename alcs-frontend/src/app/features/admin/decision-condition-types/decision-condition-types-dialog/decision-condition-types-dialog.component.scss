@@ -35,11 +35,31 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
+
+      app-error-message {
+        position: relative;
+        left: 11px;
+      }
+    }
+
+    .single-date-label-toggle {
+      width: 90%;
+      margin-left: 45px;
     }
 
     .condition-field-input {
       width: 95%;
       margin-left: 25px;
+    }
+
+    .condition-date-types {
+      display: flex;
+      flex-direction: column;
+      padding-left: 20px;
+    }
+
+    :host::ng-deep & .mat-mdc-checkbox.ng-invalid .mdc-checkbox__background {
+      border-color: colors.$error-color !important;
     }
 
     ::ng-deep .mdc-checkbox {
@@ -62,6 +82,21 @@
       --mdc-switch-selected-hover-track-color: #94c6ac61;
       --mdc-switch-selected-pressed-track-color: #94c6ac61;
       --mdc-switch-selected-track-color: #94c6ac61;
+    }
+
+    ::ng-deep .mat-mdc-radio-button.mat-accent {
+      --mdc-radio-disabled-selected-icon-color: black;
+      --mdc-radio-disabled-unselected-icon-color: black;
+      --mdc-radio-unselected-hover-icon-color: #212121;
+      --mdc-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
+      --mdc-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
+      --mdc-radio-selected-focus-icon-color: #{colors.$primary-color};
+      --mdc-radio-selected-hover-icon-color: #{colors.$primary-color};
+      --mdc-radio-selected-icon-color: #{colors.$primary-color};
+      --mdc-radio-selected-pressed-icon-color: #{colors.$primary-color};
+      --mat-radio-ripple-color: black;
+      --mat-radio-checked-ripple-color: #{colors.$primary-color};
+      --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);
     }
   }
 }

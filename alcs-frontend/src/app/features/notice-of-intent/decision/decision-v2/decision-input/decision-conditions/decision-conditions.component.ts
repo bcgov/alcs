@@ -20,7 +20,7 @@ import {
 } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
-import { DecisionComponentTypeDto } from 'src/app/services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { DecisionComponentTypeDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 export type TempNoticeOfIntentDecisionConditionDto = UpdateNoticeOfIntentDecisionConditionDto & { tempUuid?: string };
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
@@ -36,12 +36,12 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   activeTypes!: NoticeOfIntentDecisionConditionTypeDto[];
   @Input() set types(types: NoticeOfIntentDecisionConditionTypeDto[]) {
     this.activeTypes = types.filter((type) => type.isActive);
-    console.log(this.activeTypes);
   }
   @Input() componentTypes!: DecisionComponentTypeDto[];
   @Input() components: NoticeOfIntentDecisionComponentDto[] = [];
   @Input() conditions: NoticeOfIntentDecisionConditionDto[] = [];
   @Input() showError = false;
+  @Input() showDateErrors = false;
   @ViewChildren(DecisionConditionComponent) conditionComponents: DecisionConditionComponent[] = [];
 
   @Output() conditionsChange = new EventEmitter<{
