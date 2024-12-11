@@ -10,6 +10,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DecisionDialogDataInterface } from '../decision-dialog-data.interface';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
 import { NoticeOfIntentDecisionConditionTypeDto } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
+import { NoticeOfIntentDecisionConditionService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -27,12 +29,14 @@ export class DecisionConditionTypesDialogComponent {
   showWarning = false;
 
   service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService | undefined;
+  conditionService: ApplicationDecisionConditionService | NoticeOfIntentDecisionConditionService | undefined;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DecisionDialogDataInterface | undefined,
     private dialogRef: MatDialogRef<DecisionConditionTypesDialogComponent>,
   ) {
     this.service = data?.service;
+    this.conditionService = data?.conditionService;
     this.isEdit = !!data?.content;
     this.conditionTypeForm = new FormGroup({
       description: new FormControl(this.data?.content?.description ? this.data.content.description : '', [
