@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionMakerService } from '../../../../services/application/application-decision-maker/application-decision-maker.service';
 import { DecisionMakerDto } from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
 import { NgModel } from '@angular/forms';
-import { codeExistsDirectiveValidator } from 'src/app/shared/validators/code-exists-validator';
+import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-decision-maker-dialog',

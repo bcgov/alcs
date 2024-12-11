@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CardStatusDto } from '../../../../services/application/application-code.dto';
 import { CardStatusService } from '../../../../services/card/card-status/card-status.service';
 import { NgModel } from '@angular/forms';
-import { codeExistsDirectiveValidator } from 'src/app/shared/validators/code-exists-validator';
+import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',

@@ -19,7 +19,7 @@ describe('CardStatusDialogComponent', () => {
       imports: [ReactiveFormsModule, FormsModule],
       declarations: [CardStatusDialogComponent],
       providers: [
-        { provide: MAT_DIALOG_DATA, useValue: undefined },
+        { provide: MAT_DIALOG_DATA, useValue: { existingCodes: [] } },
         { provide: MatDialogRef, useValue: {} },
         {
           provide: CardStatusService,

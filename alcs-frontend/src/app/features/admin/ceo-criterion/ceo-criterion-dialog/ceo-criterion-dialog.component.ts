@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-criterion.service';
 import { NgModel } from '@angular/forms';
 import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
-import { codeExistsDirectiveValidator } from 'src/app/shared/validators/code-exists-validator';
+import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-ceo-criterion-dialog',
