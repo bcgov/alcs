@@ -40,6 +40,8 @@ import { ApplicationDecisionConditionToComponentLotDto } from '../../alcs/applic
 import { ApplicationDecisionConditionToComponentLot } from '../../alcs/application-decision/application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/application-decision/application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { CommissionerDecisionDto } from '../../alcs/commissioner/commissioner.dto';
+import { ApplicationDecisionConditionDate } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationDecisionConditionDateDto } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -209,20 +211,38 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionCondition,
         ApplicationDecisionConditionDto,
         forMember(
-          (ad) => ad.completionDate,
-          mapFrom((a) => a.completionDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.singleDate,
-          mapFrom((a) => a.singleDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
               ? this.mapper.mapArray(a.components, ApplicationDecisionComponent, ApplicationDecisionComponentDto)
               : [],
           ),
+        ),
+        forMember(
+          (dto) => dto.dates,
+          mapFrom((entity) =>
+            entity.dates
+              ? this.mapper.mapArray(
+                  entity.dates,
+                  ApplicationDecisionConditionDate,
+                  ApplicationDecisionConditionDateDto,
+                )
+              : [],
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionDate,
+        ApplicationDecisionConditionDateDto,
+        forMember(
+          (dto) => dto.date,
+          mapFrom((entity) => entity.date.getTime()),
+        ),
+        forMember(
+          (dto) => dto.completedDate,
+          mapFrom((entity) => entity.completedDate && entity.completedDate.getTime()),
         ),
       );
 
@@ -241,8 +261,12 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((entity) => (entity.administrativeFeeAmount !== null ? entity.administrativeFeeAmount : null)),
         ),
         forMember(
-          (dto) => dto.isSingleDateRequired,
-          mapFrom((entity) => (entity.isSingleDateRequired !== null ? entity.isSingleDateRequired : null)),
+          (dto) => dto.isDateRequired,
+          mapFrom((entity) => (entity.isDateRequired !== null ? entity.isDateRequired : null)),
+        ),
+        forMember(
+          (dto) => dto.dateType,
+          mapFrom((entity) => (entity.dateType !== null ? entity.dateType : null)),
         ),
         forMember(
           (dto) => dto.singleDateLabel,

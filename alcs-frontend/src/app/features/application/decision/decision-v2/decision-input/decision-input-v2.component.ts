@@ -544,7 +544,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       !this.conditionsValid ||
       !this.componentsValid ||
       (this.components.length === 0 && requiresComponents) ||
-      (this.conditionUpdates.length === 0 && requiresConditions)
+      (this.conditionUpdates.length === 0 && requiresConditions) ||
+      this.requiredDatesAreMissing()
     ) {
       this.form.controls.decisionMaker.markAsDirty();
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
@@ -556,6 +557,15 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     } else {
       return true;
     }
+  }
+
+  requiredDatesAreMissing(): boolean {
+    return this.conditionUpdates.some(
+      (condition) =>
+        condition.type?.isDateChecked &&
+        condition.type.isDateRequired &&
+        (!condition.dates || condition.dates.length === 0),
+    );
   }
 
   private scrollToError() {
