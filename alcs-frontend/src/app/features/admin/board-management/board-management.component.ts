@@ -44,6 +44,7 @@ export class BoardManagementComponent implements OnInit, OnDestroy {
       height: '80%',
       data: {
         cardTypes: this.cardTypes,
+        existingCodes: this.boards.map((b) => b.code.toLowerCase()),
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
@@ -62,6 +63,7 @@ export class BoardManagementComponent implements OnInit, OnDestroy {
       data: {
         board: boardDto,
         cardTypes: this.cardTypes,
+        existingCodes: this.boards.map((b) => b.code.toLowerCase()),
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {

@@ -18,7 +18,7 @@ export class CardStatusComponent implements OnInit {
   constructor(
     private cardStatusService: CardStatusService,
     public dialog: MatDialog,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -34,6 +34,7 @@ export class CardStatusComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
+      data: { existingCodes: this.cardStatusDtos.map((cs) => cs.code.toLowerCase()) },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
@@ -47,7 +48,7 @@ export class CardStatusComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
-      data: cardStatusDto,
+      data: { cardStatus: cardStatusDto, existingCodes: this.cardStatusDtos.map((cs) => cs.code.toLowerCase()) },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {

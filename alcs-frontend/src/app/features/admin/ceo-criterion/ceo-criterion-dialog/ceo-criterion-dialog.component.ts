@@ -1,7 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
 import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-criterion.service';
+import { NgModel } from '@angular/forms';
+import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
+import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-ceo-criterion-dialog',
@@ -18,17 +20,21 @@ export class CeoCriterionDialogComponent {
   isEdit = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: CeoCriterionDto | undefined,
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      ceoCriterion: CeoCriterionDto | undefined;
+      existingCodes: string[];
+    },
     private dialogRef: MatDialogRef<CeoCriterionDialogComponent>,
     private ceoCriterionService: CeoCriterionService,
   ) {
-    if (data) {
-      this.description = data.description;
-      this.label = data.label;
-      this.code = data.code;
-      this.number = data.number.toString();
+    if (data?.ceoCriterion) {
+      this.description = data.ceoCriterion.description;
+      this.label = data.ceoCriterion.label;
+      this.code = data.ceoCriterion.code;
+      this.number = data.ceoCriterion.number.toString();
     }
-    this.isEdit = !!data;
+    this.isEdit = !!data?.ceoCriterion;
   }
 
   async onSubmit() {
@@ -52,5 +58,9 @@ export class CeoCriterionDialogComponent {
     }
     this.isLoading = false;
     this.dialogRef.close(true);
+  }
+
+  isCodeExisting(model: NgModel) {
+    return codeExistsDirectiveValidator(model, this.data.existingCodes, this.code);
   }
 }

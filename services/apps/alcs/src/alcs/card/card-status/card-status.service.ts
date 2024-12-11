@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CardService } from '../card.service';
 import { CardStatusDto } from './card-status.dto';
 import { CARD_STATUS, CardStatus } from './card-status.entity';
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class CardStatusService {
@@ -40,6 +41,10 @@ export class CardStatusService {
   }
 
   async create(createDto: CardStatusDto) {
+    if (await this.cardStatusRepository.exists({ where: { code: createDto.code } })) {
+      throw new ServiceValidationException(`${createDto.code} code already in use.`);
+    }
+
     const cardStatus = new CardStatus();
 
     cardStatus.code = createDto.code;

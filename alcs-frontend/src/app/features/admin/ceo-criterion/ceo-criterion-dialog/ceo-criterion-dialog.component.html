@@ -21,9 +21,13 @@
           matInput
           id="code"
           [(ngModel)]="code"
+          #codeModel="ngModel"
           name="code"
         />
       </mat-form-field>
+      <div *ngIf="isCodeExisting(codeModel) && !isEdit">
+        <app-error-message message="Code already in use or deteled, pick a different code."></app-error-message>
+      </div>
     </div>
 
     <div class="full-width">
@@ -50,7 +54,7 @@
         mat-flat-button
         color="primary"
         type="submit"
-        [disabled]="!form.form.valid"
+        [disabled]="!form.form.valid || (isCodeExisting(codeModel) && !isEdit)"
       >
         Save
       </button>

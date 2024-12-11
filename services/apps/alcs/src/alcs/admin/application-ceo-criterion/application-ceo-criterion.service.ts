@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationCeoCriterionCode } from '../../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { CeoCriterionCodeDto } from '../../application-decision/application-decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class ApplicationCeoCriterionService {
@@ -34,6 +35,9 @@ export class ApplicationCeoCriterionService {
   }
 
   async create(createDto: CeoCriterionCodeDto) {
+    if (await this.ceoCriterionCodeRepository.exists({ where: { code: createDto.code } })) {
+      throw new ServiceValidationException(`${createDto.code} code already in use or deleted.`);
+    }
     const ceoCriterion = new ApplicationCeoCriterionCode();
 
     ceoCriterion.code = createDto.code;

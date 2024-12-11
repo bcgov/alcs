@@ -15,7 +15,7 @@ describe('DecisionMakerDialogComponent', () => {
       imports: [ReactiveFormsModule, FormsModule],
       declarations: [DecisionMakerDialogComponent],
       providers: [
-        { provide: MAT_DIALOG_DATA, useValue: undefined },
+        { provide: MAT_DIALOG_DATA, useValue: { existingCodes: [] } },
         { provide: MatDialogRef, useValue: {} },
         {
           provide: ApplicationDecisionMakerService,

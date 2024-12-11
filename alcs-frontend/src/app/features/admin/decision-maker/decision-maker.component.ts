@@ -36,6 +36,7 @@ export class DecisionMakerComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
+      data: { existingCodes: this.decisionMakers.map((dm) => dm.code.toLowerCase()) },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {
@@ -49,7 +50,7 @@ export class DecisionMakerComponent implements OnInit {
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
-      data: decisionMakerDto,
+      data: { decisionMaker: decisionMakerDto, existingCodes: this.decisionMakers.map((dm) => dm.code.toLowerCase()) },
     });
     dialog.beforeClosed().subscribe(async (result) => {
       if (result) {

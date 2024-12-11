@@ -8,6 +8,7 @@ import { ApplicationDecisionMakerCode } from '../../application-decision/applica
 import { CardService } from '../card.service';
 import { CardStatus } from './card-status.entity';
 import { CardStatusService } from './card-status.service';
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 describe('CardStatusService', () => {
   let service: CardStatusService;
@@ -48,6 +49,7 @@ describe('CardStatusService', () => {
 
   it('should successfully create card status', async () => {
     mockRepository.save.mockResolvedValue(new ApplicationDecisionMakerCode());
+    mockRepository.exists.mockResolvedValue(false);
 
     const result = await service.create({
       code: '',
@@ -57,6 +59,18 @@ describe('CardStatusService', () => {
 
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(result).toBeDefined();
+  });
+
+  it('should throw an error if code already exists when column entry', async () => {
+    mockRepository.exists.mockResolvedValue(true);
+
+    await expect(
+      service.create({
+        code: 'SAMPLE',
+        description: '',
+        label: '',
+      }),
+    ).rejects.toThrow(ServiceValidationException);
   });
 
   it('should successfully update card status if it exists', async () => {

@@ -2,6 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionMakerService } from '../../../../services/application/application-decision-maker/application-decision-maker.service';
 import { DecisionMakerDto } from '../../../../services/application/decision/application-decision-v2/application-decision.dto';
+import { NgModel } from '@angular/forms';
+import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-decision-maker-dialog',
@@ -18,17 +20,21 @@ export class DecisionMakerDialogComponent {
   isEdit = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DecisionMakerDto | undefined,
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      decisionMaker: DecisionMakerDto | undefined;
+      existingCodes: string[];
+    },
     private dialogRef: MatDialogRef<DecisionMakerDialogComponent>,
     private decisionMakerService: ApplicationDecisionMakerService,
   ) {
-    if (data) {
-      this.description = data.description;
-      this.label = data.label;
-      this.code = data.code;
-      this.isActive = data.isActive ? 'true' : 'false';
+    if (data?.decisionMaker) {
+      this.description = data.decisionMaker.description;
+      this.label = data.decisionMaker.label;
+      this.code = data.decisionMaker.code;
+      this.isActive = data.decisionMaker.isActive ? 'true' : 'false';
     }
-    this.isEdit = !!data;
+    this.isEdit = !!data?.decisionMaker;
   }
 
   async onSubmit() {
@@ -48,5 +54,9 @@ export class DecisionMakerDialogComponent {
     }
     this.isLoading = false;
     this.dialogRef.close(true);
+  }
+
+  isCodeExisiting(model: NgModel) {
+    return codeExistsDirectiveValidator(model, this.data.existingCodes, this.code);
   }
 }

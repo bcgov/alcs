@@ -8,6 +8,9 @@
         <mat-label>Code</mat-label>
         <input required maxlength="4" minlength="4" matInput id="code" formControlName="code" name="code" />
       </mat-form-field>
+      <div *ngIf="conditionTypeForm.get('code')?.hasError('codeExists')">
+        <app-error-message message="Code already in use or deteled, pick a different code."></app-error-message>
+      </div>
     </div>
 
     <div class="full-width">

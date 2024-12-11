@@ -6,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationDecisionMakerCode } from '../../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionMakerService } from './application-decision-maker.service';
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 describe('ApplicationDecisionMakerService', () => {
   let service: ApplicationDecisionMakerService;
@@ -31,9 +32,7 @@ describe('ApplicationDecisionMakerService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationDecisionMakerService>(
-      ApplicationDecisionMakerService,
-    );
+    service = module.get<ApplicationDecisionMakerService>(ApplicationDecisionMakerService);
   });
 
   it('should be defined', () => {
@@ -42,6 +41,7 @@ describe('ApplicationDecisionMakerService', () => {
 
   it('should successfully create decision maker entry', async () => {
     mockRepository.save.mockResolvedValue(new ApplicationDecisionMakerCode());
+    mockRepository.exists.mockResolvedValue(false);
 
     const result = await service.create({
       code: '',
@@ -52,6 +52,14 @@ describe('ApplicationDecisionMakerService', () => {
 
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(result).toBeDefined();
+  });
+
+  it('should throw an error if code already exists when decision maker entry', async () => {
+    mockRepository.exists.mockResolvedValue(true);
+
+    await expect(service.create({ code: 'SAMPLE', isActive: false, description: '', label: '' })).rejects.toThrow(
+      ServiceValidationException,
+    );
   });
 
   it('should successfully update decision maker entry if it exists', async () => {
