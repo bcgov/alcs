@@ -1,6 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgModel, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminBoardManagementService } from '../../../../services/admin-board-management/admin-board-management.service';
@@ -10,6 +10,7 @@ import { BoardService } from '../../../../services/board/board.service';
 import { CardStatusService } from '../../../../services/card/card-status/card-status.service';
 import { CardType } from '../../../../shared/card/card.component';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
+import { codeExistsValidator } from '../../../../shared/validators/code-exists-validator';
 
 const DISABLED_CREATE_CARD_TYPES = [
   CardType.APP,
@@ -60,6 +61,7 @@ export class BoardManagementDialogComponent implements OnInit {
     public data: {
       board: MinimalBoardDto | undefined;
       cardTypes: BaseCodeDto[];
+      existingCodes: string[];
     },
     private dialogRef: MatDialogRef<BoardManagementDialogComponent>,
     private cardStatusService: CardStatusService,
@@ -76,6 +78,8 @@ export class BoardManagementDialogComponent implements OnInit {
     for (const type of this.cardTypes) {
       this.cardTypeMap[type.code] = type.label;
     }
+
+    this.code.addValidators(codeExistsValidator(this.data?.existingCodes ? this.data.existingCodes : []));
   }
 
   async loadBoard(code: string) {

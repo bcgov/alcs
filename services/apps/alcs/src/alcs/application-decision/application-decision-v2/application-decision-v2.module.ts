@@ -47,6 +47,9 @@ import { ApplicationDecisionComponentType } from './application-decision/compone
 import { ApplicationDecisionComponentController } from './application-decision/component/application-decision-component.controller';
 import { ApplicationDecisionComponent } from './application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './application-decision/component/application-decision-component.service';
+import { ApplicationDecisionConditionDateService } from '../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
+import { ApplicationDecisionConditionDate } from '../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationDecisionConditionDateController } from '../application-decision-condition/application-decision-condition-date/application-decision-condition-date.controller';
 
 @Module({
   imports: [
@@ -66,6 +69,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
       ApplicationDecisionComponentType,
       ApplicationDecisionCondition,
       ApplicationDecisionConditionType,
+      ApplicationDecisionConditionDate,
       NaruSubtype,
       ApplicationSubmissionToSubmissionStatus,
       ApplicationSubmission,
@@ -90,6 +94,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
     ApplicationDecisionProfile,
     ApplicationDecisionComponentService,
     ApplicationDecisionConditionService,
+    ApplicationDecisionConditionDateService,
     ApplicationDecisionComponentLotService,
     ApplicationConditionToComponentLotService,
     ApplicationBoundaryAmendmentService,
@@ -99,6 +104,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
     ApplicationDecisionComponentController,
     ApplicationDecisionConditionController,
     ApplicationDecisionComponentLotController,
+    ApplicationDecisionConditionDateController,
     ApplicationConditionToComponentLotController,
     ApplicationBoundaryAmendmentController,
     ApplicationReconsiderationController,

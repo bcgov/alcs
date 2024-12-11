@@ -8,6 +8,7 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 
 import { ConditionsComponent } from './conditions.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConditionsComponent', () => {
   let component: ConditionsComponent;
@@ -42,6 +43,7 @@ describe('ConditionsComponent', () => {
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
+      imports: [HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConditionsComponent);

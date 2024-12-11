@@ -4,7 +4,7 @@
       <span class="tab-label">Application</span>
     </ng-template>
     <br />
-    <app-decision-condition-types [service]="applicationService" />
+    <app-decision-condition-types [service]="applicationService" [conditionService]="applicationConditionService" />
   </mat-tab>
 
   <mat-tab>
@@ -12,6 +12,6 @@
       <span class="tab-label">Notice of Intent</span>
     </ng-template>
     <br />
-    <app-decision-condition-types [service]="noiService" />
+    <app-decision-condition-types [service]="noiService" [conditionService]="noiConditionService" />
   </mat-tab>
 </mat-tab-group>

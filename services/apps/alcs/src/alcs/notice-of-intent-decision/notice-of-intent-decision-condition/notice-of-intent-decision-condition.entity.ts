@@ -1,10 +1,11 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision-condition-code.entity';
+import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 
 @Entity({
   comment: 'Decision Conditions for Notice of Intents',
@@ -45,14 +46,6 @@ export class NoticeOfIntentDecisionCondition extends Base {
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @AutoMap(() => String)
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition Completion date',
-    nullable: true,
-  })
-  completionDate?: Date | null;
-
   @ManyToOne(() => NoticeOfIntentDecisionConditionType)
   type: NoticeOfIntentDecisionConditionType;
 
@@ -82,11 +75,8 @@ export class NoticeOfIntentDecisionCondition extends Base {
   })
   oatsConditionId: number;
 
-  @AutoMap()
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition single end/due date',
-    nullable: true,
+  @OneToMany(() => NoticeOfIntentDecisionConditionDate, (d) => d.condition, {
+    cascade: ['insert', 'update'],
   })
-  singleDate?: Date | null;
+  dates: NoticeOfIntentDecisionConditionDate[];
 }
