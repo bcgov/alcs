@@ -33,6 +33,7 @@ export class ApplicationDecisionConditionService {
           code: typeCode,
         },
       },
+      relations: ['dates'],
     });
   }
 
