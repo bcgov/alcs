@@ -1,8 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class MigrateComponentsToDecisions1732917418215 implements MigrationInterface {
+export class MigrateComponentsToDecisions1733957637664 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`DELETE FROM alcs.migrations
+            WHERE name = 'MigrateComponentsToDecisions1732917418215';`);
         await queryRunner.query(`
             WITH selected_components AS
             (
@@ -108,6 +110,7 @@ export class MigrateComponentsToDecisions1732917418215 implements MigrationInter
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        // N/A
     }
 
 }
