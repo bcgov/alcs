@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
@@ -12,6 +11,7 @@ import {
   UpdateApplicationDecisionConditionServiceDto,
 } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
+import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
@@ -26,11 +26,23 @@ export class ApplicationDecisionConditionService {
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
   ) {}
 
+  async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        type: {
+          code: typeCode,
+        },
+      },
+      relations: ['dates'],
+    });
+  }
+
   async getOneOrFail(uuid: string) {
     return this.repository.findOneOrFail({
       where: { uuid },
       relations: {
         type: true,
+        dates: true,
       },
     });
   }
@@ -63,20 +75,31 @@ export class ApplicationDecisionConditionService {
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
       condition.approvalDependant = updateDto.approvalDependant ?? null;
-      condition.singleDate = updateDto.singleDate ? formatIncomingDate(updateDto.singleDate) : null;
+      if (updateDto.dates) {
+        condition.dates = updateDto.dates.map((dateDto) => {
+          const dateEntity = new ApplicationDecisionConditionDate();
 
-      if (
-        updateDto.componentsToCondition !== undefined &&
-        updateDto.componentsToCondition.length > 0
-      ) {
+          if (dateDto.date) {
+            dateEntity.date = new Date(dateDto.date);
+          }
+          if (dateDto.completedDate) {
+            dateEntity.completedDate = new Date(dateDto.completedDate);
+          }
+          if (dateDto.comment) {
+            dateEntity.comment = dateDto.comment;
+          }
+
+          return dateEntity;
+        });
+      }
+
+      if (updateDto.componentsToCondition !== undefined && updateDto.componentsToCondition.length > 0) {
         const mappedComponents: ApplicationDecisionComponent[] = [];
         for (const componentToCondition of updateDto.componentsToCondition) {
           const matchingComponent = allComponents.find(
             (component) =>
-              componentToCondition.componentDecisionUuid ===
-                component.applicationDecisionUuid &&
-              componentToCondition.componentToConditionType ===
-                component.applicationDecisionComponentTypeCode,
+              componentToCondition.componentDecisionUuid === component.applicationDecisionUuid &&
+              componentToCondition.componentToConditionType === component.applicationDecisionComponentTypeCode,
           );
 
           if (matchingComponent) {
@@ -87,8 +110,7 @@ export class ApplicationDecisionConditionService {
 
           const matchingComponent2 = newComponents.find(
             (component) =>
-              componentToCondition.componentToConditionType ===
-              component.applicationDecisionComponentTypeCode,
+              componentToCondition.componentToConditionType === component.applicationDecisionComponentTypeCode,
           );
 
           if (matchingComponent2) {
@@ -96,9 +118,7 @@ export class ApplicationDecisionConditionService {
             updatedConditions.push(condition);
             continue;
           }
-          throw new ServiceValidationException(
-            'Failed to find matching component',
-          );
+          throw new ServiceValidationException('Failed to find matching component');
         }
 
         condition.components = mappedComponents;
@@ -122,18 +142,13 @@ export class ApplicationDecisionConditionService {
       },
     });
 
-    await this.repository.manager.transaction(
-      async (transactionalEntityManager) => {
-        await transactionalEntityManager.remove(lots);
-        await transactionalEntityManager.remove(conditions);
-      },
-    );
+    await this.repository.manager.transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager.remove(lots);
+      await transactionalEntityManager.remove(conditions);
+    });
   }
 
-  async update(
-    existingCondition: ApplicationDecisionCondition,
-    updates: UpdateApplicationDecisionConditionServiceDto,
-  ) {
+  async update(existingCondition: ApplicationDecisionCondition, updates: UpdateApplicationDecisionConditionServiceDto) {
     await this.repository.update(existingCondition.uuid, updates);
     return await this.getOneOrFail(existingCondition.uuid);
   }
@@ -144,30 +159,22 @@ export class ApplicationDecisionConditionService {
     });
   }
 
-  async updateConditionPlanNumbers(
-    conditionUuid: string,
-    componentUuid: string,
-    planNumbers: string | null,
-  ) {
-    let conditionToComponent =
-      await this.conditionComponentPlanNumbersRepository.findOneBy({
-        applicationDecisionComponentUuid: componentUuid,
-        applicationDecisionConditionUuid: conditionUuid,
-      });
+  async updateConditionPlanNumbers(conditionUuid: string, componentUuid: string, planNumbers: string | null) {
+    let conditionToComponent = await this.conditionComponentPlanNumbersRepository.findOneBy({
+      applicationDecisionComponentUuid: componentUuid,
+      applicationDecisionConditionUuid: conditionUuid,
+    });
 
     if (conditionToComponent) {
       conditionToComponent.planNumbers = planNumbers;
     } else {
-      conditionToComponent =
-        new ApplicationDecisionConditionComponentPlanNumber({
-          applicationDecisionComponentUuid: componentUuid,
-          applicationDecisionConditionUuid: conditionUuid,
-          planNumbers,
-        });
+      conditionToComponent = new ApplicationDecisionConditionComponentPlanNumber({
+        applicationDecisionComponentUuid: componentUuid,
+        applicationDecisionConditionUuid: conditionUuid,
+        planNumbers,
+      });
     }
 
-    await this.conditionComponentPlanNumbersRepository.save(
-      conditionToComponent,
-    );
+    await this.conditionComponentPlanNumbersRepository.save(conditionToComponent);
   }
 }

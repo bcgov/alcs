@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import {
   ApplicationDecisionConditionType,
   DateLabel,
+  DateType,
 } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types.service';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
@@ -56,8 +57,9 @@ describe('ApplicationDecisionConditionTypesService', () => {
       isAdministrativeFeeAmountChecked: false,
       isAdministrativeFeeAmountRequired: false,
       administrativeFeeAmount: null,
-      isSingleDateChecked: false,
-      isSingleDateRequired: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       singleDateLabel: DateLabel.DUE_DATE,
       isSecurityAmountChecked: false,
       isSecurityAmountRequired: false,
@@ -81,8 +83,9 @@ describe('ApplicationDecisionConditionTypesService', () => {
         isAdministrativeFeeAmountChecked: false,
         isAdministrativeFeeAmountRequired: false,
         administrativeFeeAmount: null,
-        isSingleDateChecked: false,
-        isSingleDateRequired: false,
+        isDateChecked: false,
+        isDateRequired: false,
+        dateType: DateType.SINGLE,
         singleDateLabel: DateLabel.DUE_DATE,
         isSecurityAmountChecked: false,
         isSecurityAmountRequired: false,
@@ -104,8 +107,9 @@ describe('ApplicationDecisionConditionTypesService', () => {
       isAdministrativeFeeAmountChecked: false,
       isAdministrativeFeeAmountRequired: false,
       administrativeFeeAmount: null,
-      isSingleDateChecked: false,
-      isSingleDateRequired: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
       singleDateLabel: DateLabel.DUE_DATE,
       isSecurityAmountChecked: false,
       isSecurityAmountRequired: false,
