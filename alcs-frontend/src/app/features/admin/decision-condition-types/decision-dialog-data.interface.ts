@@ -8,4 +8,5 @@ export interface DecisionDialogDataInterface {
   service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService;
   conditionService: ApplicationDecisionConditionService | NoticeOfIntentDecisionConditionService;
   content: ApplicationDecisionConditionTypeDto;
+  existingCodes: string[];
 }

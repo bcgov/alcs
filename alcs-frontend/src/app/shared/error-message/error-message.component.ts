@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./error-message.component.scss'],
 })
 export class ErrorMessageComponent {
-  @Input() message? = 'This field is required';
+  @Input() message: string = 'This field is required';
 }

@@ -6,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationCeoCriterionCode } from '../../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationCeoCriterionService } from './application-ceo-criterion.service';
+import { BaseServiceException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 describe('CeoCriterionService', () => {
   let service: ApplicationCeoCriterionService;
@@ -31,9 +32,7 @@ describe('CeoCriterionService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationCeoCriterionService>(
-      ApplicationCeoCriterionService,
-    );
+    service = module.get<ApplicationCeoCriterionService>(ApplicationCeoCriterionService);
   });
 
   it('should be defined', () => {
@@ -42,6 +41,7 @@ describe('CeoCriterionService', () => {
 
   it('should successfully create ceo criterion entry', async () => {
     mockRepository.save.mockResolvedValue(new ApplicationCeoCriterionCode());
+    mockRepository.exists.mockResolvedValue(false);
 
     const result = await service.create({
       code: '',
@@ -52,6 +52,14 @@ describe('CeoCriterionService', () => {
 
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(result).toBeDefined();
+  });
+
+  it('should throw an error if code already exists when creating ceo criterion', async () => {
+    mockRepository.exists.mockResolvedValue(true);
+
+    await expect(service.create({ code: 'SAMPLE', number: 12, description: '', label: '' })).rejects.toThrow(
+      ServiceValidationException,
+    );
   });
 
   it('should successfully update ceo criterion entry if it exists', async () => {

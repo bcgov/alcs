@@ -53,6 +53,7 @@ export class DecisionConditionTypesComponent implements OnInit {
       data: {
         service: this.service,
         conditionService: this.conditionService,
+        existingCodes: this.decisionConditionTypeDtos.map((dct) => dct.code),
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
@@ -71,6 +72,7 @@ export class DecisionConditionTypesComponent implements OnInit {
         service: this.service,
         conditionService: this.conditionService,
         content: dto,
+        existingCodes: this.decisionConditionTypeDtos.map((dct) => dct.code),
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {

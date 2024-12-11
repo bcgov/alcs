@@ -17,6 +17,7 @@ import {
 import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { NoticeOfIntentDecisionConditionService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
+import { codeExistsValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -48,7 +49,10 @@ export class DecisionConditionTypesDialogComponent {
         Validators.required,
       ]),
       label: new FormControl(this.data?.content?.label ? this.data.content.label : '', [Validators.required]),
-      code: new FormControl(this.data?.content?.code ? this.data.content.code : '', [Validators.required]),
+      code: new FormControl(this.data?.content?.code ? this.data.content.code : '', [
+        Validators.required,
+        codeExistsValidator(this.data?.existingCodes ? this.data.existingCodes : []),
+      ]),
       isActive: new FormControl<boolean>(this.data && this.data.content ? this.data.content.isActive : true, [
         Validators.required,
       ]),
