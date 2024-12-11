@@ -82,10 +82,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       description: this.data.description ?? null,
     });
 
-    if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
-      this.form.patchValue({ singleDate: moment(this.dates[0].date) });
-    }
-
     this.form.valueChanges.subscribe(this.emitChanges.bind(this));
   }
 
