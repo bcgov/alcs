@@ -72,7 +72,13 @@
 
       <div class="condition-field">
         <div class="condition-field-header">
-          <mat-checkbox formControlName="isDateChecked">Date</mat-checkbox>
+          <div>
+            <mat-checkbox formControlName="isDateChecked"> Date </mat-checkbox>
+            <app-error-message
+              *ngIf="!conditionTypeForm.controls['isDateChecked'].valid"
+              [message]="'Field contains data, cannot be removed'"
+            ></app-error-message>
+          </div>
 
           <div class="toggle" *ngIf="conditionTypeForm.get('isDateChecked')?.value">
             <mat-label [ngClass]="{ inactive: conditionTypeForm.get('isDateRequired')?.value ?? false }"

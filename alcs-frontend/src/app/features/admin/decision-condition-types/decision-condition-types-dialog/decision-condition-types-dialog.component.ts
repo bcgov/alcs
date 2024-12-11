@@ -1,17 +1,22 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
+  ApplicationDecisionConditionDto,
   ApplicationDecisionConditionTypeDto,
   DateLabel,
   DateType,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionTypesService } from '../../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DecisionDialogDataInterface } from '../decision-dialog-data.interface';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
-import { NoticeOfIntentDecisionConditionTypeDto } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import {
+  NoticeOfIntentDecisionConditionDto,
+  NoticeOfIntentDecisionConditionTypeDto,
+} from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { NoticeOfIntentDecisionConditionService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
+import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -66,7 +71,11 @@ export class DecisionConditionTypesDialogComponent {
       administrativeFeeAmount: new FormControl(
         this.data?.content?.administrativeFeeAmount ? this.data.content.administrativeFeeAmount : '',
       ),
-      isDateChecked: new FormControl(this.data?.content?.isDateChecked ? this.data.content.isDateChecked : false),
+      isDateChecked: new FormControl(
+        this.data?.content?.isDateChecked ? this.data.content.isDateChecked : false,
+        [],
+        [this.conditionAsyncValidator()],
+      ),
       isDateRequired: new FormControl(this.data?.content?.isDateRequired ? this.data.content.isDateRequired : false),
       dateType: new FormControl(this.data?.content?.dateType),
       singleDateLabel: new FormControl(
@@ -127,5 +136,31 @@ export class DecisionConditionTypesDialogComponent {
     }
     this.isLoading = false;
     this.dialogRef.close(true);
+  }
+
+  conditionAsyncValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      return of(control.value).pipe(
+        debounceTime(300),
+        switchMap((isDateChecked) => {
+          if (!this.conditionService) {
+            throw Error('Condition service not found');
+          }
+          return this.conditionService.fetchByTypeCode(this.conditionTypeForm.controls['code'].value);
+        }),
+        map((conditions) =>
+          !control.value && conditions && this.hasAnyDates(conditions) ? { hasConditions: true } : null,
+        ),
+        catchError((e) => {
+          return of({ hasConditions: true });
+        }),
+      );
+    };
+  }
+
+  hasAnyDates(
+    conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
+  ): boolean {
+    return conditions.some((condition) => condition.dates && condition.dates.length > 0);
   }
 }

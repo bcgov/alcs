@@ -35,6 +35,11 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
+
+      app-error-message {
+        position: relative;
+        left: 11px;
+      }
     }
 
     .single-date-label-toggle {
@@ -51,6 +56,10 @@
       display: flex;
       flex-direction: column;
       padding-left: 20px;
+    }
+
+    :host::ng-deep & .mat-mdc-checkbox.ng-invalid .mdc-checkbox__background {
+      border-color: colors.$error-color !important;
     }
 
     ::ng-deep .mdc-checkbox {
