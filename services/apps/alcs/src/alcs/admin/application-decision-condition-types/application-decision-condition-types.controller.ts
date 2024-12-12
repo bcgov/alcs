@@ -36,4 +36,10 @@ export class ApplicationDecisionConditionTypesController {
   async create(@Body() createDto: ApplicationDecisionConditionTypeDto) {
     return await this.applicationDecisionConditionTypesService.create(createDto);
   }
+
+  @Get('/codes')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async fetchCodes() {
+    return await this.applicationDecisionConditionTypesService.fetchCodes();
+  }
 }

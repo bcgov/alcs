@@ -41,6 +41,15 @@ export class NoticeofIntentDecisionConditionTypesService {
     });
   }
 
+  async fetchCodes() {
+    return await this.noiDecisionConditionTypeRepository.find({
+      select: {
+        code: true,
+      },
+      withDeleted: true,
+    });
+  }
+
   async getOneOrFail(code: string) {
     return await this.noiDecisionConditionTypeRepository.findOneOrFail({
       where: { code },
