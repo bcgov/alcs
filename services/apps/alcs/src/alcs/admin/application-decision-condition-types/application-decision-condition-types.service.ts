@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationDecisionConditionType } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
+import {
+  ApplicationDecisionConditionType,
+  DateType,
+} from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionTypeDto } from '../../application-decision/application-decision-condition/application-decision-condition.dto';
 import {
   ServiceNotFoundException,
   ServiceConflictException,
   BaseServiceException,
+  ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
 
 @Injectable()
@@ -29,8 +33,9 @@ export class ApplicationDecisionConditionTypesService {
         isAdministrativeFeeAmountChecked: true,
         isAdministrativeFeeAmountRequired: true,
         administrativeFeeAmount: true,
-        isSingleDateChecked: true,
-        isSingleDateRequired: true,
+        isDateChecked: true,
+        isDateRequired: true,
+        dateType: true,
         singleDateLabel: true,
         isSecurityAmountChecked: true,
         isSecurityAmountRequired: true,
@@ -55,13 +60,17 @@ export class ApplicationDecisionConditionTypesService {
     type.isAdministrativeFeeAmountRequired = updateDto.isAdministrativeFeeAmountChecked
       ? updateDto.isAdministrativeFeeAmountRequired
       : null;
-    type.administrativeFeeAmount = updateDto.isAdministrativeFeeAmountChecked
-      ? updateDto.administrativeFeeAmount
-      : null;
 
-    type.isSingleDateChecked = updateDto.isSingleDateChecked;
-    type.isSingleDateRequired = updateDto.isSingleDateChecked ? updateDto.isSingleDateRequired : null;
-    type.singleDateLabel = updateDto.isSingleDateChecked ? updateDto.singleDateLabel : null;
+    type.administrativeFeeAmount =
+      updateDto.isAdministrativeFeeAmountChecked && updateDto.administrativeFeeAmount
+        ? updateDto.administrativeFeeAmount
+        : null;
+
+    type.isDateChecked = updateDto.isDateChecked;
+    type.isDateRequired = updateDto.isDateChecked ? updateDto.isDateRequired : null;
+
+    type.dateType = updateDto.isDateChecked ? updateDto.dateType : null;
+    type.singleDateLabel = updateDto.dateType === DateType.SINGLE ? updateDto.singleDateLabel : null;
 
     type.isSecurityAmountChecked = updateDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = updateDto.isSecurityAmountChecked ? updateDto.isSecurityAmountRequired : null;
@@ -70,6 +79,10 @@ export class ApplicationDecisionConditionTypesService {
   }
 
   async create(createDto: ApplicationDecisionConditionTypeDto) {
+    if (await this.applicationDecisionConditionTypeRepository.exists({ where: { code: createDto.code } })) {
+      throw new ServiceValidationException(`${createDto.code} code already in use or deleted.`);
+    }
+
     const type = new ApplicationDecisionConditionType();
 
     type.code = createDto.code;
@@ -80,13 +93,17 @@ export class ApplicationDecisionConditionTypesService {
     type.isAdministrativeFeeAmountRequired = createDto.isAdministrativeFeeAmountChecked
       ? createDto.isAdministrativeFeeAmountRequired
       : null;
-    type.administrativeFeeAmount = createDto.isAdministrativeFeeAmountChecked
-      ? createDto.administrativeFeeAmount
-      : null;
 
-    type.isSingleDateChecked = createDto.isSingleDateChecked;
-    type.isSingleDateRequired = createDto.isSingleDateChecked ? createDto.isSingleDateRequired : null;
-    type.singleDateLabel = createDto.isSingleDateChecked ? createDto.singleDateLabel : null;
+    type.administrativeFeeAmount =
+      createDto.isAdministrativeFeeAmountChecked && createDto.administrativeFeeAmount
+        ? createDto.administrativeFeeAmount
+        : null;
+
+    type.isDateChecked = createDto.isDateChecked;
+    type.isDateRequired = createDto.isDateChecked ? createDto.isDateRequired : null;
+
+    type.dateType = createDto.isDateChecked ? createDto.dateType : null;
+    type.singleDateLabel = createDto.dateType === DateType.SINGLE ? createDto.singleDateLabel : null;
 
     type.isSecurityAmountChecked = createDto.isSecurityAmountChecked;
     type.isSecurityAmountRequired = createDto.isSecurityAmountChecked ? createDto.isSecurityAmountRequired : null;

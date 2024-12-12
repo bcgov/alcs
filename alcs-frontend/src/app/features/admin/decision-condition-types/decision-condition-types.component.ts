@@ -7,6 +7,8 @@ import { DecisionConditionTypesDialogComponent } from './decision-condition-type
 import { ApplicationDecisionConditionTypesService } from '../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { NoticeofIntentDecisionConditionTypesService } from '../../../services/notice-of-intent/notice-of-intent-decision-condition-types/notice-of-intent-decision-condition-types.service';
 import { NoticeOfIntentDecisionConditionTypeDto } from '../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import { ApplicationDecisionConditionService } from '../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
+import { NoticeOfIntentDecisionConditionService } from '../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 
 @Component({
   selector: 'app-decision-condition-types',
@@ -17,6 +19,11 @@ export class DecisionConditionTypesComponent implements OnInit {
   @Input() public service:
     | ApplicationDecisionConditionTypesService
     | NoticeofIntentDecisionConditionTypesService
+    | undefined;
+
+  @Input() public conditionService:
+    | ApplicationDecisionConditionService
+    | NoticeOfIntentDecisionConditionService
     | undefined;
 
   destroy = new Subject<void>();
@@ -45,6 +52,8 @@ export class DecisionConditionTypesComponent implements OnInit {
       width: '70%',
       data: {
         service: this.service,
+        conditionService: this.conditionService,
+        existingCodes: this.decisionConditionTypeDtos.map((dct) => dct.code),
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
@@ -61,7 +70,9 @@ export class DecisionConditionTypesComponent implements OnInit {
       width: '70%',
       data: {
         service: this.service,
+        conditionService: this.conditionService,
         content: dto,
+        existingCodes: this.decisionConditionTypeDtos.map((dct) => dct.code),
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {

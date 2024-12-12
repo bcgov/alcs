@@ -48,9 +48,13 @@ export class ApplicationDecisionConditionTypesService {
     return;
   }
 
-  async delete(code: string) {
+  async delete(code: string): Promise<ApplicationDecisionConditionTypeDto | undefined> {
     try {
-      return await firstValueFrom(this.http.delete<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`));
+      const response = await firstValueFrom(
+        this.http.delete<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`),
+      );
+      this.toastService.showSuccessToast('Condition successfully deleted.');
+      return response;
     } catch (e: any) {
       if (e && e.error && e.error.message) {
         this.toastService.showErrorToast(e.error.message);

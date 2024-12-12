@@ -27,7 +27,7 @@
           color="primary"
           (click)="onGenerateResolutionNumber()"
           [ngClass]="{
-            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
+            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched,
           }"
         >
           Get Resolution Number
@@ -72,7 +72,7 @@
         id="decisionMaker"
         formControlName="decisionMaker"
         [ngClass]="{
-          'error-field-outlined': !form.controls.decisionMaker.valid && form.controls.decisionMaker.touched
+          'error-field-outlined': !form.controls.decisionMaker.valid && form.controls.decisionMaker.touched,
         }"
       >
         <mat-button-toggle value="CEO Delegate">CEO Delegate</mat-button-toggle>
@@ -121,7 +121,7 @@
           (change)="onChangeSubjectToConditions($event)"
           [ngClass]="{
             'error-field-outlined':
-              !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched
+              !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched,
           }"
         >
           <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -181,11 +181,13 @@
   <div>
     <app-noi-decision-conditions
       *ngIf="codes && showComponents && showConditions"
-      [codes]="codes"
+      [types]="codes.decisionConditionTypes"
+      [componentTypes]="codes.decisionComponentTypes"
       [components]="components"
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
       [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
+      [showDateErrors]="form.touched && requiredDatesAreMissing()"
     ></app-noi-decision-conditions>
   </div>
 

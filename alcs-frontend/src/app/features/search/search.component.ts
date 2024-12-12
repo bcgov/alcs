@@ -293,6 +293,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     if (this.portalStatusFilterDropDownComponent) {
       this.portalStatusFilterDropDownComponent.reset();
     }
+
+    this.clearTags();
   }
 
   getSearchParams(): SearchRequestDto {

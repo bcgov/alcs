@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationDecisionMakerCode } from '../../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionMakerCodeDto } from '../../application-decision/application-decision-maker/decision-maker.dto';
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 
 @Injectable()
 export class ApplicationDecisionMakerService {
@@ -36,12 +37,14 @@ export class ApplicationDecisionMakerService {
     decisionMakerCode.label = updateDto.label;
     decisionMakerCode.isActive = updateDto.isActive;
 
-    return await this.applicationDecisionMakerCodeRepository.save(
-      decisionMakerCode,
-    );
+    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
   }
 
   async create(createDto: ApplicationDecisionMakerCodeDto) {
+    if (await this.applicationDecisionMakerCodeRepository.exists({ where: { code: createDto.code } })) {
+      throw new ServiceValidationException(`${createDto.code} code already in use or deleted.`);
+    }
+
     const decisionMakerCode = new ApplicationDecisionMakerCode();
 
     decisionMakerCode.code = createDto.code;
@@ -49,8 +52,6 @@ export class ApplicationDecisionMakerService {
     decisionMakerCode.label = createDto.label;
     decisionMakerCode.isActive = createDto.isActive;
 
-    return await this.applicationDecisionMakerCodeRepository.save(
-      decisionMakerCode,
-    );
+    return await this.applicationDecisionMakerCodeRepository.save(decisionMakerCode);
   }
 }

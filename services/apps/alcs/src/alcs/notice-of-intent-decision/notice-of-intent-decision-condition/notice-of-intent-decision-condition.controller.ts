@@ -1,12 +1,11 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import {
   NoticeOfIntentDecisionConditionDto,
   UpdateNoticeOfIntentDecisionConditionDto,
@@ -23,6 +22,12 @@ export class NoticeOfIntentDecisionConditionController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
+  @Get()
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getByTypeCode(@Query('type_code') typeCode: string) {
+    return await this.conditionService.getByTypeCode(typeCode);
+  }
+
   @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async update(@Param('uuid') uuid: string, @Body() updates: UpdateNoticeOfIntentDecisionConditionDto) {
@@ -33,8 +38,6 @@ export class NoticeOfIntentDecisionConditionController {
       securityAmount: updates.securityAmount,
       administrativeFee: updates.administrativeFee,
       description: updates.description,
-      completionDate: formatIncomingDate(updates.completionDate),
-      singleDate: formatIncomingDate(updates.singleDate),
     });
     return await this.mapper.mapAsync(
       updatedCondition,
