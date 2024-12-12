@@ -5,9 +5,9 @@ export class ApplicationDecisionConditionDateDto {
   @IsString()
   uuid?: string;
 
-  @Transform(({ value }) => value.getTime())
+  @Transform(({ value }) => value && value.getTime())
   @IsNumber()
-  date?: number;
+  date?: number | null;
 
   @Transform(({ value }) => value && value.getTime())
   @IsNumber()
