@@ -29,7 +29,7 @@ export class DecisionConditionTypesComponent implements OnInit {
   destroy = new Subject<void>();
 
   decisionConditionTypeDtos: ApplicationDecisionConditionTypeDto[] | NoticeOfIntentDecisionConditionTypeDto[] = [];
-  decisionConditionTypeCodeDtos: ApplicationDecisionConditionTypeDto[] | NoticeOfIntentDecisionConditionTypeDto[] = [];
+  decisionConditionTypeCodeDtos: string[] = [];
   displayedColumns: string[] = ['label', 'description', 'code', 'isActive', 'actions'];
 
   constructor(
@@ -55,7 +55,7 @@ export class DecisionConditionTypesComponent implements OnInit {
       data: {
         service: this.service,
         conditionService: this.conditionService,
-        existingCodes: this.decisionConditionTypeCodeDtos.map((dct) => dct.code),
+        existingCodes: this.decisionConditionTypeCodeDtos,
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
@@ -74,7 +74,7 @@ export class DecisionConditionTypesComponent implements OnInit {
         service: this.service,
         conditionService: this.conditionService,
         content: dto,
-        existingCodes: this.decisionConditionTypeCodeDtos.map((dct) => dct.code),
+        existingCodes: this.decisionConditionTypeCodeDtos,
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {

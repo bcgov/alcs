@@ -135,7 +135,7 @@ describe('ApplicationDecisionConditionTypesService', () => {
   it('should successfully fetch decision condition type code', async () => {
     mockRepository.find.mockResolvedValue([type]);
 
-    const result = await service.fetchCodes();
+    const result = await service.fetchCodesWithDeleted();
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();

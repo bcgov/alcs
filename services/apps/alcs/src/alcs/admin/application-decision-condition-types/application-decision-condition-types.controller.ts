@@ -39,7 +39,7 @@ export class ApplicationDecisionConditionTypesController {
 
   @Get('/codes')
   @UserRoles(AUTH_ROLE.ADMIN)
-  async fetchCodes() {
-    return await this.applicationDecisionConditionTypesService.fetchCodes();
+  async fetchCodesWithDeleted() {
+    return (await this.applicationDecisionConditionTypesService.fetchCodesWithDeleted()).map((adct) => adct.code);
   }
 }

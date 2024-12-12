@@ -43,7 +43,7 @@ export class ApplicationDecisionConditionTypesService {
     });
   }
 
-  async fetchCodes() {
+  async fetchCodesWithDeleted() {
     return await this.applicationDecisionConditionTypeRepository.find({
       select: {
         code: true,

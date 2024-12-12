@@ -28,7 +28,7 @@ export class NoticeofIntentDecisionConditionTypesService {
 
   async fetchCodes() {
     try {
-      return await firstValueFrom(this.http.get<NoticeOfIntentDecisionConditionTypeDto[]>(`${this.url}/codes`));
+      return await firstValueFrom(this.http.get<string[]>(`${this.url}/codes`));
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch decision condition type codes');
