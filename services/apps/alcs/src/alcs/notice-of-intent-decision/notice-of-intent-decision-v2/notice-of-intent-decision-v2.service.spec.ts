@@ -7,7 +7,7 @@ import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { DocumentService } from '../../../document/document.service';
 import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
@@ -46,6 +46,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
   let mockDecisionComponentService: DeepMocked<NoticeOfIntentDecisionComponentService>;
   let mockDecisionConditionService: DeepMocked<NoticeOfIntentDecisionConditionService>;
   let mockNoticeOfIntentSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockdataSource: DeepMocked<DataSource>;
 
   let mockNoticeOfIntent;
   let mockDecision;
@@ -62,6 +63,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     mockDecisionComponentService = createMock();
     mockDecisionConditionService = createMock();
     mockNoticeOfIntentSubmissionStatusService = createMock();
+    mockdataSource = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -110,6 +112,10 @@ describe('NoticeOfIntentDecisionV2Service', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNoticeOfIntentSubmissionStatusService,
+        },
+        {
+          provide: DataSource,
+          useValue: mockdataSource,
         },
       ],
     }).compile();
