@@ -54,7 +54,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   showSecurityAmountField = false;
   singleDateFormated: string | undefined = undefined;
   stringIndex: string = '';
-  today!: number;
 
   CONDITION_STATUS = CONDITION_STATUS;
 
@@ -68,9 +67,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     private conditionService: ApplicationDecisionConditionService,
     private conditionLotService: ApplicationDecisionComponentToConditionLotService,
     private decisionService: ApplicationDecisionV2Service,
-  ) {
-    this.today = moment().startOf('day').toDate().getTime();
-  }
+  ) {}
 
   async ngOnInit() {
     this.stringIndex = countToString(this.index);

@@ -52,11 +52,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   isReadMoreVisible = false;
   conditionStatus: string = '';
   stringIndex: string = '';
-  today!: number;
 
-  constructor(private conditionService: NoticeOfIntentDecisionConditionService, private decisionService: NoticeOfIntentDecisionV2Service,) {
-    this.today = moment().startOf('day').toDate().getTime();
-  }
+  constructor(private conditionService: NoticeOfIntentDecisionConditionService, private decisionService: NoticeOfIntentDecisionV2Service,) {}
 
   async ngOnInit() {
     this.stringIndex = countToString(this.index);
