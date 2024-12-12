@@ -146,7 +146,7 @@ export class DecisionConditionTypesDialogComponent {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
       return of(control.value).pipe(
         debounceTime(300),
-        switchMap((isDateChecked) => {
+        switchMap(() => {
           if (!this.conditionService) {
             throw Error('Condition service not found');
           }
@@ -155,9 +155,7 @@ export class DecisionConditionTypesDialogComponent {
         map((conditions) =>
           !control.value && conditions && this.hasAnyDates(conditions) ? { hasConditions: true } : null,
         ),
-        catchError((e) => {
-          return of({ hasConditions: true });
-        }),
+        catchError((e) => of({ hasConditions: true })),
       );
     };
   }

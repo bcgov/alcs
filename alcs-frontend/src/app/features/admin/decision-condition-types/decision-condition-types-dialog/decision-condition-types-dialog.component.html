@@ -97,7 +97,7 @@
             class="condition-date-types"
           >
             <mat-radio-button [value]="DateType.SINGLE">Single - Select date label </mat-radio-button>
-            <div class="condition-fields-container" *ngIf="conditionTypeForm.value.dateType === 'single'">
+            <div class="condition-fields-container" *ngIf="conditionTypeForm.value.dateType === DateType.SINGLE">
               <mat-button-toggle-group
                 id="singleDateLabelId"
                 formControlName="singleDateLabel"
