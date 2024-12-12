@@ -20,7 +20,7 @@ export class ApplicationDecisionConditionTypesService {
     private applicationDecisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
   ) {}
 
-  async fetch() {
+  async fetch(includeDeleted: boolean = false) {
     return await this.applicationDecisionConditionTypeRepository.find({
       order: { label: 'ASC' },
       select: {
@@ -40,6 +40,15 @@ export class ApplicationDecisionConditionTypesService {
         isSecurityAmountChecked: true,
         isSecurityAmountRequired: true,
       },
+    });
+  }
+
+  async fetchCodesWithDeleted() {
+    return await this.applicationDecisionConditionTypeRepository.find({
+      select: {
+        code: true,
+      },
+      withDeleted: true,
     });
   }
 

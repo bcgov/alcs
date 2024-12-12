@@ -29,6 +29,7 @@ export class DecisionConditionTypesComponent implements OnInit {
   destroy = new Subject<void>();
 
   decisionConditionTypeDtos: ApplicationDecisionConditionTypeDto[] | NoticeOfIntentDecisionConditionTypeDto[] = [];
+  decisionConditionTypeCodeDtos: string[] = [];
   displayedColumns: string[] = ['label', 'description', 'code', 'isActive', 'actions'];
 
   constructor(
@@ -43,6 +44,7 @@ export class DecisionConditionTypesComponent implements OnInit {
   async fetch() {
     if (!this.service) return;
     this.decisionConditionTypeDtos = await this.service.fetch();
+    this.decisionConditionTypeCodeDtos = await this.service.fetchCodesWithDeleted();
   }
 
   async onCreate() {
@@ -53,7 +55,7 @@ export class DecisionConditionTypesComponent implements OnInit {
       data: {
         service: this.service,
         conditionService: this.conditionService,
-        existingCodes: this.decisionConditionTypeDtos.map((dct) => dct.code),
+        existingCodes: this.decisionConditionTypeCodeDtos,
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
@@ -72,7 +74,7 @@ export class DecisionConditionTypesComponent implements OnInit {
         service: this.service,
         conditionService: this.conditionService,
         content: dto,
-        existingCodes: this.decisionConditionTypeDtos.map((dct) => dct.code),
+        existingCodes: this.decisionConditionTypeCodeDtos,
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {

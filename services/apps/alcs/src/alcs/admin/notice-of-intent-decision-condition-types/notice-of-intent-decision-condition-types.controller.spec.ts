@@ -42,27 +42,36 @@ describe('NoticeofIntentDecisionConditionTypesController', () => {
   it('should call out to service when fetching decision condition type', async () => {
     mockDecTypesService.fetch.mockResolvedValue([]);
 
-    const applicationDecisionConditionTypes = await controller.fetch();
+    const noiDecisionConditionTypes = await controller.fetch();
 
-    expect(applicationDecisionConditionTypes).toBeDefined();
+    expect(noiDecisionConditionTypes).toBeDefined();
     expect(mockDecTypesService.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call out to service when fetching decision condition type codes', async () => {
+    mockDecTypesService.fetchCodesWithDeleted.mockResolvedValue([]);
+
+    const noiDecisionConditionTypeCodes = await controller.fetchCodesWithDeleted();
+
+    expect(noiDecisionConditionTypeCodes).toBeDefined();
+    expect(mockDecTypesService.fetchCodesWithDeleted).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when updating decision condition type', async () => {
     mockDecTypesService.update.mockResolvedValue(new NoticeOfIntentDecisionConditionType());
 
-    const applicationDecisionConditionType = await controller.update('fake', new NoticeOfIntentDecisionConditionType());
+    const noiDecisionConditionType = await controller.update('fake', new NoticeOfIntentDecisionConditionType());
 
-    expect(applicationDecisionConditionType).toBeDefined();
+    expect(noiDecisionConditionType).toBeDefined();
     expect(mockDecTypesService.update).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating decision condition type', async () => {
     mockDecTypesService.create.mockResolvedValue(new NoticeOfIntentDecisionConditionType());
 
-    const applicationDecisionConditionType = await controller.create(new NoticeOfIntentDecisionConditionType());
+    const noiDecisionConditionType = await controller.create(new NoticeOfIntentDecisionConditionType());
 
-    expect(applicationDecisionConditionType).toBeDefined();
+    expect(noiDecisionConditionType).toBeDefined();
     expect(mockDecTypesService.create).toHaveBeenCalledTimes(1);
   });
 });
