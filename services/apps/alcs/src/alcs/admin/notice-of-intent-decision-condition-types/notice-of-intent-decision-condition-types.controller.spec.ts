@@ -49,12 +49,12 @@ describe('NoticeofIntentDecisionConditionTypesController', () => {
   });
 
   it('should call out to service when fetching decision condition type codes', async () => {
-    mockDecTypesService.fetchCodes.mockResolvedValue([]);
+    mockDecTypesService.fetchCodesWithDeleted.mockResolvedValue([]);
 
     const noiDecisionConditionTypeCodes = await controller.fetchCodesWithDeleted();
 
     expect(noiDecisionConditionTypeCodes).toBeDefined();
-    expect(mockDecTypesService.fetchCodes).toHaveBeenCalledTimes(1);
+    expect(mockDecTypesService.fetchCodesWithDeleted).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when updating decision condition type', async () => {

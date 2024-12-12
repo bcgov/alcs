@@ -40,6 +40,6 @@ export class NoticeofIntentDecisionConditionTypesController {
   @Get('/codes')
   @UserRoles(AUTH_ROLE.ADMIN)
   async fetchCodesWithDeleted() {
-    return (await this.noiDecisionConditionTypesService.fetchCodes()).map((ndct) => ndct.code);
+    return (await this.noiDecisionConditionTypesService.fetchCodesWithDeleted()).map((ndct) => ndct.code);
   }
 }

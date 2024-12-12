@@ -44,7 +44,7 @@ export class DecisionConditionTypesComponent implements OnInit {
   async fetch() {
     if (!this.service) return;
     this.decisionConditionTypeDtos = await this.service.fetch();
-    this.decisionConditionTypeCodeDtos = await this.service.fetchCodes();
+    this.decisionConditionTypeCodeDtos = await this.service.fetchCodesWithDeleted();
   }
 
   async onCreate() {

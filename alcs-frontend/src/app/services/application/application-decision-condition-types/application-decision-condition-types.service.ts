@@ -26,7 +26,7 @@ export class ApplicationDecisionConditionTypesService {
     return [];
   }
 
-  async fetchCodes() {
+  async fetchCodesWithDeleted() {
     try {
       return await firstValueFrom(this.http.get<string[]>(`${this.url}/codes`));
     } catch (err) {
