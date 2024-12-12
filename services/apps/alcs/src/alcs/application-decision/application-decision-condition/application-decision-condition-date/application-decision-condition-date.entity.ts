@@ -13,8 +13,8 @@ export class ApplicationDecisionConditionDate extends Base {
   }
 
   @AutoMap()
-  @Column({ type: 'timestamptz' })
-  date: Date;
+  @Column({ type: 'timestamptz', nullable: true })
+  date: Date | null;
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
