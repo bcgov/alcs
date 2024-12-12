@@ -17,6 +17,14 @@
     ></app-no-data>
   </div>
 
+  <div *ngIf="showSingleDateField">
+    <div class="subheading2">{{ singleDateLabel }}</div>
+    {{ singleDateFormated }}
+    <app-no-data
+      *ngIf="singleDateFormated === null || singleDateFormated === undefined"
+    ></app-no-data>
+  </div>
+
   <div *ngIf="showSecurityAmountField">
     <div class="subheading2">Security Amount</div>
     {{ condition.securityAmount }}

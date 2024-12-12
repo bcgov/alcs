@@ -72,7 +72,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.stringIndex = countToString(this.index);
     if (this.condition) {
-      await this.fetchDates(this.condition.uuid);
+      this.dates = this.condition.dates ?? [];
+      this.singleDateFormated =
+      this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
       this.calcStatus();
       this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.condition.type?.dateType === DateType.SINGLE;
@@ -222,16 +224,5 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         this.statusLabel = DECISION_CONDITION_ONGOING_LABEL;
         break;
     }
-  }
-
-  private async fetchDates(uuid: string | undefined) {
-    if (!uuid) {
-      return;
-    }
-
-    this.dates = await this.conditionService.getDates(uuid);
-
-    this.singleDateFormated =
-      this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
   }
 }
