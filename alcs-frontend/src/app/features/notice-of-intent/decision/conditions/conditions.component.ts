@@ -34,8 +34,11 @@ export type DecisionWithConditionComponentLabels = NoticeOfIntentDecisionWithLin
 };
 
 export const CONDITION_STATUS = {
-  INCOMPLETE: 'incomplete',
   COMPLETE: 'complete',
+  ONGOING: 'ongoing',
+  PENDING: 'pending',
+  PASTDUE: 'pastdue',
+  EXPIRED: 'expired',
 };
 
 @Component({
@@ -93,18 +96,17 @@ export class ConditionsComponent implements OnInit {
           ),
         ),
       )
-      .subscribe(({ decisions, datesByConditionUuid }) => {
-        this.decisions = decisions.map((decision) => {
+      .subscribe(async ({ decisions }) => {
+        this.decisions = await Promise.all(decisions.map(async (decision) => {
           if (decision.uuid === this.decisionUuid) {
-            const conditions = this.mapConditions(decision, datesByConditionUuid, decisions);
-
+            const conditions = await this.mapConditions(decision, decisions);
             this.sortConditions(decision, conditions);
 
             this.decision = decision as DecisionWithConditionComponentLabels;
           }
 
           return decision as DecisionWithConditionComponentLabels;
-        });
+        }));
       });
 
     this.decisionService.loadDecisions(fileNumber);
@@ -129,7 +131,7 @@ export class ConditionsComponent implements OnInit {
     conditions: DecisionConditionWithStatus[],
   ) {
     decision.conditions = conditions.sort((a, b) => {
-      const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE];
+      const order = [CONDITION_STATUS.ONGOING, CONDITION_STATUS.COMPLETE, CONDITION_STATUS.PASTDUE, CONDITION_STATUS.EXPIRED];
       if (a.status === b.status) {
         if (a.type && b.type) {
           return a.type?.label.localeCompare(b.type.label);
@@ -142,18 +144,15 @@ export class ConditionsComponent implements OnInit {
     });
   }
 
-  private mapConditions(
+  private async mapConditions(
     decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
-    datesByConditionUuid: Map<string, NoticeOfIntentDecisionConditionDateDto[]>,
     decisions: NoticeOfIntentDecisionWithLinkedResolutionDto[],
   ) {
-    return decision.conditions.map((condition) => {
-      const dates = datesByConditionUuid.get(condition.uuid) ?? [];
-      const status = this.getStatus(dates, decision);
-
+    return Promise.all(decision.conditions.map(async (condition) => {
+      const conditionStatus = await this.decisionService.getStatus(condition.uuid);
       return {
         ...condition,
-        status,
+        status: conditionStatus.status,
         conditionComponentsLabels: condition.components?.map((c) => {
           const matchingType = this.codes.decisionComponentTypes.find(
             (type) => type.code === c.noticeOfIntentDecisionComponentTypeCode,
@@ -173,22 +172,6 @@ export class ConditionsComponent implements OnInit {
           return { label, conditionUuid: condition.uuid, componentUuid: c.uuid };
         }),
       } as DecisionConditionWithStatus;
-    });
-  }
-
-  private getStatus(
-    dates: NoticeOfIntentDecisionConditionDateDto[],
-    decision: NoticeOfIntentDecisionWithLinkedResolutionDto,
-  ) {
-    let status = '';
-    status = CONDITION_STATUS.COMPLETE;
-    if (dates.length > 0 && dates.every((date) => date.completedDate && date.completedDate <= this.today)) {
-      status = CONDITION_STATUS.COMPLETE;
-    } else if (decision.isDraft === false) {
-      status = CONDITION_STATUS.INCOMPLETE;
-    } else {
-      status = '';
-    }
-    return status;
+    }));
   }
 }
