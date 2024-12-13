@@ -61,7 +61,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       this.dates = this.condition.dates ?? [];
       this.singleDateFormated =
       this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
-      this.calcStatus();
+      this.setPillLabel(this.condition.status);
 
       this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.condition.type?.dateType === DateType.SINGLE;
@@ -110,11 +110,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   checkIfReadMoreVisible(): boolean {
     return this.isReadMoreClicked || this.isEllipsisActive(this.condition.uuid + 'Description');
-  }
-
-  async calcStatus() {
-    const conditionStatus = await this.decisionService.getStatus(this.condition.uuid);
-    this.setPillLabel(conditionStatus.status);
   }
 
   private setPillLabel(status: string) {

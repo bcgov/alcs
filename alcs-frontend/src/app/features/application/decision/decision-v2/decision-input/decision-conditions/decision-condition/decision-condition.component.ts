@@ -59,6 +59,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     administrativeFee: this.administrativeFee,
     description: this.description,
     componentsToCondition: this.componentsToCondition,
+    singleDate: this.singleDate,
   });
 
   constructor(protected dialog: MatDialog) {}
@@ -81,6 +82,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         : this.data.type?.administrativeFeeAmount?.toString(),
       description: this.data.description ?? null,
     });
+
+    if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
+      this.form.patchValue({ singleDate: moment(this.dates[0].date) });
+    }
 
     this.form.valueChanges.subscribe(this.emitChanges.bind(this));
   }
