@@ -66,7 +66,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   constructor(
     private conditionService: ApplicationDecisionConditionService,
     private conditionLotService: ApplicationDecisionComponentToConditionLotService,
-    private decisionService: ApplicationDecisionV2Service,
   ) {}
 
   async ngOnInit() {

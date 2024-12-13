@@ -53,7 +53,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   conditionStatus: string = '';
   stringIndex: string = '';
 
-  constructor(private conditionService: NoticeOfIntentDecisionConditionService, private decisionService: NoticeOfIntentDecisionV2Service,) {}
+  constructor(private conditionService: NoticeOfIntentDecisionConditionService) {}
 
   async ngOnInit() {
     this.stringIndex = countToString(this.index);
