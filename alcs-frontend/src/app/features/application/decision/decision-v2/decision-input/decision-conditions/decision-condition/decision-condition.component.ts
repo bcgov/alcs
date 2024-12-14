@@ -56,10 +56,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   form = new FormGroup({
     securityAmount: this.securityAmount,
-    singleDate: this.singleDate,
     administrativeFee: this.administrativeFee,
     description: this.description,
     componentsToCondition: this.componentsToCondition,
+    singleDate: this.singleDate,
   });
 
   constructor(protected dialog: MatDialog) {}

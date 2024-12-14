@@ -9,7 +9,7 @@
       [routerLink]="['../../']"
       [queryParams]="{ uuid: decision.uuid }"
     >
-      back to decision view
+      back to decision #{{ decision.index }}
     </button>
   </div>
   <section class="body" *ngIf="decision">
@@ -28,7 +28,7 @@
       </div>
       <div class="header">
         <div class="subheading1 title">
-          <h5>Decision #{{ decision.index }}</h5>
+          <h5>Decision</h5>
           <div *ngIf="decision.index === decisions.length - 1 && application">
             <span class="days" matTooltip="Active Days">
               <mat-icon class="icon">calendar_month</mat-icon>
@@ -63,6 +63,7 @@
           [condition]="condition"
           [isDraftDecision]="decision.isDraft"
           [fileNumber]="fileNumber"
+          [index]="j+1"
         ></app-condition>
       </div>
     </div>

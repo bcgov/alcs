@@ -54,11 +54,43 @@ export const DECISION_CONDITION_INCOMPLETE_LABEL = {
   textColor: '#000',
 };
 
+export const DECISION_CONDITION_ONGOING_LABEL = {
+  label: 'Ongoing',
+  shortLabel: 'ONGO',
+  backgroundColor: '#fff',
+  borderColor: '#003366',
+  textColor: '#000',
+};
+
 export const DECISION_CONDITION_COMPLETE_LABEL = {
   label: 'Complete',
   shortLabel: 'COMD',
   backgroundColor: '#fff',
   borderColor: '#065a2f',
+  textColor: '#000',
+};
+
+export const DECISION_CONDITION_PASTDUE_LABEL = {
+  label: 'Past Due',
+  shortLabel: 'PAST',
+  backgroundColor: '#fff',
+  borderColor: '#fcba19',
+  textColor: '#000',
+};
+
+export const DECISION_CONDITION_PENDING_LABEL = {
+  label: 'Pending',
+  shortLabel: 'PEND',
+  backgroundColor: '#fff',
+  borderColor: '#A7C7E8',
+  textColor: '#000',
+};
+
+export const DECISION_CONDITION_EXPIRED_LABEL = {
+  label: 'Expired',
+  shortLabel: 'EXPI',
+  backgroundColor: '#fff',
+  borderColor: '#c6242a',
   textColor: '#000',
 };
 

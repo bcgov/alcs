@@ -7,7 +7,7 @@ import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
@@ -59,6 +59,7 @@ describe('ApplicationDecisionV2Service', () => {
   let mockDecisionConditionService: DeepMocked<ApplicationDecisionConditionService>;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockdataSource: DeepMocked<DataSource>;
 
   let mockApplication;
   let mockDecision;
@@ -80,6 +81,8 @@ describe('ApplicationDecisionV2Service', () => {
     mockDecisionConditionService = createMock();
     mockNaruSubtypeRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
+    mockdataSource = createMock();
+    
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -140,6 +143,10 @@ describe('ApplicationDecisionV2Service', () => {
         {
           provide: ApplicationSubmissionStatusService,
           useValue: mockApplicationSubmissionStatusService,
+        },
+        {
+          provide: DataSource,
+          useValue: mockdataSource,
         },
       ],
     }).compile();

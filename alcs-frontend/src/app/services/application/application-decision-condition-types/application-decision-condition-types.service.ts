@@ -26,6 +26,16 @@ export class ApplicationDecisionConditionTypesService {
     return [];
   }
 
+  async fetchCodesWithDeleted() {
+    try {
+      return await firstValueFrom(this.http.get<string[]>(`${this.url}/codes`));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to fetch decision condition type codes');
+    }
+    return [];
+  }
+
   async create(createDto: ApplicationDecisionConditionTypeDto) {
     try {
       return await firstValueFrom(this.http.post<ApplicationDecisionConditionTypeDto>(`${this.url}`, createDto));

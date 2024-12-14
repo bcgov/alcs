@@ -1,11 +1,6 @@
 <div class="header">
-  <h4 *ngIf="condition.type">{{ condition.type.label }}</h4>
-  <ng-container *ngIf="condition.status === CONDITION_STATUS.INCOMPLETE">
-    <app-application-type-pill [type]="incompleteLabel"></app-application-type-pill>
-  </ng-container>
-  <ng-container *ngIf="condition.status === CONDITION_STATUS.COMPLETE">
-    <app-application-type-pill [type]="completeLabel"></app-application-type-pill>
-  </ng-container>
+  <h4 *ngIf="condition.type">{{ stringIndex }}. {{ condition.type.label }}</h4>
+  <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
 </div>
 <div [ngClass]="isThreeColumn ? 'grid-3' : 'grid-2'">
   <div>
@@ -19,6 +14,14 @@
     {{ condition.administrativeFee }}
     <app-no-data
       *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
+    ></app-no-data>
+  </div>
+
+  <div *ngIf="showSingleDateField">
+    <div class="subheading2">{{ singleDateLabel }}</div>
+    {{ singleDateFormated }}
+    <app-no-data
+      *ngIf="singleDateFormated === null || singleDateFormated === undefined"
     ></app-no-data>
   </div>
 

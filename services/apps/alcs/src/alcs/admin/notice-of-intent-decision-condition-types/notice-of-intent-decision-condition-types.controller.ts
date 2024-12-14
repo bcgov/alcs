@@ -36,4 +36,10 @@ export class NoticeofIntentDecisionConditionTypesController {
   async create(@Body() createDto: NoticeOfIntentDecisionConditionTypeDto) {
     return await this.noiDecisionConditionTypesService.create(createDto);
   }
+
+  @Get('/codes')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async fetchCodesWithDeleted() {
+    return (await this.noiDecisionConditionTypesService.fetchCodesWithDeleted()).map((ndct) => ndct.code);
+  }
 }

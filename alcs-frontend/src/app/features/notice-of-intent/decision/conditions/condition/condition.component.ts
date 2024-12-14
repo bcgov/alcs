@@ -7,12 +7,16 @@ import {
 } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
-  DECISION_CONDITION_INCOMPLETE_LABEL,
-  DECISION_CONDITION_SUPERSEDED_LABEL,
+  DECISION_CONDITION_ONGOING_LABEL,
+  DECISION_CONDITION_PASTDUE_LABEL,
+  DECISION_CONDITION_PENDING_LABEL,
+  DECISION_CONDITION_EXPIRED_LABEL,
 } from '../../../../../shared/application-type-pill/application-type-pill.constants';
 import { CONDITION_STATUS, ConditionComponentLabels, DecisionConditionWithStatus } from '../conditions.component';
 import { environment } from '../../../../../../environments/environment';
 import { DateType } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { countToString } from '../../../../../shared/utils/count-to-string';
+import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 
 type Condition = DecisionConditionWithStatus & {
   componentLabelsStr?: string;
@@ -28,14 +32,13 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() condition!: Condition;
   @Input() isDraftDecision!: boolean;
   @Input() fileNumber!: string;
+  @Input() index!: number;
 
   DateType = DateType;
 
   dates: NoticeOfIntentDecisionConditionDateDto[] = [];
 
-  incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
-  completeLabel = DECISION_CONDITION_COMPLETE_LABEL;
-  supersededLabel = DECISION_CONDITION_SUPERSEDED_LABEL;
+  statusLabel = DECISION_CONDITION_ONGOING_LABEL;
 
   singleDateLabel = 'End Date';
   showSingleDateField = false;
@@ -48,12 +51,17 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   isReadMoreClicked = false;
   isReadMoreVisible = false;
   conditionStatus: string = '';
+  stringIndex: string = '';
 
   constructor(private conditionService: NoticeOfIntentDecisionConditionService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.stringIndex = countToString(this.index);
     if (this.condition) {
-      this.fetchDates(this.condition.uuid);
+      this.dates = this.condition.dates ?? [];
+      this.singleDateFormated =
+      this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
+      this.setPillLabel(this.condition.status);
 
       this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
       this.showSingleDateField = this.condition.type?.dateType === DateType.SINGLE;
@@ -104,15 +112,26 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     return this.isReadMoreClicked || this.isEllipsisActive(this.condition.uuid + 'Description');
   }
 
-  async fetchDates(uuid: string | undefined) {
-    if (!uuid) {
-      return;
+  private setPillLabel(status: string) {
+    switch (status) {
+      case 'ONGOING':
+        this.statusLabel = DECISION_CONDITION_ONGOING_LABEL;
+        break;
+      case 'COMPLETED':
+          this.statusLabel = DECISION_CONDITION_COMPLETE_LABEL;
+          break;
+      case 'PASTDUE':
+        this.statusLabel = DECISION_CONDITION_PASTDUE_LABEL;
+        break;
+      case 'PENDING':
+        this.statusLabel = DECISION_CONDITION_PENDING_LABEL;
+        break;
+      case 'EXPIRED':
+        this.statusLabel = DECISION_CONDITION_EXPIRED_LABEL;
+        break;
+      default:
+        this.statusLabel = DECISION_CONDITION_ONGOING_LABEL;
+        break;
     }
-
-    this.dates = await this.conditionService.getDates(uuid);
-
-    this.singleDateFormated = this.dates[0].date
-      ? moment(this.dates[0].date).format(environment.dateFormat)
-      : undefined;
   }
 }

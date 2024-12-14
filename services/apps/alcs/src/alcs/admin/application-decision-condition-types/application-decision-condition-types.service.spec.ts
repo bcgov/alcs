@@ -131,4 +131,13 @@ describe('ApplicationDecisionConditionTypesService', () => {
     expect(mockRepository.find).toBeCalledTimes(1);
     expect(result).toBeDefined();
   });
+
+  it('should successfully fetch decision condition type code', async () => {
+    mockRepository.find.mockResolvedValue([type]);
+
+    const result = await service.fetchCodesWithDeleted();
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(result).toBeDefined();
+  });
 });

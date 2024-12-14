@@ -11,7 +11,10 @@ import { NoticeOfIntentDecisionConditionTypeDto } from '../decision-v2/notice-of
 export class NoticeofIntentDecisionConditionTypesService {
   private url = `${environment.apiUrl}/noi-decision-condition-types`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch() {
     try {
@@ -19,6 +22,16 @@ export class NoticeofIntentDecisionConditionTypesService {
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to fetch decision condition types');
+    }
+    return [];
+  }
+
+  async fetchCodesWithDeleted() {
+    try {
+      return await firstValueFrom(this.http.get<string[]>(`${this.url}/codes`));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to fetch decision condition type codes');
     }
     return [];
   }
@@ -36,7 +49,7 @@ export class NoticeofIntentDecisionConditionTypesService {
   async update(code: string, updateDto: NoticeOfIntentDecisionConditionTypeDto) {
     try {
       return await firstValueFrom(
-        this.http.patch<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto)
+        this.http.patch<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto),
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');
