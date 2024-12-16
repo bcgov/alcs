@@ -212,7 +212,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         },
       })
       .beforeClosed()
-      .subscribe(async (dates: DueDate[]) => {
+      .subscribe(async (dates: DueDate[] | null) => {
+        if (!dates) {
+          return;
+        }
         this.dates = dates.map((date) => ({
           uuid: date.uuid,
           date: date.date?.toDate().getTime(),
