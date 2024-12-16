@@ -49,6 +49,7 @@ export class DecisionConditionTypesComponent implements OnInit {
 
   async onCreate() {
     const dialog = this.dialog.open(DecisionConditionTypesDialogComponent, {
+      maxHeight: '80vh',
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
@@ -67,6 +68,7 @@ export class DecisionConditionTypesComponent implements OnInit {
 
   async onEdit(dto: ApplicationDecisionConditionTypeDto | NoticeOfIntentDecisionConditionTypeDto) {
     const dialog = this.dialog.open(DecisionConditionTypesDialogComponent, {
+      maxHeight: '80vh',
       minWidth: '600px',
       maxWidth: '800px',
       width: '70%',
