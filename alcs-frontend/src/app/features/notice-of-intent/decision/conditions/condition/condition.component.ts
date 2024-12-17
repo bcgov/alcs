@@ -95,7 +95,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       };
 
       this.isThreeColumn = this.showAdmFeeField && this.showSecurityAmountField;
-      this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(this.addIndex(this.dates));
+      this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
+        this.addIndex(this.sortDates(this.dates)),
+      );
     }
   }
 
@@ -167,9 +169,11 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   sortDates(data: NoticeOfIntentDecisionConditionDateDto[]): NoticeOfIntentDecisionConditionDateDto[] {
     return data.sort((a, b) => {
-      const dateA = a.date || a.completedDate || new Date(0);
-      const dateB = b.date || b.completedDate || new Date(0);
-      return new Date(dateA).getTime() - new Date(dateB).getTime();
+      if (a.date == null && b.date == null) return 0;
+      if (a.date == null) return 1;
+      if (b.date == null) return -1;
+
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
   }
 
@@ -178,7 +182,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
     if (newDate) {
       this.dates.push(newDate);
-      this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(this.addIndex(this.dates));
+      this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
+        this.addIndex(this.sortDates(this.dates)),
+      );
     }
   }
 
@@ -197,6 +203,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       const response = await this.conditionService.updateDate(dateUuid, updatedDto);
       this.dates[index] = response;
+      this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
+        this.addIndex(this.sortDates(this.dates)),
+      );
     } else {
       console.error('Date with specified UUID not found');
     }
@@ -210,7 +219,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       if (index !== -1) {
         this.dates.splice(index, 1);
         this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
-          this.addIndex(this.dates),
+          this.addIndex(this.sortDates(this.dates)),
         );
       }
     }
