@@ -1,18 +1,24 @@
 import { Transform } from 'class-transformer';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class NoticeOfIntentDecisionConditionDateDto {
   @IsString()
   uuid?: string;
 
-  @Transform(({ value }) => value && value.getTime())
   @IsNumber()
+  @IsOptional()
   date?: number | null;
 
-  @Transform(({ value }) => value && value.getTime())
   @IsNumber()
+  @IsOptional()
   completedDate?: number | null;
 
   @IsString()
+  @IsOptional()
   comment?: string | null;
+}
+
+export class CreateNoticeOfIntentDecisionConditionDateDto {
+  @IsString()
+  conditionUuid: string;
 }

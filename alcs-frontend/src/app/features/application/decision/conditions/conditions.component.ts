@@ -101,16 +101,18 @@ export class ConditionsComponent implements OnInit {
         ),
       )
       .subscribe(async ({ decisions }) => {
-        this.decisions = await Promise.all(decisions.map(async (decision) => {
-          if (decision.uuid === this.decisionUuid) {
-            const conditions = await this.mapConditions(decision, decisions);
-            this.sortConditions(decision, conditions);
+        this.decisions = await Promise.all(
+          decisions.map(async (decision) => {
+            if (decision.uuid === this.decisionUuid) {
+              const conditions = await this.mapConditions(decision, decisions);
+              this.sortConditions(decision, conditions);
 
-            this.decision = decision as ApplicationDecisionWithConditionComponentLabels;
-          }
+              this.decision = decision as ApplicationDecisionWithConditionComponentLabels;
+            }
 
-          return decision as ApplicationDecisionWithConditionComponentLabels;
-        }));
+            return decision as ApplicationDecisionWithConditionComponentLabels;
+          }),
+        );
       });
 
     this.decisionService.loadDecisions(fileNumber);
@@ -123,7 +125,7 @@ export class ConditionsComponent implements OnInit {
 
     for (const decision of decisions) {
       for (const condition of decision.conditions) {
-        datesByConditionUuid.set(condition.uuid, await this.conditionService.getDates(condition.uuid));
+        datesByConditionUuid.set(condition.uuid, condition.dates !== undefined ? condition.dates : []);
       }
     }
 
@@ -135,7 +137,12 @@ export class ConditionsComponent implements OnInit {
     conditions: ApplicationDecisionConditionWithStatus[],
   ) {
     decision.conditions = conditions.sort((a, b) => {
-      const order = [CONDITION_STATUS.ONGOING, CONDITION_STATUS.COMPLETE, CONDITION_STATUS.PASTDUE, CONDITION_STATUS.EXPIRED];
+      const order = [
+        CONDITION_STATUS.ONGOING,
+        CONDITION_STATUS.COMPLETE,
+        CONDITION_STATUS.PASTDUE,
+        CONDITION_STATUS.EXPIRED,
+      ];
       if (a.status === b.status) {
         if (a.type && b.type) {
           return a.type?.label.localeCompare(b.type.label);
@@ -152,30 +159,32 @@ export class ConditionsComponent implements OnInit {
     decision: ApplicationDecisionWithLinkedResolutionDto,
     decisions: ApplicationDecisionWithLinkedResolutionDto[],
   ) {
-    return Promise.all(decision.conditions.map(async (condition) => {
-      const conditionStatus = await this.decisionService.getStatus(condition.uuid);
-      return {
-        ...condition,
-        status: conditionStatus.status,
-        conditionComponentsLabels: condition.components?.map((c) => {
-          const matchingType = this.codes.decisionComponentTypes.find(
-            (type) => type.code === c.applicationDecisionComponentTypeCode,
-          );
+    return Promise.all(
+      decision.conditions.map(async (condition) => {
+        const conditionStatus = await this.decisionService.getStatus(condition.uuid);
+        return {
+          ...condition,
+          status: conditionStatus.status,
+          conditionComponentsLabels: condition.components?.map((c) => {
+            const matchingType = this.codes.decisionComponentTypes.find(
+              (type) => type.code === c.applicationDecisionComponentTypeCode,
+            );
 
-          const componentsDecision = decisions.find((d) => d.uuid === c.applicationDecisionUuid);
+            const componentsDecision = decisions.find((d) => d.uuid === c.applicationDecisionUuid);
 
-          if (componentsDecision) {
-            decision = componentsDecision;
-          }
+            if (componentsDecision) {
+              decision = componentsDecision;
+            }
 
-          const label =
-            decision.resolutionNumber && decision.resolutionYear
-              ? `#${decision.resolutionNumber}/${decision.resolutionYear} ${matchingType?.label}`
-              : `Draft ${matchingType?.label}`;
+            const label =
+              decision.resolutionNumber && decision.resolutionYear
+                ? `#${decision.resolutionNumber}/${decision.resolutionYear} ${matchingType?.label}`
+                : `Draft ${matchingType?.label}`;
 
-          return { label, conditionUuid: condition.uuid, componentUuid: c.uuid };
-        }),
-      } as ApplicationDecisionConditionWithStatus;
-    }));
+            return { label, conditionUuid: condition.uuid, componentUuid: c.uuid };
+          }),
+        } as ApplicationDecisionConditionWithStatus;
+      }),
+    );
   }
 }

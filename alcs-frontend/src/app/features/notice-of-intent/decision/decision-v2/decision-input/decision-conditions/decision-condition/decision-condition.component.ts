@@ -12,6 +12,7 @@ import {
   DueDate,
 } from '../../../../../../application/decision/decision-v2/decision-input/decision-conditions/decision-condition/decision-condition-date-dialog/decision-condition-date-dialog.component';
 import moment, { Moment } from 'moment';
+import { startWith } from 'rxjs';
 
 @Component({
   selector: 'app-noi-decision-condition',
@@ -74,6 +75,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     this.uuid = this.data.uuid;
     this.dates = this.data.dates ?? [];
 
+    this.form.valueChanges.pipe(startWith(null)).subscribe(this.emitChanges.bind(this));
+
     if (this.data.type) {
       this.initDateUi(this.data.type);
       this.initOptionalFields(this.data.type);
@@ -92,8 +95,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     if (this.showSingleDateField && this.dates.length > 0 && this.dates[0].date) {
       this.form.patchValue({ singleDate: moment(this.dates[0].date) });
     }
-
-    this.form.valueChanges.subscribe(this.emitChanges.bind(this));
   }
 
   emitChanges() {

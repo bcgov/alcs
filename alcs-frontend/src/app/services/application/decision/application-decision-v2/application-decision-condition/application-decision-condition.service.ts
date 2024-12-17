@@ -15,6 +15,7 @@ import {
 })
 export class ApplicationDecisionConditionService {
   private url = `${environment.apiUrl}/v2/application-decision-condition`;
+  private dateUrl = `${environment.apiUrl}/v2/application-decision-condition-date`;
 
   constructor(
     private http: HttpClient,
@@ -82,7 +83,7 @@ export class ApplicationDecisionConditionService {
   async getDates(conditionUuid: string): Promise<ApplicationDecisionConditionDateDto[]> {
     try {
       return await firstValueFrom(
-        this.http.get<ApplicationDecisionConditionDateDto[]>(`${this.url}/date?conditionUuid=${conditionUuid}`),
+        this.http.get<ApplicationDecisionConditionDateDto[]>(`${this.dateUrl}?conditionUuid=${conditionUuid}`),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'No dates found');
@@ -96,11 +97,38 @@ export class ApplicationDecisionConditionService {
   ): Promise<ApplicationDecisionConditionDateDto> {
     try {
       return await firstValueFrom(
-        this.http.patch<ApplicationDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
+        this.http.patch<ApplicationDecisionConditionDateDto>(`${this.dateUrl}/${dateUuid}`, dateDto),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
       throw e;
+    }
+  }
+
+  async createDate(conditionUuid: string) {
+    try {
+      return await firstValueFrom(
+        this.http.post<ApplicationDecisionConditionDateDto>(`${this.dateUrl}`, { conditionUuid: conditionUuid }),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast('Failed to create a new date');
+      if (e.error.message) {
+        console.error(e.error.message);
+      }
+      return;
+    }
+  }
+
+  async deleteDate(dateUuid: string) {
+    try {
+      return await firstValueFrom(this.http.delete<ApplicationDecisionConditionDateDto>(`${this.dateUrl}/${dateUuid}`));
+    } catch (e: any) {
+      this.toastService.showErrorToast('Failed to delete the due date');
+      if (e.error.message) {
+        console.error(e.error.message);
+      }
+
+      return;
     }
   }
 }

@@ -177,6 +177,10 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           (dto) => dto.completedDate,
           mapFrom((entity) => entity.completedDate && entity.completedDate.getTime()),
         ),
+        forMember(
+          (dto) => dto.comment,
+          mapFrom((entity) => entity.comment),
+        ),
       );
 
       createMap(

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import moment from 'moment';
 import { ApplicationDecisionComponentToConditionLotService } from '../../../../../services/application/decision/application-decision-v2/application-decision-component-to-condition-lot/application-decision-component-to-condition-lot.service';
 import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
@@ -25,11 +25,17 @@ import {
 import { environment } from '../../../../../../environments/environment';
 import { countToString } from '../../../../../shared/utils/count-to-string';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 type Condition = ApplicationDecisionConditionWithStatus & {
   componentLabelsStr?: string;
   componentLabels?: ConditionComponentLabels[];
 };
+
+export interface ApplicationDecisionConditionDateWithIndex extends ApplicationDecisionConditionDateDto {
+  index: number;
+}
 
 @Component({
   selector: 'app-condition',
@@ -48,12 +54,15 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   statusLabel = DECISION_CONDITION_ONGOING_LABEL;
 
-  singleDateLabel = 'End Date';
+  singleDateLabel: string | undefined;
   showSingleDateField = false;
+  showMultipleDateTable = false;
   showAdmFeeField = false;
   showSecurityAmountField = false;
   singleDateFormated: string | undefined = undefined;
   stringIndex: string = '';
+
+  isThreeColumn = true;
 
   CONDITION_STATUS = CONDITION_STATUS;
 
@@ -63,6 +72,12 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   subdComponent?: ApplicationDecisionComponentDto;
   planNumbers: ApplicationDecisionConditionToComponentPlanNumberDto[] = [];
 
+  displayColumns: string[] = ['index', 'due', 'completed', 'comment', 'action'];
+
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource: MatTableDataSource<ApplicationDecisionConditionDateWithIndex> =
+    new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>();
+
   constructor(
     private conditionService: ApplicationDecisionConditionService,
     private conditionLotService: ApplicationDecisionComponentToConditionLotService,
@@ -71,12 +86,16 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.stringIndex = countToString(this.index);
     if (this.condition) {
-      this.dates = this.condition.dates ?? [];
+      this.dates = Array.isArray(this.condition.dates) ? this.condition.dates : [];
       this.singleDateFormated =
-      this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
+        this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
       this.setPillLabel(this.condition.status);
-      this.singleDateLabel = this.condition.type?.singleDateLabel ? this.condition.type?.singleDateLabel : 'End Date';
+      this.singleDateLabel =
+        this.condition.type?.dateType === DateType.SINGLE && this.condition.type?.singleDateLabel
+          ? this.condition.type?.singleDateLabel
+          : undefined;
       this.showSingleDateField = this.condition.type?.dateType === DateType.SINGLE;
+      this.showMultipleDateTable = this.condition.type?.dateType === DateType.MULTIPLE;
       this.showAdmFeeField = this.condition.type?.isAdministrativeFeeAmountChecked
         ? this.condition.type?.isAdministrativeFeeAmountChecked
         : false;
@@ -89,8 +108,11 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       };
 
       this.isRequireSurveyPlan = this.condition.type?.code === 'RSPL';
+      this.isThreeColumn = this.showAdmFeeField && this.showSecurityAmountField;
+
       this.loadLots();
       this.loadPlanNumber();
+      this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(this.addIndex(this.dates));
     }
   }
 
@@ -203,8 +225,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         this.statusLabel = DECISION_CONDITION_ONGOING_LABEL;
         break;
       case 'COMPLETED':
-          this.statusLabel = DECISION_CONDITION_COMPLETE_LABEL;
-          break;
+        this.statusLabel = DECISION_CONDITION_COMPLETE_LABEL;
+        break;
       case 'PASTDUE':
         this.statusLabel = DECISION_CONDITION_PASTDUE_LABEL;
         break;
@@ -217,6 +239,62 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       default:
         this.statusLabel = DECISION_CONDITION_ONGOING_LABEL;
         break;
+    }
+  }
+
+  addIndex(data: ApplicationDecisionConditionDateDto[]): (ApplicationDecisionConditionDateDto & { index: number })[] {
+    return data.map((item, i) => ({
+      ...item,
+      index: i + 1,
+    }));
+  }
+
+  sortDates(data: ApplicationDecisionConditionDateDto[]): ApplicationDecisionConditionDateDto[] {
+    return data.sort((a, b) => {
+      const dateA = a.date || a.completedDate || new Date(0);
+      const dateB = b.date || b.completedDate || new Date(0);
+      return new Date(dateA).getTime() - new Date(dateB).getTime();
+    });
+  }
+
+  async addNewDate() {
+    const newDate = await this.conditionService.createDate(this.condition.uuid);
+
+    if (newDate) {
+      this.dates.push(newDate);
+      this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(this.addIndex(this.dates));
+    }
+  }
+
+  async updateDate(
+    dateUuid: string,
+    fieldName: keyof ApplicationDecisionConditionDateDto,
+    newValue: number | string | null,
+  ) {
+    const index = this.dates.findIndex((dto) => dto.uuid === dateUuid);
+
+    if (index !== -1) {
+      const updatedDto: ApplicationDecisionConditionDateDto = {
+        uuid: dateUuid,
+        [fieldName]: newValue,
+      };
+
+      const response = await this.conditionService.updateDate(dateUuid, updatedDto);
+      this.dates[index] = response;
+    } else {
+      console.error('Date with specified UUID not found');
+    }
+  }
+
+  async onDeleteDate(dateUuid: string) {
+    const result = await this.conditionService.deleteDate(dateUuid);
+    if (result) {
+      const index = this.dates.findIndex((date) => date.uuid === dateUuid);
+
+      if (index !== -1) {
+        this.dates.splice(index, 1);
+        this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(this.addIndex(this.dates));
+      }
     }
   }
 }
