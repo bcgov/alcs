@@ -125,7 +125,6 @@ export class ConditionsComponent implements OnInit {
 
     for (const decision of decisions) {
       for (const condition of decision.conditions) {
-        // datesByConditionUuid.set(condition.uuid, await this.conditionService.getDates(condition.uuid));
         datesByConditionUuid.set(condition.uuid, condition.dates !== undefined ? condition.dates : []);
       }
     }
