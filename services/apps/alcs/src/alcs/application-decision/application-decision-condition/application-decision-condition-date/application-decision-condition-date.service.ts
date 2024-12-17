@@ -4,8 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date.entity';
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { ApplicationDecisionCondition } from '../application-decision-condition.entity';
-import { ApplicationDecisionConditionDateDto } from './application-decision-condition-date.dto';
+import {
+  ApplicationDecisionConditionDateDto,
+  CreateApplicationDecisionConditionDateDto,
+} from './application-decision-condition-date.dto';
 import { plainToInstance } from 'class-transformer';
+import { DateType } from '../application-decision-condition-code.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionDateService {
@@ -66,5 +70,47 @@ export class ApplicationDecisionConditionDateService {
     if (dto.comment) {
       entity.comment = dto.comment;
     }
+  }
+
+  async create(createDto: CreateApplicationDecisionConditionDateDto) {
+    const condition = await this.conditionRepository.findOne({
+      where: { uuid: createDto.conditionUuid },
+      relations: ['type'],
+    });
+
+    if (!condition) {
+      throw new ServiceNotFoundException(`Condition ${createDto.conditionUuid} was not found.`);
+    }
+
+    if (condition.type.dateType !== DateType.MULTIPLE) {
+      throw new ServiceValidationException(
+        `Creating a new date is not supported for condition ${createDto.conditionUuid}`,
+      );
+    }
+
+    const newDate = new ApplicationDecisionConditionDate();
+    newDate.date = null;
+    newDate.completedDate = null;
+    newDate.comment = null;
+    newDate.condition = condition;
+
+    return await this.repository.save(newDate);
+  }
+
+  async delete(dateUuid: string) {
+    const conditionDate = await this.repository.findOne({
+      where: { uuid: dateUuid },
+      relations: ['condition', 'condition.type'],
+    });
+
+    if (!conditionDate) {
+      throw new ServiceNotFoundException(`Condition Date ${dateUuid} was not found`);
+    }
+
+    if (conditionDate.condition.type.dateType !== DateType.MULTIPLE) {
+      throw new ServiceValidationException(`Deleting the date ${dateUuid} is not permitted on single date type`);
+    }
+
+    return await this.repository.delete(dateUuid);
   }
 }
