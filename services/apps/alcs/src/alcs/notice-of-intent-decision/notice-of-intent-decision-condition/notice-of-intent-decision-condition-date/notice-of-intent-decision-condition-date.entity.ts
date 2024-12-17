@@ -24,6 +24,7 @@ export class NoticeOfIntentDecisionConditionDate extends Base {
   @ManyToOne(() => NoticeOfIntentDecisionCondition, {
     cascade: true,
     onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
   })
   condition: NoticeOfIntentDecisionCondition;
 
