@@ -86,7 +86,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.stringIndex = countToString(this.index);
     if (this.condition) {
-      this.dates = this.condition.dates ?? [];
+      this.dates = Array.isArray(this.condition.dates) ? this.condition.dates : [];
       this.singleDateFormated =
         this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
       this.setPillLabel(this.condition.status);
@@ -288,12 +288,13 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   async onDeleteDate(dateUuid: string) {
     const result = await this.conditionService.deleteDate(dateUuid);
+    if (result) {
+      const index = this.dates.findIndex((date) => date.uuid === dateUuid);
 
-    const index = this.dates.findIndex((date) => date.uuid === result?.uuid);
-
-    if (index === -1) {
-      this.dates.splice(index, 1);
-      this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(this.addIndex(this.dates));
+      if (index !== -1) {
+        this.dates.splice(index, 1);
+        this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(this.addIndex(this.dates));
+      }
     }
   }
 }
