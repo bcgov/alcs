@@ -59,4 +59,8 @@ export class DecisionConditionDateDialogComponent {
   async onSubmit() {
     this.dialogRef.close(this.dates);
   }
+
+  async onCancel() {
+    this.dialogRef.close(null);
+  }
 }

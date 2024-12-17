@@ -34,7 +34,13 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   uuid: string | undefined;
 
-  dates: NoticeOfIntentDecisionConditionDateDto[] = [];
+  private _dates: NoticeOfIntentDecisionConditionDateDto[] = [];
+  set dates(dates: NoticeOfIntentDecisionConditionDateDto[]) {
+    this._dates = dates.sort((a, b) => (a.date && b.date ? a.date - b.date : -1));
+  }
+  get dates(): NoticeOfIntentDecisionConditionDateDto[] {
+    return this._dates;
+  }
 
   singleDateLabel = 'End Date';
   showSingleDateField = false;
@@ -212,8 +218,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         },
       })
       .beforeClosed()
-      .subscribe(async (dates: DueDate[]) => {
-        if (!this.uuid) {
+      .subscribe(async (dates: DueDate[] | null) => {
+        if (!dates) {
           return;
         }
         this.dates = dates.map((date) => ({

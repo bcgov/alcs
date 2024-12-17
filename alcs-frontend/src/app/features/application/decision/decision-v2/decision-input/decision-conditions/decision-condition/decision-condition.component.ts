@@ -34,7 +34,13 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   uuid: string | undefined;
 
-  dates: ApplicationDecisionConditionDateDto[] = [];
+  private _dates: ApplicationDecisionConditionDateDto[] = [];
+  set dates(dates: ApplicationDecisionConditionDateDto[]) {
+    this._dates = dates.sort((a, b) => (a.date && b.date ? a.date - b.date : -1));
+  }
+  get dates(): ApplicationDecisionConditionDateDto[] {
+    return this._dates;
+  }
 
   singleDateLabel = 'End Date';
   showSingleDateField = false;
@@ -212,7 +218,10 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         },
       })
       .beforeClosed()
-      .subscribe(async (dates: DueDate[]) => {
+      .subscribe(async (dates: DueDate[] | null) => {
+        if (!dates) {
+          return;
+        }
         this.dates = dates.map((date) => ({
           uuid: date.uuid,
           date: date.date?.toDate().getTime(),
