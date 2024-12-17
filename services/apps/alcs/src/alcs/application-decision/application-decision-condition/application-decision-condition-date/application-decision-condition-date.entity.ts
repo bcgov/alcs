@@ -25,7 +25,6 @@ export class ApplicationDecisionConditionDate extends Base {
     cascade: true,
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
-    nullable: false,
   })
   condition: ApplicationDecisionCondition;
 
