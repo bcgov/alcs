@@ -5,12 +5,10 @@ export class NoticeOfIntentDecisionConditionDateDto {
   @IsString()
   uuid?: string;
 
-  @Transform(({ value }) => (value ? new Date(value).getTime() : null))
   @IsNumber()
   @IsOptional()
   date?: number | null;
 
-  @Transform(({ value }) => (value ? new Date(value).getTime() : null))
   @IsNumber()
   @IsOptional()
   completedDate?: number | null;
