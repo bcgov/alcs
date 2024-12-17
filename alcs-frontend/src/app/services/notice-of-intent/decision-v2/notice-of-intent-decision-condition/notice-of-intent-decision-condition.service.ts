@@ -14,7 +14,7 @@ import {
 })
 export class NoticeOfIntentDecisionConditionService {
   private url = `${environment.apiUrl}/notice-of-intent-decision-condition`;
-  private dateUrl = `${environment.apiUrl}/notice-of-intent-decision-condition-dates`;
+  private dateUrl = `${environment.apiUrl}/notice-of-intent-decision-condition-date`;
 
   constructor(
     private http: HttpClient,

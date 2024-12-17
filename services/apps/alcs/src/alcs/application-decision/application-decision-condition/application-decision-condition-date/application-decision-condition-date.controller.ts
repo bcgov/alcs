@@ -13,7 +13,7 @@ import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date.entity';
 
-@Controller('application-decision-condition-dates')
+@Controller('application-decision-condition-date')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class ApplicationDecisionConditionDateController {

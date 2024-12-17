@@ -15,7 +15,7 @@ import {
 })
 export class ApplicationDecisionConditionService {
   private url = `${environment.apiUrl}/v2/application-decision-condition`;
-  private dateUrl = `${environment.apiUrl}/v2/application-decision-condition-dates`;
+  private dateUrl = `${environment.apiUrl}/v2/application-decision-condition-date`;
 
   constructor(
     private http: HttpClient,

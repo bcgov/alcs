@@ -13,7 +13,7 @@ import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
 import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition-date.entity';
 
-@Controller('notice-of-intent-decision-condition-dates')
+@Controller('notice-of-intent-decision-condition-date')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class NoticeOfIntentDecisionConditionDateController {
