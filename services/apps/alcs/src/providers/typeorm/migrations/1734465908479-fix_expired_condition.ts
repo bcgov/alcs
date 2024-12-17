@@ -42,7 +42,6 @@ export class FixExpiredCondition1734465908479 implements MigrationInterface {
                                             LOOP
                                                 FETCH NEXT FROM dates_cursor INTO date_record;
                                                 IF NOT FOUND THEN
-                                                    is_pending = true;
                                                     EXIT;
                                                 END IF;
                                                 is_ongoing = false;
@@ -55,7 +54,7 @@ export class FixExpiredCondition1734465908479 implements MigrationInterface {
                                                         is_pending = true;
                                                     END IF;
                                                     -- check if it's past due
-                                                    IF (date_record.date::date <= utc_timestamp_today::date AND (date_record.single_date_label = 'Due Date' OR date_record.date_type = 'Multiple')) THEN
+                                                    IF (date_record.date::date < utc_timestamp_today::date AND (date_record.single_date_label = 'Due Date' OR date_record.date_type = 'Multiple')) THEN
                                                         is_pastdue = true;
                                                     END IF;
                                                     -- check if it's expired
@@ -124,7 +123,6 @@ export class FixExpiredCondition1734465908479 implements MigrationInterface {
                                             LOOP
                                                 FETCH NEXT FROM dates_cursor INTO date_record;
                                                 IF NOT FOUND THEN
-                                                    is_pending = true;
                                                     EXIT;
                                                 END IF;
                                                 is_ongoing = false;
@@ -137,7 +135,7 @@ export class FixExpiredCondition1734465908479 implements MigrationInterface {
                                                         is_pending = true;
                                                     END IF;
                                                     -- check if it's past due
-                                                    IF (date_record.date::date <= utc_timestamp_today::date AND (date_record.single_date_label = 'Due Date' OR date_record.date_type = 'Multiple')) THEN
+                                                    IF (date_record.date::date < utc_timestamp_today::date AND (date_record.single_date_label = 'Due Date' OR date_record.date_type = 'Multiple')) THEN
                                                         is_pastdue = true;
                                                     END IF;
                                                     -- check if it's expired
