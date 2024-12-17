@@ -26,34 +26,6 @@
           <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
         </div>
       </div>
-      <div class="header">
-        <div class="subheading1 title">
-          <h5>Decision</h5>
-          <div *ngIf="decision.index === decisions.length - 1 && application">
-            <span class="days" matTooltip="Active Days">
-              <mat-icon class="icon">calendar_month</mat-icon>
-              {{ application.activeDays }}
-            </span>
-            <span class="days" matTooltip="Paused Days">
-              <mat-icon class="icon">pause</mat-icon>
-              {{ application.pausedDays }}
-            </span>
-          </div>
-          <ng-container *ngIf="!!decision.reconsiders">
-            <app-application-type-pill [type]="reconLabel"></app-application-type-pill>
-          </ng-container>
-          <ng-container *ngIf="!!decision?.modifies">
-            <app-application-type-pill [type]="modificationLabel"></app-application-type-pill>
-          </ng-container>
-          <span class="body-text">Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
-          <ng-container *ngIf="decision.isDraft === true"
-            ><app-application-type-pill [type]="dratDecisionLabel"></app-application-type-pill>
-          </ng-container>
-          <ng-container *ngIf="decision?.isDraft === false"
-            ><app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
-          </ng-container>
-        </div>
-      </div>
       <div class="no-conditions" *ngIf="decision.conditions.length < 1">
         <app-no-data text="No conditions added. Return to decision draft to add conditions."></app-no-data>
       </div>
@@ -77,7 +49,7 @@
       [routerLink]="['../../']"
       [queryParams]="{ uuid: decision.uuid }"
     >
-      back to decision view
+      back to decision #{{ decision.index }}
     </button>
   </div>
 </section>
