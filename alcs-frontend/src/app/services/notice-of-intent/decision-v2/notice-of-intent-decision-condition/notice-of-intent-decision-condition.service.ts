@@ -14,6 +14,7 @@ import {
 })
 export class NoticeOfIntentDecisionConditionService {
   private url = `${environment.apiUrl}/notice-of-intent-decision-condition`;
+  private dateUrl = `${environment.apiUrl}/notice-of-intent-decision-condition-dates`;
 
   constructor(
     private http: HttpClient,
@@ -51,7 +52,7 @@ export class NoticeOfIntentDecisionConditionService {
   async getDates(conditionUuid: string): Promise<NoticeOfIntentDecisionConditionDateDto[]> {
     try {
       return await firstValueFrom(
-        this.http.get<NoticeOfIntentDecisionConditionDateDto[]>(`${this.url}/date?conditionUuid=${conditionUuid}`),
+        this.http.get<NoticeOfIntentDecisionConditionDto[]>(`${this.dateUrl}?conditionUuid=${conditionUuid}`),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'No dates found');
@@ -65,11 +66,40 @@ export class NoticeOfIntentDecisionConditionService {
   ): Promise<NoticeOfIntentDecisionConditionDateDto> {
     try {
       return await firstValueFrom(
-        this.http.patch<NoticeOfIntentDecisionConditionDateDto>(`${this.url}/date/${dateUuid}`, dateDto),
+        this.http.patch<NoticeOfIntentDecisionConditionDateDto>(`${this.dateUrl}/${dateUuid}`, dateDto),
       );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'Failed to update date');
       throw e;
+    }
+  }
+
+  async createDate(conditionUuid: string) {
+    try {
+      return await firstValueFrom(
+        this.http.post<NoticeOfIntentDecisionConditionDateDto>(`${this.dateUrl}`, { conditionUuid: conditionUuid }),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast('Failed to create a new date');
+      if (e.error.message) {
+        console.error(e.error.message);
+      }
+      return;
+    }
+  }
+
+  async deleteDate(dateUuid: string) {
+    try {
+      return await firstValueFrom(
+        this.http.delete<NoticeOfIntentDecisionConditionDateDto>(`${this.dateUrl}/${dateUuid}`),
+      );
+    } catch (e: any) {
+      this.toastService.showErrorToast('Failed to delete the due date');
+      if (e.error.message) {
+        console.error(e.error.message);
+      }
+
+      return;
     }
   }
 }
