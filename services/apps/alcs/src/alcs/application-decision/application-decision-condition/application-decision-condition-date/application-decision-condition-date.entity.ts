@@ -24,6 +24,8 @@ export class ApplicationDecisionConditionDate extends Base {
   @ManyToOne(() => ApplicationDecisionCondition, {
     cascade: true,
     onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+    nullable: false,
   })
   condition: ApplicationDecisionCondition;
 
