@@ -39,7 +39,7 @@ export class DecisionConditionTypesDialogComponent {
   isLoading = false;
   isEdit = false;
   showWarning = false;
-  isSingleDateDeafult = false;
+  isSingleDateDefault = false;
 
   service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService | undefined;
   conditionService: ApplicationDecisionConditionService | NoticeOfIntentDecisionConditionService | undefined;
@@ -112,7 +112,7 @@ export class DecisionConditionTypesDialogComponent {
     }
 
     if (!this.data?.content?.isDateChecked && !this.data?.content?.dateType) {
-      this.isSingleDateDeafult = true;
+      this.isSingleDateDefault = true;
     }
 
     this.conditionTypeForm.get('isComponentToConditionChecked')?.disable();
