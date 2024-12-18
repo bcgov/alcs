@@ -91,7 +91,7 @@ export class DecisionConditionTypesDialogComponent {
         [this.conditionAsyncValidator(ValidationFields.Dates)],
       ),
       isDateRequired: new FormControl(this.data?.content?.isDateRequired ? this.data.content.isDateRequired : false),
-      dateType: new FormControl(this.data?.content?.dateType),
+      dateType: new FormControl((!this.data?.content?.isDateChecked && !this.data?.content?.dateType) ? DateType.SINGLE : this.data?.content?.dateType),
       singleDateLabel: new FormControl(
         this.data?.content?.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
       ),
