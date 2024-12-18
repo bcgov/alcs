@@ -39,7 +39,6 @@ export class DecisionConditionTypesDialogComponent {
   isLoading = false;
   isEdit = false;
   showWarning = false;
-  isSingleDateDefault = false;
 
   service: ApplicationDecisionConditionTypesService | NoticeofIntentDecisionConditionTypesService | undefined;
   conditionService: ApplicationDecisionConditionService | NoticeOfIntentDecisionConditionService | undefined;
@@ -92,7 +91,7 @@ export class DecisionConditionTypesDialogComponent {
         [this.conditionAsyncValidator(ValidationFields.Dates)],
       ),
       isDateRequired: new FormControl(this.data?.content?.isDateRequired ? this.data.content.isDateRequired : false),
-      dateType: new FormControl(this.data?.content?.dateType),
+      dateType: new FormControl(this.data?.content?.dateType ?? DateType.SINGLE),
       singleDateLabel: new FormControl(
         this.data?.content?.singleDateLabel ? this.data.content.singleDateLabel : DateLabel.DUE_DATE,
       ),
@@ -109,10 +108,6 @@ export class DecisionConditionTypesDialogComponent {
 
     if (this.isEdit) {
       this.conditionTypeForm.get('code')?.disable();
-    }
-
-    if (!this.data?.content?.isDateChecked && !this.data?.content?.dateType) {
-      this.isSingleDateDefault = true;
     }
 
     this.conditionTypeForm.get('isComponentToConditionChecked')?.disable();
