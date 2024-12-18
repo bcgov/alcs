@@ -19,6 +19,12 @@ import { NoticeOfIntentDecisionConditionService } from '../../../../services/not
 import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
 import { codeExistsValidator } from '../../../../shared/validators/code-exists-validator';
 
+enum ValidationFields {
+  Dates,
+  AdminFee,
+  SecurityAmount,
+}
+
 @Component({
   selector: 'app-decision-condition-types-dialog',
   templateUrl: './decision-condition-types-dialog.component.html',
@@ -66,6 +72,8 @@ export class DecisionConditionTypesDialogComponent {
         this.data?.content?.isAdministrativeFeeAmountChecked
           ? this.data.content.isAdministrativeFeeAmountChecked
           : false,
+        [],
+        [this.conditionAsyncValidator(ValidationFields.AdminFee)],
       ),
       isAdministrativeFeeAmountRequired: new FormControl(
         this.data?.content?.isAdministrativeFeeAmountRequired
@@ -74,11 +82,12 @@ export class DecisionConditionTypesDialogComponent {
       ),
       administrativeFeeAmount: new FormControl(
         this.data?.content?.administrativeFeeAmount ? this.data.content.administrativeFeeAmount : '',
+        []
       ),
       isDateChecked: new FormControl(
         this.data?.content?.isDateChecked ? this.data.content.isDateChecked : false,
         [],
-        [this.conditionAsyncValidator()],
+        [this.conditionAsyncValidator(ValidationFields.Dates)],
       ),
       isDateRequired: new FormControl(this.data?.content?.isDateRequired ? this.data.content.isDateRequired : false),
       dateType: new FormControl(this.data?.content?.dateType),
@@ -87,10 +96,13 @@ export class DecisionConditionTypesDialogComponent {
       ),
       isSecurityAmountChecked: new FormControl(
         this.data?.content?.isSecurityAmountChecked ? this.data.content.isSecurityAmountChecked : false,
+        [],
+        [this.conditionAsyncValidator(ValidationFields.SecurityAmount)],
       ),
       isSecurityAmountRequired: new FormControl(
         this.data?.content?.isSecurityAmountRequired ? this.data.content.isSecurityAmountRequired : false,
       ),
+
     });
 
     if (this.isEdit) {
@@ -142,7 +154,7 @@ export class DecisionConditionTypesDialogComponent {
     this.dialogRef.close(true);
   }
 
-  conditionAsyncValidator(): AsyncValidatorFn {
+  conditionAsyncValidator(field: ValidationFields): AsyncValidatorFn {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
       return of(control.value).pipe(
         debounceTime(300),
@@ -153,7 +165,18 @@ export class DecisionConditionTypesDialogComponent {
           return this.conditionService.fetchByTypeCode(this.conditionTypeForm.controls['code'].value);
         }),
         map((conditions) =>
-          !control.value && conditions && this.hasAnyDates(conditions) ? { hasConditions: true } : null,
+          {
+            switch (field) {
+              case ValidationFields.Dates:
+                return !control.value && conditions && this.hasAnyDates(conditions) ? { hasConditions: true } : null;
+              case ValidationFields.AdminFee:
+                  return !control.value && conditions && this.hasAdminFee(conditions) ? { hasConditions: true } : null;
+              case ValidationFields.SecurityAmount:
+                return !control.value && conditions && this.hasSecurityAmount(conditions) ? { hasConditions: true } : null;
+              default:
+                return null;
+            }
+          },
         ),
         catchError((e) => of({ hasConditions: true })),
       );
@@ -164,5 +187,17 @@ export class DecisionConditionTypesDialogComponent {
     conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
   ): boolean {
     return conditions.some((condition) => condition.dates && condition.dates.length > 0);
+  }
+
+  hasAdminFee(
+    conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
+  ): boolean {
+    return conditions.map((c) => c.administrativeFee).filter((f) => f !== null).length > 0;
+  }
+
+  hasSecurityAmount(
+    conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
+  ): boolean {
+    return conditions.map((c) => c.securityAmount).filter((f) => f !== null).length > 0;
   }
 }
