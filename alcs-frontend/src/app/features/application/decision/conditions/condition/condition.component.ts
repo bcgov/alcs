@@ -81,6 +81,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   constructor(
     private conditionService: ApplicationDecisionConditionService,
     private conditionLotService: ApplicationDecisionComponentToConditionLotService,
+    private decisionService: ApplicationDecisionV2Service,
   ) {}
 
   async ngOnInit() {
@@ -290,6 +291,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(
         this.addIndex(this.sortDates(this.dates)),
       );
+      const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
+      this.condition.status = conditionNewStatus.status;
+      this.setPillLabel(this.condition.status);
     } else {
       console.error('Date with specified UUID not found');
     }
@@ -305,6 +309,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(
           this.addIndex(this.sortDates(this.dates)),
         );
+        const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
+        this.condition.status = conditionNewStatus.status;
+        this.setPillLabel(this.condition.status);
       }
     }
   }
