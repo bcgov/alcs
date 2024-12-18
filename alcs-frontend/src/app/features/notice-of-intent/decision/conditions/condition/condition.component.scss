@@ -1,3 +1,5 @@
+@use '../../../../../../styles/colors';
+
 .component-labels {
   white-space: pre-wrap;
 }
@@ -83,4 +85,14 @@
   .mutliple-actions {
     width: 5%;
   }
+}
+
+::ng-deep .editable {
+  min-height: 25px !important;
+  border: 1px solid #929292 !important;
+  border-radius: 4px !important;
+}
+
+::ng-deep textarea:focus {
+  outline: none;
 }
