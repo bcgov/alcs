@@ -48,9 +48,15 @@ export class NoticeofIntentDecisionConditionTypesService {
 
   async update(code: string, updateDto: NoticeOfIntentDecisionConditionTypeDto) {
     try {
-      return await firstValueFrom(
+      const updatedDecisionConditionType = await firstValueFrom(
         this.http.patch<NoticeOfIntentDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto),
       );
+
+      if (updatedDecisionConditionType) {
+        this.toastService.showSuccessToast('Condition type updated successfully');
+      }
+
+      return updatedDecisionConditionType;
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');
       console.error(e);

@@ -48,9 +48,15 @@ export class ApplicationDecisionConditionTypesService {
 
   async update(code: string, updateDto: ApplicationDecisionConditionTypeDto) {
     try {
-      return await firstValueFrom(
+      const updatedDecisionConditionType = await firstValueFrom(
         this.http.patch<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto),
       );
+
+      if (updatedDecisionConditionType) {
+        this.toastService.showSuccessToast('Condition type updated successfully');
+      }
+
+      return updatedDecisionConditionType;
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');
       console.error(e);
