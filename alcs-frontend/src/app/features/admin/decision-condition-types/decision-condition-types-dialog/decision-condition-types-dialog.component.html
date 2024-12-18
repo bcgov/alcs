@@ -47,7 +47,7 @@
           <div>
             <mat-checkbox formControlName="isAdministrativeFeeAmountChecked">Administrative Fee Amount</mat-checkbox>
             <app-error-message
-              *ngIf="!conditionTypeForm.controls['isAdministrativeFeeAmountChecked'].valid"
+              *ngIf="!conditionTypeForm.controls['isAdministrativeFeeAmountChecked'].valid && !isLoading"
               [message]="'Field contains data, cannot be removed'"
             ></app-error-message>
           </div>
@@ -82,7 +82,7 @@
           <div>
             <mat-checkbox formControlName="isDateChecked"> Date </mat-checkbox>
             <app-error-message
-              *ngIf="!conditionTypeForm.controls['isDateChecked'].valid"
+              *ngIf="!conditionTypeForm.controls['isDateChecked'].valid && !isLoading"
               [message]="'Field contains data, cannot be removed'"
             ></app-error-message>
           </div>
@@ -122,7 +122,7 @@
           <div>
             <mat-checkbox formControlName="isSecurityAmountChecked">Security Amount</mat-checkbox>
             <app-error-message
-              *ngIf="!conditionTypeForm.controls['isSecurityAmountChecked'].valid"
+              *ngIf="!conditionTypeForm.controls['isSecurityAmountChecked'].valid && !isLoading"
               [message]="'Field contains data, cannot be removed'"
             ></app-error-message>
           </div>

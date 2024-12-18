@@ -47,6 +47,7 @@ export class DecisionConditionTypesDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: DecisionDialogDataInterface | undefined,
     private dialogRef: MatDialogRef<DecisionConditionTypesDialogComponent>,
   ) {
+    this.isLoading = true;
     this.service = data?.service;
     this.conditionService = data?.conditionService;
     this.isEdit = !!data?.content;
@@ -111,6 +112,7 @@ export class DecisionConditionTypesDialogComponent {
 
     this.conditionTypeForm.get('isComponentToConditionChecked')?.disable();
     this.conditionTypeForm.get('isDescriptionChecked')?.disable();
+    this.isLoading = false;
   }
 
   ngOnInit(): void {
@@ -144,6 +146,9 @@ export class DecisionConditionTypesDialogComponent {
     if (this.conditionTypeForm.get('administrativeFeeAmount')?.value !== '') {
       dto.administrativeFeeAmount = this.conditionTypeForm.get('administrativeFeeAmount')?.value;
     }
+    if (!dto.isAdministrativeFeeAmountChecked) {
+      dto.administrativeFeeAmount = null;
+    }
     if (!this.service) return;
     if (this.isEdit) {
       await this.service.update(dto.code, dto);
@@ -158,11 +163,15 @@ export class DecisionConditionTypesDialogComponent {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
       return of(control.value).pipe(
         debounceTime(300),
-        switchMap(() => {
+        switchMap(async () => {
           if (!this.conditionService) {
             throw Error('Condition service not found');
           }
-          return this.conditionService.fetchByTypeCode(this.conditionTypeForm.controls['code'].value);
+          // prevents the message flash by setting isLoading while fetching codes.
+          this.isLoading = true;
+          const result = await this.conditionService.fetchByTypeCode(this.conditionTypeForm.controls['code'].value);
+          this.isLoading = false;
+          return result;
         }),
         map((conditions) =>
           {
