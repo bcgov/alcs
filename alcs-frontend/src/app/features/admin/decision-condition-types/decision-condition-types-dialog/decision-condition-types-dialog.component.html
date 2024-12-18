@@ -46,6 +46,10 @@
         <div class="condition-field-header">
           <div>
             <mat-checkbox formControlName="isAdministrativeFeeAmountChecked">Administrative Fee Amount</mat-checkbox>
+            <app-error-message
+              *ngIf="!conditionTypeForm.controls['isAdministrativeFeeAmountChecked'].valid"
+              [message]="'Field contains data, cannot be removed'"
+            ></app-error-message>
           </div>
 
           <div class="toggle" *ngIf="conditionTypeForm.get('isAdministrativeFeeAmountChecked')?.value">
@@ -117,6 +121,10 @@
         <div class="condition-field-header">
           <div>
             <mat-checkbox formControlName="isSecurityAmountChecked">Security Amount</mat-checkbox>
+            <app-error-message
+              *ngIf="!conditionTypeForm.controls['isSecurityAmountChecked'].valid"
+              [message]="'Field contains data, cannot be removed'"
+            ></app-error-message>
           </div>
 
           <div class="toggle" *ngIf="conditionTypeForm.get('isSecurityAmountChecked')?.value">
