@@ -64,14 +64,14 @@ export class NoticeOfIntentDecisionConditionDateService {
   }
 
   map(dto: NoticeOfIntentDecisionConditionDateDto, entity: NoticeOfIntentDecisionConditionDate) {
-    if (dto.date) {
-      entity.date = new Date(dto.date);
+    if ('date' in dto) {
+      entity.date = dto.date ? new Date(dto.date) : null;
     }
-    if (dto.completedDate) {
-      entity.completedDate = new Date(dto.completedDate);
+    if ('completedDate' in dto) {
+      entity.completedDate = dto.completedDate ? new Date(dto.completedDate) : null;
     }
-    if (dto.comment) {
-      entity.comment = dto.comment;
+    if ('comment' in dto) {
+      entity.comment = dto.comment ?? null;
     }
   }
 
