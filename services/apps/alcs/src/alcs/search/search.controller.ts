@@ -222,7 +222,7 @@ export class SearchController {
   }
 
   @Post('/advanced/application-status')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  @UserRoles(...ROLES_ALLOWED_SEARCH)
   async advancedSearchApplicationStatus(@Body() fileNumbers: string[]): Promise<StatusUpdateSearchResultDto[]> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
@@ -241,7 +241,7 @@ export class SearchController {
   }
 
   @Post('/advanced/noi-status')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  @UserRoles(...ROLES_ALLOWED_SEARCH)
   async advancedSearchNoiStatus(@Body() fileNumbers: string[]): Promise<StatusUpdateSearchResultDto[]> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
@@ -260,7 +260,7 @@ export class SearchController {
   }
 
   @Post('/advanced/notification-status')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  @UserRoles(...ROLES_ALLOWED_SEARCH)
   async advancedSearchNotificationStatus(@Body() fileNumbers: string[]): Promise<StatusUpdateSearchResultDto[]> {
     const queryRunner = this.dataSource.createQueryRunner('slave');
 
