@@ -16,6 +16,20 @@
     "
     class="row-no-flex"
   >
+    <div class="full-width">
+      <mat-form-field appearance="outline" class="row">
+        <mat-label>ALR Area Impacted (ha)</mat-label>
+        <input
+          matInput
+          min="0.01"
+          mask="separator.5"
+          thousandSeparator=","
+          separatorLimit="9999999999"
+          formControlName="alrArea"
+          required
+        />
+      </mat-form-field>
+    </div>
   </div>
 
   <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO" class="row-no-flex">
