@@ -55,8 +55,8 @@ export class EditBoundaryAmendmentDialogComponent implements OnInit {
 
     this.loadComponents();
 
-    const currentYear = moment().year();
-    for (let i = currentYear; i >= 1974; i--) {
+    const nextYear = moment().year() + 1;
+    for (let i = nextYear; i >= 1974; i--) {
       this.years.push(i.toString(10));
     }
   }
