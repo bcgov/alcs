@@ -1,4 +1,4 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -97,9 +97,7 @@ describe('BoardsService', () => {
   it("should throw an exception when updating an card that doesn't exist", async () => {
     cardService.get.mockResolvedValue(null);
 
-    await expect(
-      service.changeBoard('card-uuid', 'board-code'),
-    ).rejects.toMatchObject(
+    await expect(service.changeBoard('card-uuid', 'board-code')).rejects.toMatchObject(
       new ServiceNotFoundException('Failed to find card with uuid card-uuid'),
     );
   });
@@ -108,9 +106,7 @@ describe('BoardsService', () => {
     cardService.get.mockResolvedValue({} as Card);
     mockBoardRepository.findOne.mockResolvedValue(null);
 
-    await expect(
-      service.changeBoard('file-number', 'board-code'),
-    ).rejects.toMatchObject(
+    await expect(service.changeBoard('file-number', 'board-code')).rejects.toMatchObject(
       new ServiceNotFoundException(`Failed to find Board with code board-code`),
     );
   });
@@ -156,6 +152,7 @@ describe('BoardsService', () => {
     mockBoardRepository.save.mockResolvedValue(new Board());
     mockBoardStatusRepository.delete.mockResolvedValue({} as any);
     mockBoardStatusRepository.save.mockResolvedValue([] as any);
+    mockBoardRepository.exists.mockResolvedValue(false);
 
     await service.create({
       allowedCardTypes: [],
@@ -170,5 +167,20 @@ describe('BoardsService', () => {
     expect(mockBoardRepository.save).toHaveBeenCalledTimes(1);
     expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
     expect(mockBoardStatusRepository.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw an error if code already exists when creating new board entry', async () => {
+    mockBoardRepository.exists.mockResolvedValue(true);
+
+    await expect(
+      service.create({
+        allowedCardTypes: [],
+        code: 'SAMPLE',
+        createCardTypes: [],
+        showOnSchedule: false,
+        statuses: [],
+        title: '',
+      }),
+    ).rejects.toThrow(ServiceValidationException);
   });
 });

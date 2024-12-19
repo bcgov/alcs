@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { AUTH_ROLE } from '../../../common/authorization/roles';
@@ -19,9 +11,7 @@ import { ApplicationDecisionConditionTypesService } from './application-decision
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class ApplicationDecisionConditionTypesController {
-  constructor(
-    private applicationDecisionConditionTypesService: ApplicationDecisionConditionTypesService,
-  ) {}
+  constructor(private applicationDecisionConditionTypesService: ApplicationDecisionConditionTypesService) {}
 
   @Get()
   @UserRoles(AUTH_ROLE.ADMIN)
@@ -31,21 +21,25 @@ export class ApplicationDecisionConditionTypesController {
 
   @Patch('/:code')
   @UserRoles(AUTH_ROLE.ADMIN)
-  async update(
-    @Param('code') code: string,
-    @Body() updateDto: ApplicationDecisionConditionTypeDto,
-  ) {
-    return await this.applicationDecisionConditionTypesService.update(
-      code,
-      updateDto,
-    );
+  async update(@Param('code') code: string, @Body() updateDto: ApplicationDecisionConditionTypeDto) {
+    return await this.applicationDecisionConditionTypesService.update(code, updateDto);
+  }
+
+  @Delete('/:code')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async delete(@Param('code') code: string) {
+    return await this.applicationDecisionConditionTypesService.delete(code);
   }
 
   @Post('')
   @UserRoles(AUTH_ROLE.ADMIN)
   async create(@Body() createDto: ApplicationDecisionConditionTypeDto) {
-    return await this.applicationDecisionConditionTypesService.create(
-      createDto,
-    );
+    return await this.applicationDecisionConditionTypesService.create(createDto);
+  }
+
+  @Get('/codes')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async fetchCodesWithDeleted() {
+    return (await this.applicationDecisionConditionTypesService.fetchCodesWithDeleted()).map((adct) => adct.code);
   }
 }

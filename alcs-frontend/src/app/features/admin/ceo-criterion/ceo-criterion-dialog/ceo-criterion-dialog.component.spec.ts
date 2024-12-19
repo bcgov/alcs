@@ -15,7 +15,7 @@ describe('CeoCriterionDialogComponent', () => {
       imports: [ReactiveFormsModule, FormsModule],
       declarations: [CeoCriterionDialogComponent],
       providers: [
-        { provide: MAT_DIALOG_DATA, useValue: undefined },
+        { provide: MAT_DIALOG_DATA, useValue: { existingCodes: [] } },
         { provide: MatDialogRef, useValue: {} },
         {
           provide: CeoCriterionService,

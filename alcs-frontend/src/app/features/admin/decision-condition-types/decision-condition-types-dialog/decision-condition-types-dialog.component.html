@@ -2,35 +2,152 @@
   <h4>{{ isEdit ? 'Edit' : 'Create' }} Decision Condition Type</h4>
 </div>
 <div mat-dialog-content class="dialog">
-  <form (ngSubmit)="onSubmit()" #form="ngForm">
+  <form (ngSubmit)="onSubmit()" [formGroup]="conditionTypeForm">
     <div>
       <mat-form-field class="code" appearance="outline">
         <mat-label>Code</mat-label>
-        <input
-          [disabled]="isEdit"
-          required
-          maxlength="4"
-          minlength="4"
-          matInput
-          id="code"
-          [(ngModel)]="code"
-          name="code"
-        />
+        <input required maxlength="4" minlength="4" matInput id="code" formControlName="code" name="code" />
       </mat-form-field>
+      <div *ngIf="conditionTypeForm.get('code')?.hasError('codeExists')">
+        <app-error-message message="Code already in use or deteled, pick a different code."></app-error-message>
+      </div>
     </div>
 
     <div class="full-width">
       <mat-form-field class="label" appearance="outline">
         <mat-label>Label</mat-label>
-        <input required matInput id="label" [(ngModel)]="label" name="label" />
+        <input required matInput id="label" formControlName="label" name="label" />
       </mat-form-field>
     </div>
 
     <div class="full-width">
       <mat-form-field class="description" appearance="outline">
         <mat-label>Description</mat-label>
-        <input required matInput id="description" [(ngModel)]="description" name="description" />
+        <input required matInput id="description" formControlName="description" name="description" />
       </mat-form-field>
+    </div>
+
+    <div class="dialog-field full-width">
+      <mat-label>Status *</mat-label>
+      <mat-button-toggle-group required id="isActive" formControlName="isActive" name="isActive">
+        <mat-button-toggle [value]="true">Active</mat-button-toggle>
+        <mat-button-toggle [value]="false">Inactive</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="condition-fields-container full-width">
+      <span>Click to select fields</span>
+
+      <div class="condition-field">
+        <mat-checkbox formControlName="isComponentToConditionChecked">Component to Condition*</mat-checkbox>
+      </div>
+
+      <div class="condition-field">
+        <div class="condition-field-header">
+          <div>
+            <mat-checkbox formControlName="isAdministrativeFeeAmountChecked">Administrative Fee Amount</mat-checkbox>
+            <app-error-message
+              *ngIf="!conditionTypeForm.controls['isAdministrativeFeeAmountChecked'].valid && !isLoading"
+              [message]="'Field contains data, cannot be removed'"
+            ></app-error-message>
+          </div>
+
+          <div class="toggle" *ngIf="conditionTypeForm.get('isAdministrativeFeeAmountChecked')?.value">
+            <mat-label
+              [ngClass]="{ inactive: conditionTypeForm.get('isAdministrativeFeeAmountRequired')?.value ?? false }"
+              >Mark Field as Required (*)
+            </mat-label>
+            <mat-slide-toggle
+              formControlName="isAdministrativeFeeAmountRequired"
+              aria-labelledby="isAdministrativeFeeAmountRequiredLabel"
+            ></mat-slide-toggle>
+          </div>
+        </div>
+
+        <div *ngIf="conditionTypeForm.get('isAdministrativeFeeAmountChecked')?.value">
+          <mat-form-field appearance="outline" class="condition-field-input">
+            <mat-label>Administrative Fee Amount</mat-label>
+            <input
+              matInput
+              id="administrativeFeeAmount"
+              formControlName="administrativeFeeAmount"
+              name="administrativeFeeAmount"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="condition-field">
+        <div class="condition-field-header">
+          <div>
+            <mat-checkbox formControlName="isDateChecked"> Date </mat-checkbox>
+            <app-error-message
+              *ngIf="!conditionTypeForm.controls['isDateChecked'].valid && !isLoading"
+              [message]="'Field contains data, cannot be removed'"
+            ></app-error-message>
+          </div>
+
+          <div class="toggle" *ngIf="conditionTypeForm.get('isDateChecked')?.value">
+            <mat-label [ngClass]="{ inactive: conditionTypeForm.get('isDateRequired')?.value ?? false }"
+              >Mark Field as Required (*)
+            </mat-label>
+            <mat-slide-toggle formControlName="isDateRequired" aria-labelledby="isDateRequiredLabel"></mat-slide-toggle>
+          </div>
+        </div>
+        <div>
+          <mat-radio-group
+            formControlName="dateType"
+            *ngIf="conditionTypeForm.get('isDateChecked')?.value"
+            class="condition-date-types"
+          >
+            <mat-radio-button [value]="DateType.SINGLE">Single - Select date label </mat-radio-button>
+            <div class="condition-fields-container" *ngIf="conditionTypeForm.value.dateType === DateType.SINGLE">
+              <mat-button-toggle-group
+                id="singleDateLabelId"
+                formControlName="singleDateLabel"
+                name="singleDateLabel"
+                class="single-date-label-toggle"
+              >
+                <mat-button-toggle value="Due Date">Due Date</mat-button-toggle>
+                <mat-button-toggle value="End Date">End Date</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <mat-radio-button [value]="DateType.MULTIPLE">Multiple - Date label will be 'Due Date'</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="condition-field">
+        <div class="condition-field-header">
+          <div>
+            <mat-checkbox formControlName="isSecurityAmountChecked">Security Amount</mat-checkbox>
+            <app-error-message
+              *ngIf="!conditionTypeForm.controls['isSecurityAmountChecked'].valid && !isLoading"
+              [message]="'Field contains data, cannot be removed'"
+            ></app-error-message>
+          </div>
+
+          <div class="toggle" *ngIf="conditionTypeForm.get('isSecurityAmountChecked')?.value">
+            <mat-label [ngClass]="{ inactive: conditionTypeForm.get('isSecurityAmountRequired')?.value ?? false }"
+              >Mark Field as Required (*)
+            </mat-label>
+            <mat-slide-toggle
+              formControlName="isSecurityAmountRequired"
+              aria-labelledby="isSecurityAmountRequiredLabel"
+            ></mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+
+      <div class="condition-field">
+        <mat-checkbox formControlName="isDescriptionChecked">Description</mat-checkbox>
+      </div>
+      <div class="warning-section">
+        <div class="warning" *ngIf="showWarning">
+          <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Changes made here will apply to all instances of this
+          condition
+        </div>
+      </div>
     </div>
   </form>
 
@@ -43,7 +160,7 @@
         mat-flat-button
         color="primary"
         type="submit"
-        [disabled]="!form.form.valid"
+        [disabled]="!conditionTypeForm.valid"
       >
         Save
       </button>

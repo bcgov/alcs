@@ -1,0 +1,63 @@
+<div mat-dialog-title>
+  <h2 class="card-title">{{ isAdding ? 'Add' : 'Edit' }} Due Dates</h2>
+</div>
+
+<form (ngSubmit)="onSubmit()" #meetingForm="ngForm">
+  <mat-dialog-content style="height: 100%">
+    <table class="date-table" mat-table [dataSource]="tableData" multiTemplateDataRows>
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = dataIndex">
+          {{ i + 1 }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Due Dates</th>
+        <td mat-cell *matCellDef="let i = dataIndex; let row">
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              (click)="datePicker.open()"
+              [matDatepicker]="datePicker"
+              [(ngModel)]="row.date"
+              name="date-{{ i }}"
+              required
+            />
+            <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker type="date"></mat-datepicker>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let i = dataIndex">
+          <ng-container *ngIf="!isRequired || i > 0">
+            <button class="remove-button" mat-flat-button (click)="removeDueDate(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <ng-container *ngIf="isAdding">
+      <button type="button" class="add-button" mat-stroked-button color="primary" (click)="addDueDate()">
+        + Another Due Date
+      </button>
+    </ng-container>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" [mat-dialog-close]="null">Cancel</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!meetingForm.form.valid">
+        {{ isAdding ? 'Add' : 'Save' }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</form>

@@ -38,9 +38,7 @@ describe('ApplicationDecisionConditionController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationDecisionConditionController>(
-      ApplicationDecisionConditionController,
-    );
+    controller = module.get<ApplicationDecisionConditionController>(ApplicationDecisionConditionController);
   });
 
   it('should be defined', () => {
@@ -57,8 +55,6 @@ describe('ApplicationDecisionConditionController', () => {
         securityAmount: 1000,
         administrativeFee: 50,
         description: 'example description',
-        completionDate: date.getTime(),
-        supersededDate: date.getTime(),
       };
 
       const condition = new ApplicationDecisionCondition({
@@ -67,8 +63,6 @@ describe('ApplicationDecisionConditionController', () => {
         securityAmount: 500,
         administrativeFee: 25,
         description: 'existing description',
-        completionDate: new Date(),
-        supersededDate: new Date(),
       });
 
       const updated = new ApplicationDecisionCondition({
@@ -77,29 +71,17 @@ describe('ApplicationDecisionConditionController', () => {
         securityAmount: updates.securityAmount,
         administrativeFee: updates.administrativeFee,
         description: updates.description,
-        completionDate: date,
-        supersededDate: date,
       });
 
-      mockApplicationDecisionConditionService.getOneOrFail.mockResolvedValue(
-        condition,
-      );
+      mockApplicationDecisionConditionService.getOneOrFail.mockResolvedValue(condition);
       mockApplicationDecisionConditionService.update.mockResolvedValue(updated);
 
       const result = await controller.update(uuid, updates);
 
-      expect(
-        mockApplicationDecisionConditionService.getOneOrFail,
-      ).toHaveBeenCalledWith(uuid);
-      expect(
-        mockApplicationDecisionConditionService.update,
-      ).toHaveBeenCalledWith(condition, {
+      expect(mockApplicationDecisionConditionService.getOneOrFail).toHaveBeenCalledWith(uuid);
+      expect(mockApplicationDecisionConditionService.update).toHaveBeenCalledWith(condition, {
         ...updates,
-        completionDate: date,
-        supersededDate: date,
       });
-      expect(new Date(result.completionDate!)).toEqual(updated.completionDate);
-      expect(new Date(result.supersededDate!)).toEqual(updated.supersededDate);
       expect(result.description).toEqual(updated.description);
       expect(result.administrativeFee).toEqual(updated.administrativeFee);
       expect(result.securityAmount).toEqual(updated.securityAmount);

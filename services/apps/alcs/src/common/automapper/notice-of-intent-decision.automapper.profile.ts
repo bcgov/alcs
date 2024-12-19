@@ -36,6 +36,8 @@ import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentPortalDecisionDto } from '../../portal/public/notice-of-intent/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionConditionDate } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
+import { NoticeOfIntentDecisionConditionDateDto } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
 
 @Injectable()
 export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
@@ -52,11 +54,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.documents,
           mapFrom((a) =>
-            this.mapper.mapArray(
-              a.documents || [],
-              NoticeOfIntentDecisionDocument,
-              NoticeOfIntentDecisionDocumentDto,
-            ),
+            this.mapper.mapArray(a.documents || [], NoticeOfIntentDecisionDocument, NoticeOfIntentDecisionDocumentDto),
           ),
         ),
         forMember(
@@ -82,8 +80,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -120,11 +117,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentSubmissionStatusType,
-        NoticeOfIntentStatusDto,
-      );
+      createMap(mapper, NoticeOfIntentSubmissionStatusType, NoticeOfIntentStatusDto);
 
       createMap(
         mapper,
@@ -144,32 +137,28 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentDecisionComponentType,
-        NoticeOfIntentDecisionComponentTypeDto,
-      );
+      createMap(mapper, NoticeOfIntentDecisionComponentType, NoticeOfIntentDecisionComponentTypeDto);
 
       createMap(
         mapper,
         NoticeOfIntentDecisionCondition,
         NoticeOfIntentDecisionConditionDto,
         forMember(
-          (ad) => ad.completionDate,
-          mapFrom((a) => a.completionDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.supersededDate,
-          mapFrom((a) => a.supersededDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
+              ? this.mapper.mapArray(a.components, NoticeOfIntentDecisionComponent, NoticeOfIntentDecisionComponentDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.dates,
+          mapFrom((entity) =>
+            entity.dates
               ? this.mapper.mapArray(
-                  a.components,
-                  NoticeOfIntentDecisionComponent,
-                  NoticeOfIntentDecisionComponentDto,
+                  entity.dates,
+                  NoticeOfIntentDecisionConditionDate,
+                  NoticeOfIntentDecisionConditionDateDto,
                 )
               : [],
           ),
@@ -178,15 +167,55 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        NoticeOfIntentDecisionConditionType,
-        NoticeOfIntentDecisionConditionTypeDto,
+        NoticeOfIntentDecisionConditionDate,
+        NoticeOfIntentDecisionConditionDateDto,
+        forMember(
+          (dto) => dto.date,
+          mapFrom((entity) => entity.date && entity.date.getTime()),
+        ),
+        forMember(
+          (dto) => dto.completedDate,
+          mapFrom((entity) => entity.completedDate && entity.completedDate.getTime()),
+        ),
+        forMember(
+          (dto) => dto.comment,
+          mapFrom((entity) => entity.comment),
+        ),
       );
 
       createMap(
         mapper,
-        NoticeOfIntentDecisionOutcome,
-        NoticeOfIntentDecisionOutcomeCodeDto,
+        NoticeOfIntentDecisionConditionType,
+        NoticeOfIntentDecisionConditionTypeDto,
+        forMember(
+          (dto) => dto.isAdministrativeFeeAmountRequired,
+          mapFrom((entity) =>
+            entity.isAdministrativeFeeAmountRequired !== null ? entity.isAdministrativeFeeAmountRequired : null,
+          ),
+        ),
+        forMember(
+          (dto) => dto.administrativeFeeAmount,
+          mapFrom((entity) => (entity.administrativeFeeAmount !== null ? entity.administrativeFeeAmount : null)),
+        ),
+        forMember(
+          (dto) => dto.isDateRequired,
+          mapFrom((entity) => (entity.isDateRequired !== null ? entity.isDateRequired : null)),
+        ),
+        forMember(
+          (dto) => dto.dateType,
+          mapFrom((entity) => (entity.dateType !== null ? entity.dateType : null)),
+        ),
+        forMember(
+          (dto) => dto.singleDateLabel,
+          mapFrom((entity) => (entity.singleDateLabel !== null ? entity.singleDateLabel : null)),
+        ),
+        forMember(
+          (dto) => dto.isSecurityAmountRequired,
+          mapFrom((entity) => (entity.isSecurityAmountRequired !== null ? entity.isSecurityAmountRequired : null)),
+        ),
       );
+
+      createMap(mapper, NoticeOfIntentDecisionOutcome, NoticeOfIntentDecisionOutcomeCodeDto);
 
       createMap(
         mapper,
@@ -214,11 +243,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentModificationOutcomeType,
-        NoticeOfIntentModificationOutcomeCodeDto,
-      );
+      createMap(mapper, NoticeOfIntentModificationOutcomeType, NoticeOfIntentModificationOutcomeCodeDto);
 
       createMap(
         mapper,
@@ -226,13 +251,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         NoticeOfIntentForModificationDto,
         forMember(
           (a) => a.localGovernment,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.localGovernment,
-              LocalGovernment,
-              LocalGovernmentDto,
-            ),
-          ),
+          mapFrom((a) => this.mapper.map(a.localGovernment, LocalGovernment, LocalGovernmentDto)),
         ),
       );
 
@@ -242,13 +261,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         NoticeOfIntentModificationDto,
         forMember(
           (a) => a.noticeOfIntent,
-          mapFrom((rd) =>
-            this.mapper.map(
-              rd.noticeOfIntent,
-              NoticeOfIntent,
-              NoticeOfIntentForModificationDto,
-            ),
-          ),
+          mapFrom((rd) => this.mapper.map(rd.noticeOfIntent, NoticeOfIntent, NoticeOfIntentForModificationDto)),
         ),
         forMember(
           (a) => a.submittedDate,
@@ -258,11 +271,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           (a) => a.modifiesDecisions,
           mapFrom((rd) =>
             rd.modifiesDecisions
-              ? this.mapper.mapArray(
-                  rd.modifiesDecisions,
-                  NoticeOfIntentDecision,
-                  NoticeOfIntentDecisionDto,
-                )
+              ? this.mapper.mapArray(rd.modifiesDecisions, NoticeOfIntentDecision, NoticeOfIntentDecisionDto)
               : [],
           ),
         ),
@@ -270,11 +279,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           (a) => a.resultingDecision,
           mapFrom((rd) =>
             rd.resultingDecision
-              ? this.mapper.map(
-                  rd.resultingDecision,
-                  NoticeOfIntentDecision,
-                  NoticeOfIntentDecisionDto,
-                )
+              ? this.mapper.map(rd.resultingDecision, NoticeOfIntentDecision, NoticeOfIntentDecisionDto)
               : null,
           ),
         ),
@@ -299,8 +304,7 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,

@@ -2,10 +2,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-criterion.service';
 import { ApplicationDecisionConditionTypesService } from '../../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 
 describe('DecisionConditionTypesDialogComponent', () => {
   let component: DecisionConditionTypesDialogComponent;
@@ -13,7 +14,7 @@ describe('DecisionConditionTypesDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule],
+      imports: [ReactiveFormsModule, FormsModule, MatCheckboxModule, MatButtonToggleGroup],
       declarations: [DecisionConditionTypesDialogComponent],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: undefined },

@@ -1,11 +1,30 @@
 <div class="split">
   <h5>{{ data.type?.label }}</h5>
-  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+  <div class="buttons">
+    <ng-container *ngIf="showMultiDateUi">
+      <div class="add-date-button-wrapper">
+        <button
+          type="button"
+          [ngClass]="{ 'add-date-button': true, 'error-field-outlined ng-invalid': showDateError }"
+          mat-flat-button
+          color="primary"
+          (click)="openDateDialog(true)"
+        >
+          + Due Dates
+        </button>
+        <app-error-message *ngIf="showDateError"></app-error-message>
+      </div>
+    </ng-container>
+    <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+  </div>
 </div>
 
 <form [formGroup]="form">
   <div class="condition">
-    <mat-form-field appearance="outline">
+    <mat-form-field
+      appearance="outline"
+      [class.condition-full-width]="numberOfSelectedConditions === 2 || numberOfSelectedConditions === 0"
+    >
       <mat-label>Component to Condition</mat-label>
       <mat-select [formControl]="componentsToCondition" multiple>
         <mat-option *ngFor="let component of selectableComponents" [value]="component.tempId">{{
@@ -14,32 +33,7 @@
       </mat-select>
     </mat-form-field>
 
-    <div>
-      <mat-label>Approval Dependent*</mat-label>
-      <mat-button-toggle-group
-        [ngClass]="{
-          'error-field-outlined': !approvalDependant.valid && approvalDependant.touched
-        }"
-        required
-        formControlName="approvalDependant"
-      >
-        <mat-button-toggle [value]="true">Yes</mat-button-toggle>
-        <mat-button-toggle [value]="false">No</mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Security Amount</mat-label>
-      <input
-        matInput
-        mask="separator.2"
-        thousandSeparator=","
-        separatorLimit="99999999"
-        formControlName="securityAmount"
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="showAdmFeeField">
       <mat-label>Administrative Fee Amount</mat-label>
       <input
         matInput
@@ -50,9 +44,44 @@
       />
     </mat-form-field>
 
+    <mat-form-field appearance="outline" class="date-picker" *ngIf="showSingleDateField">
+      <mat-label>{{ singleDateLabel }}</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        formControlName="singleDate"
+        name="singleDate"
+        [min]="minDate | startOfDay"
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="showSecurityAmountField">
+      <mat-label>Security Amount</mat-label>
+      <input
+        matInput
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="99999999"
+        formControlName="securityAmount"
+      />
+    </mat-form-field>
+
     <mat-form-field appearance="outline" class="condition-full-width">
       <mat-label>Description</mat-label>
       <textarea matInput formControlName="description" maxlength="4000" rows="4"></textarea>
     </mat-form-field>
   </div>
 </form>
+
+<ng-container *ngIf="showMultiDateUi && dates.length > 0">
+  <div class="date-list">
+    <strong>Due Dates:</strong>
+    <div class="date-chip" *ngFor="let date of dates">{{ formatDate(date.date) }}</div>
+    <button type="button" mat-icon-button class="edit-date-button" (click)="openDateDialog(false)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+</ng-container>

@@ -12,14 +12,15 @@ import {
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import {
-  NoticeOfIntentDecisionCodesDto,
   NoticeOfIntentDecisionComponentDto,
   NoticeOfIntentDecisionConditionDto,
+  NoticeOfIntentDecisionConditionTypeDto,
   NoticeOfIntentDecisionDto,
   UpdateNoticeOfIntentDecisionConditionDto,
 } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
+import { DecisionComponentTypeDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 export type TempNoticeOfIntentDecisionConditionDto = UpdateNoticeOfIntentDecisionConditionDto & { tempUuid?: string };
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
@@ -32,10 +33,15 @@ export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid:
 export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() codes!: NoticeOfIntentDecisionCodesDto;
+  activeTypes!: NoticeOfIntentDecisionConditionTypeDto[];
+  @Input() set types(types: NoticeOfIntentDecisionConditionTypeDto[]) {
+    this.activeTypes = types.filter((type) => type.isActive);
+  }
+  @Input() componentTypes!: DecisionComponentTypeDto[];
   @Input() components: NoticeOfIntentDecisionComponentDto[] = [];
   @Input() conditions: NoticeOfIntentDecisionConditionDto[] = [];
   @Input() showError = false;
+  @Input() showDateErrors = false;
   @ViewChildren(DecisionConditionComponent) conditionComponents: DecisionConditionComponent[] = [];
 
   @Output() conditionsChange = new EventEmitter<{
@@ -91,7 +97,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   onAddNewCondition(typeCode: string) {
-    const matchingType = this.codes.decisionConditionTypes.find((code) => code.code === typeCode);
+    const matchingType = this.activeTypes.find((code) => code.code === typeCode);
     this.mappedConditions.unshift({
       type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
@@ -153,9 +159,8 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   private populateConditions(conditions: NoticeOfIntentDecisionConditionDto[]) {
     this.mappedConditions = conditions.map((condition) => {
       const selectedComponents = this.selectableComponents
-        .filter(
-          (component) =>
-            condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid),
+        .filter((component) =>
+          condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid),
         )
         .map((e) => ({
           componentDecisionUuid: e.decisionUuid,
@@ -178,7 +183,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
     decisionYear: number | null,
   ) {
     return components.map((component) => {
-      const matchingType = this.codes.decisionComponentTypes.find(
+      const matchingType = this.componentTypes.find(
         (type) => type.code === component.noticeOfIntentDecisionComponentTypeCode,
       );
       return {

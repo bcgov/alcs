@@ -40,6 +40,8 @@ import { ApplicationDecisionConditionToComponentLotDto } from '../../alcs/applic
 import { ApplicationDecisionConditionToComponentLot } from '../../alcs/application-decision/application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/application-decision/application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { CommissionerDecisionDto } from '../../alcs/commissioner/commissioner.dto';
+import { ApplicationDecisionConditionDate } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationDecisionConditionDateDto } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -55,13 +57,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionDto,
         forMember(
           (ad) => ad.documents,
-          mapFrom((a) =>
-            this.mapper.mapArray(
-              a.documents || [],
-              ApplicationDecisionDocument,
-              DecisionDocumentDto,
-            ),
-          ),
+          mapFrom((a) => this.mapper.mapArray(a.documents || [], ApplicationDecisionDocument, DecisionDocumentDto)),
         ),
         forMember(
           (a) => a.reconsiders,
@@ -70,8 +66,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.reconsiders.uuid,
                   linkedResolutions: dec.reconsiders.reconsidersDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -84,8 +79,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -141,11 +135,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (a) => a.components,
           mapFrom((ad) => {
             if (ad.components) {
-              return this.mapper.mapArray(
-                ad.components,
-                ApplicationDecisionComponent,
-                ApplicationDecisionComponentDto,
-              );
+              return this.mapper.mapArray(ad.components, ApplicationDecisionComponent, ApplicationDecisionComponentDto);
             } else {
               return [];
             }
@@ -153,11 +143,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        ApplicationDecisionOutcomeCode,
-        ApplicationDecisionOutcomeCodeDto,
-      );
+      createMap(mapper, ApplicationDecisionOutcomeCode, ApplicationDecisionOutcomeCodeDto);
 
       createMap(mapper, NaruSubtype, NaruSubtypeDto);
       createMap(
@@ -178,39 +164,21 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.naruSubtype,
-          mapFrom((a) =>
-            this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto),
-          ),
+          mapFrom((a) => this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto)),
         ),
         forMember(
           (ad) => ad.lots,
           mapFrom((a) =>
             a.lots
-              ? this.mapper.mapArray(
-                  a.lots,
-                  ApplicationDecisionComponentLot,
-                  ApplicationDecisionComponentLotDto,
-                )
+              ? this.mapper.mapArray(a.lots, ApplicationDecisionComponentLot, ApplicationDecisionComponentLotDto)
               : [],
           ),
         ),
       );
-      createMap(
-        mapper,
-        ApplicationDecisionMakerCode,
-        ApplicationDecisionMakerCodeDto,
-      );
+      createMap(mapper, ApplicationDecisionMakerCode, ApplicationDecisionMakerCodeDto);
       createMap(mapper, ApplicationCeoCriterionCode, CeoCriterionCodeDto);
-      createMap(
-        mapper,
-        ApplicationDecisionComponentType,
-        ApplicationDecisionComponentTypeDto,
-      );
-      createMap(
-        mapper,
-        ApplicationDecisionChairReviewOutcomeType,
-        ChairReviewOutcomeCodeDto,
-      );
+      createMap(mapper, ApplicationDecisionComponentType, ApplicationDecisionComponentTypeDto);
+      createMap(mapper, ApplicationDecisionChairReviewOutcomeType, ChairReviewOutcomeCodeDto);
 
       createMap(
         mapper,
@@ -243,21 +211,21 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionCondition,
         ApplicationDecisionConditionDto,
         forMember(
-          (ad) => ad.completionDate,
-          mapFrom((a) => a.completionDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.supersededDate,
-          mapFrom((a) => a.supersededDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.components,
           mapFrom((a) =>
             a.components && a.components.length > 0
+              ? this.mapper.mapArray(a.components, ApplicationDecisionComponent, ApplicationDecisionComponentDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.dates,
+          mapFrom((entity) =>
+            entity.dates
               ? this.mapper.mapArray(
-                  a.components,
-                  ApplicationDecisionComponent,
-                  ApplicationDecisionComponentDto,
+                  entity.dates,
+                  ApplicationDecisionConditionDate,
+                  ApplicationDecisionConditionDateDto,
                 )
               : [],
           ),
@@ -266,8 +234,52 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
+        ApplicationDecisionConditionDate,
+        ApplicationDecisionConditionDateDto,
+        forMember(
+          (dto) => dto.date,
+          mapFrom((entity) => entity.date && entity.date.getTime()),
+        ),
+        forMember(
+          (dto) => dto.completedDate,
+          mapFrom((entity) => entity.completedDate && entity.completedDate.getTime()),
+        ),
+        forMember(
+          (dto) => dto.comment,
+          mapFrom((entity) => entity.comment),
+        ),
+      );
+
+      createMap(
+        mapper,
         ApplicationDecisionConditionType,
         ApplicationDecisionConditionTypeDto,
+        forMember(
+          (dto) => dto.isAdministrativeFeeAmountRequired,
+          mapFrom((entity) =>
+            entity.isAdministrativeFeeAmountRequired !== null ? entity.isAdministrativeFeeAmountRequired : null,
+          ),
+        ),
+        forMember(
+          (dto) => dto.administrativeFeeAmount,
+          mapFrom((entity) => (entity.administrativeFeeAmount !== null ? entity.administrativeFeeAmount : null)),
+        ),
+        forMember(
+          (dto) => dto.isDateRequired,
+          mapFrom((entity) => (entity.isDateRequired !== null ? entity.isDateRequired : null)),
+        ),
+        forMember(
+          (dto) => dto.dateType,
+          mapFrom((entity) => (entity.dateType !== null ? entity.dateType : null)),
+        ),
+        forMember(
+          (dto) => dto.singleDateLabel,
+          mapFrom((entity) => (entity.singleDateLabel !== null ? entity.singleDateLabel : null)),
+        ),
+        forMember(
+          (dto) => dto.isSecurityAmountRequired,
+          mapFrom((entity) => (entity.isSecurityAmountRequired !== null ? entity.isSecurityAmountRequired : null)),
+        ),
       );
 
       createMap(
@@ -285,8 +297,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.reconsiders.uuid,
                   linkedResolutions: dec.reconsiders.reconsidersDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -299,8 +310,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? {
                   uuid: dec.modifies.uuid,
                   linkedResolutions: dec.modifies.modifiesDecisions.map(
-                    (decision) =>
-                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                    (decision) => `#${decision.resolutionNumber}/${decision.resolutionYear}`,
                   ),
                 }
               : undefined,
@@ -328,17 +338,9 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        ApplicationDecisionConditionToComponentLot,
-        ApplicationDecisionConditionToComponentLotDto,
-      );
+      createMap(mapper, ApplicationDecisionConditionToComponentLot, ApplicationDecisionConditionToComponentLotDto);
 
-      createMap(
-        mapper,
-        ApplicationDecisionConditionComponentPlanNumber,
-        ApplicationDecisionConditionComponentDto,
-      );
+      createMap(mapper, ApplicationDecisionConditionComponentPlanNumber, ApplicationDecisionConditionComponentDto);
 
       createMap(
         mapper,

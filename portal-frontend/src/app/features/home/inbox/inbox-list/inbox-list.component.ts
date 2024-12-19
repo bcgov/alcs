@@ -18,7 +18,6 @@ export class InboxListComponent implements OnDestroy {
   @Input() set items(items: InboxResultDto[]) {
     this._items = items;
     this.visibleCount = items.length;
-    this.totalCount = items.length;
   }
 
   @Output() loadMore = new EventEmitter<void>();

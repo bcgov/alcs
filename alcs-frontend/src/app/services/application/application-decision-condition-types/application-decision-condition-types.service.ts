@@ -11,7 +11,10 @@ import { ToastService } from '../../toast/toast.service';
 export class ApplicationDecisionConditionTypesService {
   private url = `${environment.apiUrl}/decision-condition-types`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetch() {
     try {
@@ -23,34 +26,58 @@ export class ApplicationDecisionConditionTypesService {
     return [];
   }
 
+  async fetchCodesWithDeleted() {
+    try {
+      return await firstValueFrom(this.http.get<string[]>(`${this.url}/codes`));
+    } catch (err) {
+      console.error(err);
+      this.toastService.showErrorToast('Failed to fetch decision condition type codes');
+    }
+    return [];
+  }
+
   async create(createDto: ApplicationDecisionConditionTypeDto) {
     try {
       return await firstValueFrom(this.http.post<ApplicationDecisionConditionTypeDto>(`${this.url}`, createDto));
     } catch (e) {
       this.toastService.showErrorToast('Failed to create decision condition type');
-      console.log(e);
+      console.error(e);
     }
     return;
   }
 
   async update(code: string, updateDto: ApplicationDecisionConditionTypeDto) {
     try {
-      return await firstValueFrom(
-        this.http.patch<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto)
+      const updatedDecisionConditionType = await firstValueFrom(
+        this.http.patch<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`, updateDto),
       );
+
+      if (updatedDecisionConditionType) {
+        this.toastService.showSuccessToast('Condition type updated successfully');
+      }
+
+      return updatedDecisionConditionType;
     } catch (e) {
       this.toastService.showErrorToast('Failed to update decision condition type');
-      console.log(e);
+      console.error(e);
     }
     return;
   }
 
-  async delete(code: string) {
+  async delete(code: string): Promise<ApplicationDecisionConditionTypeDto | undefined> {
     try {
-      return await firstValueFrom(this.http.delete<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`));
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to delete decision condition type');
-      console.log(e);
+      const response = await firstValueFrom(
+        this.http.delete<ApplicationDecisionConditionTypeDto>(`${this.url}/${code}`),
+      );
+      this.toastService.showSuccessToast('Condition successfully deleted.');
+      return response;
+    } catch (e: any) {
+      if (e && e.error && e.error.message) {
+        this.toastService.showErrorToast(e.error.message);
+      } else {
+        this.toastService.showErrorToast('Failed to delete decision condition type');
+      }
+      console.error(e);
     }
     return;
   }

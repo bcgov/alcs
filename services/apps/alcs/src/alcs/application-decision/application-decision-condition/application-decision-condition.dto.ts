@@ -1,16 +1,66 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  IsArray,
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { ApplicationDecisionComponentDto } from '../application-decision-v2/application-decision/component/application-decision-component.dto';
+import { DateLabel, DateType } from './application-decision-condition-code.entity';
+import { Type } from 'class-transformer';
+import { ApplicationDecisionConditionDateDto } from './application-decision-condition-date/application-decision-condition-date.dto';
 
-export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  @IsBoolean()
+  isActive: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsOptional()
+  isComponentToConditionChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsOptional()
+  isDescriptionChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isAdministrativeFeeAmountChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isAdministrativeFeeAmountRequired: boolean | null;
+
+  @AutoMap(() => Number)
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  administrativeFeeAmount: number | null;
+
+  @AutoMap()
+  @IsBoolean()
+  isDateChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isDateRequired: boolean | null;
+
+  @AutoMap()
+  @IsEnum(DateType)
+  @IsOptional()
+  dateType: DateType | null;
+
+  @AutoMap()
+  @IsEnum(DateLabel)
+  @IsOptional()
+  singleDateLabel: DateLabel | null;
+
+  @AutoMap()
+  @IsBoolean()
+  isSecurityAmountChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isSecurityAmountRequired: boolean | null;
+}
+
 export class ApplicationDecisionConditionDto {
   @AutoMap()
   uuid: string;
@@ -34,13 +84,10 @@ export class ApplicationDecisionConditionDto {
   componentUuid: string | null;
 
   @AutoMap()
-  completionDate?: number;
-
-  @AutoMap()
-  supersededDate?: number;
-
-  @AutoMap()
   components?: ApplicationDecisionComponentDto[];
+
+  @AutoMap()
+  dates: ApplicationDecisionConditionDateDto[];
 }
 
 export class ComponentToConditionDto {
@@ -83,12 +130,8 @@ export class UpdateApplicationDecisionConditionDto {
   type?: ApplicationDecisionConditionTypeDto;
 
   @IsOptional()
-  @IsNumber()
-  completionDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  supersededDate?: number;
+  @IsArray()
+  dates?: ApplicationDecisionConditionDateDto[];
 }
 
 export class UpdateApplicationDecisionConditionServiceDto {
@@ -98,8 +141,7 @@ export class UpdateApplicationDecisionConditionServiceDto {
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;
-  completionDate?: Date | null;
-  supersededDate?: Date | null;
+  dates?: ApplicationDecisionConditionDateDto[];
 }
 
 export class ApplicationDecisionConditionComponentDto {

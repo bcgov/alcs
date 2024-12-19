@@ -1,7 +1,98 @@
+@use '../../../../../../styles/colors';
+
 .component-labels {
   white-space: pre-wrap;
 }
 
 .decision-condition-description {
   white-space: pre-line;
+}
+
+.dates-container {
+  width: 100%;
+  margin: 10px 0 20px 0;
+}
+
+.single-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: none;
+}
+
+.single-table-header {
+  display: flex;
+  padding: 8px 8px;
+}
+
+.divider {
+  margin: 0;
+  border: none;
+  border-top: 1px solid #0000001f;
+}
+
+.single-table-row {
+  display: flex;
+  padding: 4px 8px;
+}
+
+.single-column {
+  padding: 4px 8px;
+  word-wrap: break-word;
+}
+
+.single-due {
+  flex: 0 0 20%;
+}
+
+.single-end {
+  flex: 1;
+}
+
+.single-completed {
+  flex: 0 0 20%;
+}
+
+.single-comment {
+  flex: 1;
+}
+
+.description-no-date-container {
+  margin-top: 18px;
+}
+
+.multiple-table {
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: transparent;
+
+  .multiple-index {
+    width: 5%;
+  }
+
+  .multiple-due {
+    width: 25%;
+  }
+
+  .multiple-completed {
+    width: 25%;
+  }
+
+  .multiple-comment {
+    width: 40%;
+  }
+
+  .mutliple-actions {
+    width: 5%;
+  }
+}
+
+::ng-deep .editable {
+  min-height: 25px !important;
+  border: 1px solid #929292 !important;
+  border-radius: 4px !important;
+}
+
+::ng-deep textarea:focus {
+  outline: none;
 }

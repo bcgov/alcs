@@ -27,7 +27,7 @@
           color="primary"
           (click)="onGenerateResolutionNumber()"
           [ngClass]="{
-            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
+            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched,
           }"
         >
           Get Resolution Number
@@ -58,7 +58,6 @@
         (click)="datePicker.open()"
         [matDatepicker]="datePicker"
         formControlName="date"
-        name="date"
         [min]="minDate | startOfDay"
       />
       <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
@@ -143,7 +142,7 @@
           (change)="onChangeSubjectToConditions($event)"
           [ngClass]="{
             'error-field-outlined':
-              !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched
+              !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched,
           }"
         >
           <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -203,11 +202,13 @@
   <div>
     <app-app-decision-conditions
       *ngIf="codes && showComponents && showConditions"
-      [codes]="codes"
+      [types]="codes.decisionConditionTypes"
+      [componentTypes]="codes.decisionComponentTypes"
       [components]="components"
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
       [showError]="showErrors && conditionUpdates.length < 1 && showConditions"
+      [showDateErrors]="showErrors && requiredDatesAreMissing()"
     ></app-app-decision-conditions>
   </div>
 

@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
+import { DateLabel, DateType } from '../../application/decision/application-decision-v2/application-decision-v2.dto';
 
 export interface UpdateNoticeOfIntentDecisionDto {
   resolutionNumber?: number;
@@ -67,7 +68,20 @@ export interface NoticeOfIntentDecisionDocumentDto {
 
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
 
-export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {}
+export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
+  isComponentToConditionChecked?: boolean | null;
+  isDescriptionChecked?: boolean | null;
+  isAdministrativeFeeAmountChecked: boolean;
+  isAdministrativeFeeAmountRequired?: boolean | null;
+  administrativeFeeAmount?: number | null;
+  isDateChecked: boolean;
+  isDateRequired?: boolean | null;
+  dateType?: DateType | null;
+  singleDateLabel?: DateLabel | null;
+  isSecurityAmountChecked: boolean;
+  isSecurityAmountRequired?: boolean | null;
+}
 
 export interface NoticeOfIntentDecisionConditionDto {
   uuid: string;
@@ -77,15 +91,21 @@ export interface NoticeOfIntentDecisionConditionDto {
   description: string | null;
   type: NoticeOfIntentDecisionConditionTypeDto;
   componentUuid: string | null;
-  completionDate?: number;
-  supersededDate?: number;
   components?: NoticeOfIntentDecisionComponentDto[];
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export interface ComponentToCondition {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
   tempId: string;
+}
+
+export interface NoticeOfIntentDecisionConditionDateDto {
+  uuid?: string;
+  date?: number;
+  completedDate?: number | null;
+  comment?: string | null;
 }
 
 export interface UpdateNoticeOfIntentDecisionConditionDto {
@@ -96,8 +116,7 @@ export interface UpdateNoticeOfIntentDecisionConditionDto {
   administrativeFee?: number | null;
   description?: string | null;
   type?: NoticeOfIntentDecisionConditionTypeDto;
-  completionDate?: number | null;
-  supersededDate?: number | null;
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export interface NoticeOfIntentDecisionComponentTypeDto extends BaseCodeDto {}

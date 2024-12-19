@@ -12,6 +12,7 @@ import {
   NoticeOfIntentDecisionWithLinkedResolutionDto,
   UpdateNoticeOfIntentDecisionDto,
 } from './notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionStatus } from './notice-of-intent-decision-status.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +39,15 @@ export class NoticeOfIntentDecisionV2Service {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
     return decisions;
+  }
+
+  async getStatus(conditionUuid: string): Promise<NoticeOfIntentDecisionStatus> {
+    try {
+      return await firstValueFrom(this.http.get<NoticeOfIntentDecisionStatus>(`${this.url}/condition/${conditionUuid}/status`));
+    } catch (e: any) {
+      this.toastService.showErrorToast(e.error?.message ?? 'No status found');
+      throw e;
+    }
   }
 
   async fetchCodes(): Promise<NoticeOfIntentDecisionCodesDto> {

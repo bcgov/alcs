@@ -1,12 +1,11 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import {
   ApplicationDecisionConditionComponentDto,
@@ -25,12 +24,15 @@ export class ApplicationDecisionConditionController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
+  @Get()
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getByTypeCode(@Query('type_code') typeCode: string) {
+    return await this.conditionService.getByTypeCode(typeCode);
+  }
+
   @Patch('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async update(
-    @Param('uuid') uuid: string,
-    @Body() updates: UpdateApplicationDecisionConditionDto,
-  ) {
+  async update(@Param('uuid') uuid: string, @Body() updates: UpdateApplicationDecisionConditionDto) {
     const condition = await this.conditionService.getOneOrFail(uuid);
 
     const updatedCondition = await this.conditionService.update(condition, {
@@ -38,14 +40,8 @@ export class ApplicationDecisionConditionController {
       securityAmount: updates.securityAmount,
       administrativeFee: updates.administrativeFee,
       description: updates.description,
-      completionDate: formatIncomingDate(updates.completionDate),
-      supersededDate: formatIncomingDate(updates.supersededDate),
     });
-    return await this.mapper.mapAsync(
-      updatedCondition,
-      ApplicationDecisionCondition,
-      ApplicationDecisionConditionDto,
-    );
+    return await this.mapper.mapAsync(updatedCondition, ApplicationDecisionCondition, ApplicationDecisionConditionDto);
   }
 
   @Get('/plan-numbers/:uuid')

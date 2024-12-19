@@ -1,16 +1,69 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  IsArray,
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { NoticeOfIntentDecisionComponentDto } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.dto';
+import {
+  DateLabel,
+  DateType,
+} from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
+import { Type } from 'class-transformer';
+import { NoticeOfIntentDecisionConditionDateDto } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
 
-export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {}
+export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
+  @IsBoolean()
+  isActive: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsOptional()
+  isComponentToConditionChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsOptional()
+  isDescriptionChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isAdministrativeFeeAmountChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isAdministrativeFeeAmountRequired: boolean | null;
+
+  @AutoMap(() => Number)
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  administrativeFeeAmount: number | null;
+
+  @AutoMap()
+  @IsBoolean()
+  isDateChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isDateRequired: boolean | null;
+
+  @AutoMap()
+  @IsEnum(DateLabel)
+  @IsOptional()
+  singleDateLabel: DateLabel | null;
+
+  @AutoMap()
+  @IsEnum(DateType)
+  @IsOptional()
+  dateType: DateType | null;
+
+  @AutoMap()
+  @IsBoolean()
+  isSecurityAmountChecked: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  isSecurityAmountRequired: boolean | null;
+}
+
 export class NoticeOfIntentDecisionConditionDto {
   @AutoMap()
   uuid: string;
@@ -34,13 +87,10 @@ export class NoticeOfIntentDecisionConditionDto {
   componentUuid: string | null;
 
   @AutoMap()
-  completionDate?: number;
-
-  @AutoMap()
-  supersededDate?: number;
-
-  @AutoMap()
   components?: NoticeOfIntentDecisionComponentDto[];
+
+  @AutoMap()
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export class ComponentToConditionDto {
@@ -83,12 +133,8 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   type?: NoticeOfIntentDecisionConditionTypeDto;
 
   @IsOptional()
-  @IsNumber()
-  completionDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  supersededDate?: number;
+  @AutoMap()
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }
 
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
@@ -98,6 +144,5 @@ export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;
-  completionDate?: Date | null;
-  supersededDate?: Date | null;
+  dates?: NoticeOfIntentDecisionConditionDateDto[];
 }

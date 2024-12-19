@@ -1,10 +1,11 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision-condition-code.entity';
+import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 
 @Entity({
   comment: 'Decision Conditions for Notice of Intents',
@@ -45,22 +46,6 @@ export class NoticeOfIntentDecisionCondition extends Base {
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @AutoMap(() => String)
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition Completion date',
-    nullable: true,
-  })
-  completionDate?: Date | null;
-
-  @AutoMap()
-  @Column({
-    type: 'timestamptz',
-    comment: 'Condition Superseded date',
-    nullable: true,
-  })
-  supersededDate?: Date | null;
-
   @ManyToOne(() => NoticeOfIntentDecisionConditionType)
   type: NoticeOfIntentDecisionConditionType;
 
@@ -75,11 +60,7 @@ export class NoticeOfIntentDecisionCondition extends Base {
   @Column()
   decisionUuid: string;
 
-  @ManyToMany(
-    () => NoticeOfIntentDecisionComponent,
-    (component) => component.conditions,
-    { nullable: true },
-  )
+  @ManyToMany(() => NoticeOfIntentDecisionComponent, (component) => component.conditions, { nullable: true })
   @JoinTable({
     name: 'notice_of_intent_decision_condition_component',
   })
@@ -93,4 +74,9 @@ export class NoticeOfIntentDecisionCondition extends Base {
       'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.notice_of_intent_decision_condition.',
   })
   oatsConditionId: number;
+
+  @OneToMany(() => NoticeOfIntentDecisionConditionDate, (d) => d.condition, {
+    cascade: ['insert', 'update'],
+  })
+  dates: NoticeOfIntentDecisionConditionDate[];
 }

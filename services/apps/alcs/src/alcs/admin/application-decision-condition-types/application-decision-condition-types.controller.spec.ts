@@ -30,9 +30,7 @@ describe('ApplicationDecisionConditionTypesController', () => {
       imports: [ConfigModule],
     }).compile();
 
-    controller = module.get<ApplicationDecisionConditionTypesController>(
-      ApplicationDecisionConditionTypesController,
-    );
+    controller = module.get<ApplicationDecisionConditionTypesController>(ApplicationDecisionConditionTypesController);
   });
 
   it('should be defined', () => {
@@ -48,28 +46,28 @@ describe('ApplicationDecisionConditionTypesController', () => {
     expect(mockDecTypesService.fetch).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service when updating decision condition type', async () => {
-    mockDecTypesService.update.mockResolvedValue(
-      new ApplicationDecisionConditionType(),
-    );
+  it('should call out to service when fetching decision condition type codes', async () => {
+    mockDecTypesService.fetchCodesWithDeleted.mockResolvedValue([]);
 
-    const applicationDecisionConditionType = await controller.update(
-      'fake',
-      new ApplicationDecisionConditionType(),
-    );
+    const applicationDecisionConditionTypeCodes = await controller.fetchCodesWithDeleted();
+
+    expect(applicationDecisionConditionTypeCodes).toBeDefined();
+    expect(mockDecTypesService.fetchCodesWithDeleted).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call out to service when updating decision condition type', async () => {
+    mockDecTypesService.update.mockResolvedValue(new ApplicationDecisionConditionType());
+
+    const applicationDecisionConditionType = await controller.update('fake', new ApplicationDecisionConditionType());
 
     expect(applicationDecisionConditionType).toBeDefined();
     expect(mockDecTypesService.update).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating decision condition type', async () => {
-    mockDecTypesService.create.mockResolvedValue(
-      new ApplicationDecisionConditionType(),
-    );
+    mockDecTypesService.create.mockResolvedValue(new ApplicationDecisionConditionType());
 
-    const applicationDecisionConditionType = await controller.create(
-      new ApplicationDecisionConditionType(),
-    );
+    const applicationDecisionConditionType = await controller.create(new ApplicationDecisionConditionType());
 
     expect(applicationDecisionConditionType).toBeDefined();
     expect(mockDecTypesService.create).toHaveBeenCalledTimes(1);

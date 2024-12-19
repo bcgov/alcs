@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
 import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types.service';
+import { DateType } from '../decision/application-decision-v2/application-decision-v2.dto';
 
 describe('DecisionConditionTypesService', () => {
   let service: ApplicationDecisionConditionTypesService;
@@ -37,13 +38,19 @@ describe('DecisionConditionTypesService', () => {
     mockHttpClient.post.mockReturnValue(
       of({
         code: 'fake',
-      })
+      }),
     );
 
     const res = await service.create({
       code: '',
       label: '',
       description: '',
+      isActive: true,
+      isAdministrativeFeeAmountChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
+      isSecurityAmountChecked: false,
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
@@ -55,13 +62,19 @@ describe('DecisionConditionTypesService', () => {
     mockHttpClient.post.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.create({
       code: '',
       label: '',
       description: '',
+      isActive: true,
+      isAdministrativeFeeAmountChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
+      isSecurityAmountChecked: false,
     });
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
@@ -73,13 +86,19 @@ describe('DecisionConditionTypesService', () => {
     mockHttpClient.patch.mockReturnValue(
       of({
         code: 'fake',
-      })
+      }),
     );
 
     const res = await service.update('fake', {
       code: '',
       label: '',
       description: '',
+      isActive: true,
+      isAdministrativeFeeAmountChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
+      isSecurityAmountChecked: false,
     });
 
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
@@ -91,13 +110,19 @@ describe('DecisionConditionTypesService', () => {
     mockHttpClient.patch.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.update('mock', {
       code: '',
       label: '',
       description: '',
+      isActive: true,
+      isAdministrativeFeeAmountChecked: false,
+      isDateChecked: false,
+      isDateRequired: false,
+      dateType: DateType.SINGLE,
+      isSecurityAmountChecked: false,
     });
 
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
@@ -116,7 +141,7 @@ describe('DecisionConditionTypesService', () => {
     mockHttpClient.get.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.fetch();
@@ -129,7 +154,7 @@ describe('DecisionConditionTypesService', () => {
     mockHttpClient.delete.mockReturnValue(
       of({
         code: 'fake',
-      })
+      }),
     );
 
     const res = await service.delete('fake');
@@ -143,7 +168,7 @@ describe('DecisionConditionTypesService', () => {
     mockHttpClient.delete.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.delete('mock');

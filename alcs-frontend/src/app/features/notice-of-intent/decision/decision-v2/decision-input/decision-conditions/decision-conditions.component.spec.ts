@@ -40,11 +40,8 @@ describe('DecisionConditionComponent', () => {
 
     fixture = TestBed.createComponent(DecisionConditionsComponent);
     component = fixture.componentInstance;
-    component.codes = {
-      decisionComponentTypes: [],
-      outcomes: [],
-      decisionConditionTypes: [],
-    };
+    component.types = [];
+    component.componentTypes = [];
     fixture.detectChanges();
   });
 

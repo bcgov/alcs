@@ -216,7 +216,30 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   COVE = 'COVE',
 }
 
-export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export enum DateLabel {
+  DUE_DATE = 'Due Date',
+  END_DATE = 'End Date',
+}
+
+export enum DateType {
+  SINGLE = 'Single',
+  MULTIPLE = 'Multiple',
+}
+
+export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
+  isActive: boolean;
+  isComponentToConditionChecked?: boolean | null;
+  isDescriptionChecked?: boolean | null;
+  isAdministrativeFeeAmountChecked: boolean;
+  isAdministrativeFeeAmountRequired?: boolean | null;
+  administrativeFeeAmount?: number | null;
+  isDateChecked: boolean;
+  isDateRequired?: boolean | null;
+  dateType?: DateType | null;
+  singleDateLabel?: DateLabel | null;
+  isSecurityAmountChecked: boolean;
+  isSecurityAmountRequired?: boolean | null;
+}
 
 export interface NaruSubtypesDto extends BaseCodeDto {}
 
@@ -227,16 +250,9 @@ export interface ApplicationDecisionConditionDto {
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
-  completionDate?: number | null;
-  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
-}
-
-export interface ComponentToCondition {
-  componentDecisionUuid?: string;
-  componentToConditionType?: string;
-  tempId: string;
+  dates?: ApplicationDecisionConditionDateDto[];
 }
 
 export interface UpdateApplicationDecisionConditionDto {
@@ -246,9 +262,21 @@ export interface UpdateApplicationDecisionConditionDto {
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
-  completionDate?: number | null;
-  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  dates?: ApplicationDecisionConditionDateDto[];
+}
+
+export interface ComponentToCondition {
+  componentDecisionUuid?: string;
+  componentToConditionType?: string;
+  tempId: string;
+}
+
+export interface ApplicationDecisionConditionDateDto {
+  uuid?: string;
+  date?: number;
+  completedDate?: number | null;
+  comment?: string | null;
 }
 
 export interface ApplicationDecisionComponentToConditionLotDto {

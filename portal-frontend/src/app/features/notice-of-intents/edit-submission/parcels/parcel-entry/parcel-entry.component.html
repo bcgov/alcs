@@ -108,7 +108,7 @@
       <mat-form-field class="full-width-input" appearance="outline">
         <input
           id="map-area"
-          mask="separator.2"
+          mask="separator.5"
           thousandSeparator=","
           separatorLimit="9999999999"
           matInput
@@ -120,6 +120,9 @@
       <div *ngIf="mapArea.invalid && (mapArea.dirty || mapArea.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="mapArea.errors?.['required']">This field is required</div>
+      </div>
+      <div>
+        <mat-hint class="subtext"> Example: 1.12345 (can be up to 5 decimal places) </mat-hint>
       </div>
     </div>
 

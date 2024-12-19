@@ -38,9 +38,7 @@ describe('NoticeOfIntentDecisionConditionController', () => {
       ],
     }).compile();
 
-    controller = module.get<NoticeOfIntentDecisionConditionController>(
-      NoticeOfIntentDecisionConditionController,
-    );
+    controller = module.get<NoticeOfIntentDecisionConditionController>(NoticeOfIntentDecisionConditionController);
   });
 
   it('should be defined', () => {
@@ -57,8 +55,6 @@ describe('NoticeOfIntentDecisionConditionController', () => {
         securityAmount: 1000,
         administrativeFee: 50,
         description: 'example description',
-        completionDate: date.getTime(),
-        supersededDate: date.getTime(),
       };
 
       const condition = new NoticeOfIntentDecisionCondition({
@@ -67,8 +63,6 @@ describe('NoticeOfIntentDecisionConditionController', () => {
         securityAmount: 500,
         administrativeFee: 25,
         description: 'existing description',
-        completionDate: new Date(),
-        supersededDate: new Date(),
       });
 
       const updated = new NoticeOfIntentDecisionCondition({
@@ -77,8 +71,6 @@ describe('NoticeOfIntentDecisionConditionController', () => {
         securityAmount: updates.securityAmount,
         administrativeFee: updates.administrativeFee,
         description: updates.description,
-        completionDate: date,
-        supersededDate: date,
       });
 
       mockNOIDecisionConditionService.getOneOrFail.mockResolvedValue(condition);
@@ -86,19 +78,10 @@ describe('NoticeOfIntentDecisionConditionController', () => {
 
       const result = await controller.update(uuid, updates);
 
-      expect(mockNOIDecisionConditionService.getOneOrFail).toHaveBeenCalledWith(
-        uuid,
-      );
-      expect(mockNOIDecisionConditionService.update).toHaveBeenCalledWith(
-        condition,
-        {
-          ...updates,
-          completionDate: date,
-          supersededDate: date,
-        },
-      );
-      expect(new Date(result.completionDate!)).toEqual(updated.completionDate);
-      expect(new Date(result.supersededDate!)).toEqual(updated.supersededDate);
+      expect(mockNOIDecisionConditionService.getOneOrFail).toHaveBeenCalledWith(uuid);
+      expect(mockNOIDecisionConditionService.update).toHaveBeenCalledWith(condition, {
+        ...updates,
+      });
       expect(result.description).toEqual(updated.description);
       expect(result.administrativeFee).toEqual(updated.administrativeFee);
       expect(result.securityAmount).toEqual(updated.securityAmount);
