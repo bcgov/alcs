@@ -220,6 +220,11 @@
                                                 <td class="constraint detail">FK_4f1ecd62bb990e102c6af22a2e1</td>
                                                 <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
                                             </tr>
+                                            <tr>
+                                                <td title="notice_of_intent_decision_condition_date.condition_uuid references notice_of_intent_decision_condition.uuid via FK_0bd2f73af4ca611761c69769fc2"><a href='notice_of_intent_decision_condition_date.html'>notice_of_intent_decision_condition_date</a><span class='relatedKey'>.condition_uuid</span></td>
+                                                <td class="constraint detail">FK_0bd2f73af4ca611761c69769fc2</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td>
@@ -295,40 +300,6 @@
                                         </table>
                                     </td>
                                     <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="completion_date">completion_date</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td><p>Condition Completion date</p></td>
-                                </tr>
-                                <tr>
-                                    <td><span id="superseded_date">superseded_date</span></td>
-                                    <td>timestamptz</td>
-                                    <td>35,6</td>
-                                    <td title='nullable'>√</td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td><p>Condition Superseded date</p></td>
                                 </tr>
                                 <tr>
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="type_code">type_code</span></td>
@@ -452,50 +423,54 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="531,5,1097,515">
-<area shape="rect" id="node2" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="81,456,411,749">
-<area shape="rect" id="node3" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="5,292,487,439">
-<area shape="rect" id="node4" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1141,155,1688,277">
+<area shape="rect" id="node1" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="531,5,1097,456">
+<area shape="rect" id="node2" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="81,397,411,691">
+<area shape="rect" id="node3" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="5,233,487,380">
+<area shape="rect" id="node4" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1141,69,1688,192">
+<area shape="rect" id="node5" href="notice_of_intent_decision_condition_date.html" target="_top" title="notice_of_intent_decision_condition_date" alt="" coords="1174,209,1655,356">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/notice_of_intent_decision_condition.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="832,529,1161,823">
-<area shape="rect" id="node2" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="315,723,686,811">
-<area shape="rect" id="node3" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="5,687,245,775">
-<area shape="rect" id="node4" href="notice_of_intent_decision_outcome.html" target="_top" title="notice_of_intent_decision_outcome" alt="" coords="289,561,712,649">
-<area shape="rect" id="node5" href="notice_of_intent_decision_component.html" target="_top" title="notice_of_intent_decision_component" alt="" coords="1341,637,1788,725">
-<area shape="rect" id="node6" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="1281,5,1848,515">
-<area shape="rect" id="node7" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="756,360,1237,507">
-<area shape="rect" id="node8" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1892,380,2439,503">
-<area shape="rect" id="node9" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1347,532,1782,620">
-<area shape="rect" id="node10" href="notice_of_intent_modified_decisions.html" target="_top" title="notice_of_intent_modified_decisions" alt="" coords="1347,773,1782,861">
+<area shape="rect" id="node1" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="832,471,1161,764">
+<area shape="rect" id="node2" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="315,664,686,752">
+<area shape="rect" id="node3" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="5,628,245,716">
+<area shape="rect" id="node4" href="notice_of_intent_decision_outcome.html" target="_top" title="notice_of_intent_decision_outcome" alt="" coords="289,503,712,591">
+<area shape="rect" id="node5" href="notice_of_intent_decision_component.html" target="_top" title="notice_of_intent_decision_component" alt="" coords="1341,473,1788,561">
+<area shape="rect" id="node6" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="1281,5,1848,456">
+<area shape="rect" id="node7" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="756,301,1237,448">
+<area shape="rect" id="node8" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1892,365,2439,488">
+<area shape="rect" id="node9" href="notice_of_intent_decision_condition_date.html" target="_top" title="notice_of_intent_decision_condition_date" alt="" coords="1925,125,2406,272">
+<area shape="rect" id="node10" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1347,579,1782,667">
+<area shape="rect" id="node11" href="notice_of_intent_modified_decisions.html" target="_top" title="notice_of_intent_modified_decisions" alt="" coords="1347,715,1782,803">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/notice_of_intent_decision_condition.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="531,5,1097,515">
-<area shape="rect" id="node2" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="81,456,411,749">
-<area shape="rect" id="node3" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="5,292,487,439">
-<area shape="rect" id="node4" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1141,155,1688,277">
+<area shape="rect" id="node1" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="531,5,1097,456">
+<area shape="rect" id="node2" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="81,397,411,691">
+<area shape="rect" id="node3" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="5,233,487,380">
+<area shape="rect" id="node4" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1141,69,1688,192">
+<area shape="rect" id="node5" href="notice_of_intent_decision_condition_date.html" target="_top" title="notice_of_intent_decision_condition_date" alt="" coords="1174,209,1655,356">
 </map>
                                         <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/notice_of_intent_decision_condition.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="832,529,1161,823">
-<area shape="rect" id="node2" href="configuration.html" target="_top" title="configuration" alt="" coords="393,697,608,785">
-<area shape="rect" id="node3" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="315,803,686,891">
-<area shape="rect" id="node4" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="5,713,245,801">
-<area shape="rect" id="node5" href="notice_of_intent_decision_outcome.html" target="_top" title="notice_of_intent_decision_outcome" alt="" coords="289,556,712,644">
-<area shape="rect" id="node6" href="notice_of_intent_decision_component.html" target="_top" title="notice_of_intent_decision_component" alt="" coords="1341,637,1788,725">
-<area shape="rect" id="node7" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="1281,5,1848,515">
-<area shape="rect" id="node8" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="756,360,1237,507">
-<area shape="rect" id="node9" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1892,380,2439,503">
-<area shape="rect" id="node10" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1347,532,1782,620">
-<area shape="rect" id="node11" href="notice_of_intent_modified_decisions.html" target="_top" title="notice_of_intent_modified_decisions" alt="" coords="1347,773,1782,861">
+<area shape="rect" id="node1" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="832,471,1161,764">
+<area shape="rect" id="node2" href="configuration.html" target="_top" title="configuration" alt="" coords="393,639,608,727">
+<area shape="rect" id="node3" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="315,744,686,832">
+<area shape="rect" id="node4" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="5,655,245,743">
+<area shape="rect" id="node5" href="notice_of_intent_decision_outcome.html" target="_top" title="notice_of_intent_decision_outcome" alt="" coords="289,497,712,585">
+<area shape="rect" id="node6" href="notice_of_intent_decision_component.html" target="_top" title="notice_of_intent_decision_component" alt="" coords="1341,473,1788,561">
+<area shape="rect" id="node7" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="1281,5,1848,456">
+<area shape="rect" id="node8" href="notice_of_intent_decision_condition_type.html" target="_top" title="notice_of_intent_decision_condition_type" alt="" coords="756,301,1237,448">
+<area shape="rect" id="node9" href="notice_of_intent_decision_condi_5e020198.html" target="_top" title="notice_of_intent_decision_condition_component" alt="" coords="1892,365,2439,488">
+<area shape="rect" id="node10" href="notice_of_intent_decision_condition_date.html" target="_top" title="notice_of_intent_decision_condition_date" alt="" coords="1925,125,2406,272">
+<area shape="rect" id="node11" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1347,579,1782,667">
+<area shape="rect" id="node12" href="notice_of_intent_modified_decisions.html" target="_top" title="notice_of_intent_modified_decisions" alt="" coords="1347,715,1782,803">
 </map>
                                         <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/notice_of_intent_decision_condition.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>

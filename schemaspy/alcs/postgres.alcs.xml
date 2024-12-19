@@ -334,6 +334,7 @@
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="application_decision_condition_uuid" foreignKey="FK_9471c8341a43328f1705e5cc2bf" implied="false" onDeleteCascade="true" schema="alcs" table="application_decision_condition_component"/>
             <child column="application_decision_condition_uuid" foreignKey="FK_e9c8eae0a03c6816475ece8a702" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition_component_plan_number"/>
+            <child column="condition_uuid" foreignKey="FK_b7a541bf441dc27322bd2acc473" implied="false" onDeleteCascade="true" schema="alcs" table="application_decision_condition_date"/>
             <child column="condition_uuid" foreignKey="FK_6b5ee63fc75f3a551029c07bc38" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition_to_component_lot"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="approval_dependant" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
@@ -346,9 +347,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_14b7fff6b85bf51b9ab527e64f6" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition_type"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="12" name="completion_date" nullable="true" remarks="Condition Completion date" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="13" name="superseded_date" nullable="true" remarks="Condition Superseded date" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="oats_condition_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.application_decision_condition." size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="oats_condition_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.application_decision_condition." size="19" type="int8" typeCode="-5"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_992b9bc08f066f248b0c25cbcc0" unique="true">
             <column ascending="true" name="uuid"/>
@@ -389,6 +388,24 @@
             <column ascending="true" name="application_decision_component_uuid"/>
          </index>
       </table>
+      <table name="application_decision_condition_date" remarks="Due/end dates for conditions" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="comment" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="condition_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_b7a541bf441dc27322bd2acc473" implied="false" onDeleteCascade="true" schema="alcs" table="application_decision_condition"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="completed_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_975ef9c1b95fa790b980eb8038a" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
       <table name="application_decision_condition_to_component_lot" remarks="Join table to link approved subdivision lots between condition and components and provide plan numbers associated with survey plan per lot" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -419,6 +436,18 @@
             <child column="type_code" foreignKey="FK_14b7fff6b85bf51b9ab527e64f6" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="8" name="is_component_to_condition_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="9" name="is_description_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="10" name="is_administrative_fee_amount_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="is_administrative_fee_amount_required" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="12" name="administrative_fee_amount" nullable="true" remarks="" size="8" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="single_date_label" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;application_decision_condition_type_single_date_label_enum&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="14" name="is_security_amount_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="is_security_amount_required" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="16" name="is_active" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="17" name="is_date_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="is_date_required" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="date_type" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;application_decision_condition_type_date_type_enum&quot;" typeCode="12"/>
          <primaryKey column="code" sequenceNumberInPK="1"/>
          <index name="PK_14b7fff6b85bf51b9ab527e64f6" unique="true">
             <column ascending="true" name="code"/>
@@ -2153,20 +2182,19 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="notice_of_intent_decision_condition_uuid" foreignKey="FK_4f1ecd62bb990e102c6af22a2e1" implied="false" onDeleteCascade="true" schema="alcs" table="notice_of_intent_decision_condition_component"/>
+            <child column="condition_uuid" foreignKey="FK_0bd2f73af4ca611761c69769fc2" implied="false" onDeleteCascade="true" schema="alcs" table="notice_of_intent_decision_condition_date"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="approval_dependant" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
          <column autoUpdated="false" defaultValue="null" digits="2" id="7" name="security_amount" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
          <column autoUpdated="false" defaultValue="null" digits="2" id="8" name="administrative_fee" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="10" name="completion_date" nullable="true" remarks="Condition Completion date" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="superseded_date" nullable="true" remarks="Condition Superseded date" size="35" type="timestamptz" typeCode="93"/>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_30a33ede5fb646124dd846719cd" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_condition_type"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="decision_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="decision_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_88a63053a271ef84bc673e2bf9b" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="oats_condition_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.notice_of_intent_decision_condition." size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="oats_condition_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.notice_of_intent_decision_condition." size="19" type="int8" typeCode="-5"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_51e53b1c3920b8957bfe368c46a" unique="true">
             <column ascending="true" name="uuid"/>
@@ -2192,6 +2220,24 @@
             <column ascending="true" name="notice_of_intent_decision_component_uuid"/>
          </index>
       </table>
+      <table name="notice_of_intent_decision_condition_date" remarks="Due/end dates for conditions" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="comment" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="condition_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_0bd2f73af4ca611761c69769fc2" implied="false" onDeleteCascade="true" schema="alcs" table="notice_of_intent_decision_condition"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="completed_date" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_1a1bb2685255cc143b6acbf1ff5" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+      </table>
       <table name="notice_of_intent_decision_condition_type" remarks="Decision Condition Types Code Table for Notice of Intents" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2203,6 +2249,18 @@
             <child column="type_code" foreignKey="FK_30a33ede5fb646124dd846719cd" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_condition"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="8" name="is_component_to_condition_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="9" name="is_description_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="10" name="is_administrative_fee_amount_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="is_administrative_fee_amount_required" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="12" name="administrative_fee_amount" nullable="true" remarks="" size="8" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="single_date_label" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;notice_of_intent_decision_condition_type_single_date_label_enum&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="14" name="is_security_amount_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="is_security_amount_required" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="16" name="is_active" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="17" name="is_date_checked" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="18" name="is_date_required" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="19" name="date_type" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;notice_of_intent_decision_condition_type_date_type_enum&quot;" typeCode="12"/>
          <primaryKey column="code" sequenceNumberInPK="1"/>
          <index name="PK_30a33ede5fb646124dd846719cd" unique="true">
             <column ascending="true" name="code"/>
