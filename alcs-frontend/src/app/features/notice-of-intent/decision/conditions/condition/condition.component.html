@@ -145,7 +145,7 @@
 
 <div
   class="full-width"
-  [ngClass]="{ 'description-no-date-container': !(dates !== undefined && condition.type.isDateChecked) }"
+  [ngClass]="{ 'description-no-date-container': !(dates !== undefined && condition.type?.isDateChecked) }"
 >
   <div class="subheading2">Description</div>
   <span
