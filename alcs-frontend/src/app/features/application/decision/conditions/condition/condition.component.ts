@@ -274,10 +274,14 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   }
 
   async updateDate(
-    dateUuid: string,
+    dateUuid: string | undefined,
     fieldName: keyof ApplicationDecisionConditionDateDto,
     newValue: number | string | null,
   ) {
+    if (dateUuid === undefined) {
+      return;
+    }
+
     const index = this.dates.findIndex((dto) => dto.uuid === dateUuid);
 
     if (index !== -1) {

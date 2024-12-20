@@ -23,7 +23,7 @@
     <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
   </div>
 </div>
-<div class="dates-container" *ngIf="condition.dates !== undefined && condition.type?.isDateChecked">
+<div class="dates-container" *ngIf="dates !== undefined && condition.type?.isDateChecked">
   <ng-container *ngIf="showSingleDateField; else showMultipleDateTable">
     <ng-container *ngIf="singleDateLabel === 'Due Date'; else showEndDateContainer">
       <div class="single-table">
@@ -44,20 +44,20 @@
         <div class="single-table-row">
           <div class="single-column single-due">
             <app-inline-datepicker
-              [value]="condition.dates[0].date ?? undefined"
-              (save)="updateDate(condition.dates[0].uuid!, 'date', $event)"
+              [value]="dates[0]?.date ?? undefined"
+              (save)="updateDate(dates[0]?.uuid, 'date', $event)"
             ></app-inline-datepicker>
           </div>
           <div class="single-column single-completed">
             <app-inline-datepicker
-              [value]="condition.dates[0].completedDate ?? undefined"
-              (save)="updateDate(condition.dates[0].uuid!, 'completedDate', $event)"
+              [value]="dates[0]?.completedDate ?? undefined"
+              (save)="updateDate(dates[0]?.uuid, 'completedDate', $event)"
             ></app-inline-datepicker>
           </div>
           <div class="single-column single-comment">
             <app-inline-textarea
-              [value]="condition.dates[0].comment ?? undefined"
-              (save)="updateDate(condition.dates[0].uuid!, 'comment', $event)"
+              [value]="dates[0]?.comment ?? undefined"
+              (save)="updateDate(dates[0]?.uuid, 'comment', $event)"
             ></app-inline-textarea>
           </div>
         </div>
@@ -77,8 +77,8 @@
         <div class="single-table-row">
           <div class="single-column single-end">
             <app-inline-datepicker
-              [value]="condition.dates[0].date ?? undefined"
-              (save)="updateDate(condition.dates[0].uuid!, 'date', $event)"
+              [value]="dates[0]?.date ?? undefined"
+              (save)="updateDate(dates[0]?.uuid, 'date', $event)"
             ></app-inline-datepicker>
           </div>
         </div>
@@ -98,8 +98,8 @@
         <th mat-header-cell *matHeaderCellDef class="multiple-due">Due</th>
         <td mat-cell *matCellDef="let element">
           <app-inline-datepicker
-            [value]="condition.dates[element.index - 1].date ?? undefined"
-            (save)="updateDate(condition.dates[element.index - 1].uuid!, 'date', $event)"
+            [value]="dates[element.index - 1]?.date ?? undefined"
+            (save)="updateDate(dates[element.index - 1]?.uuid, 'date', $event)"
           ></app-inline-datepicker>
         </td>
       </ng-container>
@@ -108,8 +108,8 @@
         <th mat-header-cell *matHeaderCellDef class="multiple-completed">Completed</th>
         <td mat-cell *matCellDef="let element">
           <app-inline-datepicker
-            [value]="condition.dates[element.index - 1].completedDate ?? undefined"
-            (save)="updateDate(condition.dates[element.index - 1].uuid!, 'completedDate', $event)"
+            [value]="dates[element.index - 1]?.completedDate ?? undefined"
+            (save)="updateDate(dates[element.index - 1]?.uuid, 'completedDate', $event)"
           ></app-inline-datepicker>
         </td>
       </ng-container>
@@ -118,8 +118,8 @@
         <th mat-header-cell *matHeaderCellDef class="multiple-comment">Comment</th>
         <td mat-cell *matCellDef="let element" class="wrap-text">
           <app-inline-textarea
-            [value]="condition.dates[element.index - 1].comment ?? undefined"
-            (save)="updateDate(condition.dates[element.index - 1].uuid!, 'comment', $event)"
+            [value]="dates[element.index - 1]?.comment ?? undefined"
+            (save)="updateDate(dates[element.index - 1]?.uuid, 'comment', $event)"
           ></app-inline-textarea>
         </td>
       </ng-container>
@@ -145,7 +145,7 @@
 
 <div
   class="full-width"
-  [ngClass]="{ 'description-no-date-container': !(condition.dates !== undefined && condition.type.isDateChecked) }"
+  [ngClass]="{ 'description-no-date-container': !(dates !== undefined && condition.type?.isDateChecked) }"
 >
   <div class="subheading2">Description</div>
   <span
