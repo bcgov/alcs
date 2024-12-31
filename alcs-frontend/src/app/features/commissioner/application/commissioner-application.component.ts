@@ -8,6 +8,7 @@ import { CommissionerApplicationDto } from '../../../services/commissioner/commi
 import { CommissionerService } from '../../../services/commissioner/commissioner.service';
 import { FileTagService } from '../../../services/common/file-tag.service';
 import { ApplicationTagService } from '../../../services/application/application-tag/application-tag.service';
+import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
 
 @Component({
   selector: 'app-commissioner-application',
@@ -23,6 +24,7 @@ export class CommissionerApplicationComponent implements OnInit, OnDestroy {
 
   constructor(
     private commissionerService: CommissionerService,
+    public applicationStatusService: ApplicationSubmissionStatusService,
     private route: ActivatedRoute,
     private titleService: Title,
   ) {}
