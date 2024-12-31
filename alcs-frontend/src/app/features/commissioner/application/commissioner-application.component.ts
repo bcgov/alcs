@@ -6,11 +6,14 @@ import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { environment } from '../../../../environments/environment';
 import { CommissionerApplicationDto } from '../../../services/commissioner/commissioner.dto';
 import { CommissionerService } from '../../../services/commissioner/commissioner.service';
+import { FileTagService } from '../../../services/common/file-tag.service';
+import { ApplicationTagService } from '../../../services/application/application-tag/application-tag.service';
 
 @Component({
   selector: 'app-commissioner-application',
   templateUrl: './commissioner-application.component.html',
   styleUrls: ['./commissioner-application.component.scss'],
+  providers: [{ provide: FileTagService, useClass: ApplicationTagService }],
 })
 export class CommissionerApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
