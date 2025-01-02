@@ -70,7 +70,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   async onSubmit() {
     const file = this.pendingFile;
     if (file) {
-      const renamedFile = new File([file], this.name.value + this.extension ?? file.name, { type: file.type })
+      const renamedFile = new File([file], this.name.value! + this.extension, { type: file.type });
       this.isSaving = true;
       if (this.data.existingDocument) {
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
