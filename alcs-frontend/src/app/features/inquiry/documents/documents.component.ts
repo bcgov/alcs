@@ -28,9 +28,9 @@ export class DocumentsComponent implements OnInit {
   dataSource: MatTableDataSource<InquiryDocumentDto> = new MatTableDataSource<InquiryDocumentDto>();
 
   readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
-  
+
   constructor(
-    private planningReviewDocumentService: InquiryDocumentService,
+    private inquiryDocumentService: InquiryDocumentService,
     private inquiryDetailService: InquiryDetailService,
     private confirmationDialogService: ConfirmationDialogService,
     private toastService: ToastService,
@@ -65,15 +65,15 @@ export class DocumentsComponent implements OnInit {
   }
 
   async openFile(uuid: string, fileName: string) {
-    await this.planningReviewDocumentService.download(uuid, fileName);
+    await this.inquiryDocumentService.download(uuid, fileName);
   }
 
   async downloadFile(uuid: string, fileName: string) {
-    await this.planningReviewDocumentService.download(uuid, fileName, false);
+    await this.inquiryDocumentService.download(uuid, fileName, false);
   }
 
   private async loadDocuments(fileNumber: string) {
-    this.documents = await this.planningReviewDocumentService.listAll(fileNumber);
+    this.documents = await this.inquiryDocumentService.listAll(fileNumber);
     this.dataSource = new MatTableDataSource(this.documents);
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
@@ -112,7 +112,7 @@ export class DocumentsComponent implements OnInit {
       })
       .subscribe(async (accepted) => {
         if (accepted) {
-          await this.planningReviewDocumentService.delete(element.uuid);
+          await this.inquiryDocumentService.delete(element.uuid);
           this.loadDocuments(this.fileId);
           this.toastService.showSuccessToast('Document deleted');
         }
