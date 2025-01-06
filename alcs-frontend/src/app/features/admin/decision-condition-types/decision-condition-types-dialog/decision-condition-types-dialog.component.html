@@ -25,6 +25,9 @@
         <mat-label>Description</mat-label>
         <input required matInput id="description" formControlName="description" name="description" />
       </mat-form-field>
+      <div *ngIf="conditionTypeForm.get('description')?.hasError('descriptionExists')">
+        <app-error-message message="Description already in use or deteled, pick a different description."></app-error-message>
+      </div>
     </div>
 
     <div class="dialog-field full-width">

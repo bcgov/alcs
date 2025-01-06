@@ -17,7 +17,7 @@ import {
 import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { NoticeOfIntentDecisionConditionService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
-import { codeExistsValidator } from '../../../../shared/validators/code-exists-validator';
+import { codeExistsValidator, descriptionExistsValidator } from '../../../../shared/validators/code-exists-validator';
 
 enum ValidationFields {
   Dates,
@@ -54,6 +54,7 @@ export class DecisionConditionTypesDialogComponent {
     this.conditionTypeForm = new FormGroup({
       description: new FormControl(this.data?.content?.description ? this.data.content.description : '', [
         Validators.required,
+        descriptionExistsValidator(this.data?.existingDescriptions ? this.data.existingDescriptions : []),
       ]),
       label: new FormControl(this.data?.content?.label ? this.data.content.label : '', [Validators.required]),
       code: new FormControl(this.data?.content?.code ? this.data.content.code : '', [

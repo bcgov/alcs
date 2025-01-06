@@ -12,6 +12,17 @@ export function codeExistsValidator(existingCodes: string[]): ValidatorFn {
   };
 }
 
+export function descriptionExistsValidator(existingDescriptions: string[]): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
+    const inputValue = control.value.toLowerCase();
+    if (existingDescriptions.some((description) => description.toLowerCase() === inputValue)) {
+      return { descriptionExists: true };
+    }
+    return null;
+  };
+}
+
 export function codeExistsDirectiveValidator(model: NgModel, existingCodes: string[], code: string) {
   const existingErrors = model.control.errors || {};
   const isExisting = existingCodes.includes(code.toLowerCase());
