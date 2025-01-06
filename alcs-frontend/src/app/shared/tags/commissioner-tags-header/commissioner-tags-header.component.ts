@@ -18,7 +18,6 @@ export class CommissionerTagsHeaderComponent implements OnInit, OnChanges {
   clicked = false;
 
   @Input() application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
-  @Input() service: FileTagService | undefined;
   @Input() isHidden: boolean = false;
 
   constructor(private fileTagService: FileTagService) {}
