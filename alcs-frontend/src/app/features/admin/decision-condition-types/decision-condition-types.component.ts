@@ -30,6 +30,7 @@ export class DecisionConditionTypesComponent implements OnInit {
 
   decisionConditionTypeDtos: ApplicationDecisionConditionTypeDto[] | NoticeOfIntentDecisionConditionTypeDto[] = [];
   decisionConditionTypeCodeDtos: string[] = [];
+  decisionConditionTypeDescriptionDtos: string[] = [];
   displayedColumns: string[] = ['label', 'description', 'code', 'isActive', 'actions'];
 
   constructor(
@@ -45,6 +46,7 @@ export class DecisionConditionTypesComponent implements OnInit {
     if (!this.service) return;
     this.decisionConditionTypeDtos = await this.service.fetch();
     this.decisionConditionTypeCodeDtos = await this.service.fetchCodesWithDeleted();
+    this.decisionConditionTypeDescriptionDtos = this.decisionConditionTypeDtos.map((d) => d.description);
   }
 
   async onCreate() {
@@ -57,6 +59,7 @@ export class DecisionConditionTypesComponent implements OnInit {
         service: this.service,
         conditionService: this.conditionService,
         existingCodes: this.decisionConditionTypeCodeDtos,
+        existingDescriptions: this.decisionConditionTypeDescriptionDtos,
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
@@ -77,6 +80,7 @@ export class DecisionConditionTypesComponent implements OnInit {
         conditionService: this.conditionService,
         content: dto,
         existingCodes: this.decisionConditionTypeCodeDtos,
+        existingDescriptions: this.decisionConditionTypeDescriptionDtos,
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
