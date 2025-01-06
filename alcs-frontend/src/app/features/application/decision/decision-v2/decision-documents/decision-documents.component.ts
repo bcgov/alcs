@@ -8,7 +8,7 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 import { ApplicationDecisionDocumentDto } from '../../../../../services/application/decision/application-decision-v2/application-decision.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { DecisionDocumentUploadDialogComponent } from '../decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
+import { DocumentUploadDialogComponent } from '../../../../../shared/document-upload-dialog/document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../../shared/constants';
 
 @Component({
@@ -102,7 +102,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   private openFileDialog(existingDocument?: ApplicationDecisionDocumentDto) {
     if (this.decision) {
       this.dialog
-        .open(DecisionDocumentUploadDialogComponent, {
+        .open(DocumentUploadDialogComponent, {
           minWidth: '600px',
           maxWidth: '800px',
           width: '70%',

@@ -2,19 +2,19 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDecisionDocumentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
-import { ToastService } from '../../../../../../services/toast/toast.service';
-import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
-import { FileHandle } from '../../../../../../shared/drag-drop-file/drag-drop-file.directive';
-import { splitExtension } from '../../../../../../shared/utils/file';
+import { ApplicationDecisionDocumentDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionV2Service } from '../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { DOCUMENT_SOURCE } from '../document/document.dto';
+import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
+import { splitExtension } from '../utils/file';
 
 @Component({
-  selector: 'app-app-decision-document-upload-dialog',
-  templateUrl: './decision-document-upload-dialog.component.html',
-  styleUrls: ['./decision-document-upload-dialog.component.scss'],
+  selector: 'app-document-upload-dialog',
+  templateUrl: './document-upload-dialog.component.html',
+  styleUrls: ['./document-upload-dialog.component.scss'],
 })
-export class DecisionDocumentUploadDialogComponent implements OnInit {
+export class DocumentUploadDialogComponent implements OnInit {
   title = 'Create';
   isDirty = false;
   isSaving = false;
