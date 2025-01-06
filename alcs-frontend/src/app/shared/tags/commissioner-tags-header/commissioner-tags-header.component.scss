@@ -1,0 +1,20 @@
+.tag-container {
+  width: 100%;
+  margin-left: -10px;
+  margin-top: -5px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 5px;
+
+  &.hovered {
+    border: 1px solid #aaaaaa;
+  }
+
+  &.clicked {
+    border: 1px solid #929292;
+  }
+}
+
+.category {
+  color: #a0a0a0;
+}

@@ -78,6 +78,7 @@ import { TagsHeaderComponent } from './tags/tags-header/tags-header.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { TagChipComponent } from './tags/tag-chip/tag-chip.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CommissionerTagsHeaderComponent } from './tags/commissioner-tags-header/commissioner-tags-header.component';
 
 @NgModule({
   declarations: [
@@ -121,6 +122,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     TruncatePipe,
     TagsHeaderComponent,
     TagChipComponent,
+    CommissionerTagsHeaderComponent,
   ],
   imports: [
     CommonModule,
