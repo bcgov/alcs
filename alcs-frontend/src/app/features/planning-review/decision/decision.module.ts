@@ -4,7 +4,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { DecisionDocumentsComponent } from './decision-documents/decision-documents.component';
-import { DecisionDocumentUploadDialogComponent } from './decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
 import { DecisionInputComponent } from './decision-input/decision-input.component';
 import { DecisionComponent } from './decision.component';
 import { ReleaseDialogComponent } from './release-dialog/release-dialog.component';
@@ -39,7 +38,6 @@ export const decisionChildRoutes = [
     DecisionDocumentsComponent,
     RevertToDraftDialogComponent,
     ReleaseDialogComponent,
-    DecisionDocumentUploadDialogComponent,
   ],
   imports: [SharedModule, RouterModule.forChild(decisionChildRoutes), MatTabsModule, MatOptionModule],
 })
