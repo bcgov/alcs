@@ -7,7 +7,7 @@ import { ToastService } from '../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../document/document.dto';
 import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
 import { splitExtension } from '../utils/file';
-import { DecisionService } from './document-upload.interface';
+import { DecisionService } from './document-upload-dialog.interface';
 
 @Component({
   selector: 'app-document-upload-dialog',
