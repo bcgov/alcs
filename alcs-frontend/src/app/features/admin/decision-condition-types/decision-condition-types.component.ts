@@ -80,7 +80,7 @@ export class DecisionConditionTypesComponent implements OnInit {
         conditionService: this.conditionService,
         content: dto,
         existingCodes: this.decisionConditionTypeCodeDtos,
-        existingDescriptions: this.decisionConditionTypeDescriptionDtos,
+        existingDescriptions: this.decisionConditionTypeDescriptionDtos.filter((d) => d !== dto.description),
       },
     });
     dialog.beforeClosed().subscribe(async (result) => {
