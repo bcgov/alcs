@@ -110,6 +110,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
             fileId: this.fileId,
             decisionUuid: this.decision?.uuid,
             existingDocument: existingDocument,
+            decisionService: this.decisionService,
           },
         })
         .beforeClosed()

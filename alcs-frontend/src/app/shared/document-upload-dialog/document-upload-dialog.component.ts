@@ -3,11 +3,11 @@ import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionDocumentDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionV2Service } from '../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../document/document.dto';
 import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
 import { splitExtension } from '../utils/file';
+import { DecisionService } from './document-upload.interface';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -47,9 +47,13 @@ export class DocumentUploadDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { fileId: string; decisionUuid: string; existingDocument?: ApplicationDecisionDocumentDto },
+    public data: {
+      fileId: string;
+      decisionUuid: string;
+      existingDocument?: ApplicationDecisionDocumentDto;
+      decisionService: DecisionService;
+    },
     protected dialog: MatDialogRef<any>,
-    private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
   ) {}
 
@@ -73,11 +77,11 @@ export class DocumentUploadDialogComponent implements OnInit {
       const renamedFile = new File([file], this.name.value! + this.extension, { type: file.type });
       this.isSaving = true;
       if (this.data.existingDocument) {
-        await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
+        await this.data.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
       }
 
       try {
-        await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
+        await this.data.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
       } catch (err) {
         this.toastService.showErrorToast('Document upload failed');
         if (err instanceof HttpErrorResponse && err.status === 403) {
@@ -92,7 +96,7 @@ export class DocumentUploadDialogComponent implements OnInit {
       this.isSaving = false;
     } else if (this.data.existingDocument) {
       this.isSaving = true;
-      await this.decisionService.updateFile(
+      await this.data.decisionService.updateFile(
         this.data.decisionUuid,
         this.data.existingDocument.uuid,
         this.name.value! + this.extension,
@@ -131,10 +135,11 @@ export class DocumentUploadDialogComponent implements OnInit {
 
   async openExistingFile() {
     if (this.data.existingDocument) {
-      await this.decisionService.downloadFile(
+      await this.data.decisionService.downloadFile(
         this.data.decisionUuid,
         this.data.existingDocument.uuid,
         this.data.existingDocument.fileName,
+        true,
       );
     }
   }
