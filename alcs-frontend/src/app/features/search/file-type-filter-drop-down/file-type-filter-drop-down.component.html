@@ -1,13 +1,8 @@
-<mat-form-field
-  [matTooltip]="tooltip"
-  [matTooltipDisabled]="!tooltip"
-  appearance="outline"
-  class="file-type-input"
->
+<mat-form-field [matTooltip]="tooltip" [matTooltipDisabled]="!tooltip" appearance="outline" class="file-type-input">
   <mat-label>{{ label }}</mat-label>
   <input
     value="{{ getSelectedItems() }}"
-    id="type"
+    [id]="id"
     type="text"
     matInput
     [matAutocomplete]="auto"
