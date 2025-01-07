@@ -202,12 +202,12 @@ export class DecisionConditionTypesDialogComponent {
   hasAdminFee(
     conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
   ): boolean {
-    return conditions.map((c) => c.administrativeFee).filter((f) => f !== null).length > 0;
+    return conditions.map((c) => c.administrativeFee).filter((f) => f !== null && f !== undefined && f > 0).length > 0;
   }
 
   hasSecurityAmount(
     conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
   ): boolean {
-    return conditions.map((c) => c.securityAmount).filter((f) => f !== null).length > 0;
+    return conditions.map((c) => c.securityAmount).filter((f) => f !== null && f !== undefined && f > 0).length > 0;
   }
 }
