@@ -39,13 +39,14 @@
       </div>
       <div *ngIf="existingFile" class="file">
         <div>
-          <a (click)="openExistingFile()">{{ existingFile }}</a>
+          <a (click)="openExistingFile()">{{ existingFile.name }}</a>
         </div>
         <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
           <mat-icon>close</mat-icon>
           Remove
         </button>
       </div>
+
       <mat-error *ngIf="showVirusError" class="left" style="display: flex">
         <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
       </mat-error>
@@ -61,20 +62,49 @@
 
     <div>
       <ng-select
-        [(ngModel)]="documentType"
-        [ngModelOptions]="{ standalone: true }"
+        formControlName="type"
+        (change)="onDocTypeSelected($event)"
+        [searchFn]="filterDocumentTypes"
+        appendTo="body"
+        [items]="documentTypes"
+        bindLabel="label"
+        bindValue="code"
         appearance="outline"
-        disabled="true"
         placeholder="Document Type*"
-        required
       >
       </ng-select>
+
+      <mat-error *ngIf="showVirusError" class="left" style="display: flex">
+        <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
+      </mat-error>
     </div>
     <div>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Source</mat-label>
         <mat-select [formControl]="source">
           <mat-option *ngFor="let source of documentSources" [value]="source">{{ source }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Associated Parcel</mat-label>
+        <mat-select [formControl]="parcelId">
+          <mat-option *ngFor="let parcel of data.selectableParcels" [value]="parcel.uuid">
+            #{{ parcel.index + 1 }} PID:
+            <span *ngIf="parcel.pid">{{ parcel.pid | mask: '000-000-000' }}</span>
+            <span *ngIf="!parcel.pid">No Data</span></mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Associated Organization</mat-label>
+        <mat-select [formControl]="ownerId">
+          <mat-option *ngFor="let owner of data.selectableOwners" [value]="owner.uuid">
+            {{ owner.label }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
