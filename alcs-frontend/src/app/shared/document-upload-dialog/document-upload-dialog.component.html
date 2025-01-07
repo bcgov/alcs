@@ -86,7 +86,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
+    <div *ngIf="data.selectableParcels && type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Parcel</mat-label>
         <mat-select [formControl]="parcelId">
@@ -98,7 +98,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
+    <div *ngIf="data.selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Organization</mat-label>
         <mat-select [formControl]="ownerId">
