@@ -16,8 +16,10 @@ import { NoiDocumentService } from '../../../services/notice-of-intent/noi-docum
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
+import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
+import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
+import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 
 @Component({
   selector: 'app-noi-documents',
@@ -43,7 +45,9 @@ export class NoiDocumentsComponent implements OnInit {
     private noiDocumentService: NoiDocumentService,
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private confirmationDialogService: ConfirmationDialogService,
+    private noiSubmissionService: NoticeOfIntentSubmissionService,
     private noiSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private noiParcelService: NoticeOfIntentParcelService,
     private toastService: ToastService,
     public dialog: MatDialog,
   ) {}
@@ -60,6 +64,9 @@ export class NoiDocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
+    const submission = await this.noiSubmissionService.fetchSubmission(this.fileId);
+    const parcels = await this.noiParcelService.fetchParcels(this.fileId);
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
@@ -67,6 +74,14 @@ export class NoiDocumentsComponent implements OnInit {
         width: '70%',
         data: {
           fileId: this.fileId,
+          documentService: this.noiDocumentService,
+          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
+          selectableOwners: submission.owners
+            .filter((owner) => owner.type.code === 'ORGZ')
+            .map((owner) => ({
+              label: owner.organizationName ?? owner.displayName,
+              uuid: owner.uuid,
+            })),
         },
       })
       .beforeClosed()
@@ -85,7 +100,10 @@ export class NoiDocumentsComponent implements OnInit {
     await this.noiDocumentService.download(uuid, fileName, false);
   }
 
-  onEditFile(element: NoticeOfIntentDocumentDto) {
+  async onEditFile(element: NoticeOfIntentDocumentDto) {
+    const submission = await this.noiSubmissionService.fetchSubmission(this.fileId);
+    const parcels = await this.noiParcelService.fetchParcels(this.fileId);
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
@@ -94,6 +112,14 @@ export class NoiDocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           existingDocument: element,
+          documentService: this.noiDocumentService,
+          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
+          selectableOwners: submission.owners
+            .filter((owner) => owner.type.code === 'ORGZ')
+            .map((owner) => ({
+              label: owner.organizationName ?? owner.displayName,
+              uuid: owner.uuid,
+            })),
         },
       })
       .beforeClosed()
