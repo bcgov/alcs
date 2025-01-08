@@ -8,8 +8,8 @@ import { PlanningReviewDocumentService } from '../../../services/planning-review
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
-import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
+import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-documents',
@@ -55,6 +55,7 @@ export class DocumentsComponent implements OnInit {
         width: '70%',
         data: {
           fileId: this.fileId,
+          documentService: this.planningReviewDocumentService,
         },
       })
       .beforeClosed()
@@ -96,6 +97,7 @@ export class DocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           existingDocument: element,
+          documentService: this.planningReviewDocumentService,
         },
       })
       .beforeClosed()

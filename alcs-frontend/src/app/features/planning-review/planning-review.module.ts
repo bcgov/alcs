@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PlanningReviewDetailService } from '../../services/planning-review/planning-review-detail.service';
 import { SharedModule } from '../../shared/shared.module';
-import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { HeaderComponent } from './header/header.component';
 import { OverviewComponent } from './overview/overview.component';
@@ -31,7 +30,6 @@ const routes: Routes = [
     OverviewComponent,
     HeaderComponent,
     DocumentsComponent,
-    DocumentUploadDialogComponent,
     ReferralComponent,
     CreatePlanningReferralDialogComponent,
     EvidentiaryRecordComponent,
