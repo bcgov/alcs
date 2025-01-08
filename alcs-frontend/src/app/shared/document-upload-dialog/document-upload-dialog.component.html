@@ -12,7 +12,7 @@
         *ngIf="!pendingFile && !existingFile"
         [ngClass]="{
           'file-drag-drop': true,
-          error: showVirusError,
+          error: showHasVirusError || showVirusScanFailedError,
         }"
         class="full-width upload-button"
         appDragDropFile
@@ -47,8 +47,11 @@
         </button>
       </div>
 
-      <mat-error *ngIf="showVirusError" class="left" style="display: flex">
+      <mat-error *ngIf="showHasVirusError" class="left" style="display: flex">
         <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
+      </mat-error>
+      <mat-error *ngIf="showVirusScanFailedError" class="left" style="display: flex">
+        <mat-icon>warning</mat-icon>&nbsp;There was a problem scanning the file for viruses. Please try again.
       </mat-error>
     </div>
 
@@ -73,11 +76,8 @@
         placeholder="Document Type*"
       >
       </ng-select>
-
-      <mat-error *ngIf="showVirusError" class="left" style="display: flex">
-        <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
-      </mat-error>
     </div>
+
     <div>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Source</mat-label>

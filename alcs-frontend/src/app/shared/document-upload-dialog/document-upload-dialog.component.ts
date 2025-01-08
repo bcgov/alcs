@@ -58,7 +58,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
   showSupersededWarning = false;
-  showVirusError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
   extension = '';
 
   constructor(
@@ -163,8 +164,12 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
         }
       } catch (err) {
         this.toastService.showErrorToast('Document upload failed');
-        if (err instanceof HttpErrorResponse && err.status === 403) {
-          this.showVirusError = true;
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 400) {
+            this.showHasVirusError = true;
+          } else if (err.status === 500) {
+            this.showVirusScanFailedError = true;
+          }
           this.isSaving = false;
           this.pendingFile = undefined;
           return;
@@ -256,7 +261,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       const { fileName, extension } = splitExtension(selectedFiles[0].name);
       this.name.setValue(fileName);
       this.extension = extension;
-      this.showVirusError = false;
+      this.showHasVirusError = false;
+      this.showVirusScanFailedError = false;
     }
   }
 
@@ -298,7 +304,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const { fileName, extension } = splitExtension(this.pendingFile.name);
     this.extension = extension;
     this.name.setValue(fileName);
-    this.showVirusError = false;
+    this.showHasVirusError = false;
+    this.showVirusScanFailedError = false;
     this.uploadFiles.emit($event);
   }
 
