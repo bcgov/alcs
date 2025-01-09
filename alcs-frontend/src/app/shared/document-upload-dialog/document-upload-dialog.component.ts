@@ -62,6 +62,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   showVirusScanFailedError = false;
   extension = '';
 
+  internalVisibilityLabel = '';
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -72,6 +74,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       documentService?: DocumentService;
       selectableParcels?: SelectableParcelDto[];
       selectableOwners?: SelectableOwnerDto[];
+      allowedVisibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
     },
     protected dialog: MatDialogRef<any>,
     private toastService: ToastService,
@@ -79,6 +82,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadDocumentTypes();
+
+    this.internalVisibilityLabel = this.buildInternalVisibilityLabel();
 
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
@@ -100,7 +105,10 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         name: fileName,
         source: document.source,
-        visibleToInternal: document.visibilityFlags?.includes('C') || document.visibilityFlags?.includes('A'),
+        visibleToInternal:
+          document.visibilityFlags?.includes('A') ||
+          document.visibilityFlags?.includes('C') ||
+          document.visibilityFlags?.includes('G'),
         visibleToPublic: document.visibilityFlags?.includes('P'),
       });
 
@@ -124,17 +132,62 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+  buildInternalVisibilityLabel(): string {
+    const ordinalsByWord = {
+      Applicant: 0,
+      'L/FNG': 1,
+      Commissioner: 2,
+    };
+
+    type Word = keyof typeof ordinalsByWord;
+
+    const wordsByFlag: {
+      A: Word;
+      G: Word;
+      C: Word;
+    } = {
+      A: 'Applicant',
+      G: 'L/FNG',
+      C: 'Commissioner',
+    };
+
+    const words = (
+      this.data.allowedVisibilityFlags?.reduce((words, flag) => {
+        if (flag !== 'P') {
+          words.push(wordsByFlag[flag]);
+        }
+        return words;
+      }, [] as Word[]) ?? []
+    ).sort((word1, word2) => ordinalsByWord[word1] - ordinalsByWord[word2]);
+
+    if (words.length === 0) {
+      return '';
+    }
+
+    if (words.length === 1) {
+      return words[0];
+    }
+
+    if (words.length === 2) {
+      return `${words[0]} and ${words[1]}`;
+    }
+
+    return `${words.slice(0, -1).join(', ')}, and ${words[words.length - 1]}`;
+  }
+
   async onSubmit() {
     const file = this.pendingFile;
     const visibilityFlags: ('A' | 'C' | 'G' | 'P')[] = [];
 
     if (this.visibleToInternal.getRawValue()) {
-      visibilityFlags.push('A');
-      visibilityFlags.push('G');
-      visibilityFlags.push('C');
+      for (const flag of this.data.allowedVisibilityFlags ?? []) {
+        if (flag !== 'P') {
+          visibilityFlags.push(flag);
+        }
+      }
     }
 
-    if (this.visibleToPublic.getRawValue()) {
+    if (this.visibleToPublic.getRawValue() && this.data.allowedVisibilityFlags?.includes('P')) {
       visibilityFlags.push('P');
     }
 

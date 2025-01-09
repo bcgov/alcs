@@ -108,12 +108,18 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="double">
+    <div *ngIf="data.allowedVisibilityFlags" class="double">
       <mat-label>Visible To:</mat-label>
-      <div>
-        <mat-checkbox [formControl]="visibleToInternal">Applicant, L/FNG, and Commissioner</mat-checkbox>
+      <div
+        *ngIf="
+          data.allowedVisibilityFlags?.includes('A') ||
+          data.allowedVisibilityFlags?.includes('C') ||
+          data.allowedVisibilityFlags?.includes('G')
+        "
+      >
+        <mat-checkbox [formControl]="visibleToInternal">{{ internalVisibilityLabel }}</mat-checkbox>
       </div>
-      <div>
+      <div *ngIf="data.allowedVisibilityFlags?.includes('P')">
         <mat-checkbox [formControl]="visibleToPublic">Public</mat-checkbox>
       </div>
     </div>

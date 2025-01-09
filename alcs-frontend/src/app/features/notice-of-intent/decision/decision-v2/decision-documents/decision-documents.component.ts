@@ -94,6 +94,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
             decisionUuid: this.decision?.uuid,
             existingDocument: existingDocument,
             decisionService: this.decisionService,
+            allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
           },
         })
         .beforeClosed()

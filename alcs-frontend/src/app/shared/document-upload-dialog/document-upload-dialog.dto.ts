@@ -7,7 +7,7 @@ export interface UpdateDocumentDto {
   fileName: string;
   typeCode: DOCUMENT_TYPE;
   source: DOCUMENT_SOURCE;
-  visibilityFlags: ('A' | 'C' | 'G' | 'P')[];
+  visibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
 }
 
 export interface CreateDocumentDto extends UpdateDocumentDto {

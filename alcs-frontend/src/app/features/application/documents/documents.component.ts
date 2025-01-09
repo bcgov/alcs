@@ -78,6 +78,7 @@ export class DocumentsComponent implements OnInit {
               label: owner.organizationName ?? owner.displayName,
               uuid: owner.uuid,
             })),
+          allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
         },
       })
       .beforeClosed()

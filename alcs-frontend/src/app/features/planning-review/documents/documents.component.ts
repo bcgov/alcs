@@ -56,6 +56,7 @@ export class DocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           documentService: this.planningReviewDocumentService,
+          allowedVisibilityFlags: ['C'],
         },
       })
       .beforeClosed()
@@ -98,6 +99,7 @@ export class DocumentsComponent implements OnInit {
           fileId: this.fileId,
           existingDocument: element,
           documentService: this.planningReviewDocumentService,
+          allowedVisibilityFlags: ['C'],
         },
       })
       .beforeClosed()
