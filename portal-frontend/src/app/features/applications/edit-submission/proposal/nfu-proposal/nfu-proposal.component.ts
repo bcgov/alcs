@@ -26,6 +26,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);

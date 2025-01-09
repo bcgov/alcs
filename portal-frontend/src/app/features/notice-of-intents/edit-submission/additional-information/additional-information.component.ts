@@ -96,6 +96,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   confirmRemovalOfSoil = false;
   showBuildingPlanVirus = false;
+  showBuildingPlanServerError = false;
   buildingPlans: NoticeOfIntentDocumentDto[] = [];
 
   proposedStructures: FormProposedStructure[] = [];

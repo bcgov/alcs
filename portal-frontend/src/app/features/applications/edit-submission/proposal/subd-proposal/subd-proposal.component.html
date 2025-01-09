@@ -216,6 +216,7 @@
       [showErrors]="showErrors"
       [isRequired]="true"
       [showVirusError]="showProposalMapVirus"
+      [showServerError]="showProposalMapServerError"
     ></app-file-drag-drop>
   </div>
   <div class="full-row">
@@ -272,6 +273,7 @@
       [allowMultiple]="true"
       [disabled]="isHomeSiteSeverance.getRawValue() !== 'true'"
       [showVirusError]="showHomesiteSeveranceVirus"
+      [showServerError]="showHomesiteSeveranceServerError"
     ></app-file-drag-drop>
   </div>
 </form>

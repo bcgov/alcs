@@ -27,7 +27,9 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
   proposalMap: ApplicationDocumentDto[] = [];
 
   showServingNoticeVirus = false;
+  showServingNoticeServerError = false;
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
 
   purpose = new FormControl<string | null>(null, [Validators.required]);
   outsideLands = new FormControl<string | null>(null, [Validators.required]);

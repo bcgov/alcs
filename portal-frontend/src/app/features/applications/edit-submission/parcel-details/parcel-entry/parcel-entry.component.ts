@@ -58,6 +58,7 @@ export class ParcelEntryComponent implements OnInit {
   @Input() isDraft = false;
 
   showVirusError = false;
+  showServerError = false;
 
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
   @Output() private onSaveProgress = new EventEmitter<void>();

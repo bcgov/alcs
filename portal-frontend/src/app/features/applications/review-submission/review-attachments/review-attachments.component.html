@@ -19,6 +19,7 @@
         [isRequired]="true"
         [showErrors]="showErrors"
         [showVirusError]="showResolutionVirusError"
+        [showServerError]="showResolutionServerError"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
@@ -32,6 +33,7 @@
         [isRequired]="isAuthorized"
         [showErrors]="showErrors"
         [showVirusError]="showStaffReportVirusError"
+        [showServerError]="showStaffReportServerError"
       ></app-file-drag-drop>
     </section>
     <section>
@@ -44,6 +46,7 @@
         (openFile)="openFile($event)"
         [allowMultiple]="true"
         [showVirusError]="showOtherVirusError"
+        [showServerError]="showOtherServerError"
       ></app-file-drag-drop>
     </section>
   </div>

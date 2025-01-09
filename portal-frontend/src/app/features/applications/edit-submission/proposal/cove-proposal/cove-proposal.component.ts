@@ -50,8 +50,10 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
 
   proposalMap: ApplicationDocumentDto[] = [];
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   draftCovenant: ApplicationDocumentDto[] = [];
   showDraftCovenantVirus = false;
+  showDraftCovenantServerError = false;
   isMobile = false;
   visibleCount = VISIBLE_COUNT_INCREMENT;
 

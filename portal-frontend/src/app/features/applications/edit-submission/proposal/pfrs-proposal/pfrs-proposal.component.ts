@@ -55,10 +55,15 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   areComponentsDirty = false;
 
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   showCrossSectionVirus = false;
+  showCrossSectionServerError = false;
   showReclamationPlanVirus = false;
+  showReclamationPlanServerError = false;
   showBuildingPlanVirus = false;
+  showBuildingPlanServerError = false;
   showNoticeOfWorkVirus = false;
+  showNoticeOfWorkServerError = false;
 
   isNewStructure = new FormControl<boolean | null>(null, [Validators.required]);
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);

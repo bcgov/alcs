@@ -38,6 +38,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   needsAuthorizationLetter = false;
   showVirusError = false;
+  showServerError = false;
   selectedThirdPartyAgent: boolean | null = false;
   selectedLocalGovernment = false;
   _selectedOwnerUuid: string | undefined = undefined;

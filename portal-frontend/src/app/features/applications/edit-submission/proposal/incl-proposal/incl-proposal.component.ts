@@ -38,9 +38,13 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
   disableNotificationFileUploads = true;
 
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   showProofOfAdvertisingVirus = false;
+  showProofOfAdvertisingServerError = false;
   showProofOfSignageVirus = false;
+  showProofOfSignageServerError = false;
   showReportOfPublicHearingVirus = false;
+  showReportOfPublicHearingServerError = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);

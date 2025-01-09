@@ -28,8 +28,11 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
 
   allowMiningUploads = false;
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   showCrossSectionVirus = false;
+  showCrossSectionServerError = false;
   showReclamationPlanVirus = false;
+  showReclamationPlanServerError = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];

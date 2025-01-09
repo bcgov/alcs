@@ -33,8 +33,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   showMandatoryUploads = false;
   hasCompletedPreviousSteps = false;
   showResolutionVirusError = false;
+  showResolutionServerError = false;
   showStaffReportVirusError = false;
+  showStaffReportServerError = false;
   showOtherVirusError = false;
+  showOtherServerError = false;
 
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,

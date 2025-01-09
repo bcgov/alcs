@@ -34,7 +34,9 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   currentStep = EditApplicationSteps.Proposal;
 
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   showBuildingPlanVirus = false;
+  showBuildingPlanServerError = false;
 
   willBeOverFiveHundredM2 = new FormControl<boolean | null>(null, [Validators.required]);
   willRetainResidence = new FormControl<boolean | null>(null, [Validators.required]);

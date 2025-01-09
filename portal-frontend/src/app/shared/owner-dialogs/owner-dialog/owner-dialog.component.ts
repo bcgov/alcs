@@ -39,6 +39,7 @@ export class OwnerDialogComponent {
 
   isEdit = false;
   showVirusError = false;
+  showServerError = false;
   existingUuid: string | undefined;
   files: ApplicationDocumentDto[] = [];
   showFileErrors = false;

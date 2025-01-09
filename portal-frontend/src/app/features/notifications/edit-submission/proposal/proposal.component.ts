@@ -49,7 +49,9 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   private isDirty = false;
   surveyForm = new FormGroup({} as any);
   showSRWTermsVirus = false;
+  showSRWTermsServerError = false;
   showSurveyPlanVirus = false;
+  showSurveyPlanServerError = false;
 
   constructor(
     private router: Router,

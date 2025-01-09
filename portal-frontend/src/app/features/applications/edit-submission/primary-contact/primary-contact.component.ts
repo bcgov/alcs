@@ -44,6 +44,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   governmentName: string | undefined;
   isDirty = false;
   showVirusError = false;
+  showServerError = false;
   hasCrownParcels = false;
 
   ownersList = new FormControl<string | null>(null, [Validators.required]);

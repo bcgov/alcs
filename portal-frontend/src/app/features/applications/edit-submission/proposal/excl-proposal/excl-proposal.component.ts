@@ -26,9 +26,13 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
   prescribedBody: string | null = null;
 
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   showProofOfAdvertisingVirus = false;
+  showProofOfAdvertisingServerError = false;
   showProofOfSignageVirus = false;
+  showProofOfSignageServerError = false;
   showReportOfPublicHearingVirus = false;
+  showReportOfPublicHearingServerError = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   shareProperty = new FormControl<string | null>(null, [Validators.required]);

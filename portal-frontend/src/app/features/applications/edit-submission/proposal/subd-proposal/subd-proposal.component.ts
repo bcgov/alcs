@@ -32,7 +32,9 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
   proposalMap: ApplicationDocumentDto[] = [];
 
   showHomesiteSeveranceVirus = false;
+  showHomesiteSeveranceServerError = false;
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
 
   lotsProposed = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);

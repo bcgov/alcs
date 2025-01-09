@@ -684,6 +684,7 @@
         [showErrors]="showErrors"
         [isRequired]="true"
         [showVirusError]="showProposalMapVirus"
+        [showServerError]="showProposalMapServerError"
       ></app-file-drag-drop>
     </div>
 
@@ -710,6 +711,7 @@
           [isRequired]="true"
           [allowMultiple]="true"
           [showVirusError]="showCrossSectionVirus"
+          [showServerError]="showCrossSectionServerError"
         ></app-file-drag-drop>
       </div>
 
@@ -738,6 +740,7 @@
           [isRequired]="true"
           [allowMultiple]="true"
           [showVirusError]="showReclamationPlanVirus"
+          [showServerError]="showReclamationPlanServerError"
         ></app-file-drag-drop>
       </div>
     </ng-container>
@@ -757,6 +760,7 @@
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [showVirusError]="showBuildingPlanVirus"
+          [showServerError]="showBuildingPlanServerError"
           [isRequired]="true"
           [allowMultiple]="true"
         ></app-file-drag-drop>
@@ -863,6 +867,7 @@
           [disabled]="!requiresNoticeOfWork"
           [allowMultiple]="true"
           [showVirusError]="showNoticeOfWorkVirus"
+          [showServerError]="showNoticeOfWorkServerError"
         ></app-file-drag-drop>
       </div>
     </ng-container>

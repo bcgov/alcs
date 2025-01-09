@@ -54,9 +54,13 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   buildingPlans: ApplicationDocumentDto[] = [];
 
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   showCrossSectionVirus = false;
+  showCrossSectionServerError = false;
   showReclamationPlanVirus = false;
+  showReclamationPlanServerError = false;
   showBuildingPlanVirus = false;
+  showBuildingPlanServerError = false;
 
   isNewStructure = new FormControl<boolean | null>(null, [Validators.required]);
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);

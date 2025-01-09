@@ -67,6 +67,7 @@ export class ParcelEntryComponent implements OnInit {
   isCrownLand: boolean | null = null;
   isCertificateOfTitleRequired = true;
   showVirusError = false;
+  showServerError = false;
   isMobile = false;
 
   parcelType = new FormControl<string | null>(null, [Validators.required]);

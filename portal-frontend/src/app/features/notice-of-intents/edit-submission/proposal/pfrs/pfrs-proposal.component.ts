@@ -35,9 +35,13 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   allowMiningUploads = false;
   requiresNoticeOfWork = false;
   showProposalMapVirus = false;
+  showProposalMapServerError = false;
   showCrossSectionVirus = false;
+  showCrossSectionServerError = false;
   showReclamationPlanVirus = false;
+  showReclamationPlanServerError = false;
   showNoticeOfWorkVirus = false;
+  showNoticeOfWorkServerError = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];

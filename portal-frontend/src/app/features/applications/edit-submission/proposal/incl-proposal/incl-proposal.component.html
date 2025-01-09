@@ -126,6 +126,7 @@
         [showErrors]="showErrors"
         [isRequired]="true"
         [showVirusError]="showProposalMapVirus"
+        [showServerError]="showProposalMapServerError"
       ></app-file-drag-drop>
     </div>
     <div class="full-row" *ngIf="showGovernmentQuestions">
@@ -215,6 +216,7 @@
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
           [showVirusError]="showProofOfAdvertisingVirus"
+          [showServerError]="showProofOfAdvertisingServerError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -234,6 +236,7 @@
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
           [showVirusError]="showProofOfSignageVirus"
+          [showServerError]="showProofOfSignageServerError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -249,6 +252,7 @@
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
           [showVirusError]="showReportOfPublicHearingVirus"
+          [showServerError]="showReportOfPublicHearingServerError"
           [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>
