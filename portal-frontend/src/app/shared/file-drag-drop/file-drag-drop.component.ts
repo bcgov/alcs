@@ -20,6 +20,7 @@ export class FileDragDropComponent implements OnInit {
   @Input() isRequired = false;
   @Input() showErrors = false;
   @Input() showVirusError = false;
+  @Input() showServerError = false;
 
   private uploadClicked = false;
 
