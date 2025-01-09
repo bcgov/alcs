@@ -9,7 +9,7 @@ import {
   NOI_SUBMISSION_STATUS,
   NoticeOfIntentSubmissionToSubmissionStatusDto,
 } from '../../../services/notice-of-intent/notice-of-intent.dto';
-import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
+import { DOCUMENT_SYSTEM, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent/noi-document/noi-document.dto';
 import { NoiDocumentService } from '../../../services/notice-of-intent/noi-document/noi-document.service';
@@ -17,7 +17,10 @@ import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
-import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
+import {
+  DocumentUploadDialogComponent,
+  VisibilityGroup,
+} from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 
@@ -83,6 +86,10 @@ export class NoiDocumentsComponent implements OnInit {
               uuid: owner.uuid,
             })),
           allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+          documentTypeToVisibilityGroupsMap: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          },
         },
       })
       .beforeClosed()
@@ -122,6 +129,10 @@ export class NoiDocumentsComponent implements OnInit {
               uuid: owner.uuid,
             })),
           allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+          documentTypeToVisibilityGroupsMap: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          },
         },
       })
       .beforeClosed()

@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationSubmissionToSubmissionStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../services/application/application.dto';
-import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
+import { DOCUMENT_SYSTEM, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
@@ -14,7 +14,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
 import { ApplicationParcelService } from '../../../services/application/application-parcel/application-parcel.service';
-import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
+import {
+  DocumentUploadDialogComponent,
+  VisibilityGroup,
+} from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-documents',
@@ -79,6 +82,10 @@ export class DocumentsComponent implements OnInit {
               uuid: owner.uuid,
             })),
           allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+          documentTypeToVisibilityGroupsMap: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          },
         },
       })
       .beforeClosed()
@@ -131,6 +138,10 @@ export class DocumentsComponent implements OnInit {
               label: owner.organizationName ?? owner.displayName,
               uuid: owner.uuid,
             })),
+          documentTypeToVisibilityGroupsMap: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          },
         },
       })
       .beforeClosed()

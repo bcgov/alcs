@@ -16,6 +16,11 @@ import {
 } from './document-upload-dialog.dto';
 import { Subject } from 'rxjs';
 
+export enum VisibilityGroup {
+  INTERNAL = 'Internal',
+  PUBLIC = 'Public',
+}
+
 @Component({
   selector: 'app-document-upload-dialog',
   templateUrl: './document-upload-dialog.component.html',
@@ -75,6 +80,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       selectableParcels?: SelectableParcelDto[];
       selectableOwners?: SelectableOwnerDto[];
       allowedVisibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
+      documentTypeToVisibilityGroupsMap: Record<DOCUMENT_TYPE, VisibilityGroup[]>;
     },
     protected dialog: MatDialogRef<any>,
     private toastService: ToastService,
@@ -279,18 +285,30 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   }
 
   async onDocTypeSelected($event?: DocumentTypeDto) {
-    if (this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+    if (!$event) {
+      return;
+    }
+
+    for (const visibilityGroup of this.data.documentTypeToVisibilityGroupsMap[$event.code]) {
+      if (visibilityGroup === VisibilityGroup.INTERNAL) {
+        this.visibleToInternal.setValue(true);
+      }
+
+      if (visibilityGroup === VisibilityGroup.PUBLIC) {
+        this.visibleToPublic.setValue(true);
+      }
+    }
+
+    if ($event.code === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
       await this.prepareCertificateOfTitleUpload();
-      this.visibleToInternal.setValue(true);
     } else {
       this.parcelId.setValue(null);
       this.parcelId.setValidators([]);
       this.parcelId.updateValueAndValidity();
     }
 
-    if (this.type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+    if ($event.code === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
       await this.prepareCorporateSummaryUpload();
-      this.visibleToInternal.setValue(true);
     } else {
       this.ownerId.setValue(null);
       this.ownerId.setValidators([]);
