@@ -46,6 +46,7 @@ import { ApplicationDecisionConditionCard } from '../../alcs/application-decisio
 import {
   ApplicationDecisionConditionCardBoardDto,
   ApplicationDecisionConditionCardDto,
+  ApplicationDecisionConditionCardUuidDto,
 } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
 import { Card } from '../../alcs/card/card.entity';
 
@@ -146,6 +147,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               return [];
             }
           }),
+        ),
+        forMember(
+          (dto) => dto.conditionCards,
+          mapFrom((entity) =>
+            entity.conditionCards
+              ? this.mapper.mapArray(
+                  entity.conditionCards,
+                  ApplicationDecisionConditionCard,
+                  ApplicationDecisionConditionCardUuidDto,
+                )
+              : [],
+          ),
         ),
       );
 
@@ -400,6 +413,16 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         forMember(
           (dto) => dto.decisionUuid,
           mapFrom((entity) => entity.decision.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardUuidDto,
+        forMember(
+          (dto) => dto.uuid,
+          mapFrom((entity) => entity.uuid),
         ),
       );
     };
