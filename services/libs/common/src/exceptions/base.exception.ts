@@ -35,3 +35,9 @@ export class ServiceConflictException extends BaseServiceException {
     super(error, HttpStatus.CONFLICT);
   }
 }
+
+export class ServiceInternalErrorException extends BaseServiceException {
+  constructor(error: string | Record<string, any>) {
+    super(error, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
