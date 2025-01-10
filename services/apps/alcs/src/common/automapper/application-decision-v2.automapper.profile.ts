@@ -42,6 +42,12 @@ import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/appl
 import { CommissionerDecisionDto } from '../../alcs/commissioner/commissioner.dto';
 import { ApplicationDecisionConditionDate } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationDecisionConditionDateDto } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.dto';
+import { ApplicationDecisionConditionCard } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
+import {
+  ApplicationDecisionConditionCardBoardDto,
+  ApplicationDecisionConditionCardDto,
+} from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
+import { Card } from '../../alcs/card/card.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -358,6 +364,42 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               uuid: decisionComponent.uuid,
             })),
           ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(entity.conditions, ApplicationDecisionCondition, ApplicationDecisionConditionDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => entity.decision.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardBoardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(entity.conditions, ApplicationDecisionCondition, ApplicationDecisionConditionDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => entity.decision.uuid),
         ),
       );
     };
