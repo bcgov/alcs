@@ -249,6 +249,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               : [],
           ),
         ),
+        forMember(
+          (dto) => dto.conditionCard,
+          mapFrom((entity) =>
+            entity.conditionCard
+              ? this.mapper.map(
+                  entity.conditionCard,
+                  ApplicationDecisionConditionCard,
+                  ApplicationDecisionConditionCardUuidDto,
+                )
+              : undefined,
+          ),
+        ),
       );
 
       createMap(

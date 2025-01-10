@@ -115,14 +115,9 @@ export class ApplicationDecisionV2Service {
             lots: true,
           },
           dates: true,
+          conditionCard: true,
         },
-        conditionCards: {},
-      },
-      select: {
-        conditionCards: {
-          conditions: { uuid: true },
-          cardUuid: true,
-        },
+        conditionCards: true,
       },
     });
 

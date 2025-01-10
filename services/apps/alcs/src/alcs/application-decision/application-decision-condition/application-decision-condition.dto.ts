@@ -5,7 +5,10 @@ import { ApplicationDecisionComponentDto } from '../application-decision-v2/appl
 import { DateLabel, DateType } from './application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
 import { ApplicationDecisionConditionDateDto } from './application-decision-condition-date/application-decision-condition-date.dto';
-import { ApplicationDecisionConditionCardDto } from './application-decision-condition-card/application-decision-condition-card.dto';
+import {
+  ApplicationDecisionConditionCardDto,
+  ApplicationDecisionConditionCardUuidDto,
+} from './application-decision-condition-card/application-decision-condition-card.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -90,8 +93,8 @@ export class ApplicationDecisionConditionDto {
   @AutoMap()
   dates: ApplicationDecisionConditionDateDto[];
 
-  @AutoMap(() => ApplicationDecisionConditionCardDto)
-  conditionCard: ApplicationDecisionConditionCardDto;
+  @AutoMap(() => ApplicationDecisionConditionCardUuidDto)
+  conditionCard: ApplicationDecisionConditionCardUuidDto | null;
 }
 
 export class ComponentToConditionDto {
