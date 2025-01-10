@@ -50,6 +50,9 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
 import { ApplicationDecisionConditionDateService } from '../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
 import { ApplicationDecisionConditionDate } from '../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationDecisionConditionDateController } from '../application-decision-condition/application-decision-condition-date/application-decision-condition-date.controller';
+import { ApplicationDecisionConditionCardController } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.controller';
+import { ApplicationDecisionConditionCard } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
+import { ApplicationDecisionConditionCardService } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 @Module({
   imports: [
@@ -78,6 +81,7 @@ import { ApplicationDecisionConditionDateController } from '../application-decis
       ApplicationDecisionConditionToComponentLot,
       ApplicationDecisionConditionComponentPlanNumber,
       ApplicationBoundaryAmendment,
+      ApplicationDecisionConditionCard,
     ]),
     forwardRef(() => BoardModule),
     forwardRef(() => ApplicationModule),
@@ -98,6 +102,7 @@ import { ApplicationDecisionConditionDateController } from '../application-decis
     ApplicationDecisionComponentLotService,
     ApplicationConditionToComponentLotService,
     ApplicationBoundaryAmendmentService,
+    ApplicationDecisionConditionCardService,
   ],
   controllers: [
     ApplicationDecisionV2Controller,
@@ -109,11 +114,13 @@ import { ApplicationDecisionConditionDateController } from '../application-decis
     ApplicationBoundaryAmendmentController,
     ApplicationReconsiderationController,
     ApplicationModificationController,
+    ApplicationDecisionConditionCardController,
   ],
   exports: [
     ApplicationDecisionV2Service,
     ApplicationModificationService,
     ApplicationReconsiderationService,
+    ApplicationDecisionConditionCardService,
   ],
 })
 export class ApplicationDecisionV2Module {}
