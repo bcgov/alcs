@@ -116,6 +116,13 @@ export class ApplicationDecisionV2Service {
           },
           dates: true,
         },
+        conditionCards: {},
+      },
+      select: {
+        conditionCards: {
+          conditions: { uuid: true },
+          cardUuid: true,
+        },
       },
     });
 
@@ -317,28 +324,17 @@ export class ApplicationDecisionV2Service {
     });
 
     if (isDraftExists) {
-      throw new ServiceValidationException(
-        'Draft decision already exists for this application.',
-      );
+      throw new ServiceValidationException('Draft decision already exists for this application.');
     }
 
     await this.validateDecisionChanges(createDto);
 
-    await this.validateResolutionNumber(
-      createDto.resolutionNumber,
-      createDto.resolutionYear,
-    );
+    await this.validateResolutionNumber(createDto.resolutionNumber, createDto.resolutionYear);
 
     let decisionComponents: ApplicationDecisionComponent[] = [];
     if (createDto.decisionComponents) {
-      this.decisionComponentService.validate(
-        createDto.decisionComponents,
-        createDto.isDraft,
-      );
-      decisionComponents = await this.decisionComponentService.createOrUpdate(
-        createDto.decisionComponents,
-        false,
-      );
+      this.decisionComponentService.validate(createDto.decisionComponents, createDto.isDraft);
+      decisionComponents = await this.decisionComponentService.createOrUpdate(createDto.decisionComponents, false);
     }
 
     const decision = new ApplicationDecision({
@@ -347,12 +343,8 @@ export class ApplicationDecisionV2Service {
       resolutionNumber: createDto.resolutionNumber,
       resolutionYear: createDto.resolutionYear,
       chairReviewRequired: createDto.chairReviewRequired,
-      auditDate: createDto.auditDate
-        ? new Date(createDto.auditDate)
-        : undefined,
-      chairReviewDate: createDto.chairReviewDate
-        ? new Date(createDto.chairReviewDate)
-        : undefined,
+      auditDate: createDto.auditDate ? new Date(createDto.auditDate) : undefined,
+      chairReviewDate: createDto.chairReviewDate ? new Date(createDto.chairReviewDate) : undefined,
       chairReviewOutcomeCode: createDto.chairReviewOutcomeCode,
       linkedResolutionOutcomeCode: createDto.linkedResolutionOutcomeCode,
       ceoCriterionCode: createDto.ceoCriterionCode,
@@ -362,9 +354,7 @@ export class ApplicationDecisionV2Service {
       isDraft: true,
       isSubjectToConditions: createDto.isSubjectToConditions,
       decisionDescription: createDto.decisionDescription,
-      rescindedDate: createDto.rescindedDate
-        ? new Date(createDto.rescindedDate)
-        : null,
+      rescindedDate: createDto.rescindedDate ? new Date(createDto.rescindedDate) : null,
       rescindedComment: createDto.rescindedComment,
       application,
       modifies,
@@ -383,10 +373,7 @@ export class ApplicationDecisionV2Service {
     return this.get(savedDecision.uuid);
   }
 
-  private async copyDecisionFields(
-    decisionToCopy: string,
-    decision: ApplicationDecision,
-  ) {
+  private async copyDecisionFields(decisionToCopy: string, decision: ApplicationDecision) {
     //It is intentional to only copy select fields
     const existingDecision = await this.get(decisionToCopy);
     decision.decisionMakerCode = existingDecision.decisionMakerCode;
@@ -412,19 +399,13 @@ export class ApplicationDecisionV2Service {
     const savedDecision = await this.appDecisionRepository.save(decision);
 
     savedDecision.conditions = existingDecision.conditions.map((condition) => {
-      const conditionsComponents = condition.components?.map(
-        (component) => component.uuid,
-      );
+      const conditionsComponents = condition.components?.map((component) => component.uuid);
       return new ApplicationDecisionCondition({
         ...condition,
         uuid: undefined,
         components: savedDecision.components.filter((component) => {
           const oldUuid = newToOldComponentsUuid.get(component.uuid);
-          return (
-            !!oldUuid &&
-            conditionsComponents &&
-            conditionsComponents.includes(oldUuid)
-          );
+          return !!oldUuid && conditionsComponents && conditionsComponents.includes(oldUuid);
         }),
       });
     });
@@ -447,9 +428,7 @@ export class ApplicationDecisionV2Service {
     });
 
     if (existingDecision) {
-      throw new ServiceValidationException(
-        `Resolution number #${number}/${year} is already in use`,
-      );
+      throw new ServiceValidationException(`Resolution number #${number}/${year} is already in use`);
     }
   }
 
@@ -467,18 +446,14 @@ export class ApplicationDecisionV2Service {
     });
 
     if (!applicationDecision) {
-      throw new ServiceNotFoundException(
-        `Failed to find decision with uuid ${uuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
 
-    await this.decisionComponentService.softRemove(
-      applicationDecision.components,
-    );
+    await this.decisionComponentService.softRemove(applicationDecision.components);
 
     //Clear potential links
     applicationDecision.reconsiders = null;
@@ -508,21 +483,16 @@ export class ApplicationDecisionV2Service {
   }
 
   async deleteDocument(decisionDocumentUuid: string) {
-    const decisionDocument =
-      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
+    const decisionDocument = await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
     await this.decisionDocumentRepository.softRemove(decisionDocument);
     return decisionDocument;
   }
 
   async getDownloadUrl(decisionDocumentUuid: string, openInline = false) {
-    const decisionDocument =
-      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
+    const decisionDocument = await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
-    return this.documentService.getDownloadUrl(
-      decisionDocument.document,
-      openInline,
-    );
+    return this.documentService.getDownloadUrl(decisionDocument.document, openInline);
   }
 
   async getDownloadForPortal(decisionDocumentUuid: string) {
@@ -613,35 +583,23 @@ export class ApplicationDecisionV2Service {
     const outcomeCode = updateDto.outcomeCode ?? existingDecision.outcomeCode;
     if (updateDto.decisionComponents) {
       if (outcomeCode && outcomeCode === 'APPR') {
-        this.decisionComponentService.validate(
-          updateDto.decisionComponents,
-          updateDto.isDraft,
-        );
+        this.decisionComponentService.validate(updateDto.decisionComponents, updateDto.isDraft);
       }
 
       if (existingDecision.components) {
         const componentsToRemove = existingDecision.components.filter(
-          (component) =>
-            !updateDto.decisionComponents?.some(
-              (componentDto) => componentDto.uuid === component.uuid,
-            ),
+          (component) => !updateDto.decisionComponents?.some((componentDto) => componentDto.uuid === component.uuid),
         );
 
         await this.decisionComponentService.softRemove(componentsToRemove);
       }
 
-      existingDecision.components =
-        await this.decisionComponentService.createOrUpdate(
-          updateDto.decisionComponents,
-          false,
-        );
-    } else if (
-      updateDto.decisionComponents === null &&
-      existingDecision.components
-    ) {
-      await this.decisionComponentService.softRemove(
-        existingDecision.components,
+      existingDecision.components = await this.decisionComponentService.createOrUpdate(
+        updateDto.decisionComponents,
+        false,
       );
+    } else if (updateDto.decisionComponents === null && existingDecision.components) {
+      await this.decisionComponentService.softRemove(existingDecision.components);
     }
   }
 
@@ -688,52 +646,31 @@ export class ApplicationDecisionV2Service {
     });
 
     if (!existingDecision) {
-      throw new ServiceNotFoundException(
-        `Decision with UUID ${uuid} not found`,
-      );
+      throw new ServiceNotFoundException(`Decision with UUID ${uuid} not found`);
     }
     return existingDecision;
   }
 
-  private async validateDecisionChanges(
-    updateData: UpdateApplicationDecisionDto,
-  ) {
-    if (
-      updateData.ceoCriterionCode &&
-      updateData.decisionMakerCode !== 'CEOP'
-    ) {
-      throw new ServiceValidationException(
-        'Cannot set ceo criterion code unless ceo the decision maker',
-      );
+  private async validateDecisionChanges(updateData: UpdateApplicationDecisionDto) {
+    if (updateData.ceoCriterionCode && updateData.decisionMakerCode !== 'CEOP') {
+      throw new ServiceValidationException('Cannot set ceo criterion code unless ceo the decision maker');
     }
 
     if (
       updateData.ceoCriterionCode !== 'MODI' &&
-      (updateData.isTimeExtension === true ||
-        updateData.isTimeExtension === false)
+      (updateData.isTimeExtension === true || updateData.isTimeExtension === false)
     ) {
-      throw new ServiceValidationException(
-        'Cannot set time extension unless ceo criterion is modification',
-      );
+      throw new ServiceValidationException('Cannot set time extension unless ceo criterion is modification');
     }
   }
 
-  private async updateApplicationDecisionDates(
-    applicationDecision: ApplicationDecision,
-  ) {
-    const existingDecisions = await this.getByAppFileNumber(
-      applicationDecision.application.fileNumber,
-    );
-    const releasedDecisions = existingDecisions.filter(
-      (decision) => !decision.isDraft,
-    );
+  private async updateApplicationDecisionDates(applicationDecision: ApplicationDecision) {
+    const existingDecisions = await this.getByAppFileNumber(applicationDecision.application.fileNumber);
+    const releasedDecisions = existingDecisions.filter((decision) => !decision.isDraft);
     if (releasedDecisions.length === 0) {
-      await this.applicationService.updateByUuid(
-        applicationDecision.application.uuid,
-        {
-          decisionDate: null,
-        },
-      );
+      await this.applicationService.updateByUuid(applicationDecision.application.uuid, {
+        decisionDate: null,
+      });
 
       await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
         applicationDecision.application.fileNumber,
@@ -742,21 +679,15 @@ export class ApplicationDecisionV2Service {
       );
     } else {
       const decisionDate = existingDecisions[existingDecisions.length - 1].date;
-      await this.applicationService.updateByUuid(
-        applicationDecision.application.uuid,
-        {
-          decisionDate,
-        },
-      );
+      await this.applicationService.updateByUuid(applicationDecision.application.uuid, {
+        decisionDate,
+      });
 
       await this.setDecisionReleasedStatus(decisionDate, applicationDecision);
     }
   }
 
-  private async setDecisionReleasedStatus(
-    decisionDate: Date | null,
-    applicationDecision: ApplicationDecision,
-  ) {
+  private async setDecisionReleasedStatus(decisionDate: Date | null, applicationDecision: ApplicationDecision) {
     await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
       applicationDecision.application.fileNumber,
       SUBMISSION_STATUS.ALC_DECISION,
@@ -775,9 +706,7 @@ export class ApplicationDecisionV2Service {
     });
 
     if (!decisionDocument) {
-      throw new ServiceNotFoundException(
-        `Failed to find document with uuid ${decisionDocumentUuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find document with uuid ${decisionDocumentUuid}`);
     }
     return decisionDocument;
   }

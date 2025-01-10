@@ -159,4 +159,14 @@ export class BoardService {
 
     await this.boardStatusRepository.save(newStatuses);
   }
+
+  async getApplicationDecisionConditionBoard() {
+    const board = await this.boardRepository.findOne({ where: { code: 'appcon' }, relations: ['statuses'] });
+
+    if (!board) {
+      throw new ServiceNotFoundException('Application Condition Board not found');
+    }
+
+    return board;
+  }
 }

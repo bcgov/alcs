@@ -1,13 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  IsArray,
-  IsBoolean,
-  IsDate,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../../../common/dtos/base.dto';
 import {
   ApplicationDecisionConditionDto,
@@ -19,6 +11,10 @@ import {
   ApplicationDecisionComponentDto,
   UpdateApplicationDecisionComponentDto,
 } from './component/application-decision-component.dto';
+import {
+  ApplicationDecisionConditionCardDto,
+  ApplicationDecisionConditionCardUuidDto,
+} from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
@@ -229,6 +225,9 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => [ApplicationDecisionConditionDto])
   conditions?: ApplicationDecisionConditionDto[];
+
+  @AutoMap(() => [ApplicationDecisionConditionCardUuidDto])
+  conditionCards: ApplicationDecisionConditionCardUuidDto[];
 }
 
 export class LinkedResolutionDto {
