@@ -258,7 +258,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
                   ApplicationDecisionConditionCard,
                   ApplicationDecisionConditionCardUuidDto,
                 )
-              : undefined,
+              : null,
           ),
         ),
       );

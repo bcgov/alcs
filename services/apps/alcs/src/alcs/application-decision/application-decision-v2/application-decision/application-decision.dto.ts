@@ -227,7 +227,7 @@ export class ApplicationDecisionDto {
   conditions?: ApplicationDecisionConditionDto[];
 
   @AutoMap(() => [ApplicationDecisionConditionCardUuidDto])
-  conditionCards: ApplicationDecisionConditionCardUuidDto[];
+  conditionCards?: ApplicationDecisionConditionCardUuidDto[];
 }
 
 export class LinkedResolutionDto {
