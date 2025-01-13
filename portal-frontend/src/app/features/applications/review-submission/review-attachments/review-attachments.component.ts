@@ -112,6 +112,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
           documentType,
           DOCUMENT_SOURCE.LFNG
         );
+        this.toastService.showSuccessToast('Document uploaded');
       } catch (e) {
         this.toastService.showErrorToast('Document upload failed');
         return false;

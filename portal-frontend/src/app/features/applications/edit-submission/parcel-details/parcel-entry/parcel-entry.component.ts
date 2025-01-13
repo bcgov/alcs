@@ -308,6 +308,7 @@ export class ParcelEntryComponent implements OnInit {
           parcelUuid,
           mappedFiles,
         );
+        this.toastService.showSuccessToast('Document uploaded');
       } catch (e) {
         this.showVirusError = true;
         this.toastService.showErrorToast('Document upload failed');

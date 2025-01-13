@@ -49,6 +49,7 @@ export abstract class FilesStepComponent extends StepComponent {
       }
 
       if (res) {
+        this.toastService.showSuccessToast('Document uploaded');
         const documents = await this.noticeOfIntentDocumentService.getByFileId(this.fileId);
         if (documents) {
           this.$noiDocuments.next(documents);

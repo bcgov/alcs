@@ -21,6 +21,7 @@ import { OWNER_TYPE } from '../../dto/owner.dto';
 import { FileHandle } from '../../file-drag-drop/drag-drop.directive';
 import { openFileInline } from '../../utils/file';
 import { strictEmailValidator } from '../../validators/email-validator';
+import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-owner-dialog',
@@ -72,6 +73,7 @@ export class OwnerDialogComponent {
       documentService: ApplicationDocumentService | NoticeOfIntentDocumentService;
       ownerService: ApplicationOwnerService | NoticeOfIntentOwnerService;
     },
+    private toastService: ToastService,
   ) {
     if (data && data.existingOwner) {
       this.onChangeType({
@@ -272,11 +274,13 @@ export class OwnerDialogComponent {
     if (file) {
       try {
         documentUuid = await this.data.ownerService.uploadCorporateSummary(this.data.fileId, file);
+        this.toastService.showSuccessToast('Document uploaded');
       } catch (e) {
         this.showVirusError = true;
         this.pendingFile = undefined;
         this.corporateSummary.setValue(null);
         this.files = [];
+        this.toastService.showErrorToast('Document upload failed');
         return;
       }
     }
