@@ -19,6 +19,8 @@ import {
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConditionCardDialogComponent } from './condition-card-dialog/condition-card-dialog.component';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -70,6 +72,7 @@ export class ConditionsComponent implements OnInit {
     private decisionService: ApplicationDecisionV2Service,
     private conditionService: ApplicationDecisionConditionService,
     private activatedRouter: ActivatedRoute,
+    private dialog: MatDialog,
   ) {
     this.today = moment().startOf('day').toDate().getTime();
   }
@@ -186,5 +189,28 @@ export class ConditionsComponent implements OnInit {
         } as ApplicationDecisionConditionWithStatus;
       }),
     );
+  }
+
+  openConditionCardDialog(): void {
+    const dialogRef = this.dialog.open(ConditionCardDialogComponent, {
+      minWidth: '800px',
+      maxWidth: '1100px',
+      maxHeight: '80vh',
+      data: {
+        conditions: this.decision.conditions.map((condition, index) => ({
+          condition: condition,
+          index: index,
+        })),
+        decision: this.decision.uuid,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (result.action === 'save' && result.result === true) {
+          this.loadDecisions(this.fileNumber);
+        }
+      }
+    });
   }
 }

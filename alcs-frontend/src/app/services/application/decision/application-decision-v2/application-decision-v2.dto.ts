@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
+import { CardDto } from '../../../card/card.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -73,6 +74,7 @@ export interface ApplicationDecisionDto {
   components: ApplicationDecisionComponentDto[];
   conditions: ApplicationDecisionConditionDto[];
   wasReleased: boolean;
+  conditionsCards: ApplicationDecisionConditionCardDto[];
 }
 
 export interface LinkedResolutionDto {
@@ -253,6 +255,7 @@ export interface ApplicationDecisionConditionDto {
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
   dates?: ApplicationDecisionConditionDateDto[];
+  conditionCard?: ApplicationDecisionConditionCardDto | null;
 }
 
 export interface UpdateApplicationDecisionConditionDto {
@@ -289,4 +292,32 @@ export interface ApplicationDecisionConditionToComponentPlanNumberDto {
   applicationDecisionComponentUuid: string;
   applicationDecisionConditionUuid: string;
   planNumbers: string | null;
+}
+
+export interface ApplicationDecisionConditionCardDto {
+  uuid: string;
+  conditions: ApplicationDecisionConditionDto[];
+  cardUuid: string;
+  decisionUuid: string;
+}
+
+export interface CreateApplicationDecisionConditionCardDto {
+  conditionsUuids: string[];
+  decisionUuid: string;
+  cardStatusCode: string;
+}
+
+export interface UpdateApplicationDecisionConditionCardDto {
+  conditionsUuids: string[];
+}
+
+export interface ApplicationDecisionConditionCardUuidDto {
+  uuid: string;
+}
+
+export interface ApplicationDecisionConditionCardBoardDto {
+  uuid: string;
+  conditions: ApplicationDecisionConditionDto[];
+  card: CardDto;
+  decisionUuid: string;
 }

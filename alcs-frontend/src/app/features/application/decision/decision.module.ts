@@ -35,6 +35,7 @@ import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dia
 import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { DecisionComponent } from './decision.component';
 import { DecisionConditionDateDialogComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition-date-dialog/decision-condition-date-dialog.component';
+import { ConditionCardDialogComponent } from './conditions/condition-card-dialog/condition-card-dialog.component';
 
 export const decisionChildRoutes = [
   {
@@ -96,6 +97,7 @@ export const decisionChildRoutes = [
     ConditionsComponent,
     ConditionComponent,
     BasicComponent,
+    ConditionCardDialogComponent,
   ],
   imports: [SharedModule, RouterModule.forChild(decisionChildRoutes), MatTabsModule, MatOptionModule, MatChipsModule],
 })
