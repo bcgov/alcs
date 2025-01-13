@@ -49,7 +49,6 @@ export class ApplicationDecisionConditionCardService {
   ) {}
 
   async create(dto: CreateApplicationDecisionConditionCardDto) {
-    console.log(dto);
     let board: Board;
     try {
       board = await this.boardService.getApplicationDecisionConditionBoard();
