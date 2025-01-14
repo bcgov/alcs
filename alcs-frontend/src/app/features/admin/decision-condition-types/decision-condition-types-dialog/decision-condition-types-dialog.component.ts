@@ -196,18 +196,18 @@ export class DecisionConditionTypesDialogComponent {
   hasAnyDates(
     conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
   ): boolean {
-    return conditions.some((condition) => condition.dates && condition.dates.length > 0);
+    return conditions.filter((c) => c.decision !== null).some((condition) => condition.dates && condition.dates.length > 0);
   }
 
   hasAdminFee(
     conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
   ): boolean {
-    return conditions.map((c) => c.administrativeFee).filter((f) => f !== null && f !== undefined && f > 0).length > 0;
+    return conditions.filter((c) => c.decision !== null).map((c) => c.administrativeFee).filter((f) => f !== null && f !== undefined && f > 0).length > 0;
   }
 
   hasSecurityAmount(
     conditions: Partial<ApplicationDecisionConditionDto>[] | Partial<NoticeOfIntentDecisionConditionDto>[],
   ): boolean {
-    return conditions.map((c) => c.securityAmount).filter((f) => f !== null && f !== undefined && f > 0).length > 0;
+    return conditions.filter((c) => c.decision !== null).map((c) => c.securityAmount).filter((f) => f !== null && f !== undefined && f > 0).length > 0;
   }
 }
