@@ -166,13 +166,17 @@ export class DocumentService {
     if (isInfected === null || isInfected === undefined) {
       await this.deleteDocument(data.fileKey);
       this.logger.warn(`Deleted unscanned file ${data.fileKey}`);
-      throw new BaseServiceException('Virus scan failed, cannot determine if infected, upload blocked');
+      throw new BaseServiceException(
+        'Virus scan failed, cannot determine if infected, upload blocked',
+        undefined,
+        'VirusScanFailed',
+      );
     }
 
     if (isInfected) {
       await this.deleteDocument(data.fileKey);
       this.logger.warn(`Deleted malicious file ${data.fileKey}`);
-      throw new ServiceValidationException('File may contain malicious data, upload blocked');
+      throw new ServiceValidationException('File may contain malicious data, upload blocked :P', 'VirusDetected');
     }
 
     return this.documentRepository.save(
