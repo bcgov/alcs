@@ -93,6 +93,7 @@ export interface NoticeOfIntentDecisionConditionDto {
   componentUuid: string | null;
   components?: NoticeOfIntentDecisionComponentDto[];
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+  decision: NoticeOfIntentDecisionDto | null;
 }
 
 export interface ComponentToCondition {
