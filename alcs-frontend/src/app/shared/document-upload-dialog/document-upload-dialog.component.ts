@@ -80,7 +80,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       selectableParcels?: SelectableParcelDto[];
       selectableOwners?: SelectableOwnerDto[];
       allowedVisibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
-      documentTypeToVisibilityGroupsMap: Record<DOCUMENT_TYPE, VisibilityGroup[]>;
+      documentTypeToVisibilityGroupsMap?: Record<DOCUMENT_TYPE, VisibilityGroup[]>;
     },
     protected dialog: MatDialogRef<any>,
     private toastService: ToastService,
@@ -289,13 +289,15 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    for (const visibilityGroup of this.data.documentTypeToVisibilityGroupsMap[$event.code]) {
-      if (visibilityGroup === VisibilityGroup.INTERNAL) {
-        this.visibleToInternal.setValue(true);
-      }
+    if (this.data.documentTypeToVisibilityGroupsMap && this.data.documentTypeToVisibilityGroupsMap[$event.code]) {
+      for (const visibilityGroup of this.data.documentTypeToVisibilityGroupsMap[$event.code]) {
+        if (visibilityGroup === VisibilityGroup.INTERNAL) {
+          this.visibleToInternal.setValue(true);
+        }
 
-      if (visibilityGroup === VisibilityGroup.PUBLIC) {
-        this.visibleToPublic.setValue(true);
+        if (visibilityGroup === VisibilityGroup.PUBLIC) {
+          this.visibleToPublic.setValue(true);
+        }
       }
     }
 
