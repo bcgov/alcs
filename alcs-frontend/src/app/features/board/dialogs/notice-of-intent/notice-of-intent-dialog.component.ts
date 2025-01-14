@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
-  ApplicationSubmissionToSubmissionStatusDto,
   DEFAULT_NO_STATUS,
 } from '../../../../services/application/application-submission-status/application-submission-status.dto';
+import { NOI_SUBMISSION_STATUS } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardService } from '../../../../services/card/card.service';
@@ -34,6 +34,8 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
 
   noticeOfIntent: NoticeOfIntentDto = this.data;
   RETROACTIVE_TYPE = RETROACTIVE_TYPE_LABEL;
+
+  routerLink = `notice-of-intent/`;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: NoticeOfIntentDto,
@@ -76,7 +78,7 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
 
   private async populateSubmissionStatus(fileNumber: string) {
     let submissionStatus: NoticeOfIntentSubmissionToSubmissionStatusDto | null = null;
-
+    this.routerLink = this.routerLink + fileNumber;
     try {
       submissionStatus = await this.noticeOfIntentSubmissionStatusService.fetchCurrentStatusByFileNumber(
         fileNumber,
@@ -85,8 +87,10 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
     } catch (e) {
       console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
     }
-
     if (submissionStatus) {
+      if (submissionStatus.statusTypeCode === NOI_SUBMISSION_STATUS.ALC_DECISION) {
+        this.routerLink = this.routerLink + '/decision'
+      }
       this.status = {
         backgroundColor: submissionStatus.status.alcsBackgroundColor,
         textColor: submissionStatus.status.alcsColor,
