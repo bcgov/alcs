@@ -334,8 +334,8 @@
           </div>
         </section>
       </ng-container>
-      <div class="right" *ngIf="decision.isDraft">
-        <button mat-stroked-button color="warn" (click)="deleteDecision(decision.uuid)">Delete draft</button>
+      <div class="right">
+        <button *ngIf="decision.isDraft" mat-stroked-button color="warn" (click)="deleteDecision(decision.uuid)">Delete draft</button>
         <button mat-flat-button color="link" (click)="toggleSummary()">{{ isSummary ? 'View Less' : 'View More' }} <mat-icon iconPositionEnd>{{ isSummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon></button>
       </div>
     </div>
