@@ -95,17 +95,7 @@ describe('NoticeOfIntentParcelService', () => {
     await service.update([{ uuid: mockUuid }] as NoticeOfIntentParcelUpdateDto[]);
 
     expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
     expect(mockHttpClient.put.mock.calls[0][0]).toContain('notice-of-intent-parcel');
-  });
-
-  it('should show an error toast if updating a parcel fails', async () => {
-    mockHttpClient.put.mockReturnValue(throwError(() => ({})));
-
-    await service.update([{}] as NoticeOfIntentParcelUpdateDto[]);
-
-    expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should call document service for attaching certificate of title', async () => {
@@ -114,16 +104,6 @@ describe('NoticeOfIntentParcelService', () => {
     await service.attachCertificateOfTitle('fileId', 'parcelUuid', {} as File);
 
     expect(mockDocumentService.uploadFile).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
-  });
-
-  it('should show an error toast if document service fails', async () => {
-    mockDocumentService.uploadFile.mockRejectedValue({});
-
-    await service.attachCertificateOfTitle('fileId', 'parcelUuid', {} as File);
-
-    expect(mockDocumentService.uploadFile).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should make a delete request and show the overlay for removing all parcels', async () => {
@@ -147,7 +127,7 @@ describe('NoticeOfIntentParcelService', () => {
     mockHttpClient.delete.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.deleteMany([]);

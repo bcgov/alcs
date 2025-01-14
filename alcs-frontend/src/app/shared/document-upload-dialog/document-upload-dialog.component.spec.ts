@@ -1,150 +1,63 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDecisionDocumentDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionV2Service } from '../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
+import { ApplicationParcelService } from '../../services/application/application-parcel/application-parcel.service';
+import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { DOCUMENT_SOURCE } from '../document/document.dto';
-import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
-import { splitExtension } from '../utils/file';
 
-@Component({
-  selector: 'app-app-decision-document-upload-dialog',
-  templateUrl: './decision-document-upload-dialog.component.html',
-  styleUrls: ['./decision-document-upload-dialog.component.scss'],
-})
-export class DecisionDocumentUploadDialogComponent implements OnInit {
-  title = 'Create';
-  isDirty = false;
-  isSaving = false;
-  allowsFileEdit = true;
-  documentType = 'Decision Package';
+import { DocumentUploadDialogComponent } from './document-upload-dialog.component';
 
-  @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();
+describe('DocumentUploadDialogComponent', () => {
+  let component: DocumentUploadDialogComponent;
+  let fixture: ComponentFixture<DocumentUploadDialogComponent>;
 
-  name = new FormControl<string>('', [Validators.required]);
-  type = new FormControl<string | undefined>({ disabled: true, value: undefined }, [Validators.required]);
-  source = new FormControl<string>({ disabled: true, value: DOCUMENT_SOURCE.ALC }, [Validators.required]);
+  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockParcelService: DeepMocked<ApplicationParcelService>;
+  let mockSubmissionService: DeepMocked<ApplicationSubmissionService>;
 
-  visibleToInternal = new FormControl<boolean>({ disabled: true, value: true }, [Validators.required]);
-  visibleToPublic = new FormControl<boolean>({ disabled: true, value: true }, [Validators.required]);
+  beforeEach(async () => {
+    mockAppDocService = createMock();
+    mockParcelService = createMock();
+    mockSubmissionService = createMock();
 
-  documentSources = Object.values(DOCUMENT_SOURCE);
+    const mockDialogRef = {
+      close: jest.fn(),
+      afterClosed: jest.fn(),
+      subscribe: jest.fn(),
+      backdropClick: () => new EventEmitter(),
+    };
 
-  form = new FormGroup({
-    name: this.name,
-    type: this.type,
-    source: this.source,
-    visibleToInternal: this.visibleToInternal,
-    visibleToPublic: this.visibleToPublic,
+    await TestBed.configureTestingModule({
+      declarations: [DocumentUploadDialogComponent],
+      providers: [
+        {
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocService,
+        },
+        {
+          provide: ApplicationParcelService,
+          useValue: mockParcelService,
+        },
+        {
+          provide: ApplicationSubmissionService,
+          useValue: mockSubmissionService,
+        },
+        { provide: MatDialogRef, useValue: mockDialogRef },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: ToastService, useValue: {} },
+      ],
+      imports: [MatDialogModule],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DocumentUploadDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  pendingFile: File | undefined;
-  existingFile: string | undefined;
-  showVirusError = false;
-  extension = '';
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA)
-    public data: { fileId: string; decisionUuid: string; existingDocument?: ApplicationDecisionDocumentDto },
-    protected dialog: MatDialogRef<any>,
-    private decisionService: ApplicationDecisionV2Service,
-    private toastService: ToastService,
-  ) {}
-
-  ngOnInit(): void {
-    if (this.data.existingDocument) {
-      const document = this.data.existingDocument;
-      this.title = 'Edit';
-
-      const { fileName, extension } = splitExtension(document.fileName);
-      this.extension = extension;
-      this.form.patchValue({
-        name: fileName,
-      });
-      this.existingFile = document.fileName;
-    }
-  }
-
-  async onSubmit() {
-    const file = this.pendingFile;
-    if (file) {
-      const renamedFile = new File([file], this.name.value! + this.extension, { type: file.type });
-      this.isSaving = true;
-      if (this.data.existingDocument) {
-        await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
-      }
-
-      try {
-        await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
-      } catch (err) {
-        this.toastService.showErrorToast('Document upload failed');
-        if (err instanceof HttpErrorResponse && err.status === 403) {
-          this.showVirusError = true;
-          this.isSaving = false;
-          this.pendingFile = undefined;
-          return;
-        }
-      }
-
-      this.dialog.close(true);
-      this.isSaving = false;
-    } else if (this.data.existingDocument) {
-      this.isSaving = true;
-      await this.decisionService.updateFile(
-        this.data.decisionUuid,
-        this.data.existingDocument.uuid,
-        this.name.value! + this.extension,
-      );
-
-      this.dialog.close(true);
-      this.isSaving = false;
-    }
-  }
-
-  uploadFile(event: Event) {
-    const element = event.target as HTMLInputElement;
-    const selectedFiles = element.files;
-    if (selectedFiles && selectedFiles[0]) {
-      this.pendingFile = selectedFiles[0];
-      const { fileName, extension } = splitExtension(selectedFiles[0].name);
-      this.name.setValue(fileName);
-      this.extension = extension;
-      this.showVirusError = false;
-    }
-  }
-
-  onRemoveFile() {
-    this.pendingFile = undefined;
-    this.existingFile = undefined;
-    this.extension = '';
-    this.name.setValue('');
-  }
-
-  openFile() {
-    if (this.pendingFile) {
-      const fileURL = URL.createObjectURL(this.pendingFile);
-      window.open(fileURL, '_blank');
-    }
-  }
-
-  async openExistingFile() {
-    if (this.data.existingDocument) {
-      await this.decisionService.downloadFile(
-        this.data.decisionUuid,
-        this.data.existingDocument.uuid,
-        this.data.existingDocument.fileName,
-      );
-    }
-  }
-
-  filesDropped($event: FileHandle) {
-    this.pendingFile = $event.file;
-    const { fileName, extension } = splitExtension(this.pendingFile.name);
-    this.extension = extension;
-    this.name.setValue(fileName);
-    this.showVirusError = false;
-    this.uploadFiles.emit($event);
-  }
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
