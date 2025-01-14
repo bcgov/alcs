@@ -253,6 +253,7 @@ export interface ApplicationDecisionConditionDto {
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
   dates?: ApplicationDecisionConditionDateDto[];
+  decision: ApplicationDecisionDto | null;
 }
 
 export interface UpdateApplicationDecisionConditionDto {
