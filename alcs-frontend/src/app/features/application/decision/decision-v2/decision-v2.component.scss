@@ -1,7 +1,7 @@
 @use '../../../../../styles/colors';
 
 section {
-  margin-bottom: 64px;
+  margin-bottom: 15px;
 }
 
 h4 {
@@ -32,12 +32,19 @@ hr {
 
 .decision-section {
   background: colors.$grey-light;
-  padding: 18px;
 }
 
 .decision-section-no-title {
   background: colors.$grey-light;
   padding: 1px 18px;
+}
+
+.component-summary {
+  padding: 10px 0;
+}
+
+.status-pill {
+  padding: 6px 6px;
 }
 
 .header {
@@ -156,5 +163,9 @@ hr {
 
   .pre-wrapped-text {
     white-space: pre-wrap;
+  }
+
+  .mat-link {
+    color: colors.$link-color;
   }
 }

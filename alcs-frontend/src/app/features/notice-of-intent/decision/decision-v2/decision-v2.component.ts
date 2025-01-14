@@ -16,10 +16,16 @@ import {
   DRAFT_DECISION_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
+  DECISION_CONDITION_COMPLETE_LABEL,
+  DECISION_CONDITION_ONGOING_LABEL,
+  DECISION_CONDITION_PASTDUE_LABEL,
+  DECISION_CONDITION_PENDING_LABEL,
+  DECISION_CONDITION_EXPIRED_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
+import { NoticeOfIntentConditionWithStatus, getEndDate } from '../../../../shared/utils/decision-methods';
 
 type LoadingDecision = NoticeOfIntentDecisionDto & {
   loading: boolean;
@@ -51,6 +57,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
 
   COMPONENT_TYPE = NOI_DECISION_COMPONENT_TYPE;
 
+  isSummary = false;
+  
+  conditions: Record<string, NoticeOfIntentConditionWithStatus[]> = {};
+
   constructor(
     public dialog: MatDialog,
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
@@ -81,10 +91,31 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.decisionService.loadDecisions(fileNumber);
 
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      this.decisions = decisions.map((decision) => ({
-        ...decision,
-        loading: false,
-      }));
+      this.decisions = decisions.map((decision) => {
+        decision.conditions.map(async (x) => {
+          if (x.components) {
+            const componentId = x.components[0].uuid;
+            if (componentId) {
+              const conditionStatus = await this.decisionService.getStatus(x.uuid);
+              if (this.conditions[componentId]) {
+                this.conditions[componentId].push({
+                  ...x,
+                  conditionStatus: conditionStatus,
+                });
+              } else {
+                this.conditions[componentId] = [{
+                  ...x,
+                  conditionStatus: conditionStatus,
+                }];
+              }
+            }
+          }
+        });
+        return {
+          ...decision,
+          loading: false,
+        }
+      });
 
       this.scrollToDecision();
 
@@ -213,6 +244,35 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         block: 'start',
         inline: 'start',
       });
+    }
+  }
+
+  toggleSummary() {
+      this.isSummary = !this.isSummary;
+  }
+
+  getConditions(uuid: string | undefined) {
+    return uuid && this.conditions[uuid] ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))] : [];
+  }
+
+  getDate(uuid: string | undefined) {
+    return getEndDate(uuid, this.conditions);
+  }
+
+  private getPillLabel(status: string) {
+    switch (status) {
+      case 'ONGOING':
+        return DECISION_CONDITION_ONGOING_LABEL;
+      case 'COMPLETED':
+        return DECISION_CONDITION_COMPLETE_LABEL;
+      case 'PASTDUE':
+        return DECISION_CONDITION_PASTDUE_LABEL;
+      case 'PENDING':
+        return DECISION_CONDITION_PENDING_LABEL;
+      case 'EXPIRED':
+        return DECISION_CONDITION_EXPIRED_LABEL;
+      default:
+        return DECISION_CONDITION_ONGOING_LABEL;
     }
   }
 }
