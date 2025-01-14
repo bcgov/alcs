@@ -42,7 +42,6 @@ export class OwnerDialogComponent {
   isEdit = false;
   showHasVirusError = false;
   showVirusScanFailedError = false;
-  showUnknownError = false;
   existingUuid: string | undefined;
   files: ApplicationDocumentDto[] = [];
   showFileErrors = false;
@@ -278,7 +277,6 @@ export class OwnerDialogComponent {
         this.toastService.showSuccessToast('Document uploaded');
         this.showHasVirusError = false;
         this.showVirusScanFailedError = false;
-        this.showUnknownError = false;
         return documentUuid;
       } catch (err) {
         if (err instanceof HttpErrorResponse) {
@@ -291,7 +289,6 @@ export class OwnerDialogComponent {
         this.toastService.showErrorToast('Document upload failed');
       }
     }
-    this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
     return;
   }
 

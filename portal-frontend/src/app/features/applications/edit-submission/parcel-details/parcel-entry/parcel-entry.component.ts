@@ -60,7 +60,6 @@ export class ParcelEntryComponent implements OnInit {
 
   showHasVirusError = false;
   showVirusScanFailedError = false;
-  showUnknownError = false;
 
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
   @Output() private onSaveProgress = new EventEmitter<void>();
@@ -314,7 +313,6 @@ export class ParcelEntryComponent implements OnInit {
         this.toastService.showSuccessToast('Document uploaded');
         this.showHasVirusError = false;
         this.showVirusScanFailedError = false;
-        this.showUnknownError = false;
         return;
       } catch (err) {
         this.toastService.showErrorToast('Document upload failed');
@@ -325,7 +323,6 @@ export class ParcelEntryComponent implements OnInit {
         }
       }
     }
-    this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
   }
 
   async deleteFile($event: ApplicationDocumentDto) {

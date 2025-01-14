@@ -98,7 +98,6 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   confirmRemovalOfSoil = false;
   showBuildingPlanHasVirusError = false;
   showBuildingPlanVirusScanFailedError = false;
-  showBuildingPlanUnknownError = false;
   buildingPlans: NoticeOfIntentDocumentDto[] = [];
 
   proposedStructures: FormProposedStructure[] = [];
@@ -202,14 +201,11 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
       this.showBuildingPlanHasVirusError = false;
       this.showBuildingPlanVirusScanFailedError = false;
-      this.showBuildingPlanUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showBuildingPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showBuildingPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showBuildingPlanUnknownError =
-        !this.showBuildingPlanHasVirusError && !this.showBuildingPlanVirusScanFailedError;
     }
   }
 

@@ -34,10 +34,8 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
 
   showHomesiteSeveranceHasVirusError = false;
   showProposalMapVirusScanFailedError = false;
-  showHomesiteSeveranceUnknownError = false;
   showProposalMapHasVirusError = false;
   showHomesiteSeveranceVirusScanFailedError = false;
-  showProposalMapUnknownError = false;
 
   lotsProposed = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
@@ -129,14 +127,11 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
       this.showProposalMapHasVirusError = false;
       this.showProposalMapVirusScanFailedError = false;
-      this.showProposalMapUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProposalMapUnknownError =
-        !this.showProposalMapHasVirusError && !this.showProposalMapVirusScanFailedError;
     }
   }
 
@@ -145,14 +140,11 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.HOMESITE_SEVERANCE);
       this.showHomesiteSeveranceHasVirusError = false;
       this.showHomesiteSeveranceVirusScanFailedError = false;
-      this.showHomesiteSeveranceUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showHomesiteSeveranceHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showHomesiteSeveranceVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showHomesiteSeveranceUnknownError =
-        !this.showHomesiteSeveranceHasVirusError && !this.showHomesiteSeveranceVirusScanFailedError;
     }
   }
 

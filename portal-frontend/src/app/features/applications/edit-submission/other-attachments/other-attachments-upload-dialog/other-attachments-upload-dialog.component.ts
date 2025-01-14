@@ -27,7 +27,6 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
   isSaving = false;
   showHasVirusError = false;
   showVirusScanFailedError = false;
-  showUnknownError = false;
   showFileRequiredError = false;
   title: string = '';
   isEditing = false;
@@ -151,7 +150,6 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
         await this.data.otherAttachmentsComponent.attachFile(this.pendingFile!, null);
         this.showHasVirusError = false;
         this.showVirusScanFailedError = false;
-        this.showUnknownError = false;
 
         const documents = await this.applicationDcoumentService.getByFileId(this.data.fileId);
 
@@ -174,7 +172,6 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
           this.dialogRef.close();
         } else {
           this.toastService.showErrorToast('Could not read attached documents');
-          this.showUnknownError = true;
         }
       } catch (err) {
         if (err instanceof HttpErrorResponse) {
@@ -186,7 +183,6 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
       this.isFileDirty = true;
       this.isSaving = false;
     }
-    this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
   }
 
   async onEdit() {

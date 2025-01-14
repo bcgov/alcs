@@ -31,16 +31,12 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   requiresNoticeOfWork = false;
   showProposalMapHasVirusError = false;
   showProposalMapVirusScanFailedError = false;
-  showProposalMapUnknownError = false;
   showCrossSectionHasVirusError = false;
   showCrossSectionVirusScanFailedError = false;
-  showCrossSectionUnknownError = false;
   showReclamationPlanHasVirusError = false;
   showReclamationPlanVirusScanFailedError = false;
-  showReclamationPlanUnknownError = false;
   showNoticeOfWorkHasVirusError = false;
   showNoticeOfWorkVirusScanFailedError = false;
-  showNoticeOfWorkUnknownError = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];
@@ -145,14 +141,11 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
       this.showProposalMapHasVirusError = false;
       this.showProposalMapVirusScanFailedError = false;
-      this.showProposalMapUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProposalMapUnknownError =
-        !this.showProposalMapHasVirusError && !this.showProposalMapVirusScanFailedError;
     }
   }
 
@@ -161,14 +154,11 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
       this.showCrossSectionHasVirusError = false;
       this.showCrossSectionVirusScanFailedError = false;
-      this.showCrossSectionUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showCrossSectionHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showCrossSectionVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showCrossSectionUnknownError =
-        !this.showCrossSectionHasVirusError && !this.showCrossSectionVirusScanFailedError;
     }
   }
 
@@ -177,14 +167,11 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
       this.showReclamationPlanHasVirusError = false;
       this.showReclamationPlanVirusScanFailedError = false;
-      this.showReclamationPlanUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showReclamationPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showReclamationPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showReclamationPlanUnknownError =
-        !this.showReclamationPlanHasVirusError && !this.showReclamationPlanVirusScanFailedError;
     }
   }
 
@@ -193,14 +180,11 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.NOTICE_OF_WORK);
       this.showNoticeOfWorkHasVirusError = false;
       this.showNoticeOfWorkVirusScanFailedError = false;
-      this.showNoticeOfWorkUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showNoticeOfWorkHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showNoticeOfWorkVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showNoticeOfWorkUnknownError =
-        !this.showNoticeOfWorkHasVirusError && !this.showNoticeOfWorkVirusScanFailedError;
     }
   }
 

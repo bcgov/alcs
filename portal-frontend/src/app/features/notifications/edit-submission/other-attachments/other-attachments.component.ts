@@ -36,7 +36,6 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   private isDirty = false;
   showHasVirusError = false;
   showVirusScanFailedError = false;
-  showUnknownError = false;
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   private documentCodes: DocumentTypeDto[] = [];
@@ -78,13 +77,11 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
       await this.attachFile(file, null);
       this.showHasVirusError = false;
       this.showVirusScanFailedError = false;
-      this.showUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
     }
   }
 

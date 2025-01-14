@@ -30,13 +30,10 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   allowMiningUploads = false;
   showProposalMapHasVirusError = false;
   showProposalMapVirusScanFailedError = false;
-  showProposalMapUnknownError = false;
   showCrossSectionHasVirusError = false;
   showCrossSectionVirusScanFailedError = false;
-  showCrossSectionUnknownError = false;
   showReclamationPlanHasVirusError = false;
   showReclamationPlanVirusScanFailedError = false;
-  showReclamationPlanUnknownError = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];
@@ -128,13 +125,11 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
       this.showProposalMapHasVirusError = false;
       this.showProposalMapVirusScanFailedError = false;
-      this.showProposalMapUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProposalMapUnknownError = !this.showProposalMapHasVirusError;
     }
   }
 
@@ -143,14 +138,11 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
       this.showCrossSectionHasVirusError = false;
       this.showCrossSectionVirusScanFailedError = false;
-      this.showCrossSectionUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showCrossSectionHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showCrossSectionVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showCrossSectionUnknownError =
-        !this.showCrossSectionHasVirusError && !this.showCrossSectionVirusScanFailedError;
     }
   }
 
@@ -159,13 +151,11 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
       this.showReclamationPlanHasVirusError = false;
       this.showReclamationPlanVirusScanFailedError = false;
-      this.showReclamationPlanUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showReclamationPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showReclamationPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showReclamationPlanUnknownError = !this.showReclamationPlanHasVirusError;
     }
   }
 

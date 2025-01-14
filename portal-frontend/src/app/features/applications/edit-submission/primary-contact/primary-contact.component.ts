@@ -46,7 +46,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isDirty = false;
   showHasVirusError = false;
   showVirusScanFailedError = false;
-  showUnknownError = false;
   hasCrownParcels = false;
 
   ownersList = new FormControl<string | null>(null, [Validators.required]);
@@ -109,13 +108,11 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
       this.showHasVirusError = false;
       this.showVirusScanFailedError = false;
-      this.showUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
     }
   }
 

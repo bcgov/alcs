@@ -29,10 +29,7 @@
     'desktop-file-drag-drop': true,
     'error-outline':
       !disabled &&
-      ((isRequired && showErrors && !uploadedFiles.length) ||
-        showHasVirusError ||
-        showVirusScanFailedError ||
-        showUnknownError),
+      ((isRequired && showErrors && !uploadedFiles.length) || showHasVirusError || showVirusScanFailedError),
     disabled: disabled,
   }"
   dragDropFile
@@ -65,8 +62,5 @@
 </app-validation-error>
 <app-validation-error *ngIf="!disabled && showVirusScanFailedError" errorClass="field-error">
   A problem occurred while scanning for viruses. Please try again.
-</app-validation-error>
-<app-validation-error *ngIf="!disabled && showUnknownError" errorClass="field-error">
-  There was a problem uploading the file. Please try again.
 </app-validation-error>
 <mat-hint class="subtext">Maximum file size: 100 MB</mat-hint>

@@ -36,10 +36,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   showProposalMapHasVirusError = false;
   showProposalMapVirusScanFailedError = false;
-  showProposalMapUnknownError = false;
   showBuildingPlanHasVirusError = false;
   showBuildingPlanVirusScanFailedError = false;
-  showBuildingPlanUnknownError = false;
 
   willBeOverFiveHundredM2 = new FormControl<boolean | null>(null, [Validators.required]);
   willRetainResidence = new FormControl<boolean | null>(null, [Validators.required]);
@@ -188,14 +186,11 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
       this.showProposalMapHasVirusError = false;
       this.showProposalMapVirusScanFailedError = false;
-      this.showProposalMapUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProposalMapUnknownError =
-        !this.showProposalMapHasVirusError && !this.showProposalMapVirusScanFailedError;
     }
   }
 
@@ -204,14 +199,11 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
       this.showBuildingPlanHasVirusError = false;
       this.showBuildingPlanVirusScanFailedError = false;
-      this.showBuildingPlanUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showBuildingPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showBuildingPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showBuildingPlanUnknownError =
-        !this.showBuildingPlanHasVirusError && !this.showBuildingPlanVirusScanFailedError;
     }
   }
 

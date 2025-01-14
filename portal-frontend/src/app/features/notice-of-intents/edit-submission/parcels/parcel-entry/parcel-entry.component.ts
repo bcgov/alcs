@@ -69,7 +69,6 @@ export class ParcelEntryComponent implements OnInit {
   isCertificateOfTitleRequired = true;
   showHasVirusError = false;
   showVirusScanFailedError = false;
-  showUnknownError = false;
   isMobile = false;
 
   parcelType = new FormControl<string | null>(null, [Validators.required]);
@@ -317,7 +316,6 @@ export class ParcelEntryComponent implements OnInit {
         this.toastService.showSuccessToast('Document uploaded');
         this.showHasVirusError = false;
         this.showVirusScanFailedError = false;
-        this.showUnknownError = false;
         return;
       } catch (err) {
         this.toastService.showErrorToast('Document upload failed');
@@ -328,7 +326,6 @@ export class ParcelEntryComponent implements OnInit {
         }
       }
     }
-    this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
   }
 
   async deleteFile($event: NoticeOfIntentDocumentDto) {

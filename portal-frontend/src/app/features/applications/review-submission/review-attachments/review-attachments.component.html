@@ -20,7 +20,6 @@
         [showErrors]="showErrors"
         [showHasVirusError]="showResolutionHasVirusError"
         [showVirusScanFailedError]="showResolutionVirusScanFailedError"
-        [showUnknownError]="showResolutionUnknownError"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
@@ -35,7 +34,6 @@
         [showErrors]="showErrors"
         [showHasVirusError]="showStaffReportHasVirusError"
         [showVirusScanFailedError]="showStaffReportVirusScanFailedError"
-        [showUnknownError]="showStaffReportUnknownError"
       ></app-file-drag-drop>
     </section>
     <section>
@@ -49,7 +47,6 @@
         [allowMultiple]="true"
         [showHasVirusError]="showOtherHasVirusError"
         [showVirusScanFailedError]="showOtherVirusScanFailedError"
-        [showUnknownError]="showOtherUnknownError"
       ></app-file-drag-drop>
     </section>
   </div>

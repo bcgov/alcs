@@ -28,16 +28,12 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
 
   showProposalMapHasVirusError = false;
   showProposalMapVirusScanFailedError = false;
-  showProposalMapUnknownError = false;
   showProofOfAdvertisingHasVirusError = false;
   showProofOfAdvertisingVirusScanFailedError = false;
-  showProofOfAdvertisingUnknownError = false;
   showProofOfSignageHasVirusError = false;
   showProofOfSignageVirusScanFailedError = false;
-  showProofOfSignageUnknownError = false;
   showReportOfPublicHearingHasVirusError = false;
   showReportOfPublicHearingVirusScanFailedError = false;
-  showReportOfPublicHearingUnknownError = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   shareProperty = new FormControl<string | null>(null, [Validators.required]);
@@ -110,14 +106,11 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
       this.showProposalMapHasVirusError = false;
       this.showProposalMapVirusScanFailedError = false;
-      this.showProposalMapUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProposalMapUnknownError =
-        !this.showProposalMapHasVirusError && !this.showProposalMapVirusScanFailedError;
     }
   }
 
@@ -126,14 +119,11 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_ADVERTISING);
       this.showProofOfAdvertisingHasVirusError = false;
       this.showProofOfAdvertisingVirusScanFailedError = false;
-      this.showProofOfAdvertisingUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProofOfAdvertisingHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProofOfAdvertisingVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProofOfAdvertisingUnknownError =
-        !this.showProofOfAdvertisingHasVirusError && !this.showProofOfAdvertisingVirusScanFailedError;
     }
   }
 
@@ -142,14 +132,11 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_SIGNAGE);
       this.showProofOfSignageHasVirusError = false;
       this.showProofOfSignageVirusScanFailedError = false;
-      this.showProofOfSignageUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProofOfSignageHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProofOfSignageVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProofOfSignageUnknownError =
-        !this.showProofOfSignageHasVirusError && !this.showProofOfSignageVirusScanFailedError;
     }
   }
 
@@ -158,14 +145,11 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING);
       this.showReportOfPublicHearingHasVirusError = false;
       this.showReportOfPublicHearingVirusScanFailedError = false;
-      this.showReportOfPublicHearingUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showReportOfPublicHearingHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showReportOfPublicHearingVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showReportOfPublicHearingUnknownError =
-        !this.showReportOfPublicHearingHasVirusError && !this.showReportOfPublicHearingVirusScanFailedError;
     }
   }
 

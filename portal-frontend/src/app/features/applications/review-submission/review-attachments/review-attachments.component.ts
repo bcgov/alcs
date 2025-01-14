@@ -36,13 +36,10 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
   showResolutionHasVirusError = false;
   showResolutionVirusScanFailedError = false;
-  showResolutionUnknownError = false;
   showStaffReportHasVirusError = false;
   showStaffReportVirusScanFailedError = false;
-  showStaffReportUnknownError = false;
   showOtherHasVirusError = false;
   showOtherVirusScanFailedError = false;
-  showOtherUnknownError = false;
 
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,
@@ -98,14 +95,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
       await this.attachFile(fileHandle, DOCUMENT_TYPE.STAFF_REPORT);
       this.showStaffReportHasVirusError = false;
       this.showStaffReportVirusScanFailedError = false;
-      this.showStaffReportUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showStaffReportHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showStaffReportVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showStaffReportUnknownError =
-        !this.showStaffReportHasVirusError && !this.showStaffReportVirusScanFailedError;
     }
   }
 
@@ -114,13 +108,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
       await this.attachFile(fileHandle, DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
       this.showResolutionHasVirusError = false;
       this.showResolutionVirusScanFailedError = false;
-      this.showResolutionUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showResolutionHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showResolutionVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showResolutionUnknownError = !this.showResolutionHasVirusError && !this.showResolutionVirusScanFailedError;
     }
   }
 
@@ -129,13 +121,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
       await this.attachFile(fileHandle, DOCUMENT_TYPE.OTHER);
       this.showOtherHasVirusError = false;
       this.showOtherVirusScanFailedError = false;
-      this.showOtherUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showOtherHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showOtherVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showOtherUnknownError = !this.showOtherHasVirusError && this.showOtherVirusScanFailedError;
     }
   }
 

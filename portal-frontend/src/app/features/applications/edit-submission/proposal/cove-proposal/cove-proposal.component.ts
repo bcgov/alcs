@@ -52,11 +52,9 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
   proposalMap: ApplicationDocumentDto[] = [];
   showProposalMapHasVirusError = false;
   showProposalMapVirusScanFailedError = false;
-  showProposalMapUnknownError = false;
   draftCovenant: ApplicationDocumentDto[] = [];
   showDraftCovenantHasVirusError = false;
   showDraftCovenantVirusScanFailedError = false;
-  showDraftCovenantUnknownError = false;
   isMobile = false;
   visibleCount = VISIBLE_COUNT_INCREMENT;
 
@@ -136,14 +134,11 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
       this.showProposalMapHasVirusError = false;
       this.showProposalMapVirusScanFailedError = false;
-      this.showProposalMapUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showProposalMapUnknownError =
-        !this.showProposalMapHasVirusError && !this.showProposalMapVirusScanFailedError;
     }
   }
 
@@ -152,14 +147,11 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
       await this.attachFile(file, DOCUMENT_TYPE.SRW_TERMS);
       this.showDraftCovenantHasVirusError = false;
       this.showDraftCovenantVirusScanFailedError = false;
-      this.showDraftCovenantUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showDraftCovenantHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showDraftCovenantVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showDraftCovenantUnknownError =
-        !this.showDraftCovenantHasVirusError && !this.showDraftCovenantVirusScanFailedError;
     }
   }
 

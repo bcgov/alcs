@@ -51,10 +51,8 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   surveyForm = new FormGroup({} as any);
   showSRWTermsHasVirusError = false;
   showSRWTermsVirusScanFailedError = false;
-  showSRWTermsUnknownError = false;
   showSurveyPlanHasVirusError = false;
   showSurveyPlanVirusScanFailedError = false;
-  showSurveyPlanUnknownError = false;
 
   constructor(
     private router: Router,
@@ -107,13 +105,11 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
       await this.attachFile(file, DOCUMENT_TYPE.SRW_TERMS);
       this.showSRWTermsHasVirusError = false;
       this.showSRWTermsVirusScanFailedError = false;
-      this.showSRWTermsUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showSRWTermsHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showSRWTermsVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showSRWTermsUnknownError = !this.showSRWTermsHasVirusError && !this.showSRWTermsVirusScanFailedError;
     }
   }
 
@@ -122,13 +118,11 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
       await this.attachFile(file, DOCUMENT_TYPE.SURVEY_PLAN);
       this.showSurveyPlanHasVirusError = false;
       this.showSurveyPlanVirusScanFailedError = false;
-      this.showSurveyPlanUnknownError = false;
     } catch (err) {
       if (err instanceof HttpErrorResponse) {
         this.showSurveyPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
         this.showSurveyPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
       }
-      this.showSurveyPlanUnknownError = !this.showSurveyPlanHasVirusError && !this.showSurveyPlanVirusScanFailedError;
     }
   }
 
