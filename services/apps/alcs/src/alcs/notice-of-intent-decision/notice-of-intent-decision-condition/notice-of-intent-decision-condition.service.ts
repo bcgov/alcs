@@ -27,7 +27,7 @@ export class NoticeOfIntentDecisionConditionService {
           code: typeCode,
         },
       },
-      relations: ['dates'],
+      relations: ['dates', 'decision'],
     });
   }
 
