@@ -176,7 +176,7 @@ export class DocumentService {
     if (isInfected) {
       await this.deleteDocument(data.fileKey);
       this.logger.warn(`Deleted malicious file ${data.fileKey}`);
-      throw new ServiceValidationException('File may contain malicious data, upload blocked :P', 'VirusDetected');
+      throw new ServiceValidationException('File may contain malicious data, upload blocked', 'VirusDetected');
     }
 
     return this.documentRepository.save(
