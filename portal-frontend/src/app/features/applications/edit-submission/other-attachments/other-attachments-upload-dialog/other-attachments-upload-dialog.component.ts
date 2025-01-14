@@ -12,6 +12,7 @@ import { OtherAttachmentsComponent } from '../other-attachments.component';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../../shared/dto/document.dto';
 import { CodeService } from '../../../../../services/code/code.service';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
@@ -24,8 +25,9 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
   isDirty = false;
   isFileDirty = false;
   isSaving = false;
-  showVirusError = false;
-  showServerError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
+  showUnknownError = false;
   showFileRequiredError = false;
   title: string = '';
   isEditing = false;
@@ -145,10 +147,14 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
   protected async add() {
     if (this.isFileDirty) {
       this.isSaving = true;
-      const res = await this.data.otherAttachmentsComponent.attachFile(this.pendingFile!, null);
-      this.showVirusError = !res;
-      if (res) {
+      try {
+        await this.data.otherAttachmentsComponent.attachFile(this.pendingFile!, null);
+        this.showHasVirusError = false;
+        this.showVirusScanFailedError = false;
+        this.showUnknownError = false;
+
         const documents = await this.applicationDcoumentService.getByFileId(this.data.fileId);
+
         if (documents) {
           const sortedDocuments = documents.sort((a, b) => {
             return b.uploadedAt - a.uploadedAt;
@@ -168,9 +174,19 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
           this.dialogRef.close();
         } else {
           this.toastService.showErrorToast('Could not read attached documents');
+          this.showUnknownError = true;
+        }
+      } catch (err) {
+        if (err instanceof HttpErrorResponse) {
+          this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+          this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
         }
       }
+      this.isDirty = false;
+      this.isFileDirty = true;
+      this.isSaving = false;
     }
+    this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
   }
 
   async onEdit() {

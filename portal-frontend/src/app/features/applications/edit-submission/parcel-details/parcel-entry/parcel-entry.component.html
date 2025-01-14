@@ -241,8 +241,9 @@
       (beforeFileUploadOpened)="saveParcelProgress()"
       [showErrors]="showErrors"
       [isRequired]="isCertificateOfTitleRequired"
-      [showVirusError]="showVirusError"
-      [showServerError]="showServerError"
+      [showHasVirusError]="showHasVirusError"
+      [showVirusScanFailedError]="showVirusScanFailedError"
+      [showUnknownError]="showUnknownError"
       [disabled]="parcelForm.controls.pid.disabled"
     ></app-file-drag-drop>
   </div>
@@ -354,11 +355,12 @@
         </div>
         <div class="owner-details-mobile" *ngIf="isMobile">
           <app-parcel-owner-mobile-card
-            [owner]="selectedOwner" 
-            [isLast]="true" 
-            [isReviewStep]="false" 
+            [owner]="selectedOwner"
+            [isLast]="true"
+            [isReviewStep]="false"
             [isCrown]="true"
-            (editClicked)="onEditCrownOwner(selectedOwner)">
+            (editClicked)="onEditCrownOwner(selectedOwner)"
+          >
           </app-parcel-owner-mobile-card>
         </div>
       </div>
@@ -377,18 +379,20 @@
       <label for="owner-search" *ngIf="filteredOwners.length">Select from Existing Government Contacts</label>
       <ng-container *ngIf="filteredOwners.length">
         <mat-form-field class="full-width-input" appearance="outline">
-          <mat-select 
-            [value]="selectedOwner?.uuid" 
+          <mat-select
+            [value]="selectedOwner?.uuid"
             [required]="true"
-            [ngClass]="{ 'error': ownerInput.errors && ownerInput.errors['required'] }">
-            <mat-option 
-              *ngFor="let owner of filteredOwners" 
-              [value]="owner.uuid" 
-              (click)="onCrownOwnerSelected(owner, owner.isSelected)" 
-              class="option" 
-              required>
+            [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
+          >
+            <mat-option
+              *ngFor="let owner of filteredOwners"
+              [value]="owner.uuid"
+              (click)="onCrownOwnerSelected(owner, owner.isSelected)"
+              class="option"
+              required
+            >
               <div class="owner-option">
-                {{owner.firstName + ' ' + owner.lastName}}
+                {{ owner.firstName + ' ' + owner.lastName }}
               </div>
             </mat-option>
           </mat-select>
@@ -408,7 +412,7 @@
       'error-outline':
         enableUserSignOff &&
         isConfirmedByApplicant.invalid &&
-        (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched)
+        (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched),
     }"
   >
     <ng-container *ngIf="!isCrownLand">

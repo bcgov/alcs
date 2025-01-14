@@ -40,7 +40,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="true"
             >Yes
@@ -48,7 +48,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="false"
             >No
@@ -195,8 +195,9 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
-        [showServerError]="showProposalMapServerError"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+        [showUnknownError]="showProposalMapUnknownError"
       ></app-file-drag-drop>
     </div>
 
@@ -212,7 +213,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isAreaWideFilling.invalid && (isAreaWideFilling.dirty || isAreaWideFilling.touched)
+              'error-outline': isAreaWideFilling.invalid && (isAreaWideFilling.dirty || isAreaWideFilling.touched),
             }"
             value="true"
             >Yes
@@ -220,7 +221,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isAreaWideFilling.invalid && (isAreaWideFilling.dirty || isAreaWideFilling.touched)
+              'error-outline': isAreaWideFilling.invalid && (isAreaWideFilling.dirty || isAreaWideFilling.touched),
             }"
             value="false"
             >No
@@ -251,8 +252,9 @@
         [isRequired]="true"
         [allowMultiple]="true"
         [disabled]="!allowMiningUploads"
-        [showVirusError]="showCrossSectionVirus"
-        [showServerError]="showCrossSectionServerError"
+        [showHasVirusError]="showCrossSectionHasVirusError"
+        [showVirusScanFailedError]="showCrossSectionVirusScanFailedError"
+        [showUnknownError]="showCrossSectionUnknownError"
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
@@ -280,8 +282,9 @@
         [isRequired]="true"
         [allowMultiple]="true"
         [disabled]="!allowMiningUploads"
-        [showVirusError]="showReclamationPlanVirus"
-        [showServerError]="showReclamationPlanServerError"
+        [showHasVirusError]="showReclamationPlanHasVirusError"
+        [showVirusScanFailedError]="showReclamationPlanVirusScanFailedError"
+        [showUnknownError]="showReclamationPlanUnknownError"
       ></app-file-drag-drop>
     </div>
   </div>

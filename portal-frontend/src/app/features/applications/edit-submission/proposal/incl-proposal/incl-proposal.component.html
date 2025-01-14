@@ -125,8 +125,9 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
-        [showServerError]="showProposalMapServerError"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+        [showUnknownError]="showProposalMapUnknownError"
       ></app-file-drag-drop>
     </div>
     <div class="full-row" *ngIf="showGovernmentQuestions">
@@ -157,7 +158,7 @@
           value="true"
           [ngClass]="{
             'error-outline':
-              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched)
+              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched),
           }"
           >Yes</mat-button-toggle
         >
@@ -165,7 +166,7 @@
           value="false"
           [ngClass]="{
             'error-outline':
-              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched)
+              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched),
           }"
           >No</mat-button-toggle
         >
@@ -215,8 +216,9 @@
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
-          [showVirusError]="showProofOfAdvertisingVirus"
-          [showServerError]="showProofOfAdvertisingServerError"
+          [showHasVirusError]="showProofOfAdvertisingHasVirusError"
+          [showVirusScanFailedError]="showProofOfAdvertisingVirusScanFailedError"
+          [showUnknownError]="showProofOfAdvertisingUnknownError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -235,8 +237,10 @@
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
-          [showVirusError]="showProofOfSignageVirus"
-          [showServerError]="showProofOfSignageServerError"
+          [showHasVirusError]="showProofOfSignageHasVirusError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
+          [showUnknownError]="showProofOfSignageUnknownError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -251,8 +255,9 @@
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
-          [showVirusError]="showReportOfPublicHearingVirus"
-          [showServerError]="showReportOfPublicHearingServerError"
+          [showHasVirusError]="showReportOfPublicHearingHasVirusError"
+          [showVirusScanFailedError]="showReportOfPublicHearingVirusScanFailedError"
+          [showUnknownError]="showReportOfPublicHearingUnknownError"
           [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>

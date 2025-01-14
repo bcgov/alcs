@@ -12,6 +12,7 @@ import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-tur-proposal',
@@ -26,10 +27,12 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
   servingNotice: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
 
-  showServingNoticeVirus = false;
-  showServingNoticeServerError = false;
-  showProposalMapVirus = false;
-  showProposalMapServerError = false;
+  showServingNoticeHasVirusError = false;
+  showServingNoticeVirusScanFailedError = false;
+  showServingNoticeUnknownError = false;
+  showProposalMapHasVirusError = false;
+  showProposalMapVirusScanFailedError = false;
+  showProposalMapUnknownError = false;
 
   purpose = new FormControl<string | null>(null, [Validators.required]);
   outsideLands = new FormControl<string | null>(null, [Validators.required]);
@@ -53,7 +56,7 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
     private applicationService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
@@ -86,13 +89,35 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
   }
 
   async attachProposalMap(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.showProposalMapVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.showProposalMapHasVirusError = false;
+      this.showProposalMapVirusScanFailedError = false;
+      this.showProposalMapUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showProposalMapUnknownError =
+        !this.showProposalMapHasVirusError && !this.showProposalMapVirusScanFailedError;
+    }
   }
 
   async attachServinceNotice(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.SERVING_NOTICE);
-    this.showServingNoticeVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.SERVING_NOTICE);
+      this.showServingNoticeHasVirusError = false;
+      this.showServingNoticeVirusScanFailedError = false;
+      this.showServingNoticeUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showServingNoticeHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showServingNoticeVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showServingNoticeUnknownError =
+        !this.showServingNoticeHasVirusError && !this.showServingNoticeVirusScanFailedError;
+    }
   }
 
   async onSave() {

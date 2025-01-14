@@ -23,6 +23,7 @@ import { openFileInline } from '../../../../../shared/utils/file';
 import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -57,8 +58,9 @@ export class ParcelEntryComponent implements OnInit {
   @Input() _disabled = false;
   @Input() isDraft = false;
 
-  showVirusError = false;
-  showServerError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
+  showUnknownError = false;
 
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
   @Output() private onSaveProgress = new EventEmitter<void>();
@@ -302,6 +304,7 @@ export class ParcelEntryComponent implements OnInit {
   async attachFile(file: FileHandle, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
+
       try {
         this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
           this.fileId,
@@ -309,13 +312,20 @@ export class ParcelEntryComponent implements OnInit {
           mappedFiles,
         );
         this.toastService.showSuccessToast('Document uploaded');
-      } catch (e) {
-        this.showVirusError = true;
-        this.toastService.showErrorToast('Document upload failed');
+        this.showHasVirusError = false;
+        this.showVirusScanFailedError = false;
+        this.showUnknownError = false;
         return;
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+
+        if (err instanceof HttpErrorResponse) {
+          this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+          this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+        }
       }
-      this.showVirusError = false;
     }
+    this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
   }
 
   async deleteFile($event: ApplicationDocumentDto) {

@@ -32,7 +32,7 @@
         mat-flat-button
         color="accent"
         [ngClass]="{
-          'error-outline': transferees.length === 0 && showErrors
+          'error-outline': transferees.length === 0 && showErrors,
         }"
         (click)="onAdd()"
       >
@@ -185,8 +185,10 @@
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [isRequired]="true"
-          [showVirusError]="showProposalMapVirus"
-          [showServerError]="showProposalMapServerError"
+          [showHasVirusError]="showProposalMapHasVirusError"
+          [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+          [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+          [showUnknownError]="showProposalMapUnknownError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -202,7 +204,7 @@
             <mat-button-toggle
               class="toggle-button"
               [ngClass]="{
-                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
+                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched),
               }"
               value="true"
               >Yes
@@ -210,7 +212,7 @@
             <mat-button-toggle
               class="toggle-button"
               [ngClass]="{
-                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
+                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched),
               }"
               value="false"
               >No
@@ -230,8 +232,9 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [disabled]="!canUploadDraft"
-          [showVirusError]="showDraftCovenantVirus"
-          [showServerError]="showDraftCovenantServerError"
+          [showHasVirusError]="showDraftCovenantHasVirusError"
+          [showVirusScanFailedError]="showDraftCovenantVirusScanFailedError"
+          [showUnknownError]="showDraftCovenantUnknownError"
         ></app-file-drag-drop>
       </div>
     </div>

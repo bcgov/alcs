@@ -149,7 +149,7 @@
       [formControl]="allOwnersNotified"
       [ngClass]="{
         'parcel-checkbox': true,
-        'error-outline': allOwnersNotified.invalid && (allOwnersNotified.dirty || allOwnersNotified.touched)
+        'error-outline': allOwnersNotified.invalid && (allOwnersNotified.dirty || allOwnersNotified.touched),
       }"
       >I confirm that all affected property owners with land in the ALR have been notified.
     </mat-checkbox>
@@ -178,8 +178,9 @@
       (openFile)="openFile($event)"
       [showErrors]="showErrors"
       [isRequired]="true"
-      [showVirusError]="showServingNoticeVirus"
-      [showServerError]="showServingNoticeServerError"
+      [showHasVirusError]="showServingNoticeHasVirusError"
+      [showVirusScanFailedError]="showServingNoticeVirusScanFailedError"
+      [showUnknownError]="showServingNoticeUnknownError"
       data-testid="proof-of-serving-notice-filechooser"
     ></app-file-drag-drop>
   </div>
@@ -194,8 +195,9 @@
       (openFile)="openFile($event)"
       [showErrors]="showErrors"
       [isRequired]="true"
-      [showVirusError]="showProposalMapVirus"
-      [showServerError]="showProposalMapServerError"
+      [showHasVirusError]="showProposalMapHasVirusError"
+      [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+      [showUnknownError]="showProposalMapUnknownError"
       data-testid="proposal-map-filechooser"
     ></app-file-drag-drop>
   </div>

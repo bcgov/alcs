@@ -40,7 +40,7 @@
             [ngClass]="{
               'error-outline':
                 isRemovingSoilForNewStructure.invalid &&
-                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched)
+                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched),
             }"
             value="true"
             >Yes
@@ -50,7 +50,7 @@
             [ngClass]="{
               'error-outline':
                 isRemovingSoilForNewStructure.invalid &&
-                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched)
+                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched),
             }"
             value="false"
             >No
@@ -68,7 +68,7 @@
       <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
       <div class="scrollable">
         <div *ngIf="isMobile">
-          <app-structure-mobile-card            
+          <app-structure-mobile-card
             *ngFor="let structure of proposedStructures; let last = last; index as i"
             [structure]="structure"
             [isLast]="last"
@@ -76,18 +76,28 @@
             [isReviewStep]="false"
             (removeClicked)="onStructureRemove(structure.id)"
             (editClicked)="onStructureEdit(structure.id)"
-            >
+          >
           </app-structure-mobile-card>
         </div>
         <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
           <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef>#</th>
-            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">{{ i + 1 }}</td>
+            <td
+              mat-cell
+              *matCellDef="let i = dataIndex; let element"
+              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+            >
+              {{ i + 1 }}
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
+            <td
+              mat-cell
+              *matCellDef="let i = dataIndex; let element"
+              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+            >
               <mat-form-field appearance="outline">
                 <mat-select
                   [value]="element.type"
@@ -118,7 +128,11 @@
 
           <ng-container matColumnDef="area">
             <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
-            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
+            <td
+              mat-cell
+              *matCellDef="let i = dataIndex; let element"
+              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+            >
               <mat-form-field appearance="outline">
                 <input
                   type="text"
@@ -151,7 +165,11 @@
 
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef>Action</th>
-            <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
+            <td
+              mat-cell
+              *matCellDef="let i = dataIndex; let element"
+              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+            >
               <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
                 Remove
               </button>
@@ -165,12 +183,15 @@
             <td colspan="7" mat-cell *matCellDef class="no-top-border">
               <div class="residential-warning">
                 <div class="residential-warning-text">
-                  The proposed residential structure and its total floor area must be allowed under the ALC Act and/or ALR Use Regulation. 
-                  If not, you may require a 'Non-Adhering Residential Use' application instead. For more info, please see 
-                  <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank">Housing in the ALR</a> 
+                  The proposed residential structure and its total floor area must be allowed under the ALC Act and/or
+                  ALR Use Regulation. If not, you may require a 'Non-Adhering Residential Use' application instead. For
+                  more info, please see
+                  <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+                    >Housing in the ALR</a
+                  >
                   on the ALC website.
                 </div>
-              </div>              
+              </div>
             </td>
           </ng-container>
 
@@ -381,8 +402,9 @@
           (deleteFile)="onDeleteFile($event)"
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
-          [showVirusError]="showBuildingPlanVirus"
-          [showServerError]="showBuildingPlanServerError"
+          [showHasVirusError]="showBuildingPlanHasVirusError"
+          [showVirusScanFailedError]="showBuildingPlanVirusScanFailedError"
+          [showUnknownError]="showBuildingPlanUnknownError"
           [isRequired]="confirmRemovalOfSoil"
           [allowMultiple]="true"
           [disabled]="!confirmRemovalOfSoil"

@@ -18,8 +18,9 @@
         (openFile)="openFile($event)"
         [isRequired]="true"
         [showErrors]="showErrors"
-        [showVirusError]="showResolutionVirusError"
-        [showServerError]="showResolutionServerError"
+        [showHasVirusError]="showResolutionHasVirusError"
+        [showVirusScanFailedError]="showResolutionVirusScanFailedError"
+        [showUnknownError]="showResolutionUnknownError"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
@@ -32,8 +33,9 @@
         (openFile)="openFile($event)"
         [isRequired]="isAuthorized"
         [showErrors]="showErrors"
-        [showVirusError]="showStaffReportVirusError"
-        [showServerError]="showStaffReportServerError"
+        [showHasVirusError]="showStaffReportHasVirusError"
+        [showVirusScanFailedError]="showStaffReportVirusScanFailedError"
+        [showUnknownError]="showStaffReportUnknownError"
       ></app-file-drag-drop>
     </section>
     <section>
@@ -45,8 +47,9 @@
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [allowMultiple]="true"
-        [showVirusError]="showOtherVirusError"
-        [showServerError]="showOtherServerError"
+        [showHasVirusError]="showOtherHasVirusError"
+        [showVirusScanFailedError]="showOtherVirusScanFailedError"
+        [showUnknownError]="showOtherUnknownError"
       ></app-file-drag-drop>
     </section>
   </div>

@@ -134,8 +134,10 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
-        [showServerError]="showProposalMapServerError"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+        [showUnknownError]="showProposalMapUnknownError"
       ></app-file-drag-drop>
     </div>
   </div>
@@ -177,8 +179,10 @@
           [showErrors]="showErrors"
           [allowMultiple]="true"
           [isRequired]="true"
-          [showVirusError]="showProofOfAdvertisingVirus"
-          [showServerError]="showProofOfAdvertisingServerError"
+          [showHasVirusError]="showProofOfAdvertisingHasVirusError"
+          [showVirusScanFailedError]="showProofOfAdvertisingVirusScanFailedError"
+          [showVirusScanFailedError]="showProofOfAdvertisingVirusScanFailedError"
+          [showUnknownError]="showProofOfAdvertisingUnknownError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -196,8 +200,10 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [allowMultiple]="true"
-          [showVirusError]="showProofOfSignageVirus"
-          [showServerError]="showProofOfSignageServerError"
+          [showHasVirusError]="showProofOfSignageHasVirusError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
+          [showUnknownError]="showProofOfSignageUnknownError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -212,8 +218,9 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [allowMultiple]="true"
-          [showVirusError]="showReportOfPublicHearingVirus"
-          [showServerError]="showReportOfPublicHearingServerError"
+          [showHasVirusError]="showReportOfPublicHearingHasVirusError"
+          [showVirusScanFailedError]="showReportOfPublicHearingVirusScanFailedError"
+          [showUnknownError]="showReportOfPublicHearingUnknownError"
         ></app-file-drag-drop>
       </div>
     </div>

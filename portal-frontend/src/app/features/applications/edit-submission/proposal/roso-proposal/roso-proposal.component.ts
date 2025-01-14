@@ -26,6 +26,7 @@ import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { AddStructureDialogComponent } from '../../../../../features/notice-of-intents/edit-submission/additional-information/add-structure-dialog/add-structure-dialog.component';
 import { ProposedStructure } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { v4 } from 'uuid';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-roso-proposal',
@@ -53,14 +54,18 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   reclamationPlan: ApplicationDocumentDto[] = [];
   buildingPlans: ApplicationDocumentDto[] = [];
 
-  showProposalMapVirus = false;
-  showProposalMapServerError = false;
-  showCrossSectionVirus = false;
-  showCrossSectionServerError = false;
-  showReclamationPlanVirus = false;
-  showReclamationPlanServerError = false;
-  showBuildingPlanVirus = false;
-  showBuildingPlanServerError = false;
+  showProposalMapHasVirusError = false;
+  showProposalMapVirusScanFailedError = false;
+  showProposalMapUnknownError = false;
+  showCrossSectionHasVirusError = false;
+  showCrossSectionVirusScanFailedError = false;
+  showCrossSectionUnknownError = false;
+  showReclamationPlanHasVirusError = false;
+  showReclamationPlanVirusScanFailedError = false;
+  showReclamationPlanUnknownError = false;
+  showBuildingPlanHasVirusError = false;
+  showBuildingPlanVirusScanFailedError = false;
+  showBuildingPlanUnknownError = false;
 
   isNewStructure = new FormControl<boolean | null>(null, [Validators.required]);
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);
@@ -189,23 +194,67 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   async attachProposalMap(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.showProposalMapVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.showProposalMapHasVirusError = false;
+      this.showProposalMapVirusScanFailedError = false;
+      this.showProposalMapUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showProposalMapUnknownError =
+        !this.showProposalMapHasVirusError && !this.showProposalMapVirusScanFailedError;
+    }
   }
 
   async attachCrossSection(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
-    this.showCrossSectionVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
+      this.showCrossSectionHasVirusError = false;
+      this.showCrossSectionVirusScanFailedError = false;
+      this.showCrossSectionUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showCrossSectionHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showCrossSectionVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showCrossSectionUnknownError =
+        !this.showCrossSectionHasVirusError && !this.showCrossSectionVirusScanFailedError;
+    }
   }
 
   async attachReclamationPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
-    this.showReclamationPlanVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
+      this.showReclamationPlanHasVirusError = false;
+      this.showReclamationPlanVirusScanFailedError = false;
+      this.showReclamationPlanUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showReclamationPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showReclamationPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showReclamationPlanUnknownError =
+        !this.showReclamationPlanHasVirusError && !this.showReclamationPlanVirusScanFailedError;
+    }
   }
 
   async attachBuildingPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
-    this.showBuildingPlanVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+      this.showBuildingPlanHasVirusError = false;
+      this.showBuildingPlanVirusScanFailedError = false;
+      this.showBuildingPlanUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showBuildingPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showBuildingPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showBuildingPlanUnknownError =
+        !this.showBuildingPlanHasVirusError && !this.showBuildingPlanVirusScanFailedError;
+    }
   }
 
   protected async save() {

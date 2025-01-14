@@ -22,6 +22,7 @@ import { FileHandle } from '../../file-drag-drop/drag-drop.directive';
 import { openFileInline } from '../../utils/file';
 import { strictEmailValidator } from '../../validators/email-validator';
 import { ToastService } from '../../../services/toast/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-owner-dialog',
@@ -39,8 +40,9 @@ export class OwnerDialogComponent {
   corporateSummary = new FormControl<string | null>(null);
 
   isEdit = false;
-  showVirusError = false;
-  showServerError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
+  showUnknownError = false;
   existingUuid: string | undefined;
   files: ApplicationDocumentDto[] = [];
   showFileErrors = false;
@@ -101,7 +103,7 @@ export class OwnerDialogComponent {
       this.corporateSummary.setValidators([Validators.required]);
     } else {
       this.organizationName.setValidators([]);
-      this.corporateSummary.setValidators([]); 
+      this.corporateSummary.setValidators([]);
     }
     this.corporateSummary.updateValueAndValidity();
     this.organizationName.updateValueAndValidity();
@@ -184,7 +186,7 @@ export class OwnerDialogComponent {
       let document;
       if (this.pendingFile) {
         document = await this.uploadPendingFile(this.pendingFile);
-      } else { 
+      } else {
         document = this.type.value === OWNER_TYPE.ORGANIZATION ? this.data.existingOwner?.corporateSummary : null;
       }
 
@@ -217,7 +219,7 @@ export class OwnerDialogComponent {
     this.corporateSummary.setValue('pending');
     const corporateSummaryType = this.documentCodes.find((code) => code.code === DOCUMENT_TYPE.CORPORATE_SUMMARY);
     if (corporateSummaryType) {
-      this.showVirusError = false;
+      this.showHasVirusError = false;
       this.files = [
         {
           type: corporateSummaryType,
@@ -270,21 +272,27 @@ export class OwnerDialogComponent {
   }
 
   private async uploadPendingFile(file?: File) {
-    let documentUuid;
     if (file) {
       try {
-        documentUuid = await this.data.ownerService.uploadCorporateSummary(this.data.fileId, file);
+        const documentUuid = await this.data.ownerService.uploadCorporateSummary(this.data.fileId, file);
         this.toastService.showSuccessToast('Document uploaded');
-      } catch (e) {
-        this.showVirusError = true;
+        this.showHasVirusError = false;
+        this.showVirusScanFailedError = false;
+        this.showUnknownError = false;
+        return documentUuid;
+      } catch (err) {
+        if (err instanceof HttpErrorResponse) {
+          this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+          this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+        }
         this.pendingFile = undefined;
         this.corporateSummary.setValue(null);
         this.files = [];
         this.toastService.showErrorToast('Document upload failed');
-        return;
       }
     }
-    return documentUuid;
+    this.showUnknownError = !this.showHasVirusError && !this.showVirusScanFailedError;
+    return;
   }
 
   private async loadDocumentCodes() {

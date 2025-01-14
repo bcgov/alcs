@@ -215,8 +215,9 @@
       (openFile)="openFile($event)"
       [showErrors]="showErrors"
       [isRequired]="true"
-      [showVirusError]="showProposalMapVirus"
-      [showServerError]="showProposalMapServerError"
+      [showHasVirusError]="showProposalMapHasVirusError"
+      [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+      [showUnknownError]="showProposalMapUnknownError"
     ></app-file-drag-drop>
   </div>
   <div class="full-row">
@@ -241,7 +242,7 @@
       <mat-button-toggle
         class="toggle-button"
         [ngClass]="{
-          'error-outline': isHomeSiteSeverance.invalid && (isHomeSiteSeverance.dirty || isHomeSiteSeverance.touched)
+          'error-outline': isHomeSiteSeverance.invalid && (isHomeSiteSeverance.dirty || isHomeSiteSeverance.touched),
         }"
         value="true"
         >Yes
@@ -249,7 +250,7 @@
       <mat-button-toggle
         class="toggle-button"
         [ngClass]="{
-          'error-outline': isHomeSiteSeverance.invalid && (isHomeSiteSeverance.dirty || isHomeSiteSeverance.touched)
+          'error-outline': isHomeSiteSeverance.invalid && (isHomeSiteSeverance.dirty || isHomeSiteSeverance.touched),
         }"
         value="false"
         >No
@@ -272,8 +273,9 @@
       [isRequired]="isHomeSiteSeverance.getRawValue() !== 'true'"
       [allowMultiple]="true"
       [disabled]="isHomeSiteSeverance.getRawValue() !== 'true'"
-      [showVirusError]="showHomesiteSeveranceVirus"
-      [showServerError]="showHomesiteSeveranceServerError"
+      [showHasVirusError]="showHomesiteSeveranceHasVirusError"
+      [showVirusScanFailedError]="showHomesiteSeveranceVirusScanFailedError"
+      [showUnknownError]="showHomesiteSeveranceUnknownError"
     ></app-file-drag-drop>
   </div>
 </form>

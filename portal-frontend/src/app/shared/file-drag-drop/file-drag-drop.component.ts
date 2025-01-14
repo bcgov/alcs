@@ -19,8 +19,9 @@ export class FileDragDropComponent implements OnInit {
   @Input() uploadedFiles: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
   @Input() isRequired = false;
   @Input() showErrors = false;
-  @Input() showVirusError = false;
-  @Input() showServerError = false;
+  @Input() showHasVirusError = false;
+  @Input() showVirusScanFailedError = false;
+  @Input() showUnknownError = false;
 
   private uploadClicked = false;
 

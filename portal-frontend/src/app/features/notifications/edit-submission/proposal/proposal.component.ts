@@ -18,6 +18,7 @@ import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { ChangeSurveyPlanConfirmationDialogComponent } from './change-survey-plan-confirmation-dialog/change-survey-plan-confirmation-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-proposal',
@@ -48,17 +49,19 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   private submissionUuid = '';
   private isDirty = false;
   surveyForm = new FormGroup({} as any);
-  showSRWTermsVirus = false;
-  showSRWTermsServerError = false;
-  showSurveyPlanVirus = false;
-  showSurveyPlanServerError = false;
+  showSRWTermsHasVirusError = false;
+  showSRWTermsVirusScanFailedError = false;
+  showSRWTermsUnknownError = false;
+  showSurveyPlanHasVirusError = false;
+  showSurveyPlanVirusScanFailedError = false;
+  showSurveyPlanUnknownError = false;
 
   constructor(
     private router: Router,
     private notificationSubmissionService: NotificationSubmissionService,
     notificationDocumentService: NotificationDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(notificationDocumentService, dialog, toastService);
   }
@@ -100,13 +103,33 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   }
 
   async attachSRWTerms(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.SRW_TERMS);
-    this.showSRWTermsVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.SRW_TERMS);
+      this.showSRWTermsHasVirusError = false;
+      this.showSRWTermsVirusScanFailedError = false;
+      this.showSRWTermsUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showSRWTermsHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showSRWTermsVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showSRWTermsUnknownError = !this.showSRWTermsHasVirusError && !this.showSRWTermsVirusScanFailedError;
+    }
   }
 
   async attachSurveyPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.SURVEY_PLAN);
-    this.showSurveyPlanVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.SURVEY_PLAN);
+      this.showSurveyPlanHasVirusError = false;
+      this.showSurveyPlanVirusScanFailedError = false;
+      this.showSurveyPlanUnknownError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showSurveyPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showSurveyPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+      this.showSurveyPlanUnknownError = !this.showSurveyPlanHasVirusError && !this.showSurveyPlanVirusScanFailedError;
+    }
   }
 
   async onSave() {

@@ -120,8 +120,9 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
-        [showServerError]="showProposalMapServerError"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+        [showUnknownError]="showProposalMapUnknownError"
       ></app-file-drag-drop>
     </div>
     <div class="full-row">

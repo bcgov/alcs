@@ -28,7 +28,11 @@
   [ngClass]="{
     'desktop-file-drag-drop': true,
     'error-outline':
-      !disabled && ((isRequired && showErrors && !uploadedFiles.length) || showVirusError || showServerError),
+      !disabled &&
+      ((isRequired && showErrors && !uploadedFiles.length) ||
+        showHasVirusError ||
+        showVirusScanFailedError ||
+        showUnknownError),
     disabled: disabled,
   }"
   dragDropFile
@@ -56,10 +60,13 @@
 <app-validation-error *ngIf="isRequired && !disabled && showErrors && !uploadedFiles.length" errorClass="field-error">
   This file upload is required
 </app-validation-error>
-<app-validation-error *ngIf="!disabled && showVirusError" errorClass="field-error">
+<app-validation-error *ngIf="!disabled && showHasVirusError" errorClass="field-error">
   A virus was detected in the file. Choose another file and try again.
 </app-validation-error>
-<app-validation-error *ngIf="!disabled && showServerError" errorClass="field-error">
+<app-validation-error *ngIf="!disabled && showVirusScanFailedError" errorClass="field-error">
+  A problem occurred while scanning for viruses. Please try again.
+</app-validation-error>
+<app-validation-error *ngIf="!disabled && showUnknownError" errorClass="field-error">
   There was a problem uploading the file. Please try again.
 </app-validation-error>
 <mat-hint class="subtext">Maximum file size: 100 MB</mat-hint>
