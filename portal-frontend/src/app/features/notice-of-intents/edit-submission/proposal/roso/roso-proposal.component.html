@@ -40,7 +40,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="true"
             >Yes
@@ -48,7 +48,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
             }"
             value="false"
             >No
@@ -180,7 +180,8 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
 
@@ -199,7 +200,7 @@
             class="toggle-button"
             [ngClass]="{
               'error-outline':
-                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)
+                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched),
             }"
             value="true"
             >Yes
@@ -208,7 +209,7 @@
             class="toggle-button"
             [ngClass]="{
               'error-outline':
-                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)
+                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched),
             }"
             value="false"
             >No
@@ -239,7 +240,8 @@
         [isRequired]="true"
         [allowMultiple]="true"
         [disabled]="!allowMiningUploads"
-        [showVirusError]="showCrossSectionVirus"
+        [showHasVirusError]="showCrossSectionHasVirusError"
+        [showVirusScanFailedError]="showCrossSectionVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
@@ -267,7 +269,8 @@
         [isRequired]="true"
         [allowMultiple]="true"
         [disabled]="!allowMiningUploads"
-        [showVirusError]="showReclamationPlanVirus"
+        [showHasVirusError]="showReclamationPlanHasVirusError"
+        [showVirusScanFailedError]="showReclamationPlanVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
 
@@ -286,7 +289,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)
+              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched),
             }"
             value="true"
             >Yes
@@ -294,7 +297,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)
+              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched),
             }"
             value="false"
             >No
@@ -324,7 +327,8 @@
         [isRequired]="true"
         [disabled]="!requiresNoticeOfWork"
         [allowMultiple]="true"
-        [showVirusError]="showNoticeOfWorkVirus"
+        [showHasVirusError]="showNoticeOfWorkHasVirusError"
+        [showVirusScanFailedError]="showNoticeOfWorkVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
   </div>

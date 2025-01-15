@@ -28,7 +28,6 @@ import { SubdInputComponent } from './decision-v2/decision-input/decision-compon
 import { DecisionComponentsComponent } from './decision-v2/decision-input/decision-components/decision-components.component';
 import { DecisionConditionComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition.component';
 import { DecisionConditionsComponent } from './decision-v2/decision-input/decision-conditions/decision-conditions.component';
-import { DecisionDocumentUploadDialogComponent } from './decision-v2/decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
 import { DecisionInputV2Component } from './decision-v2/decision-input/decision-input-v2.component';
 import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
@@ -72,7 +71,6 @@ export const decisionChildRoutes = [
     DecisionConditionDateDialogComponent,
     DecisionComponentComponent,
     DecisionComponentsComponent,
-    DecisionDocumentUploadDialogComponent,
     RevertToDraftDialogComponent,
     DecisionDocumentsComponent,
     NfuInputComponent,

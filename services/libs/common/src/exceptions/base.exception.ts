@@ -1,32 +1,37 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class BaseErrorResponseModel {
-  constructor(statusCode: number, message: string, path?: string) {
+  constructor(statusCode: number, name: string, message: string, path?: string) {
     this.statusCode = statusCode;
+    this.name = name;
     this.message = message;
     this.path = path;
   }
 
   statusCode: number;
-  path: string | undefined;
+  name: string;
   message: string;
+  path: string | undefined;
 }
 
 export class BaseServiceException extends HttpException {
-  constructor(error: string | Record<string, any>, status?: number) {
+  constructor(error: string | Record<string, any>, status?: number, name?: string) {
     super(error, status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    if (name) {
+      this.name = name;
+    }
   }
 }
 
 export class ServiceValidationException extends BaseServiceException {
-  constructor(error: string | Record<string, any>) {
-    super(error, HttpStatus.BAD_REQUEST);
+  constructor(error: string | Record<string, any>, name?: string) {
+    super(error, HttpStatus.BAD_REQUEST, name);
   }
 }
 
 export class ServiceNotFoundException extends BaseServiceException {
-  constructor(error: string | Record<string, any>) {
-    super(error, HttpStatus.NOT_FOUND);
+  constructor(error: string | Record<string, any>, name?: string) {
+    super(error, HttpStatus.NOT_FOUND, name);
   }
 }
 

@@ -2,10 +2,10 @@ import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-document/noi-document.service';
-import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
-import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
-import { ToastService } from '../../../../services/toast/toast.service';
+import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
+import { ApplicationParcelService } from '../../services/application/application-parcel/application-parcel.service';
+import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
+import { ToastService } from '../../services/toast/toast.service';
 
 import { DocumentUploadDialogComponent } from './document-upload-dialog.component';
 
@@ -13,12 +13,14 @@ describe('DocumentUploadDialogComponent', () => {
   let component: DocumentUploadDialogComponent;
   let fixture: ComponentFixture<DocumentUploadDialogComponent>;
 
-  let mockNoiDocService: DeepMocked<NoiDocumentService>;
-  let mockParcelService: DeepMocked<NoticeOfIntentParcelService>;
-  let mockSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
+  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockParcelService: DeepMocked<ApplicationParcelService>;
+  let mockSubmissionService: DeepMocked<ApplicationSubmissionService>;
 
   beforeEach(async () => {
-    mockNoiDocService = createMock();
+    mockAppDocService = createMock();
+    mockParcelService = createMock();
+    mockSubmissionService = createMock();
 
     const mockDialogRef = {
       close: jest.fn(),
@@ -31,15 +33,15 @@ describe('DocumentUploadDialogComponent', () => {
       declarations: [DocumentUploadDialogComponent],
       providers: [
         {
-          provide: NoiDocumentService,
-          useValue: mockNoiDocService,
+          provide: ApplicationDocumentService,
+          useValue: mockAppDocService,
         },
         {
-          provide: NoticeOfIntentParcelService,
+          provide: ApplicationParcelService,
           useValue: mockParcelService,
         },
         {
-          provide: NoticeOfIntentSubmissionService,
+          provide: ApplicationSubmissionService,
           useValue: mockSubmissionService,
         },
         { provide: MatDialogRef, useValue: mockDialogRef },

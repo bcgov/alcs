@@ -1,8 +1,5 @@
 <div mat-dialog-title>
   <h4>{{ title }} Document</h4>
-  <span *ngIf="showSupersededWarning" class="superseded-warning"
-    >Superseded - Not associated with Applicant Submission in Portal</span
-  >
 </div>
 <div mat-dialog-content>
   <form [formGroup]="form" class="form">
@@ -15,7 +12,7 @@
         *ngIf="!pendingFile && !existingFile"
         [ngClass]="{
           'file-drag-drop': true,
-          error: showVirusError
+          error: showHasVirusError || showVirusScanFailedError,
         }"
         class="full-width upload-button"
         appDragDropFile
@@ -43,15 +40,18 @@
       <div *ngIf="existingFile" class="file">
         <div>
           <a (click)="openExistingFile()">{{ existingFile.name }}</a>
-          &nbsp;({{ existingFile.size | filesize }})
         </div>
         <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
           <mat-icon>close</mat-icon>
           Remove
         </button>
       </div>
-      <mat-error *ngIf="showVirusError" class="left" style="display: flex">
+
+      <mat-error *ngIf="showHasVirusError" class="left" style="display: flex">
         <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
+      </mat-error>
+      <mat-error *ngIf="showVirusScanFailedError" class="left" style="display: flex">
+        <mat-icon>warning</mat-icon>&nbsp;There was a problem scanning the file for viruses. Please try again.
       </mat-error>
     </div>
 
@@ -59,26 +59,25 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Document Name</mat-label>
         <input [formControl]="name" id="name" matInput name="name" required />
-        <span matTextSuffix>{{ this.extension }}</span>
+        <span matTextSuffix>{{ extension }}</span>
       </mat-form-field>
     </div>
 
     <div>
       <ng-select
+        formControlName="type"
         (change)="onDocTypeSelected($event)"
-        [(ngModel)]="documentTypeAhead"
-        [items]="documentTypes"
-        [ngModelOptions]="{ standalone: true }"
         [searchFn]="filterDocumentTypes"
-        appearance="outline"
         appendTo="body"
+        [items]="documentTypes"
         bindLabel="label"
         bindValue="code"
+        appearance="outline"
         placeholder="Document Type*"
-        required
       >
       </ng-select>
     </div>
+
     <div>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Source</mat-label>
@@ -87,11 +86,11 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
+    <div *ngIf="data.selectableParcels && type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Parcel</mat-label>
         <mat-select [formControl]="parcelId">
-          <mat-option *ngFor="let parcel of selectableParcels" [value]="parcel.uuid">
+          <mat-option *ngFor="let parcel of data.selectableParcels" [value]="parcel.uuid">
             #{{ parcel.index + 1 }} PID:
             <span *ngIf="parcel.pid">{{ parcel.pid | mask: '000-000-000' }}</span>
             <span *ngIf="!parcel.pid">No Data</span></mat-option
@@ -99,22 +98,28 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
+    <div *ngIf="data.selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Organization</mat-label>
         <mat-select [formControl]="ownerId">
-          <mat-option *ngFor="let owner of selectableOwners" [value]="owner.uuid">
+          <mat-option *ngFor="let owner of data.selectableOwners" [value]="owner.uuid">
             {{ owner.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="double">
+    <div *ngIf="data.allowedVisibilityFlags" class="double">
       <mat-label>Visible To:</mat-label>
-      <div>
-        <mat-checkbox [formControl]="visibleToInternal">Applicant, L/FNG</mat-checkbox>
+      <div
+        *ngIf="
+          data.allowedVisibilityFlags?.includes('A') ||
+          data.allowedVisibilityFlags?.includes('C') ||
+          data.allowedVisibilityFlags?.includes('G')
+        "
+      >
+        <mat-checkbox [formControl]="visibleToInternal">{{ internalVisibilityLabel }}</mat-checkbox>
       </div>
-      <div>
+      <div *ngIf="data.allowedVisibilityFlags?.includes('P')">
         <mat-checkbox [formControl]="visibleToPublic">Public</mat-checkbox>
       </div>
     </div>

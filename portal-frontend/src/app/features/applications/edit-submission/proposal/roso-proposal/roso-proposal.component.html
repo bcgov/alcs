@@ -224,12 +224,22 @@
             <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>#</th>
-                <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">{{ i + 1 }}</td>
+                <td
+                  mat-cell
+                  *matCellDef="let i = dataIndex; let element"
+                  [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                >
+                  {{ i + 1 }}
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="type">
                 <th mat-header-cell *matHeaderCellDef>Type</th>
-                <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
+                <td
+                  mat-cell
+                  *matCellDef="let i = dataIndex; let element"
+                  [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                >
                   <mat-form-field appearance="outline">
                     <mat-select
                       [value]="element.type"
@@ -260,7 +270,11 @@
 
               <ng-container matColumnDef="area">
                 <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
-                <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
+                <td
+                  mat-cell
+                  *matCellDef="let i = dataIndex; let element"
+                  [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                >
                   <mat-form-field appearance="outline">
                     <input
                       type="text"
@@ -293,7 +307,11 @@
 
               <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef>Action</th>
-                <td mat-cell *matCellDef="let i = dataIndex; let element" [ngClass]="{ 'no-bottom-border': isWarning(i, element) }">
+                <td
+                  mat-cell
+                  *matCellDef="let i = dataIndex; let element"
+                  [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                >
                   <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
                     Remove
                   </button>
@@ -561,7 +579,8 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
 
@@ -587,7 +606,8 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [allowMultiple]="true"
-          [showVirusError]="showCrossSectionVirus"
+          [showHasVirusError]="showCrossSectionHasVirusError"
+          [showVirusScanFailedError]="showCrossSectionVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
 
@@ -615,7 +635,8 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [allowMultiple]="true"
-          [showVirusError]="showReclamationPlanVirus"
+          [showHasVirusError]="showReclamationPlanHasVirusError"
+          [showVirusScanFailedError]="showReclamationPlanVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
     </ng-container>
@@ -634,7 +655,8 @@
           (deleteFile)="onDeleteFile($event)"
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
-          [showVirusError]="showBuildingPlanVirus"
+          [showHasVirusError]="showBuildingPlanHasVirusError"
+          [showVirusScanFailedError]="showBuildingPlanVirusScanFailedError"
           [isRequired]="true"
           [allowMultiple]="true"
         ></app-file-drag-drop>

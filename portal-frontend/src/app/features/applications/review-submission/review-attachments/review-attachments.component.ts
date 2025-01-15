@@ -8,6 +8,7 @@ import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-submission.component';
 import { openFileInline } from '../../../../shared/utils/file';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-review-attachments',
@@ -32,14 +33,18 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   isAuthorized = false;
   showMandatoryUploads = false;
   hasCompletedPreviousSteps = false;
-  showResolutionVirusError = false;
-  showStaffReportVirusError = false;
-  showOtherVirusError = false;
+
+  showResolutionHasVirusError = false;
+  showResolutionVirusScanFailedError = false;
+  showStaffReportHasVirusError = false;
+  showStaffReportVirusScanFailedError = false;
+  showOtherHasVirusError = false;
+  showOtherVirusScanFailedError = false;
 
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -69,11 +74,11 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.resolutionDocument = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
       );
       this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
       this.otherAttachments = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG,
       );
     });
   }
@@ -86,18 +91,42 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   }
 
   async attachStaffReport(fileHandle: FileHandle) {
-    const res = await this.attachFile(fileHandle, DOCUMENT_TYPE.STAFF_REPORT);
-    this.showStaffReportVirusError = !res;
+    try {
+      await this.attachFile(fileHandle, DOCUMENT_TYPE.STAFF_REPORT);
+      this.showStaffReportHasVirusError = false;
+      this.showStaffReportVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showStaffReportHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showStaffReportVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachResolutionDocument(fileHandle: FileHandle) {
-    const res = await this.attachFile(fileHandle, DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
-    this.showResolutionVirusError = !res;
+    try {
+      await this.attachFile(fileHandle, DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
+      this.showResolutionHasVirusError = false;
+      this.showResolutionVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showResolutionHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showResolutionVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachOtherDocument(fileHandle: FileHandle) {
-    const res = await this.attachFile(fileHandle, DOCUMENT_TYPE.OTHER);
-    this.showOtherVirusError = !res;
+    try {
+      await this.attachFile(fileHandle, DOCUMENT_TYPE.OTHER);
+      this.showOtherHasVirusError = false;
+      this.showOtherVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showOtherHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showOtherVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   private async attachFile(fileHandle: FileHandle, documentType: DOCUMENT_TYPE) {
@@ -107,15 +136,16 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
           this.fileId,
           fileHandle.file,
           documentType,
-          DOCUMENT_SOURCE.LFNG
+          DOCUMENT_SOURCE.LFNG,
         );
-      } catch (e) {
+        this.toastService.showSuccessToast('Document uploaded');
+      } catch (err) {
         this.toastService.showErrorToast('Document upload failed');
-        return false;
+
+        throw err;
       }
       await this.loadApplicationDocuments(this.fileId);
     }
-    return true;
   }
 
   async deleteFile($event: ApplicationDocumentDto) {

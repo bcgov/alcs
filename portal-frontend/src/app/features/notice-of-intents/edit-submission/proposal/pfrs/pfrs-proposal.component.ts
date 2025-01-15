@@ -16,6 +16,7 @@ import { parseStringToBoolean } from '../../../../../shared/utils/string-helper'
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { EditNoiSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-pfrs-proposal',
@@ -34,10 +35,14 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   allowMiningUploads = false;
   requiresNoticeOfWork = false;
-  showProposalMapVirus = false;
-  showCrossSectionVirus = false;
-  showReclamationPlanVirus = false;
-  showNoticeOfWorkVirus = false;
+  showProposalMapHasVirusError = false;
+  showProposalMapVirusScanFailedError = false;
+  showCrossSectionHasVirusError = false;
+  showCrossSectionVirusScanFailedError = false;
+  showReclamationPlanHasVirusError = false;
+  showReclamationPlanVirusScanFailedError = false;
+  showNoticeOfWorkHasVirusError = false;
+  showNoticeOfWorkVirusScanFailedError = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];
@@ -81,7 +86,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(noticeOfIntentDocumentService, dialog, toastService);
   }
@@ -166,23 +171,55 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   async attachProposalMap(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.showProposalMapVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.showProposalMapHasVirusError = false;
+      this.showProposalMapVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachCrossSection(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
-    this.showCrossSectionVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
+      this.showCrossSectionHasVirusError = false;
+      this.showCrossSectionVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showCrossSectionHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showCrossSectionVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachReclamationPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
-    this.showReclamationPlanVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
+      this.showReclamationPlanHasVirusError = false;
+      this.showReclamationPlanVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showReclamationPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showReclamationPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachNoticeOfWork(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.NOTICE_OF_WORK);
-    this.showNoticeOfWorkVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.NOTICE_OF_WORK);
+      this.showNoticeOfWorkHasVirusError = false;
+      this.showNoticeOfWorkVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showNoticeOfWorkHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showNoticeOfWorkVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   protected async save() {

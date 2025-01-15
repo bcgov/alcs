@@ -35,10 +35,7 @@ describe('HttpExceptionFilter', () => {
     });
 
     it('should call global HttpExceptionFilter', () => {
-      const mockHttpException = new HttpException(
-        { message: 'Sample Exception' },
-        HttpStatus.BAD_REQUEST,
-      );
+      const mockHttpException = new HttpException({ message: 'Sample Exception' }, HttpStatus.BAD_REQUEST);
       service.catch(mockHttpException, mockArgumentsHost);
 
       expect(mockHttpArgumentsHost).toBeCalledTimes(1);
@@ -51,6 +48,7 @@ describe('HttpExceptionFilter', () => {
       expect(mockSend).toBeCalledWith(
         new BaseErrorResponseModel(
           mockHttpException.getStatus(),
+          mockHttpException.name,
           mockHttpException.message,
           mockGetRequest().url,
         ),

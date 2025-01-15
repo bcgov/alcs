@@ -38,24 +38,22 @@ export abstract class FilesStepComponent extends StepComponent {
       await this.save();
       const mappedFiles = file.file;
 
-      let res;
       try {
-        res = await this.noticeOfIntentDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
+        const res = await this.noticeOfIntentDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
+
+        if (res) {
+          this.toastService.showSuccessToast('Document uploaded');
+          const documents = await this.noticeOfIntentDocumentService.getByFileId(this.fileId);
+          if (documents) {
+            this.$noiDocuments.next(documents);
+          }
+        }
       } catch (err) {
         this.toastService.showErrorToast('Document upload failed');
-        if (err instanceof HttpErrorResponse && err.status === 403) {
-          return false;
-        }
-      }
 
-      if (res) {
-        const documents = await this.noticeOfIntentDocumentService.getByFileId(this.fileId);
-        if (documents) {
-          this.$noiDocuments.next(documents);
-        }
+        throw err;
       }
     }
-    return true;
   }
 
   async onDeleteFile($event: NoticeOfIntentDocumentDto) {
