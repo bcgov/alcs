@@ -92,6 +92,7 @@ export interface ApplicationDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize?: number;
 }
 
 export interface DecisionMakerDto extends BaseCodeDto {}

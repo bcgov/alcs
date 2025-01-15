@@ -17,12 +17,12 @@ export function getEndDate(uuid: string | undefined, conditions: Record<string, 
     .map((x) => x.dates?.map((x) => x.date))
   : [];
   if (dates.length === 0) {
-    return null;
+    return 'approved';
   }
   const reducedDates = dates
   .reduce((pre, cur) => pre?.concat(cur))
     ?.filter((x) => x !== null)
     .sort().reverse();
   const lastDate = reducedDates && reducedDates.length > 0 ? reducedDates[0] : null;
-  return lastDate ? moment(lastDate).format('YYYY-MMM-DD') : null;
+  return lastDate ? `approved until: ${moment(lastDate).format('YYYY-MMM-DD')}` : 'approved until: No Data';
 }

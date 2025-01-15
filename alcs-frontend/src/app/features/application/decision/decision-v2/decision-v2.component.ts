@@ -7,6 +7,7 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
+  ApplicationDecisionDocumentDto,
   ApplicationDecisionWithLinkedResolutionDto,
   CeoCriterionDto,
   DecisionMakerDto,
@@ -29,6 +30,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { ApplicationConditionWithStatus, getEndDate } from '../../../../shared/utils/decision-methods';
+import { openFileInline } from '../../../../shared/utils/file';
 
 type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
@@ -300,6 +302,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
 
   getDate(uuid: string | undefined) {
     return getEndDate(uuid, this.conditions);
+  }
+
+  async openFile(decisionUuid: string, fileUuid: string, fileName: string) {
+    await this.decisionService.downloadFile(decisionUuid, fileUuid, fileName);
   }
 
   private getPillLabel(status: string) {
