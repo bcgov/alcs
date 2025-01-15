@@ -5,6 +5,7 @@ section {
 }
 
 h4 {
+  padding-top: 15px;
   margin-bottom: 12px !important;
 }
 
@@ -120,6 +121,19 @@ hr {
 
 .conditions-link-icon {
   position: absolute;
+}
+
+.document {
+  padding: 9px 16px;
+  border-radius: 4px;
+  border: 1px solid colors.$grey;
+  background: colors.$white;
+  margin: 8px 0;
+}
+
+.align-right {
+  display: flex;
+  justify-content: flex-end;
 }
 
 :host ::ng-deep {

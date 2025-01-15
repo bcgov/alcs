@@ -259,6 +259,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     return getEndDate(uuid, this.conditions);
   }
 
+  async openFile(decisionUuid: string, fileUuid: string, fileName: string) {
+    await this.decisionService.downloadFile(decisionUuid, fileUuid, fileName);
+  }
+
   private getPillLabel(status: string) {
     switch (status) {
       case 'ONGOING':

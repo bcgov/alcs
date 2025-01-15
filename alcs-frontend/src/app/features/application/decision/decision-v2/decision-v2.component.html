@@ -110,12 +110,37 @@
             {{ decision.date | momentFormat }}
             <app-no-data *ngIf="decision.date === null || decision.date === undefined"></app-no-data>
           </div>
-          <div>
+          <div class="align-right">
             <span class="subheading2">Decision Maker: </span>
             {{ decision.decisionMaker?.label }}
             <app-no-data *ngIf="decision.decisionMaker === null || decision.decisionMaker === undefined"></app-no-data>
           </div>
-
+        </div>
+        <div class="component-summary">
+          <div *ngIf="decision.ceoCriterion">
+            <span class="subheading2">CEO Criterion: </span>
+            {{ decision.ceoCriterion?.label }}
+            <ng-container *ngIf="decision.isTimeExtension || decision.isOther">&#32;-&#32;</ng-container>
+            <ng-container *ngIf="decision.isTimeExtension">Time extension</ng-container>
+            <ng-container *ngIf="decision.isTimeExtension && decision.isOther">,&#32;</ng-container>
+            <ng-container *ngIf="decision.isOther">Other</ng-container>
+          </div>
+        </div>
+        <div class="component-summary">
+          <div *ngIf="decision.outcome?.code === 'RESC'">
+            <span class="subheading2">Rescinded Date: </span>
+            <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
+            <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
+          </div>
+        </div>
+        <div class="component-summary">
+          <div *ngIf="decision.outcome?.code === 'RESC'">
+            <span class="subheading2">Rescinded Comment: </span>
+            {{ decision.rescindedComment }}
+            <app-no-data *ngIf="!decision.rescindedComment"></app-no-data>
+          </div>
+        </div>
+        <div class="component-summary">
           <div class="full-width decision-description">
             {{ decision.decisionDescription }}
             <app-no-data
@@ -126,7 +151,7 @@
         <ng-container *ngFor="let component of decision.components; let index = index">
           <div class="component-summary">
             <span class="subheading2">{{ component.applicationDecisionComponentType?.label }} </span>
-            {{ getDate(component.uuid) ?  'approved until ' + getDate(component.uuid) : 'approved'}}
+            {{ getDate(component.uuid) }}
             <span class="subheading2">Conditions: </span>
             <ng-container *ngFor="let condition of getConditions(component.uuid)">
               <app-application-type-pill class="status-pill" *ngIf="condition !== null" [type]="condition"></app-application-type-pill>
@@ -146,6 +171,18 @@
             </div>
           </section>
         </ng-container>
+        <div class="full-width">
+          <div class="document split" *ngFor="let document of decision.documents">
+            <div>
+              <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>
+              &nbsp;({{ document.fileSize ? (document.fileSize | filesize) : '' }})
+            </div>
+            <button class="center" mat-button (click)="openFile(decision.uuid, document.uuid, document.fileName)">
+              <mat-icon>file_download</mat-icon>
+              Download
+            </button>
+          </div>
+        </div>
       </section>
       <ng-container *ngIf="isSummary">
         <!-- Components -->
