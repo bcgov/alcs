@@ -14,6 +14,9 @@ import {
 } from './application-decision-v2.dto';
 import { ApplicationDecisionStatus } from './application-condition-status.dto';
 
+export enum IncludeQueryParam {
+  CONDITION_STATUS = 'conditionStatus',
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -43,7 +46,9 @@ export class ApplicationDecisionV2Service {
 
   async getStatus(conditionUuid: string): Promise<ApplicationDecisionStatus> {
     try {
-      return await firstValueFrom(this.http.get<ApplicationDecisionStatus>(`${this.url}/condition/${conditionUuid}/status`));
+      return await firstValueFrom(
+        this.http.get<ApplicationDecisionStatus>(`${this.url}/condition/${conditionUuid}/status`),
+      );
     } catch (e: any) {
       this.toastService.showErrorToast(e.error?.message ?? 'No status found');
       throw e;
@@ -147,10 +152,11 @@ export class ApplicationDecisionV2Service {
     return await firstValueFrom(this.http.delete<{ url: string }>(url));
   }
 
-  async getByUuid(uuid: string) {
+  async getByUuid(uuid: string, includeConditionStatus: boolean = false) {
     let decision: ApplicationDecisionDto | undefined;
+    const url = `${this.url}/${uuid}${includeConditionStatus ? `?include=${IncludeQueryParam.CONDITION_STATUS}` : ''}`;
     try {
-      decision = await firstValueFrom(this.http.get<ApplicationDecisionDto>(`${this.url}/${uuid}`));
+      decision = await firstValueFrom(this.http.get<ApplicationDecisionDto>(url));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decision');
     }
