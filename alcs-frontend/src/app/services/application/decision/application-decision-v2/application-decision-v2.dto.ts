@@ -1,5 +1,6 @@
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { CardDto } from '../../../card/card.dto';
+import { ApplicationTypeDto } from '../../application-code.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -256,6 +257,7 @@ export interface ApplicationDecisionConditionDto {
   components?: ApplicationDecisionComponentDto[] | null;
   dates?: ApplicationDecisionConditionDateDto[];
   conditionCard?: ApplicationDecisionConditionCardDto | null;
+  status?: string | null;
 }
 
 export interface UpdateApplicationDecisionConditionDto {
@@ -299,6 +301,7 @@ export interface ApplicationDecisionConditionCardDto {
   conditions: ApplicationDecisionConditionDto[];
   cardUuid: string;
   decisionUuid: string;
+  applicationFileNumber: string;
 }
 
 export interface CreateApplicationDecisionConditionCardDto {
@@ -308,7 +311,8 @@ export interface CreateApplicationDecisionConditionCardDto {
 }
 
 export interface UpdateApplicationDecisionConditionCardDto {
-  conditionsUuids: string[];
+  conditionsUuids?: string[] | null;
+  cardStatusCode?: string | null;
 }
 
 export interface ApplicationDecisionConditionCardUuidDto {
@@ -320,4 +324,7 @@ export interface ApplicationDecisionConditionCardBoardDto {
   conditions: ApplicationDecisionConditionDto[];
   card: CardDto;
   decisionUuid: string;
+  fileNumber: string;
+  applicant: string;
+  type?: ApplicationTypeDto;
 }
