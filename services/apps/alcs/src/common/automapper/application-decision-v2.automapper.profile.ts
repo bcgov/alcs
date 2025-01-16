@@ -48,7 +48,6 @@ import {
   ApplicationDecisionConditionCardDto,
   ApplicationDecisionConditionCardUuidDto,
 } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
-import { Card } from '../../alcs/card/card.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
