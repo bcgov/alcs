@@ -95,6 +95,8 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap(() => ApplicationDecisionConditionCardUuidDto)
   conditionCard: ApplicationDecisionConditionCardUuidDto | null;
+
+  status?: string | null;
 }
 
 export class ComponentToConditionDto {
