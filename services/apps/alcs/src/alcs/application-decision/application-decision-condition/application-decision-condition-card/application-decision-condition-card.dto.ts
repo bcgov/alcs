@@ -1,8 +1,8 @@
 import { AutoMap } from 'automapper-classes';
 import { ApplicationDecisionConditionDto } from '../application-decision-condition.dto';
-import { IsArray, IsString, IsUUID } from 'class-validator';
-import { condition } from 'automapper-core';
+import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
 import { CardDto } from '../../../card/card.dto';
+import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
 
 export class ApplicationDecisionConditionCardDto {
   @AutoMap()
@@ -19,6 +19,10 @@ export class ApplicationDecisionConditionCardDto {
 
   @IsString()
   decisionUuid: string;
+
+  @IsString()
+  @IsOptional()
+  applicationFileNumber?: string | null;
 }
 
 export class CreateApplicationDecisionConditionCardDto {
@@ -38,7 +42,13 @@ export class CreateApplicationDecisionConditionCardDto {
 export class UpdateApplicationDecisionConditionCardDto {
   @AutoMap()
   @IsArray()
-  conditionsUuids: string[];
+  @IsOptional()
+  conditionsUuids?: string[] | null;
+
+  @AutoMap()
+  @IsString()
+  @IsOptional()
+  cardStatusCode?: string | null;
 }
 
 export class ApplicationDecisionConditionCardUuidDto {
@@ -52,7 +62,6 @@ export class ApplicationDecisionConditionCardBoardDto {
   @IsUUID()
   uuid: string;
 
-  @AutoMap(() => ApplicationDecisionConditionDto)
   @IsArray()
   conditions: ApplicationDecisionConditionDto[];
 
@@ -61,4 +70,20 @@ export class ApplicationDecisionConditionCardBoardDto {
 
   @IsString()
   decisionUuid: string;
+
+  @IsString()
+  fileNumber: string;
+
+  @IsString()
+  @IsOptional()
+  applicant?: string | null;
+
+  @IsOptional()
+  type?: ApplicationTypeDto | null;
+}
+
+export class UpdateApplicationDecisionConditionBoardCardDto {
+  @AutoMap()
+  @IsString()
+  cardStatusCode: string;
 }

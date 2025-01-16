@@ -8,6 +8,7 @@ import { Mapper } from 'automapper-core';
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../../../common/authorization/roles';
 import {
+  ApplicationDecisionConditionCardBoardDto,
   ApplicationDecisionConditionCardDto,
   CreateApplicationDecisionConditionCardDto,
   UpdateApplicationDecisionConditionCardDto,
@@ -48,5 +49,18 @@ export class ApplicationDecisionConditionCardController {
     const result = await this.service.update(uuid, dto);
 
     return await this.mapper.map(result, ApplicationDecisionConditionCard, ApplicationDecisionConditionCardDto);
+  }
+
+  @Get('/board-card/:uuid')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async getByCardUuid(@Param('uuid') uuid: string): Promise<ApplicationDecisionConditionCardBoardDto> {
+    const result = await this.service.getByBoardCard(uuid);
+    const dto = await this.mapper.map(
+      result,
+      ApplicationDecisionConditionCard,
+      ApplicationDecisionConditionCardBoardDto,
+    );
+    dto.fileNumber = result.decision.application.fileNumber;
+    return dto;
   }
 }

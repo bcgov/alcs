@@ -3,6 +3,7 @@ import {
   ApplicationDecisionConditionCardBoardDto,
   ApplicationDecisionConditionCardDto,
   CreateApplicationDecisionConditionCardDto,
+  UpdateApplicationDecisionConditionBoardCardDto,
   UpdateApplicationDecisionConditionCardDto,
 } from './application-decision-condition-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,6 +23,11 @@ import { ApplicationDecisionV2Service } from '../../application-decision-v2/appl
 import { Board } from '../../../board/board.entity';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
+import { ApplicationDecisionConditionDateService } from '../application-decision-condition-date/application-decision-condition-date.service';
+import { Application } from '../../../application/application.entity';
+import { ApplicationDto } from '../../../application/application.dto';
+import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
+import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
 
 @Injectable()
 export class ApplicationDecisionConditionCardService {
@@ -32,10 +38,22 @@ export class ApplicationDecisionConditionCardService {
     assignee: true,
   };
 
-  private DEFAULT_RELATIONS = {
+  private BOARD_CARD_RELATIONS = {
     card: this.CARD_RELATIONS,
     conditions: true,
-    decision: true,
+    decision: {
+      application: {
+        type: true,
+      },
+    },
+  };
+
+  private DEFAULT_RELATIONS = {
+    conditions: true,
+    card: true,
+    decision: {
+      application: true,
+    },
   };
 
   constructor(
@@ -66,7 +84,7 @@ export class ApplicationDecisionConditionCardService {
     }
 
     const card = new Card();
-    card.typeCode = CARD_TYPE.APP;
+    card.typeCode = CARD_TYPE.APP_CON;
     card.statusCode = dto.cardStatusCode;
     card.boardUuid = board.uuid;
     const newCard = await this.cardService.save(card);
@@ -105,27 +123,65 @@ export class ApplicationDecisionConditionCardService {
   async update(uuid: string, dto: UpdateApplicationDecisionConditionCardDto) {
     const applicationDecisionConditionCard = await this.get(uuid);
 
-    const conditions = await this.applicationDecisionConditionService.findByUuids(dto.conditionsUuids);
+    if (dto.conditionsUuids && dto.conditionsUuids.length > 0) {
+      const conditions = await this.applicationDecisionConditionService.findByUuids(dto.conditionsUuids);
 
-    if (conditions.length !== dto.conditionsUuids.length) {
-      throw new ServiceValidationException('Failed to fetch all conditions');
+      if (conditions.length !== dto.conditionsUuids.length) {
+        throw new ServiceValidationException('Failed to fetch all conditions');
+      }
+
+      applicationDecisionConditionCard.conditions = conditions;
     }
 
-    applicationDecisionConditionCard.conditions = conditions;
+    if (dto.cardStatusCode) {
+      let board: Board;
+      try {
+        board = await this.boardService.getApplicationDecisionConditionBoard();
+      } catch (error) {
+        throw new ServiceNotFoundException('Failed to fetch Application Decision Condition Board');
+      }
+
+      if (!board.statuses.find((status) => status.statusCode === dto.cardStatusCode)) {
+        throw new ServiceValidationException(`Invalid card status code: ${dto.cardStatusCode}`);
+      }
+
+      applicationDecisionConditionCard.card.statusCode = dto.cardStatusCode;
+    }
 
     return this.repository.save(applicationDecisionConditionCard);
   }
 
   async getByBoard(boardUuid: string): Promise<ApplicationDecisionConditionCard[]> {
-    return this.repository.find({
+    return await this.repository.find({
       where: { card: { boardUuid } },
-      relations: this.DEFAULT_RELATIONS,
+      relations: this.BOARD_CARD_RELATIONS,
     });
   }
 
+  async getByBoardCard(uuid: string): Promise<ApplicationDecisionConditionCard> {
+    const res = await this.repository.findOne({ where: { cardUuid: uuid }, relations: this.BOARD_CARD_RELATIONS });
+    if (!res) {
+      throw new ServiceNotFoundException(`Could not find card with UUID ${uuid}`);
+    }
+
+    return res;
+  }
+
   async mapToBoardDtos(applicationDecisionConditionCards: ApplicationDecisionConditionCard[]) {
-    return applicationDecisionConditionCards.map((card) =>
-      this.mapper.map(card, ApplicationDecisionConditionCard, ApplicationDecisionConditionCardBoardDto),
-    );
+    const dtos = applicationDecisionConditionCards.map((card) => {
+      const dto = this.mapper.map(card, ApplicationDecisionConditionCard, ApplicationDecisionConditionCardBoardDto);
+      dto.applicant = card.decision.application.applicant;
+      dto.fileNumber = card.decision.application.fileNumber;
+      dto.type = this.mapper.map(card.decision.application.type, ApplicationType, ApplicationTypeDto);
+      return dto;
+    });
+
+    for (const dto of dtos) {
+      for (const condition of dto.conditions) {
+        const status = await this.applicationDecisionService.getDecisionConditionStatus(condition.uuid);
+        condition.status = status !== '' ? status : undefined;
+      }
+    }
+    return dtos;
   }
 }
