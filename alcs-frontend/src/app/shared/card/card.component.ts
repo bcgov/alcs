@@ -42,6 +42,7 @@ export enum CardType {
   NOI_MODI = 'NOIM',
   NOTIFICATION = 'NOTI',
   INQUIRY = 'INQR',
+  APP_CON = 'APP_CON',
 }
 
 const lineHeight = 24;
