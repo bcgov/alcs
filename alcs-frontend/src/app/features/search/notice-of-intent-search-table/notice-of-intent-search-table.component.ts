@@ -79,7 +79,8 @@ export class NoticeOfIntentSearchTableComponent {
   }
 
   onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/notice-of-intent/${record.referenceId}`]));
+    const decisionUrl = record.status?.label === 'Decision Released' ? '/decision' : '';
+    const url = this.router.serializeUrl(this.router.createUrlTree([`/notice-of-intent/${record.referenceId}${decisionUrl}`]));
 
     window.open(url, '_blank');
   }
