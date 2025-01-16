@@ -206,7 +206,9 @@ export class ApplicationDecisionV2Service {
           type: true,
           components: true,
           dates: true,
+          conditionCard: true,
         },
+        conditionCards: true,
         chairReviewOutcome: true,
       },
     });
@@ -727,7 +729,8 @@ export class ApplicationDecisionV2Service {
     });
   }
 
-  async getDecisionConditionStatus(uuid: string) {
-    return await this.dataSource.query('SELECT alcs.get_current_status_for_application_condition($1)', [uuid]);
+  async getDecisionConditionStatus(uuid: string): Promise<string> {
+    const res = await this.dataSource.query('SELECT alcs.get_current_status_for_application_condition($1)', [uuid]);
+    return res.length > 0 ? res[0]['get_current_status_for_application_condition'] : '';
   }
 }
