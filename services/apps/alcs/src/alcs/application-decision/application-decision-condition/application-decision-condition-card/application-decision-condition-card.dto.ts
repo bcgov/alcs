@@ -1,6 +1,6 @@
 import { AutoMap } from 'automapper-classes';
 import { ApplicationDecisionConditionDto } from '../application-decision-condition.dto';
-import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
 import { CardDto } from '../../../card/card.dto';
 import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
 
@@ -80,6 +80,12 @@ export class ApplicationDecisionConditionCardBoardDto {
 
   @IsOptional()
   type?: ApplicationTypeDto | null;
+
+  @IsBoolean()
+  isReconsideration?: boolean;
+
+  @IsBoolean()
+  isModification?: boolean;
 }
 
 export class UpdateApplicationDecisionConditionBoardCardDto {

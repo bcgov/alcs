@@ -14,6 +14,8 @@ import {
   UpdateApplicationDecisionConditionCardDto,
 } from './application-decision-condition-card.dto';
 import { ApplicationDecisionConditionCard } from './application-decision-condition-card.entity';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-condition-card')
@@ -21,6 +23,8 @@ import { ApplicationDecisionConditionCard } from './application-decision-conditi
 export class ApplicationDecisionConditionCardController {
   constructor(
     private service: ApplicationDecisionConditionCardService,
+    private applicationModificationService: ApplicationModificationService,
+    private applicationReconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -61,6 +65,16 @@ export class ApplicationDecisionConditionCardController {
       ApplicationDecisionConditionCardBoardDto,
     );
     dto.fileNumber = result.decision.application.fileNumber;
+
+    const appModifications = await this.applicationModificationService.getByApplicationDecisionUuid(
+      result.decision.uuid,
+    );
+    const appReconsiderations = await this.applicationReconsiderationService.getByApplicationDecisionUuid(
+      result.decision.uuid,
+    );
+
+    dto.isModification = appModifications.length > 0;
+    dto.isReconsideration = appReconsiderations.length > 0;
     return dto;
   }
 }
