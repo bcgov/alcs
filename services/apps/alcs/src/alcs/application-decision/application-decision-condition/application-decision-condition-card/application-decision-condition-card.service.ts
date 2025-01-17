@@ -28,17 +28,18 @@ import { Application } from '../../../application/application.entity';
 import { ApplicationDto } from '../../../application/application.dto';
 import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
+import { ApplicationDecision } from '../../application-decision.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionCardService {
-  private CARD_RELATIONS = {
+  CARD_RELATIONS = {
     board: true,
     type: true,
     status: true,
     assignee: true,
   };
 
-  private BOARD_CARD_RELATIONS = {
+  BOARD_CARD_RELATIONS = {
     card: this.CARD_RELATIONS,
     conditions: true,
     decision: {
@@ -78,8 +79,10 @@ export class ApplicationDecisionConditionCardService {
       throw new ServiceValidationException(`Invalid card status code: ${dto.cardStatusCode}`);
     }
 
-    const decision = await this.applicationDecisionService.get(dto.decisionUuid);
-    if (!decision) {
+    let decision: ApplicationDecision;
+    try {
+      decision = await this.applicationDecisionService.get(dto.decisionUuid);
+    } catch (error) {
       throw new ServiceNotFoundException(`Failed to fetch decision with uuid ${dto.decisionUuid}`);
     }
 
