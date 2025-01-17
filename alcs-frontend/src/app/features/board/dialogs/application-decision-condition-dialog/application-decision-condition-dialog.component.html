@@ -9,11 +9,11 @@
     <div class="left">
       <h3 class="card-title">
         <span class="margin-right">{{ cardTitle }}</span>
-        <app-application-type-pill [type]="application.type"></app-application-type-pill>
       </h3>
     </div>
     <div class="center">
       <button
+        *ngIf="decision"
         color="accent"
         mat-flat-button
         [mat-dialog-close]="isDirty"
@@ -23,35 +23,25 @@
       </button>
     </div>
   </div>
-  <div>
-    <span class="region">{{ application.localGovernment?.name }} - {{ application.region?.label }} Region</span>
+  <div class="pill-row">
+    <app-application-type-pill [type]="application.type"></app-application-type-pill>
+    <app-application-type-pill
+      *ngIf="applicationDecisionConditionCard.isModification"
+      [type]="getStatusPill('MODIFICATION')"
+    ></app-application-type-pill>
+    <app-application-type-pill
+      *ngIf="applicationDecisionConditionCard.isReconsideration"
+      [type]="getStatusPill('RECONSIDERATION')"
+    ></app-application-type-pill>
+    <app-application-type-pill [type]="getStatusPill('CONDITION')"></app-application-type-pill>
   </div>
   <div class="header-row">
     <div class="left">
-      <!-- <app-time-tracker [data]="application"></app-time-tracker> -->
-      <!-- <app-application-submission-status-type-pill
-        *ngIf="status"
-        [type]="status"
-      ></app-application-submission-status-type-pill> -->
+      <div>
+        <span class="region">{{ application.localGovernment?.name }} - {{ application.region?.label }} Region</span>
+      </div>
     </div>
     <div class="right">
-      <!-- TODO: Implement move board feature in the future -->
-      <!-- <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
-        <mat-icon>move_down</mat-icon>
-      </button>
-      <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
-        <button (click)="onBoardSelected(board)" *ngFor="let board of allowedBoards" mat-menu-item>
-          <div class="board-menu-item">
-            <span class="favourite-board-icon-container"
-              ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
-            </span>
-            <span>{{ board.title }}</span>
-            <span *ngIf="card && card!.boardCode === board.code"
-              ><mat-icon class="selected-board-icon">check</mat-icon></span
-            >
-          </div>
-        </button>
-      </mat-menu> -->
       <button
         *ngIf="canArchive"
         matTooltip="Archive Card"
@@ -117,6 +107,72 @@
         </div>
       </ng-template>
     </ng-select>
+  </div>
+  <div class="conditions-container">
+    <div class="conditions-header-container">
+      <span class="conditions-header">Decision # - Conditions to Review</span>
+      <div class="buttons-container">
+        <ng-container *ngIf="!isEditing; else editMode">
+          <button class="edit-button" mat-icon-button (click)="editClicked()">
+            <mat-icon class="edit-icon">edit</mat-icon>
+          </button>
+        </ng-container>
+        <ng-template #editMode>
+          <button type="button" mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+          <button type="button" mat-flat-button color="primary" [disabled]="isSaveDisabled()" (click)="onSave()">
+            Save
+          </button>
+        </ng-template>
+      </div>
+    </div>
+    <div class="conditions-table-container">
+      <table mat-table class="conditions-table mat-elevation-z2" [dataSource]="dataSource" style="width: 100%">
+        <ng-container matColumnDef="select">
+          <td mat-cell *matCellDef="let element" class="column-select">
+            <mat-checkbox [(ngModel)]="element.selected"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="condition">
+          <td mat-cell *matCellDef="let element" class="column-condition">
+            {{ element.index }}. {{ element.condition.type.label }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <td mat-cell *matCellDef="let element" class="column-date">
+            <ng-container *ngIf="element.condition.type.isDateChecked">
+              <ng-container *ngIf="element.condition.type.dateType === 'Single'; else multipleDateColumn">
+                <ng-container *ngIf="element.condition.type.singleDateLabel === 'Due Date'; else singleEndDate">
+                  <span class="date-label">Due Date: </span>
+                </ng-container>
+                <ng-template #singleEndDate>
+                  <span class="date-label">End Date: </span>
+                </ng-template>
+              </ng-container>
+              <ng-template #multipleDateColumn>
+                <span class="date-label">Due Date:</span>
+              </ng-template>
+              {{ getDate(element.condition) }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <td mat-cell *matCellDef="let element" class="column-status">
+            <app-application-type-pill [type]="getStatusPill(element.condition.status)"></app-application-type-pill>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayColumns"
+          [class.disabled-row]="isConditionDisabled(row.condition)"
+          matTooltip="Condition is being used by another card"
+          [matTooltipDisabled]="!isConditionDisabled(row.condition)"
+        ></tr>
+      </table>
+    </div>
   </div>
   <div class="subtasks-wrapper">
     <app-subtasks *ngIf="card" [cardUuid]="card.uuid"></app-subtasks>

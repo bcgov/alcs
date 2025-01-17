@@ -73,12 +73,11 @@ export class ConditionCardDialogComponent implements OnInit {
       decisionUuid: this.data.decision,
       cardStatusCode: this.selectedStatus,
     };
-    try {
-      await this.decisionConditionCardService.create(createDto);
+    const res = await this.decisionConditionCardService.create(createDto);
+    if (res) {
       this.toastService.showSuccessToast('Condition card created successfully');
-      this.dialogRef.close(true);
       this.dialogRef.close({ action: 'save', result: true });
-    } catch (error) {
+    } else {
       this.toastService.showErrorToast('Failed to create condition card');
       this.dialogRef.close({ action: 'save', result: false });
     }

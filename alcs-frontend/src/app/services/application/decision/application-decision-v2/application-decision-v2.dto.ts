@@ -327,4 +327,6 @@ export interface ApplicationDecisionConditionCardBoardDto {
   fileNumber: string;
   applicant: string;
   type?: ApplicationTypeDto;
+  isReconsideration: boolean;
+  isModification: boolean;
 }
