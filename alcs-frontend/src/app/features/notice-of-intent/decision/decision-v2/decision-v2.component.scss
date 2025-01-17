@@ -9,6 +9,10 @@ h4 {
   margin-bottom: 12px !important;
 }
 
+h5 {
+  padding-top: 20px;
+}
+
 hr {
   margin: 36px 0;
   stroke: colors.$grey;
@@ -139,7 +143,7 @@ hr {
 :host ::ng-deep {
   .grid-2 {
     margin-top: 18px;
-    margin-bottom: 18px;
+    margin-bottom: 6px;
     display: grid;
     grid-template-columns: 50% 50%;
     grid-row-gap: 18px;

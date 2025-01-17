@@ -99,37 +99,36 @@
       <section class="decision-section-no-title">
         <div class="grid-2">
           <div>
-            <span class="subheading2">Decision Date: </span>
+            <span class="subheading2">Decision Date:&nbsp;</span>
             {{ decision.date ? (decision.date | momentFormat) : undefined }}
             <app-no-data *ngIf="decision.date === null || decision.date === undefined"></app-no-data>
           </div>
           <div class="align-right">
-            <span class="subheading2">Decision Maker: </span>
+            <span class="subheading2">Decision Maker:&nbsp;</span>
             {{ decision.decisionMaker }}
             <app-no-data *ngIf="decision.decisionMaker === null || decision.decisionMaker === undefined"></app-no-data>
           </div>
 
-          <div class="component-summary">
-            <div *ngIf="decision.outcome?.code === 'RESC'">
-              <span class="subheading2">Rescinded Date: </span>
+          <div *ngIf="decision.outcome?.code === 'RESC'" class="component-summary">
+            <div>
+              <span class="subheading2">Rescinded Date:&nbsp;</span>
               <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
               <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
             </div>
           </div>
-          <div class="component-summary">
-            <div *ngIf="decision.outcome?.code === 'RESC'">
-              <span class="subheading2">Rescinded Comment: </span>
+          <div *ngIf="decision.outcome?.code === 'RESC'" class="component-summary">
+            <div>
+              <span class="subheading2">Rescinded Comment:&nbsp;</span>
               {{ decision.rescindedComment }}
               <app-no-data *ngIf="!decision.rescindedComment"></app-no-data>
             </div>
           </div>
-
-          <div class="full-width decision-description">
-            {{ decision.decisionDescription }}
-            <app-no-data
-              *ngIf="decision.decisionDescription === null || decision.decisionDescription === undefined"
-            ></app-no-data>
-          </div>
+        </div>
+        <div class="full-width decision-description">
+          {{ decision.decisionDescription }}
+          <app-no-data
+            *ngIf="decision.decisionDescription === null || decision.decisionDescription === undefined"
+          ></app-no-data>
         </div>
         <ng-container *ngFor="let component of decision.components; let index = index">
           <div class="component-summary">

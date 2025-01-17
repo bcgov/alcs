@@ -106,36 +106,36 @@
       <section class="decision-section-no-title">
         <div class="grid-2">
           <div>
-            <span class="subheading2">Decision Date: </span>
+            <span class="subheading2">Decision Date:&nbsp;</span>
             {{ decision.date | momentFormat }}
             <app-no-data *ngIf="decision.date === null || decision.date === undefined"></app-no-data>
           </div>
           <div class="align-right">
-            <span class="subheading2">Decision Maker: </span>
+            <span class="subheading2">Decision Maker:&nbsp;</span>
             {{ decision.decisionMaker?.label }}
             <app-no-data *ngIf="decision.decisionMaker === null || decision.decisionMaker === undefined"></app-no-data>
           </div>
         </div>
-        <div class="component-summary">
-          <div *ngIf="decision.ceoCriterion">
-            <span class="subheading2">CEO Criterion: </span>
-            {{ decision.ceoCriterion?.label }}
+        <div *ngIf="decision.ceoCriterion" class="component-summary">
+          <div>
+            <span class="subheading2">CEO Criterion:&nbsp;</span>
+            {{ decision.ceoCriterion.label }}
             <ng-container *ngIf="decision.isTimeExtension || decision.isOther">&#32;-&#32;</ng-container>
             <ng-container *ngIf="decision.isTimeExtension">Time extension</ng-container>
             <ng-container *ngIf="decision.isTimeExtension && decision.isOther">,&#32;</ng-container>
             <ng-container *ngIf="decision.isOther">Other</ng-container>
           </div>
         </div>
-        <div class="component-summary">
-          <div *ngIf="decision.outcome?.code === 'RESC'">
-            <span class="subheading2">Rescinded Date: </span>
+        <div *ngIf="decision.outcome?.code === 'RESC'" class="component-summary">
+          <div>
+            <span class="subheading2">Rescinded Date:&nbsp;</span>
             <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
             <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
           </div>
         </div>
-        <div class="component-summary">
-          <div *ngIf="decision.outcome?.code === 'RESC'">
-            <span class="subheading2">Rescinded Comment: </span>
+        <div *ngIf="decision.outcome?.code === 'RESC'" class="component-summary">
+          <div>
+            <span class="subheading2">Rescinded Comment:&nbsp;</span>
             {{ decision.rescindedComment }}
             <app-no-data *ngIf="!decision.rescindedComment"></app-no-data>
           </div>
