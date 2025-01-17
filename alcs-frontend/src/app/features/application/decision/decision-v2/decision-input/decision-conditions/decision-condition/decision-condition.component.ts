@@ -120,6 +120,11 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       const singleDateDto: ApplicationDecisionConditionDateDto = {};
 
       if (this.singleDate.value) {
+        if (this.data.dates && this.data.dates.length > 0) {
+          singleDateDto.uuid = this.data.dates[0].uuid;
+          singleDateDto.completedDate = this.data.dates[0].completedDate;
+          singleDateDto.comment = this.data.dates[0].comment;
+        }
         singleDateDto.date = this.singleDate.value.toDate().getTime();
       }
 
