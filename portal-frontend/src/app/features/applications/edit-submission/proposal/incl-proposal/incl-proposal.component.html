@@ -125,7 +125,8 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
     <div class="full-row" *ngIf="showGovernmentQuestions">
@@ -156,7 +157,7 @@
           value="true"
           [ngClass]="{
             'error-outline':
-              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched)
+              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched),
           }"
           >Yes</mat-button-toggle
         >
@@ -164,7 +165,7 @@
           value="false"
           [ngClass]="{
             'error-outline':
-              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched)
+              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched),
           }"
           >No</mat-button-toggle
         >
@@ -214,7 +215,8 @@
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
-          [showVirusError]="showProofOfAdvertisingVirus"
+          [showHasVirusError]="showProofOfAdvertisingHasVirusError"
+          [showVirusScanFailedError]="showProofOfAdvertisingVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -233,7 +235,9 @@
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
-          [showVirusError]="showProofOfSignageVirus"
+          [showHasVirusError]="showProofOfSignageHasVirusError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -248,7 +252,8 @@
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
-          [showVirusError]="showReportOfPublicHearingVirus"
+          [showHasVirusError]="showReportOfPublicHearingHasVirusError"
+          [showVirusScanFailedError]="showReportOfPublicHearingVirusScanFailedError"
           [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>

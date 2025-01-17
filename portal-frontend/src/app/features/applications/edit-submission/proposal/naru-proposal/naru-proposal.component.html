@@ -23,10 +23,7 @@
       >
     </li>
     <li>
-      <a
-        href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing"
-        target="_blank"
-      >
+      <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank">
         Housing in the ALR</a
       >
     </li>
@@ -642,7 +639,8 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
 
@@ -659,7 +657,8 @@
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
-        [showVirusError]="showBuildingPlanVirus"
+        [showHasVirusError]="showBuildingPlanHasVirusError"
+        [showVirusScanFailedError]="showBuildingPlanVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
   </div>

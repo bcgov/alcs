@@ -1,11 +1,6 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
-import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import {
-  DeleteObjectCommand,
-  GetObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from '@aws-sdk/client-s3';
+import { BaseServiceException, ServiceValidationException } from '@app/common/exceptions/base.exception';
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { MultipartFile } from '@fastify/multipart';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -167,13 +162,21 @@ export class DocumentService {
     });
 
     const isInfected = await this.clamAvService.scanFile(fileUrl);
+
+    if (isInfected === null || isInfected === undefined) {
+      await this.deleteDocument(data.fileKey);
+      this.logger.warn(`Deleted unscanned file ${data.fileKey}`);
+      throw new BaseServiceException(
+        'Virus scan failed, cannot determine if infected, upload blocked',
+        undefined,
+        'VirusScanFailed',
+      );
+    }
+
     if (isInfected) {
       await this.deleteDocument(data.fileKey);
       this.logger.warn(`Deleted malicious file ${data.fileKey}`);
-      throw new BaseServiceException(
-        'File may contain malicious data, upload blocked',
-        403,
-      );
+      throw new ServiceValidationException('File may contain malicious data, upload blocked', 'VirusDetected');
     }
 
     return this.documentRepository.save(

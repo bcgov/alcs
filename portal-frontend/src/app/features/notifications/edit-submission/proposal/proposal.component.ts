@@ -18,6 +18,7 @@ import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { ChangeSurveyPlanConfirmationDialogComponent } from './change-survey-plan-confirmation-dialog/change-survey-plan-confirmation-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-proposal',
@@ -48,15 +49,17 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   private submissionUuid = '';
   private isDirty = false;
   surveyForm = new FormGroup({} as any);
-  showSRWTermsVirus = false;
-  showSurveyPlanVirus = false;
+  showSRWTermsHasVirusError = false;
+  showSRWTermsVirusScanFailedError = false;
+  showSurveyPlanHasVirusError = false;
+  showSurveyPlanVirusScanFailedError = false;
 
   constructor(
     private router: Router,
     private notificationSubmissionService: NotificationSubmissionService,
     notificationDocumentService: NotificationDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(notificationDocumentService, dialog, toastService);
   }
@@ -98,13 +101,29 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   }
 
   async attachSRWTerms(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.SRW_TERMS);
-    this.showSRWTermsVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.SRW_TERMS);
+      this.showSRWTermsHasVirusError = false;
+      this.showSRWTermsVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showSRWTermsHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showSRWTermsVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachSurveyPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.SURVEY_PLAN);
-    this.showSurveyPlanVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.SURVEY_PLAN);
+      this.showSurveyPlanHasVirusError = false;
+      this.showSurveyPlanVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showSurveyPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showSurveyPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async onSave() {

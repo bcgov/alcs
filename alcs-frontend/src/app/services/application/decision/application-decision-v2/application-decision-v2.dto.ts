@@ -95,6 +95,7 @@ export interface ApplicationDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize?: number;
 }
 
 export interface DecisionMakerDto extends BaseCodeDto {}
@@ -258,6 +259,7 @@ export interface ApplicationDecisionConditionDto {
   dates?: ApplicationDecisionConditionDateDto[];
   conditionCard?: ApplicationDecisionConditionCardDto | null;
   status?: string | null;
+  decision: ApplicationDecisionDto | null;
 }
 
 export interface UpdateApplicationDecisionConditionDto {

@@ -5,6 +5,7 @@ import {
   ApplicationSubmissionToSubmissionStatusDto,
   DEFAULT_NO_STATUS,
 } from '../../../../services/application/application-submission-status/application-submission-status.dto';
+import { SUBMISSION_STATUS } from '../../../../services/application/application.dto';
 import { ApplicationSubmissionStatusService } from '../../../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
@@ -29,6 +30,8 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
 
   application: ApplicationDto = this.data;
   status?: ApplicationSubmissionStatusPill;
+
+  routerLink = `application/`;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
@@ -61,7 +64,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
 
   async populateApplicationSubmissionStatus(fileNumber: string) {
     let submissionStatus: ApplicationSubmissionToSubmissionStatusDto | null = null;
-
+    this.routerLink = this.routerLink + fileNumber;
     try {
       submissionStatus = await this.applicationSubmissionStatusService.fetchCurrentStatusByFileNumber(
         fileNumber,
@@ -72,6 +75,9 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
     }
 
     if (submissionStatus) {
+      if (submissionStatus.statusTypeCode === SUBMISSION_STATUS.ALC_DECISION) {
+        this.routerLink = this.routerLink + '/decision'
+      }
       this.status = {
         backgroundColor: submissionStatus.status.alcsBackgroundColor,
         textColor: submissionStatus.status.alcsColor,

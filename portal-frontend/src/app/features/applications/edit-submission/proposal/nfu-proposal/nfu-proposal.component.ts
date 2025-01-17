@@ -14,6 +14,7 @@ import { SoilTableData } from '../../../../../shared/soil-table/soil-table.compo
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-nfu-proposal',
@@ -25,7 +26,8 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
 
   fillTableData: SoilTableData = {};
   fillTableDisabled = true;
-  showProposalMapVirus = false;
+  showProposalMapHasVirusError = false;
+  showProposalMapVirusScanFailedError = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
@@ -103,8 +105,16 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
   }
 
   async attachProposalMap(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.showProposalMapVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.showProposalMapHasVirusError = false;
+      this.showProposalMapVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   protected async save() {

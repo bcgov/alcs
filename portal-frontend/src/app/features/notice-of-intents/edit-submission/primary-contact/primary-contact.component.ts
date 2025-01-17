@@ -23,6 +23,7 @@ import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crow
 import { scrollToElement } from '../../../../shared/utils/scroll-helper';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { strictEmailValidator } from '../../../../shared/validators/email-validator';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-primary-contact',
@@ -37,7 +38,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   files: (NoticeOfIntentDocumentDto & { errorMessage?: string })[] = [];
 
   needsAuthorizationLetter = false;
-  showVirusError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
   selectedThirdPartyAgent: boolean | null = false;
   selectedLocalGovernment = false;
   _selectedOwnerUuid: string | undefined = undefined;
@@ -104,8 +106,16 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async attachAuthorizationLetter(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
-    this.showVirusError = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
+      this.showHasVirusError = false;
+      this.showVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   set selectedOwnerUuid(value: string | undefined) {

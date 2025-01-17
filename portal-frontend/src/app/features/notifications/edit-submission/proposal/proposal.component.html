@@ -77,7 +77,8 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showSRWTermsVirus"
+        [showHasVirusError]="showSRWTermsHasVirusError"
+        [showVirusScanFailedError]="showSRWTermsVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
 
@@ -93,7 +94,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': hasSurveyPlan.invalid && (hasSurveyPlan.dirty || hasSurveyPlan.touched)
+              'error-outline': hasSurveyPlan.invalid && (hasSurveyPlan.dirty || hasSurveyPlan.touched),
             }"
             value="true"
             >Yes
@@ -101,7 +102,7 @@
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
-              'error-outline': hasSurveyPlan.invalid && (hasSurveyPlan.dirty || hasSurveyPlan.touched)
+              'error-outline': hasSurveyPlan.invalid && (hasSurveyPlan.dirty || hasSurveyPlan.touched),
             }"
             value="false"
             >No
@@ -122,7 +123,8 @@
         [isRequired]="surveyPlans.length === 0"
         [disabled]="!allowSurveyPlanUploads"
         [allowMultiple]="true"
-        [showVirusError]="showSurveyPlanVirus"
+        [showHasVirusError]="showSurveyPlanHasVirusError"
+        [showVirusScanFailedError]="showSurveyPlanVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
   </div>

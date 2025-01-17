@@ -64,6 +64,7 @@ export interface NoticeOfIntentDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize: number | null;
 }
 
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
@@ -93,6 +94,7 @@ export interface NoticeOfIntentDecisionConditionDto {
   componentUuid: string | null;
   components?: NoticeOfIntentDecisionComponentDto[];
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+  decision: NoticeOfIntentDecisionDto | null;
 }
 
 export interface ComponentToCondition {

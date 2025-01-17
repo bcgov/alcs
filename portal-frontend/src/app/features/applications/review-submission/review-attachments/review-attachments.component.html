@@ -18,7 +18,8 @@
         (openFile)="openFile($event)"
         [isRequired]="true"
         [showErrors]="showErrors"
-        [showVirusError]="showResolutionVirusError"
+        [showHasVirusError]="showResolutionHasVirusError"
+        [showVirusScanFailedError]="showResolutionVirusScanFailedError"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
@@ -31,7 +32,8 @@
         (openFile)="openFile($event)"
         [isRequired]="isAuthorized"
         [showErrors]="showErrors"
-        [showVirusError]="showStaffReportVirusError"
+        [showHasVirusError]="showStaffReportHasVirusError"
+        [showVirusScanFailedError]="showStaffReportVirusScanFailedError"
       ></app-file-drag-drop>
     </section>
     <section>
@@ -43,7 +45,8 @@
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [allowMultiple]="true"
-        [showVirusError]="showOtherVirusError"
+        [showHasVirusError]="showOtherHasVirusError"
+        [showVirusScanFailedError]="showOtherVirusScanFailedError"
       ></app-file-drag-drop>
     </section>
   </div>

@@ -24,6 +24,7 @@ import { DeleteStructureConfirmationDialogComponent } from './delete-structure-c
 import { SoilRemovalConfirmationDialogComponent } from './soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
 import { AddStructureDialogComponent } from './add-structure-dialog/add-structure-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export enum STRUCTURE_TYPES {
   FARM_STRUCTURE = 'Farm Structure',
@@ -95,7 +96,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   typeCode: string = '';
 
   confirmRemovalOfSoil = false;
-  showBuildingPlanVirus = false;
+  showBuildingPlanHasVirusError = false;
+  showBuildingPlanVirusScanFailedError = false;
   buildingPlans: NoticeOfIntentDocumentDto[] = [];
 
   proposedStructures: FormProposedStructure[] = [];
@@ -195,8 +197,16 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   }
 
   async attachBuildingPlan(file: FileHandle) {
-    const attachmentSucceeded = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
-    this.showBuildingPlanVirus = !attachmentSucceeded;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+      this.showBuildingPlanHasVirusError = false;
+      this.showBuildingPlanVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showBuildingPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showBuildingPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   prepareStructureSpecificTextInputs() {

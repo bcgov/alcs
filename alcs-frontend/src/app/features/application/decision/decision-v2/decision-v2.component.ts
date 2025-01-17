@@ -7,6 +7,7 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
+  ApplicationDecisionDocumentDto,
   ApplicationDecisionWithLinkedResolutionDto,
   CeoCriterionDto,
   DecisionMakerDto,
@@ -19,10 +20,17 @@ import {
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
+  DECISION_CONDITION_COMPLETE_LABEL,
+  DECISION_CONDITION_ONGOING_LABEL,
+  DECISION_CONDITION_PASTDUE_LABEL,
+  DECISION_CONDITION_PENDING_LABEL,
+  DECISION_CONDITION_EXPIRED_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
+import { ApplicationConditionWithStatus, getEndDate } from '../../../../shared/utils/decision-methods';
+import { openFileInline } from '../../../../shared/utils/file';
 
 type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
@@ -55,6 +63,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
 
   COMPONENT_TYPE = APPLICATION_DECISION_COMPONENT_TYPE;
+
+  isSummary = false;
+
+  conditions: Record<string, ApplicationConditionWithStatus[]> = {};
 
   constructor(
     public dialog: MatDialog,
@@ -102,7 +114,26 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         if (duplicateComponentCodes.length > 0) {
           disabledMessage = 'Editing disabled - contact admin';
         }
-
+        decision.conditions.map(async (x) => {
+          if (x.components) {
+            const componentId = x.components[0].uuid;
+            if (componentId) {
+              const conditionStatus = await this.decisionService.getStatus(x.uuid);
+              
+              if (this.conditions[componentId]) {
+                this.conditions[componentId].push({
+                  ...x,
+                  conditionStatus: conditionStatus,
+                });
+              } else {
+                this.conditions[componentId] = [{
+                  ...x,
+                  conditionStatus: conditionStatus,
+                }];
+              }
+            }
+          }
+        });
         return {
           ...decision,
           loading: false,
@@ -258,6 +289,39 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         block: 'start',
         inline: 'start',
       });
+    }
+  }
+
+  toggleSummary() {
+    this.isSummary = !this.isSummary;
+  }
+
+  getConditions(uuid: string | undefined) {
+    return uuid && this.conditions[uuid] ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))] : [];
+  }
+
+  getDate(uuid: string | undefined) {
+    return getEndDate(uuid, this.conditions);
+  }
+
+  async openFile(decisionUuid: string, fileUuid: string, fileName: string) {
+    await this.decisionService.downloadFile(decisionUuid, fileUuid, fileName);
+  }
+
+  private getPillLabel(status: string) {
+    switch (status) {
+      case 'ONGOING':
+        return DECISION_CONDITION_ONGOING_LABEL;
+      case 'COMPLETED':
+        return DECISION_CONDITION_COMPLETE_LABEL;
+      case 'PASTDUE':
+        return DECISION_CONDITION_PASTDUE_LABEL;
+      case 'PENDING':
+        return DECISION_CONDITION_PENDING_LABEL;
+      case 'EXPIRED':
+        return DECISION_CONDITION_EXPIRED_LABEL;
+      default:
+        return DECISION_CONDITION_ONGOING_LABEL;
     }
   }
 }

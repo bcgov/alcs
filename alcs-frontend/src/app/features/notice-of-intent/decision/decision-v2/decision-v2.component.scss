@@ -1,10 +1,11 @@
 @use '../../../../../styles/colors';
 
 section {
-  margin-bottom: 64px;
+  margin-bottom: 15px;
 }
 
 h4 {
+  padding-top: 15px;
   margin-bottom: 12px !important;
 }
 
@@ -32,12 +33,19 @@ hr {
 
 .decision-section {
   background: colors.$grey-light;
-  padding: 18px;
 }
 
 .decision-section-no-title {
   background: colors.$grey-light;
   padding: 1px 18px;
+}
+
+.component-summary {
+  padding: 10px 0;
+}
+
+.status-pill {
+  padding: 6px 6px;
 }
 
 .header {
@@ -115,6 +123,19 @@ hr {
   position: absolute;
 }
 
+.document {
+  padding: 9px 16px;
+  border-radius: 4px;
+  border: 1px solid colors.$grey;
+  background: colors.$white;
+  margin: 8px 0;
+}
+
+.align-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
 :host ::ng-deep {
   .grid-2 {
     margin-top: 18px;
@@ -156,5 +177,9 @@ hr {
 
   .pre-wrapped-text {
     white-space: pre-wrap;
+  }
+
+  .mat-link {
+    color: colors.$link-color;
   }
 }

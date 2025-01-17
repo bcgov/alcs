@@ -112,12 +112,22 @@ export class SearchBarComponent implements AfterViewInit, OnInit {
         const result = searchResult[0];
         switch (result.type) {
           case 'APP':
+            const appStatusResult = await this.searchService.advancedSearchApplicationStatusFetch([result.fileNumber]);
+            let appDecisionUrl = '';
+            if (appStatusResult && appStatusResult.length > 0 && appStatusResult[0].status === 'ALCD') {
+              appDecisionUrl = '/decision'
+            }
             this.isCommissioner
               ? await this.router.navigate(['commissioner/application', result.referenceId])
-              : await this.router.navigate(['application', result.referenceId]);
+              : await this.router.navigate([`application/${result.referenceId}${appDecisionUrl}`]);
             break;
           case 'NOI':
-            await this.router.navigate(['notice-of-intent', result.referenceId]);
+            const noiStatusResult = await this.searchService.advancedSearchNoiStatusFetch([result.fileNumber]);
+            let noiDecisionUrl = '';
+            if (noiStatusResult && noiStatusResult.length > 0 && noiStatusResult[0].status === 'ALCD') {
+              noiDecisionUrl = '/decision'
+            }
+            await this.router.navigate([`notice-of-intent/${result.referenceId}${noiDecisionUrl}`]);
             break;
           case 'NOTI':
             await this.router.navigate(['notification', result.referenceId]);
