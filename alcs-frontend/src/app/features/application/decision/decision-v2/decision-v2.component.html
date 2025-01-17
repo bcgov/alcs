@@ -195,7 +195,7 @@
             ></app-no-data>
 
             <ng-container *ngFor="let component of decision.components; let index = index">
-              <h5>{{ component.applicationDecisionComponentType?.label }}</h5>
+              <h5 class="component-title">{{ component.applicationDecisionComponentType?.label }}</h5>
               <div>
                 <app-nfup
                   class="grid-2"
