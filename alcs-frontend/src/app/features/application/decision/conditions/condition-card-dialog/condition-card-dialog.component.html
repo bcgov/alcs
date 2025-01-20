@@ -25,7 +25,7 @@
   <div class="section">
     <span>Add one or more conditions*</span>
     <div class="table-container">
-      <table mat-table class="conditions-table mat-elevation-z2" [dataSource]="dataSource" style="width: 100%">
+      <table mat-table class="conditions-table mat-elevation-z3" [dataSource]="dataSource" style="width: 100%">
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef class="column-select"></th>
           <td mat-cell *matCellDef="let element" class="column-select">
@@ -53,6 +53,8 @@
           mat-row
           *matRowDef="let row; columns: displayColumns"
           [class.disabled-row]="isConditionCardNotNull(row)"
+          matTooltip="Condition is already used by another card"
+          [matTooltipDisabled]="!isConditionCardNotNull(row)"
         ></tr>
       </table>
     </div>

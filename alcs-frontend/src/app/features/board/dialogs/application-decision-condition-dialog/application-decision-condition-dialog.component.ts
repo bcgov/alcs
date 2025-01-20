@@ -110,7 +110,6 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
       return false;
     }
     return condition.conditionCard?.uuid !== this.applicationDecisionConditionCard.uuid;
-    // return condition.conditionCard?.uuid !== this.applicationDecisionConditionCard.uuid;
   }
 
   getStatusPill(status: string) {
@@ -185,7 +184,6 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
       conditionsUuids: selectedConditions,
     };
 
-    console.log(updateDto);
     const res = await this.applicationDecisionConditionCardService.update(
       this.applicationDecisionConditionCard.uuid,
       updateDto,
@@ -195,6 +193,8 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
     } else {
       this.toastService.showErrorToast('Failed to update condition card');
     }
+    this.isEditing = false;
+    this.displayColumns = this.defaultColumns;
   }
 
   isSaveDisabled(): boolean {

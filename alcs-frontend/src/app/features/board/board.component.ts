@@ -31,7 +31,7 @@ import {
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
-import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
+import { CardData, CardSelectedEvent, CardType, ConditionCardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
@@ -507,7 +507,19 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private mapApplicationDecisionConditionToCard(
     applicationDecisionCondition: ApplicationDecisionConditionCardBoardDto,
-  ): CardData {
+  ): ConditionCardData {
+    let isExpired = false;
+    let isPastDue = false;
+
+    for (const condition of applicationDecisionCondition.conditions) {
+      if (condition.status === 'EXPIRED') {
+        isExpired = true;
+      }
+      if (condition.status === 'PASTDUE') {
+        isPastDue = true;
+      }
+    }
+
     return {
       status: applicationDecisionCondition.card!.status.code,
       typeLabel: 'Application',
@@ -521,6 +533,8 @@ export class BoardComponent implements OnInit, OnDestroy {
       cardUuid: applicationDecisionCondition.card.uuid,
       paused: false,
       dateReceived: 0,
+      isExpired,
+      isPastDue,
     };
   }
 

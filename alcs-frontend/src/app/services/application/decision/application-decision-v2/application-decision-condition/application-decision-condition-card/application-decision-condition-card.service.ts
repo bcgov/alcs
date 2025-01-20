@@ -67,4 +67,18 @@ export class ApplicationDecisionConditionCardService {
     }
     return;
   }
+
+  async fetchByApplicationFileNumber(fileNumber: string): Promise<ApplicationDecisionConditionCardDto[] | undefined> {
+    try {
+      return await firstValueFrom(
+        this.http.get<ApplicationDecisionConditionCardDto[]>(`${this.url}/application/${fileNumber}`),
+      );
+    } catch (e: any) {
+      console.error(e);
+      this.toastService.showErrorToast(
+        'Failed to fetch Application Decision Condition Cards by Application File Number',
+      );
+    }
+    return;
+  }
 }
