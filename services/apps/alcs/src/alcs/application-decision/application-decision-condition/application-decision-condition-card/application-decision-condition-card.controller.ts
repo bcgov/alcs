@@ -16,6 +16,7 @@ import {
 import { ApplicationDecisionConditionCard } from './application-decision-condition-card.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
+import { ApplicationDecisionV2Service } from '../../application-decision-v2/application-decision/application-decision-v2.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-condition-card')
@@ -25,6 +26,7 @@ export class ApplicationDecisionConditionCardController {
     private service: ApplicationDecisionConditionCardService,
     private applicationModificationService: ApplicationModificationService,
     private applicationReconsiderationService: ApplicationReconsiderationService,
+    private applicationDecisionService: ApplicationDecisionV2Service,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -75,6 +77,27 @@ export class ApplicationDecisionConditionCardController {
 
     dto.isModification = appModifications.length > 0;
     dto.isReconsideration = appReconsiderations.length > 0;
+
+    const decisionOrder = await this.applicationDecisionService.getDecisionOrder(
+      result.decision.application.fileNumber,
+      result.decision.uuid,
+    );
+    dto.decisionOrder = decisionOrder;
+
     return dto;
+  }
+
+  @Get('/application/:fileNumber')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async getByApplicationFileNumber(
+    @Param('fileNumber') fileNumber: string,
+  ): Promise<ApplicationDecisionConditionCardDto[]> {
+    const conditionCards = await this.applicationDecisionService.getForDecisionConditionCardsByFileNumber(fileNumber);
+    const dtos: ApplicationDecisionConditionCardDto[] = [];
+    for (const card of conditionCards) {
+      const dto = await this.mapper.map(card, ApplicationDecisionConditionCard, ApplicationDecisionConditionCardDto);
+      dtos.push(dto);
+    }
+    return dtos;
   }
 }

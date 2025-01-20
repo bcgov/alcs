@@ -405,7 +405,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
         forMember(
           (dto) => dto.decisionUuid,
-          mapFrom((entity) => entity.decision.uuid),
+          mapFrom((entity) => (entity.decision.uuid ? entity.decision.uuid : undefined)),
         ),
       );
 

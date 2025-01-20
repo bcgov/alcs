@@ -733,4 +733,50 @@ export class ApplicationDecisionV2Service {
     const res = await this.dataSource.query('SELECT alcs.get_current_status_for_application_condition($1)', [uuid]);
     return res.length > 0 ? res[0]['get_current_status_for_application_condition'] : '';
   }
+
+  async getForDecisionConditionCardsByFileNumber(fileNumber: string) {
+    const application = await this.applicationService.getOrFail(fileNumber);
+
+    const decisions = await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: application.uuid,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+      relations: {
+        conditionCards: {
+          card: {
+            board: true,
+            status: true,
+            type: true,
+          },
+          decision: {},
+        },
+      },
+    });
+
+    return decisions.flatMap((decision) => decision.conditionCards);
+  }
+
+  async getDecisionOrder(fileNumber: string, decisionUuid: string): Promise<number> {
+    const application = await this.applicationService.getOrFail(fileNumber);
+
+    const decisions = await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: application.uuid,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    const decisionOrder = decisions.findIndex((decision) => decision.uuid === decisionUuid);
+
+    if (decisionOrder === -1) {
+      throw new ServiceNotFoundException(`Decision with UUID ${decisionUuid} not found`);
+    }
+
+    return decisionOrder + 1;
+  }
 }
