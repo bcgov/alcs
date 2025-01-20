@@ -47,6 +47,14 @@ export class ApplicationDecisionConditionService {
     });
   }
 
+  async findByUuids(uuids: string[]): Promise<ApplicationDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        uuid: In(uuids),
+      },
+    });
+  }
+
   async createOrUpdate(
     updateDtos: UpdateApplicationDecisionConditionDto[],
     allComponents: ApplicationDecisionComponent[],

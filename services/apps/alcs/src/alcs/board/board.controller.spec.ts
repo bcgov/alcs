@@ -20,6 +20,7 @@ import { BoardController } from './board.controller';
 import { BOARD_CODES } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
+import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 describe('BoardController', () => {
   let controller: BoardController;
@@ -34,6 +35,7 @@ describe('BoardController', () => {
   let noiModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let notificationService: DeepMocked<NotificationService>;
   let inquiryService: DeepMocked<InquiryService>;
+  let applicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
   let mockBoard;
 
   beforeEach(async () => {
@@ -47,6 +49,7 @@ describe('BoardController', () => {
     noiModificationService = createMock();
     notificationService = createMock();
     inquiryService = createMock();
+    applicationDecisionConditionCardService = createMock();
 
     mockBoard = new Board({
       allowedCardTypes: [],
@@ -72,6 +75,8 @@ describe('BoardController', () => {
     notificationService.mapToDtos.mockResolvedValue([]);
     inquiryService.getByBoard.mockResolvedValue([]);
     inquiryService.mapToDtos.mockResolvedValue([]);
+    applicationDecisionConditionCardService.getByBoard.mockResolvedValue([]);
+    applicationDecisionConditionCardService.mapToBoardDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -110,6 +115,10 @@ describe('BoardController', () => {
         {
           provide: InquiryService,
           useValue: inquiryService,
+        },
+        {
+          provide: ApplicationDecisionConditionCardService,
+          useValue: applicationDecisionConditionCardService,
         },
         {
           provide: ClsService,
@@ -153,6 +162,7 @@ describe('BoardController', () => {
     expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(planningReferralService.getByBoard).toHaveBeenCalledTimes(0);
     expect(planningReferralService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(applicationDecisionConditionCardService.getByBoard).toHaveBeenCalledTimes(0);
   });
 
   it('should call through to planning review service if board supports planning reviews', async () => {

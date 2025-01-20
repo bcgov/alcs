@@ -11,6 +11,9 @@ export interface BoardWithFavourite extends MinimalBoardDto {
   isFavourite: boolean;
 }
 
+export enum BOARD_TYPE_CODES {
+  APPCON = 'appcon',
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -20,7 +23,10 @@ export class BoardService {
   private boardsEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
   $boards = this.boardsEmitter.asObservable();
 
-  constructor(private http: HttpClient, private userService: UserService) {
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+  ) {
     this.userService.$userProfile.subscribe((user) => {
       this.userProfile = user;
       this.publishBoards();
@@ -59,7 +65,7 @@ export class BoardService {
       this.http.post<ApplicationDto>(`${environment.apiUrl}/board/change`, {
         cardUuid,
         boardCode,
-      })
+      }),
     );
   }
 }

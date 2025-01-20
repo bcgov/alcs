@@ -3,14 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import {
-  FindOptionsRelations,
-  FindOptionsWhere,
-  In,
-  IsNull,
-  Not,
-  Repository,
-} from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, In, IsNull, Not, Repository } from 'typeorm';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
@@ -50,38 +43,36 @@ export class ApplicationReconsiderationService {
     assignee: true,
   };
 
-  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
-    {
-      application: {
-        type: true,
-        region: true,
-        localGovernment: true,
-        decisionMeetings: true,
-      },
-      card: { ...this.DEFAULT_CARD_RELATIONS, board: false },
+  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> = {
+    application: {
       type: true,
-    };
+      region: true,
+      localGovernment: true,
+      decisionMeetings: true,
+    },
+    card: { ...this.DEFAULT_CARD_RELATIONS, board: false },
+    type: true,
+  };
 
-  private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
-    {
-      application: {
-        type: true,
-        region: true,
-        localGovernment: true,
-        decisionMeetings: true,
-      },
-      card: {
-        board: true,
-        type: true,
-        status: true,
-        assignee: true,
-      },
+  private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> = {
+    application: {
       type: true,
-      reconsidersDecisions: true,
-      resultingDecision: true,
-      reviewOutcome: true,
-      decisionOutcome: true,
-    };
+      region: true,
+      localGovernment: true,
+      decisionMeetings: true,
+    },
+    card: {
+      board: true,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+    type: true,
+    reconsidersDecisions: true,
+    resultingDecision: true,
+    reviewOutcome: true,
+    decisionOutcome: true,
+  };
 
   getByBoard(boardUuid: string) {
     return this.reconsiderationRepository.find({
@@ -116,14 +107,8 @@ export class ApplicationReconsiderationService {
     });
   }
 
-  mapToDtos(
-    reconsiderations: ApplicationReconsideration[],
-  ): Promise<ApplicationReconsiderationDto[]> {
-    return this.mapper.mapArrayAsync(
-      reconsiderations,
-      ApplicationReconsideration,
-      ApplicationReconsiderationDto,
-    );
+  mapToDtos(reconsiderations: ApplicationReconsideration[]): Promise<ApplicationReconsiderationDto[]> {
+    return this.mapper.mapArrayAsync(reconsiderations, ApplicationReconsideration, ApplicationReconsiderationDto);
   }
 
   async create(createDto: ApplicationReconsiderationCreateDto, board: Board) {
@@ -138,18 +123,13 @@ export class ApplicationReconsiderationService {
       type,
     });
 
-    reconsideration.card = await this.cardService.create(
-      CARD_TYPE.RECON,
-      board,
-      false,
-    );
+    reconsideration.card = await this.cardService.create(CARD_TYPE.RECON, board, false);
 
     reconsideration.application = await this.getOrCreateApplication(createDto);
 
-    reconsideration.reconsidersDecisions =
-      await this.applicationDecisionService.getMany(
-        createDto.reconsideredDecisionUuids,
-      );
+    reconsideration.reconsidersDecisions = await this.applicationDecisionService.getMany(
+      createDto.reconsideredDecisionUuids,
+    );
 
     if (createDto.reconTypeCode === RECONSIDERATION_TYPE.T_33) {
       reconsideration.reviewOutcomeCode = 'PEN';
@@ -159,12 +139,8 @@ export class ApplicationReconsiderationService {
     return this.getByUuid(recon.uuid);
   }
 
-  private async getOrCreateApplication(
-    createDto: ApplicationReconsiderationCreateDto,
-  ) {
-    const existingApplication = await this.applicationService.get(
-      createDto.applicationFileNumber,
-    );
+  private async getOrCreateApplication(createDto: ApplicationReconsiderationCreateDto) {
+    const existingApplication = await this.applicationService.get(createDto.applicationFileNumber);
 
     if (existingApplication) {
       return existingApplication;
@@ -186,9 +162,7 @@ export class ApplicationReconsiderationService {
     const reconsideration = await this.fetchAndValidateReconsideration(uuid);
 
     if (updateDto.reviewDate !== undefined) {
-      reconsideration.reviewDate = updateDto.reviewDate
-        ? new Date(updateDto.reviewDate)
-        : null;
+      reconsideration.reviewDate = updateDto.reviewDate ? new Date(updateDto.reviewDate) : null;
     }
 
     if (updateDto.submittedDate) {
@@ -196,18 +170,13 @@ export class ApplicationReconsiderationService {
     }
 
     if (updateDto.typeCode) {
-      reconsideration.type = await this.getReconsiderationType(
-        updateDto.typeCode,
-      );
+      reconsideration.type = await this.getReconsiderationType(updateDto.typeCode);
     }
 
     reconsideration.reviewOutcomeCode = updateDto.reviewOutcomeCode;
     reconsideration.decisionOutcomeCode = updateDto.decisionOutcomeCode;
 
-    if (
-      reconsideration.type.code === RECONSIDERATION_TYPE.T_33 &&
-      updateDto.reviewOutcomeCode === null
-    ) {
+    if (reconsideration.type.code === RECONSIDERATION_TYPE.T_33 && updateDto.reviewOutcomeCode === null) {
       reconsideration.reviewOutcomeCode = 'PEN';
     }
 
@@ -217,10 +186,9 @@ export class ApplicationReconsiderationService {
     }
 
     if (updateDto.reconsideredDecisionUuids) {
-      reconsideration.reconsidersDecisions =
-        await this.applicationDecisionService.getMany(
-          updateDto.reconsideredDecisionUuids,
-        );
+      reconsideration.reconsidersDecisions = await this.applicationDecisionService.getMany(
+        updateDto.reconsideredDecisionUuids,
+      );
     }
 
     reconsideration.description = updateDto.description;
@@ -251,9 +219,7 @@ export class ApplicationReconsiderationService {
     });
 
     if (!recon) {
-      throw new ServiceNotFoundException(
-        `Reconsideration with uuid ${uuid} not found`,
-      );
+      throw new ServiceNotFoundException(`Reconsideration with uuid ${uuid} not found`);
     }
 
     return recon;
@@ -306,16 +272,10 @@ export class ApplicationReconsiderationService {
     const codes = await this.reconsiderationTypeRepository.find({
       order: { label: 'ASC' },
     });
-    return this.mapper.mapArrayAsync(
-      codes,
-      ApplicationReconsiderationType,
-      ReconsiderationTypeDto,
-    );
+    return this.mapper.mapArrayAsync(codes, ApplicationReconsiderationType, ReconsiderationTypeDto);
   }
 
-  async getReconsiderationType(
-    code: string,
-  ): Promise<ApplicationReconsiderationType> {
+  async getReconsiderationType(code: string): Promise<ApplicationReconsiderationType> {
     return this.reconsiderationTypeRepository.findOneByOrFail({
       code,
     });
@@ -325,6 +285,17 @@ export class ApplicationReconsiderationService {
     return this.reconsiderationRepository.find({
       where: {
         uuid: In(reconUuids),
+      },
+      relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
+    });
+  }
+
+  async getByApplicationDecisionUuid(decisionUuid: string): Promise<ApplicationReconsideration[]> {
+    return this.reconsiderationRepository.find({
+      where: {
+        reconsidersDecisions: {
+          uuid: decisionUuid,
+        },
       },
       relations: this.DEFAULT_RECONSIDERATION_RELATIONS,
     });

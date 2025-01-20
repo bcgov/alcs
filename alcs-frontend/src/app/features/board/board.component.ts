@@ -46,12 +46,16 @@ import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/c
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import { ReconsiderationDialogComponent } from './dialogs/reconsiderations/reconsideration-dialog.component';
+import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { ApplicationDecisionConditionCardBoardDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionConditionDialogComponent } from './dialogs/application-decision-condition-dialog/application-decision-condition-dialog.component';
 
 export const BOARD_TYPE_CODES = {
   VETT: 'vett',
   EXEC: 'exec',
   CEO: 'ceo',
   NOI: 'noi',
+  APP_CON: 'appcon',
 };
 
 @Component({
@@ -133,6 +137,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private inquiryService: InquiryService,
     private titleService: Title,
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
   ) {}
 
   ngOnInit() {
@@ -262,6 +267,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     );
     const mappedNotifications = response.notifications.map(this.mapNotificationToCard.bind(this));
     const mappedInquiries = response.inquiries.map(this.mapInquiryToCard.bind(this));
+    const mappedAppDecisionConditions = response.applicationDecisionConditions.map(
+      this.mapApplicationDecisionConditionToCard.bind(this),
+    );
     if (boardCode === BOARD_TYPE_CODES.VETT) {
       const vettingSort = (a: CardData, b: CardData) => {
         if (a.highPriority === b.highPriority) {
@@ -300,6 +308,14 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedPlanningReferrals,
         ...mappedNotifications,
       ].sort(noiSort);
+    } else if (boardCode === BOARD_TYPE_CODES.APP_CON) {
+      const appConSort = (a: CardData, b: CardData) => {
+        if (a.highPriority !== b.highPriority) {
+          return b.highPriority ? 1 : -1;
+        }
+        return 0;
+      };
+      this.cards = mappedAppDecisionConditions.sort(appConSort);
     } else {
       const sorted = [];
       sorted.push(
@@ -489,6 +505,25 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapApplicationDecisionConditionToCard(
+    applicationDecisionCondition: ApplicationDecisionConditionCardBoardDto,
+  ): CardData {
+    return {
+      status: applicationDecisionCondition.card!.status.code,
+      typeLabel: 'Application',
+      title: `${applicationDecisionCondition.fileNumber} (${applicationDecisionCondition.applicant})`,
+      titleTooltip: applicationDecisionCondition.applicant,
+      assignee: applicationDecisionCondition.card!.assignee,
+      id: applicationDecisionCondition.fileNumber,
+      labels: [applicationDecisionCondition.type!],
+      highPriority: applicationDecisionCondition.card.highPriority,
+      cardType: CardType.APP_CON,
+      cardUuid: applicationDecisionCondition.card.uuid,
+      paused: false,
+      dateReceived: 0,
+    };
+  }
+
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
@@ -548,6 +583,14 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.INQUIRY:
           const inquiry = await this.inquiryService.fetchByCardUuid(card.uuid);
           this.openDialog(InquiryDialogComponent, inquiry);
+          break;
+        case CardType.APP_CON:
+          const applicationDecisionCondition = await this.applicationDecisionConditionCardService.getByCard(card.uuid);
+          const app = await this.applicationService.fetchApplication(applicationDecisionCondition?.fileNumber!);
+          this.openDialog(ApplicationDecisionConditionDialogComponent, {
+            decisionConditionCard: applicationDecisionCondition,
+            application: app,
+          });
           break;
         default:
           console.error('Card type is not configured for a dialog');

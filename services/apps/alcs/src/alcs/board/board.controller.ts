@@ -4,10 +4,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
-import {
-  ANY_AUTH_ROLE,
-  ROLES_ALLOWED_BOARDS,
-} from '../../common/authorization/roles';
+import { ANY_AUTH_ROLE, ROLES_ALLOWED_BOARDS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
@@ -24,6 +21,7 @@ import { PlanningReferralService } from '../planning-review/planning-referral/pl
 import { BoardDto, MinimalBoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
+import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('board')
@@ -40,6 +38,7 @@ export class BoardController {
     private noticeOfIntentService: NoticeOfIntentService,
     private notificationService: NotificationService,
     private inquiryService: InquiryService,
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -97,23 +96,24 @@ export class BoardController {
       ? await this.notificationService.getByBoard(board.uuid)
       : [];
 
-    const inquiries = allowedCodes.includes(CARD_TYPE.INQUIRY)
-      ? await this.inquiryService.getByBoard(board.uuid)
+    const inquiries = allowedCodes.includes(CARD_TYPE.INQUIRY) ? await this.inquiryService.getByBoard(board.uuid) : [];
+
+    const applicationDecisionConditions = allowedCodes.includes(CARD_TYPE.APP_CON)
+      ? await this.applicationDecisionConditionCardService.getByBoard(board.uuid)
       : [];
 
     return {
       board: await this.autoMapper.mapAsync(board, Board, BoardDto),
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),
-      planningReferrals:
-        await this.planningReferralService.mapToDtos(planningReferrals),
+      planningReferrals: await this.planningReferralService.mapToDtos(planningReferrals),
       modifications: await this.appModificationService.mapToDtos(modifications),
-      noticeOfIntents:
-        await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
-      noiModifications:
-        await this.noiModificationService.mapToDtos(noiModifications),
+      noticeOfIntents: await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
+      noiModifications: await this.noiModificationService.mapToDtos(noiModifications),
       notifications: await this.notificationService.mapToDtos(notifications),
       inquiries: await this.inquiryService.mapToDtos(inquiries),
+      applicationDecisionConditions:
+        await this.applicationDecisionConditionCardService.mapToBoardDtos(applicationDecisionConditions),
     };
   }
 

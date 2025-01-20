@@ -42,6 +42,12 @@ import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/appl
 import { CommissionerDecisionDto } from '../../alcs/commissioner/commissioner.dto';
 import { ApplicationDecisionConditionDate } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationDecisionConditionDateDto } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.dto';
+import { ApplicationDecisionConditionCard } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
+import {
+  ApplicationDecisionConditionCardBoardDto,
+  ApplicationDecisionConditionCardDto,
+  ApplicationDecisionConditionCardUuidDto,
+} from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -141,6 +147,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
             }
           }),
         ),
+        forMember(
+          (dto) => dto.conditionCards,
+          mapFrom((entity) =>
+            entity.conditionCards
+              ? this.mapper.mapArray(
+                  entity.conditionCards,
+                  ApplicationDecisionConditionCard,
+                  ApplicationDecisionConditionCardUuidDto,
+                )
+              : [],
+          ),
+        ),
       );
 
       createMap(mapper, ApplicationDecisionOutcomeCode, ApplicationDecisionOutcomeCodeDto);
@@ -228,6 +246,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
                   ApplicationDecisionConditionDateDto,
                 )
               : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.conditionCard,
+          mapFrom((entity) =>
+            entity.conditionCard
+              ? this.mapper.map(
+                  entity.conditionCard,
+                  ApplicationDecisionConditionCard,
+                  ApplicationDecisionConditionCardUuidDto,
+                )
+              : null,
           ),
         ),
       );
@@ -358,6 +388,52 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               uuid: decisionComponent.uuid,
             })),
           ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(entity.conditions, ApplicationDecisionCondition, ApplicationDecisionConditionDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => entity.decision.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardBoardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(entity.conditions, ApplicationDecisionCondition, ApplicationDecisionConditionDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => entity.decision.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardUuidDto,
+        forMember(
+          (dto) => dto.uuid,
+          mapFrom((entity) => entity.uuid),
         ),
       );
     };
