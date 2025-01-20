@@ -46,7 +46,7 @@ const TREE_DATA: TreeNode[] = [
         item: { label: 'Subdivision', value: 'SUBD' },
       },
       {
-        item: { label: 'Transportation, Utility, Trail Permits', value: 'TURP' },
+        item: { label: 'Transportation, Utility, or Recreational Trail', value: 'TURP' },
       },
       {
         item: { label: 'Restrictive Covenant', value: 'COVE' },
@@ -155,7 +155,7 @@ const COMMISSIONER_TREE_DATA: TreeNode[] = [
         item: { label: 'Subdivision', value: 'SUBD' },
       },
       {
-        item: { label: 'Transportation, Utility, Trail Permits', value: 'TURP' },
+        item: { label: 'Transportation, Utility, or Recreational Trail', value: 'TURP' },
       },
       {
         item: { label: 'Restrictive Covenant', value: 'COVE' },
