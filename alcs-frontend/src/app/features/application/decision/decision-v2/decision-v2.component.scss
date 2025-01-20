@@ -9,10 +9,6 @@ h4 {
   margin-bottom: 12px !important;
 }
 
-h5 {
-  padding-top: 20px;
-}
-
 hr {
   margin: 36px 0;
   stroke: colors.$grey;
@@ -46,6 +42,10 @@ hr {
 
 .component-summary {
   padding: 10px 0;
+}
+
+.component-title {
+  padding-top: 20px;
 }
 
 .status-pill {
