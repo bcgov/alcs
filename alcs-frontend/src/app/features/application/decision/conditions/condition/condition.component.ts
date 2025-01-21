@@ -295,12 +295,12 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(
         this.addIndex(this.sortDates(this.dates)),
       );
-      const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
-      this.condition.status = conditionNewStatus.status;
-      this.setPillLabel(this.condition.status);
     } else {
-      console.error('Date with specified UUID not found');
+      await this.addNewDate();
     }
+    const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
+    this.condition.status = conditionNewStatus.status;
+    this.setPillLabel(this.condition.status);
   }
 
   async onDeleteDate(dateUuid: string) {
