@@ -443,6 +443,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (dto) => dto.decisionUuid,
           mapFrom((entity) => entity.decision.uuid),
         ),
+        forMember(
+          (dto) => dto.decisionIsFlagged,
+          mapFrom((entity) => entity.decision.isFlagged),
+        ),
       );
 
       createMap(
