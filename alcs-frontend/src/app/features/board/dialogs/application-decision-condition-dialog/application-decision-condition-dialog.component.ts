@@ -8,9 +8,7 @@ import {
   ApplicationDecisionDto,
   UpdateApplicationDecisionConditionCardDto,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationService } from '../../../../services/application/application.service';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
-import { Router } from '@angular/router';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { BoardService } from '../../../../services/board/board.service';
@@ -63,10 +61,8 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
       decisionConditionCard: ApplicationDecisionConditionCardBoardDto;
       application: ApplicationDto;
     },
-    private applicationService: ApplicationService,
     private applicationDecisionService: ApplicationDecisionV2Service,
     private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
-    private router: Router,
     dialogRef: MatDialogRef<ApplicationDecisionConditionDialogComponent>,
     userService: UserService,
     confirmationDialogService: ConfirmationDialogService,
@@ -83,6 +79,15 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
   }
 
   async populateData() {
+    await this.loadDecision();
+
+    this.populateCardData(this.applicationDecisionConditionCard.card);
+    this.cardTitle = `${this.application.fileNumber} (${this.application.applicant})`;
+
+    this.loadTableData(true);
+  }
+
+  async loadDecision() {
     const decision = await this.applicationDecisionService.getByUuid(
       this.applicationDecisionConditionCard.decisionUuid,
       true,
@@ -90,15 +95,16 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
     if (decision) {
       this.decision = decision;
     }
+  }
 
-    this.populateCardData(this.applicationDecisionConditionCard.card);
-    this.cardTitle = `${this.application.fileNumber} (${this.application.applicant})`;
-
-    this.dataSource.data = this.decision.conditions.map((condition, index) => ({
+  loadTableData(filterSelected: boolean = false) {
+    const data = this.decision.conditions.map((condition, index) => ({
       condition,
       index: countToString(index + 1),
       selected: this.isConditionSelected(condition),
     }));
+
+    filterSelected ? (this.dataSource.data = data.filter((item) => item.selected)) : (this.dataSource.data = data);
   }
 
   isConditionSelected(condition: ApplicationDecisionConditionDto): boolean {
@@ -171,11 +177,14 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
   editClicked() {
     this.isEditing = true;
     this.displayColumns = this.editColumns;
+    this.loadTableData();
   }
 
   onCancel() {
     this.isEditing = false;
     this.displayColumns = this.defaultColumns;
+
+    this.loadTableData(true);
   }
 
   async onSave() {
@@ -188,13 +197,16 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
       this.applicationDecisionConditionCard.uuid,
       updateDto,
     );
-    if (res) {
-      this.toastService.showSuccessToast('Condition card updated successfully');
-    } else {
-      this.toastService.showErrorToast('Failed to update condition card');
-    }
+    res
+      ? this.toastService.showSuccessToast('Condition card updated successfully')
+      : this.toastService.showErrorToast('Failed to update condition card');
+
     this.isEditing = false;
     this.displayColumns = this.defaultColumns;
+    this.isDirty = true;
+
+    await this.loadDecision();
+    this.loadTableData(true);
   }
 
   isSaveDisabled(): boolean {

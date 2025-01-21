@@ -127,11 +127,14 @@
         </ng-template>
       </div>
     </div>
-    <div class="conditions-table-container">
+    <div class="conditions-table-container" [ngClass]="{ 'error-state': isSaveDisabled() }">
       <table mat-table class="conditions-table mat-elevation-z2" [dataSource]="dataSource" style="width: 100%">
         <ng-container matColumnDef="select">
           <td mat-cell *matCellDef="let element" class="column-select">
-            <mat-checkbox [(ngModel)]="element.selected"></mat-checkbox>
+            <mat-checkbox
+              [disabled]="isConditionDisabled(element.condition)"
+              [(ngModel)]="element.selected"
+            ></mat-checkbox>
           </td>
         </ng-container>
 
@@ -155,7 +158,12 @@
               <ng-template #multipleDateColumn>
                 <span class="date-label">Due Date:</span>
               </ng-template>
-              {{ getDate(element.condition) }}
+              <ng-container *ngIf="getDate(element.condition); else noDate">
+                {{ getDate(element.condition) }}
+              </ng-container>
+              <ng-template #noDate>
+                <span class="no-data">No Data</span>
+              </ng-template>
             </ng-container>
           </td>
         </ng-container>
