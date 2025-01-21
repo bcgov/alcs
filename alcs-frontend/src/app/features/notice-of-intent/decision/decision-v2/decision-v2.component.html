@@ -77,7 +77,7 @@
 
           <button
             type="button"
-            (click)="decision.isFlagged ? unflag(decision) : flag(decision, i + 1, false)"
+            (click)="decision.isFlagged ? unflag(decision, i + 1) : flag(decision, i + 1, false)"
             class="flag-button"
             [class.flagged]="decision.isFlagged"
             [matTooltip]="decision.isFlagged ? 'Click to unflag' : ''"

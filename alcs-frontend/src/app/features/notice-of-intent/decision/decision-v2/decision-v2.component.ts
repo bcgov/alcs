@@ -331,14 +331,17 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       });
   }
 
-  async unflag(decision: LoadingDecision) {
+  async unflag(decision: LoadingDecision, index: number) {
     this.confirmationDialogService
       .openDialog({
-        body: `Only remove if flagged in error.
-        
+        title: `Unflag Decision #${index}`,
+        body: `<strong>Warning:</strong> Only remove if flagged in error.
+        <br>
+        <br>
         This action will also remove the follow-up date and explanatory text
         associated with the flag and cannot be undone.
-        
+        <br>
+        <br>
         Are you sure you want to remove the flag?`,
       })
       .subscribe(async (confirmed) => {
