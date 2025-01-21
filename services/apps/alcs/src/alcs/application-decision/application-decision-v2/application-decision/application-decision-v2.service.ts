@@ -219,6 +219,10 @@ export class ApplicationDecisionV2Service {
 
     decision.documents = decision.documents.filter((document) => !!document.document);
 
+    if (decision.conditions) {
+      decision.conditions.sort((a, b) => a.auditCreatedAt.getTime() - b.auditCreatedAt.getTime());
+    }
+
     return decision;
   }
 
