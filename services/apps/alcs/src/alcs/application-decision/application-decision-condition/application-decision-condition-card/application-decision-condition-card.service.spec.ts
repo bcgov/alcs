@@ -16,9 +16,7 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../../../../../../libs/common/src/exceptions/base.exception';
-import { ApplicationDecisionConditionCardBoardDto } from './application-decision-condition-card.dto';
 import { Card } from '../../../card/card.entity';
-import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { ApplicationProfile } from '../../../../common/automapper/application.automapper.profile';
 
 describe('ApplicationDecisionConditionCardService', () => {
@@ -29,6 +27,31 @@ describe('ApplicationDecisionConditionCardService', () => {
   let mockBoardService: DeepMocked<BoardService>;
   let mockCardService: DeepMocked<CardService>;
   let mockMapper: DeepMocked<Mapper>;
+
+  const CARD_RELATIONS = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
+  const BOARD_CARD_RELATIONS = {
+    card: CARD_RELATIONS,
+    conditions: true,
+    decision: {
+      application: {
+        type: true,
+      },
+    },
+  };
+
+  const DEFAULT_RELATIONS = {
+    conditions: true,
+    card: CARD_RELATIONS,
+    decision: {
+      application: true,
+    },
+  };
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -165,7 +188,7 @@ describe('ApplicationDecisionConditionCardService', () => {
 
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { uuid },
-        relations: ['conditions', 'decision'],
+        relations: DEFAULT_RELATIONS,
       });
       expect(result).toEqual(conditionCard);
     });
@@ -199,7 +222,7 @@ describe('ApplicationDecisionConditionCardService', () => {
 
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { uuid },
-        relations: ['conditions', 'decision'],
+        relations: DEFAULT_RELATIONS,
       });
       expect(mockBoardService.getApplicationDecisionConditionBoard).toHaveBeenCalled();
       expect(mockConditionService.findByUuids).toHaveBeenCalledWith(dto.conditionsUuids);

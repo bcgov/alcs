@@ -49,7 +49,7 @@ export class ApplicationDecisionConditionCardService {
     },
   };
 
-  private DEFAULT_RELATIONS = {
+  DEFAULT_RELATIONS = {
     conditions: true,
     card: this.CARD_RELATIONS,
     decision: {
