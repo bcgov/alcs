@@ -50,6 +50,11 @@ import { ApplicationDecisionConditionCardService } from '../../services/applicat
 import { ApplicationDecisionConditionCardBoardDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionDialogComponent } from './dialogs/application-decision-condition-dialog/application-decision-condition-dialog.component';
 
+export const CONDITION_STATUS = {
+  EXPIRED: 'EXPIRED',
+  PASTDUE: 'PASTDUE',
+};
+
 export const BOARD_TYPE_CODES = {
   VETT: 'vett',
   EXEC: 'exec',
@@ -187,7 +192,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDropped($event: { id: string; status: string; cardTypeCode: CardType }) {
+  onDropped($event: { id: string; status: string; cardTypeCode: CardType; conditionCardUuid?: string }) {
     switch ($event.cardTypeCode) {
       case CardType.APP:
         this.applicationService
@@ -205,6 +210,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.NOI_MODI:
       case CardType.NOTIFICATION:
       case CardType.INQUIRY:
+      case CardType.APP_CON:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -512,12 +518,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     let isPastDue = false;
 
     for (const condition of applicationDecisionCondition.conditions) {
-      if (condition.status === 'EXPIRED') {
-        isExpired = true;
-      }
-      if (condition.status === 'PASTDUE') {
-        isPastDue = true;
-      }
+      isExpired = isExpired || condition.status === CONDITION_STATUS.EXPIRED;
+      isPastDue = isPastDue || condition.status === CONDITION_STATUS.PASTDUE;
     }
 
     return {
@@ -526,7 +528,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       title: `${applicationDecisionCondition.fileNumber} (${applicationDecisionCondition.applicant})`,
       titleTooltip: applicationDecisionCondition.applicant,
       assignee: applicationDecisionCondition.card!.assignee,
-      id: applicationDecisionCondition.fileNumber,
+      id: applicationDecisionCondition.uuid,
       labels: [applicationDecisionCondition.type!],
       highPriority: applicationDecisionCondition.card.highPriority,
       cardType: CardType.APP_CON,

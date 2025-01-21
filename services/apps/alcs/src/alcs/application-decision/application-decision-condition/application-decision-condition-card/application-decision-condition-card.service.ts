@@ -51,7 +51,7 @@ export class ApplicationDecisionConditionCardService {
 
   private DEFAULT_RELATIONS = {
     conditions: true,
-    card: true,
+    card: this.CARD_RELATIONS,
     decision: {
       application: true,
     },
@@ -113,7 +113,7 @@ export class ApplicationDecisionConditionCardService {
   async get(uuid: string): Promise<ApplicationDecisionConditionCard> {
     const applicationDecisionConditionCard = await this.repository.findOne({
       where: { uuid },
-      relations: ['conditions', 'decision'],
+      relations: this.DEFAULT_RELATIONS,
     });
 
     if (!applicationDecisionConditionCard) {
