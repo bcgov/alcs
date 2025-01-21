@@ -2,6 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApplicationDecisionMeetingDto } from '../../services/application/application.dto';
 import { AssigneeDto } from '../../services/user/user.dto';
 import { ApplicationPill } from '../application-type-pill/application-type-pill.component';
+import {
+  DECISION_CONDITION_EXPIRED_LABEL,
+  DECISION_CONDITION_PASTDUE_LABEL,
+} from '../application-type-pill/application-type-pill.constants';
 
 export interface CardData {
   id: string;
@@ -28,6 +32,11 @@ export interface CardData {
   showDueDate?: boolean;
 }
 
+export interface ConditionCardData extends CardData {
+  isExpired: boolean;
+  isPastDue: boolean;
+}
+
 export interface CardSelectedEvent {
   uuid: string;
   cardType: CardType;
@@ -42,7 +51,7 @@ export enum CardType {
   NOI_MODI = 'NOIM',
   NOTIFICATION = 'NOTI',
   INQUIRY = 'INQR',
-  APP_CON = 'APP_CON',
+  APP_CON = 'APPCON',
 }
 
 const lineHeight = 24;
@@ -53,9 +62,13 @@ const lineHeight = 24;
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent implements OnInit {
-  @Input() cardData!: CardData;
+  @Input() cardData!: CardData | ConditionCardData;
 
   @Output() cardSelected = new EventEmitter<CardSelectedEvent>();
+
+  isConditionCard = false;
+  isExpired = false;
+  isPastDue = false;
 
   constructor() {}
 
@@ -82,6 +95,10 @@ export class CardComponent implements OnInit {
         this.cardData.latestDecisionDate = this.getLatestDecisionDate();
       }
     }
+
+    this.isConditionCard = this.cardData.cardType === CardType.APP_CON;
+    this.isExpired = this.isConditionCard ? (this.cardData as ConditionCardData).isExpired : false;
+    this.isPastDue = this.isConditionCard ? (this.cardData as ConditionCardData).isPastDue : false;
   }
 
   onMouseHover(e: any) {
@@ -92,5 +109,13 @@ export class CardComponent implements OnInit {
     }
 
     return;
+  }
+
+  getStatusPill(status: string) {
+    if (status === 'PASTDUE') {
+      return DECISION_CONDITION_PASTDUE_LABEL;
+    } else {
+      return DECISION_CONDITION_EXPIRED_LABEL;
+    }
   }
 }

@@ -302,6 +302,7 @@ export interface ApplicationDecisionConditionCardDto {
   uuid: string;
   conditions: ApplicationDecisionConditionDto[];
   cardUuid: string;
+  card: CardDto;
   decisionUuid: string;
   applicationFileNumber: string;
 }
@@ -326,6 +327,7 @@ export interface ApplicationDecisionConditionCardBoardDto {
   conditions: ApplicationDecisionConditionDto[];
   card: CardDto;
   decisionUuid: string;
+  decisionOrder: number;
   fileNumber: string;
   applicant: string;
   type?: ApplicationTypeDto;

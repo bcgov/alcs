@@ -11,6 +11,7 @@ import { ApplicationDecisionConditionCardService } from '../../../../../services
 import { BOARD_TYPE_CODES, BoardService } from '../../../../../services/board/board.service';
 import { BoardDto, BoardStatusDto } from '../../../../../services/board/board.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
+import { CardType } from '../../../../../shared/card/card.component';
 
 @Component({
   selector: 'app-condition-card-dialog',
@@ -75,7 +76,11 @@ export class ConditionCardDialogComponent implements OnInit {
     };
     const res = await this.decisionConditionCardService.create(createDto);
     if (res) {
-      this.toastService.showSuccessToast('Condition card created successfully');
+      this.toastService.showSuccessToastWithLink(
+        'Condition card created successfully',
+        'GO TO BOARD',
+        `/board/appcon?card=${res.cardUuid}&type=${CardType.APP_CON}`,
+      );
       this.dialogRef.close({ action: 'save', result: true });
     } else {
       this.toastService.showErrorToast('Failed to create condition card');

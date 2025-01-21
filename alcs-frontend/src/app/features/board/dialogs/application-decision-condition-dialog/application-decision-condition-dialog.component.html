@@ -110,7 +110,9 @@
   </div>
   <div class="conditions-container">
     <div class="conditions-header-container">
-      <span class="conditions-header">Decision # - Conditions to Review</span>
+      <span class="conditions-header"
+        >Decision #{{ applicationDecisionConditionCard.decisionOrder }} - Conditions to Review</span
+      >
       <div class="buttons-container">
         <ng-container *ngIf="!isEditing; else editMode">
           <button class="edit-button" mat-icon-button (click)="editClicked()">
@@ -168,7 +170,7 @@
           mat-row
           *matRowDef="let row; columns: displayColumns"
           [class.disabled-row]="isConditionDisabled(row.condition)"
-          matTooltip="Condition is being used by another card"
+          matTooltip="Condition is already used by another card"
           [matTooltipDisabled]="!isConditionDisabled(row.condition)"
         ></tr>
       </table>

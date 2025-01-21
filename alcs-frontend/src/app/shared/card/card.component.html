@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="lower-card">
-      <div>
+      <div *ngIf="!isConditionCard">
         <div
           *ngIf="cardData.activeDays !== undefined"
           class="day-count active-days center"
@@ -65,6 +65,10 @@
             >Overdue</span
           >
         </div>
+      </div>
+      <div class="condition-status-pill">
+        <app-application-type-pill *ngIf="isExpired" [type]="getStatusPill('EXPIRED')"></app-application-type-pill>
+        <app-application-type-pill *ngIf="isPastDue" [type]="getStatusPill('PASTDUE')"></app-application-type-pill>
       </div>
       <app-avatar-circle
         *ngIf="cardData.assignee"

@@ -16,17 +16,20 @@ import { classes } from 'automapper-classes';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
 import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v2.automapper.profile';
+import { ApplicationDecisionV2Service } from '../../application-decision-v2/application-decision/application-decision-v2.service';
 
 describe('ApplicationDecisionConditionCardController', () => {
   let controller: ApplicationDecisionConditionCardController;
   let mockService: DeepMocked<ApplicationDecisionConditionCardService>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
+  let mockApplicationDecisionService: DeepMocked<ApplicationDecisionV2Service>;
 
   beforeEach(async () => {
     mockService = createMock();
     mockModificationService = createMock();
     mockReconsiderationService = createMock();
+    mockApplicationDecisionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -47,6 +50,10 @@ describe('ApplicationDecisionConditionCardController', () => {
         {
           provide: ApplicationReconsiderationService,
           useValue: mockReconsiderationService,
+        },
+        {
+          provide: ApplicationDecisionV2Service,
+          useValue: mockApplicationDecisionService,
         },
         {
           provide: ClsService,
@@ -116,11 +123,25 @@ describe('ApplicationDecisionConditionCardController', () => {
     mockService.getByBoardCard.mockResolvedValue(conditionCard);
     mockReconsiderationService.getByApplicationDecisionUuid.mockResolvedValue([]);
     mockModificationService.getByApplicationDecisionUuid.mockResolvedValue([]);
+    mockApplicationDecisionService.getDecisionOrder.mockResolvedValue(1);
 
     const result = await controller.getByCardUuid(uuid);
 
     expect(mockService.getByBoardCard).toHaveBeenCalledWith(uuid);
     expect(result).toBeInstanceOf(ApplicationDecisionConditionCardBoardDto);
     expect(result.fileNumber).toEqual('file-number');
+  });
+
+  it('should return condition cards by application file number', async () => {
+    const fileNumber = 'example-file-number';
+    const conditionCard = new ApplicationDecisionConditionCard();
+    conditionCard.decision = { uuid: 'decision-uuid' } as any;
+    mockApplicationDecisionService.getForDecisionConditionCardsByFileNumber.mockResolvedValue([conditionCard]);
+
+    const result = await controller.getByApplicationFileNumber(fileNumber);
+
+    expect(mockApplicationDecisionService.getForDecisionConditionCardsByFileNumber).toHaveBeenCalledWith(fileNumber);
+    expect(result).toBeInstanceOf(Array);
+    expect(result[0]).toBeInstanceOf(ApplicationDecisionConditionCardDto);
   });
 });

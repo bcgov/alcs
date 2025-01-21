@@ -15,6 +15,7 @@ import { ApplicationSubmissionService } from '../../services/application/applica
 import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 
 import { ApplicationComponent } from './application.component';
+import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 describe('ApplicationComponent', () => {
   let component: ApplicationComponent;
@@ -25,6 +26,7 @@ describe('ApplicationComponent', () => {
   let mockReviewService: DeepMocked<ApplicationReviewService>;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockAppStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockApplicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
 
   beforeEach(async () => {
     mockAppDetailService = createMock();
@@ -39,6 +41,8 @@ describe('ApplicationComponent', () => {
     mockReviewService = createMock();
     mockAppSubmissionService = createMock();
     mockAppStatusService = createMock();
+
+    mockApplicationDecisionConditionCardService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -69,6 +73,10 @@ describe('ApplicationComponent', () => {
         {
           provide: ApplicationSubmissionStatusService,
           useValue: mockAppStatusService,
+        },
+        {
+          provide: ApplicationDecisionConditionCardService,
+          useValue: mockApplicationDecisionConditionCardService,
         },
         {
           provide: ActivatedRoute,
