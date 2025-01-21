@@ -15,6 +15,7 @@ import { CardType } from './card-type/card-type.entity';
 import { CardController } from './card.controller';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
+import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 
 @Module({
   imports: [
@@ -25,18 +26,13 @@ import { CardService } from './card.service';
       CardSubtaskType,
       CardSubtask,
       CardHistory,
+      ApplicationDecisionCondition,
     ]),
     CodeModule,
     MessageModule,
   ],
   controllers: [CardSubtaskController, CardController],
-  providers: [
-    CardStatusService,
-    CardService,
-    CardSubtaskService,
-    CardSubscriber,
-    CardProfile,
-  ],
+  providers: [CardStatusService, CardService, CardSubtaskService, CardSubscriber, CardProfile],
   exports: [CardStatusService, CardService, CardSubtaskService],
 })
 export class CardModule {}

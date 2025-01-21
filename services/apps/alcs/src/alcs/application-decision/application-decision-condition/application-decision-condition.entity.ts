@@ -86,5 +86,5 @@ export class ApplicationDecisionCondition extends Base {
   @ManyToOne(() => ApplicationDecisionConditionCard, (conditionCard) => conditionCard.conditions, {
     nullable: true,
   })
-  conditionCard: ApplicationDecisionConditionCard;
+  conditionCard: ApplicationDecisionConditionCard | null;
 }

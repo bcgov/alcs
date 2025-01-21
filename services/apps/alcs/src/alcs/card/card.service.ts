@@ -13,6 +13,7 @@ import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
+import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 
 @Injectable()
 export class CardService {
@@ -29,6 +30,8 @@ export class CardService {
     private cardRepository: Repository<Card>,
     @InjectRepository(CardType)
     private cardTypeRepository: Repository<CardType>,
+    @InjectRepository(ApplicationDecisionCondition)
+    private applicationConditionRepository: Repository<ApplicationDecisionCondition>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
     private subtaskService: CardSubtaskService,
     private notificationService: MessageService,
@@ -190,6 +193,19 @@ export class CardService {
 
     const subtaskUuids = card.subtasks.map((subtask) => subtask.uuid);
     await this.subtaskService.deleteMany(subtaskUuids);
+
+    const conditions = await this.applicationConditionRepository.find({
+      where: {
+        conditionCard: {
+          cardUuid: uuid,
+        },
+      },
+    });
+
+    conditions.forEach((c) => {
+      c.conditionCard = null;
+      this.applicationConditionRepository.save(c);
+    });
 
     card.archived = true;
     await this.cardRepository.save(card);
