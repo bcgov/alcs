@@ -15,6 +15,8 @@ import {
   ApplicationDecisionConditionCardDto,
   ApplicationDecisionConditionCardUuidDto,
 } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
+import { Type } from 'class-transformer';
+import { UserDto } from 'apps/alcs/src/user/user.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
@@ -110,6 +112,30 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   @IsArray()
   ccEmails?: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  isFlagged?: boolean;
+
+  @IsOptional()
+  @IsString()
+  reasonFlagged?: string | null;
+
+  @IsOptional()
+  @IsNumber()
+  followUpAt?: number | null;
+
+  @IsOptional()
+  @IsString()
+  flaggedByUuid?: string | null;
+
+  @IsOptional()
+  @IsString()
+  flagEditedByUuid?: string | null;
+
+  @IsOptional()
+  @IsNumber()
+  flagEditedAt?: number | null;
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -228,6 +254,24 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => [ApplicationDecisionConditionCardUuidDto])
   conditionCards?: ApplicationDecisionConditionCardUuidDto[];
+
+  @AutoMap(() => Boolean)
+  isFlagged: boolean;
+
+  @AutoMap(() => String)
+  reasonFlagged: string | null;
+
+  @AutoMap(() => Number)
+  followUpAt: number | null;
+
+  @AutoMap(() => UserDto)
+  flaggedBy: UserDto | null;
+
+  @AutoMap(() => UserDto)
+  flagEditedBy: UserDto | null;
+
+  @AutoMap(() => Number)
+  flagEditedAt: number | null;
 }
 
 export class LinkedResolutionDto {

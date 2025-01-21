@@ -17,6 +17,7 @@ import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-con
 import { NoticeOfIntentDecisionDocument } from './notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
 import { NoticeOfIntentDecisionOutcome } from './notice-of-intent-decision-outcome.entity';
 import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
+import { User } from '../../user/user.entity';
 
 @Entity({
   comment: 'Decisions saved to NOIs, linked to the modification request',
@@ -189,4 +190,28 @@ export class NoticeOfIntentDecision extends Base {
       'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_decisions to alcs.notice_of_intent_decisions.',
   })
   oatsAlrApplDecisionId: number;
+
+  @AutoMap()
+  @Column({ default: false })
+  isFlagged: boolean;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  reasonFlagged: string | null;
+
+  @AutoMap(() => Date)
+  @Column({ type: 'timestamptz', nullable: true })
+  followUpAt: Date | null;
+
+  @AutoMap(() => User)
+  @ManyToOne(() => User, { nullable: true, eager: true })
+  flaggedBy: User | null;
+
+  @AutoMap(() => User)
+  @ManyToOne(() => User, { nullable: true, eager: true })
+  flagEditedBy: User | null;
+
+  @AutoMap(() => Date)
+  @Column({ type: 'timestamptz', nullable: true })
+  flagEditedAt: Date | null;
 }

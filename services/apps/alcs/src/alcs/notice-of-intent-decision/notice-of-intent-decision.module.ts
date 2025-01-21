@@ -27,6 +27,7 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
 import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 import { NoticeOfIntentDecisionConditionDateService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
 import { NoticeOfIntentDecisionConditionDateController } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.controller';
+import { User } from '../../user/user.entity';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { NoticeOfIntentDecisionConditionDateController } from './notice-of-inten
       NoticeOfIntentDecisionCondition,
       NoticeOfIntentDecisionConditionType,
       NoticeOfIntentDecisionConditionDate,
+      User,
     ]),
     forwardRef(() => BoardModule),
     CardModule,
