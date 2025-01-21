@@ -66,6 +66,7 @@
           >
         </div>
       </div>
+
       <div class="condition-status-pill">
         <app-application-type-pill *ngIf="isExpired" [type]="getStatusPill('EXPIRED')"></app-application-type-pill>
         <app-application-type-pill *ngIf="isPastDue" [type]="getStatusPill('PASTDUE')"></app-application-type-pill>
@@ -75,6 +76,20 @@
         [initials]="cardData.assignee.initials || ''"
         [name]="cardData.assignee.prettyName"
       ></app-avatar-circle>
+
+      <div class="flag-avatar-container">
+        <mat-icon
+          *ngIf="cardData.cardType === CardType.APP_CON && cardData.decisionIsFlagged"
+          svgIcon="personal_places"
+          class="flag-icon"
+        ></mat-icon>
+
+        <app-avatar-circle
+          *ngIf="cardData.assignee"
+          [initials]="cardData.assignee.initials || ''"
+          [name]="cardData.assignee.prettyName"
+        ></app-avatar-circle>
+      </div>
     </div>
   </div>
 </mat-card>

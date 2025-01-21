@@ -341,6 +341,7 @@ export interface ApplicationDecisionConditionCardBoardDto {
   card: CardDto;
   decisionUuid: string;
   decisionOrder: number;
+  decisionIsFlagged: boolean;
   fileNumber: string;
   applicant: string;
   type?: ApplicationTypeDto;
