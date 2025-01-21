@@ -241,6 +241,10 @@ export class SharedModule {
       'cancel_filled',
       domSanitizer.bypassSecurityTrustResourceUrl('/assets/icons/cancel_filled.svg'),
     );
+    matIconRegistry.addSvgIcon(
+      'personal_places',
+      domSanitizer.bypassSecurityTrustResourceUrl('/assets/icons/personal_places.svg'),
+    );
   }
   static forRoot(): ModuleWithProviders<SharedModule> {
     return {

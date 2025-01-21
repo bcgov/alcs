@@ -187,3 +187,73 @@ hr {
     color: colors.$link-color;
   }
 }
+
+.flag-button {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
+  text-align: left;
+  font-weight: normal;
+
+  background-color: transparent;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  margin: 0;
+
+  &:hover {
+    background-color: colors.$grey-light;
+  }
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+
+  &.flagged {
+    mat-icon {
+      color: blue;
+    }
+  }
+}
+
+.flag-details {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  padding: 16px;
+  border: 1px solid colors.$grey;
+  border-radius: 4px;
+}
+
+.flag-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flag-details-flagger {
+  display: flex;
+  gap: 5px;
+
+  mat-icon {
+    color: blue;
+  }
+}
+
+.flag-details-body {
+  line-height: 1.5;
+}
+
+.flag-details-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.flag-details-edited-details {
+  font-size: 12px;
+  color: colors.$grey;
+}
