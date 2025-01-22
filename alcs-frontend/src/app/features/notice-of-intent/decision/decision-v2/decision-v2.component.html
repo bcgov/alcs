@@ -74,7 +74,9 @@
           <ng-container *ngIf="!decision.isDraft">
             <app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
           </ng-container>
+        </div>
 
+        <div class="flag-button-container">
           <button
             type="button"
             (click)="decision.isFlagged ? unflag(decision, i + 1) : flag(decision, i + 1, false)"
@@ -83,11 +85,14 @@
             [matTooltip]="decision.isFlagged ? 'Click to unflag' : ''"
           >
             <mat-icon svgIcon="personal_places"></mat-icon>
-            Flag{{ decision.isFlagged ? 'ged' : '' }}&nbsp;for Condition&nbsp;Follow&#8209;Up
+            Flag{{ decision.isFlagged ? 'ged' : '' }} for Condition Follow-Up
           </button>
         </div>
+
         <ng-container *ngIf="decision.isDraft">
-          <button mat-flat-button color="primary" (click)="onEdit(decision)">Edit Draft</button>
+          <button class="edit-decision-button" mat-flat-button color="primary" (click)="onEdit(decision)">
+            Edit Draft
+          </button>
         </ng-container>
 
         <div
