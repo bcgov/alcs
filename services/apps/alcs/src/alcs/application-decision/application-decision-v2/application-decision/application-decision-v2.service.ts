@@ -1,5 +1,5 @@
 import { MultipartFile } from '@fastify/multipart';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, LessThan, Repository, DataSource } from 'typeorm';
 import { v4 } from 'uuid';
@@ -31,6 +31,7 @@ import { CreateApplicationDecisionDto, UpdateApplicationDecisionDto } from './ap
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
+import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -56,6 +57,8 @@ export class ApplicationDecisionV2Service {
     private decisionComponentService: ApplicationDecisionComponentService,
     private decisionConditionService: ApplicationDecisionConditionService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    @Inject(forwardRef(() => ApplicationDecisionConditionCardService))
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
     private dataSource: DataSource,
   ) {}
 
@@ -443,6 +446,7 @@ export class ApplicationDecisionV2Service {
         },
         application: true,
         components: true,
+        conditionCards: true,
       },
     });
 
@@ -455,6 +459,12 @@ export class ApplicationDecisionV2Service {
     }
 
     await this.decisionComponentService.softRemove(applicationDecision.components);
+
+    if (applicationDecision.conditionCards && applicationDecision.conditionCards.length > 0) {
+      for (const conditionCard of applicationDecision.conditionCards) {
+        await this.applicationDecisionConditionCardService.softRemove(conditionCard);
+      }
+    }
 
     //Clear potential links
     applicationDecision.reconsiders = null;

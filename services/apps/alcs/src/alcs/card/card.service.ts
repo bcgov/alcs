@@ -111,9 +111,7 @@ export class CardService {
     });
 
     if (!existingCard) {
-      throw new ServiceValidationException(
-        `Card for with ${cardUuid} not found`,
-      );
+      throw new ServiceValidationException(`Card for with ${cardUuid} not found`);
     }
 
     const shouldCreateNotification =
@@ -147,15 +145,11 @@ export class CardService {
     });
 
     if (!type) {
-      throw new ServiceValidationException(
-        `Provided type does not exist ${typeCode}`,
-      );
+      throw new ServiceValidationException(`Provided type does not exist ${typeCode}`);
     }
 
     const newCard = new Card();
-    newCard.statusCode = board.statuses.reduce((prev, curr) =>
-      prev.order < curr.order ? prev : curr,
-    )?.status.code;
+    newCard.statusCode = board.statuses.reduce((prev, curr) => (prev.order < curr.order ? prev : curr))?.status.code;
     newCard.typeCode = typeCode;
     newCard.boardUuid = board.uuid;
 
@@ -241,5 +235,12 @@ export class CardService {
       where: { statusCode: code },
       relations: this.DEFAULT_RELATIONS,
     });
+  }
+
+  async softRemoveByUuid(uuid: string) {
+    const card = await this.cardRepository.findOneOrFail({
+      where: { uuid },
+    });
+    await this.cardRepository.softRemove(card);
   }
 }

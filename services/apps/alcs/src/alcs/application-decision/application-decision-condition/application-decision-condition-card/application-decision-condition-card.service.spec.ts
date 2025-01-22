@@ -297,4 +297,32 @@ describe('ApplicationDecisionConditionCardService', () => {
       await expect(service.getByBoardCard(uuid)).rejects.toThrow(ServiceNotFoundException);
     });
   });
+
+  describe('softRemove', () => {
+    it('should soft remove a condition card', async () => {
+      const conditionCard = new ApplicationDecisionConditionCard();
+      conditionCard.cardUuid = 'card-uuid';
+      const card = new Card();
+
+      mockCardService.get.mockResolvedValue(card);
+      mockCardService.softRemoveByUuid.mockResolvedValue();
+      mockRepository.softRemove.mockResolvedValue(conditionCard);
+
+      const result = await service.softRemove(conditionCard);
+
+      expect(mockCardService.get).toHaveBeenCalledWith(conditionCard.cardUuid);
+      expect(mockCardService.softRemoveByUuid).toHaveBeenCalledWith(card.uuid);
+      expect(mockRepository.softRemove).toHaveBeenCalledWith(conditionCard);
+      expect(result).toEqual(conditionCard);
+    });
+
+    it('should throw an error if card is not found', async () => {
+      const conditionCard = new ApplicationDecisionConditionCard();
+      conditionCard.cardUuid = 'card-uuid';
+
+      mockCardService.get.mockResolvedValue(null);
+
+      await expect(service.softRemove(conditionCard)).rejects.toThrow(ServiceNotFoundException);
+    });
+  });
 });
