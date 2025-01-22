@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import {
   ApplicationDecisionConditionCardBoardDto,
-  ApplicationDecisionConditionCardDto,
   CreateApplicationDecisionConditionCardDto,
-  UpdateApplicationDecisionConditionBoardCardDto,
   UpdateApplicationDecisionConditionCardDto,
 } from './application-decision-condition-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,9 +21,6 @@ import { ApplicationDecisionV2Service } from '../../application-decision-v2/appl
 import { Board } from '../../../board/board.entity';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
-import { ApplicationDecisionConditionDateService } from '../application-decision-condition-date/application-decision-condition-date.service';
-import { Application } from '../../../application/application.entity';
-import { ApplicationDto } from '../../../application/application.dto';
 import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
 import { ApplicationDecision } from '../../application-decision.entity';
@@ -61,6 +56,7 @@ export class ApplicationDecisionConditionCardService {
     @InjectRepository(ApplicationDecisionConditionCard)
     private repository: Repository<ApplicationDecisionConditionCard>,
     private applicationDecisionConditionService: ApplicationDecisionConditionService,
+    @Inject(forwardRef(() => ApplicationDecisionV2Service))
     private applicationDecisionService: ApplicationDecisionV2Service,
     private boardService: BoardService,
     private cardService: CardService,
@@ -152,6 +148,16 @@ export class ApplicationDecisionConditionCardService {
     }
 
     return this.repository.save(applicationDecisionConditionCard);
+  }
+
+  async softRemove(decisionConditionCard: ApplicationDecisionConditionCard) {
+    const card = await this.cardService.get(decisionConditionCard.cardUuid);
+    if (!card) {
+      throw new ServiceNotFoundException(`Card with uuid ${decisionConditionCard.cardUuid} not found`);
+    }
+
+    await this.cardService.softRemoveByUuid(card.uuid);
+    return this.repository.softRemove(decisionConditionCard);
   }
 
   async getByBoard(boardUuid: string): Promise<ApplicationDecisionConditionCard[]> {
