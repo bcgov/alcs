@@ -78,6 +78,8 @@ import { TagsHeaderComponent } from './tags/tags-header/tags-header.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { TagChipComponent } from './tags/tag-chip/tag-chip.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CommissionerTagsHeaderComponent } from './tags/commissioner-tags-header/commissioner-tags-header.component';
+import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 
 @NgModule({
   declarations: [
@@ -121,6 +123,8 @@ import { DomSanitizer } from '@angular/platform-browser';
     TruncatePipe,
     TagsHeaderComponent,
     TagChipComponent,
+    CommissionerTagsHeaderComponent,
+    DocumentUploadDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -148,6 +152,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     MatSlideToggleModule,
     MatChipsModule,
     MatAutocompleteModule,
+    MatCheckboxModule,
   ],
   exports: [
     CommonModule,
@@ -224,6 +229,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     TruncatePipe,
     TagsHeaderComponent,
     TagChipComponent,
+    DocumentUploadDialogComponent,
   ],
 })
 export class SharedModule {

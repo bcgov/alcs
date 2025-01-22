@@ -3,7 +3,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { ANY_ROLE_BUT_COMMISSIONER, AUTH_ROLE } from '../../../common/authorization/roles';
+import { ANY_AUTH_ROLE, AUTH_ROLE } from '../../../common/authorization/roles';
 import { TagCategoryDto } from './tag-category.dto';
 import { TagCategoryService } from './tag-category.service';
 
@@ -14,7 +14,7 @@ export class TagCategoryController {
   constructor(private service: TagCategoryService) {}
 
   @Get('')
-  @UserRoles(...ANY_ROLE_BUT_COMMISSIONER)
+  @UserRoles(...ANY_AUTH_ROLE)
   async fetch(
     @Query('pageIndex') pageIndex: number,
     @Query('itemsPerPage') itemsPerPage: number,

@@ -64,6 +64,7 @@ export interface NoticeOfIntentDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize: number | null;
 }
 
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}

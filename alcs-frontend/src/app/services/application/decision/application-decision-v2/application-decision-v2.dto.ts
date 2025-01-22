@@ -1,4 +1,6 @@
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
+import { CardDto } from '../../../card/card.dto';
+import { ApplicationTypeDto } from '../../application-code.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -73,6 +75,7 @@ export interface ApplicationDecisionDto {
   components: ApplicationDecisionComponentDto[];
   conditions: ApplicationDecisionConditionDto[];
   wasReleased: boolean;
+  conditionsCards: ApplicationDecisionConditionCardDto[];
 }
 
 export interface LinkedResolutionDto {
@@ -92,6 +95,7 @@ export interface ApplicationDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize?: number;
 }
 
 export interface DecisionMakerDto extends BaseCodeDto {}
@@ -253,6 +257,8 @@ export interface ApplicationDecisionConditionDto {
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
   dates?: ApplicationDecisionConditionDateDto[];
+  conditionCard?: ApplicationDecisionConditionCardDto | null;
+  status?: string | null;
   decision: ApplicationDecisionDto | null;
 }
 
@@ -290,4 +296,41 @@ export interface ApplicationDecisionConditionToComponentPlanNumberDto {
   applicationDecisionComponentUuid: string;
   applicationDecisionConditionUuid: string;
   planNumbers: string | null;
+}
+
+export interface ApplicationDecisionConditionCardDto {
+  uuid: string;
+  conditions: ApplicationDecisionConditionDto[];
+  cardUuid: string;
+  card: CardDto;
+  decisionUuid: string;
+  applicationFileNumber: string;
+}
+
+export interface CreateApplicationDecisionConditionCardDto {
+  conditionsUuids: string[];
+  decisionUuid: string;
+  cardStatusCode: string;
+}
+
+export interface UpdateApplicationDecisionConditionCardDto {
+  conditionsUuids?: string[] | null;
+  cardStatusCode?: string | null;
+}
+
+export interface ApplicationDecisionConditionCardUuidDto {
+  uuid: string;
+}
+
+export interface ApplicationDecisionConditionCardBoardDto {
+  uuid: string;
+  conditions: ApplicationDecisionConditionDto[];
+  card: CardDto;
+  decisionUuid: string;
+  decisionOrder: number;
+  fileNumber: string;
+  applicant: string;
+  type?: ApplicationTypeDto;
+  isReconsideration: boolean;
+  isModification: boolean;
 }

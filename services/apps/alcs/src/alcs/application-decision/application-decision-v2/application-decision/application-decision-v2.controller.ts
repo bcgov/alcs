@@ -1,4 +1,16 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
@@ -30,6 +42,10 @@ import { ApplicationDecisionComponentType } from './component/application-decisi
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
 import { ApplicationConditionStatus } from './application-condition-status.dto';
 
+export enum IncludeQueryParam {
+  CONDITION_STATUS = 'conditionStatus',
+}
+
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
 @UseGuards(RolesGuard)
@@ -44,7 +60,7 @@ export class ApplicationDecisionV2Controller {
 
   @Get('/application/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getByFileNumber(@Param('fileNumber') fileNumber): Promise<ApplicationDecisionDto[]> {
+  async getByFileNumber(@Param('fileNumber') fileNumber: string): Promise<ApplicationDecisionDto[]> {
     const decisions = await this.appDecisionService.getByAppFileNumber(fileNumber);
     return await this.mapper.mapArrayAsync(decisions, ApplicationDecision, ApplicationDecisionDto);
   }
@@ -55,7 +71,7 @@ export class ApplicationDecisionV2Controller {
     const status = await this.appDecisionService.getDecisionConditionStatus(uuid);
     return {
       uuid: uuid,
-      status: status && status.length > 0 ? status[0]['get_current_status_for_application_condition'] : '',
+      status: status,
     };
   }
 
@@ -95,10 +111,22 @@ export class ApplicationDecisionV2Controller {
 
   @Get('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async get(@Param('uuid') uuid: string): Promise<ApplicationDecisionDto> {
+  async get(
+    @Param('uuid') uuid: string,
+    @Query('include') include?: IncludeQueryParam,
+  ): Promise<ApplicationDecisionDto> {
     const decision = await this.appDecisionService.get(uuid);
 
-    return this.mapper.mapAsync(decision, ApplicationDecision, ApplicationDecisionDto);
+    const decisionDto = await this.mapper.mapAsync(decision, ApplicationDecision, ApplicationDecisionDto);
+
+    if (include === IncludeQueryParam.CONDITION_STATUS) {
+      for (const condition of decisionDto.conditions!) {
+        const status = await this.appDecisionService.getDecisionConditionStatus(condition.uuid);
+        condition.status = status !== '' ? status : undefined;
+      }
+    }
+
+    return decisionDto;
   }
 
   @Post()

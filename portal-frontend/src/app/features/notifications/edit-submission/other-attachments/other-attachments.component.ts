@@ -17,6 +17,7 @@ import { EditNotificationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { OtherAttachmentsUploadDialogComponent } from './other-attachments-upload-dialog/other-attachments-upload-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
@@ -33,7 +34,8 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   otherFiles: NotificationDocumentDto[] = [];
 
   private isDirty = false;
-  showVirusError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
   private documentCodes: DocumentTypeDto[] = [];
@@ -42,7 +44,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
     private codeService: CodeService,
     toastService: ToastService,
     notificationDocumentService: NotificationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
   ) {
     super(notificationDocumentService, dialog, toastService);
   }
@@ -71,8 +73,16 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   }
 
   async attachDocument(file: FileHandle) {
-    const res = await this.attachFile(file, null);
-    this.showVirusError = !res;
+    try {
+      await this.attachFile(file, null);
+      this.showHasVirusError = false;
+      this.showVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   protected async save() {
@@ -95,15 +105,17 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   onAddEditAttachment(attachment: NotificationDocumentDto | undefined) {
     this.dialog
       .open(OtherAttachmentsUploadDialogComponent, {
-        width: this.isMobile? '90%' : '50%',
+        width: this.isMobile ? '90%' : '50%',
         data: {
           fileId: this.fileId,
           otherAttachmentsComponent: this,
           existingDocument: attachment,
-        }
-    }).afterClosed().subscribe(async res => {
-      await this.refreshFiles();
-    });
+        },
+      })
+      .afterClosed()
+      .subscribe(async (res) => {
+        await this.refreshFiles();
+      });
   }
 
   @HostListener('window:resize', ['$event'])

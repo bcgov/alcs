@@ -7,10 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { Repository } from 'typeorm';
-import {
-  initBoardMockEntity,
-  initCardMockEntity,
-} from '../../../test/mocks/mockEntities';
+import { initBoardMockEntity, initCardMockEntity } from '../../../test/mocks/mockEntities';
 import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
 import { MessageService } from '../message/message.service';
@@ -20,11 +17,13 @@ import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
+import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 
 describe('CardService', () => {
   let service: CardService;
   let cardRepositoryMock: DeepMocked<Repository<Card>>;
   let cardTypeRepositoryMock: DeepMocked<Repository<CardType>>;
+  let applicationConditionRepositoryMock: DeepMocked<Repository<ApplicationDecisionCondition>>;
   let mockCardEntity;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
   let mockNotificationService: DeepMocked<MessageService>;
@@ -32,6 +31,7 @@ describe('CardService', () => {
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
     cardTypeRepositoryMock = createMock<Repository<CardType>>();
+    applicationConditionRepositoryMock = createMock<Repository<ApplicationDecisionCondition>>();
     mockCardEntity = initCardMockEntity();
     mockSubtaskService = createMock();
     mockNotificationService = createMock();
@@ -53,6 +53,10 @@ describe('CardService', () => {
           useValue: cardTypeRepositoryMock,
         },
         {
+          provide: getRepositoryToken(ApplicationDecisionCondition),
+          useValue: applicationConditionRepositoryMock,
+        },
+        {
           provide: CONFIG_TOKEN,
           useValue: config,
         },
@@ -71,6 +75,8 @@ describe('CardService', () => {
 
     cardRepositoryMock.findOne.mockResolvedValue(mockCardEntity);
     cardRepositoryMock.save.mockResolvedValue(mockCardEntity);
+    applicationConditionRepositoryMock.save.mockResolvedValue(new ApplicationDecisionCondition());
+    applicationConditionRepositoryMock.find.mockResolvedValue([new ApplicationDecisionCondition()]);
     cardTypeRepositoryMock = module.get(getRepositoryToken(CardType));
   });
 
@@ -89,11 +95,7 @@ describe('CardService', () => {
       boardUuid: mockCardEntity.boardUuid,
     };
 
-    const result = await service.update(
-      new User(),
-      mockCardEntity.uuid,
-      payload,
-    );
+    const result = await service.update(new User(), mockCardEntity.uuid, payload);
     expect(result).toStrictEqual(mockCardEntity);
     expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.save).toHaveBeenCalledWith(mockCardEntity);
@@ -108,12 +110,8 @@ describe('CardService', () => {
 
     cardRepositoryMock.findOne.mockResolvedValue(null);
 
-    await expect(
-      service.update(new User(), mockCardEntity.uuid, payload),
-    ).rejects.toMatchObject(
-      new ServiceValidationException(
-        `Card for with ${mockCardEntity.uuid} not found`,
-      ),
+    await expect(service.update(new User(), mockCardEntity.uuid, payload)).rejects.toMatchObject(
+      new ServiceValidationException(`Card for with ${mockCardEntity.uuid} not found`),
     );
     expect(cardRepositoryMock.save).toBeCalledTimes(0);
   });
@@ -145,9 +143,7 @@ describe('CardService', () => {
     cardTypeRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(service.create(fakeType, board)).rejects.toMatchObject(
-      new ServiceValidationException(
-        `Provided type does not exist ${fakeType}`,
-      ),
+      new ServiceValidationException(`Provided type does not exist ${fakeType}`),
     );
 
     expect(cardRepositoryMock.save).toBeCalledTimes(0);
@@ -219,15 +215,10 @@ describe('CardService', () => {
 
     expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
 
-    const createNotificationServiceDto =
-      mockNotificationService.create.mock.calls[0][0];
+    const createNotificationServiceDto = mockNotificationService.create.mock.calls[0][0];
     expect(createNotificationServiceDto.actor).toStrictEqual(fakeAuthor);
-    expect(createNotificationServiceDto.receiverUuid).toStrictEqual(
-      mockUserUuid,
-    );
-    expect(createNotificationServiceDto.title).toStrictEqual(
-      "You've been assigned",
-    );
+    expect(createNotificationServiceDto.receiverUuid).toStrictEqual(mockUserUuid);
+    expect(createNotificationServiceDto.title).toStrictEqual("You've been assigned");
     expect(createNotificationServiceDto.targetType).toStrictEqual('card');
   });
 

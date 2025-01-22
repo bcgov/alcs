@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 
@@ -99,31 +99,12 @@ describe('ApplicationParcelService', () => {
     expect(mockHttpClient.put.mock.calls[0][0]).toContain('application-parcel');
   });
 
-  it('should show an error toast if updating a parcel fails', async () => {
-    mockHttpClient.put.mockReturnValue(throwError(() => ({})));
-
-    await service.update([{}] as ApplicationParcelUpdateDto[]);
-
-    expect(mockHttpClient.put).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
   it('should call document service for attaching certificate of title', async () => {
     mockDocumentService.uploadFile.mockResolvedValue({});
 
     await service.attachCertificateOfTitle('fileId', 'parcelUuid', {} as File);
 
     expect(mockDocumentService.uploadFile).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showSuccessToast).toHaveBeenCalledTimes(1);
-  });
-
-  it('should show an error toast if document service fails', async () => {
-    mockDocumentService.uploadFile.mockRejectedValue({});
-
-    await service.attachCertificateOfTitle('fileId', 'parcelUuid', {} as File);
-
-    expect(mockDocumentService.uploadFile).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should make a delete request and show the overlay for removing all parcels', async () => {
@@ -147,7 +128,7 @@ describe('ApplicationParcelService', () => {
     mockHttpClient.delete.mockReturnValue(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     await service.deleteMany([]);

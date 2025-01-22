@@ -15,7 +15,6 @@ import { appChildRoutes, ApplicationComponent } from './application.component';
 import { BoundaryAmendmentComponent } from './boundary-amendment/boundary-amendment.component';
 import { EditBoundaryAmendmentDialogComponent } from './boundary-amendment/edit-boundary-amendment-dialog/edit-boundary-amendment-dialog.component';
 import { DecisionModule } from './decision/decision.module';
-import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { InfoRequestDialogComponent } from './info-requests/info-request-dialog/info-request-dialog.component';
@@ -73,7 +72,6 @@ const routes: Routes = [
     ApplicantInfoComponent,
     LfngInfoComponent,
     DocumentsComponent,
-    DocumentUploadDialogComponent,
     ProposalComponent,
     NfuProposalComponent,
     SubdProposalComponent,

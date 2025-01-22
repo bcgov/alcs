@@ -8,6 +8,7 @@ import {
   FlatTreeNode,
   TreeNode,
 } from '../../../services/search/file-type/file-type-data-source.service';
+import { PortalStatusDataSourceService } from '../../../services/search/portal-status/portal-status-data-source.service';
 
 @Component({
   selector: 'app-file-type-filter-drop-down[fileTypeData]',
@@ -34,10 +35,11 @@ export class FileTypeFilterDropDownComponent implements OnInit {
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   @Output() fileTypeChange = new EventEmitter<string[]>();
 
-  @Input() fileTypeData!: FileTypeDataSourceService;
+  @Input() fileTypeData!: FileTypeDataSourceService | PortalStatusDataSourceService;
   @Input() label!: string;
   @Input() tooltip = '';
   @Input() preExpanded: string[] = [];
+  @Input() id!: string;
 
   constructor() {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);

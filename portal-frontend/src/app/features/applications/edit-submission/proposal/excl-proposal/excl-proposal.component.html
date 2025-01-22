@@ -134,7 +134,9 @@
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
+        [showHasVirusError]="showProposalMapHasVirusError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
       ></app-file-drag-drop>
     </div>
   </div>
@@ -176,7 +178,9 @@
           [showErrors]="showErrors"
           [allowMultiple]="true"
           [isRequired]="true"
-          [showVirusError]="showProofOfAdvertisingVirus"
+          [showHasVirusError]="showProofOfAdvertisingHasVirusError"
+          [showVirusScanFailedError]="showProofOfAdvertisingVirusScanFailedError"
+          [showVirusScanFailedError]="showProofOfAdvertisingVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -194,7 +198,9 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [allowMultiple]="true"
-          [showVirusError]="showProofOfSignageVirus"
+          [showHasVirusError]="showProofOfSignageHasVirusError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
+          [showVirusScanFailedError]="showProofOfSignageVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -209,7 +215,8 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [allowMultiple]="true"
-          [showVirusError]="showReportOfPublicHearingVirus"
+          [showHasVirusError]="showReportOfPublicHearingHasVirusError"
+          [showVirusScanFailedError]="showReportOfPublicHearingVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
     </div>

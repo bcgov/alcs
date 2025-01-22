@@ -103,266 +103,277 @@
         </div>
       </div>
 
-      <h4>Resolution</h4>
       <section class="decision-section-no-title">
         <div class="grid-2">
           <div>
-            <div class="subheading2">Decision Date</div>
+            <span class="subheading2">Decision Date:&nbsp;</span>
             {{ decision.date | momentFormat }}
             <app-no-data *ngIf="decision.date === null || decision.date === undefined"></app-no-data>
           </div>
-          <div>
-            <div class="subheading2">Decision Maker</div>
+          <div class="align-right">
+            <span class="subheading2">Decision Maker:&nbsp;</span>
             {{ decision.decisionMaker?.label }}
             <app-no-data *ngIf="decision.decisionMaker === null || decision.decisionMaker === undefined"></app-no-data>
           </div>
-
+        </div>
+        <div *ngIf="decision.ceoCriterion" class="component-summary">
           <div>
-            <div class="subheading2">Decision Outcome</div>
-            {{ decision.outcome.label }} {{ decision.isSubjectToConditions ? '- Subject to Conditions' : '' }}
-          </div>
-
-          <div>
-            <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
-            {{ decision.ceoCriterion?.label }}
+            <span class="subheading2">CEO Criterion:&nbsp;</span>
+            {{ decision.ceoCriterion.label }}
             <ng-container *ngIf="decision.isTimeExtension || decision.isOther">&#32;-&#32;</ng-container>
             <ng-container *ngIf="decision.isTimeExtension">Time extension</ng-container>
             <ng-container *ngIf="decision.isTimeExtension && decision.isOther">,&#32;</ng-container>
             <ng-container *ngIf="decision.isOther">Other</ng-container>
           </div>
-
+        </div>
+        <div *ngIf="decision.outcome?.code === 'RESC'" class="component-summary">
+          <div>
+            <span class="subheading2">Rescinded Date:&nbsp;</span>
+            <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
+            <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="decision.outcome?.code === 'RESC'" class="component-summary">
+          <div>
+            <span class="subheading2">Rescinded Comment:&nbsp;</span>
+            {{ decision.rescindedComment }}
+            <app-no-data *ngIf="!decision.rescindedComment"></app-no-data>
+          </div>
+        </div>
+        <div class="component-summary">
           <div class="full-width decision-description">
-            <div class="subheading2">Decision Description</div>
             {{ decision.decisionDescription }}
             <app-no-data
               *ngIf="decision.decisionDescription === null || decision.decisionDescription === undefined"
             ></app-no-data>
           </div>
-
-          <div *ngIf="decision.outcome?.code === 'RESC'">
-            <div class="subheading2">Rescinded Date</div>
-            <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
-            <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
+        </div>
+        <ng-container *ngFor="let component of decision.components; let index = index">
+          <div class="component-summary">
+            <span class="subheading2">{{ component.applicationDecisionComponentType?.label }} </span>
+            {{ getDate(component.uuid) }}
+            <span class="subheading2">Conditions: </span>
+            <ng-container *ngFor="let condition of getConditions(component.uuid)">
+              <app-application-type-pill class="status-pill" *ngIf="condition !== null" [type]="condition"></app-application-type-pill>
+            </ng-container>
+            <ng-container *ngIf="getConditions(component.uuid).length === 0"> 
+              None
+            </ng-container>
           </div>
-
-          <div *ngIf="decision.outcome?.code === 'RESC'">
-            <div class="subheading2">Rescinded Comment</div>
-            {{ decision.rescindedComment }}
-            <app-no-data *ngIf="!decision.rescindedComment"></app-no-data>
+        </ng-container>
+        <ng-container *ngIf="['APPR', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
+          <section class="decision-section">
+            <div>
+              <a [routerLink]="['/application/' + fileNumber + '/decision/conditions/' + decision.uuid]"
+                >View Conditions
+                <mat-icon class="conditions-link-icon">open_in_new</mat-icon>
+              </a>
+            </div>
+          </section>
+        </ng-container>
+        <div class="full-width">
+          <div class="document split" *ngFor="let document of decision.documents">
+            <div>
+              <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>
+              &nbsp;({{ document.fileSize ? (document.fileSize | filesize) : '' }})
+            </div>
+            <button class="center" mat-button (click)="openFile(decision.uuid, document.uuid, document.fileName)">
+              <mat-icon>file_download</mat-icon>
+              Download
+            </button>
           </div>
         </div>
       </section>
+      <ng-container *ngIf="isSummary">
+        <!-- Components -->
+        <ng-container *ngIf="['APPR', 'RESC'].includes(decision.outcome.code)">
+          <h4>Components</h4>
+          <section class="decision-section-no-title">
+            <app-no-data
+              *ngIf="decision.components.length < 1"
+              text="No decision components are added. Edit draft to add decision components."
+            ></app-no-data>
 
-      <h4>Documents</h4>
-      <section class="decision-section">
-        <app-decision-documents
-          [hiddenFromPortal]="application?.hideFromPortal ?? false"
-          [editable]="false"
-          [loadData]="false"
-          [decision]="decision"
-        ></app-decision-documents>
-      </section>
-
-      <!-- Components -->
-      <ng-container *ngIf="['APPR', 'RESC'].includes(decision.outcome.code)">
-        <h4>Components</h4>
-        <section class="decision-section">
-          <app-no-data
-            *ngIf="decision.components.length < 1"
-            text="No decision components are added. Edit draft to add decision components."
-          ></app-no-data>
-
-          <ng-container *ngFor="let component of decision.components; let index = index">
-            <h5>{{ component.applicationDecisionComponentType?.label }}</h5>
-            <div>
-              <app-nfup
-                class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
-                [component]="component"
-              >
-                <app-app-basic
+            <ng-container *ngFor="let component of decision.components; let index = index">
+              <h5 class="component-title">{{ component.applicationDecisionComponentType?.label }}</h5>
+              <div>
+                <app-nfup
+                  class="grid-2"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic>
-              </app-nfup>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic>
+                </app-nfup>
 
-              <app-expiry-date
-                class="grid-2"
-                *ngIf="
-                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
-                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE
-                "
-                [component]="component"
-              >
-                <app-app-basic
+                <app-expiry-date
+                  class="grid-2"
+                  *ngIf="
+                    component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
+                    component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE
+                  "
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic
-              ></app-expiry-date>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic
+                ></app-expiry-date>
 
-              <app-app-pofo
-                class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
-                [component]="component"
-              >
-                <app-app-basic
+                <app-app-pofo
+                  class="grid-2"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic
-              ></app-app-pofo>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic
+                ></app-app-pofo>
 
-              <app-app-roso
-                class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
-                [component]="component"
-              >
-                <app-app-basic
+                <app-app-roso
+                  class="grid-2"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic
-              ></app-app-roso>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic
+                ></app-app-roso>
 
-              <app-app-pfrs
-                class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
-                [component]="component"
-              >
-                <app-app-basic
+                <app-app-pfrs
+                  class="grid-2"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic
-              ></app-app-pfrs>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic
+                ></app-app-pfrs>
 
-              <app-naru
-                class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU"
-                [component]="component"
-              >
-                <app-app-basic
+                <app-naru
+                  class="grid-2"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU"
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic
-              ></app-naru>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic
+                ></app-naru>
 
-              <app-subd
-                class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
-                [component]="component"
-              >
-                <app-app-basic
+                <app-subd
+                  class="grid-2"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic
-              ></app-subd>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic
+                ></app-subd>
 
-              <app-incl-excl
-                class="grid-2"
-                *ngIf="
-                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL ||
-                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL
-                "
-                [component]="component"
-              >
-                <app-app-basic
+                <app-incl-excl
+                  class="grid-2"
+                  *ngIf="
+                    component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL ||
+                    component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL
+                  "
                   [component]="component"
-                  [fillRow]="true"
-                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                  [nonZeroEmptyValidation]="decision.wasReleased"
-                ></app-app-basic
-              ></app-incl-excl>
+                >
+                  <app-app-basic
+                    [component]="component"
+                    [fillRow]="true"
+                    (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                    [nonZeroEmptyValidation]="decision.wasReleased"
+                  ></app-app-basic
+                ></app-incl-excl>
 
-              <div class="grid-2">
-                <div>
-                  <div class="subheading2">Agricultural Capability</div>
-                  {{ component.agCap }}
-                  <app-no-data *ngIf="component.agCap === null || component.agCap === undefined"></app-no-data>
-                </div>
-                <div>
-                  <div class="subheading2">Agricultural Capability Source</div>
-                  {{ component.agCapSource }}
-                  <app-no-data
-                    *ngIf="component.agCapSource === null || component.agCapSource === undefined"
-                  ></app-no-data>
-                </div>
+                <div class="grid-2">
+                  <div>
+                    <div class="subheading2">Agricultural Capability</div>
+                    {{ component.agCap }}
+                    <app-no-data *ngIf="component.agCap === null || component.agCap === undefined"></app-no-data>
+                  </div>
+                  <div>
+                    <div class="subheading2">Agricultural Capability Source</div>
+                    {{ component.agCapSource }}
+                    <app-no-data
+                      *ngIf="component.agCapSource === null || component.agCapSource === undefined"
+                    ></app-no-data>
+                  </div>
 
-                <div *ngIf="component.agCapMap">
-                  <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
-                  {{ component.agCapMap }}
-                  <app-no-data *ngIf="component.agCapMap === null || component.agCapMap === undefined"></app-no-data>
-                </div>
-                <div *ngIf="component.agCapConsultant">
-                  <div class="subheading2">Agricultural Capability Consultant</div>
-                  {{ component.agCapConsultant }}
-                  <app-no-data
-                    *ngIf="component.agCapConsultant === null || component.agCapConsultant === undefined"
-                  ></app-no-data>
+                  <div *ngIf="component.agCapMap">
+                    <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
+                    {{ component.agCapMap }}
+                    <app-no-data *ngIf="component.agCapMap === null || component.agCapMap === undefined"></app-no-data>
+                  </div>
+                  <div *ngIf="component.agCapConsultant">
+                    <div class="subheading2">Agricultural Capability Consultant</div>
+                    {{ component.agCapConsultant }}
+                    <app-no-data
+                      *ngIf="component.agCapConsultant === null || component.agCapConsultant === undefined"
+                    ></app-no-data>
+                  </div>
                 </div>
               </div>
+              <hr *ngIf="index !== decision.components.length - 1" />
+            </ng-container>
+          </section>
+        </ng-container>
+
+        <h4>Audit and Chair Review</h4>
+        <section class="decision-section-no-title">
+          <div class="grid-2">
+            <div>
+              <div class="subheading2">Audit Date</div>
+              <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
+              <span *ngIf="!decision.auditDate">
+                <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
+              </span>
             </div>
-            <hr *ngIf="index !== decision.components.length - 1" />
-          </ng-container>
-        </section>
-      </ng-container>
-
-      <ng-container *ngIf="['APPR', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
-        <h4>Conditions</h4>
-        <section class="decision-section">
-          <div>
-            <a [routerLink]="['/application/' + fileNumber + '/decision/conditions/' + decision.uuid]"
-              >View Conditions
-              <mat-icon class="conditions-link-icon">open_in_new</mat-icon>
-            </a>
+            <div>
+              <div class="subheading2">Chair Review</div>
+              {{ decision.chairReviewRequired ? 'Required' : 'Not Needed' }}
+            </div>
+            <div *ngIf="decision.chairReviewRequired">
+              <div class="subheading2">Chair Review Date</div>
+              <span *ngIf="!decision.chairReviewDate">
+                <app-inline-datepicker (save)="onSaveChairReviewDate(decision.uuid, $event)"></app-inline-datepicker>
+              </span>
+              <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
+            </div>
+            <div *ngIf="decision.chairReviewRequired">
+              <div class="subheading2">Chair Review Outcome</div>
+              <app-inline-chair-review-outcome
+                [selectedValue]="decision.chairReviewOutcome?.code"
+                (save)="onSaveChairReviewOutcome(decision.uuid, $event)"
+              ></app-inline-chair-review-outcome>
+            </div>
           </div>
         </section>
       </ng-container>
-
-      <h4>Audit and Chair Review</h4>
-      <section class="decision-section-no-title">
-        <div class="grid-2">
-          <div>
-            <div class="subheading2">Audit Date</div>
-            <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
-            <span *ngIf="!decision.auditDate">
-              <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
-            </span>
-          </div>
-          <div>
-            <div class="subheading2">Chair Review</div>
-            {{ decision.chairReviewRequired ? 'Required' : 'Not Needed' }}
-          </div>
-          <div *ngIf="decision.chairReviewRequired">
-            <div class="subheading2">Chair Review Date</div>
-            <span *ngIf="!decision.chairReviewDate">
-              <app-inline-datepicker (save)="onSaveChairReviewDate(decision.uuid, $event)"></app-inline-datepicker>
-            </span>
-            <span *ngIf="decision.chairReviewDate">{{ decision.chairReviewDate | momentFormat }}</span>
-          </div>
-          <div *ngIf="decision.chairReviewRequired">
-            <div class="subheading2">Chair Review Outcome</div>
-            <app-inline-chair-review-outcome
-              [selectedValue]="decision.chairReviewOutcome?.code"
-              (save)="onSaveChairReviewOutcome(decision.uuid, $event)"
-            ></app-inline-chair-review-outcome>
-          </div>
-        </div>
-      </section>
-
-      <div class="right" *ngIf="decision.isDraft">
-        <button mat-stroked-button color="warn" (click)="deleteDecision(decision.uuid)">Delete draft</button>
+      <div class="right">
+        <button *ngIf="decision.isDraft" mat-stroked-button color="warn" (click)="deleteDecision(decision.uuid)">Delete draft</button>
+        <button mat-flat-button color="link" (click)="toggleSummary()">{{ isSummary ? 'View Less' : 'View More' }} <mat-icon iconPositionEnd>{{ isSummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon></button>
       </div>
     </div>
   </div>

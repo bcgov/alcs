@@ -21,6 +21,11 @@ p {
   justify-content: flex-end;
 }
 
+.header-buttons {
+  display: flex;
+  gap: 8px;
+}
+
 :host ::ng-deep {
   .display-none {
     display: none !important;

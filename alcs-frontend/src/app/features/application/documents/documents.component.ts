@@ -5,14 +5,19 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationSubmissionToSubmissionStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../services/application/application.dto';
-import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
+import { DOCUMENT_SYSTEM, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
+import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
+import { ApplicationParcelService } from '../../../services/application/application-parcel/application-parcel.service';
+import {
+  DocumentUploadDialogComponent,
+  VisibilityGroup,
+} from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-documents',
@@ -39,7 +44,9 @@ export class DocumentsComponent implements OnInit {
     private applicationDocumentService: ApplicationDocumentService,
     private applicationDetailService: ApplicationDetailService,
     private confirmationDialogService: ConfirmationDialogService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    private applicationParcelService: ApplicationParcelService,
     private toastService: ToastService,
     public dialog: MatDialog,
   ) {}
@@ -56,6 +63,9 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
+    const submission = await this.applicationSubmissionService.fetchSubmission(this.fileId);
+    const parcels = await this.applicationParcelService.fetchParcels(this.fileId);
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
@@ -63,6 +73,19 @@ export class DocumentsComponent implements OnInit {
         width: '70%',
         data: {
           fileId: this.fileId,
+          documentService: this.applicationDocumentService,
+          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
+          selectableOwners: submission.owners
+            .filter((owner) => owner.type.code === 'ORGZ')
+            .map((owner) => ({
+              label: owner.organizationName ?? owner.displayName,
+              uuid: owner.uuid,
+            })),
+          allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+          documentTypeToVisibilityGroupsMap: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          },
         },
       })
       .beforeClosed()
@@ -95,7 +118,10 @@ export class DocumentsComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  onEditFile(element: ApplicationDocumentDto) {
+  async onEditFile(element: ApplicationDocumentDto) {
+    const submission = await this.applicationSubmissionService.fetchSubmission(this.fileId);
+    const parcels = await this.applicationParcelService.fetchParcels(this.fileId);
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
@@ -104,6 +130,18 @@ export class DocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           existingDocument: element,
+          documentService: this.applicationDocumentService,
+          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
+          selectableOwners: submission.owners
+            .filter((owner) => owner.type.code === 'ORGZ')
+            .map((owner) => ({
+              label: owner.organizationName ?? owner.displayName,
+              uuid: owner.uuid,
+            })),
+          documentTypeToVisibilityGroupsMap: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          },
         },
       })
       .beforeClosed()

@@ -1,6 +1,13 @@
 <div class="layout">
   <div class="application">
-    <app-details-header [application]="application" heading="Application" days="Business Days"></app-details-header>
+    <app-details-header
+      [application]="application"
+      heading="Application"
+      days="Business Days"
+      [isTagSectionHidden]="false"
+      [submissionStatusService]="applicationStatusService"
+      [showStatus]="true"
+    ></app-details-header>
     <section class="content">
       <app-commissioner-decisions
         *ngIf="application?.decisions"

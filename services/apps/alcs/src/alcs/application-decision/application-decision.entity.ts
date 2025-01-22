@@ -21,10 +21,10 @@ import { ApplicationDecisionOutcomeCode } from './application-decision-outcome.e
 import { ApplicationDecisionComponent } from './application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationModification } from './application-modification/application-modification.entity';
 import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
+import { ApplicationDecisionConditionCard } from './application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
 
 @Entity({
-  comment:
-    'Decisions saved to applications, incl. those linked to the recon/modification request',
+  comment: 'Decisions saved to applications, incl. those linked to the recon/modification request',
 })
 @Index(['resolutionNumber', 'resolutionYear'], {
   unique: true,
@@ -143,8 +143,7 @@ export class ApplicationDecision extends Base {
     type: 'timestamptz',
     nullable: false,
     update: false,
-    comment:
-      'Date that indicates when decision was created. It is not editable by user.',
+    comment: 'Date that indicates when decision was created. It is not editable by user.',
   })
   createdAt: Date;
 
@@ -192,50 +191,32 @@ export class ApplicationDecision extends Base {
   @OneToMany(() => ApplicationDecisionDocument, (document) => document.decision)
   documents: ApplicationDecisionDocument[];
 
-  @ManyToMany(
-    () => ApplicationReconsideration,
-    (reconsideration) => reconsideration.reconsidersDecisions,
-  )
+  @ManyToMany(() => ApplicationReconsideration, (reconsideration) => reconsideration.reconsidersDecisions)
   reconsideredBy: ApplicationReconsideration[];
 
-  @ManyToMany(
-    () => ApplicationModification,
-    (modification) => modification.modifiesDecisions,
-  )
+  @ManyToMany(() => ApplicationModification, (modification) => modification.modifiesDecisions)
   modifiedBy: ApplicationModification[];
 
   @AutoMap(() => ApplicationModification)
-  @OneToOne(
-    () => ApplicationModification,
-    (modification) => modification.resultingDecision,
-    { nullable: true },
-  )
+  @OneToOne(() => ApplicationModification, (modification) => modification.resultingDecision, { nullable: true })
   @JoinColumn()
   modifies?: ApplicationModification | null;
 
   @AutoMap(() => ApplicationReconsideration)
-  @OneToOne(
-    () => ApplicationReconsideration,
-    (reconsideration) => reconsideration.resultingDecision,
-    { nullable: true },
-  )
+  @OneToOne(() => ApplicationReconsideration, (reconsideration) => reconsideration.resultingDecision, {
+    nullable: true,
+  })
   @JoinColumn()
   reconsiders?: ApplicationReconsideration | null;
 
   @AutoMap(() => [ApplicationDecisionComponent])
-  @OneToMany(
-    () => ApplicationDecisionComponent,
-    (component) => component.applicationDecision,
-    { cascade: ['insert', 'update'] },
-  )
+  @OneToMany(() => ApplicationDecisionComponent, (component) => component.applicationDecision, {
+    cascade: ['insert', 'update'],
+  })
   components: ApplicationDecisionComponent[];
 
   @AutoMap(() => [ApplicationDecisionCondition])
-  @OneToMany(
-    () => ApplicationDecisionCondition,
-    (component) => component.decision,
-    { cascade: ['insert', 'update'] },
-  )
+  @OneToMany(() => ApplicationDecisionCondition, (component) => component.decision, { cascade: ['insert', 'update'] })
   conditions: ApplicationDecisionCondition[];
 
   @Column({
@@ -246,4 +227,10 @@ export class ApplicationDecision extends Base {
       'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_decisions to alcs.application_decisions.',
   })
   oatsAlrApplDecisionId: number;
+
+  @AutoMap(() => [ApplicationDecisionConditionCard])
+  @OneToMany(() => ApplicationDecisionConditionCard, (conditionCard) => conditionCard.decision, {
+    cascade: ['insert', 'update'],
+  })
+  conditionCards: ApplicationDecisionConditionCard[];
 }

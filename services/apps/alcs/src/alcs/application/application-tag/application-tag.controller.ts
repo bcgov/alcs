@@ -16,7 +16,7 @@ import * as config from 'config';
 import { ApplicationTagService } from './application-tag.service';
 import { ApplicationTagDto } from './application-tag.dto';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { ROLES_ALLOWED_APPLICATIONS } from '../../../common/authorization/roles';
+import { ANY_AUTH_ROLE, ROLES_ALLOWED_APPLICATIONS } from '../../../common/authorization/roles';
 
 @Controller('application/:fileNumber/tag')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -25,7 +25,7 @@ export class ApplicationTagController {
   constructor(private service: ApplicationTagService) {}
 
   @Get('')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  @UserRoles(...ANY_AUTH_ROLE)
   async getApplicationTags(@Param('fileNumber') fileNumber: string) {
     return await this.service.getApplicationTags(fileNumber);
   }

@@ -27,6 +27,7 @@ import { PlanningReferralDto } from '../../services/planning-review/planning-rev
 import { ToastService } from '../../services/toast/toast.service';
 import { CardType } from '../../shared/card/card.component';
 import { BoardComponent } from './board.component';
+import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 describe('BoardComponent', () => {
   let component: BoardComponent;
@@ -46,6 +47,7 @@ describe('BoardComponent', () => {
   let noticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let notificationService: DeepMocked<NotificationService>;
   let inquiryService: DeepMocked<InquiryService>;
+  let applicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
 
   let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
 
@@ -100,6 +102,7 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
     });
 
     dialog = createMock();
@@ -115,6 +118,7 @@ describe('BoardComponent', () => {
     noticeOfIntentModificationService = createMock();
     notificationService = createMock();
     inquiryService = createMock();
+    applicationDecisionConditionCardService = createMock();
 
     const params = {
       boardCode: 'boardCode',
@@ -185,6 +189,10 @@ describe('BoardComponent', () => {
           useValue: inquiryService,
         },
         {
+          provide: ApplicationDecisionConditionCardService,
+          useValue: applicationDecisionConditionCardService,
+        },
+        {
           provide: Title,
           useValue: titleService,
         },
@@ -227,6 +235,7 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -248,6 +257,7 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -291,6 +301,7 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
     });
 
     boardEmitter.next([mockBoard]);

@@ -10,8 +10,8 @@ import {
 import { PlanningReviewDecisionService } from '../../../../services/planning-review/planning-review-decision/planning-review-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { DecisionDocumentUploadDialogComponent } from '../decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../shared/constants';
+import { DocumentUploadDialogComponent } from '../../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-decision-documents',
@@ -35,7 +35,7 @@ export class DecisionDocumentsComponent implements OnDestroy, OnChanges {
     new MatTableDataSource<PlanningReviewDecisionDocumentDto>();
 
   readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
-  
+
   constructor(
     private decisionService: PlanningReviewDecisionService,
     private dialog: MatDialog,
@@ -67,7 +67,7 @@ export class DecisionDocumentsComponent implements OnDestroy, OnChanges {
   private openFileDialog(existingDocument?: PlanningReviewDecisionDocumentDto) {
     if (this.decision) {
       this.dialog
-        .open(DecisionDocumentUploadDialogComponent, {
+        .open(DocumentUploadDialogComponent, {
           minWidth: '600px',
           maxWidth: '800px',
           width: '70%',
@@ -75,6 +75,7 @@ export class DecisionDocumentsComponent implements OnDestroy, OnChanges {
             fileId: this.fileId,
             decisionUuid: this.decision?.uuid,
             existingDocument: existingDocument,
+            decisionService: this.decisionService,
           },
         })
         .beforeClosed()

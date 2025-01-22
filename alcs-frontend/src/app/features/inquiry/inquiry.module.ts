@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { InquiryDetailService } from '../../services/inquiry/inquiry-detail.service';
 import { SharedModule } from '../../shared/shared.module';
 import { DetailsComponent } from './detail/details.component';
-import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { HeaderComponent } from './header/header.component';
 import { InquiryComponent, childRoutes } from './inquiry.component';
@@ -29,7 +28,6 @@ const routes: Routes = [
     DetailsComponent,
     ParcelsComponent,
     DocumentsComponent,
-    DocumentUploadDialogComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), CdkDropList, CdkDrag],
   exports: [HeaderComponent],
