@@ -155,16 +155,24 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
       if (condition.dates && condition.dates.length > 0) {
         let minDueDate: ApplicationDecisionConditionDateDto | null = null;
         let maxDueDate: ApplicationDecisionConditionDateDto | null = null;
+        let allDatesNull = true;
 
         for (const date of condition.dates) {
-          if (!maxDueDate || date.date! > maxDueDate.date!) {
-            maxDueDate = date;
-          }
-          if (!date.completedDate) {
-            if (!minDueDate || date.date! < minDueDate.date!) {
-              minDueDate = date;
+          if (date.date !== null) {
+            allDatesNull = false;
+            if (!maxDueDate || date.date! > maxDueDate.date!) {
+              maxDueDate = date;
+            }
+            if (!date.completedDate) {
+              if (!minDueDate || date.date! < minDueDate.date!) {
+                minDueDate = date;
+              }
             }
           }
+        }
+
+        if (allDatesNull) {
+          return null;
         }
 
         const selectedDate = minDueDate || maxDueDate;
