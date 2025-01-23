@@ -218,7 +218,6 @@ export class CardService {
     await this.subtaskService.recoverMany(subtaskUuids);
 
     if (card.typeCode === CARD_TYPE.APP_CON) {
-      console.log(card.uuid);
       await this.applicationDecisionConditionCardService.recoverByBoardCard(card.uuid);
     }
 
