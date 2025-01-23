@@ -83,9 +83,14 @@ hr {
   }
 }
 
-.edit-decision-button {
+.edit-decision-button,
+.revert-to-draft-button {
   grid-row: 1/2;
   grid-column: 3/4;
+}
+
+.revert-to-draft-button {
+  text-align: right;
 }
 
 .loading-overlay {
