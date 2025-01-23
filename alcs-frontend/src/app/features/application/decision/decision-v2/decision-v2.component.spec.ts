@@ -16,8 +16,8 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-
 import { DecisionV2Component } from './decision-v2.component';
+import { HttpClient } from '@angular/common/http';
 
 describe('DecisionV2Component', () => {
   let component: DecisionV2Component;
@@ -25,6 +25,7 @@ describe('DecisionV2Component', () => {
   let mockApplicationDecisionService: DeepMocked<ApplicationDecisionV2Service>;
   let mockAppDetailService: DeepMocked<ApplicationDetailService>;
   let mockApplicationDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
 
   beforeEach(async () => {
     mockApplicationDecisionService = createMock();
@@ -35,6 +36,8 @@ describe('DecisionV2Component', () => {
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     mockApplicationDecisionComponentService = createMock();
+
+    mockHttpClient = createMock();
 
     await TestBed.configureTestingModule({
       imports: [MatSnackBarModule, MatMenuModule],
@@ -71,6 +74,10 @@ describe('DecisionV2Component', () => {
         {
           provide: ActivatedRoute,
           useValue: {},
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

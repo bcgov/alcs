@@ -34,6 +34,8 @@
       [type]="getStatusPill('RECONSIDERATION')"
     ></app-application-type-pill>
     <app-application-type-pill [type]="getStatusPill('CONDITION')"></app-application-type-pill>
+
+    <mat-icon *ngIf="decision.isFlagged" svgIcon="personal_places" class="flag-icon"></mat-icon>
   </div>
   <div class="header-row">
     <div class="left">

@@ -104,10 +104,15 @@
 .pill-row {
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
   gap: 1px;
 }
 
 .no-data {
   color: colors.$grey;
   font-weight: 400;
+}
+
+.flag-icon {
+  color: blue;
 }

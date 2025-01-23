@@ -22,6 +22,7 @@ import { ApplicationDecisionComponent } from './application-decision-v2/applicat
 import { ApplicationModification } from './application-modification/application-modification.entity';
 import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 import { ApplicationDecisionConditionCard } from './application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
+import { User } from '../../user/user.entity';
 
 @Entity({
   comment: 'Decisions saved to applications, incl. those linked to the recon/modification request',
@@ -233,4 +234,28 @@ export class ApplicationDecision extends Base {
     cascade: ['insert', 'update'],
   })
   conditionCards: ApplicationDecisionConditionCard[];
+
+  @AutoMap()
+  @Column({ default: false })
+  isFlagged: boolean;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  reasonFlagged: string | null;
+
+  @AutoMap(() => Date)
+  @Column({ type: 'timestamptz', nullable: true })
+  followUpAt: Date | null;
+
+  @AutoMap(() => User)
+  @ManyToOne(() => User, { nullable: true, eager: true })
+  flaggedBy: User | null;
+
+  @AutoMap(() => User)
+  @ManyToOne(() => User, { nullable: true, eager: true })
+  flagEditedBy: User | null;
+
+  @AutoMap(() => Date)
+  @Column({ type: 'timestamptz', nullable: true })
+  flagEditedAt: Date | null;
 }

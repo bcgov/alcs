@@ -16,6 +16,7 @@ import { NoticeOfIntentDetailService } from '../../../../services/notice-of-inte
 import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { HttpClient } from '@angular/common/http';
 
 import { DecisionV2Component } from './decision-v2.component';
 
@@ -25,6 +26,7 @@ describe('DecisionV2Component', () => {
   let mockNOIDecisionService: DeepMocked<NoticeOfIntentDecisionV2Service>;
   let mockNOIDetailService: DeepMocked<NoticeOfIntentDetailService>;
   let mockNOIDecisionComponentService: DeepMocked<NoticeOfIntentDecisionComponentService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
 
   beforeEach(async () => {
     mockNOIDecisionService = createMock();
@@ -35,6 +37,8 @@ describe('DecisionV2Component', () => {
     mockNOIDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
 
     mockNOIDecisionComponentService = createMock();
+
+    mockHttpClient = createMock();
 
     await TestBed.configureTestingModule({
       imports: [MatSnackBarModule, MatMenuModule],
@@ -71,6 +75,10 @@ describe('DecisionV2Component', () => {
         {
           provide: ActivatedRoute,
           useValue: {},
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

@@ -53,6 +53,7 @@ import { ApplicationDecisionConditionDateController } from '../application-decis
 import { ApplicationDecisionConditionCardController } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.controller';
 import { ApplicationDecisionConditionCard } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
 import { ApplicationDecisionConditionCardService } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { User } from 'apps/alcs/src/user/user.entity';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { ApplicationDecisionConditionCardService } from '../application-decision
       ApplicationDecisionConditionComponentPlanNumber,
       ApplicationBoundaryAmendment,
       ApplicationDecisionConditionCard,
+      User,
     ]),
     forwardRef(() => BoardModule),
     forwardRef(() => ApplicationModule),

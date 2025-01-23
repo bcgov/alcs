@@ -537,6 +537,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       dateReceived: 0,
       isExpired,
       isPastDue,
+      decisionIsFlagged: applicationDecisionCondition.decisionIsFlagged,
     };
   }
 

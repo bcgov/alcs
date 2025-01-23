@@ -38,6 +38,8 @@ import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.ent
 import { NoticeOfIntentPortalDecisionDto } from '../../portal/public/notice-of-intent/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionConditionDate } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 import { NoticeOfIntentDecisionConditionDateDto } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
+import { User } from '../../user/user.entity';
+import { UserDto } from '../../user/user.dto';
 
 @Injectable()
 export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
@@ -114,6 +116,22 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               return [];
             }
           }),
+        ),
+        forMember(
+          (ad) => ad.followUpAt,
+          mapFrom((a) => a.followUpAt?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.flaggedBy,
+          mapFrom((a) => (a.flaggedBy ? this.mapper.map(a.flaggedBy, User, UserDto) : a.flaggedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedBy,
+          mapFrom((a) => (a.flagEditedBy ? this.mapper.map(a.flagEditedBy, User, UserDto) : a.flagEditedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedAt,
+          mapFrom((a) => a.flagEditedAt?.getTime()),
         ),
       );
 
