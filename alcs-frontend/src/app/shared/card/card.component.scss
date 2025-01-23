@@ -141,3 +141,12 @@ mat-card {
 .ellipsis {
   @include text-ellipsis($lines: 2);
 }
+
+.flag-avatar-container {
+  display: flex;
+  gap: 10px;
+}
+
+.flag-icon {
+  color: blue;
+}

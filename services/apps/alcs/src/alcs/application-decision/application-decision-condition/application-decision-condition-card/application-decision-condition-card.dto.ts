@@ -76,6 +76,9 @@ export class ApplicationDecisionConditionCardBoardDto {
   @IsNumber()
   decisionOrder: number;
 
+  @IsBoolean()
+  decisionIsFlagged: boolean;
+
   @IsString()
   fileNumber: string;
 

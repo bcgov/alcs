@@ -30,6 +30,7 @@ export interface CardData {
   maxActiveDays?: number;
   legacyId?: string;
   showDueDate?: boolean;
+  decisionIsFlagged?: boolean;
 }
 
 export interface ConditionCardData extends CardData {
@@ -62,8 +63,9 @@ const lineHeight = 24;
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent implements OnInit {
-  @Input() cardData!: CardData | ConditionCardData;
+  CardType = CardType;
 
+  @Input() cardData!: CardData | ConditionCardData;
   @Output() cardSelected = new EventEmitter<CardSelectedEvent>();
 
   isConditionCard = false;

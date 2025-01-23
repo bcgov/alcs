@@ -1,5 +1,5 @@
 export const formatIncomingDate = (date?: number | null) => {
-  if (date) {
+  if (date !== undefined && date !== null) {
     return new Date(date);
   } else if (date === null) {
     return null;

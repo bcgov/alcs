@@ -1,3 +1,4 @@
+import { UserDto } from '../../../user/user.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { CardDto } from '../../../card/card.dto';
 import { ApplicationTypeDto } from '../../application-code.dto';
@@ -30,6 +31,12 @@ export interface UpdateApplicationDecisionDto {
   conditions?: UpdateApplicationDecisionConditionDto[];
   isDraft?: boolean;
   ccEmails?: string[];
+  isFlagged?: boolean;
+  reasonFlagged?: string | null;
+  followUpAt?: number | null;
+  flaggedByUuid?: string | null;
+  flagEditedByUuid?: string | null;
+  flagEditedAt?: number | null;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -76,6 +83,12 @@ export interface ApplicationDecisionDto {
   conditions: ApplicationDecisionConditionDto[];
   wasReleased: boolean;
   conditionsCards: ApplicationDecisionConditionCardDto[];
+  isFlagged: boolean;
+  reasonFlagged: string | null;
+  followUpAt: number | null;
+  flaggedBy: UserDto | null;
+  flagEditedBy: UserDto | null;
+  flagEditedAt: number | null;
 }
 
 export interface LinkedResolutionDto {
@@ -328,6 +341,7 @@ export interface ApplicationDecisionConditionCardBoardDto {
   card: CardDto;
   decisionUuid: string;
   decisionOrder: number;
+  decisionIsFlagged: boolean;
   fileNumber: string;
   applicant: string;
   type?: ApplicationTypeDto;

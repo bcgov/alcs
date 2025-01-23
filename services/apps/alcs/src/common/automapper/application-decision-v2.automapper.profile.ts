@@ -48,6 +48,8 @@ import {
   ApplicationDecisionConditionCardDto,
   ApplicationDecisionConditionCardUuidDto,
 } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
+import { UserDto } from '../../user/user.dto';
+import { User } from '../../user/user.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -158,6 +160,22 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
                 )
               : [],
           ),
+        ),
+        forMember(
+          (ad) => ad.followUpAt,
+          mapFrom((a) => a.followUpAt?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.flaggedBy,
+          mapFrom((a) => (a.flaggedBy ? this.mapper.map(a.flaggedBy, User, UserDto) : a.flaggedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedBy,
+          mapFrom((a) => (a.flagEditedBy ? this.mapper.map(a.flagEditedBy, User, UserDto) : a.flagEditedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedAt,
+          mapFrom((a) => a.flagEditedAt?.getTime()),
         ),
       );
 
@@ -424,6 +442,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         forMember(
           (dto) => dto.decisionUuid,
           mapFrom((entity) => entity.decision.uuid),
+        ),
+        forMember(
+          (dto) => dto.decisionIsFlagged,
+          mapFrom((entity) => entity.decision.isFlagged),
         ),
       );
 
