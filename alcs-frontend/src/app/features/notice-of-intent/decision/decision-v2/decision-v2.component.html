@@ -96,6 +96,7 @@
         </ng-container>
 
         <div
+          class="revert-to-draft-button"
           *ngIf="!decision.isDraft"
           matTooltip="{{ disabledCreateBtnTooltip }}"
           [matTooltipDisabled]="!isPaused && !isDraftExists"
