@@ -16,7 +16,7 @@ import {
   ApplicationDecisionConditionCardUuidDto,
 } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
 import { Type } from 'class-transformer';
-import { UserDto } from 'apps/alcs/src/user/user.dto';
+import { UserDto } from '../../../../user/user.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
