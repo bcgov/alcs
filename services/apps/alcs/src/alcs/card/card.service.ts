@@ -1,8 +1,8 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Mapper } from 'automapper-core';
+import { condition, Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import { IConfig } from 'config';
 import { FindOptionsRelations, Not, Repository } from 'typeorm';
@@ -14,6 +14,7 @@ import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
+import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 @Injectable()
 export class CardService {
@@ -30,11 +31,11 @@ export class CardService {
     private cardRepository: Repository<Card>,
     @InjectRepository(CardType)
     private cardTypeRepository: Repository<CardType>,
-    @InjectRepository(ApplicationDecisionCondition)
-    private applicationConditionRepository: Repository<ApplicationDecisionCondition>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
     private subtaskService: CardSubtaskService,
     private notificationService: MessageService,
+    @Inject(forwardRef(() => ApplicationDecisionConditionCardService))
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
   ) {}
 
   async getCardTypes() {
@@ -188,18 +189,9 @@ export class CardService {
     const subtaskUuids = card.subtasks.map((subtask) => subtask.uuid);
     await this.subtaskService.deleteMany(subtaskUuids);
 
-    const conditions = await this.applicationConditionRepository.find({
-      where: {
-        conditionCard: {
-          cardUuid: uuid,
-        },
-      },
-    });
-
-    conditions.forEach((c) => {
-      c.conditionCard = null;
-      this.applicationConditionRepository.save(c);
-    });
+    if (card.typeCode === CARD_TYPE.APP_CON) {
+      await this.applicationDecisionConditionCardService.archiveByBoardCard(card.uuid);
+    }
 
     card.archived = true;
     await this.cardRepository.save(card);
@@ -224,6 +216,10 @@ export class CardService {
 
     const subtaskUuids = card.subtasks.map((subtask) => subtask.uuid);
     await this.subtaskService.recoverMany(subtaskUuids);
+
+    if (card.typeCode === CARD_TYPE.APP_CON) {
+      await this.applicationDecisionConditionCardService.recoverByBoardCard(card.uuid);
+    }
 
     card.archived = false;
     await this.cardRepository.save(card);

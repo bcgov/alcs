@@ -7,7 +7,7 @@ import { BoardService } from '../../../board/board.service';
 import { CardService } from '../../../card/card.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ApplicationDecisionConditionCard } from './application-decision-condition-card.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { AutomapperModule } from 'automapper-nestjs';
 import { classes } from 'automapper-classes';
 import { Mapper } from 'automapper-core';
@@ -323,6 +323,94 @@ describe('ApplicationDecisionConditionCardService', () => {
       mockCardService.get.mockResolvedValue(null);
 
       await expect(service.softRemove(conditionCard)).rejects.toThrow(ServiceNotFoundException);
+    });
+  });
+
+  describe('archiveByBoardCard', () => {
+    it('should archive a condition card by board card uuid', async () => {
+      const boardCardUuid = 'example-uuid';
+      const conditionCard = new ApplicationDecisionConditionCard();
+      conditionCard.conditions = [];
+
+      mockRepository.findOne.mockResolvedValue(conditionCard);
+      mockRepository.save.mockResolvedValue(conditionCard);
+      mockRepository.softRemove.mockResolvedValue(conditionCard);
+
+      await service.archiveByBoardCard(boardCardUuid);
+
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { cardUuid: boardCardUuid },
+        relations: service.BOARD_CARD_RELATIONS,
+      });
+      expect(mockRepository.save).toHaveBeenCalledWith(conditionCard);
+      expect(mockRepository.softRemove).toHaveBeenCalledWith(conditionCard);
+    });
+
+    it('should throw an error if condition card is not found', async () => {
+      const boardCardUuid = 'example-uuid';
+
+      mockRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.archiveByBoardCard(boardCardUuid)).rejects.toThrow(ServiceNotFoundException);
+    });
+  });
+
+  describe('recoverByBoardCard', () => {
+    it('should recover a condition card by board card uuid', async () => {
+      const boardCardUuid = 'example-uuid';
+      const conditionCard = new ApplicationDecisionConditionCard();
+
+      mockRepository.findOne.mockResolvedValue(conditionCard);
+      mockRepository.recover.mockResolvedValue(conditionCard);
+
+      await service.recoverByBoardCard(boardCardUuid);
+
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { cardUuid: boardCardUuid },
+        withDeleted: true,
+        relations: service.DEFAULT_RELATIONS,
+      });
+      expect(mockRepository.recover).toHaveBeenCalledWith(conditionCard);
+    });
+
+    it('should throw an error if condition card is not found', async () => {
+      const boardCardUuid = 'example-uuid';
+
+      mockRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.recoverByBoardCard(boardCardUuid)).rejects.toThrow(ServiceNotFoundException);
+    });
+  });
+
+  describe('getDeletedCards', () => {
+    it('should return deleted condition cards by file number', async () => {
+      const fileNumber = 'example-file-number';
+      const conditionCards = [new ApplicationDecisionConditionCard()];
+
+      mockRepository.find.mockResolvedValue(conditionCards);
+
+      const result = await service.getDeletedCards(fileNumber);
+
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        where: {
+          decision: {
+            application: {
+              fileNumber,
+            },
+          },
+          card: {
+            auditDeletedDateAt: Not(IsNull()),
+          },
+        },
+        withDeleted: true,
+        relations: {
+          decision: {
+            application: true,
+          },
+          card: service.CARD_RELATIONS,
+        },
+      });
+      expect(result).toEqual(conditionCards);
     });
   });
 });

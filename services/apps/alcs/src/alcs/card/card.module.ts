@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CodeModule } from '../code/code.module';
 import { CardProfile } from '../../common/automapper/card.automapper.profile';
@@ -16,6 +16,8 @@ import { CardController } from './card.controller';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
+import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
+import { BoardModule } from '../board/board.module';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { ApplicationDecisionCondition } from '../application-decision/applicatio
     ]),
     CodeModule,
     MessageModule,
+    forwardRef(() => ApplicationDecisionModule),
   ],
   controllers: [CardSubtaskController, CardController],
   providers: [CardStatusService, CardService, CardSubtaskService, CardSubscriber, CardProfile],

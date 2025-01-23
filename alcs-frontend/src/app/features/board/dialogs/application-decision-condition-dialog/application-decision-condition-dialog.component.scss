@@ -113,6 +113,16 @@
   font-weight: 400;
 }
 
+.no-conditions {
+  border: none;
+  background-color: colors.$grey-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  width: 100%;
+}
+
 .flag-icon {
   color: blue;
 }
