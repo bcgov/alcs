@@ -45,7 +45,7 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
   isReconsideration: boolean = false;
 
   @ViewChild(MatSort) sort!: MatSort;
-  dataSource: MatTableDataSource<{ condition: ApplicationDecisionConditionDto; index: string; selected: boolean }> =
+  dataSource: MatTableDataSource<{ condition: ApplicationDecisionConditionDto; index: number; selected: boolean }> =
     new MatTableDataSource();
 
   editColumns: string[] = ['select', 'condition', 'date', 'status'];
@@ -98,13 +98,15 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
   }
 
   loadTableData(filterSelected: boolean = false) {
-    const data = this.decision.conditions.map((condition, index) => ({
-      condition,
-      index: countToString(index + 1),
-      selected: this.isConditionSelected(condition),
-    }));
+    const data = this.decision.conditions
+      .filter((condition) => !filterSelected || this.isConditionSelected(condition))
+      .map((condition, index) => ({
+        condition,
+        index: index + 1,
+        selected: this.isConditionSelected(condition),
+      }));
 
-    filterSelected ? (this.dataSource.data = data.filter((item) => item.selected)) : (this.dataSource.data = data);
+    this.dataSource.data = data;
   }
 
   isConditionSelected(condition: ApplicationDecisionConditionDto): boolean {
