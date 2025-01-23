@@ -32,6 +32,7 @@ import { ApplicationDecisionComponentType } from './component/application-decisi
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { ApplicationDecisionConditionDate } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -428,10 +429,17 @@ export class ApplicationDecisionV2Service {
           conditions: [],
         }),
     );
+
     const savedDecision = await this.appDecisionRepository.save(decision);
 
     savedDecision.conditions = existingDecision.conditions.map((condition) => {
       const conditionsComponents = condition.components?.map((component) => component.uuid);
+      condition.dates = condition.dates?.map((d) => {
+        return new ApplicationDecisionConditionDate({
+          ...d,
+          uuid: undefined,
+        });
+      });
       return new ApplicationDecisionCondition({
         ...condition,
         uuid: undefined,
