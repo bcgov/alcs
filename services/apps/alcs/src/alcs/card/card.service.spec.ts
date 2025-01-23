@@ -18,6 +18,7 @@ import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
+import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 describe('CardService', () => {
   let service: CardService;
@@ -27,6 +28,7 @@ describe('CardService', () => {
   let mockCardEntity;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
   let mockNotificationService: DeepMocked<MessageService>;
+  let mockApplicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
 
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
@@ -35,6 +37,7 @@ describe('CardService', () => {
     mockCardEntity = initCardMockEntity();
     mockSubtaskService = createMock();
     mockNotificationService = createMock();
+    mockApplicationDecisionConditionCardService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -67,6 +70,10 @@ describe('CardService', () => {
         {
           provide: MessageService,
           useValue: mockNotificationService,
+        },
+        {
+          provide: ApplicationDecisionConditionCardService,
+          useValue: mockApplicationDecisionConditionCardService,
         },
       ],
     }).compile();

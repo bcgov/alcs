@@ -6,7 +6,7 @@ import {
 } from './application-decision-condition-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationDecisionConditionCard } from './application-decision-condition-card.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { CardService } from '../../../card/card.service';
 import { ApplicationDecisionConditionService } from '../application-decision-condition.service';
 import { BoardService } from '../../../board/board.service';
@@ -24,6 +24,7 @@ import { Mapper } from 'automapper-core';
 import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
 import { ApplicationDecision } from '../../application-decision.entity';
+import { ApplicationDecisionCondition } from '../application-decision-condition.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionCardService {
@@ -59,6 +60,7 @@ export class ApplicationDecisionConditionCardService {
     @Inject(forwardRef(() => ApplicationDecisionV2Service))
     private applicationDecisionService: ApplicationDecisionV2Service,
     private boardService: BoardService,
+    @Inject(forwardRef(() => CardService))
     private cardService: CardService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -192,5 +194,53 @@ export class ApplicationDecisionConditionCardService {
       }
     }
     return dtos;
+  }
+
+  async archiveByBoardCard(boardCardUuid: string) {
+    const decisionConditionCard = await this.getByBoardCard(boardCardUuid);
+
+    if (!decisionConditionCard) {
+      throw new ServiceNotFoundException(`Card with uuid ${boardCardUuid} not found`);
+    }
+    decisionConditionCard.conditions = [];
+    await this.repository.save(decisionConditionCard);
+
+    await this.repository.softRemove(decisionConditionCard);
+  }
+
+  async recoverByBoardCard(boardCardUuid: string) {
+    const decisionConditionCard = await this.repository.findOne({
+      where: { cardUuid: boardCardUuid },
+      withDeleted: true,
+      relations: this.DEFAULT_RELATIONS,
+    });
+
+    if (!decisionConditionCard) {
+      throw new ServiceNotFoundException(`Card with uuid ${boardCardUuid} not found`);
+    }
+
+    await this.repository.recover(decisionConditionCard);
+  }
+
+  async getDeletedCards(fileNumber: string) {
+    return this.repository.find({
+      where: {
+        decision: {
+          application: {
+            fileNumber,
+          },
+        },
+        card: {
+          auditDeletedDateAt: Not(IsNull()),
+        },
+      },
+      withDeleted: true,
+      relations: {
+        decision: {
+          application: true,
+        },
+        card: this.CARD_RELATIONS,
+      },
+    });
   }
 }

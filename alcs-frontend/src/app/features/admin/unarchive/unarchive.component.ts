@@ -5,6 +5,7 @@ import {
   UnarchiveCardService,
 } from '../../../services/unarchive-card/unarchive-card.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { CardType } from '../../../shared/card/card.component';
 
 @Component({
   selector: 'app-unarchive',
@@ -18,7 +19,7 @@ export class UnarchiveComponent {
 
   constructor(
     private unarchiveCardService: UnarchiveCardService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   onUnarchive(uuid: string) {
@@ -36,6 +37,11 @@ export class UnarchiveComponent {
   async onSearch() {
     const results = await this.unarchiveCardService.search(this.search);
     if (results) {
+      results.forEach((result) => {
+        if (result.type === CardType.APP_CON) {
+          result.type = 'Condition';
+        }
+      });
       this.cards = results;
     }
   }

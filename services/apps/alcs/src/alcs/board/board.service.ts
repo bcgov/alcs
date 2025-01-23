@@ -1,5 +1,5 @@
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
@@ -24,6 +24,7 @@ export class BoardService {
     private boardRepository: Repository<Board>,
     @InjectRepository(BoardStatus)
     private boardStatusRepository: Repository<BoardStatus>,
+    @Inject(forwardRef(() => CardService))
     private cardService: CardService,
   ) {}
 
