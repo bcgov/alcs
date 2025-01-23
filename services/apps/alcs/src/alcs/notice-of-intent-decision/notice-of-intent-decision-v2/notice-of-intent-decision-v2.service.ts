@@ -32,6 +32,7 @@ import {
 } from '../notice-of-intent-decision.dto';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
+import { NoticeOfIntentDecisionConditionDate } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 
 @Injectable()
 export class NoticeOfIntentDecisionV2Service {
@@ -264,26 +265,15 @@ export class NoticeOfIntentDecisionV2Service {
     });
 
     if (isDraftExists) {
-      throw new ServiceValidationException(
-        'Draft decision already exists for this notice of intent.',
-      );
+      throw new ServiceValidationException('Draft decision already exists for this notice of intent.');
     }
 
-    await this.validateResolutionNumber(
-      createDto.resolutionNumber,
-      createDto.resolutionYear,
-    );
+    await this.validateResolutionNumber(createDto.resolutionNumber, createDto.resolutionYear);
 
     let decisionComponents: NoticeOfIntentDecisionComponent[] = [];
     if (createDto.decisionComponents) {
-      this.decisionComponentService.validate(
-        createDto.decisionComponents,
-        createDto.isDraft,
-      );
-      decisionComponents = await this.decisionComponentService.createOrUpdate(
-        createDto.decisionComponents,
-        false,
-      );
+      this.decisionComponentService.validate(createDto.decisionComponents, createDto.isDraft);
+      decisionComponents = await this.decisionComponentService.createOrUpdate(createDto.decisionComponents, false);
     }
 
     const decision = new NoticeOfIntentDecision({
@@ -293,27 +283,20 @@ export class NoticeOfIntentDecisionV2Service {
       resolutionYear: createDto.resolutionYear,
       decisionMaker: createDto.decisionMaker,
       decisionMakerName: createDto.decisionMakerName,
-      auditDate: createDto.auditDate
-        ? new Date(createDto.auditDate)
-        : undefined,
+      auditDate: createDto.auditDate ? new Date(createDto.auditDate) : undefined,
       isDraft: true,
       isSubjectToConditions: createDto.isSubjectToConditions,
       decisionDescription: createDto.decisionDescription,
-      rescindedDate: createDto.rescindedDate
-        ? new Date(createDto.rescindedDate)
-        : null,
+      rescindedDate: createDto.rescindedDate ? new Date(createDto.rescindedDate) : null,
       rescindedComment: createDto.rescindedComment,
       noticeOfIntent,
       modifies,
       components: decisionComponents,
     });
 
-    const savedDecision = await this.noticeOfIntentDecisionRepository.save(
-      decision,
-      {
-        transaction: true,
-      },
-    );
+    const savedDecision = await this.noticeOfIntentDecisionRepository.save(decision, {
+      transaction: true,
+    });
 
     if (createDto.decisionToCopy) {
       await this.copyDecisionFields(createDto.decisionToCopy, savedDecision);
@@ -322,10 +305,7 @@ export class NoticeOfIntentDecisionV2Service {
     return this.get(savedDecision.uuid);
   }
 
-  private async copyDecisionFields(
-    decisionToCopy: string,
-    decision: NoticeOfIntentDecision,
-  ) {
+  private async copyDecisionFields(decisionToCopy: string, decision: NoticeOfIntentDecision) {
     //It is intentional to only copy select fields
     const existingDecision = await this.get(decisionToCopy);
     decision.decisionMaker = existingDecision.decisionMaker;
@@ -349,23 +329,22 @@ export class NoticeOfIntentDecisionV2Service {
           conditions: [],
         }),
     );
-    const savedDecision =
-      await this.noticeOfIntentDecisionRepository.save(decision);
+    const savedDecision = await this.noticeOfIntentDecisionRepository.save(decision);
 
     savedDecision.conditions = existingDecision.conditions.map((condition) => {
-      const conditionsComponents = condition.components?.map(
-        (component) => component.uuid,
-      );
+      const conditionsComponents = condition.components?.map((component) => component.uuid);
+      condition.dates = condition.dates?.map((d) => {
+        return new NoticeOfIntentDecisionConditionDate({
+          ...d,
+          uuid: undefined,
+        });
+      });
       return new NoticeOfIntentDecisionCondition({
         ...condition,
         uuid: undefined,
         components: savedDecision.components.filter((component) => {
           const oldUuid = newToOldComponentsUuid.get(component.uuid);
-          return (
-            !!oldUuid &&
-            conditionsComponents &&
-            conditionsComponents.includes(oldUuid)
-          );
+          return !!oldUuid && conditionsComponents && conditionsComponents.includes(oldUuid);
         }),
       });
     });

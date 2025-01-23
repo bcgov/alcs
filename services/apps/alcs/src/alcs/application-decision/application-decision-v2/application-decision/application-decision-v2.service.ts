@@ -31,6 +31,7 @@ import { CreateApplicationDecisionDto, UpdateApplicationDecisionDto } from './ap
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
+import { ApplicationDecisionConditionDate } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -317,28 +318,17 @@ export class ApplicationDecisionV2Service {
     });
 
     if (isDraftExists) {
-      throw new ServiceValidationException(
-        'Draft decision already exists for this application.',
-      );
+      throw new ServiceValidationException('Draft decision already exists for this application.');
     }
 
     await this.validateDecisionChanges(createDto);
 
-    await this.validateResolutionNumber(
-      createDto.resolutionNumber,
-      createDto.resolutionYear,
-    );
+    await this.validateResolutionNumber(createDto.resolutionNumber, createDto.resolutionYear);
 
     let decisionComponents: ApplicationDecisionComponent[] = [];
     if (createDto.decisionComponents) {
-      this.decisionComponentService.validate(
-        createDto.decisionComponents,
-        createDto.isDraft,
-      );
-      decisionComponents = await this.decisionComponentService.createOrUpdate(
-        createDto.decisionComponents,
-        false,
-      );
+      this.decisionComponentService.validate(createDto.decisionComponents, createDto.isDraft);
+      decisionComponents = await this.decisionComponentService.createOrUpdate(createDto.decisionComponents, false);
     }
 
     const decision = new ApplicationDecision({
@@ -347,12 +337,8 @@ export class ApplicationDecisionV2Service {
       resolutionNumber: createDto.resolutionNumber,
       resolutionYear: createDto.resolutionYear,
       chairReviewRequired: createDto.chairReviewRequired,
-      auditDate: createDto.auditDate
-        ? new Date(createDto.auditDate)
-        : undefined,
-      chairReviewDate: createDto.chairReviewDate
-        ? new Date(createDto.chairReviewDate)
-        : undefined,
+      auditDate: createDto.auditDate ? new Date(createDto.auditDate) : undefined,
+      chairReviewDate: createDto.chairReviewDate ? new Date(createDto.chairReviewDate) : undefined,
       chairReviewOutcomeCode: createDto.chairReviewOutcomeCode,
       linkedResolutionOutcomeCode: createDto.linkedResolutionOutcomeCode,
       ceoCriterionCode: createDto.ceoCriterionCode,
@@ -362,9 +348,7 @@ export class ApplicationDecisionV2Service {
       isDraft: true,
       isSubjectToConditions: createDto.isSubjectToConditions,
       decisionDescription: createDto.decisionDescription,
-      rescindedDate: createDto.rescindedDate
-        ? new Date(createDto.rescindedDate)
-        : null,
+      rescindedDate: createDto.rescindedDate ? new Date(createDto.rescindedDate) : null,
       rescindedComment: createDto.rescindedComment,
       application,
       modifies,
@@ -383,10 +367,7 @@ export class ApplicationDecisionV2Service {
     return this.get(savedDecision.uuid);
   }
 
-  private async copyDecisionFields(
-    decisionToCopy: string,
-    decision: ApplicationDecision,
-  ) {
+  private async copyDecisionFields(decisionToCopy: string, decision: ApplicationDecision) {
     //It is intentional to only copy select fields
     const existingDecision = await this.get(decisionToCopy);
     decision.decisionMakerCode = existingDecision.decisionMakerCode;
@@ -409,22 +390,23 @@ export class ApplicationDecisionV2Service {
           conditions: [],
         }),
     );
+
     const savedDecision = await this.appDecisionRepository.save(decision);
 
     savedDecision.conditions = existingDecision.conditions.map((condition) => {
-      const conditionsComponents = condition.components?.map(
-        (component) => component.uuid,
-      );
+      const conditionsComponents = condition.components?.map((component) => component.uuid);
+      condition.dates = condition.dates?.map((d) => {
+        return new ApplicationDecisionConditionDate({
+          ...d,
+          uuid: undefined,
+        });
+      });
       return new ApplicationDecisionCondition({
         ...condition,
         uuid: undefined,
         components: savedDecision.components.filter((component) => {
           const oldUuid = newToOldComponentsUuid.get(component.uuid);
-          return (
-            !!oldUuid &&
-            conditionsComponents &&
-            conditionsComponents.includes(oldUuid)
-          );
+          return !!oldUuid && conditionsComponents && conditionsComponents.includes(oldUuid);
         }),
       });
     });
@@ -467,18 +449,14 @@ export class ApplicationDecisionV2Service {
     });
 
     if (!applicationDecision) {
-      throw new ServiceNotFoundException(
-        `Failed to find decision with uuid ${uuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
 
-    await this.decisionComponentService.softRemove(
-      applicationDecision.components,
-    );
+    await this.decisionComponentService.softRemove(applicationDecision.components);
 
     //Clear potential links
     applicationDecision.reconsiders = null;
