@@ -31,6 +31,11 @@ import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { ApplicationConditionWithStatus, getEndDate } from '../../../../shared/utils/decision-methods';
 import { openFileInline } from '../../../../shared/utils/file';
+import { UserService } from '../../../../services/user/user.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import { FlagDialogComponent, FlagDialogIO } from '../../../../shared/flag-dialog/flag-dialog.component';
+import { UpdateApplicationDecisionDto } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import moment from 'moment';
 
 type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
@@ -67,6 +72,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   isSummary = false;
 
   conditions: Record<string, ApplicationConditionWithStatus[]> = {};
+  profile: UserDto | undefined;
 
   constructor(
     public dialog: MatDialog,
@@ -78,6 +84,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private elementRef: ElementRef,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +96,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         this.loadDecisions(application.fileNumber);
         this.application = application;
       }
+    });
+
+    this.userService.$userProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
+      this.profile = profile;
     });
   }
 
@@ -323,5 +334,82 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       default:
         return DECISION_CONDITION_ONGOING_LABEL;
     }
+  }
+
+  async flag(decision: ApplicationDecisionWithLinkedResolutionDto, isEditing: boolean) {
+    this.dialog
+      .open(FlagDialogComponent, {
+        minWidth: '800px',
+        maxWidth: '800px',
+        maxHeight: '80vh',
+        width: '90%',
+        autoFocus: false,
+        data: {
+          isEditing,
+          decisionNumber: decision.index,
+          reasonFlagged: decision.reasonFlagged,
+          followUpAt: decision.followUpAt,
+        },
+      })
+      .beforeClosed()
+      .subscribe(async ({ isEditing, reasonFlagged, followUpAt, isSaving }: FlagDialogIO) => {
+        if (isSaving) {
+          const updateDto: UpdateApplicationDecisionDto = {
+            isDraft: decision.isDraft,
+            isFlagged: true,
+            reasonFlagged,
+            flagEditedByUuid: this.profile?.uuid,
+            flagEditedAt: moment().toDate().getTime(),
+          };
+
+          if (!isEditing) {
+            updateDto.flaggedByUuid = this.profile?.uuid;
+          }
+
+          if (followUpAt !== undefined) {
+            updateDto.followUpAt = followUpAt;
+          }
+
+          await this.decisionService.update(decision.uuid, updateDto);
+          await this.loadDecisions(this.fileNumber);
+        }
+      });
+  }
+
+  async unflag(decision: ApplicationDecisionWithLinkedResolutionDto) {
+    this.confirmationDialogService
+      .openDialog({
+        title: `Unflag Decision #${decision.index}`,
+        body: `<strong>Warning:</strong> Only remove if flagged in error.
+        <br>
+        <br>
+        This action will also remove the follow-up date and explanatory text
+        associated with the flag and cannot be undone.
+        <br>
+        <br>
+        Are you sure you want to remove the flag?`,
+      })
+      .subscribe(async (confirmed) => {
+        if (confirmed) {
+          await this.decisionService.update(decision.uuid, {
+            isDraft: decision.isDraft,
+            isFlagged: false,
+            reasonFlagged: null,
+            followUpAt: null,
+            flaggedByUuid: null,
+            flagEditedByUuid: null,
+            flagEditedAt: null,
+          });
+          await this.loadDecisions(this.fileNumber);
+        }
+      });
+  }
+
+  formatDate(timestamp?: number | null, includeTime = false): string {
+    if (timestamp === undefined || timestamp === null) {
+      return '';
+    }
+
+    return moment(new Date(timestamp)).format(`YYYY-MMM-DD ${includeTime ? 'hh:mm:ss A' : ''}`);
   }
 }

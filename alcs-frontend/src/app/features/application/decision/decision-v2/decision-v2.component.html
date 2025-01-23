@@ -83,11 +83,28 @@
             <app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
           </ng-container>
         </div>
+
+        <div class="flag-button-container">
+          <button
+            type="button"
+            (click)="decision.isFlagged ? unflag(decision) : flag(decision, false)"
+            class="flag-button"
+            [class.flagged]="decision.isFlagged"
+            [matTooltip]="decision.isFlagged ? 'Click to unflag' : ''"
+          >
+            <mat-icon svgIcon="personal_places"></mat-icon>
+            Flag{{ decision.isFlagged ? 'ged' : '' }} for Condition Follow Up
+          </button>
+        </div>
+
         <ng-container *ngIf="decision.isDraft">
-          <button mat-flat-button color="primary" (click)="onEdit(decision)">Edit Draft</button>
+          <button class="edit-decision-button" mat-flat-button color="primary" (click)="onEdit(decision)">
+            Edit Draft
+          </button>
         </ng-container>
 
         <div
+          class="revert-to-draft-button"
           *ngIf="!decision.isDraft"
           [matTooltip]="decision.disabledMessage"
           [matTooltipDisabled]="!isPaused && !isDraftExists && !decision.hasDuplicateComponents"
@@ -183,6 +200,28 @@
             </button>
           </div>
         </div>
+
+        <ng-container *ngIf="decision.isFlagged">
+          <section class="flag-details">
+            <div class="flag-details-header">
+              <div class="flag-details-flagger">
+                <mat-icon svgIcon="personal_places"></mat-icon><strong>{{ decision.flaggedBy?.prettyName }}</strong>
+              </div>
+              <div><strong>Follow-Up Date:</strong> {{ formatDate(decision.followUpAt) || 'No Data' }}</div>
+            </div>
+
+            <div class="flag-details-body">
+              <strong>Flagged for condition follow-up because:</strong> {{ decision.reasonFlagged }}
+            </div>
+
+            <div class="flag-details-footer">
+              <div class="flag-details-edited-details">
+                {{ formatDate(decision.flagEditedAt, true) }} (Last Edited by {{ decision.flagEditedBy?.prettyName }})
+              </div>
+              <button mat-button type="button" (click)="flag(decision, true)">Edit</button>
+            </div>
+          </section>
+        </ng-container>
       </section>
       <ng-container *ngIf="isSummary">
         <!-- Components -->

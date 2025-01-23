@@ -26,6 +26,7 @@ import { ApplicationDecisionComponentDto } from './component/application-decisio
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { User } from '../../../../user/user.entity';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
@@ -40,6 +41,7 @@ describe('ApplicationDecisionV2Service', () => {
   let mockDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
   let mockDecisionConditionService: DeepMocked<ApplicationDecisionConditionService>;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
+  let mockUserRepository: DeepMocked<Repository<User>>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
   let mockApplicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
   let mockdataSource: DeepMocked<DataSource>;
@@ -55,6 +57,7 @@ describe('ApplicationDecisionV2Service', () => {
     mockDecisionOutcomeRepository = createMock<Repository<ApplicationDecisionOutcomeCode>>();
     mockDecisionMakerCodeRepository = createMock<Repository<ApplicationDecisionMakerCode>>();
     mockCeoCriterionCodeRepository = createMock<Repository<ApplicationCeoCriterionCode>>();
+    mockUserRepository = createMock<Repository<User>>();
     mockApplicationDecisionComponentTypeRepository = createMock();
     mockDecisionComponentService = createMock();
     mockDecisionConditionService = createMock();
@@ -94,6 +97,10 @@ describe('ApplicationDecisionV2Service', () => {
         {
           provide: getRepositoryToken(NaruSubtype),
           useValue: mockNaruSubtypeRepository,
+        },
+        {
+          provide: getRepositoryToken(User),
+          useValue: mockUserRepository,
         },
         {
           provide: ApplicationService,

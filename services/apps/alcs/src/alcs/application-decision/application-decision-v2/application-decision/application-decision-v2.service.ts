@@ -52,6 +52,8 @@ export class ApplicationDecisionV2Service {
     private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
     @InjectRepository(NaruSubtype)
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
@@ -280,6 +282,32 @@ export class ApplicationDecisionV2Service {
     existingDecision.linkedResolutionOutcomeCode = updateDto.linkedResolutionOutcomeCode;
     existingDecision.emailSent = updateDto.emailSent;
     existingDecision.ccEmails = filterUndefined(updateDto.ccEmails, existingDecision.ccEmails);
+    existingDecision.isFlagged = updateDto.isFlagged;
+    existingDecision.reasonFlagged = updateDto.reasonFlagged;
+    existingDecision.followUpAt = formatIncomingDate(updateDto.followUpAt);
+    existingDecision.flagEditedAt = formatIncomingDate(updateDto.flagEditedAt);
+
+    if (updateDto.flaggedByUuid !== undefined) {
+      existingDecision.flaggedBy =
+        updateDto.flaggedByUuid === null
+          ? null
+          : await this.userRepository.findOne({
+              where: {
+                uuid: updateDto.flaggedByUuid,
+              },
+            });
+    }
+
+    if (updateDto.flagEditedByUuid !== undefined) {
+      existingDecision.flagEditedBy =
+        updateDto.flagEditedByUuid === null
+          ? null
+          : await this.userRepository.findOne({
+              where: {
+                uuid: updateDto.flagEditedByUuid,
+              },
+            });
+    }
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(updateDto.outcomeCode);
