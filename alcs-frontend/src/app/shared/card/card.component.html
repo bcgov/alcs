@@ -10,80 +10,108 @@
   </div>
   <div class="card-content">
     <div class="upper-card">
-      <div class="subtext">
-        {{ cardData.typeLabel }}
+      <div class="row">
+        <div class="subtext">
+          {{ cardData.typeLabel }}
+        </div>
       </div>
-      <span
-        class="ellipsis"
-        [id]="cardData.id"
-        [matTooltip]="cardData.titleTooltip"
-        (mouseover)="onMouseHover(cardData.id)"
-        (focus)="onMouseHover(cardData.id)"
-        [matTooltipDisabled]="!cardData.verticalOutBound"
-        >{{ cardData.title }}</span
-      >
-      <span class="high-priority" *ngIf="cardData.highPriority">!</span>
-      <div class="labels">
-        <app-application-type-pill
-          *ngFor="let type of cardData.labels"
-          [type]="type"
-          [useShortLabel]="true"
-        ></app-application-type-pill>
+      <div class="row">
+        <span
+          class="ellipsis"
+          [id]="cardData.id"
+          [matTooltip]="cardData.titleTooltip"
+          (mouseover)="onMouseHover(cardData.id)"
+          (focus)="onMouseHover(cardData.id)"
+          [matTooltipDisabled]="!cardData.verticalOutBound"
+          >{{ cardData.title }}</span
+        >
+        <span class="high-priority" *ngIf="cardData.highPriority">!</span>
+      </div>
+      <div class="row">
+        <div class="labels">
+          <app-application-type-pill
+            *ngFor="let type of cardData.labels"
+            [type]="type"
+            [useShortLabel]="true"
+          ></app-application-type-pill>
+          <ng-container *ngIf="isConditionCard && !isInConditionBoard">
+            <app-application-type-pill
+              [type]="getStatusPill('CONDITION')"
+              [useShortLabel]="true"
+            ></app-application-type-pill>
+            <app-application-type-pill
+              *ngIf="isModification"
+              [type]="getStatusPill('MODIFICATION')"
+              [useShortLabel]="true"
+            ></app-application-type-pill>
+            <app-application-type-pill
+              *ngIf="isReconsideration"
+              [type]="getStatusPill('RECONSIDERATION')"
+              [useShortLabel]="true"
+            ></app-application-type-pill>
+          </ng-container>
+        </div>
       </div>
     </div>
     <div class="lower-card">
-      <div *ngIf="!isConditionCard">
-        <div
-          *ngIf="cardData.activeDays !== undefined"
-          class="day-count active-days center"
-          matTooltip="Active days: {{ cardData.activeDays }} "
-        >
-          <mat-icon>calendar_month</mat-icon>
-          <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center">
-            {{ cardData.activeDays }}
-          </span>
-          <span *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays" class="center">
-            {{ cardData.maxActiveDays }}+
-          </span>
-        </div>
-        <div
-          *ngIf="cardData.pausedDays !== undefined"
-          class="day-count center"
-          matTooltip="Paused days: {{ cardData.pausedDays }} "
-        >
-          <mat-icon>pause</mat-icon>
-          <span class="center">{{ cardData.pausedDays }}</span>
-        </div>
-        <div *ngIf="cardData.showDueDate && cardData.dueDate" class="due-date center">
-          <span class="center">Due: {{ cardData.dueDate | momentFormat }}</span>
-        </div>
-        <div *ngIf="cardData.activeDays && cardData.dueDate !== undefined" class="due-date center">
-          <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center"
-            >Due: {{ cardData.dueDate | momentFormat }}</span
+      <div class="left-card">
+        <div *ngIf="!isConditionCard">
+          <div
+            *ngIf="cardData.activeDays !== undefined"
+            class="day-count active-days center"
+            matTooltip="Active days: {{ cardData.activeDays }} "
           >
-          <span *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays" class="center red-text"
-            >Overdue</span
+            <mat-icon>calendar_month</mat-icon>
+            <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center">
+              {{ cardData.activeDays }}
+            </span>
+            <span *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays" class="center">
+              {{ cardData.maxActiveDays }}+
+            </span>
+          </div>
+          <div
+            *ngIf="cardData.pausedDays !== undefined"
+            class="day-count center"
+            matTooltip="Paused days: {{ cardData.pausedDays }} "
           >
+            <mat-icon>pause</mat-icon>
+            <span class="center">{{ cardData.pausedDays }}</span>
+          </div>
+          <div *ngIf="cardData.showDueDate && cardData.dueDate" class="due-date center">
+            <span class="center">Due: {{ cardData.dueDate | momentFormat }}</span>
+          </div>
+          <div *ngIf="cardData.activeDays && cardData.dueDate !== undefined" class="due-date center">
+            <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center"
+              >Due: {{ cardData.dueDate | momentFormat }}</span
+            >
+            <span
+              *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays"
+              class="center red-text"
+              >Overdue</span
+            >
+          </div>
+        </div>
+
+        <div class="condition-status-pill" *ngIf="isConditionCard && isInConditionBoard">
+          <app-application-type-pill *ngIf="isExpired" [type]="getStatusPill('EXPIRED')"></app-application-type-pill>
+          <app-application-type-pill *ngIf="isPastDue" [type]="getStatusPill('PASTDUE')"></app-application-type-pill>
         </div>
       </div>
 
-      <div class="condition-status-pill">
-        <app-application-type-pill *ngIf="isExpired" [type]="getStatusPill('EXPIRED')"></app-application-type-pill>
-        <app-application-type-pill *ngIf="isPastDue" [type]="getStatusPill('PASTDUE')"></app-application-type-pill>
-      </div>
+      <div class="right-card">
+        <div class="flag-avatar-container">
+          <mat-icon
+            *ngIf="cardData.cardType === CardType.APP_CON && cardData.decisionIsFlagged"
+            svgIcon="personal_places"
+            class="flag-icon"
+          ></mat-icon>
 
-      <div class="flag-avatar-container">
-        <mat-icon
-          *ngIf="cardData.cardType === CardType.APP_CON && cardData.decisionIsFlagged"
-          svgIcon="personal_places"
-          class="flag-icon"
-        ></mat-icon>
-
-        <app-avatar-circle
-          *ngIf="cardData.assignee"
-          [initials]="cardData.assignee.initials || ''"
-          [name]="cardData.assignee.prettyName"
-        ></app-avatar-circle>
+          <app-avatar-circle
+            *ngIf="cardData.assignee"
+            [initials]="cardData.assignee.initials || ''"
+            [name]="cardData.assignee.prettyName"
+          ></app-avatar-circle>
+        </div>
       </div>
     </div>
   </div>

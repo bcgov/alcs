@@ -531,7 +531,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       dateReceived: 0,
       isExpired,
       isPastDue,
+      isInConditionBoard: this.currentBoardCode === BOARD_TYPE_CODES.APP_CON,
       decisionIsFlagged: applicationDecisionCondition.decisionIsFlagged,
+      isModification: applicationDecisionCondition.isModification,
+      isReconsideration: applicationDecisionCondition.isReconsideration,
     };
   }
 

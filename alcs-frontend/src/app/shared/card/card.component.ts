@@ -3,8 +3,11 @@ import { ApplicationDecisionMeetingDto } from '../../services/application/applic
 import { AssigneeDto } from '../../services/user/user.dto';
 import { ApplicationPill } from '../application-type-pill/application-type-pill.component';
 import {
+  CONDITION_LABEL,
   DECISION_CONDITION_EXPIRED_LABEL,
   DECISION_CONDITION_PASTDUE_LABEL,
+  MODIFICATION_TYPE_LABEL,
+  RECON_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
 
 export interface CardData {
@@ -36,6 +39,9 @@ export interface CardData {
 export interface ConditionCardData extends CardData {
   isExpired: boolean;
   isPastDue: boolean;
+  isInConditionBoard: boolean;
+  isModification: boolean;
+  isReconsideration: boolean;
 }
 
 export interface CardSelectedEvent {
@@ -68,9 +74,13 @@ export class CardComponent implements OnInit {
   @Input() cardData!: CardData | ConditionCardData;
   @Output() cardSelected = new EventEmitter<CardSelectedEvent>();
 
+  // Condition Card
   isConditionCard = false;
+  isInConditionBoard = true;
   isExpired = false;
   isPastDue = false;
+  isModification = false;
+  isReconsideration = false;
 
   constructor() {}
 
@@ -99,8 +109,11 @@ export class CardComponent implements OnInit {
     }
 
     this.isConditionCard = this.cardData.cardType === CardType.APP_CON;
+    this.isInConditionBoard = this.isConditionCard ? (this.cardData as ConditionCardData).isInConditionBoard : true;
     this.isExpired = this.isConditionCard ? (this.cardData as ConditionCardData).isExpired : false;
     this.isPastDue = this.isConditionCard ? (this.cardData as ConditionCardData).isPastDue : false;
+    this.isModification = this.isConditionCard ? (this.cardData as ConditionCardData).isModification : false;
+    this.isReconsideration = this.isConditionCard ? (this.cardData as ConditionCardData).isReconsideration : false;
   }
 
   onMouseHover(e: any) {
@@ -116,8 +129,14 @@ export class CardComponent implements OnInit {
   getStatusPill(status: string) {
     if (status === 'PASTDUE') {
       return DECISION_CONDITION_PASTDUE_LABEL;
-    } else {
+    } else if (status === 'EXPIRED') {
       return DECISION_CONDITION_EXPIRED_LABEL;
+    } else if (status === 'MODIFICATION') {
+      return MODIFICATION_TYPE_LABEL;
+    } else if (status === 'RECONSIDERATION') {
+      return RECON_TYPE_LABEL;
+    } else {
+      return CONDITION_LABEL;
     }
   }
 }
