@@ -11,7 +11,7 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { BoardService } from '../../../../services/board/board.service';
+import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { CardService } from '../../../../services/card/card.service';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
@@ -30,6 +30,7 @@ import {
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-application-decision-condition-dialog',
@@ -70,6 +71,7 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
     toastService: ToastService,
     cardService: CardService,
     authService: AuthenticationService,
+    private router: Router,
   ) {
     super(authService, dialogRef, cardService, confirmationDialogService, toastService, userService, boardService);
   }
@@ -221,5 +223,25 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
 
   isSaveDisabled(): boolean {
     return !this.dataSource.data.some((item) => item.selected);
+  }
+
+  async onBoardSelected(board: BoardWithFavourite) {
+    this.selectedBoard = board.code;
+    try {
+      await this.boardService.changeBoard(this.applicationDecisionConditionCard.card!.uuid, board.code);
+      const loadedBoard = await this.boardService.fetchBoardDetail(board.code);
+      if (loadedBoard) {
+        this.boardStatuses = loadedBoard.statuses;
+      }
+
+      this.isDirty = true;
+      const toast = this.toastService.showSuccessToast(`Application Condition moved to ${board.title}`, 'Go to Board');
+      toast.onAction().subscribe(() => {
+        this.router.navigate(['/board', board.code]);
+      });
+      // await this.reloadApplication();
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to move to new board');
+    }
   }
 }
