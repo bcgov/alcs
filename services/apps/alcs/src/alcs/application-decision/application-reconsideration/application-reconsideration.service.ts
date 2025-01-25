@@ -1,5 +1,5 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
@@ -32,6 +32,7 @@ export class ApplicationReconsiderationService {
     @InjectRepository(ApplicationReconsiderationType)
     private reconsiderationTypeRepository: Repository<ApplicationReconsiderationType>,
     private applicationService: ApplicationService,
+    @Inject(forwardRef(() => CardService))
     private cardService: CardService,
     private applicationDecisionService: ApplicationDecisionV2Service,
   ) {}

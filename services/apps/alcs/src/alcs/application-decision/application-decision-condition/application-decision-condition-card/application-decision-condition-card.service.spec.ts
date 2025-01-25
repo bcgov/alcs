@@ -18,6 +18,8 @@ import {
 } from '../../../../../../../libs/common/src/exceptions/base.exception';
 import { Card } from '../../../card/card.entity';
 import { ApplicationProfile } from '../../../../common/automapper/application.automapper.profile';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 
 describe('ApplicationDecisionConditionCardService', () => {
   let service: ApplicationDecisionConditionCardService;
@@ -26,6 +28,8 @@ describe('ApplicationDecisionConditionCardService', () => {
   let mockDecisionService: DeepMocked<ApplicationDecisionV2Service>;
   let mockBoardService: DeepMocked<BoardService>;
   let mockCardService: DeepMocked<CardService>;
+  let mockApplicationModificationService: DeepMocked<ApplicationModificationService>;
+  let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockMapper: DeepMocked<Mapper>;
 
   const CARD_RELATIONS = {
@@ -59,6 +63,8 @@ describe('ApplicationDecisionConditionCardService', () => {
     mockDecisionService = createMock();
     mockBoardService = createMock();
     mockCardService = createMock();
+    mockApplicationModificationService = createMock();
+    mockApplicationReconsiderationService = createMock();
     mockMapper = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -88,6 +94,14 @@ describe('ApplicationDecisionConditionCardService', () => {
         {
           provide: CardService,
           useValue: mockCardService,
+        },
+        {
+          provide: ApplicationModificationService,
+          useValue: mockApplicationModificationService,
+        },
+        {
+          provide: ApplicationReconsiderationService,
+          useValue: mockApplicationReconsiderationService,
         },
         ApplicationDecisionProfile,
         ApplicationProfile,

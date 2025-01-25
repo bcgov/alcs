@@ -120,7 +120,7 @@ export const CLOSED_PR_LABEL = {
 
 export const CONDITION_LABEL = {
   label: 'Condition',
-  shortLabel: 'Condition',
+  shortLabel: 'COND',
   backgroundColor: '#fff',
   borderColor: '#454545',
   textColor: '#000',

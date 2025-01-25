@@ -314,14 +314,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedPlanningReferrals,
         ...mappedNotifications,
       ].sort(noiSort);
-    } else if (boardCode === BOARD_TYPE_CODES.APP_CON) {
-      const appConSort = (a: CardData, b: CardData) => {
-        if (a.highPriority !== b.highPriority) {
-          return b.highPriority ? 1 : -1;
-        }
-        return 0;
-      };
-      this.cards = mappedAppDecisionConditions.sort(appConSort);
     } else {
       const sorted = [];
       sorted.push(
@@ -336,6 +328,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedPlanningReferrals.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedInquiries.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedAppDecisionConditions.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
         ...mappedNoticeOfIntents
           .filter((a) => !a.highPriority)
@@ -349,6 +342,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedPlanningReferrals.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedInquiries.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedAppDecisionConditions.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
       );
       this.cards = sorted;
     }
@@ -537,7 +531,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       dateReceived: 0,
       isExpired,
       isPastDue,
+      isInConditionBoard: this.currentBoardCode === BOARD_TYPE_CODES.APP_CON,
       decisionIsFlagged: applicationDecisionCondition.decisionIsFlagged,
+      isModification: applicationDecisionCondition.isModification,
+      isReconsideration: applicationDecisionCondition.isReconsideration,
     };
   }
 

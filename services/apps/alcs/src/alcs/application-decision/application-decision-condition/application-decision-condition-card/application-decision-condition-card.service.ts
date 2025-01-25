@@ -25,6 +25,8 @@ import { ApplicationType } from '../../../code/application-code/application-type
 import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
 import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationDecisionCondition } from '../application-decision-condition.entity';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 
 @Injectable()
 export class ApplicationDecisionConditionCardService {
@@ -62,6 +64,8 @@ export class ApplicationDecisionConditionCardService {
     private boardService: BoardService,
     @Inject(forwardRef(() => CardService))
     private cardService: CardService,
+    private applicationModificationService: ApplicationModificationService,
+    private applicationReconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -188,6 +192,14 @@ export class ApplicationDecisionConditionCardService {
     });
 
     for (const dto of dtos) {
+      const appModifications = await this.applicationModificationService.getByApplicationDecisionUuid(dto.decisionUuid);
+      const appReconsiderations = await this.applicationReconsiderationService.getByApplicationDecisionUuid(
+        dto.decisionUuid,
+      );
+
+      dto.isModification = appModifications.length > 0;
+      dto.isReconsideration = appReconsiderations.length > 0;
+
       for (const condition of dto.conditions) {
         const status = await this.applicationDecisionService.getDecisionConditionStatus(condition.uuid);
         condition.status = status !== '' ? status : undefined;
