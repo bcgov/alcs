@@ -239,9 +239,17 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
       toast.onAction().subscribe(() => {
         this.router.navigate(['/board', board.code]);
       });
-      // await this.reloadApplication();
+      await this.reloadApplicationCondition();
     } catch (e) {
       this.toastService.showErrorToast('Failed to move to new board');
     }
+  }
+
+  async reloadApplicationCondition() {
+    const applicationDecisionConditionCard = await this.applicationDecisionConditionCardService.getByCard(
+      this.applicationDecisionConditionCard.card.uuid,
+    );
+    this.applicationDecisionConditionCard = applicationDecisionConditionCard!;
+    this.populateData();
   }
 }
