@@ -1,3 +1,4 @@
+import { UserDto } from '../../user/user.dto';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { DateLabel, DateType } from '../../application/decision/application-decision-v2/application-decision-v2.dto';
 
@@ -18,6 +19,12 @@ export interface UpdateNoticeOfIntentDecisionDto {
   decisionComponents?: NoticeOfIntentDecisionComponentDto[];
   conditions?: UpdateNoticeOfIntentDecisionConditionDto[];
   ccEmails?: string[];
+  isFlagged?: boolean;
+  reasonFlagged?: string | null;
+  followUpAt?: number | null;
+  flaggedByUuid?: string | null;
+  flagEditedByUuid?: string | null;
+  flagEditedAt?: number | null;
 }
 
 export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
@@ -56,6 +63,12 @@ export interface NoticeOfIntentDecisionDto {
   modifiedByResolutions?: string[];
   components: NoticeOfIntentDecisionComponentDto[];
   conditions: NoticeOfIntentDecisionConditionDto[];
+  isFlagged: boolean;
+  reasonFlagged: string | null;
+  followUpAt: number | null;
+  flaggedBy: UserDto | null;
+  flagEditedBy: UserDto | null;
+  flagEditedAt: number | null;
 }
 
 export interface NoticeOfIntentDecisionDocumentDto {
@@ -64,6 +77,7 @@ export interface NoticeOfIntentDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize: number | null;
 }
 
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}

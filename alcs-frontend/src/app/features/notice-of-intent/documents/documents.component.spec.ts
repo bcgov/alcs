@@ -10,6 +10,8 @@ import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { NoiDocumentsComponent } from './documents.component';
+import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
+import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 
 describe('NoiDocumentsComponent', () => {
   let component: NoiDocumentsComponent;
@@ -19,6 +21,8 @@ describe('NoiDocumentsComponent', () => {
   let mockDialog: DeepMocked<MatDialog>;
   let mockToastService: DeepMocked<ToastService>;
   let mockNoiSubStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockAppSubService: DeepMocked<NoticeOfIntentSubmissionService>;
+  let mockAppParcelService: DeepMocked<NoticeOfIntentParcelService>;
 
   beforeEach(async () => {
     mockNoiDocService = createMock();
@@ -50,6 +54,14 @@ describe('NoiDocumentsComponent', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNoiSubStatusService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionService,
+          useValue: mockAppSubService,
+        },
+        {
+          provide: NoticeOfIntentParcelService,
+          useValue: mockAppParcelService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

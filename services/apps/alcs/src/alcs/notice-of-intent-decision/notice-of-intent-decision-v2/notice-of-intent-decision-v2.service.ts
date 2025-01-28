@@ -47,6 +47,8 @@ export class NoticeOfIntentDecisionV2Service {
     private decisionComponentTypeRepository: Repository<NoticeOfIntentDecisionComponentType>,
     @InjectRepository(NoticeOfIntentDecisionConditionType)
     private decisionConditionTypeRepository: Repository<NoticeOfIntentDecisionConditionType>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private noticeOfIntentService: NoticeOfIntentService,
     private documentService: DocumentService,
     private decisionComponentService: NoticeOfIntentDecisionComponentService,
@@ -221,6 +223,32 @@ export class NoticeOfIntentDecisionV2Service {
       existingDecision.wasReleased || !updateDto.isDraft;
     existingDecision.emailSent = updateDto.emailSent;
     existingDecision.ccEmails = updateDto.ccEmails;
+    existingDecision.isFlagged = updateDto.isFlagged;
+    existingDecision.reasonFlagged = updateDto.reasonFlagged;
+    existingDecision.followUpAt = formatIncomingDate(updateDto.followUpAt);
+    existingDecision.flagEditedAt = formatIncomingDate(updateDto.flagEditedAt);
+
+    if (updateDto.flaggedByUuid !== undefined) {
+      existingDecision.flaggedBy =
+        updateDto.flaggedByUuid === null
+          ? null
+          : await this.userRepository.findOne({
+              where: {
+                uuid: updateDto.flaggedByUuid,
+              },
+            });
+    }
+
+    if (updateDto.flagEditedByUuid !== undefined) {
+      existingDecision.flagEditedBy =
+        updateDto.flagEditedByUuid === null
+          ? null
+          : await this.userRepository.findOne({
+              where: {
+                uuid: updateDto.flagEditedByUuid,
+              },
+            });
+    }
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(

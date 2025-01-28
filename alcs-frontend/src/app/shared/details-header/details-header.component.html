@@ -43,7 +43,11 @@
         </div>
       </div>
       <div class="tag-container">
-        <app-tags-header [application]="_application" *ngIf="!isTagSectionHidden"></app-tags-header>
+        <app-tags-header [application]="_application" *ngIf="!isTagSectionHidden && !isCommissioner"></app-tags-header>
+        <app-commissioner-tags-header
+          [application]="_application"
+          *ngIf="!isTagSectionHidden && isCommissioner"
+        ></app-commissioner-tags-header>
       </div>
     </div>
   </div>

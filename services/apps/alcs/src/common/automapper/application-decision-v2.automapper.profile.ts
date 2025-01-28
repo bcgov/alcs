@@ -42,6 +42,14 @@ import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/appl
 import { CommissionerDecisionDto } from '../../alcs/commissioner/commissioner.dto';
 import { ApplicationDecisionConditionDate } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationDecisionConditionDateDto } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.dto';
+import { ApplicationDecisionConditionCard } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
+import {
+  ApplicationDecisionConditionCardBoardDto,
+  ApplicationDecisionConditionCardDto,
+  ApplicationDecisionConditionCardUuidDto,
+} from '../../alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
+import { UserDto } from '../../user/user.dto';
+import { User } from '../../user/user.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -141,6 +149,34 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
             }
           }),
         ),
+        forMember(
+          (dto) => dto.conditionCards,
+          mapFrom((entity) =>
+            entity.conditionCards
+              ? this.mapper.mapArray(
+                  entity.conditionCards,
+                  ApplicationDecisionConditionCard,
+                  ApplicationDecisionConditionCardUuidDto,
+                )
+              : [],
+          ),
+        ),
+        forMember(
+          (ad) => ad.followUpAt,
+          mapFrom((a) => a.followUpAt?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.flaggedBy,
+          mapFrom((a) => (a.flaggedBy ? this.mapper.map(a.flaggedBy, User, UserDto) : a.flaggedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedBy,
+          mapFrom((a) => (a.flagEditedBy ? this.mapper.map(a.flagEditedBy, User, UserDto) : a.flagEditedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedAt,
+          mapFrom((a) => a.flagEditedAt?.getTime()),
+        ),
       );
 
       createMap(mapper, ApplicationDecisionOutcomeCode, ApplicationDecisionOutcomeCodeDto);
@@ -228,6 +264,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
                   ApplicationDecisionConditionDateDto,
                 )
               : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.conditionCard,
+          mapFrom((entity) =>
+            entity.conditionCard
+              ? this.mapper.map(
+                  entity.conditionCard,
+                  ApplicationDecisionConditionCard,
+                  ApplicationDecisionConditionCardUuidDto,
+                )
+              : null,
           ),
         ),
       );
@@ -358,6 +406,56 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               uuid: decisionComponent.uuid,
             })),
           ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(entity.conditions, ApplicationDecisionCondition, ApplicationDecisionConditionDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => (entity.decision.uuid ? entity.decision.uuid : undefined)),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardBoardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(entity.conditions, ApplicationDecisionCondition, ApplicationDecisionConditionDto)
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => entity.decision.uuid),
+        ),
+        forMember(
+          (dto) => dto.decisionIsFlagged,
+          mapFrom((entity) => entity.decision.isFlagged),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionCardUuidDto,
+        forMember(
+          (dto) => dto.uuid,
+          mapFrom((entity) => entity.uuid),
         ),
       );
     };

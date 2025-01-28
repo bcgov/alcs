@@ -21,6 +21,7 @@ import { ResidenceDialogComponent } from './residence-dialog/residence-dialog.co
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { isTruncated, truncate } from '../../../../../shared/utils/string-helper';
 import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT } from '../../../../../shared/constants';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export type FormExisingResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
 export type FormProposedResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
@@ -33,8 +34,10 @@ export type FormProposedResidence = { id?: number; floorArea: number; descriptio
 export class NaruProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
 
-  showProposalMapVirus = false;
-  showBuildingPlanVirus = false;
+  showProposalMapHasVirusError = false;
+  showProposalMapVirusScanFailedError = false;
+  showBuildingPlanHasVirusError = false;
+  showBuildingPlanVirusScanFailedError = false;
 
   willBeOverFiveHundredM2 = new FormControl<boolean | null>(null, [Validators.required]);
   willRetainResidence = new FormControl<boolean | null>(null, [Validators.required]);
@@ -179,13 +182,29 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   async attachProposalMap(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.showProposalMapVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.showProposalMapHasVirusError = false;
+      this.showProposalMapVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachBuildingPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
-    this.showBuildingPlanVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+      this.showBuildingPlanHasVirusError = false;
+      this.showBuildingPlanVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showBuildingPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showBuildingPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   onChangeOver500m2(answerIsYes: boolean) {

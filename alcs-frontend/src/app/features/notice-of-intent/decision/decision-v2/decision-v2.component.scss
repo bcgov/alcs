@@ -1,10 +1,11 @@
 @use '../../../../../styles/colors';
 
 section {
-  margin-bottom: 64px;
+  margin-bottom: 15px;
 }
 
 h4 {
+  padding-top: 15px;
   margin-bottom: 12px !important;
 }
 
@@ -32,7 +33,6 @@ hr {
 
 .decision-section {
   background: colors.$grey-light;
-  padding: 18px;
 }
 
 .decision-section-no-title {
@@ -40,9 +40,24 @@ hr {
   padding: 1px 18px;
 }
 
+.component-summary {
+  padding: 10px 0;
+}
+
+.component-title {
+  padding-top: 20px;
+}
+
+.status-pill {
+  padding: 6px 6px;
+}
+
 .header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto;
+  row-gap: 10px;
+  column-gap: 28px;
   margin-bottom: 36px;
 
   .title {
@@ -50,6 +65,8 @@ hr {
     align-items: center;
     justify-content: space-between;
     gap: 28px;
+    grid-row: 1/2;
+    grid-column: 1/2;
 
     .days {
       display: inline-block;
@@ -64,6 +81,16 @@ hr {
       }
     }
   }
+}
+
+.edit-decision-button,
+.revert-to-draft-button {
+  grid-row: 1/2;
+  grid-column: 3/4;
+}
+
+.revert-to-draft-button {
+  text-align: right;
 }
 
 .loading-overlay {
@@ -115,10 +142,23 @@ hr {
   position: absolute;
 }
 
+.document {
+  padding: 9px 16px;
+  border-radius: 4px;
+  border: 1px solid colors.$grey;
+  background: colors.$white;
+  margin: 8px 0;
+}
+
+.align-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
 :host ::ng-deep {
   .grid-2 {
     margin-top: 18px;
-    margin-bottom: 18px;
+    margin-bottom: 6px;
     display: grid;
     grid-template-columns: 50% 50%;
     grid-row-gap: 18px;
@@ -157,4 +197,90 @@ hr {
   .pre-wrapped-text {
     white-space: pre-wrap;
   }
+
+  .mat-link {
+    color: colors.$link-color;
+  }
+}
+
+.flag-button-container {
+  justify-self: end;
+  grid-row: 2/3;
+  grid-column: 1/4;
+
+  @media screen and (min-width: 1440px) {
+    grid-row: 1/2;
+    grid-column: 2/3;
+  }
+}
+
+.flag-button {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+
+  text-align: left;
+  font-weight: normal;
+  text-wrap: nowrap;
+
+  background-color: transparent;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  margin: 0;
+
+  &:hover {
+    background-color: colors.$grey-light;
+  }
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+
+  &.flagged {
+    mat-icon {
+      color: blue;
+    }
+  }
+}
+
+.flag-details {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  padding: 16px;
+  border: 1px solid colors.$grey;
+  border-radius: 4px;
+}
+
+.flag-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flag-details-flagger {
+  display: flex;
+  gap: 5px;
+
+  mat-icon {
+    color: blue;
+  }
+}
+
+.flag-details-body {
+  line-height: 1.5;
+}
+
+.flag-details-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.flag-details-edited-details {
+  font-size: 12px;
+  color: colors.$grey;
 }

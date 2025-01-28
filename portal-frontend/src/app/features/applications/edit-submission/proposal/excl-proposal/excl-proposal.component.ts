@@ -13,6 +13,7 @@ import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.direc
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-excl-proposal',
@@ -25,10 +26,14 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
   currentStep = EditApplicationSteps.Proposal;
   prescribedBody: string | null = null;
 
-  showProposalMapVirus = false;
-  showProofOfAdvertisingVirus = false;
-  showProofOfSignageVirus = false;
-  showReportOfPublicHearingVirus = false;
+  showProposalMapHasVirusError = false;
+  showProposalMapVirusScanFailedError = false;
+  showProofOfAdvertisingHasVirusError = false;
+  showProofOfAdvertisingVirusScanFailedError = false;
+  showProofOfSignageHasVirusError = false;
+  showProofOfSignageVirusScanFailedError = false;
+  showReportOfPublicHearingHasVirusError = false;
+  showReportOfPublicHearingVirusScanFailedError = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   shareProperty = new FormControl<string | null>(null, [Validators.required]);
@@ -52,7 +57,7 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
     private pdfGenerationService: PdfGenerationService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
-    toastService: ToastService
+    toastService: ToastService,
   ) {
     super(applicationDocumentService, dialog, toastService);
   }
@@ -83,11 +88,11 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
       this.noticeOfPublicHearing = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.PROOF_OF_ADVERTISING
+        (document) => document.type?.code === DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
       );
       this.proofOfSignage = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROOF_OF_SIGNAGE);
       this.reportOfPublicHearing = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING
+        (document) => document.type?.code === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
       );
     });
   }
@@ -97,23 +102,55 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   async attachProposalMap(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.showProposalMapVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.showProposalMapHasVirusError = false;
+      this.showProposalMapVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachProofOfAdvertising(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_ADVERTISING);
-    this.showProofOfAdvertisingVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_ADVERTISING);
+      this.showProofOfAdvertisingHasVirusError = false;
+      this.showProofOfAdvertisingVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProofOfAdvertisingHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProofOfAdvertisingVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachProofOfSignage(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_SIGNAGE);
-    this.showProofOfSignageVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_SIGNAGE);
+      this.showProofOfSignageHasVirusError = false;
+      this.showProofOfSignageVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProofOfSignageHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProofOfSignageVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachReportOfPublicHearing(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING);
-    this.showReportOfPublicHearingVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING);
+      this.showReportOfPublicHearingHasVirusError = false;
+      this.showReportOfPublicHearingVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showReportOfPublicHearingHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showReportOfPublicHearingVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async onDownloadPdf() {

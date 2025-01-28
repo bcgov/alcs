@@ -1,15 +1,9 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import {
-  FindOptionsRelations,
-  FindOptionsWhere,
-  IsNull,
-  Not,
-  Repository,
-} from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
 import { filterUndefined } from '../../../utils/undefined';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
@@ -32,6 +26,7 @@ export class ApplicationModificationService {
     @InjectMapper() private mapper: Mapper,
     private applicationService: ApplicationService,
     private applicationDecisionV2Service: ApplicationDecisionV2Service,
+    @Inject(forwardRef(() => CardService))
     private cardService: CardService,
   ) {}
 
@@ -42,19 +37,18 @@ export class ApplicationModificationService {
     assignee: true,
   };
 
-  private BOARD_MODIFICATION_RELATIONS: FindOptionsRelations<ApplicationModification> =
-    {
-      application: {
-        type: true,
-        region: true,
-        localGovernment: true,
-        decisionMeetings: true,
-      },
-      card: {
-        ...this.CARD_RELATIONS,
-        board: false,
-      },
-    };
+  private BOARD_MODIFICATION_RELATIONS: FindOptionsRelations<ApplicationModification> = {
+    application: {
+      type: true,
+      region: true,
+      localGovernment: true,
+      decisionMeetings: true,
+    },
+    card: {
+      ...this.CARD_RELATIONS,
+      board: false,
+    },
+  };
 
   private DEFAULT_RELATIONS: FindOptionsRelations<ApplicationModification> = {
     application: {
@@ -107,14 +101,8 @@ export class ApplicationModificationService {
     });
   }
 
-  mapToDtos(
-    modifications: ApplicationModification[],
-  ): Promise<ApplicationModificationDto[]> {
-    return this.mapper.mapArrayAsync(
-      modifications,
-      ApplicationModification,
-      ApplicationModificationDto,
-    );
+  mapToDtos(modifications: ApplicationModification[]): Promise<ApplicationModificationDto[]> {
+    return this.mapper.mapArrayAsync(modifications, ApplicationModification, ApplicationModificationDto);
   }
 
   async create(createDto: ApplicationModificationCreateDto, board: Board) {
@@ -124,28 +112,16 @@ export class ApplicationModificationService {
       description: createDto.description,
     });
 
-    modification.card = await this.cardService.create(
-      CARD_TYPE.APP_MODI,
-      board,
-      false,
-    );
+    modification.card = await this.cardService.create(CARD_TYPE.APP_MODI, board, false);
     modification.application = await this.getOrCreateApplication(createDto);
-    modification.modifiesDecisions =
-      await this.applicationDecisionV2Service.getMany(
-        createDto.modifiesDecisionUuids,
-      );
+    modification.modifiesDecisions = await this.applicationDecisionV2Service.getMany(createDto.modifiesDecisionUuids);
 
-    const mockModifications =
-      await this.modificationRepository.save(modification);
+    const mockModifications = await this.modificationRepository.save(modification);
     return this.getByUuid(mockModifications.uuid);
   }
 
-  private async getOrCreateApplication(
-    createDto: ApplicationModificationCreateDto,
-  ) {
-    const existingApplication = await this.applicationService.get(
-      createDto.applicationFileNumber,
-    );
+  private async getOrCreateApplication(createDto: ApplicationModificationCreateDto) {
+    const existingApplication = await this.applicationService.get(createDto.applicationFileNumber);
 
     if (existingApplication) {
       return existingApplication;
@@ -178,16 +154,10 @@ export class ApplicationModificationService {
       modification.isTimeExtension = updateDto.isTimeExtension;
     }
 
-    modification.description = filterUndefined(
-      updateDto.description,
-      modification.description,
-    );
+    modification.description = filterUndefined(updateDto.description, modification.description);
 
     if (updateDto.modifiesDecisionUuids) {
-      modification.modifiesDecisions =
-        await this.applicationDecisionV2Service.getMany(
-          updateDto.modifiesDecisionUuids,
-        );
+      modification.modifiesDecisions = await this.applicationDecisionV2Service.getMany(updateDto.modifiesDecisionUuids);
     }
 
     await this.modificationRepository.save(modification);
@@ -209,9 +179,7 @@ export class ApplicationModificationService {
     });
 
     if (!modification) {
-      throw new ServiceNotFoundException(
-        `Modification with uuid ${uuid} not found`,
-      );
+      throw new ServiceNotFoundException(`Modification with uuid ${uuid} not found`);
     }
 
     return modification;
@@ -257,6 +225,17 @@ export class ApplicationModificationService {
           subtasks: { type: true, assignee: true },
         },
       },
+    });
+  }
+
+  async getByApplicationDecisionUuid(decisionUuid: string): Promise<ApplicationModification[]> {
+    return this.modificationRepository.find({
+      where: {
+        modifiesDecisions: {
+          uuid: decisionUuid,
+        },
+      },
+      relations: this.DEFAULT_RELATIONS,
     });
   }
 }

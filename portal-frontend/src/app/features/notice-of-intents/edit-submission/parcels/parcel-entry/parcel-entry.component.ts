@@ -22,6 +22,7 @@ import { scrollToElement } from '../../../../../shared/utils/scroll-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -66,7 +67,8 @@ export class ParcelEntryComponent implements OnInit {
   searchBy = new FormControl<string | null>(null);
   isCrownLand: boolean | null = null;
   isCertificateOfTitleRequired = true;
-  showVirusError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
   isMobile = false;
 
   parcelType = new FormControl<string | null>(null, [Validators.required]);
@@ -311,12 +313,18 @@ export class ParcelEntryComponent implements OnInit {
           parcelUuid,
           mappedFiles,
         );
-      } catch (e) {
-        this.showVirusError = true;
-        this.toastService.showErrorToast('Document upload failed');
+        this.toastService.showSuccessToast('Document uploaded');
+        this.showHasVirusError = false;
+        this.showVirusScanFailedError = false;
         return;
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+
+        if (err instanceof HttpErrorResponse) {
+          this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+          this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+        }
       }
-      this.showVirusError = false;
     }
   }
 

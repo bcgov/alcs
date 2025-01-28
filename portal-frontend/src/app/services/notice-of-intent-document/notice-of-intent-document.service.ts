@@ -27,26 +27,13 @@ export class NoticeOfIntentDocumentService {
     documentType: DOCUMENT_TYPE | null,
     source = DOCUMENT_SOURCE.APPLICANT
   ) {
-    try {
-      const res = await this.documentService.uploadFile(
-        fileNumber,
-        file,
-        documentType,
-        source,
-        `${this.serviceUrl}/notice-of-intent/${fileNumber}/attachExternal`
-      );
-      if (res) {
-        this.toastService.showSuccessToast('Document uploaded');
-      }
-      return res;
-    } catch (e) {
-      if (e instanceof HttpErrorResponse && e.status === 403) {
-        throw e;
-      }
-      console.error(e);
-      this.toastService.showErrorToast('Failed to attach document, please try again');
-    }
-    return undefined;
+    return await this.documentService.uploadFile<NoticeOfIntentDocumentDto>(
+      fileNumber,
+      file,
+      documentType,
+      source,
+      `${this.serviceUrl}/notice-of-intent/${fileNumber}/attachExternal`,
+    );
   }
 
   async openFile(fileUuid: string) {

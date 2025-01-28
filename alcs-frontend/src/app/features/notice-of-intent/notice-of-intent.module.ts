@@ -4,7 +4,6 @@ import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/not
 import { SharedModule } from '../../shared/shared.module';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { NoticeOfIntentDetailsModule } from './applicant-info/notice-of-intent-details/notice-of-intent-details.module';
-import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { NoiDocumentsComponent } from './documents/documents.component';
 import { InfoRequestDialogComponent } from './info-requests/info-request-dialog/info-request-dialog.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -41,7 +40,6 @@ const routes: Routes = [
     PostDecisionComponent,
     EditModificationDialogComponent,
     NoiDocumentsComponent,
-    DocumentUploadDialogComponent,
     ApplicantInfoComponent,
     ProposalComponent,
     ParcelPrepComponent,

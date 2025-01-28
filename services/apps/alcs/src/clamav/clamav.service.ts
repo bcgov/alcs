@@ -1,4 +1,5 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import * as NodeClam from 'clamscan';

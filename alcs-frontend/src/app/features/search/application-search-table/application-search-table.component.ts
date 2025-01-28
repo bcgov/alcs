@@ -71,9 +71,10 @@ export class ApplicationSearchTableComponent {
   }
 
   onSelectRecord(record: SearchResult) {
+    const decisionUrl = record.status?.label === 'Decision Released' ? '/decision' : '';
     const url = this.isCommissioner
       ? this.router.serializeUrl(this.router.createUrlTree([`/commissioner/application/${record.referenceId}`]))
-      : this.router.serializeUrl(this.router.createUrlTree([`/application/${record.referenceId}`]));
+      : this.router.serializeUrl(this.router.createUrlTree([`/application/${record.referenceId}${decisionUrl}`]));
 
     window.open(url, '_blank');
   }

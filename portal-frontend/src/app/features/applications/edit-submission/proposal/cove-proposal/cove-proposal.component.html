@@ -32,7 +32,7 @@
         mat-flat-button
         color="accent"
         [ngClass]="{
-          'error-outline': transferees.length === 0 && showErrors
+          'error-outline': transferees.length === 0 && showErrors,
         }"
         (click)="onAdd()"
       >
@@ -185,7 +185,9 @@
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [isRequired]="true"
-          [showVirusError]="showProposalMapVirus"
+          [showHasVirusError]="showProposalMapHasVirusError"
+          [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+          [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -201,7 +203,7 @@
             <mat-button-toggle
               class="toggle-button"
               [ngClass]="{
-                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
+                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched),
               }"
               value="true"
               >Yes
@@ -209,7 +211,7 @@
             <mat-button-toggle
               class="toggle-button"
               [ngClass]="{
-                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
+                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched),
               }"
               value="false"
               >No
@@ -229,7 +231,8 @@
           [showErrors]="showErrors"
           [isRequired]="true"
           [disabled]="!canUploadDraft"
-          [showVirusError]="showDraftCovenantVirus"
+          [showHasVirusError]="showDraftCovenantHasVirusError"
+          [showVirusScanFailedError]="showDraftCovenantVirusScanFailedError"
         ></app-file-drag-drop>
       </div>
     </div>

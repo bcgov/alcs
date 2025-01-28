@@ -74,7 +74,6 @@ $date-ht: 32px;
   font-size: 1.4em;
   font-weight: bold;
   color: colors.$error-color;
-  float: right;
 }
 
 .day-count {
@@ -96,6 +95,8 @@ $date-ht: 32px;
 
 .labels {
   margin-top: 6px;
+  display: flex;
+  justify-items: flex-start;
 }
 
 .cdk-drag-placeholder {
@@ -140,4 +141,31 @@ mat-card {
 
 .ellipsis {
   @include text-ellipsis($lines: 2);
+}
+
+.flag-avatar-container {
+  display: flex;
+  gap: 10px;
+}
+
+.flag-icon {
+  color: blue;
+}
+
+.left-card {
+  display: flex;
+  justify-content: flex-start;
+  flex: 1;
+}
+
+.right-card {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }

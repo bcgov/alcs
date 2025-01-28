@@ -9,8 +9,8 @@ import { PlanningReviewDocumentDto } from '../../../services/planning-review/pla
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
-import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
+import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-documents',
@@ -28,9 +28,9 @@ export class DocumentsComponent implements OnInit {
   dataSource: MatTableDataSource<InquiryDocumentDto> = new MatTableDataSource<InquiryDocumentDto>();
 
   readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
-  
+
   constructor(
-    private planningReviewDocumentService: InquiryDocumentService,
+    private inquiryDocumentService: InquiryDocumentService,
     private inquiryDetailService: InquiryDetailService,
     private confirmationDialogService: ConfirmationDialogService,
     private toastService: ToastService,
@@ -54,6 +54,7 @@ export class DocumentsComponent implements OnInit {
         width: '70%',
         data: {
           fileId: this.fileId,
+          documentService: this.inquiryDocumentService,
         },
       })
       .beforeClosed()
@@ -65,15 +66,15 @@ export class DocumentsComponent implements OnInit {
   }
 
   async openFile(uuid: string, fileName: string) {
-    await this.planningReviewDocumentService.download(uuid, fileName);
+    await this.inquiryDocumentService.download(uuid, fileName);
   }
 
   async downloadFile(uuid: string, fileName: string) {
-    await this.planningReviewDocumentService.download(uuid, fileName, false);
+    await this.inquiryDocumentService.download(uuid, fileName, false);
   }
 
   private async loadDocuments(fileNumber: string) {
-    this.documents = await this.planningReviewDocumentService.listAll(fileNumber);
+    this.documents = await this.inquiryDocumentService.listAll(fileNumber);
     this.dataSource = new MatTableDataSource(this.documents);
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
@@ -95,6 +96,7 @@ export class DocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           existingDocument: element,
+          documentService: this.inquiryDocumentService,
         },
       })
       .beforeClosed()
@@ -112,7 +114,7 @@ export class DocumentsComponent implements OnInit {
       })
       .subscribe(async (accepted) => {
         if (accepted) {
-          await this.planningReviewDocumentService.delete(element.uuid);
+          await this.inquiryDocumentService.delete(element.uuid);
           this.loadDocuments(this.fileId);
           this.toastService.showSuccessToast('Document deleted');
         }
