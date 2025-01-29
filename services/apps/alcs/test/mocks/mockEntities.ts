@@ -26,6 +26,7 @@ import { TagCategory } from '../../src/alcs/tag/tag-category/tag-category.entity
 import { Tag } from '../../src/alcs/tag/tag.entity';
 import { NoticeOfIntent } from '../../src/alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentType } from '../../src/alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { ApplicationDecisionConditionCard } from '../../src/alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
 
 const initCardStatusMockEntity = (): CardStatus => {
   const cardStatus = new CardStatus();
@@ -198,11 +199,11 @@ const initApplicationModificationMockEntity = (application?: Application, card?:
   return modification;
 };
 
-const initApplicationMockEntity = (fileNumber?: string): Application => {
+const initApplicationMockEntity = (fileNumber?: string, uuid?: string): Application => {
   const applicationEntity = new Application();
   applicationEntity.fileNumber = fileNumber ?? 'app_1';
   applicationEntity.applicant = 'applicant 1';
-  applicationEntity.uuid = '1111-1111-1111-1111';
+  applicationEntity.uuid = uuid ?? '1111-1111-1111-1111';
   applicationEntity.auditDeletedDateAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   applicationEntity.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
@@ -392,6 +393,24 @@ const initTagMockEntity = (): Tag => {
   return tag;
 };
 
+const initMockApplicationDecisionConditionCard = (
+  application?: Application,
+  applicationDecision?: ApplicationDecision,
+  card?: Card,
+): ApplicationDecisionConditionCard => {
+  const conditionCard = new ApplicationDecisionConditionCard();
+  conditionCard.uuid = 'condition-card-uuid';
+  if (application) {
+    conditionCard.decision = initApplicationDecisionMock(application);
+  } else {
+    conditionCard.decision = applicationDecision ?? initApplicationDecisionMock();
+  }
+  conditionCard.card = card ?? initCardMockEntity();
+  conditionCard.cardUuid = conditionCard.card.uuid;
+
+  return conditionCard;
+};
+
 export {
   initCardStatusMockEntity,
   initApplicationMockEntity,
@@ -416,4 +435,5 @@ export {
   initApplicationWithTagsMockEntity,
   initNoticeOfIntentMockEntity,
   initNoticeOfIntentWithTagsMockEntity,
+  initMockApplicationDecisionConditionCard,
 };
