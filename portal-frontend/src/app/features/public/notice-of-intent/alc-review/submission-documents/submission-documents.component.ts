@@ -7,6 +7,8 @@ import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 import { openFileInline } from '../../../../../shared/utils/file';
 
+type PublicDocumentWithoutTypeDto = Omit<PublicDocumentDto, 'type'>;
+
 @Component({
   selector: 'app-submission-documents',
   templateUrl: './submission-documents.component.html',
@@ -19,13 +21,27 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   @Input() documents!: PublicDocumentDto[];
   @Input() submission!: PublicNoticeOfIntentSubmissionDto;
 
-  @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<PublicDocumentDto> = new MatTableDataSource<PublicDocumentDto>();
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private publicService: PublicService) {}
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.documents);
+    this.dataSource.data = this.documents;
+    this.dataSource.sortingDataAccessor = (
+      { type, ...rest }: PublicDocumentDto,
+      sortHeaderId: string,
+    ): string | number => {
+      if (sortHeaderId === 'type') {
+        return type?.label ?? '';
+      }
+
+      return (rest as PublicDocumentWithoutTypeDto)[sortHeaderId as keyof PublicDocumentWithoutTypeDto] ?? '';
+    };
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   async openFile(file: PublicDocumentDto) {
