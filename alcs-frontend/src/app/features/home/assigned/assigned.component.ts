@@ -106,8 +106,6 @@ export class AssignedComponent implements OnInit {
         .sort((a, b) => a.date! - b.date!),
     ];
 
-    console.log(this.applications);
-
     this.planningReferrals = [
       ...planningReferrals
         .filter((r) => r.card!.highPriority)
