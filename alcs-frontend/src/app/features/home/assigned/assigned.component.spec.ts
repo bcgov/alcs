@@ -43,6 +43,7 @@ describe('AssignedComponent', () => {
       noticeOfIntents: [],
       notifications: [],
       inquiries: [],
+      applicationsConditions: [],
     });
 
     fixture.detectChanges();

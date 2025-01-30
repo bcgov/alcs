@@ -8,6 +8,9 @@ import { ApplicationDecisionConditionType } from './application-decision-conditi
 import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionService } from './application-decision-condition.service';
+import { Mapper } from 'automapper-core';
+import { AutomapperModule } from 'automapper-nestjs';
+import { classes } from 'automapper-classes';
 
 describe('ApplicationDecisionConditionService', () => {
   let service: ApplicationDecisionConditionService;
@@ -19,14 +22,21 @@ describe('ApplicationDecisionConditionService', () => {
   let mockApplicationDecisionConditionToComponentLot: DeepMocked<
     Repository<ApplicationDecisionConditionToComponentLot>
   >;
+  let mockMapper: DeepMocked<Mapper>;
 
   beforeEach(async () => {
     mockApplicationDecisionConditionRepository = createMock();
     mockAppDecCondTypeRepository = createMock();
     mockApplicationDecisionConditionComponentPlanNumber = createMock();
     mockApplicationDecisionConditionToComponentLot = createMock();
+    mockMapper = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         ApplicationDecisionConditionService,
         {
