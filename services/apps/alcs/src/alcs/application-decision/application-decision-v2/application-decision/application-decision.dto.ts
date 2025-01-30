@@ -11,12 +11,9 @@ import {
   ApplicationDecisionComponentDto,
   UpdateApplicationDecisionComponentDto,
 } from './component/application-decision-component.dto';
-import {
-  ApplicationDecisionConditionCardDto,
-  ApplicationDecisionConditionCardUuidDto,
-} from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
-import { Type } from 'class-transformer';
+import { ApplicationDecisionConditionCardUuidDto } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
 import { UserDto } from '../../../../user/user.dto';
+import { ApplicationDto } from '../../../application/application.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
@@ -272,6 +269,9 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Number)
   flagEditedAt: number | null;
+
+  @AutoMap()
+  application: ApplicationDto;
 }
 
 export class LinkedResolutionDto {

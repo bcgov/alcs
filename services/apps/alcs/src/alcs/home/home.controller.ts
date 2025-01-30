@@ -20,11 +20,7 @@ import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { CARD_STATUS } from '../card/card-status/card-status.entity';
-import {
-  CARD_SUBTASK_TYPE,
-  HomepageSubtaskDTO,
-  PARENT_TYPE,
-} from '../card/card-subtask/card-subtask.dto';
+import { CARD_SUBTASK_TYPE, HomepageSubtaskDTO, PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { InquiryDto } from '../inquiry/inquiry.dto';
@@ -43,11 +39,10 @@ import { PlanningReferral } from '../planning-review/planning-referral/planning-
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { HolidayService } from '../admin/holiday/holiday.service';
+import { ApplicationDecisionConditionDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
+import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
 
-const HIDDEN_CARD_STATUSES = [
-  CARD_STATUS.CANCELLED,
-  CARD_STATUS.DECISION_RELEASED,
-];
+const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('home')
@@ -65,6 +60,7 @@ export class HomeController {
     private planningReferralService: PlanningReferralService,
     private inquiryService: InquiryService,
     private holidayService: HolidayService,
+    private applicationDecisionConditionService: ApplicationDecisionConditionService,
   ) {}
 
   @Get('/assigned')
@@ -78,6 +74,7 @@ export class HomeController {
     modifications: ApplicationModificationDto[];
     notifications: NotificationDto[];
     inquiries: InquiryDto[];
+    applicationsConditions: ApplicationDecisionConditionDto[];
   }> {
     const userId = req.user.entity.uuid;
     const assignedFindOptions = {
@@ -88,45 +85,45 @@ export class HomeController {
         },
       },
     };
+    const assignedConditionFindOptions = {
+      conditionCard: {
+        card: {
+          assigneeUuid: userId,
+          status: {
+            code: Not(In(HIDDEN_CARD_STATUSES)),
+          },
+        },
+      },
+    };
 
     if (userId) {
-      const applications =
-        await this.applicationService.getMany(assignedFindOptions);
-      const reconsiderations =
-        await this.reconsiderationService.getBy(assignedFindOptions);
+      const applications = await this.applicationService.getMany(assignedFindOptions);
+      const reconsiderations = await this.reconsiderationService.getBy(assignedFindOptions);
 
-      const planningReviews =
-        await this.planningReferralService.getBy(assignedFindOptions);
+      const planningReviews = await this.planningReferralService.getBy(assignedFindOptions);
 
-      const modifications =
-        await this.modificationService.getBy(assignedFindOptions);
+      const modifications = await this.modificationService.getBy(assignedFindOptions);
 
-      const noticeOfIntents =
-        await this.noticeOfIntentService.getBy(assignedFindOptions);
+      const noticeOfIntents = await this.noticeOfIntentService.getBy(assignedFindOptions);
 
-      const noticeOfIntentModifications =
-        await this.noticeOfIntentModificationService.getBy(assignedFindOptions);
+      const noticeOfIntentModifications = await this.noticeOfIntentModificationService.getBy(assignedFindOptions);
 
-      const notifications =
-        await this.notificationService.getBy(assignedFindOptions);
+      const notifications = await this.notificationService.getBy(assignedFindOptions);
 
       const inquiries = await this.inquiryService.getBy(assignedFindOptions);
 
+      const conditions = await this.applicationDecisionConditionService.getBy(assignedConditionFindOptions);
       return {
-        noticeOfIntents:
-          await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
+        noticeOfIntents: await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
         noticeOfIntentModifications:
-          await this.noticeOfIntentModificationService.mapToDtos(
-            noticeOfIntentModifications,
-          ),
+          await this.noticeOfIntentModificationService.mapToDtos(noticeOfIntentModifications),
         applications: await this.applicationService.mapToDtos(applications),
-        reconsiderations:
-          await this.reconsiderationService.mapToDtos(reconsiderations),
-        planningReferrals:
-          await this.planningReferralService.mapToDtos(planningReviews),
+        reconsiderations: await this.reconsiderationService.mapToDtos(reconsiderations),
+        planningReferrals: await this.planningReferralService.mapToDtos(planningReviews),
         modifications: await this.modificationService.mapToDtos(modifications),
         notifications: await this.notificationService.mapToDtos(notifications),
         inquiries: await this.inquiryService.mapToDtos(inquiries),
+        applicationsConditions: await this.applicationDecisionConditionService.mapToDtos(conditions),
       };
     } else {
       return {
@@ -138,6 +135,7 @@ export class HomeController {
         modifications: [],
         notifications: [],
         inquiries: [],
+        applicationsConditions: [],
       };
     }
   }
@@ -147,64 +145,33 @@ export class HomeController {
   async getIncompleteSubtasksByType(
     @Param('subtaskType') subtaskType: CARD_SUBTASK_TYPE,
   ): Promise<HomepageSubtaskDTO[]> {
-    const applicationsWithSubtasks =
-      await this.applicationService.getWithIncompleteSubtaskByType(subtaskType);
-    const applicationSubtasks = await this.mapApplicationsToDtos(
-      applicationsWithSubtasks,
-    );
+    const applicationsWithSubtasks = await this.applicationService.getWithIncompleteSubtaskByType(subtaskType);
+    const applicationSubtasks = await this.mapApplicationsToDtos(applicationsWithSubtasks);
 
-    const reconsiderationWithSubtasks =
-      await this.reconsiderationService.getWithIncompleteSubtaskByType(
-        subtaskType,
-      );
+    const reconsiderationWithSubtasks = await this.reconsiderationService.getWithIncompleteSubtaskByType(subtaskType);
     const reconSubtasks = await this.mapReconToDto(reconsiderationWithSubtasks);
 
     const planningReferralsWithSubtasks =
-      await this.planningReferralService.getWithIncompleteSubtaskByType(
-        subtaskType,
-      );
-    const planningReferralSubtasks = await this.mapPlanningReferralsToDtos(
-      planningReferralsWithSubtasks,
-    );
+      await this.planningReferralService.getWithIncompleteSubtaskByType(subtaskType);
+    const planningReferralSubtasks = await this.mapPlanningReferralsToDtos(planningReferralsWithSubtasks);
 
-    const modificationsWithSubtasks =
-      await this.modificationService.getWithIncompleteSubtaskByType(
-        subtaskType,
-      );
-    const modificationSubtasks = await this.mapModificationsToDtos(
-      modificationsWithSubtasks,
-    );
+    const modificationsWithSubtasks = await this.modificationService.getWithIncompleteSubtaskByType(subtaskType);
+    const modificationSubtasks = await this.mapModificationsToDtos(modificationsWithSubtasks);
 
-    const noiSubtasks =
-      await this.noticeOfIntentService.getWithIncompleteSubtaskByType(
-        subtaskType,
-      );
-    const noticeOfIntentSubtasks =
-      await this.mapNoticeOfIntentToDtos(noiSubtasks);
+    const noiSubtasks = await this.noticeOfIntentService.getWithIncompleteSubtaskByType(subtaskType);
+    const noticeOfIntentSubtasks = await this.mapNoticeOfIntentToDtos(noiSubtasks);
 
     const noiModificationsWithSubtasks =
-      await this.noticeOfIntentModificationService.getWithIncompleteSubtaskByType(
-        subtaskType,
-      );
-    const noiModificationsSubtasks = await this.mapNoiModificationsToDtos(
-      noiModificationsWithSubtasks,
-    );
+      await this.noticeOfIntentModificationService.getWithIncompleteSubtaskByType(subtaskType);
+    const noiModificationsSubtasks = await this.mapNoiModificationsToDtos(noiModificationsWithSubtasks);
 
-    const notificationsWithSubtasks =
-      await this.notificationService.getWithIncompleteSubtaskByType(
-        subtaskType,
-      );
+    const notificationsWithSubtasks = await this.notificationService.getWithIncompleteSubtaskByType(subtaskType);
 
-    const notificationSubtasks = await this.mapNotificationsToDtos(
-      notificationsWithSubtasks,
-    );
+    const notificationSubtasks = await this.mapNotificationsToDtos(notificationsWithSubtasks);
 
-    const inquiriesWIthSubtasks =
-      await this.inquiryService.getWithIncompleteSubtaskByType(subtaskType);
+    const inquiriesWIthSubtasks = await this.inquiryService.getWithIncompleteSubtaskByType(subtaskType);
 
-    const inquirySubtasks = await this.mapInquiriesToDtos(
-      inquiriesWIthSubtasks,
-    );
+    const inquirySubtasks = await this.mapInquiriesToDtos(inquiriesWIthSubtasks);
 
     return [
       ...noticeOfIntentSubtasks,
@@ -240,11 +207,7 @@ export class HomeController {
           parentType: PARENT_TYPE.RECONSIDERATION,
           subtaskDays:
             subtask.type.code === CARD_SUBTASK_TYPE.GIS
-              ? this.holidayService.calculateBusinessDays(
-                  subtask.createdAt,
-                  new Date(),
-                  holidays,
-                )
+              ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
               : 0,
         });
       }
@@ -253,8 +216,7 @@ export class HomeController {
   }
 
   private async mapApplicationsToDtos(applications: Application[]) {
-    const applicationTimes =
-      await this.timeService.fetchActiveTimes(applications);
+    const applicationTimes = await this.timeService.fetchActiveTimes(applications);
 
     const appPausedMap = await this.timeService.getPausedStatus(applications);
     const holidays = await this.holidayService.fetchAllHolidays();
@@ -280,11 +242,7 @@ export class HomeController {
           parentType: PARENT_TYPE.APPLICATION,
           subtaskDays:
             subtask.type.code === CARD_SUBTASK_TYPE.GIS
-              ? this.holidayService.calculateBusinessDays(
-                  subtask.createdAt,
-                  new Date(),
-                  holidays,
-                )
+              ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
               : 0,
         });
       }
@@ -292,9 +250,7 @@ export class HomeController {
     return result;
   }
 
-  private async mapPlanningReferralsToDtos(
-    planningReferrals: PlanningReferral[],
-  ) {
+  private async mapPlanningReferralsToDtos(planningReferrals: PlanningReferral[]) {
     const result: HomepageSubtaskDTO[] = [];
     const holidays = await this.holidayService.fetchAllHolidays();
     for (const planningReferral of planningReferrals) {
@@ -312,11 +268,7 @@ export class HomeController {
           appType: planningReferral.planningReview.type,
           subtaskDays:
             subtask.type.code === CARD_SUBTASK_TYPE.GIS
-              ? this.holidayService.calculateBusinessDays(
-                  subtask.createdAt,
-                  new Date(),
-                  holidays,
-                )
+              ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
               : 0,
         });
       }
@@ -348,11 +300,7 @@ export class HomeController {
             parentType: PARENT_TYPE.NOTICE_OF_INTENT,
             subtaskDays:
               subtask.type.code === CARD_SUBTASK_TYPE.GIS
-                ? this.holidayService.calculateBusinessDays(
-                    subtask.createdAt,
-                    new Date(),
-                    holidays,
-                  )
+                ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
                 : 0,
           });
         }
@@ -361,9 +309,7 @@ export class HomeController {
     return result;
   }
 
-  private async mapModificationsToDtos(
-    modifications: ApplicationModification[],
-  ) {
+  private async mapModificationsToDtos(modifications: ApplicationModification[]) {
     const result: HomepageSubtaskDTO[] = [];
     const holidays = await this.holidayService.fetchAllHolidays();
     for (const modification of modifications) {
@@ -384,11 +330,7 @@ export class HomeController {
           parentType: PARENT_TYPE.MODIFICATION,
           subtaskDays:
             subtask.type.code === CARD_SUBTASK_TYPE.GIS
-              ? this.holidayService.calculateBusinessDays(
-                  subtask.createdAt,
-                  new Date(),
-                  holidays,
-                )
+              ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
               : 0,
         });
       }
@@ -396,9 +338,7 @@ export class HomeController {
     return result;
   }
 
-  private async mapNoiModificationsToDtos(
-    modifications: NoticeOfIntentModification[],
-  ) {
+  private async mapNoiModificationsToDtos(modifications: NoticeOfIntentModification[]) {
     const result: HomepageSubtaskDTO[] = [];
     const holidays = await this.holidayService.fetchAllHolidays();
     for (const modification of modifications) {
@@ -418,11 +358,7 @@ export class HomeController {
           parentType: PARENT_TYPE.MODIFICATION,
           subtaskDays:
             subtask.type.code === CARD_SUBTASK_TYPE.GIS
-              ? this.holidayService.calculateBusinessDays(
-                  subtask.createdAt,
-                  new Date(),
-                  holidays,
-                )
+              ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
               : 0,
         });
       }
@@ -449,11 +385,7 @@ export class HomeController {
             appType: notification.type,
             subtaskDays:
               subtask.type.code === CARD_SUBTASK_TYPE.GIS
-                ? this.holidayService.calculateBusinessDays(
-                    subtask.createdAt,
-                    new Date(),
-                    holidays,
-                  )
+                ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
                 : 0,
           });
         }
@@ -476,18 +408,12 @@ export class HomeController {
             card: this.mapper.map(inquiry.card, Card, CardDto),
             completedAt: subtask.completedAt?.getTime(),
             paused: false,
-            title: `${inquiry.fileNumber} (${
-              inquiry.inquirerLastName ?? 'Unknown'
-            })`,
+            title: `${inquiry.fileNumber} (${inquiry.inquirerLastName ?? 'Unknown'})`,
             parentType: PARENT_TYPE.INQUIRY,
             appType: inquiry.type,
             subtaskDays:
               subtask.type.code === CARD_SUBTASK_TYPE.GIS
-                ? this.holidayService.calculateBusinessDays(
-                    subtask.createdAt,
-                    new Date(),
-                    holidays,
-                  )
+                ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
                 : 0,
           });
         }

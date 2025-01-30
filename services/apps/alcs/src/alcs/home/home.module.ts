@@ -10,9 +10,22 @@ import { NotificationModule } from '../notification/notification.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { HomeController } from './home.controller';
 import { AdminModule } from '../admin/admin.module';
+import { CardModule } from '../card/card.module';
+import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationDecisionConditionToComponentLot } from '../application-decision/application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision/application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
+import { ApplicationDecisionConditionType } from '../application-decision/application-decision-condition/application-decision-condition-code.entity';
+import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([
+      ApplicationDecisionCondition,
+      ApplicationDecisionConditionType,
+      ApplicationDecisionConditionComponentPlanNumber,
+      ApplicationDecisionConditionToComponentLot,
+    ]),
     ApplicationModule,
     UserModule,
     PlanningReviewModule,
@@ -22,8 +35,9 @@ import { AdminModule } from '../admin/admin.module';
     NotificationModule,
     InquiryModule,
     AdminModule,
+    CardModule,
   ],
-  providers: [ApplicationSubtaskProfile],
+  providers: [ApplicationSubtaskProfile, ApplicationDecisionConditionService],
   controllers: [HomeController],
 })
 export class HomeModule {}

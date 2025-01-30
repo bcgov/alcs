@@ -27,6 +27,26 @@ export class ApplicationDecisionConditionCardDto {
   applicationFileNumber?: string | null;
 }
 
+export class ApplicationDecisionConditionHomeCardDto {
+  @AutoMap()
+  @IsUUID()
+  uuid: string;
+
+  @IsArray()
+  conditions: ApplicationDecisionConditionDto[];
+
+  @AutoMap()
+  @IsString()
+  cardUuid: string;
+
+  @AutoMap()
+  card: CardDto;
+
+  @IsString()
+  @IsOptional()
+  applicationFileNumber?: string | null;
+}
+
 export class CreateApplicationDecisionConditionCardDto {
   @AutoMap()
   @IsArray()

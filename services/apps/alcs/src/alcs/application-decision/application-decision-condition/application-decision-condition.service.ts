@@ -1,20 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
+  ApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionServiceDto,
 } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
+import { InjectMapper } from 'automapper-nestjs';
+import { Mapper } from 'automapper-core';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
+  CARD_RELATIONS = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
+  DEFAULT_RELATIONS = {
+    conditionCard: this.CARD_RELATIONS,
+  };
+
   constructor(
     @InjectRepository(ApplicationDecisionCondition)
     private repository: Repository<ApplicationDecisionCondition>,
@@ -24,6 +38,7 @@ export class ApplicationDecisionConditionService {
     private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
@@ -53,6 +68,28 @@ export class ApplicationDecisionConditionService {
         uuid: In(uuids),
       },
     });
+  }
+
+  getBy(findOptions: FindOptionsWhere<ApplicationDecisionCondition>) {
+    return this.repository.find({
+      where: findOptions,
+      relations: {
+        decision: {
+          application: {
+            decisionMeetings: true,
+          },
+        },
+        conditionCard: {
+          card: this.CARD_RELATIONS,
+        },
+      },
+    });
+  }
+
+  async mapToDtos(applications: ApplicationDecisionCondition[]): Promise<ApplicationDecisionConditionDto[]> {
+    return applications.map((app) => ({
+      ...this.mapper.map(app, ApplicationDecisionCondition, ApplicationDecisionConditionDto),
+    }));
   }
 
   async createOrUpdate(

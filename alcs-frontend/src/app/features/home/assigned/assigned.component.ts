@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDecisionConditionDto, ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { HomeService } from '../../../services/home/home.service';
 import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
@@ -10,6 +10,7 @@ import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-
 import { NotificationDto } from '../../../services/notification/notification.dto';
 import { PlanningReferralDto } from '../../../services/planning-review/planning-review.dto';
 import {
+  CONDITION_LABEL,
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
@@ -49,6 +50,7 @@ export class AssignedComponent implements OnInit {
       noticeOfIntentModifications,
       notifications,
       inquiries,
+      applicationsConditions,
     } = await this.homeService.fetchAssignedToMe();
 
     this.noticeOfIntents = [
@@ -74,6 +76,10 @@ export class AssignedComponent implements OnInit {
         .filter((a) => a.card!.highPriority)
         .map((a) => this.mapApplication(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
+      ...applicationsConditions
+        .filter((a) => a.conditionCard?.card!.highPriority)
+        .map((a) => this.mapApplicationCondition(a))
+        .sort((a, b) => b.activeDays! - a.activeDays!),
       ...modifications
         .filter((a) => a.card.highPriority)
         .map((a) => this.mapModification(a))
@@ -86,6 +92,10 @@ export class AssignedComponent implements OnInit {
         .filter((a) => !a.card!.highPriority)
         .map((a) => this.mapApplication(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
+      ...applicationsConditions
+        .filter((a) => !a.conditionCard?.card!.highPriority)
+        .map((a) => this.mapApplicationCondition(a))
+        .sort((a, b) => b.activeDays! - a.activeDays!),
       ...modifications
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapModification(r))
@@ -95,6 +105,8 @@ export class AssignedComponent implements OnInit {
         .map((r) => this.mapReconsideration(r))
         .sort((a, b) => a.date! - b.date!),
     ];
+
+    console.log(this.applications);
 
     this.planningReferrals = [
       ...planningReferrals
@@ -168,6 +180,18 @@ export class AssignedComponent implements OnInit {
       card: a.card!,
       highPriority: a.card!.highPriority,
       labels: [a.type],
+    };
+  }
+
+  private mapApplicationCondition(a: ApplicationDecisionConditionDto): AssignedToMeFile {
+    return {
+      title: `${a.conditionCard?.applicationFileNumber} (${a.decision.application.applicant})`,
+      activeDays: a.decision.application.activeDays,
+      type: a.conditionCard!.card.type,
+      paused: a.decision.application.paused,
+      card: a.conditionCard!.card,
+      highPriority: a.conditionCard!.card.highPriority,
+      labels: [CONDITION_LABEL],
     };
   }
 

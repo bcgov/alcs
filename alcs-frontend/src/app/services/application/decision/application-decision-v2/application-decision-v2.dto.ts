@@ -2,6 +2,7 @@ import { UserDto } from '../../../user/user.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { CardDto } from '../../../card/card.dto';
 import { ApplicationTypeDto } from '../../application-code.dto';
+import { ApplicationDto } from '../../application.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -89,6 +90,7 @@ export interface ApplicationDecisionDto {
   flaggedBy: UserDto | null;
   flagEditedBy: UserDto | null;
   flagEditedAt: number | null;
+  application: ApplicationDto;
 }
 
 export interface LinkedResolutionDto {

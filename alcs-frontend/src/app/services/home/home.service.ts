@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationModificationDto } from '../application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationDto } from '../application/application.dto';
+import { ApplicationDecisionConditionDto, ApplicationDto } from '../application/application.dto';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
 import { InquiryDto } from '../inquiry/inquiry.dto';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
@@ -29,6 +29,7 @@ export class HomeService {
         noticeOfIntentModifications: NoticeOfIntentModificationDto[];
         notifications: NotificationDto[];
         inquiries: InquiryDto[];
+        applicationsConditions: ApplicationDecisionConditionDto[];
       }>(`${environment.apiUrl}/home/assigned`),
     );
   }

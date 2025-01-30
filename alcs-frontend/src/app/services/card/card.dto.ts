@@ -30,3 +30,10 @@ export interface CardDto {
   boardCode: string;
   createdAt: number;
 }
+
+export interface ApplicationDecisionConditionHomeCardDto {
+  uuid: string;
+  cardUuid: string;
+  card: CardDto;
+  applicationFileNumber?: string | null;
+}

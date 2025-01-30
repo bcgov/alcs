@@ -1,12 +1,13 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
-import { CardDto } from '../card/card.dto';
+import { ApplicationDecisionConditionHomeCardDto, CardDto } from '../card/card.dto';
 import { TagDto } from '../tag/tag.dto';
 import { ProposedStructure } from '../notice-of-intent/notice-of-intent.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 import { ApplicationSubmissionToSubmissionStatusDto } from './application-submission-status/application-submission-status.dto';
+import { ApplicationDecisionDto } from './decision/application-decision-v2/application-decision-v2.dto';
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -291,6 +292,19 @@ export interface ApplicationDto {
   proposalExpiryDate?: number;
   legacyId?: string;
   tags?: TagDto[];
+}
+
+export interface ApplicationDecisionConditionDto {
+  uuid: string;
+  approvalDependant: boolean | null;
+  securityAmount: number | null;
+  administrativeFee: number | null;
+  description: string | null;
+  type: ApplicationTypeDto;
+  componentUuid: string | null;
+  conditionCard?: ApplicationDecisionConditionHomeCardDto;
+  status?: string | null;
+  decision: ApplicationDecisionDto;
 }
 
 export interface UpdateApplicationDto {
