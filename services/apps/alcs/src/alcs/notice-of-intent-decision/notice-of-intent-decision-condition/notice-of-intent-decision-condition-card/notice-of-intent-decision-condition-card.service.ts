@@ -62,6 +62,7 @@ export class NoticeOfIntentDecisionConditionCardService {
     private boardService: BoardService,
     @Inject(forwardRef(() => CardService))
     private cardService: CardService,
+    @Inject(forwardRef(() => NoticeOfIntentModificationService))
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
