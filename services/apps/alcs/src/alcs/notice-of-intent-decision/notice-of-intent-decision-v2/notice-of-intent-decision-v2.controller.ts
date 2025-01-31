@@ -1,17 +1,6 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
@@ -47,17 +36,10 @@ export class NoticeOfIntentDecisionV2Controller {
 
   @Get('/notice-of-intent/:fileNumber')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getByFileNumber(
-    @Param('fileNumber') fileNumber,
-  ): Promise<NoticeOfIntentDecisionDto[]> {
-    const decisions =
-      await this.noticeOfIntentDecisionV2Service.getByFileNumber(fileNumber);
+  async getByFileNumber(@Param('fileNumber') fileNumber): Promise<NoticeOfIntentDecisionDto[]> {
+    const decisions = await this.noticeOfIntentDecisionV2Service.getByFileNumber(fileNumber);
 
-    return await this.mapper.mapArrayAsync(
-      decisions,
-      NoticeOfIntentDecision,
-      NoticeOfIntentDecisionDto,
-    );
+    return await this.mapper.mapArrayAsync(decisions, NoticeOfIntentDecision, NoticeOfIntentDecisionDto);
   }
 
   @Get('/condition/:uuid/status')
@@ -98,37 +80,21 @@ export class NoticeOfIntentDecisionV2Controller {
   async get(@Param('uuid') uuid: string): Promise<NoticeOfIntentDecisionDto> {
     const decision = await this.noticeOfIntentDecisionV2Service.get(uuid);
 
-    return this.mapper.mapAsync(
-      decision,
-      NoticeOfIntentDecision,
-      NoticeOfIntentDecisionDto,
-    );
+    return this.mapper.mapAsync(decision, NoticeOfIntentDecision, NoticeOfIntentDecisionDto);
   }
 
   @Post()
   @UserRoles(...ANY_AUTH_ROLE)
-  async create(
-    @Body() createDto: CreateNoticeOfIntentDecisionDto,
-  ): Promise<NoticeOfIntentDecisionDto> {
-    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(
-      createDto.fileNumber,
-    );
+  async create(@Body() createDto: CreateNoticeOfIntentDecisionDto): Promise<NoticeOfIntentDecisionDto> {
+    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(createDto.fileNumber);
 
     const modification = createDto.modifiesUuid
       ? await this.modificationService.getByUuid(createDto.modifiesUuid)
       : undefined;
 
-    const newDecision = await this.noticeOfIntentDecisionV2Service.create(
-      createDto,
-      noticeOfIntent,
-      modification,
-    );
+    const newDecision = await this.noticeOfIntentDecisionV2Service.create(createDto, noticeOfIntent, modification);
 
-    return this.mapper.mapAsync(
-      newDecision,
-      NoticeOfIntentDecision,
-      NoticeOfIntentDecisionDto,
-    );
+    return this.mapper.mapAsync(newDecision, NoticeOfIntentDecision, NoticeOfIntentDecisionDto);
   }
 
   @Patch('/:uuid')
@@ -139,24 +105,14 @@ export class NoticeOfIntentDecisionV2Controller {
   ): Promise<NoticeOfIntentDecisionDto> {
     let modifies;
     if (updateDto.modifiesUuid) {
-      modifies = await this.modificationService.getByUuid(
-        updateDto.modifiesUuid,
-      );
+      modifies = await this.modificationService.getByUuid(updateDto.modifiesUuid);
     } else if (updateDto.modifiesUuid === null) {
       modifies = null;
     }
 
-    const updatedDecision = await this.noticeOfIntentDecisionV2Service.update(
-      uuid,
-      updateDto,
-      modifies,
-    );
+    const updatedDecision = await this.noticeOfIntentDecisionV2Service.update(uuid, updateDto, modifies);
 
-    return this.mapper.mapAsync(
-      updatedDecision,
-      NoticeOfIntentDecision,
-      NoticeOfIntentDecisionDto,
-    );
+    return this.mapper.mapAsync(updatedDecision, NoticeOfIntentDecision, NoticeOfIntentDecisionDto);
   }
 
   @Delete('/:uuid')
@@ -173,11 +129,7 @@ export class NoticeOfIntentDecisionV2Controller {
     }
 
     const file = req.body.file;
-    await this.noticeOfIntentDecisionV2Service.attachDocument(
-      decisionUuid,
-      file,
-      req.user.entity,
-    );
+    await this.noticeOfIntentDecisionV2Service.attachDocument(decisionUuid, file, req.user.entity);
     return {
       uploaded: true,
     };
@@ -190,10 +142,7 @@ export class NoticeOfIntentDecisionV2Controller {
     @Param('documentUuid') documentUuid: string,
     @Body() body: { fileName: string },
   ) {
-    await this.noticeOfIntentDecisionV2Service.updateDocument(
-      documentUuid,
-      body.fileName,
-    );
+    await this.noticeOfIntentDecisionV2Service.updateDocument(documentUuid, body.fileName);
     return {
       uploaded: true,
     };
@@ -201,12 +150,8 @@ export class NoticeOfIntentDecisionV2Controller {
 
   @Get('/:uuid/file/:fileUuid/download')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getDownloadUrl(
-    @Param('uuid') decisionUuid: string,
-    @Param('fileUuid') documentUuid: string,
-  ) {
-    const downloadUrl =
-      await this.noticeOfIntentDecisionV2Service.getDownloadUrl(documentUuid);
+  async getDownloadUrl(@Param('uuid') decisionUuid: string, @Param('fileUuid') documentUuid: string) {
+    const downloadUrl = await this.noticeOfIntentDecisionV2Service.getDownloadUrl(documentUuid);
     return {
       url: downloadUrl,
     };
@@ -214,15 +159,8 @@ export class NoticeOfIntentDecisionV2Controller {
 
   @Get('/:uuid/file/:fileUuid/open')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getOpenUrl(
-    @Param('uuid') decisionUuid: string,
-    @Param('fileUuid') documentUuid: string,
-  ) {
-    const downloadUrl =
-      await this.noticeOfIntentDecisionV2Service.getDownloadUrl(
-        documentUuid,
-        true,
-      );
+  async getOpenUrl(@Param('uuid') decisionUuid: string, @Param('fileUuid') documentUuid: string) {
+    const downloadUrl = await this.noticeOfIntentDecisionV2Service.getDownloadUrl(documentUuid, true);
     return {
       url: downloadUrl,
     };
@@ -230,21 +168,14 @@ export class NoticeOfIntentDecisionV2Controller {
 
   @Delete('/:uuid/file/:fileUuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async deleteDocument(
-    @Param('uuid') decisionUuid: string,
-    @Param('fileUuid') documentUuid: string,
-  ) {
+  async deleteDocument(@Param('uuid') decisionUuid: string, @Param('fileUuid') documentUuid: string) {
     await this.noticeOfIntentDecisionV2Service.deleteDocument(documentUuid);
     return {};
   }
 
   @Get('next-resolution-number/:resolutionYear')
   @UserRoles(...ANY_AUTH_ROLE)
-  async getNextAvailableResolutionNumber(
-    @Param('resolutionYear') resolutionYear: number,
-  ) {
-    return this.noticeOfIntentDecisionV2Service.generateResolutionNumber(
-      resolutionYear,
-    );
+  async getNextAvailableResolutionNumber(@Param('resolutionYear') resolutionYear: number) {
+    return this.noticeOfIntentDecisionV2Service.generateResolutionNumber(resolutionYear);
   }
 }

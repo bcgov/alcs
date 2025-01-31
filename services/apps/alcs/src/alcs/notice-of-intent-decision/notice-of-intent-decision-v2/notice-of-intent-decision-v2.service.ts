@@ -1,16 +1,10 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, LessThan, Repository, DataSource } from 'typeorm';
 import { v4 } from 'uuid';
-import {
-  DOCUMENT_SOURCE,
-  DOCUMENT_SYSTEM,
-} from '../../../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
@@ -26,10 +20,7 @@ import { NoticeOfIntentDecisionCondition } from '../notice-of-intent-decision-co
 import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { NoticeOfIntentDecisionDocument } from '../notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
 import { NoticeOfIntentDecisionOutcome } from '../notice-of-intent-decision-outcome.entity';
-import {
-  CreateNoticeOfIntentDecisionDto,
-  UpdateNoticeOfIntentDecisionDto,
-} from '../notice-of-intent-decision.dto';
+import { CreateNoticeOfIntentDecisionDto, UpdateNoticeOfIntentDecisionDto } from '../notice-of-intent-decision.dto';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentDecisionConditionDate } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
@@ -47,6 +38,8 @@ export class NoticeOfIntentDecisionV2Service {
     private decisionComponentTypeRepository: Repository<NoticeOfIntentDecisionComponentType>,
     @InjectRepository(NoticeOfIntentDecisionConditionType)
     private decisionConditionTypeRepository: Repository<NoticeOfIntentDecisionConditionType>,
+    @InjectRepository(NoticeOfIntentDecisionDocument)
+    private noticeOfIntentDecisionDocumentRepository: Repository<NoticeOfIntentDecisionDocument>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private noticeOfIntentService: NoticeOfIntentService,
@@ -104,28 +97,25 @@ export class NoticeOfIntentDecisionV2Service {
     });
 
     // do not place modifiedBy into query above, it will kill performance
-    const decisionsWithModifiedBy =
-      await this.noticeOfIntentDecisionRepository.find({
-        where: {
-          noticeOfIntentUuid,
-          modifiedBy: {
-            resultingDecision: {
-              isDraft: false,
-            },
+    const decisionsWithModifiedBy = await this.noticeOfIntentDecisionRepository.find({
+      where: {
+        noticeOfIntentUuid,
+        modifiedBy: {
+          resultingDecision: {
+            isDraft: false,
           },
         },
-        relations: {
-          modifiedBy: {
-            resultingDecision: true,
-            reviewOutcome: true,
-          },
+      },
+      relations: {
+        modifiedBy: {
+          resultingDecision: true,
+          reviewOutcome: true,
         },
-      });
+      },
+    });
 
     for (const decision of decisions) {
-      decision.modifiedBy =
-        decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)
-          ?.modifiedBy || [];
+      decision.modifiedBy = decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)?.modifiedBy || [];
     }
 
     //Query Documents separately as when added to the above joins caused performance issues
@@ -170,14 +160,10 @@ export class NoticeOfIntentDecisionV2Service {
     });
 
     if (!decision) {
-      throw new ServiceNotFoundException(
-        `Failed to load decision with uuid ${uuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to load decision with uuid ${uuid}`);
     }
 
-    decision.documents = decision.documents.filter(
-      (document) => !!document.document,
-    );
+    decision.documents = decision.documents.filter((document) => !!document.document);
 
     return decision;
   }
@@ -187,8 +173,7 @@ export class NoticeOfIntentDecisionV2Service {
     updateDto: UpdateNoticeOfIntentDecisionDto,
     modifies: NoticeOfIntentModification | undefined | null,
   ) {
-    const existingDecision: Partial<NoticeOfIntentDecision> =
-      await this.getOrFail(uuid);
+    const existingDecision: Partial<NoticeOfIntentDecision> = await this.getOrFail(uuid);
 
     // resolution number is int64 in postgres, which means it is a string in JS
     if (
@@ -197,14 +182,10 @@ export class NoticeOfIntentDecisionV2Service {
       (existingDecision.resolutionNumber !== updateDto.resolutionNumber ||
         existingDecision.resolutionYear !== updateDto.resolutionYear)
     ) {
-      await this.validateResolutionNumber(
-        updateDto.resolutionNumber,
-        updateDto.resolutionYear,
-      );
+      await this.validateResolutionNumber(updateDto.resolutionNumber, updateDto.resolutionYear);
     }
 
-    const isChangingDraftStatus =
-      existingDecision.isDraft !== updateDto.isDraft;
+    const isChangingDraftStatus = existingDecision.isDraft !== updateDto.isDraft;
 
     existingDecision.auditDate = formatIncomingDate(updateDto.auditDate);
     existingDecision.modifies = modifies;
@@ -215,12 +196,9 @@ export class NoticeOfIntentDecisionV2Service {
     existingDecision.isSubjectToConditions = updateDto.isSubjectToConditions;
     existingDecision.decisionDescription = updateDto.decisionDescription;
     existingDecision.isDraft = updateDto.isDraft;
-    existingDecision.rescindedDate = formatIncomingDate(
-      updateDto.rescindedDate,
-    );
+    existingDecision.rescindedDate = formatIncomingDate(updateDto.rescindedDate);
     existingDecision.rescindedComment = updateDto.rescindedComment;
-    existingDecision.wasReleased =
-      existingDecision.wasReleased || !updateDto.isDraft;
+    existingDecision.wasReleased = existingDecision.wasReleased || !updateDto.isDraft;
     existingDecision.emailSent = updateDto.emailSent;
     existingDecision.ccEmails = updateDto.ccEmails;
     existingDecision.isFlagged = updateDto.isFlagged;
@@ -251,16 +229,11 @@ export class NoticeOfIntentDecisionV2Service {
     }
 
     if (updateDto.outcomeCode) {
-      existingDecision.outcome = await this.getOutcomeByCode(
-        updateDto.outcomeCode,
-      );
+      existingDecision.outcome = await this.getOutcomeByCode(updateDto.outcomeCode);
     }
 
     let dateHasChanged = false;
-    if (
-      updateDto.date !== undefined &&
-      existingDecision.date !== formatIncomingDate(updateDto.date)
-    ) {
+    if (updateDto.date !== undefined && existingDecision.date !== formatIncomingDate(updateDto.date)) {
       dateHasChanged = true;
       existingDecision.date = formatIncomingDate(updateDto.date);
     }
@@ -270,8 +243,7 @@ export class NoticeOfIntentDecisionV2Service {
     //Must be called after update components
     await this.updateConditions(updateDto, existingDecision);
 
-    const updatedDecision =
-      await this.noticeOfIntentDecisionRepository.save(existingDecision);
+    const updatedDecision = await this.noticeOfIntentDecisionRepository.save(existingDecision);
 
     if (dateHasChanged || isChangingDraftStatus) {
       await this.updateDecisionDates(updatedDecision);
@@ -386,56 +358,52 @@ export class NoticeOfIntentDecisionV2Service {
     }
 
     // we do not need to include deleted items since there may be multiple deleted draft decision wih the same or different numbers
-    const existingDecision =
-      await this.noticeOfIntentDecisionRepository.findOne({
-        where: {
-          resolutionNumber: number,
-          resolutionYear: year ?? IsNull(),
-        },
-      });
+    const existingDecision = await this.noticeOfIntentDecisionRepository.findOne({
+      where: {
+        resolutionNumber: number,
+        resolutionYear: year ?? IsNull(),
+      },
+    });
 
     if (existingDecision) {
-      throw new ServiceValidationException(
-        `Resolution number #${number}/${year} is already in use`,
-      );
+      throw new ServiceValidationException(`Resolution number #${number}/${year} is already in use`);
     }
   }
 
   async delete(uuid) {
-    const noticeOfIntentDecision =
-      await this.noticeOfIntentDecisionRepository.findOne({
-        where: { uuid },
-        relations: {
-          outcome: true,
-          documents: {
-            document: true,
-          },
-          noticeOfIntent: true,
-          components: true,
+    const noticeOfIntentDecision = await this.noticeOfIntentDecisionRepository.findOne({
+      where: { uuid },
+      relations: {
+        conditions: {
+          dates: true,
         },
-      });
+        outcome: true,
+        documents: {
+          document: true,
+        },
+        noticeOfIntent: true,
+        components: true,
+      },
+    });
 
     if (!noticeOfIntentDecision) {
-      throw new ServiceNotFoundException(
-        `Failed to find decision with uuid ${uuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
+    await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
+
     for (const document of noticeOfIntentDecision.documents) {
+      await this.noticeOfIntentDecisionDocumentRepository.softRemove(document);
       await this.documentService.softRemove(document.document);
     }
 
-    await this.decisionComponentService.softRemove(
-      noticeOfIntentDecision.components,
-    );
+    await this.decisionComponentService.softRemove(noticeOfIntentDecision.components);
 
     //Clear potential links
     noticeOfIntentDecision.modifies = null;
     await this.noticeOfIntentDecisionRepository.save(noticeOfIntentDecision);
 
-    await this.noticeOfIntentDecisionRepository.softRemove([
-      noticeOfIntentDecision,
-    ]);
+    await this.noticeOfIntentDecisionRepository.softRemove([noticeOfIntentDecision]);
     await this.updateDecisionDates(noticeOfIntentDecision);
   }
 
@@ -458,21 +426,16 @@ export class NoticeOfIntentDecisionV2Service {
   }
 
   async deleteDocument(decisionDocumentUuid: string) {
-    const decisionDocument =
-      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
+    const decisionDocument = await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
     await this.decisionDocumentRepository.softRemove(decisionDocument);
     return decisionDocument;
   }
 
   async getDownloadUrl(decisionDocumentUuid: string, openInline = false) {
-    const decisionDocument =
-      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
+    const decisionDocument = await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
-    return this.documentService.getDownloadUrl(
-      decisionDocument.document,
-      openInline,
-    );
+    return this.documentService.getDownloadUrl(decisionDocument.document, openInline);
   }
 
   async getDownloadForPortal(decisionDocumentUuid: string) {
@@ -545,39 +508,24 @@ export class NoticeOfIntentDecisionV2Service {
     existingDecision: Partial<NoticeOfIntentDecision>,
   ) {
     if (updateDto.decisionComponents) {
-      if (
-        existingDecision.outcomeCode &&
-        ['APPA', 'APPR'].includes(existingDecision.outcomeCode)
-      ) {
-        this.decisionComponentService.validate(
-          updateDto.decisionComponents,
-          updateDto.isDraft,
-        );
+      if (existingDecision.outcomeCode && ['APPA', 'APPR'].includes(existingDecision.outcomeCode)) {
+        this.decisionComponentService.validate(updateDto.decisionComponents, updateDto.isDraft);
       }
 
       if (existingDecision.components) {
         const componentsToRemove = existingDecision.components.filter(
-          (component) =>
-            !updateDto.decisionComponents?.some(
-              (componentDto) => componentDto.uuid === component.uuid,
-            ),
+          (component) => !updateDto.decisionComponents?.some((componentDto) => componentDto.uuid === component.uuid),
         );
 
         await this.decisionComponentService.softRemove(componentsToRemove);
       }
 
-      existingDecision.components =
-        await this.decisionComponentService.createOrUpdate(
-          updateDto.decisionComponents,
-          false,
-        );
-    } else if (
-      updateDto.decisionComponents === null &&
-      existingDecision.components
-    ) {
-      await this.decisionComponentService.softRemove(
-        existingDecision.components,
+      existingDecision.components = await this.decisionComponentService.createOrUpdate(
+        updateDto.decisionComponents,
+        false,
       );
+    } else if (updateDto.decisionComponents === null && existingDecision.components) {
+      await this.decisionComponentService.softRemove(existingDecision.components);
     }
   }
 
@@ -588,27 +536,22 @@ export class NoticeOfIntentDecisionV2Service {
     if (updateDto.conditions) {
       if (existingDecision.noticeOfIntentUuid && existingDecision.conditions) {
         const conditionsToRemove = existingDecision.conditions.filter(
-          (condition) =>
-            !updateDto.conditions?.some(
-              (conditionDto) => conditionDto.uuid === condition.uuid,
-            ),
+          (condition) => !updateDto.conditions?.some((conditionDto) => conditionDto.uuid === condition.uuid),
         );
 
         await this.decisionConditionService.remove(conditionsToRemove);
       }
 
-      const existingComponents =
-        await this.decisionComponentService.getAllByNoticeOfIntentUUID(
-          existingDecision.noticeOfIntentUuid!,
-        );
+      const existingComponents = await this.decisionComponentService.getAllByNoticeOfIntentUUID(
+        existingDecision.noticeOfIntentUuid!,
+      );
 
-      existingDecision.conditions =
-        await this.decisionConditionService.createOrUpdate(
-          updateDto.conditions,
-          existingComponents,
-          existingDecision.components ?? [],
-          false,
-        );
+      existingDecision.conditions = await this.decisionConditionService.createOrUpdate(
+        updateDto.conditions,
+        existingComponents,
+        existingDecision.components ?? [],
+        false,
+      );
     } else if (updateDto.conditions === null && existingDecision.conditions) {
       await this.decisionConditionService.remove(existingDecision.conditions);
     }
@@ -629,29 +572,18 @@ export class NoticeOfIntentDecisionV2Service {
     });
 
     if (!existingDecision) {
-      throw new ServiceNotFoundException(
-        `Decision with UUID ${uuid} not found`,
-      );
+      throw new ServiceNotFoundException(`Decision with UUID ${uuid} not found`);
     }
     return existingDecision;
   }
 
-  private async updateDecisionDates(
-    noticeOfIntentDecision: NoticeOfIntentDecision,
-  ) {
-    const existingDecisions = await this.getByFileNumber(
-      noticeOfIntentDecision.noticeOfIntent.fileNumber,
-    );
-    const releasedDecisions = existingDecisions.filter(
-      (decision) => !decision.isDraft,
-    );
+  private async updateDecisionDates(noticeOfIntentDecision: NoticeOfIntentDecision) {
+    const existingDecisions = await this.getByFileNumber(noticeOfIntentDecision.noticeOfIntent.fileNumber);
+    const releasedDecisions = existingDecisions.filter((decision) => !decision.isDraft);
     if (releasedDecisions.length === 0) {
-      await this.noticeOfIntentService.updateByUuid(
-        noticeOfIntentDecision.noticeOfIntent.uuid,
-        {
-          decisionDate: null,
-        },
-      );
+      await this.noticeOfIntentService.updateByUuid(noticeOfIntentDecision.noticeOfIntent.uuid, {
+        decisionDate: null,
+      });
 
       await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
         noticeOfIntentDecision.noticeOfIntent.fileNumber,
@@ -660,24 +592,15 @@ export class NoticeOfIntentDecisionV2Service {
       );
     } else {
       const decisionDate = existingDecisions[existingDecisions.length - 1].date;
-      await this.noticeOfIntentService.updateByUuid(
-        noticeOfIntentDecision.noticeOfIntent.uuid,
-        {
-          decisionDate,
-        },
-      );
-
-      await this.setDecisionReleasedStatus(
+      await this.noticeOfIntentService.updateByUuid(noticeOfIntentDecision.noticeOfIntent.uuid, {
         decisionDate,
-        noticeOfIntentDecision,
-      );
+      });
+
+      await this.setDecisionReleasedStatus(decisionDate, noticeOfIntentDecision);
     }
   }
 
-  private async setDecisionReleasedStatus(
-    decisionDate: Date | null,
-    noticeOfIntentDecision: NoticeOfIntentDecision,
-  ) {
+  private async setDecisionReleasedStatus(decisionDate: Date | null, noticeOfIntentDecision: NoticeOfIntentDecision) {
     await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
       noticeOfIntentDecision.noticeOfIntent.fileNumber,
       NOI_SUBMISSION_STATUS.ALC_DECISION,
@@ -696,9 +619,7 @@ export class NoticeOfIntentDecisionV2Service {
     });
 
     if (!decisionDocument) {
-      throw new ServiceNotFoundException(
-        `Failed to find document with uuid ${decisionDocumentUuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find document with uuid ${decisionDocumentUuid}`);
     }
     return decisionDocument;
   }

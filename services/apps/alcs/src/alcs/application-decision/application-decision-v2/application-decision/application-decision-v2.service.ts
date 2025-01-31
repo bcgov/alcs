@@ -53,6 +53,8 @@ export class ApplicationDecisionV2Service {
     private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
     @InjectRepository(NaruSubtype)
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
+    @InjectRepository(ApplicationDecisionDocument)
+    private noticeOfIntentDecisionDocumentRepository: Repository<ApplicationDecisionDocument>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private applicationService: ApplicationService,
@@ -476,6 +478,9 @@ export class ApplicationDecisionV2Service {
     const applicationDecision = await this.appDecisionRepository.findOne({
       where: { uuid },
       relations: {
+        conditions: {
+          dates: true,
+        },
         outcome: true,
         documents: {
           document: true,
@@ -490,7 +495,10 @@ export class ApplicationDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
+    await this.decisionConditionService.remove(applicationDecision.conditions);
+
     for (const document of applicationDecision.documents) {
+      await this.noticeOfIntentDecisionDocumentRepository.softRemove(document);
       await this.documentService.softRemove(document.document);
     }
 
