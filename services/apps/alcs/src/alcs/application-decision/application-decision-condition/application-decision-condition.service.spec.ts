@@ -8,6 +8,7 @@ import { ApplicationDecisionConditionType } from './application-decision-conditi
 import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionService } from './application-decision-condition.service';
+import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 
 describe('ApplicationDecisionConditionService', () => {
   let service: ApplicationDecisionConditionService;
@@ -19,12 +20,14 @@ describe('ApplicationDecisionConditionService', () => {
   let mockApplicationDecisionConditionToComponentLot: DeepMocked<
     Repository<ApplicationDecisionConditionToComponentLot>
   >;
+  let mockApplicationDecisionConditionDate: DeepMocked<Repository<ApplicationDecisionConditionDate>>;
 
   beforeEach(async () => {
     mockApplicationDecisionConditionRepository = createMock();
     mockAppDecCondTypeRepository = createMock();
     mockApplicationDecisionConditionComponentPlanNumber = createMock();
     mockApplicationDecisionConditionToComponentLot = createMock();
+    mockApplicationDecisionConditionDate = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -44,6 +47,10 @@ describe('ApplicationDecisionConditionService', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionConditionToComponentLot),
           useValue: mockApplicationDecisionConditionToComponentLot,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionConditionDate),
+          useValue: mockApplicationDecisionConditionDate,
         },
       ],
     }).compile();
