@@ -21,7 +21,7 @@ jobs:
     steps:
     - name: Lowercase repo owner
       id: lowercase_repo_owner
-      uses: ASzc/change-string-case-action@v1
+      uses: ASzc/change-string-case-action@v6
       with:
         string: ${{ github.repository_owner }}
 
@@ -42,7 +42,7 @@ jobs:
         import alcs-portal-frontend
 
     - name: Repository Dispatch
-      uses: peter-evans/repository-dispatch@v1
+      uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.GITOPS_PAT }}
         repository: ${{ env.GITOPS_REPO }}

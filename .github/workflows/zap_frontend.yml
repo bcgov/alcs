@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.7.0
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           target: "https://alcs-dev.apps.silver.devops.gov.bc.ca"
           issue_title: OWASP Zap Frontend Scan Results
