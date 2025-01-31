@@ -170,4 +170,14 @@ export class BoardService {
 
     return board;
   }
+
+  async getNoticeOfIntentDecisionConditionBoard() {
+    const board = await this.boardRepository.findOne({ where: { code: 'noicon' }, relations: ['statuses'] });
+
+    if (!board) {
+      throw new ServiceNotFoundException('NOI Condition Board not found');
+    }
+
+    return board;
+  }
 }

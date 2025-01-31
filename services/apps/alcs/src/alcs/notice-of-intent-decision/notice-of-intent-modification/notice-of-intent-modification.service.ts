@@ -1,15 +1,9 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import {
-  FindOptionsRelations,
-  FindOptionsWhere,
-  IsNull,
-  Not,
-  Repository,
-} from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
 import { filterUndefined } from '../../../utils/undefined';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
@@ -25,42 +19,42 @@ import { NoticeOfIntentModification } from './notice-of-intent-modification.enti
 
 @Injectable()
 export class NoticeOfIntentModificationService {
-  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> =
-    {
-      noticeOfIntent: {
-        region: true,
-        localGovernment: true,
-      },
-      card: {
-        board: false,
-        type: true,
-        status: true,
-        assignee: true,
-      },
-    };
-  private DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> =
-    {
-      noticeOfIntent: {
-        region: true,
-        localGovernment: true,
-      },
-      card: {
-        board: true,
-        type: true,
-        status: true,
-        assignee: true,
-      },
-      modifiesDecisions: true,
-      resultingDecision: true,
-      reviewOutcome: true,
-    };
+  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
+    noticeOfIntent: {
+      region: true,
+      localGovernment: true,
+    },
+    card: {
+      board: false,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+  };
+  private DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
+    noticeOfIntent: {
+      region: true,
+      localGovernment: true,
+    },
+    card: {
+      board: true,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+    modifiesDecisions: true,
+    resultingDecision: true,
+    reviewOutcome: true,
+  };
 
   constructor(
     @InjectRepository(NoticeOfIntentModification)
     private modificationRepository: Repository<NoticeOfIntentModification>,
     @InjectMapper() private mapper: Mapper,
     private noticeOfIntentService: NoticeOfIntentService,
+    @Inject(forwardRef(() => NoticeOfIntentDecisionV2Service))
     private noticeOfIntentDecisionService: NoticeOfIntentDecisionV2Service,
+    @Inject(forwardRef(() => CardService))
     private cardService: CardService,
   ) {}
 
@@ -97,14 +91,8 @@ export class NoticeOfIntentModificationService {
     });
   }
 
-  mapToDtos(
-    modifications: NoticeOfIntentModification[],
-  ): Promise<NoticeOfIntentModificationDto[]> {
-    return this.mapper.mapArrayAsync(
-      modifications,
-      NoticeOfIntentModification,
-      NoticeOfIntentModificationDto,
-    );
+  mapToDtos(modifications: NoticeOfIntentModification[]): Promise<NoticeOfIntentModificationDto[]> {
+    return this.mapper.mapArrayAsync(modifications, NoticeOfIntentModification, NoticeOfIntentModificationDto);
   }
 
   async create(createDto: NoticeOfIntentModificationCreateDto, board: Board) {
@@ -113,20 +101,11 @@ export class NoticeOfIntentModificationService {
       description: createDto.description,
     });
 
-    modification.card = await this.cardService.create(
-      CARD_TYPE.NOI_MODI,
-      board,
-      false,
-    );
-    modification.noticeOfIntent =
-      await this.noticeOfIntentService.getByFileNumber(createDto.fileNumber);
-    modification.modifiesDecisions =
-      await this.noticeOfIntentDecisionService.getMany(
-        createDto.modifiesDecisionUuids,
-      );
+    modification.card = await this.cardService.create(CARD_TYPE.NOI_MODI, board, false);
+    modification.noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(createDto.fileNumber);
+    modification.modifiesDecisions = await this.noticeOfIntentDecisionService.getMany(createDto.modifiesDecisionUuids);
 
-    const mockModifications =
-      await this.modificationRepository.save(modification);
+    const mockModifications = await this.modificationRepository.save(modification);
     return this.getByUuid(mockModifications.uuid);
   }
 
@@ -141,16 +120,12 @@ export class NoticeOfIntentModificationService {
       modification.reviewOutcomeCode = updateDto.reviewOutcomeCode;
     }
 
-    modification.description = filterUndefined(
-      updateDto.description,
-      modification.description,
-    );
+    modification.description = filterUndefined(updateDto.description, modification.description);
 
     if (updateDto.modifiesDecisionUuids) {
-      modification.modifiesDecisions =
-        await this.noticeOfIntentDecisionService.getMany(
-          updateDto.modifiesDecisionUuids,
-        );
+      modification.modifiesDecisions = await this.noticeOfIntentDecisionService.getMany(
+        updateDto.modifiesDecisionUuids,
+      );
     }
 
     await this.modificationRepository.save(modification);
@@ -213,11 +188,20 @@ export class NoticeOfIntentModificationService {
     });
 
     if (!modification) {
-      throw new ServiceNotFoundException(
-        `Modification with uuid ${uuid} not found`,
-      );
+      throw new ServiceNotFoundException(`Modification with uuid ${uuid} not found`);
     }
 
     return modification;
+  }
+
+  async getByNoticeOfIntentDecisionUuid(decisionUuid: string): Promise<NoticeOfIntentModification[]> {
+    return this.modificationRepository.find({
+      where: {
+        modifiesDecisions: {
+          uuid: decisionUuid,
+        },
+      },
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 }

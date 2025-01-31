@@ -18,6 +18,7 @@ import { NoticeOfIntentDecisionDocument } from './notice-of-intent-decision-docu
 import { NoticeOfIntentDecisionOutcome } from './notice-of-intent-decision-outcome.entity';
 import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
 import { User } from '../../user/user.entity';
+import { NoticeOfIntentDecisionConditionCard } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.entity';
 
 @Entity({
   comment: 'Decisions saved to NOIs, linked to the modification request',
@@ -113,16 +114,12 @@ export class NoticeOfIntentDecision extends Base {
     type: 'timestamptz',
     nullable: false,
     update: false,
-    comment:
-      'Date that indicates when decision was created. It is not editable by user.',
+    comment: 'Date that indicates when decision was created. It is not editable by user.',
   })
   createdAt: Date;
 
   @AutoMap(() => [NoticeOfIntentDecisionDocument])
-  @OneToMany(
-    () => NoticeOfIntentDecisionDocument,
-    (document) => document.decision,
-  )
+  @OneToMany(() => NoticeOfIntentDecisionDocument, (document) => document.decision)
   documents: NoticeOfIntentDecisionDocument[];
 
   @AutoMap()
@@ -151,35 +148,24 @@ export class NoticeOfIntentDecision extends Base {
   })
   ccEmails: string[];
 
-  @ManyToMany(
-    () => NoticeOfIntentModification,
-    (modification) => modification.modifiesDecisions,
-  )
+  @ManyToMany(() => NoticeOfIntentModification, (modification) => modification.modifiesDecisions)
   modifiedBy: NoticeOfIntentModification[];
 
   @AutoMap(() => NoticeOfIntentModification)
-  @OneToOne(
-    () => NoticeOfIntentModification,
-    (modification) => modification.resultingDecision,
-    { nullable: true },
-  )
+  @OneToOne(() => NoticeOfIntentModification, (modification) => modification.resultingDecision, { nullable: true })
   @JoinColumn()
   modifies?: NoticeOfIntentModification | null;
 
   @AutoMap(() => [NoticeOfIntentDecisionComponent])
-  @OneToMany(
-    () => NoticeOfIntentDecisionComponent,
-    (component) => component.noticeOfIntentDecision,
-    { cascade: ['insert', 'update'] },
-  )
+  @OneToMany(() => NoticeOfIntentDecisionComponent, (component) => component.noticeOfIntentDecision, {
+    cascade: ['insert', 'update'],
+  })
   components: NoticeOfIntentDecisionComponent[];
 
   @AutoMap(() => [NoticeOfIntentDecisionCondition])
-  @OneToMany(
-    () => NoticeOfIntentDecisionCondition,
-    (component) => component.decision,
-    { cascade: ['insert', 'update'] },
-  )
+  @OneToMany(() => NoticeOfIntentDecisionCondition, (component) => component.decision, {
+    cascade: ['insert', 'update'],
+  })
   conditions: NoticeOfIntentDecisionCondition[];
 
   @Column({
@@ -214,4 +200,10 @@ export class NoticeOfIntentDecision extends Base {
   @AutoMap(() => Date)
   @Column({ type: 'timestamptz', nullable: true })
   flagEditedAt: Date | null;
+
+  @AutoMap(() => [NoticeOfIntentDecisionConditionCard])
+  @OneToMany(() => NoticeOfIntentDecisionConditionCard, (conditionCard) => conditionCard.decision, {
+    cascade: ['insert', 'update'],
+  })
+  conditionCards: NoticeOfIntentDecisionConditionCard[];
 }
