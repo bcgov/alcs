@@ -276,6 +276,15 @@ export class NoticeOfIntentSubmissionService {
     try {
       const tags = this.populateNoiTags(noticeOfIntentSubmission);
 
+      await this.generateNoiSubmissionDocumentService.generateAndAttach(noticeOfIntentSubmission.fileNumber, user);
+
+      const documents = await this.noticeOfIntentDocumentService.list(noticeOfIntentSubmission.fileNumber);
+      const submissionDocs = documents.filter((document) => document.typeCode === DOCUMENT_TYPE.ORIGINAL_SUBMISSION);
+
+      if (submissionDocs.length < 1) {
+        throw new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError');
+      }
+
       const submittedNoi = await this.noticeOfIntentService.submit({
         fileNumber: noticeOfIntentSubmission.fileNumber,
         applicant: noticeOfIntentSubmission.applicant,
@@ -290,8 +299,6 @@ export class NoticeOfIntentSubmissionService {
         NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         submittedNoi.dateSubmittedToAlc,
       );
-
-      await this.generateNoiSubmissionDocumentService.generateAndAttach(submittedNoi.fileNumber, user);
 
       return submittedNoi;
     } catch (ex) {

@@ -20,6 +20,7 @@ import { NotificationSubmissionValidatorService } from './notification-submissio
 import { NotificationSubmissionUpdateDto } from './notification-submission.dto';
 import { NotificationSubmission } from './notification-submission.entity';
 import { NotificationSubmissionService } from './notification-submission.service';
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 
 @Controller('notification-submission')
 @UseGuards(PortalAuthGuard)
@@ -186,11 +187,9 @@ export class NotificationSubmissionController {
       );
 
     if (savedDocument) {
-      await this.notificationSubmissionService.sendAndRecordLTSAPackage(
-        submission,
-        savedDocument,
-        user,
-      );
+      await this.notificationSubmissionService.sendAndRecordLTSAPackage(submission, savedDocument, user);
+    } else {
+      throw new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError');
     }
   }
 }
