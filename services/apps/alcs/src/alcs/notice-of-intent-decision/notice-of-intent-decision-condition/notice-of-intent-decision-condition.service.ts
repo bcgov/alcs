@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision-condition-code.entity';
@@ -36,6 +36,14 @@ export class NoticeOfIntentDecisionConditionService {
       where: { uuid },
       relations: {
         type: true,
+      },
+    });
+  }
+
+  async findByUuids(uuids: string[]): Promise<NoticeOfIntentDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        uuid: In(uuids),
       },
     });
   }

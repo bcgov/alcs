@@ -22,6 +22,7 @@ import { BoardDto, MinimalBoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('board')
@@ -39,6 +40,7 @@ export class BoardController {
     private notificationService: NotificationService,
     private inquiryService: InquiryService,
     private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
+    private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -102,6 +104,10 @@ export class BoardController {
       ? await this.applicationDecisionConditionCardService.getByBoard(board.uuid)
       : [];
 
+    const noticeOfIntentDecisionConditions = allowedCodes.includes(CARD_TYPE.NOI_CON)
+      ? await this.noticeOfIntentDecisionConditionCardService.getByBoard(board.uuid)
+      : [];
+
     return {
       board: await this.autoMapper.mapAsync(board, Board, BoardDto),
       applications: await this.applicationService.mapToDtos(applications),
@@ -114,6 +120,9 @@ export class BoardController {
       inquiries: await this.inquiryService.mapToDtos(inquiries),
       applicationDecisionConditions:
         await this.applicationDecisionConditionCardService.mapToBoardDtos(applicationDecisionConditions),
+      noticeOfIntentDecisionConditions: await this.noticeOfIntentDecisionConditionCardService.mapToBoardDtos(
+        noticeOfIntentDecisionConditions,
+      ),
     };
   }
 

@@ -8,6 +8,7 @@ import {
 } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
 import { NoticeOfIntentDecisionConditionDateDto } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
+import { NoticeOfIntentDecisionConditionCardUuidDto } from './notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
 
 export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -91,6 +92,11 @@ export class NoticeOfIntentDecisionConditionDto {
 
   @AutoMap()
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+
+  @AutoMap(() => NoticeOfIntentDecisionConditionCardUuidDto)
+  conditionCard: NoticeOfIntentDecisionConditionCardUuidDto | null;
+
+  status?: string | null;
 }
 
 export class ComponentToConditionDto {
@@ -135,6 +141,10 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   @IsOptional()
   @AutoMap()
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+
+  @IsOptional()
+  @IsUUID()
+  conditionCardUuid?: string;
 }
 
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
@@ -145,4 +155,5 @@ export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   administrativeFee?: number;
   description?: string;
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+  conditionCardUuid?: string;
 }

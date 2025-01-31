@@ -21,6 +21,7 @@ import { BOARD_CODES } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 describe('BoardController', () => {
   let controller: BoardController;
@@ -36,6 +37,7 @@ describe('BoardController', () => {
   let notificationService: DeepMocked<NotificationService>;
   let inquiryService: DeepMocked<InquiryService>;
   let applicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
+  let noticeOfIntentDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
   let mockBoard;
 
   beforeEach(async () => {
@@ -50,6 +52,7 @@ describe('BoardController', () => {
     notificationService = createMock();
     inquiryService = createMock();
     applicationDecisionConditionCardService = createMock();
+    noticeOfIntentDecisionConditionCardService = createMock();
 
     mockBoard = new Board({
       allowedCardTypes: [],
@@ -77,6 +80,8 @@ describe('BoardController', () => {
     inquiryService.mapToDtos.mockResolvedValue([]);
     applicationDecisionConditionCardService.getByBoard.mockResolvedValue([]);
     applicationDecisionConditionCardService.mapToBoardDtos.mockResolvedValue([]);
+    noticeOfIntentDecisionConditionCardService.getByBoard.mockResolvedValue([]);
+    noticeOfIntentDecisionConditionCardService.mapToBoardDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -121,6 +126,10 @@ describe('BoardController', () => {
           useValue: applicationDecisionConditionCardService,
         },
         {
+          provide: NoticeOfIntentDecisionConditionCardService,
+          useValue: noticeOfIntentDecisionConditionCardService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -163,6 +172,7 @@ describe('BoardController', () => {
     expect(planningReferralService.getByBoard).toHaveBeenCalledTimes(0);
     expect(planningReferralService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(applicationDecisionConditionCardService.getByBoard).toHaveBeenCalledTimes(0);
+    expect(noticeOfIntentDecisionConditionCardService.getByBoard).toHaveBeenCalledTimes(0);
   });
 
   it('should call through to planning review service if board supports planning reviews', async () => {

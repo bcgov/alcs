@@ -1,13 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  IsArray,
-  IsBoolean,
-  IsDate,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import {
   NoticeOfIntentDecisionComponentDto,
@@ -19,6 +11,7 @@ import {
 } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
 import { UserDto } from '../../user/user.dto';
 import { Type } from 'class-transformer';
+import { NoticeOfIntentDecisionConditionCardUuidDto } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
 
 export class NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
 
@@ -186,6 +179,9 @@ export class NoticeOfIntentDecisionDto {
 
   @AutoMap(() => [NoticeOfIntentDecisionConditionDto])
   conditions?: NoticeOfIntentDecisionConditionDto[];
+
+  @AutoMap(() => [NoticeOfIntentDecisionConditionCardUuidDto])
+  conditionCards?: NoticeOfIntentDecisionConditionCardUuidDto[];
 
   @AutoMap(() => Boolean)
   isFlagged: boolean;
