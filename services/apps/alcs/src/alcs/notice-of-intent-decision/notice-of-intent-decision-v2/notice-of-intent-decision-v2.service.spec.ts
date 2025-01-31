@@ -135,6 +135,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     mockDecision = new NoticeOfIntentDecision({
       noticeOfIntent: mockNoticeOfIntent,
       documents: [],
+      conditions: [],
     });
 
     mockDecisionRepository.find.mockResolvedValue([mockDecision]);
