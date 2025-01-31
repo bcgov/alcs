@@ -28,6 +28,9 @@ import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision
 import { NoticeOfIntentDecisionConditionDateService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
 import { NoticeOfIntentDecisionConditionDateController } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.controller';
 import { User } from '../../user/user.entity';
+import { NoticeOfIntentDecisionConditionCard } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.entity';
+import { NoticeOfIntentDecisionConditionCardService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardController } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.controller';
 
 @Module({
   imports: [
@@ -42,6 +45,7 @@ import { User } from '../../user/user.entity';
       NoticeOfIntentDecisionCondition,
       NoticeOfIntentDecisionConditionType,
       NoticeOfIntentDecisionConditionDate,
+      NoticeOfIntentDecisionConditionCard,
       User,
     ]),
     forwardRef(() => BoardModule),
@@ -58,6 +62,7 @@ import { User } from '../../user/user.entity';
     NoticeOfIntentDecisionConditionDateService,
     NoticeOfIntentDecisionProfile,
     NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionConditionCardService,
   ],
   controllers: [
     NoticeOfIntentDecisionV2Controller,
@@ -65,7 +70,13 @@ import { User } from '../../user/user.entity';
     NoticeOfIntentDecisionComponentController,
     NoticeOfIntentDecisionConditionController,
     NoticeOfIntentDecisionConditionDateController,
+    NoticeOfIntentDecisionConditionCardController,
   ],
-  exports: [NoticeOfIntentModificationService, NoticeOfIntentDecisionV2Service],
+  exports: [
+    NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionV2Service,
+    NoticeOfIntentDecisionConditionCardService,
+    NoticeOfIntentModificationService,
+  ],
 })
 export class NoticeOfIntentDecisionModule {}

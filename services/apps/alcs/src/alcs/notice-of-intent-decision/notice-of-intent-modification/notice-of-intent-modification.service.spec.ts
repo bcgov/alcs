@@ -93,9 +93,7 @@ describe('NoticeOfIntentModificationService', () => {
         ModificationProfile,
       ],
     }).compile();
-    service = module.get<NoticeOfIntentModificationService>(
-      NoticeOfIntentModificationService,
-    );
+    service = module.get<NoticeOfIntentModificationService>(NoticeOfIntentModificationService);
 
     mockModification = new NoticeOfIntentModification({ cardUuid: 'mockUuid' });
     modificationRepoMock.findOneOrFail.mockResolvedValue(mockModification);
@@ -103,9 +101,7 @@ describe('NoticeOfIntentModificationService', () => {
     modificationRepoMock.find.mockResolvedValue([mockModification]);
     modificationRepoMock.save.mockResolvedValue({} as any);
 
-    noticeOfIntentServiceMock.getByFileNumber.mockResolvedValue(
-      new NoticeOfIntent(),
-    );
+    noticeOfIntentServiceMock.getByFileNumber.mockResolvedValue(new NoticeOfIntent());
 
     mockModificationCreateDto = {
       fileNumber: 'fake-app-number',
@@ -142,11 +138,7 @@ describe('NoticeOfIntentModificationService', () => {
     await service.create(mockModificationCreateDto, {} as Board);
 
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(
-      CARD_TYPE.NOI_MODI,
-      {} as Board,
-      false,
-    );
+    expect(cardServiceMock.create).toBeCalledWith(CARD_TYPE.NOI_MODI, {} as Board, false);
     expect(noticeOfIntentServiceMock.create).toBeCalledTimes(0);
   });
 
@@ -157,9 +149,7 @@ describe('NoticeOfIntentModificationService', () => {
       uuid: decisionUuid,
     });
     decisionServiceMock.getMany.mockResolvedValue([mockDecision]);
-    noticeOfIntentServiceMock.getByFileNumber.mockResolvedValue(
-      new NoticeOfIntent(),
-    );
+    noticeOfIntentServiceMock.getByFileNumber.mockResolvedValue(new NoticeOfIntent());
 
     await service.create(
       {
@@ -170,17 +160,11 @@ describe('NoticeOfIntentModificationService', () => {
     );
 
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(
-      CARD_TYPE.NOI_MODI,
-      {} as Board,
-      false,
-    );
+    expect(cardServiceMock.create).toBeCalledWith(CARD_TYPE.NOI_MODI, {} as Board, false);
     expect(noticeOfIntentServiceMock.create).toBeCalledTimes(0);
     expect(decisionServiceMock.getMany).toHaveBeenCalledTimes(1);
     expect(decisionServiceMock.getMany).toHaveBeenCalledWith([decisionUuid]);
-    expect(
-      modificationRepoMock.save.mock.calls[0][0].modifiesDecisions,
-    ).toEqual([mockDecision]);
+    expect(modificationRepoMock.save.mock.calls[0][0].modifiesDecisions).toEqual([mockDecision]);
   });
 
   it('should successfully update modification', async () => {
@@ -201,9 +185,7 @@ describe('NoticeOfIntentModificationService', () => {
     const uuid = 'fake';
     modificationRepoMock.findOneBy.mockResolvedValue(null);
 
-    await expect(
-      service.update(uuid, {} as NoticeOfIntentModificationUpdateDto),
-    ).rejects.toMatchObject(
+    await expect(service.update(uuid, {} as NoticeOfIntentModificationUpdateDto)).rejects.toMatchObject(
       new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
     expect(modificationRepoMock.findOneBy).toBeCalledWith({
@@ -228,9 +210,7 @@ describe('NoticeOfIntentModificationService', () => {
 
   it('should not call archive card if modification does not have card attached (only modifications imported from OATS) on delete', async () => {
     const uuid = 'fake';
-    modificationRepoMock.findOneBy.mockResolvedValue(
-      new NoticeOfIntentModification(),
-    );
+    modificationRepoMock.findOneBy.mockResolvedValue(new NoticeOfIntentModification());
     modificationRepoMock.softRemove.mockResolvedValue({} as any);
     cardServiceMock.archive.mockResolvedValue();
 
@@ -316,8 +296,6 @@ describe('NoticeOfIntentModificationService', () => {
     await service.getDeletedCards('file-number');
 
     expect(modificationRepoMock.find).toHaveBeenCalledTimes(1);
-    expect(modificationRepoMock.find.mock.calls[0][0]!.withDeleted).toEqual(
-      true,
-    );
+    expect(modificationRepoMock.find.mock.calls[0][0]!.withDeleted).toEqual(true);
   });
 });
