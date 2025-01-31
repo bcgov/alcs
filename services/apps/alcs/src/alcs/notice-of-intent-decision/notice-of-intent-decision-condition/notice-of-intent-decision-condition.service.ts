@@ -18,6 +18,8 @@ export class NoticeOfIntentDecisionConditionService {
     private repository: Repository<NoticeOfIntentDecisionCondition>,
     @InjectRepository(NoticeOfIntentDecisionConditionType)
     private typeRepository: Repository<NoticeOfIntentDecisionConditionType>,
+    @InjectRepository(NoticeOfIntentDecisionConditionDate)
+    private dateRepository: Repository<NoticeOfIntentDecisionConditionDate>,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionCondition[]> {
@@ -129,7 +131,10 @@ export class NoticeOfIntentDecisionConditionService {
   }
 
   async remove(conditions: NoticeOfIntentDecisionCondition[]) {
-    await this.repository.remove(conditions);
+    conditions.forEach(async (c) => {
+      await this.dateRepository.softRemove(c.dates);
+    });
+    await this.repository.softRemove(conditions);
   }
 
   async update(
