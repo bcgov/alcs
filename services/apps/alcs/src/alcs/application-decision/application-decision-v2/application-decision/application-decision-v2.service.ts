@@ -33,6 +33,7 @@ import { ApplicationDecisionComponent } from './component/application-decision-c
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 import { ApplicationDecisionConditionDate } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationDecisionConditionDateService } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -61,6 +62,7 @@ export class ApplicationDecisionV2Service {
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
     private decisionConditionService: ApplicationDecisionConditionService,
+    private dateService: ApplicationDecisionConditionDateService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @Inject(forwardRef(() => ApplicationDecisionConditionCardService))
     private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
@@ -495,6 +497,13 @@ export class ApplicationDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
+    const dateIds: string[] = [];
+    applicationDecision.conditions.forEach((c) => {
+      c.dates.forEach((d) => {
+        dateIds.push(d.uuid);
+      });
+    });
+
     await this.decisionConditionService.remove(applicationDecision.conditions);
 
     for (const document of applicationDecision.documents) {
@@ -517,6 +526,9 @@ export class ApplicationDecisionV2Service {
 
     await this.appDecisionRepository.softRemove([applicationDecision]);
     await this.updateApplicationDecisionDates(applicationDecision);
+    dateIds.forEach(async (id) => {
+      await this.dateService.delete(id, true);
+    });
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {

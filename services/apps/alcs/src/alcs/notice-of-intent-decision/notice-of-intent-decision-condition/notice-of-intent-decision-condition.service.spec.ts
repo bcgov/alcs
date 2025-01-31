@@ -61,9 +61,6 @@ describe('NoticeOfIntentDecisionConditionService', () => {
     const conditions = [new NoticeOfIntentDecisionCondition(), new NoticeOfIntentDecisionCondition()];
 
     mockNOIDecisionConditionRepository.softRemove.mockResolvedValue({} as NoticeOfIntentDecisionCondition);
-    mockNoticeOfIntentDecisionConditionDateRepository.softRemove.mockResolvedValue(
-      {} as NoticeOfIntentDecisionConditionDate,
-    );
 
     await service.remove(conditions);
 

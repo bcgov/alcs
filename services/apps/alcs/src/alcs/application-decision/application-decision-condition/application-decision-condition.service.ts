@@ -24,8 +24,6 @@ export class ApplicationDecisionConditionService {
     private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
-    @InjectRepository(ApplicationDecisionConditionDate)
-    private dateRepository: Repository<ApplicationDecisionConditionDate>,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
@@ -152,12 +150,8 @@ export class ApplicationDecisionConditionService {
       },
     });
 
-    conditions.forEach(async (c) => {
-      await this.dateRepository.softRemove(c.dates);
-    });
-
     await this.repository.manager.transaction(async (transactionalEntityManager) => {
-      await transactionalEntityManager.softRemove(lots);
+      await transactionalEntityManager.remove(lots);
       await transactionalEntityManager.softRemove(conditions);
     });
   }

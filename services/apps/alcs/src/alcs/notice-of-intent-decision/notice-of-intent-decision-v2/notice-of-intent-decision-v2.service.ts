@@ -25,6 +25,7 @@ import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentDecisionConditionDate } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionDateService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
 
 @Injectable()
 export class NoticeOfIntentDecisionV2Service {
@@ -48,6 +49,7 @@ export class NoticeOfIntentDecisionV2Service {
     private decisionComponentService: NoticeOfIntentDecisionComponentService,
     private decisionConditionService: NoticeOfIntentDecisionConditionService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private dateService: NoticeOfIntentDecisionConditionDateService,
     @Inject(forwardRef(() => NoticeOfIntentDecisionConditionCardService))
     private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
     private dataSource: DataSource,
@@ -402,6 +404,13 @@ export class NoticeOfIntentDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
+    const dateIds: string[] = [];
+    noticeOfIntentDecision.conditions.forEach((c) => {
+      c.dates.forEach((d) => {
+        dateIds.push(d.uuid);
+      });
+    });
+
     await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
 
     for (const document of noticeOfIntentDecision.documents) {
@@ -423,6 +432,9 @@ export class NoticeOfIntentDecisionV2Service {
 
     await this.noticeOfIntentDecisionRepository.softRemove([noticeOfIntentDecision]);
     await this.updateDecisionDates(noticeOfIntentDecision);
+    dateIds.forEach(async (id) => {
+      await this.dateService.delete(id, true);
+    });
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {
