@@ -30,6 +30,7 @@ import {
   PORTAL_TO_ALCS_STRUCTURE_MAP,
   PORTAL_TO_ALCS_TAGS_MAP,
 } from './notice-of-intent-submission.entity';
+import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 
 @Injectable()
 export class NoticeOfIntentSubmissionService {
@@ -273,19 +274,21 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async submitToAlcs(noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission, user: User) {
+    await this.generateNoiSubmissionDocumentService.generateAndAttach(noticeOfIntentSubmission.fileNumber, user);
+
+    const documents = await this.noticeOfIntentDocumentService.list(noticeOfIntentSubmission.fileNumber);
+    const submissionDocs = documents.filter((document) => document.typeCode === DOCUMENT_TYPE.ORIGINAL_SUBMISSION);
+
+    if (submissionDocs.length < 1) {
+      throw new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError');
+    }
+
+    let submittedNoi: NoticeOfIntent | null = null;
+
     try {
       const tags = this.populateNoiTags(noticeOfIntentSubmission);
 
-      await this.generateNoiSubmissionDocumentService.generateAndAttach(noticeOfIntentSubmission.fileNumber, user);
-
-      const documents = await this.noticeOfIntentDocumentService.list(noticeOfIntentSubmission.fileNumber);
-      const submissionDocs = documents.filter((document) => document.typeCode === DOCUMENT_TYPE.ORIGINAL_SUBMISSION);
-
-      if (submissionDocs.length < 1) {
-        throw new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError');
-      }
-
-      const submittedNoi = await this.noticeOfIntentService.submit({
+      submittedNoi = await this.noticeOfIntentService.submit({
         fileNumber: noticeOfIntentSubmission.fileNumber,
         applicant: noticeOfIntentSubmission.applicant,
         localGovernmentUuid: noticeOfIntentSubmission.localGovernmentUuid,
@@ -299,12 +302,12 @@ export class NoticeOfIntentSubmissionService {
         NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         submittedNoi.dateSubmittedToAlc,
       );
-
-      return submittedNoi;
     } catch (ex) {
       this.logger.error(ex);
       throw new BaseServiceException(`Failed to submit notice of intent: ${noticeOfIntentSubmission.fileNumber}`);
     }
+
+    return submittedNoi;
   }
 
   /**

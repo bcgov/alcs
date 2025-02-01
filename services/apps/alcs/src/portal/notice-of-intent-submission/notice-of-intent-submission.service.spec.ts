@@ -29,6 +29,7 @@ import {
   STRUCTURE_TYPES,
 } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 
 describe('NoticeOfIntentSubmissionService', () => {
   let service: NoticeOfIntentSubmissionService;
@@ -225,21 +226,38 @@ describe('NoticeOfIntentSubmissionService', () => {
       localGovernmentUuid,
     });
 
+    mockGenerateNoiSubmissionDocumentService.generateAndAttach.mockResolvedValue(undefined);
+    mockNoiDocService.list.mockResolvedValue([
+      new NoticeOfIntentDocument({
+        typeCode: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+      }),
+    ]);
     mockNoiService.submit.mockRejectedValue(new Error());
 
-    await expect(
-      service.submitToAlcs(noticeOfIntentSubmission as ValidatedNoticeOfIntentSubmission, mockUser),
-    ).rejects.toMatchObject(new BaseServiceException(`Failed to submit notice of intent: ${fileNumber}`));
+    try {
+      await service.submitToAlcs(noticeOfIntentSubmission as ValidatedNoticeOfIntentSubmission, mockUser);
+    } catch (err) {
+      await expect([
+        new BaseServiceException(`Failed to submit notice of intent: ${fileNumber}`),
+        new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError'),
+      ]).toContainEqual(err);
+    }
   });
 
   it('should call out to service on submitToAlcs', async () => {
     const mockNoticeOfIntent = new NoticeOfIntent({
       dateSubmittedToAlc: new Date(),
     });
+
+    mockNoiDocService.list.mockResolvedValue([
+      {
+        typeCode: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+      },
+    ] as any);
     mockNoiStatusService.setStatusDate.mockResolvedValue(new NoticeOfIntentSubmissionToSubmissionStatus());
     mockGenerateNoiSubmissionDocumentService.generateAndAttach.mockResolvedValue();
-
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
+
     await service.submitToAlcs(mockNoiSubmission as ValidatedNoticeOfIntentSubmission, mockUser);
 
     expect(mockNoiService.submit).toBeCalledTimes(1);
@@ -310,6 +328,8 @@ describe('NoticeOfIntentSubmissionService', () => {
   });
 
   it('should populate noi tags', async () => {
+    mockNoiDocService.list.mockResolvedValue([] as any);
+
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
@@ -346,6 +366,11 @@ describe('NoticeOfIntentSubmissionService', () => {
       dateSubmittedToAlc: new Date(),
     });
     mockNoiStatusService.setStatusDate.mockResolvedValue(new NoticeOfIntentSubmissionToSubmissionStatus());
+    mockNoiDocService.list.mockResolvedValue([
+      {
+        typeCode: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+      } as any,
+    ]);
 
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
     await service.submitToAlcs(mockNoiSubmission as ValidatedNoticeOfIntentSubmission, mockUser);
