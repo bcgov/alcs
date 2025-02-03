@@ -60,11 +60,11 @@ describe('NoticeOfIntentDecisionConditionService', () => {
   it('calls remove method for deleted conditions', async () => {
     const conditions = [new NoticeOfIntentDecisionCondition(), new NoticeOfIntentDecisionCondition()];
 
-    mockNOIDecisionConditionRepository.softRemove.mockResolvedValue({} as NoticeOfIntentDecisionCondition);
+    mockNOIDecisionConditionRepository.remove.mockResolvedValue({} as NoticeOfIntentDecisionCondition);
 
     await service.remove(conditions);
 
-    expect(mockNOIDecisionConditionRepository.softRemove).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.remove).toBeCalledTimes(1);
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
