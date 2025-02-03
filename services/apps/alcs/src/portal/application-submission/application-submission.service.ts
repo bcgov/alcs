@@ -231,6 +231,16 @@ export class ApplicationSubmissionService {
     user: User,
     applicationReview?: ApplicationSubmissionReview,
   ) {
+    const hasReview: boolean = !!applicationReview;
+    await this.generateAndAttachPdfs(application.fileNumber, user, hasReview);
+
+    const documents = await this.applicationDocumentService.list(application.fileNumber);
+    const submissionDocs = documents.filter((document) => document.typeCode === DOCUMENT_TYPE.ORIGINAL_SUBMISSION);
+
+    if (!((hasReview && submissionDocs.length >= 2) || (!hasReview && submissionDocs.length >= 1))) {
+      throw new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError');
+    }
+
     let submittedApp: Application | null = null;
 
     const shouldCreateCard = applicationReview?.isAuthorized ?? true;
@@ -247,8 +257,6 @@ export class ApplicationSubmissionService {
       );
 
       await this.updateStatus(application, SUBMISSION_STATUS.SUBMITTED_TO_ALC, submittedApp.dateSubmittedToAlc);
-
-      this.generateAndAttachPdfs(application.fileNumber, user, !!applicationReview);
     } catch (ex) {
       this.logger.error(ex);
       throw new BaseServiceException(`Failed to submit application: ${application.fileNumber}`);

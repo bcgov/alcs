@@ -114,7 +114,9 @@ export class NoticeOfIntentSubmissionService {
       this.toastService.showSuccessToast('Notice of Intent Submitted');
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to submit Notice of Intent, please try again');
+      this.toastService.showErrorToast(
+        'Failed to submit Notice of Intent, please try again. If the problem persists, contact ALC.Portal@gov.bc.ca.',
+      );
     } finally {
       this.overlayService.hideSpinner();
     }
