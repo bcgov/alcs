@@ -52,10 +52,10 @@ export class ApplicationDecisionV2Service {
     private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     @InjectRepository(ApplicationDecisionConditionType)
     private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
+    @InjectRepository(ApplicationDecisionCondition)
+    private applicationDecisionCondition: Repository<ApplicationDecisionCondition>,
     @InjectRepository(NaruSubtype)
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
-    @InjectRepository(ApplicationDecisionDocument)
-    private noticeOfIntentDecisionDocumentRepository: Repository<ApplicationDecisionDocument>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private applicationService: ApplicationService,
@@ -507,7 +507,6 @@ export class ApplicationDecisionV2Service {
     await this.decisionConditionService.remove(applicationDecision.conditions);
 
     for (const document of applicationDecision.documents) {
-      await this.noticeOfIntentDecisionDocumentRepository.softRemove(document);
       await this.documentService.softRemove(document.document);
     }
 
@@ -515,7 +514,9 @@ export class ApplicationDecisionV2Service {
 
     if (applicationDecision.conditionCards && applicationDecision.conditionCards.length > 0) {
       for (const conditionCard of applicationDecision.conditionCards) {
-        await this.applicationDecisionConditionCardService.softRemove(conditionCard);
+        conditionCard.conditions.forEach(async (c) => {
+          await this.applicationDecisionCondition.remove(c);
+        });
       }
     }
 

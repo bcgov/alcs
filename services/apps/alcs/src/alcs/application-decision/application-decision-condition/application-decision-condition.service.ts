@@ -152,7 +152,7 @@ export class ApplicationDecisionConditionService {
 
     await this.repository.manager.transaction(async (transactionalEntityManager) => {
       await transactionalEntityManager.remove(lots);
-      await transactionalEntityManager.softRemove(conditions);
+      await transactionalEntityManager.remove(conditions);
     });
   }
 
