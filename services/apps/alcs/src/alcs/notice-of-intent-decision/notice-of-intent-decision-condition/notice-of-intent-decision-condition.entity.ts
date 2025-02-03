@@ -84,5 +84,5 @@ export class NoticeOfIntentDecisionCondition extends Base {
   @ManyToOne(() => NoticeOfIntentDecisionConditionCard, (conditionCard) => conditionCard.conditions, {
     nullable: true,
   })
-  conditionCard: NoticeOfIntentDecisionConditionCard;
+  conditionCard: NoticeOfIntentDecisionConditionCard | null;
 }

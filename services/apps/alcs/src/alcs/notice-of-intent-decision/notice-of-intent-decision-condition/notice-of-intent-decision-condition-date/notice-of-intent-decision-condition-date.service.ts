@@ -110,11 +110,7 @@ export class NoticeOfIntentDecisionConditionDateService {
       throw new ServiceNotFoundException(`Condition Date ${dateUuid} was not found`);
     }
 
-    if (forceSingleDateDeletion) {
-      return await this.repository.delete(dateUuid);
-    }
-
-    if (conditionDate.condition.type.dateType !== DateType.MULTIPLE) {
+    if (!forceSingleDateDeletion && conditionDate.condition.type.dateType !== DateType.MULTIPLE) {
       throw new ServiceValidationException(`Deleting the date ${dateUuid} is not permitted on single date type`);
     }
 
