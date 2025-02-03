@@ -18,6 +18,8 @@ export class NoticeOfIntentDecisionConditionService {
     private repository: Repository<NoticeOfIntentDecisionCondition>,
     @InjectRepository(NoticeOfIntentDecisionConditionType)
     private typeRepository: Repository<NoticeOfIntentDecisionConditionType>,
+    @InjectRepository(NoticeOfIntentDecisionConditionDate)
+    private dateRepository: Repository<NoticeOfIntentDecisionConditionDate>,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionCondition[]> {

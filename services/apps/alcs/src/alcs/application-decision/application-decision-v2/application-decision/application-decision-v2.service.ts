@@ -31,8 +31,8 @@ import { CreateApplicationDecisionDto, UpdateApplicationDecisionDto } from './ap
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
-import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 import { ApplicationDecisionConditionDate } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationDecisionConditionDateService } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -51,6 +51,8 @@ export class ApplicationDecisionV2Service {
     private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     @InjectRepository(ApplicationDecisionConditionType)
     private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
+    @InjectRepository(ApplicationDecisionDocument)
+    private applicationDecisionDocumentRepository: Repository<ApplicationDecisionDocument>,
     @InjectRepository(NaruSubtype)
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
     @InjectRepository(User)
@@ -59,9 +61,8 @@ export class ApplicationDecisionV2Service {
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
     private decisionConditionService: ApplicationDecisionConditionService,
+    private dateService: ApplicationDecisionConditionDateService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
-    @Inject(forwardRef(() => ApplicationDecisionConditionCardService))
-    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
     private dataSource: DataSource,
   ) {}
 
@@ -476,6 +477,9 @@ export class ApplicationDecisionV2Service {
     const applicationDecision = await this.appDecisionRepository.findOne({
       where: { uuid },
       relations: {
+        conditions: {
+          dates: true,
+        },
         outcome: true,
         documents: {
           document: true,
@@ -490,7 +494,17 @@ export class ApplicationDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
+    const dateIds: string[] = [];
+    applicationDecision.conditions.forEach((c) => {
+      c.dates.forEach((d) => {
+        dateIds.push(d.uuid);
+      });
+    });
+
+    await this.decisionConditionService.remove(applicationDecision.conditions);
+
     for (const document of applicationDecision.documents) {
+      await this.applicationDecisionDocumentRepository.softRemove(document);
       await this.documentService.softRemove(document.document);
     }
 
@@ -498,7 +512,10 @@ export class ApplicationDecisionV2Service {
 
     if (applicationDecision.conditionCards && applicationDecision.conditionCards.length > 0) {
       for (const conditionCard of applicationDecision.conditionCards) {
-        await this.applicationDecisionConditionCardService.softRemove(conditionCard);
+        conditionCard.conditions.forEach(async (c) => {
+          c.conditionCard = null;
+          c.save();
+        });
       }
     }
 
@@ -509,6 +526,9 @@ export class ApplicationDecisionV2Service {
 
     await this.appDecisionRepository.softRemove([applicationDecision]);
     await this.updateApplicationDecisionDates(applicationDecision);
+    dateIds.forEach(async (id) => {
+      await this.dateService.delete(id, true);
+    });
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {

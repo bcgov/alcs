@@ -25,6 +25,7 @@ import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentDecisionConditionDate } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionDateService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
 
 @Injectable()
 export class NoticeOfIntentDecisionV2Service {
@@ -39,6 +40,8 @@ export class NoticeOfIntentDecisionV2Service {
     private decisionComponentTypeRepository: Repository<NoticeOfIntentDecisionComponentType>,
     @InjectRepository(NoticeOfIntentDecisionConditionType)
     private decisionConditionTypeRepository: Repository<NoticeOfIntentDecisionConditionType>,
+    @InjectRepository(NoticeOfIntentDecisionDocument)
+    private noticeOfIntentDecisionDocumentRepository: Repository<NoticeOfIntentDecisionDocument>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private noticeOfIntentService: NoticeOfIntentService,
@@ -46,6 +49,7 @@ export class NoticeOfIntentDecisionV2Service {
     private decisionComponentService: NoticeOfIntentDecisionComponentService,
     private decisionConditionService: NoticeOfIntentDecisionConditionService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private dateService: NoticeOfIntentDecisionConditionDateService,
     @Inject(forwardRef(() => NoticeOfIntentDecisionConditionCardService))
     private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
     private dataSource: DataSource,
@@ -383,6 +387,9 @@ export class NoticeOfIntentDecisionV2Service {
     const noticeOfIntentDecision = await this.noticeOfIntentDecisionRepository.findOne({
       where: { uuid },
       relations: {
+        conditions: {
+          dates: true,
+        },
         outcome: true,
         documents: {
           document: true,
@@ -397,7 +404,17 @@ export class NoticeOfIntentDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
+    const dateIds: string[] = [];
+    noticeOfIntentDecision.conditions.forEach((c) => {
+      c.dates.forEach((d) => {
+        dateIds.push(d.uuid);
+      });
+    });
+
+    await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
+
     for (const document of noticeOfIntentDecision.documents) {
+      await this.noticeOfIntentDecisionDocumentRepository.softRemove(document);
       await this.documentService.softRemove(document.document);
     }
 
@@ -405,7 +422,10 @@ export class NoticeOfIntentDecisionV2Service {
 
     if (noticeOfIntentDecision.conditionCards && noticeOfIntentDecision.conditionCards.length > 0) {
       for (const conditionCard of noticeOfIntentDecision.conditionCards) {
-        await this.noticeOfIntentDecisionConditionCardService.softRemove(conditionCard);
+        conditionCard.conditions.forEach(async (c) => {
+          c.conditionCard = null;
+          c.save();
+        });
       }
     }
 
@@ -415,6 +435,9 @@ export class NoticeOfIntentDecisionV2Service {
 
     await this.noticeOfIntentDecisionRepository.softRemove([noticeOfIntentDecision]);
     await this.updateDecisionDates(noticeOfIntentDecision);
+    dateIds.forEach(async (id) => {
+      await this.dateService.delete(id, true);
+    });
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {

@@ -27,6 +27,7 @@ import { ApplicationDecisionComponent } from './component/application-decision-c
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 import { User } from '../../../../user/user.entity';
+import { ApplicationDecisionConditionDateService } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
@@ -44,6 +45,7 @@ describe('ApplicationDecisionV2Service', () => {
   let mockUserRepository: DeepMocked<Repository<User>>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
   let mockApplicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
+  let mockApplicationDecisionConditionDateService: DeepMocked<ApplicationDecisionConditionDateService>;
   let mockdataSource: DeepMocked<DataSource>;
 
   let mockApplication;
@@ -64,6 +66,7 @@ describe('ApplicationDecisionV2Service', () => {
     mockNaruSubtypeRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
     mockApplicationDecisionConditionCardService = createMock();
+    mockApplicationDecisionConditionDateService = createMock();
     mockdataSource = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -133,6 +136,10 @@ describe('ApplicationDecisionV2Service', () => {
         {
           provide: ApplicationDecisionConditionCardService,
           useValue: mockApplicationDecisionConditionCardService,
+        },
+        {
+          provide: ApplicationDecisionConditionDateService,
+          useValue: mockApplicationDecisionConditionDateService,
         },
         {
           provide: DataSource,
