@@ -13,7 +13,6 @@ import {
 } from './component/application-decision-component.dto';
 import { ApplicationDecisionConditionCardUuidDto } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
 import { UserDto } from '../../../../user/user.dto';
-import { ApplicationDto } from '../../../application/application.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
