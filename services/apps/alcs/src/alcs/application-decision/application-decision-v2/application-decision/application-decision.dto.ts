@@ -11,11 +11,7 @@ import {
   ApplicationDecisionComponentDto,
   UpdateApplicationDecisionComponentDto,
 } from './component/application-decision-component.dto';
-import {
-  ApplicationDecisionConditionCardDto,
-  ApplicationDecisionConditionCardUuidDto,
-} from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
-import { Type } from 'class-transformer';
+import { ApplicationDecisionConditionCardUuidDto } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.dto';
 import { UserDto } from '../../../../user/user.dto';
 
 export class UpdateApplicationDecisionDto {

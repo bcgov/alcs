@@ -6,9 +6,10 @@ import { DateLabel, DateType } from './application-decision-condition-code.entit
 import { Type } from 'class-transformer';
 import { ApplicationDecisionConditionDateDto } from './application-decision-condition-date/application-decision-condition-date.dto';
 import {
-  ApplicationDecisionConditionCardDto,
   ApplicationDecisionConditionCardUuidDto,
+  ApplicationDecisionConditionHomeCardDto,
 } from './application-decision-condition-card/application-decision-condition-card.dto';
+import { ApplicationDto } from '../../application/application.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -97,6 +98,39 @@ export class ApplicationDecisionConditionDto {
   conditionCard: ApplicationDecisionConditionCardUuidDto | null;
 
   status?: string | null;
+}
+
+export class ApplicationHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  applicant: string;
+
+  activeDays: number;
+  paused: boolean;
+  pausedDays: number;
+}
+
+export class ApplicationDecisionHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  application: ApplicationHomeDto;
+}
+
+export class ApplicationDecisionConditionHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap(() => ApplicationDecisionConditionHomeCardDto)
+  conditionCard: ApplicationDecisionConditionHomeCardDto | null;
+
+  status?: string | null;
+
+  @AutoMap()
+  decision?: ApplicationDecisionHomeDto;
 }
 
 export class ComponentToConditionDto {

@@ -1,20 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
+  ApplicationDecisionConditionHomeDto,
+  ApplicationDecisionHomeDto,
+  ApplicationHomeDto,
   UpdateApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionServiceDto,
 } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
+import { InjectMapper } from 'automapper-nestjs';
+import { Mapper } from 'automapper-core';
+import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
+import { ApplicationDecision } from '../application-decision.entity';
+import { Application } from '../../application/application.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
+  CARD_RELATIONS = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
+  DEFAULT_RELATIONS = {
+    conditionCard: this.CARD_RELATIONS,
+  };
+
   constructor(
     @InjectRepository(ApplicationDecisionCondition)
     private repository: Repository<ApplicationDecisionCondition>,
@@ -24,6 +43,8 @@ export class ApplicationDecisionConditionService {
     private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
+    @InjectMapper() private mapper: Mapper,
+    private applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
@@ -52,6 +73,48 @@ export class ApplicationDecisionConditionService {
       where: {
         uuid: In(uuids),
       },
+    });
+  }
+
+  getBy(findOptions: FindOptionsWhere<ApplicationDecisionCondition>) {
+    return this.repository.find({
+      where: findOptions,
+      relations: {
+        decision: {
+          application: {
+            decisionMeetings: true,
+          },
+        },
+        conditionCard: {
+          card: this.CARD_RELATIONS,
+        },
+      },
+    });
+  }
+
+  async mapToDtos(conditions: ApplicationDecisionCondition[]): Promise<ApplicationDecisionConditionHomeDto[]> {
+    const appTimeMap = await this.applicationTimeTrackingService.fetchActiveTimes(
+      conditions.map((c) => c.decision.application),
+    );
+    const appPausedMap = await this.applicationTimeTrackingService.getPausedStatus(
+      conditions.map((c) => c.decision.application),
+    );
+    return conditions.map((c) => {
+      const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
+      const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
+      const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
+      return {
+        ...condition,
+        decision: {
+          ...decision,
+          application: {
+            ...application,
+            activeDays: appTimeMap.get(application.uuid)!.activeDays || 0,
+            pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
+            paused: appPausedMap.get(application.uuid) || false,
+          },
+        },
+      };
     });
   }
 

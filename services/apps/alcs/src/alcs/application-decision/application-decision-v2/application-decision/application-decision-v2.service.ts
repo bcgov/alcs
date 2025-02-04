@@ -55,6 +55,8 @@ export class ApplicationDecisionV2Service {
     private applicationDecisionDocumentRepository: Repository<ApplicationDecisionDocument>,
     @InjectRepository(NaruSubtype)
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
+    @InjectRepository(ApplicationDecisionDocument)
+    private noticeOfIntentDecisionDocumentRepository: Repository<ApplicationDecisionDocument>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private applicationService: ApplicationService,
