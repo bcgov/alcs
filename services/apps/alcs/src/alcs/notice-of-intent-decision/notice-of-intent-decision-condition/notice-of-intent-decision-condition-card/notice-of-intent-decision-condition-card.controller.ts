@@ -83,7 +83,7 @@ export class NoticeOfIntentDecisionConditionCardController {
     return dto;
   }
 
-  @Get('/application/:fileNumber')
+  @Get('/noi/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByApplicationFileNumber(
     @Param('fileNumber') fileNumber: string,

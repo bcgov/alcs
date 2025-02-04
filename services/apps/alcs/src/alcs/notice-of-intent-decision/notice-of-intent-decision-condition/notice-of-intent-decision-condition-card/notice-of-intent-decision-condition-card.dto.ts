@@ -2,7 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import { NoticeOfIntentDecisionConditionDto } from '../notice-of-intent-decision-condition.dto';
 import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { CardDto } from '../../../card/card.dto';
-import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
+import { NoticeOfIntentTypeDto } from '../../../notice-of-intent/notice-of-intent-type/notice-of-intent-type.dto';
 
 export class NoticeOfIntentDecisionConditionCardDto {
   @AutoMap()
@@ -87,7 +87,7 @@ export class NoticeOfIntentDecisionConditionCardBoardDto {
   applicant?: string | null;
 
   @IsOptional()
-  type?: ApplicationTypeDto | null;
+  type?: NoticeOfIntentTypeDto | null;
 
   @IsBoolean()
   isModification?: boolean;
