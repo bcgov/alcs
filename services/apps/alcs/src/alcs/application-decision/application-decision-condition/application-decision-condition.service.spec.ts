@@ -11,6 +11,7 @@ import { ApplicationDecisionConditionService } from './application-decision-cond
 import { Mapper } from 'automapper-core';
 import { AutomapperModule } from 'automapper-nestjs';
 import { classes } from 'automapper-classes';
+import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 
 describe('ApplicationDecisionConditionService', () => {
   let service: ApplicationDecisionConditionService;
@@ -23,6 +24,7 @@ describe('ApplicationDecisionConditionService', () => {
     Repository<ApplicationDecisionConditionToComponentLot>
   >;
   let mockMapper: DeepMocked<Mapper>;
+  let mockApplicationDecisionConditionDate: DeepMocked<Repository<ApplicationDecisionConditionDate>>;
 
   beforeEach(async () => {
     mockApplicationDecisionConditionRepository = createMock();
@@ -30,6 +32,7 @@ describe('ApplicationDecisionConditionService', () => {
     mockApplicationDecisionConditionComponentPlanNumber = createMock();
     mockApplicationDecisionConditionToComponentLot = createMock();
     mockMapper = createMock();
+    mockApplicationDecisionConditionDate = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -54,6 +57,10 @@ describe('ApplicationDecisionConditionService', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionConditionToComponentLot),
           useValue: mockApplicationDecisionConditionToComponentLot,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionConditionDate),
+          useValue: mockApplicationDecisionConditionDate,
         },
       ],
     }).compile();

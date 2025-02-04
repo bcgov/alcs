@@ -113,7 +113,9 @@ export class ApplicationSubmissionService {
       this.toastService.showSuccessToast('Application Submitted');
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to submit Application, please try again');
+      this.toastService.showErrorToast(
+        'Failed to submit Application, please try again. If the problem persists, contact ALC.Portal@gov.bc.ca.',
+      );
     } finally {
       this.overlayService.hideSpinner();
     }

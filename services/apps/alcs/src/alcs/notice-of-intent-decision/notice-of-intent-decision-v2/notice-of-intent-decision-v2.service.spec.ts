@@ -23,6 +23,8 @@ import { CreateNoticeOfIntentDecisionDto, UpdateNoticeOfIntentDecisionDto } from
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionV2Service } from './notice-of-intent-decision-v2.service';
 import { User } from '../../../user/user.entity';
+import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionDateService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
 
 describe('NoticeOfIntentDecisionV2Service', () => {
   let service: NoticeOfIntentDecisionV2Service;
@@ -36,6 +38,8 @@ describe('NoticeOfIntentDecisionV2Service', () => {
   let mockDecisionComponentService: DeepMocked<NoticeOfIntentDecisionComponentService>;
   let mockDecisionConditionService: DeepMocked<NoticeOfIntentDecisionConditionService>;
   let mockNoticeOfIntentSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNoticeOfIntentDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
+  let mockNoticeOfIntentDecisionConditionDateService: DeepMocked<NoticeOfIntentDecisionConditionDateService>;
   let mockdataSource: DeepMocked<DataSource>;
 
   let mockNoticeOfIntent;
@@ -52,6 +56,8 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     mockDecisionComponentService = createMock();
     mockDecisionConditionService = createMock();
     mockNoticeOfIntentSubmissionStatusService = createMock();
+    mockNoticeOfIntentDecisionConditionCardService = createMock();
+    mockNoticeOfIntentDecisionConditionDateService = createMock();
     mockdataSource = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -107,6 +113,14 @@ describe('NoticeOfIntentDecisionV2Service', () => {
           useValue: mockNoticeOfIntentSubmissionStatusService,
         },
         {
+          provide: NoticeOfIntentDecisionConditionCardService,
+          useValue: mockNoticeOfIntentDecisionConditionCardService,
+        },
+        {
+          provide: NoticeOfIntentDecisionConditionDateService,
+          useValue: mockNoticeOfIntentDecisionConditionDateService,
+        },
+        {
           provide: DataSource,
           useValue: mockdataSource,
         },
@@ -121,6 +135,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     mockDecision = new NoticeOfIntentDecision({
       noticeOfIntent: mockNoticeOfIntent,
       documents: [],
+      conditions: [],
     });
 
     mockDecisionRepository.find.mockResolvedValue([mockDecision]);

@@ -1,6 +1,6 @@
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { MultipartFile } from '@fastify/multipart';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, LessThan, Repository, DataSource } from 'typeorm';
 import { v4 } from 'uuid';
@@ -24,6 +24,8 @@ import { CreateNoticeOfIntentDecisionDto, UpdateNoticeOfIntentDecisionDto } from
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentDecisionConditionDate } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
+import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionDateService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
 
 @Injectable()
 export class NoticeOfIntentDecisionV2Service {
@@ -47,6 +49,9 @@ export class NoticeOfIntentDecisionV2Service {
     private decisionComponentService: NoticeOfIntentDecisionComponentService,
     private decisionConditionService: NoticeOfIntentDecisionConditionService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private dateService: NoticeOfIntentDecisionConditionDateService,
+    @Inject(forwardRef(() => NoticeOfIntentDecisionConditionCardService))
+    private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
     private dataSource: DataSource,
   ) {}
 
@@ -92,7 +97,9 @@ export class NoticeOfIntentDecisionV2Service {
           type: true,
           components: true,
           dates: true,
+          conditionCard: true,
         },
+        conditionCards: true,
       },
     });
 
@@ -155,7 +162,9 @@ export class NoticeOfIntentDecisionV2Service {
           type: true,
           components: true,
           dates: true,
+          conditionCard: true,
         },
+        conditionCards: true,
       },
     });
 
@@ -164,6 +173,10 @@ export class NoticeOfIntentDecisionV2Service {
     }
 
     decision.documents = decision.documents.filter((document) => !!document.document);
+
+    if (decision.conditions) {
+      decision.conditions.sort((a, b) => a.auditCreatedAt.getTime() - b.auditCreatedAt.getTime());
+    }
 
     return decision;
   }
@@ -383,12 +396,20 @@ export class NoticeOfIntentDecisionV2Service {
         },
         noticeOfIntent: true,
         components: true,
+        conditionCards: true,
       },
     });
 
     if (!noticeOfIntentDecision) {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
+
+    const dateIds: string[] = [];
+    noticeOfIntentDecision.conditions.forEach((c) => {
+      c.dates.forEach((d) => {
+        dateIds.push(d.uuid);
+      });
+    });
 
     await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
 
@@ -399,12 +420,24 @@ export class NoticeOfIntentDecisionV2Service {
 
     await this.decisionComponentService.softRemove(noticeOfIntentDecision.components);
 
+    if (noticeOfIntentDecision.conditionCards && noticeOfIntentDecision.conditionCards.length > 0) {
+      for (const conditionCard of noticeOfIntentDecision.conditionCards) {
+        conditionCard.conditions.forEach(async (c) => {
+          c.conditionCard = null;
+          c.save();
+        });
+      }
+    }
+
     //Clear potential links
     noticeOfIntentDecision.modifies = null;
     await this.noticeOfIntentDecisionRepository.save(noticeOfIntentDecision);
 
     await this.noticeOfIntentDecisionRepository.softRemove([noticeOfIntentDecision]);
     await this.updateDecisionDates(noticeOfIntentDecision);
+    dateIds.forEach(async (id) => {
+      await this.dateService.delete(id, true);
+    });
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {
@@ -646,6 +679,53 @@ export class NoticeOfIntentDecisionV2Service {
   }
 
   async getDecisionConditionStatus(uuid: string) {
-    return await this.dataSource.query('SELECT alcs.get_current_status_for_noi_condition($1)', [uuid]);
+    const res = await this.dataSource.query('SELECT alcs.get_current_status_for_noi_condition($1)', [uuid]);
+    return res.length > 0 ? res[0]['get_current_status_for_noi_condition'] : '';
+  }
+
+  async getForDecisionConditionCardsByFileNumber(fileNumber: string) {
+    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(fileNumber);
+
+    const decisions = await this.noticeOfIntentDecisionRepository.find({
+      where: {
+        noticeOfIntentUuid: noticeOfIntent.uuid,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+      relations: {
+        conditionCards: {
+          card: {
+            board: true,
+            status: true,
+            type: true,
+          },
+          decision: {},
+        },
+      },
+    });
+
+    return decisions.flatMap((decision) => decision.conditionCards);
+  }
+
+  async getDecisionOrder(fileNumber: string, decisionUuid: string): Promise<number> {
+    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(fileNumber);
+
+    const decisions = await this.noticeOfIntentDecisionRepository.find({
+      where: {
+        noticeOfIntentUuid: noticeOfIntent.uuid,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    const decisionOrder = decisions.findIndex((decision) => decision.uuid === decisionUuid);
+
+    if (decisionOrder === -1) {
+      throw new ServiceNotFoundException(`Decision with UUID ${decisionUuid} not found`);
+    }
+
+    return decisionOrder + 1;
   }
 }

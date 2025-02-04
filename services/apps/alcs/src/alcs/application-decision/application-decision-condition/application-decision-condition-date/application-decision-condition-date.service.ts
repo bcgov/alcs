@@ -97,7 +97,7 @@ export class ApplicationDecisionConditionDateService {
     return await this.repository.save(newDate);
   }
 
-  async delete(dateUuid: string) {
+  async delete(dateUuid: string, forceSingleDateDeletion: boolean = false) {
     const conditionDate = await this.repository.findOne({
       where: { uuid: dateUuid },
       relations: ['condition', 'condition.type'],
@@ -107,7 +107,7 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException(`Condition Date ${dateUuid} was not found`);
     }
 
-    if (conditionDate.condition.type.dateType !== DateType.MULTIPLE) {
+    if (!forceSingleDateDeletion && conditionDate.condition.type.dateType !== DateType.MULTIPLE) {
       throw new ServiceValidationException(`Deleting the date ${dateUuid} is not permitted on single date type`);
     }
 

@@ -1,6 +1,18 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
@@ -22,6 +34,10 @@ import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDecisionV2Service } from './notice-of-intent-decision-v2.service';
 import { NoticeOfIntentConditionStatus } from './notice-of-intent-condition-status.dto';
+
+export enum IncludeQueryParam {
+  CONDITION_STATUS = 'conditionStatus',
+}
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notice-of-intent-decision/v2')
@@ -48,7 +64,7 @@ export class NoticeOfIntentDecisionV2Controller {
     const status = await this.noticeOfIntentDecisionV2Service.getDecisionConditionStatus(uuid);
     return {
       uuid: uuid,
-      status: status && status.length > 0 ? status[0]['get_current_status_for_noi_condition'] : '',
+      status: status,
     };
   }
 
@@ -77,10 +93,22 @@ export class NoticeOfIntentDecisionV2Controller {
 
   @Get('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
-  async get(@Param('uuid') uuid: string): Promise<NoticeOfIntentDecisionDto> {
+  async get(
+    @Param('uuid') uuid: string,
+    @Query('include') include?: IncludeQueryParam,
+  ): Promise<NoticeOfIntentDecisionDto> {
     const decision = await this.noticeOfIntentDecisionV2Service.get(uuid);
 
-    return this.mapper.mapAsync(decision, NoticeOfIntentDecision, NoticeOfIntentDecisionDto);
+    const decisionDto = await this.mapper.mapAsync(decision, NoticeOfIntentDecision, NoticeOfIntentDecisionDto);
+
+    if (include === IncludeQueryParam.CONDITION_STATUS) {
+      for (const condition of decisionDto.conditions!) {
+        const status = await this.noticeOfIntentDecisionV2Service.getDecisionConditionStatus(condition.uuid);
+        condition.status = status !== '' ? status : undefined;
+      }
+    }
+
+    return decisionDto;
   }
 
   @Post()

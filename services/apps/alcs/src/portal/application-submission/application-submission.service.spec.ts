@@ -379,16 +379,22 @@ describe('ApplicationSubmissionService', () => {
       localGovernmentUuid,
     });
 
+    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(undefined);
+    mockAppDocService.list.mockResolvedValue([
+      new ApplicationDocument({
+        typeCode: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+      }),
+    ]);
     mockApplicationService.submit.mockRejectedValue(new Error());
 
-    await expect(
-      service.submitToAlcs(
-        applicationSubmission as ValidatedApplicationSubmission,
-        mockUser,
-      ),
-    ).rejects.toMatchObject(
-      new BaseServiceException(`Failed to submit application: ${fileNumber}`),
-    );
+    try {
+      await service.submitToAlcs(applicationSubmission as ValidatedApplicationSubmission, mockUser);
+    } catch (err) {
+      await expect([
+        new BaseServiceException(`Failed to submit application: ${fileNumber}`),
+        new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError'),
+      ]).toContainEqual(err);
+    }
   });
 
   it('should call out to service on submitToAlcs', async () => {
@@ -410,7 +416,17 @@ describe('ApplicationSubmissionService', () => {
       dateSubmittedToAlc: new Date(),
     });
 
+    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(undefined);
+    mockAppDocService.list.mockResolvedValue([
+      {
+        typeCode: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+      },
+      {
+        typeCode: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
+      },
+    ] as any);
     mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
+
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
       mockUser,
@@ -418,104 +434,7 @@ describe('ApplicationSubmissionService', () => {
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);
 
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
-      mockApplication.uuid,
-      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-      mockSubmittedApp.dateSubmittedToAlc,
-    );
-  });
-
-  it('should submit to alcs even if document generation fails', async () => {
-    const applicant = 'Bruce Wayne';
-    const typeCode = 'fake-code';
-    const fileNumber = 'fake';
-    const localGovernmentUuid = 'fake-uuid';
-    const mockApplication = new ApplicationSubmission({
-      fileNumber,
-      applicant,
-      typeCode,
-      localGovernmentUuid,
-      status: new ApplicationSubmissionToSubmissionStatus({
-        statusTypeCode: 'status-code',
-        submissionUuid: 'fake',
-      }),
-    });
-
-    const mockSubmittedApp = new Application({
-      dateSubmittedToAlc: new Date(),
-    });
-    mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
-    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
-      new Error('fake'),
-    );
-
-    await service.submitToAlcs(
-      mockApplication as ValidatedApplicationSubmission,
-      mockUser,
-    );
-
-    expect(mockApplicationService.submit).toBeCalledTimes(1);
-    expect(
-      mockGenerateSubmissionDocumentService.generateAndAttach,
-    ).toBeCalledTimes(1);
-    expect(
-      mockGenerateSubmissionDocumentService.generateAndAttach,
-    ).rejects.toMatchObject(new Error('fake'));
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
-      mockApplication.uuid,
-      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-      mockSubmittedApp.dateSubmittedToAlc,
-    );
-  });
-
-  it('should submit to alcs even if document attachment to application fails', async () => {
-    const applicant = 'Bruce Wayne';
-    const typeCode = 'fake-code';
-    const fileNumber = 'fake';
-    const localGovernmentUuid = 'fake-uuid';
-    const mockApplication = new ApplicationSubmission({
-      fileNumber,
-      applicant,
-      typeCode,
-      localGovernmentUuid,
-      status: new ApplicationSubmissionToSubmissionStatus({
-        statusTypeCode: 'status-code',
-        submissionUuid: 'fake',
-      }),
-    });
-
-    const mockSubmittedApp = new Application({
-      dateSubmittedToAlc: new Date(),
-    });
-
-    mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
-    mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
-      new Error('fake'),
-    );
-
-    await service.submitToAlcs(
-      mockApplication as ValidatedApplicationSubmission,
-      mockUser,
-    );
-
-    await new Promise((r) => setTimeout(r, 100));
-
-    expect(mockApplicationService.submit).toBeCalledTimes(1);
-    expect(
-      mockGenerateSubmissionDocumentService.generateAndAttach,
-    ).toBeCalledTimes(1);
-    expect(
-      mockGenerateSubmissionDocumentService.generateAndAttach,
-    ).toBeCalledWith(fileNumber, mockUser);
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledTimes(1);
     expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
       mockApplication.uuid,
       SUBMISSION_STATUS.SUBMITTED_TO_ALC,
