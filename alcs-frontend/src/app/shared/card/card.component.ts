@@ -59,6 +59,7 @@ export enum CardType {
   NOTIFICATION = 'NOTI',
   INQUIRY = 'INQR',
   APP_CON = 'APPCON',
+  NOI_CON = 'NOICON',
 }
 
 const lineHeight = 24;
@@ -108,7 +109,7 @@ export class CardComponent implements OnInit {
       }
     }
 
-    this.isConditionCard = this.cardData.cardType === CardType.APP_CON;
+    this.isConditionCard = this.cardData.cardType === CardType.APP_CON || this.cardData.cardType === CardType.NOI_CON;
     this.isInConditionBoard = this.isConditionCard ? (this.cardData as ConditionCardData).isInConditionBoard : true;
     this.isExpired = this.isConditionCard ? (this.cardData as ConditionCardData).isExpired : false;
     this.isPastDue = this.isConditionCard ? (this.cardData as ConditionCardData).isPastDue : false;
