@@ -29,36 +29,31 @@ export class AuthorizationController {
 
   @Get()
   @Public()
-  async handleAuth(
-    @Query('code') authCode: string,
-    @Query('state') sessionId: string,
-    @Res() res: FastifyReply,
-  ) {
+  async handleAuth(@Query('code') authCode: string, @Query('state') sessionId: string, @Res() res: FastifyReply) {
+    let isPortal = true;
+    let path = '';
+
     try {
       const redis = this.redisService.getClient();
       const sessionData = await redis.get(`session_${sessionId}`);
 
-      let isPortal = true;
       if (sessionData) {
         const parsedSession = JSON.parse(sessionData);
         isPortal = parsedSession.source === 'portal';
       }
 
-      const token = await this.authorizationService.exchangeCodeForToken(
-        authCode,
-        isPortal,
-      );
+      const token = await this.authorizationService.exchangeCodeForToken(authCode, isPortal);
 
-      const frontEndUrl = isPortal
-        ? this.config.get('PORTAL.FRONTEND_ROOT')
-        : this.config.get('ALCS.FRONTEND_ROOT');
-
-      res.status(302);
-      res.redirect(
-        `${frontEndUrl}/authorized?t=${token.access_token}&r=${token.refresh_token}`,
-      );
+      path = `authorized?t=${token.access_token}&r=${token.refresh_token}`;
     } catch (e) {
       console.log(e);
+
+      path = 'login?login_failed=true';
+    } finally {
+      const frontEndUrl = isPortal ? this.config.get('PORTAL.FRONTEND_ROOT') : this.config.get('ALCS.FRONTEND_ROOT');
+
+      res.status(302);
+      res.redirect(`${frontEndUrl}/${path}`);
     }
   }
 
