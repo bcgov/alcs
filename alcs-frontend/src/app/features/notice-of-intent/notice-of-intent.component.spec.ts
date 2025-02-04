@@ -10,6 +10,7 @@ import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-int
 import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 
 import { NoticeOfIntentComponent } from './notice-of-intent.component';
+import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 describe('NoticeOfIntentComponent', () => {
   let component: NoticeOfIntentComponent;
@@ -17,6 +18,7 @@ describe('NoticeOfIntentComponent', () => {
   let mockNOIDetailService: DeepMocked<NoticeOfIntentDetailService>;
   let mockNOIModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let mockNOIStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNOIDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
 
   beforeEach(async () => {
     mockNOIDetailService = createMock();
@@ -24,6 +26,7 @@ describe('NoticeOfIntentComponent', () => {
     mockNOIModificationService = createMock();
     mockNOIModificationService.$modifications = new BehaviorSubject<NoticeOfIntentModificationDto[]>([]);
     mockNOIStatusService = createMock();
+    mockNOIDecisionConditionCardService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -44,6 +47,10 @@ describe('NoticeOfIntentComponent', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNOIStatusService,
+        },
+        {
+          provide: NoticeOfIntentDecisionConditionCardService,
+          useValue: mockNOIDecisionConditionCardService,
         },
         {
           provide: Router,

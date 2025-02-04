@@ -1,16 +1,21 @@
 <section>
   <div class="header">
     <h3>View Conditions</h3>
-    <button
-      *ngIf="decision"
-      type="button"
-      mat-stroked-button
-      color="primary"
-      [routerLink]="['../../']"
-      [queryParams]="{ uuid: decision.uuid }"
-    >
-    back to decision #{{ decision.index }}
-    </button>
+    <div class="header-buttons">
+      <button *ngIf="decision" type="button" mat-flat-button color="primary" (click)="openConditionCardDialog()">
+        + Condition Card
+      </button>
+      <button
+        *ngIf="decision"
+        type="button"
+        mat-stroked-button
+        color="primary"
+        [routerLink]="['../../']"
+        [queryParams]="{ uuid: decision.uuid }"
+      >
+        back to decision #{{ decision.index }}
+      </button>
+    </div>
   </div>
   <section class="body" *ngIf="decision">
     <div class="decision-container">
@@ -30,7 +35,7 @@
           [condition]="condition"
           [isDraftDecision]="decision.isDraft"
           [fileNumber]="fileNumber"
-          [index]="j+1"
+          [index]="j + 1"
         ></app-condition>
       </div>
     </div>

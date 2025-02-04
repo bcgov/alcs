@@ -13,6 +13,7 @@ export interface BoardWithFavourite extends MinimalBoardDto {
 
 export enum BOARD_TYPE_CODES {
   APPCON = 'appcon',
+  NOICON = 'noicon',
 }
 @Injectable({
   providedIn: 'root',

@@ -31,6 +31,7 @@ import { IncomingFileService } from '../../services/incoming-file/incoming-file.
 import { IncomingFileBoardMapDto } from 'src/app/services/incoming-file/incoming-file.dto';
 import { FileTagService } from '../../services/common/file-tag.service';
 import { ApplicationDecisionConditionCardDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { NoticeOfIntentDecisionConditionCardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -126,8 +127,10 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
     this.setupLinkedCards();
   }
 
-  _conditionCards: ApplicationDecisionConditionCardDto[] = [];
-  @Input() set conditionCards(conditionCards: ApplicationDecisionConditionCardDto[]) {
+  _conditionCards: ApplicationDecisionConditionCardDto[] | NoticeOfIntentDecisionConditionCardDto[] = [];
+  @Input() set conditionCards(
+    conditionCards: ApplicationDecisionConditionCardDto[] | NoticeOfIntentDecisionConditionCardDto[],
+  ) {
     this._conditionCards = conditionCards;
     this.setupLinkedCards();
   }
