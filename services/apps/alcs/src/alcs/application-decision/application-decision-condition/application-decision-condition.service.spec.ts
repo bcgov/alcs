@@ -12,9 +12,11 @@ import { Mapper } from 'automapper-core';
 import { AutomapperModule } from 'automapper-nestjs';
 import { classes } from 'automapper-classes';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
 
 describe('ApplicationDecisionConditionService', () => {
   let service: ApplicationDecisionConditionService;
+  let timeTrackingService: ApplicationTimeTrackingService;
   let mockApplicationDecisionConditionRepository: DeepMocked<Repository<ApplicationDecisionCondition>>;
   let mockAppDecCondTypeRepository: DeepMocked<Repository<ApplicationDecisionConditionType>>;
   let mockApplicationDecisionConditionComponentPlanNumber: DeepMocked<
@@ -42,6 +44,7 @@ describe('ApplicationDecisionConditionService', () => {
       ],
       providers: [
         ApplicationDecisionConditionService,
+        ApplicationTimeTrackingService,
         {
           provide: getRepositoryToken(ApplicationDecisionCondition),
           useValue: mockApplicationDecisionConditionRepository,
@@ -66,6 +69,7 @@ describe('ApplicationDecisionConditionService', () => {
     }).compile();
 
     service = module.get<ApplicationDecisionConditionService>(ApplicationDecisionConditionService);
+    timeTrackingService = module.get<ApplicationTimeTrackingService>(ApplicationTimeTrackingService);
   });
 
   it('should be defined', () => {
