@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { MaintenanceService } from '../../services/maintenance/maintenance.service';
+import { ToastService } from 'src/app/services/toast/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private maintenanceService: MaintenanceService,
-    private router: Router
+    private route: ActivatedRoute,
+    private router: Router,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit() {
@@ -25,6 +28,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/home');
       }
     });
+
+    const login_failed = this.route.snapshot.queryParamMap.get('login_failed')?.toLowerCase() === 'true';
+
+    if (login_failed) {
+      this.toastService.showErrorToast(
+        'Login failed. Please try again. If the problem persists, contact ALC.Portal@gov.bc.ca."',
+      );
+    }
   }
 
   async onLogin() {
