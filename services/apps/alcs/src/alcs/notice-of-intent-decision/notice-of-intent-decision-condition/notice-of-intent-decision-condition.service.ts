@@ -139,10 +139,7 @@ export class NoticeOfIntentDecisionConditionService {
   }
 
   async remove(conditions: NoticeOfIntentDecisionCondition[]) {
-    conditions.forEach(async (c) => {
-      await this.dateRepository.softRemove(c.dates);
-    });
-    await this.repository.softRemove(conditions);
+    await this.repository.remove(conditions);
   }
 
   async update(
