@@ -7,8 +7,9 @@ import { ApplicationDecisionConditionComponentPlanNumber } from '../application-
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
-  ApplicationDecisionConditionDto,
   ApplicationDecisionConditionHomeDto,
+  ApplicationDecisionHomeDto,
+  ApplicationHomeDto,
   UpdateApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionServiceDto,
 } from './application-decision-condition.dto';
@@ -16,6 +17,9 @@ import { ApplicationDecisionCondition } from './application-decision-condition.e
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
+import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
+import { ApplicationDecision } from '../application-decision.entity';
+import { Application } from '../../application/application.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
@@ -40,8 +44,7 @@ export class ApplicationDecisionConditionService {
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
     @InjectMapper() private mapper: Mapper,
-    @InjectRepository(ApplicationDecisionConditionDate)
-    private dateRepository: Repository<ApplicationDecisionConditionDate>,
+    private applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
@@ -89,10 +92,30 @@ export class ApplicationDecisionConditionService {
     });
   }
 
-  async mapToDtos(applications: ApplicationDecisionCondition[]): Promise<ApplicationDecisionConditionHomeDto[]> {
-    return applications.map((app) => ({
-      ...this.mapper.map(app, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto),
-    }));
+  async mapToDtos(conditions: ApplicationDecisionCondition[]): Promise<ApplicationDecisionConditionHomeDto[]> {
+    const appTimeMap = await this.applicationTimeTrackingService.fetchActiveTimes(
+      conditions.map((c) => c.decision.application),
+    );
+    const appPausedMap = await this.applicationTimeTrackingService.getPausedStatus(
+      conditions.map((c) => c.decision.application),
+    );
+    return conditions.map((c) => {
+      const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
+      const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
+      const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
+      return {
+        ...condition,
+        decision: {
+          ...decision,
+          application: {
+            ...application,
+            activeDays: appTimeMap.get(application.uuid)!.activeDays || 0,
+            pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
+            paused: appPausedMap.get(application.uuid) || false,
+          },
+        },
+      };
+    });
   }
 
   async createOrUpdate(

@@ -9,7 +9,7 @@ import {
   ApplicationDecisionConditionCardUuidDto,
   ApplicationDecisionConditionHomeCardDto,
 } from './application-decision-condition-card/application-decision-condition-card.dto';
-import { ApplicationDecisionDto } from '../application-decision-v2/application-decision/application-decision.dto';
+import { ApplicationDto } from '../../application/application.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -100,6 +100,26 @@ export class ApplicationDecisionConditionDto {
   status?: string | null;
 }
 
+export class ApplicationHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  applicant: string;
+
+  activeDays: number;
+  paused: boolean;
+  pausedDays: number;
+}
+
+export class ApplicationDecisionHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  application: ApplicationHomeDto;
+}
+
 export class ApplicationDecisionConditionHomeDto {
   @AutoMap()
   uuid: string;
@@ -110,7 +130,7 @@ export class ApplicationDecisionConditionHomeDto {
   status?: string | null;
 
   @AutoMap()
-  decision?: ApplicationDecisionDto;
+  decision?: ApplicationDecisionHomeDto;
 }
 
 export class ComponentToConditionDto {

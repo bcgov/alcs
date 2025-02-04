@@ -93,6 +93,19 @@ export interface ApplicationDecisionDto {
   application: ApplicationDto;
 }
 
+export interface ApplicationHomeDto {
+  uuid: string;
+  applicant: string;
+  activeDays: number;
+  paused: boolean;
+  pausedDays: number;
+}
+
+export interface ApplicationDecisionHomeDto {
+  uuid: string;
+  application: ApplicationHomeDto;
+}
+
 export interface ApplicationDecisionConditionHomeCardDto {
   uuid: string;
   cardUuid: string;
@@ -104,7 +117,7 @@ export interface ApplicationDecisionConditionHomeDto {
   uuid: string;
   conditionCard: ApplicationDecisionConditionHomeCardDto | null;
   status?: string | null;
-  decision: ApplicationDecisionDto;
+  decision: ApplicationDecisionHomeDto;
 }
 
 export interface LinkedResolutionDto {
