@@ -19,6 +19,7 @@ import { Card } from './card.entity';
 import { CardService } from './card.service';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 describe('CardService', () => {
   let service: CardService;
@@ -29,6 +30,7 @@ describe('CardService', () => {
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
   let mockNotificationService: DeepMocked<MessageService>;
   let mockApplicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
+  let mockNoticeOfIntentDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
 
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
@@ -38,6 +40,7 @@ describe('CardService', () => {
     mockSubtaskService = createMock();
     mockNotificationService = createMock();
     mockApplicationDecisionConditionCardService = createMock();
+    mockNoticeOfIntentDecisionConditionCardService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -74,6 +77,10 @@ describe('CardService', () => {
         {
           provide: ApplicationDecisionConditionCardService,
           useValue: mockApplicationDecisionConditionCardService,
+        },
+        {
+          provide: NoticeOfIntentDecisionConditionCardService,
+          useValue: mockNoticeOfIntentDecisionConditionCardService,
         },
       ],
     }).compile();

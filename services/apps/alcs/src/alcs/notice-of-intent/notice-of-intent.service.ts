@@ -1,5 +1,5 @@
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
@@ -44,6 +44,7 @@ export class NoticeOfIntentService {
   };
 
   constructor(
+    @Inject(forwardRef(() => CardService))
     private cardService: CardService,
     @InjectRepository(NoticeOfIntent)
     private repository: Repository<NoticeOfIntent>,

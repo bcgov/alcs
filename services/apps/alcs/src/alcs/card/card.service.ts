@@ -15,6 +15,7 @@ import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 @Injectable()
 export class CardService {
@@ -36,6 +37,8 @@ export class CardService {
     private notificationService: MessageService,
     @Inject(forwardRef(() => ApplicationDecisionConditionCardService))
     private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
+    @Inject(forwardRef(() => NoticeOfIntentDecisionConditionCardService))
+    private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
   ) {}
 
   async getCardTypes() {
@@ -193,6 +196,10 @@ export class CardService {
       await this.applicationDecisionConditionCardService.archiveByBoardCard(card.uuid);
     }
 
+    if (card.typeCode === CARD_TYPE.NOI_CON) {
+      await this.noticeOfIntentDecisionConditionCardService.archiveByBoardCard(card.uuid);
+    }
+
     card.archived = true;
     await this.cardRepository.save(card);
     await this.cardRepository.softRemove(card);
@@ -219,6 +226,10 @@ export class CardService {
 
     if (card.typeCode === CARD_TYPE.APP_CON) {
       await this.applicationDecisionConditionCardService.recoverByBoardCard(card.uuid);
+    }
+
+    if (card.typeCode === CARD_TYPE.NOI_CON) {
+      await this.noticeOfIntentDecisionConditionCardService.recoverByBoardCard(card.uuid);
     }
 
     card.archived = false;

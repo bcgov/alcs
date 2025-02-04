@@ -12,6 +12,7 @@ import { NotificationService } from '../../notification/notification.service';
 import { PlanningReferralService } from '../../planning-review/planning-referral/planning-referral.service';
 import { UnarchiveCardService } from './unarchive-card.service';
 import { ApplicationDecisionConditionCardService } from '../../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 describe('UnarchiveCardService', () => {
   let service: UnarchiveCardService;
@@ -25,6 +26,7 @@ describe('UnarchiveCardService', () => {
   let mockNotificationService: DeepMocked<NoticeOfIntentService>;
   let mockInquiryService: DeepMocked<InquiryService>;
   let mockApplicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
+  let mockNoticeOfIntentDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -36,6 +38,7 @@ describe('UnarchiveCardService', () => {
     mockNotificationService = createMock();
     mockInquiryService = createMock();
     mockApplicationDecisionConditionCardService = createMock();
+    mockNoticeOfIntentDecisionConditionCardService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -81,6 +84,10 @@ describe('UnarchiveCardService', () => {
           provide: ApplicationDecisionConditionCardService,
           useValue: mockApplicationDecisionConditionCardService,
         },
+        {
+          provide: NoticeOfIntentDecisionConditionCardService,
+          useValue: mockNoticeOfIntentDecisionConditionCardService,
+        },
       ],
     }).compile();
 
@@ -101,6 +108,7 @@ describe('UnarchiveCardService', () => {
     mockNotificationService.getDeletedCards.mockResolvedValue([]);
     mockInquiryService.getDeletedCards.mockResolvedValue([]);
     mockApplicationDecisionConditionCardService.getDeletedCards.mockResolvedValue([]);
+    mockNoticeOfIntentDecisionConditionCardService.getDeletedCards.mockResolvedValue([]);
 
     await service.fetchByFileId('uuid');
 
@@ -113,5 +121,6 @@ describe('UnarchiveCardService', () => {
     expect(mockNotificationService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockInquiryService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockApplicationDecisionConditionCardService.getDeletedCards).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionConditionCardService.getDeletedCards).toHaveBeenCalledTimes(1);
   });
 });

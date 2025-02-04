@@ -241,6 +241,7 @@ export class NoticeOfIntentDecisionConditionCardService {
           noticeOfIntent: {
             fileNumber,
           },
+          auditDeletedDateAt: IsNull(),
         },
         card: {
           auditDeletedDateAt: Not(IsNull()),

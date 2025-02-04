@@ -49,7 +49,7 @@ import { NoticeOfIntentDecisionConditionCardController } from './notice-of-inten
       User,
     ]),
     forwardRef(() => BoardModule),
-    CardModule,
+    forwardRef(() => CardModule),
     DocumentModule,
     forwardRef(() => NoticeOfIntentModule),
     NoticeOfIntentSubmissionStatusModule,
@@ -77,6 +77,7 @@ import { NoticeOfIntentDecisionConditionCardController } from './notice-of-inten
     NoticeOfIntentDecisionV2Service,
     NoticeOfIntentDecisionConditionCardService,
     NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionConditionCardService,
   ],
 })
 export class NoticeOfIntentDecisionModule {}

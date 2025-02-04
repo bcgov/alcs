@@ -40,8 +40,7 @@
       </div>
     </div>
     <div class="right">
-      <!-- TODO: Implement archive functionality for the card -->
-      <!-- <button
+      <button
         *ngIf="canArchive"
         matTooltip="Archive Card"
         class="toggle-priority"
@@ -49,7 +48,7 @@
         mat-icon-button
       >
         <mat-icon>archive</mat-icon>
-      </button> -->
+      </button>
       <button
         *ngIf="card"
         [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
