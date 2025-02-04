@@ -39,7 +39,7 @@ import { PlanningReferral } from '../planning-review/planning-referral/planning-
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { HolidayService } from '../admin/holiday/holiday.service';
-import { ApplicationDecisionConditionDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
+import { ApplicationDecisionConditionHomeDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
 
 const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
@@ -74,7 +74,7 @@ export class HomeController {
     modifications: ApplicationModificationDto[];
     notifications: NotificationDto[];
     inquiries: InquiryDto[];
-    applicationsConditions: ApplicationDecisionConditionDto[];
+    applicationsConditions: ApplicationDecisionConditionHomeDto[];
   }> {
     const userId = req.user.entity.uuid;
     const assignedFindOptions = {

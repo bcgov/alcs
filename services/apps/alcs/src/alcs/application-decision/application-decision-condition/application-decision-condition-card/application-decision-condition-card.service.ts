@@ -24,7 +24,6 @@ import { Mapper } from 'automapper-core';
 import { ApplicationType } from '../../../code/application-code/application-type/application-type.entity';
 import { ApplicationTypeDto } from '../../../code/application-code/application-type/application-type.dto';
 import { ApplicationDecision } from '../../application-decision.entity';
-import { ApplicationDecisionCondition } from '../application-decision-condition.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 

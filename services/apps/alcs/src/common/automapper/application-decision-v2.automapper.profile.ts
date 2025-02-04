@@ -8,6 +8,7 @@ import { ApplicationDecisionConditionType } from '../../alcs/application-decisio
 import {
   ApplicationDecisionConditionComponentDto,
   ApplicationDecisionConditionDto,
+  ApplicationDecisionConditionHomeDto,
   ApplicationDecisionConditionTypeDto,
 } from '../../alcs/application-decision/application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionCondition } from '../../alcs/application-decision/application-decision-condition/application-decision-condition.entity';
@@ -157,7 +158,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               ? this.mapper.mapArray(
                   entity.conditionCards,
                   ApplicationDecisionConditionCard,
-                  ApplicationDecisionConditionHomeCardDto,
+                  ApplicationDecisionConditionCardUuidDto,
                 )
               : [],
           ),
@@ -267,6 +268,24 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               : [],
           ),
         ),
+        forMember(
+          (dto) => dto.conditionCard,
+          mapFrom((entity) =>
+            entity.conditionCard
+              ? this.mapper.map(
+                  entity.conditionCard,
+                  ApplicationDecisionConditionCard,
+                  ApplicationDecisionConditionCardUuidDto,
+                )
+              : null,
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionCondition,
+        ApplicationDecisionConditionHomeDto,
         forMember(
           (dto) => dto.conditionCard,
           mapFrom((entity) =>
@@ -431,20 +450,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
       createMap(
         mapper,
         ApplicationDecisionConditionCard,
-        ApplicationDecisionConditionHomeCardDto,
-        forMember(
-          (dto) => dto.conditions,
-          mapFrom((entity) =>
-            entity.conditions
-              ? this.mapper.mapArray(entity.conditions, ApplicationDecisionCondition, ApplicationDecisionConditionDto)
-              : [],
-          ),
-        ),
-      );
-
-      createMap(
-        mapper,
-        ApplicationDecisionConditionCard,
         ApplicationDecisionConditionCardBoardDto,
         forMember(
           (dto) => dto.conditions,
@@ -468,6 +473,16 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionConditionCard,
         ApplicationDecisionConditionCardUuidDto,
+        forMember(
+          (dto) => dto.uuid,
+          mapFrom((entity) => entity.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionCard,
+        ApplicationDecisionConditionHomeCardDto,
         forMember(
           (dto) => dto.uuid,
           mapFrom((entity) => entity.uuid),

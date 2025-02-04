@@ -4,13 +4,14 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationModificationDto } from '../application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationDecisionConditionDto, ApplicationDto } from '../application/application.dto';
+import { ApplicationDto } from '../application/application.dto';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../card/card-subtask/card-subtask.dto';
 import { InquiryDto } from '../inquiry/inquiry.dto';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../notification/notification.dto';
 import { PlanningReferralDto } from '../planning-review/planning-review.dto';
+import { ApplicationDecisionConditionHomeDto } from '../application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class HomeService {
         noticeOfIntentModifications: NoticeOfIntentModificationDto[];
         notifications: NotificationDto[];
         inquiries: InquiryDto[];
-        applicationsConditions: ApplicationDecisionConditionDto[];
+        applicationsConditions: ApplicationDecisionConditionHomeDto[];
       }>(`${environment.apiUrl}/home/assigned`),
     );
   }

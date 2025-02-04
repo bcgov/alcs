@@ -93,6 +93,20 @@ export interface ApplicationDecisionDto {
   application: ApplicationDto;
 }
 
+export interface ApplicationDecisionConditionHomeCardDto {
+  uuid: string;
+  cardUuid: string;
+  card: CardDto;
+  applicationFileNumber?: string | null;
+}
+
+export interface ApplicationDecisionConditionHomeDto {
+  uuid: string;
+  conditionCard: ApplicationDecisionConditionHomeCardDto | null;
+  status?: string | null;
+  decision: ApplicationDecisionDto;
+}
+
 export interface LinkedResolutionDto {
   uuid: string;
   linkedResolutions: string[];

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationDecisionConditionDto, ApplicationDto } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { HomeService } from '../../../services/home/home.service';
 import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
@@ -16,6 +16,7 @@ import {
   RETROACTIVE_TYPE_LABEL,
 } from '../../../shared/application-type-pill/application-type-pill.constants';
 import { AssignedToMeFile } from './assigned-table/assigned-table.component';
+import { ApplicationDecisionConditionHomeDto } from '../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
   selector: 'app-assigned',
@@ -181,7 +182,7 @@ export class AssignedComponent implements OnInit {
     };
   }
 
-  private mapApplicationCondition(a: ApplicationDecisionConditionDto): AssignedToMeFile {
+  private mapApplicationCondition(a: ApplicationDecisionConditionHomeDto): AssignedToMeFile {
     return {
       title: `${a.conditionCard?.applicationFileNumber} (${a.decision.application.applicant})`,
       activeDays: a.decision.application.activeDays,

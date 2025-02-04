@@ -8,6 +8,7 @@ import { ApplicationDecisionComponent } from '../application-decision-v2/applica
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
   ApplicationDecisionConditionDto,
+  ApplicationDecisionConditionHomeDto,
   UpdateApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionServiceDto,
 } from './application-decision-condition.dto';
@@ -88,9 +89,9 @@ export class ApplicationDecisionConditionService {
     });
   }
 
-  async mapToDtos(applications: ApplicationDecisionCondition[]): Promise<ApplicationDecisionConditionDto[]> {
+  async mapToDtos(applications: ApplicationDecisionCondition[]): Promise<ApplicationDecisionConditionHomeDto[]> {
     return applications.map((app) => ({
-      ...this.mapper.map(app, ApplicationDecisionCondition, ApplicationDecisionConditionDto),
+      ...this.mapper.map(app, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto),
     }));
   }
 
