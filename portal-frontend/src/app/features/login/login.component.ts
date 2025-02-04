@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { MaintenanceService } from '../../services/maintenance/maintenance.service';
-import { ToastService } from 'src/app/services/toast/toast.service';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-login',
