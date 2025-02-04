@@ -269,9 +269,6 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Number)
   flagEditedAt: number | null;
-
-  @AutoMap()
-  application: ApplicationDto;
 }
 
 export class LinkedResolutionDto {
