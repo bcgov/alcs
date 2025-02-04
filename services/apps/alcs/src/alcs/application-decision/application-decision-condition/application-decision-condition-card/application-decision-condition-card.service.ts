@@ -6,7 +6,7 @@ import {
 } from './application-decision-condition-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationDecisionConditionCard } from './application-decision-condition-card.entity';
-import { IsNull, Not, Repository } from 'typeorm';
+import { FindOptionsOrder, FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
 import { CardService } from '../../../card/card.service';
 import { ApplicationDecisionConditionService } from '../application-decision-condition.service';
 import { BoardService } from '../../../board/board.service';
@@ -253,6 +253,17 @@ export class ApplicationDecisionConditionCardService {
         },
         card: this.CARD_RELATIONS,
       },
+    });
+  }
+
+  async getMany(
+    findOptions?: FindOptionsWhere<ApplicationDecisionConditionCard>,
+    sortOptions?: FindOptionsOrder<ApplicationDecisionConditionCard>,
+  ): Promise<ApplicationDecisionConditionCard[]> {
+    return await this.repository.find({
+      where: findOptions,
+      relations: this.DEFAULT_RELATIONS,
+      order: sortOptions,
     });
   }
 }

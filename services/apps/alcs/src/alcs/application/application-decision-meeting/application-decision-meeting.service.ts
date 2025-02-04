@@ -7,6 +7,7 @@ import { SUBMISSION_STATUS } from '../application-submission-status/submission-s
 import { ApplicationService } from '../application.service';
 import { CARD_STATUS } from '../../card/card-status/card-status.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
+import { ApplicationDecisionConditionCard } from '../../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
 
 @Injectable()
 export class ApplicationDecisionMeetingService {
@@ -15,6 +16,8 @@ export class ApplicationDecisionMeetingService {
   constructor(
     @InjectRepository(ApplicationDecisionMeeting)
     private appDecisionMeetingRepository: Repository<ApplicationDecisionMeeting>,
+    @InjectRepository(ApplicationDecisionConditionCard)
+    private applicationDecisionConditionCardRepository: Repository<ApplicationDecisionConditionCard>,
     private applicationService: ApplicationService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
@@ -174,6 +177,35 @@ export class ApplicationDecisionMeetingService {
         values: [CARD_STATUS.DECISION_RELEASED, CARD_STATUS.CANCELLED],
       })
       .groupBy('application.uuid')
+      .getRawMany();
+  }
+
+  async getUpcomingApplicationDecisionConditionCards(): Promise<
+    { uuid: string; next_meeting: string; condition_card_uuid: string }[]
+  > {
+    return await this.applicationDecisionConditionCardRepository
+      .createQueryBuilder('conditionCard')
+      .select('application.uuid', 'uuid')
+      .addSelect('conditionCard.uuid', 'condition_card_uuid')
+      .addSelect(
+        `
+      CASE
+        WHEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE 'America/Vancouver') THEN meeting.date END) is NOT NULL
+        THEN MIN(CASE WHEN meeting.date >= (CURRENT_DATE AT TIME ZONE 'America/Vancouver') THEN meeting.date END)
+      ELSE MAX(CASE WHEN meeting.date < (CURRENT_DATE AT TIME ZONE 'America/Vancouver') THEN meeting.date END)
+      END
+      `,
+        'next_meeting',
+      )
+      .innerJoin('conditionCard.card', 'card')
+      .innerJoin('conditionCard.decision', 'decision')
+      .innerJoin('decision.application', 'application')
+      .innerJoin('application.decisionMeetings', 'meeting')
+      .where('card.status_code NOT IN (:...values)', {
+        values: [CARD_STATUS.DECISION_RELEASED, CARD_STATUS.CANCELLED],
+      })
+      .groupBy('application.uuid')
+      .addGroupBy('conditionCard.uuid')
       .getRawMany();
   }
 }

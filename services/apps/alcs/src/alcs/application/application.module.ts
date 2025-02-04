@@ -48,6 +48,7 @@ import { ApplicationService } from './application.service';
 import { ApplicationTagService } from './application-tag/application-tag.service';
 import { ApplicationTagController } from './application-tag/application-tag.controller';
 import { TagModule } from '../tag/tag.module';
+import { ApplicationDecisionConditionCard } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { TagModule } from '../tag/tag.module';
       LocalGovernment,
       CovenantTransferee,
       ApplicationOwner,
+      ApplicationDecisionConditionCard,
     ]),
     MessageModule,
     DocumentModule,

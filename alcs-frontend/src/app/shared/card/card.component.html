@@ -92,7 +92,7 @@
           </div>
         </div>
 
-        <div class="condition-status-pill" *ngIf="isConditionCard && isInConditionBoard">
+        <div class="condition-status-pill-container" *ngIf="isConditionCard && isInConditionBoard">
           <app-application-type-pill *ngIf="isExpired" [type]="getStatusPill('EXPIRED')"></app-application-type-pill>
           <app-application-type-pill *ngIf="isPastDue" [type]="getStatusPill('PASTDUE')"></app-application-type-pill>
         </div>
