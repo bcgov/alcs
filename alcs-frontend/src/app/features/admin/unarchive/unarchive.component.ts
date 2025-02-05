@@ -38,7 +38,7 @@ export class UnarchiveComponent {
     const results = await this.unarchiveCardService.search(this.search);
     if (results) {
       results.forEach((result) => {
-        if (result.type === CardType.APP_CON) {
+        if (result.type === CardType.APP_CON || result.type === CardType.NOI_CON) {
           result.type = 'Condition';
         }
       });

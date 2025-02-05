@@ -9,6 +9,7 @@ import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.s
 import { NotificationService } from '../../notification/notification.service';
 import { PlanningReferralService } from '../../planning-review/planning-referral/planning-referral.service';
 import { ApplicationDecisionConditionCardService } from '../../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 @Injectable()
 export class UnarchiveCardService {
@@ -22,6 +23,7 @@ export class UnarchiveCardService {
     private planningReferralService: PlanningReferralService,
     private inquiryService: InquiryService,
     private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
+    private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
   ) {}
 
   async fetchByFileId(fileId: string) {
@@ -40,6 +42,7 @@ export class UnarchiveCardService {
     await this.fetchAndMapNotifications(fileId, result);
     await this.fetchAndMapInquiries(fileId, result);
     await this.fetchAndMapApplicationDecisionConditionCards(fileId, result);
+    await this.fetchAndMapNoticeOfIntentDecisionConditionCards(fileId, result);
 
     return result;
   }
@@ -211,6 +214,27 @@ export class UnarchiveCardService {
         cardUuid: conditionCard.cardUuid,
         createdAt: conditionCard.auditCreatedAt.getTime(),
         type: CARD_TYPE.APP_CON,
+        status: conditionCard.card!.status.label,
+      });
+    }
+  }
+
+  private async fetchAndMapNoticeOfIntentDecisionConditionCards(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const conditionCards = await this.noticeOfIntentDecisionConditionCardService.getDeletedCards(fileId);
+
+    for (const conditionCard of conditionCards) {
+      result.push({
+        cardUuid: conditionCard.cardUuid,
+        createdAt: conditionCard.auditCreatedAt.getTime(),
+        type: CARD_TYPE.NOI_CON,
         status: conditionCard.card!.status.label,
       });
     }

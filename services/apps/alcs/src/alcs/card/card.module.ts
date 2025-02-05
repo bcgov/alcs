@@ -17,7 +17,7 @@ import { Card } from './card.entity';
 import { CardService } from './card.service';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
-import { BoardModule } from '../board/board.module';
+import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
 
 @Module({
   imports: [
@@ -33,6 +33,7 @@ import { BoardModule } from '../board/board.module';
     CodeModule,
     MessageModule,
     forwardRef(() => ApplicationDecisionModule),
+    forwardRef(() => NoticeOfIntentDecisionModule),
   ],
   controllers: [CardSubtaskController, CardController],
   providers: [CardStatusService, CardService, CardSubtaskService, CardSubscriber, CardProfile],

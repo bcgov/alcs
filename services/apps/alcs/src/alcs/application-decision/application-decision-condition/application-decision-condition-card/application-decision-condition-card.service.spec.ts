@@ -411,6 +411,7 @@ describe('ApplicationDecisionConditionCardService', () => {
             application: {
               fileNumber,
             },
+            auditDeletedDateAt: IsNull(),
           },
           card: {
             auditDeletedDateAt: Not(IsNull()),

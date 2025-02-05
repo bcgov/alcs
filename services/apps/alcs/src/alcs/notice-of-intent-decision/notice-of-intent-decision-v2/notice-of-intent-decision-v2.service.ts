@@ -44,6 +44,7 @@ export class NoticeOfIntentDecisionV2Service {
     private noticeOfIntentDecisionDocumentRepository: Repository<NoticeOfIntentDecisionDocument>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @Inject(forwardRef(() => NoticeOfIntentService))
     private noticeOfIntentService: NoticeOfIntentService,
     private documentService: DocumentService,
     private decisionComponentService: NoticeOfIntentDecisionComponentService,
