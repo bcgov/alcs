@@ -24,7 +24,7 @@
 }
 
 .warning {
-  background-color: colors.$secondary-color-light;
+  background-color: rgba(colors.$field-warning-bg-color, 0.5);
   border-radius: 4px;
   padding: 16px;
   display: flex;
@@ -32,16 +32,7 @@
   margin-bottom: 24px;
 
   mat-icon {
+    margin-right: 30px;
     margin-left: 20px;
-    margin-top: 10px;
   }
-}
-
-.warning-text {
-  padding-left: 20px;
-}
-
-.no-margin-ul {
-  margin-top: 0px;
-  margin-bottom: 0px;
 }

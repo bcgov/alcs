@@ -81,6 +81,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CommissionerTagsHeaderComponent } from './tags/commissioner-tags-header/commissioner-tags-header.component';
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FlagDialogComponent } from './flag-dialog/flag-dialog.component';
+import { UnFlagDialogComponent } from './unflag-dialog/unflag-dialog.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +128,7 @@ import { FlagDialogComponent } from './flag-dialog/flag-dialog.component';
     CommissionerTagsHeaderComponent,
     DocumentUploadDialogComponent,
     FlagDialogComponent,
+    UnFlagDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -233,6 +235,7 @@ import { FlagDialogComponent } from './flag-dialog/flag-dialog.component';
     TagChipComponent,
     DocumentUploadDialogComponent,
     FlagDialogComponent,
+    UnFlagDialogComponent,
   ],
 })
 export class SharedModule {
