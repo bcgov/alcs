@@ -31,7 +31,7 @@ import moment from 'moment';
 import { FlagDialogComponent, FlagDialogIO } from '../../../../shared/flag-dialog/flag-dialog.component';
 import { UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
-import { UnFlagDialogComponent, UnFlagDialogIO } from 'src/app/shared/unflag-dialog/unflag-dialog.component';
+import { UnFlagDialogComponent, UnFlagDialogIO } from '../../../../shared/unflag-dialog/unflag-dialog.component';
 
 type LoadingDecision = NoticeOfIntentDecisionDto & {
   loading: boolean;

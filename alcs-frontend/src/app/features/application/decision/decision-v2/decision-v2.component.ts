@@ -7,7 +7,6 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
-  ApplicationDecisionDocumentDto,
   ApplicationDecisionWithLinkedResolutionDto,
   CeoCriterionDto,
   DecisionMakerDto,
@@ -30,7 +29,6 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { ApplicationConditionWithStatus, getEndDate } from '../../../../shared/utils/decision-methods';
-import { openFileInline } from '../../../../shared/utils/file';
 import { UserService } from '../../../../services/user/user.service';
 import { UserDto } from '../../../../services/user/user.dto';
 import { FlagDialogComponent, FlagDialogIO } from '../../../../shared/flag-dialog/flag-dialog.component';
