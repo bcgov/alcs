@@ -212,6 +212,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       if (this.data.existingDocument) {
         if (this.data.decisionService && this.data.decisionUuid) {
           this.data.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
+        } else if (this.data.documentService) {
+          this.data.documentService.delete(this.data.existingDocument.uuid);
         }
       }
 

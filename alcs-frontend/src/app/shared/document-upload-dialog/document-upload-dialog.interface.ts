@@ -13,4 +13,5 @@ export interface DocumentService {
   upload(fileNumber: string, createDto: CreateDocumentDto): Promise<Object | undefined>;
   download(uuid: string, fileName: string, isInline: boolean): Promise<void>;
   fetchTypes(): Promise<DocumentTypeDto[]>;
+  delete(uuid: string): Promise<Object>;
 }
