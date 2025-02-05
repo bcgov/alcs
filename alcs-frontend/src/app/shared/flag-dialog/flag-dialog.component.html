@@ -19,6 +19,18 @@
     <mat-datepicker-toggle matSuffix [for]="followUpAtDatepicker"></mat-datepicker-toggle>
     <mat-datepicker #followUpAtDatepicker type="date"> </mat-datepicker>
   </mat-form-field>
+  <div class="warning" *ngIf="data.isEditing">
+    <div class="icon">
+      <mat-icon>info</mat-icon>
+    </div>
+    <div class="warning-text">
+      <span>Add a follow-up date if:</span>
+      <ul class="no-margin-ul">
+        <li>the decision is a refusal; or</li>
+        <li>there are no End/Due date(s) on the condition(s)</li>
+      </ul>
+    </div>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

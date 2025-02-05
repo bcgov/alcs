@@ -31,6 +31,7 @@ import moment from 'moment';
 import { FlagDialogComponent, FlagDialogIO } from '../../../../shared/flag-dialog/flag-dialog.component';
 import { UserDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
+import { UnFlagDialogComponent, UnFlagDialogIO } from 'src/app/shared/unflag-dialog/unflag-dialog.component';
 
 type LoadingDecision = NoticeOfIntentDecisionDto & {
   loading: boolean;
@@ -332,19 +333,19 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   async unflag(decision: LoadingDecision, index: number) {
-    this.confirmationDialogService
-      .openDialog({
-        title: `Unflag Decision #${index}`,
-        body: `<strong>Warning:</strong> Only remove if flagged in error.
-        <br>
-        <br>
-        This action will also remove the follow-up date and explanatory text
-        associated with the flag and cannot be undone.
-        <br>
-        <br>
-        Are you sure you want to remove the flag?`,
-      })
-      .subscribe(async (confirmed) => {
+    this.dialog
+      .open(UnFlagDialogComponent, {
+              minWidth: '800px',
+              maxWidth: '800px',
+              maxHeight: '80vh',
+              width: '90%',
+              autoFocus: false,
+              data: {
+                decisionNumber: index,
+              },
+            })
+      .beforeClosed()
+      .subscribe(async ({confirmed} : UnFlagDialogIO) => {
         if (confirmed) {
           await this.decisionService.update(decision.uuid, {
             isDraft: decision.isDraft,
