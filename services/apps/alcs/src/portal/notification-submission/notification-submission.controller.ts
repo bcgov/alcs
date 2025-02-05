@@ -154,20 +154,13 @@ export class NotificationSubmissionController {
       );
 
     if (validationResult.noticeOfIntentSubmission) {
-      const validatedApplicationSubmission =
-        validationResult.noticeOfIntentSubmission;
-
-      await this.notificationSubmissionService.submitToAlcs(
-        validatedApplicationSubmission,
-      );
+      const validatedApplicationSubmission = validationResult.noticeOfIntentSubmission;
 
       await this.generatePdf(notificationSubmission, req.user.entity);
 
-      const finalSubmission =
-        await this.notificationSubmissionService.getByUuid(
-          uuid,
-          req.user.entity,
-        );
+      await this.notificationSubmissionService.submitToAlcs(validatedApplicationSubmission);
+
+      const finalSubmission = await this.notificationSubmissionService.getByUuid(uuid, req.user.entity);
 
       return await this.notificationSubmissionService.mapToDetailedDTO(
         finalSubmission,
