@@ -33,6 +33,7 @@ import { ApplicationDecisionComponent } from './component/application-decision-c
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 import { ApplicationDecisionConditionDate } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationDecisionConditionDateService } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
+import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -55,8 +56,6 @@ export class ApplicationDecisionV2Service {
     private applicationDecisionDocumentRepository: Repository<ApplicationDecisionDocument>,
     @InjectRepository(NaruSubtype)
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
-    @InjectRepository(ApplicationDecisionDocument)
-    private noticeOfIntentDecisionDocumentRepository: Repository<ApplicationDecisionDocument>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private applicationService: ApplicationService,
@@ -66,6 +65,8 @@ export class ApplicationDecisionV2Service {
     private dateService: ApplicationDecisionConditionDateService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private dataSource: DataSource,
+    @Inject(forwardRef(() => ApplicationDecisionConditionCardService))
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
   ) {}
 
   async getForPortal(fileNumber: string) {
@@ -514,10 +515,7 @@ export class ApplicationDecisionV2Service {
 
     if (applicationDecision.conditionCards && applicationDecision.conditionCards.length > 0) {
       for (const conditionCard of applicationDecision.conditionCards) {
-        conditionCard.conditions.forEach(async (c) => {
-          c.conditionCard = null;
-          c.save();
-        });
+        await this.applicationDecisionConditionCardService.softRemove(conditionCard);
       }
     }
 

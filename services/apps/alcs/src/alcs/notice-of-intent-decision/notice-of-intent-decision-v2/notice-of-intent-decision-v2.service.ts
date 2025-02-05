@@ -423,10 +423,7 @@ export class NoticeOfIntentDecisionV2Service {
 
     if (noticeOfIntentDecision.conditionCards && noticeOfIntentDecision.conditionCards.length > 0) {
       for (const conditionCard of noticeOfIntentDecision.conditionCards) {
-        conditionCard.conditions.forEach(async (c) => {
-          c.conditionCard = null;
-          c.save();
-        });
+        await this.noticeOfIntentDecisionConditionCardService.softRemove(conditionCard);
       }
     }
 
