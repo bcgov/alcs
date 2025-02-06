@@ -413,6 +413,7 @@ export class NoticeOfIntentDecisionV2Service {
     });
 
     await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
+    noticeOfIntentDecision.conditions = [];
 
     for (const document of noticeOfIntentDecision.documents) {
       await this.noticeOfIntentDecisionDocumentRepository.softRemove(document);
