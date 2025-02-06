@@ -86,7 +86,7 @@ export class PlanningReviewDocumentService {
       },
       relations: this.DEFAULT_RELATIONS,
     });
-    if (!document) {
+    if (!document || !document.document) {
       throw new NotFoundException(`Failed to find document ${uuid}`);
     }
     return document;
@@ -107,15 +107,17 @@ export class PlanningReviewDocumentService {
     if (visibilityFlags) {
       where.visibilityFlags = ArrayOverlap(visibilityFlags);
     }
-    return this.planningReviewDocumentRepo.find({
-      where,
-      order: {
-        document: {
-          uploadedAt: 'DESC',
+    return (
+      await this.planningReviewDocumentRepo.find({
+        where,
+        order: {
+          document: {
+            uploadedAt: 'DESC',
+          },
         },
-      },
-      relations: this.DEFAULT_RELATIONS,
-    });
+        relations: this.DEFAULT_RELATIONS,
+      })
+    ).filter((document) => document.document);
   }
 
   async getInlineUrl(document: PlanningReviewDocument) {
