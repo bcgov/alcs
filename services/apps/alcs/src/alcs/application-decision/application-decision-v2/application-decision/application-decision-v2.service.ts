@@ -497,13 +497,6 @@ export class ApplicationDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
-    const dateIds: string[] = [];
-    applicationDecision.conditions.forEach((c) => {
-      c.dates.forEach((d) => {
-        dateIds.push(d.uuid);
-      });
-    });
-
     await this.decisionConditionService.remove(applicationDecision.conditions);
     applicationDecision.conditions = [];
 
@@ -527,9 +520,6 @@ export class ApplicationDecisionV2Service {
 
     await this.appDecisionRepository.softRemove([applicationDecision]);
     await this.updateApplicationDecisionDates(applicationDecision);
-    dateIds.forEach(async (id) => {
-      await this.dateService.delete(id, true);
-    });
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {

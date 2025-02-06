@@ -405,13 +405,6 @@ export class NoticeOfIntentDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
-    const dateIds: string[] = [];
-    noticeOfIntentDecision.conditions.forEach((c) => {
-      c.dates.forEach((d) => {
-        dateIds.push(d.uuid);
-      });
-    });
-
     await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
     noticeOfIntentDecision.conditions = [];
 
@@ -434,9 +427,6 @@ export class NoticeOfIntentDecisionV2Service {
 
     await this.noticeOfIntentDecisionRepository.softRemove([noticeOfIntentDecision]);
     await this.updateDecisionDates(noticeOfIntentDecision);
-    dateIds.forEach(async (id) => {
-      await this.dateService.delete(id, true);
-    });
   }
 
   async attachDocument(decisionUuid: string, file: MultipartFile, user: User) {
