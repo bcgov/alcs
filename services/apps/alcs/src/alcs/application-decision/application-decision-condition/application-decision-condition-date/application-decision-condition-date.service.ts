@@ -82,10 +82,14 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException(`Condition ${createDto.conditionUuid} was not found.`);
     }
 
-    if (condition.type.dateType !== DateType.MULTIPLE) {
+    if (!condition.type.isDateChecked) {
       throw new ServiceValidationException(
         `Creating a new date is not supported for condition ${createDto.conditionUuid}`,
       );
+    }
+
+    if (condition.type.dateType !== DateType.MULTIPLE && condition.dates?.length > 0) {
+      throw new ServiceValidationException(`Cannot create more than one date for condition ${createDto.conditionUuid}`);
     }
 
     const newDate = new ApplicationDecisionConditionDate();

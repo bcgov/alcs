@@ -40,7 +40,7 @@ import { Router } from '@angular/router';
 export class ApplicationDecisionConditionDialogComponent extends CardDialogComponent implements OnInit {
   cardTitle = '';
   application: ApplicationDto = this.data.application;
-  decision!: ApplicationDecisionDto;
+  decision: ApplicationDecisionDto | undefined;
   applicationDecisionConditionCard: ApplicationDecisionConditionCardBoardDto = this.data.decisionConditionCard;
   isModification: boolean = false;
   isReconsideration: boolean = false;
@@ -100,6 +100,10 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
   }
 
   loadTableData(filterSelected: boolean = false) {
+    if (!this.decision) {
+      return;
+    }
+
     const data = this.decision.conditions
       .filter((condition) => !filterSelected || this.isConditionSelected(condition))
       .map((condition, index) => ({
@@ -154,7 +158,10 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
 
   getDate(condition: ApplicationDecisionConditionDto) {
     if (condition.type!.dateType === 'Single') {
-      return condition.dates![0].date ? this.formatTimestamp(condition.dates![0].date) : null;
+      if (!condition.dates || condition.dates?.length <= 0) {
+        return null;
+      }
+      return condition.dates[0].date ? this.formatTimestamp(condition.dates[0].date) : null;
     } else {
       if (condition.dates && condition.dates.length > 0) {
         let minDueDate: ApplicationDecisionConditionDateDto | null = null;
