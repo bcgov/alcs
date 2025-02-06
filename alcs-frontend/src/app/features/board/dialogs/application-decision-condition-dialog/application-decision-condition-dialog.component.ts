@@ -158,7 +158,10 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
 
   getDate(condition: ApplicationDecisionConditionDto) {
     if (condition.type!.dateType === 'Single') {
-      return condition.dates![0].date ? this.formatTimestamp(condition.dates![0].date) : null;
+      if (!condition.dates || condition.dates?.length <= 0) {
+        return null;
+      }
+      return condition.dates[0].date ? this.formatTimestamp(condition.dates[0].date) : null;
     } else {
       if (condition.dates && condition.dates.length > 0) {
         let minDueDate: ApplicationDecisionConditionDateDto | null = null;
