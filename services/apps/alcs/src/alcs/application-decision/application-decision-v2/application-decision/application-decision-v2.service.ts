@@ -505,6 +505,7 @@ export class ApplicationDecisionV2Service {
     });
 
     await this.decisionConditionService.remove(applicationDecision.conditions);
+    applicationDecision.conditions = [];
 
     for (const document of applicationDecision.documents) {
       await this.applicationDecisionDocumentRepository.softRemove(document);
