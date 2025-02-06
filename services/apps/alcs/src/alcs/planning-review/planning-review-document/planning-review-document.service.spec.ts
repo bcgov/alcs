@@ -203,11 +203,17 @@ describe('PlanningReviewDocumentService', () => {
   });
 
   it('should create a record for external documents', async () => {
-    mockRepository.save.mockResolvedValue(new PlanningReviewDocument());
-    mockPlanningReviewService.getDetailedReview.mockResolvedValueOnce(
-      mockPlanningReview,
+    mockRepository.save.mockResolvedValue(
+      new PlanningReviewDocument({
+        document: new Document(),
+      }),
     );
-    mockRepository.findOne.mockResolvedValue(new PlanningReviewDocument());
+    mockPlanningReviewService.getDetailedReview.mockResolvedValueOnce(mockPlanningReview);
+    mockRepository.findOne.mockResolvedValue(
+      new PlanningReviewDocument({
+        document: new Document(),
+      }),
+    );
 
     const res = await service.attachExternalDocument(
       '',

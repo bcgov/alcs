@@ -287,9 +287,17 @@ describe('NoticeOfIntentDocumentService', () => {
   });
 
   it('should create a record for external documents', async () => {
-    mockRepository.save.mockResolvedValue(new NoticeOfIntentDocument());
+    mockRepository.save.mockResolvedValue(
+      new NoticeOfIntentDocument({
+        document: new Document(),
+      }),
+    );
     mockNOIService.getUuid.mockResolvedValueOnce('app-uuid');
-    mockRepository.findOne.mockResolvedValue(new NoticeOfIntentDocument());
+    mockRepository.findOne.mockResolvedValue(
+      new NoticeOfIntentDocument({
+        document: new Document(),
+      }),
+    );
 
     const res = await service.attachExternalDocument(
       '',

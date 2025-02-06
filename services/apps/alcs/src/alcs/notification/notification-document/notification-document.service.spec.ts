@@ -287,9 +287,17 @@ describe('NotificationDocumentService', () => {
   });
 
   it('should create a record for external documents', async () => {
-    mockRepository.save.mockResolvedValue(new NotificationDocument());
+    mockRepository.save.mockResolvedValue(
+      new NotificationDocument({
+        document: new Document(),
+      }),
+    );
     mockNotificationService.getUuid.mockResolvedValueOnce('app-uuid');
-    mockRepository.findOne.mockResolvedValue(new NotificationDocument());
+    mockRepository.findOne.mockResolvedValue(
+      new NotificationDocument({
+        document: new Document(),
+      }),
+    );
 
     const res = await service.attachExternalDocument(
       '',

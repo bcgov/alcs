@@ -217,9 +217,17 @@ describe('InquiryDocumentService', () => {
   });
 
   it('should create a record for external documents', async () => {
-    mockRepository.save.mockResolvedValue(new InquiryDocument());
+    mockRepository.save.mockResolvedValue(
+      new InquiryDocument({
+        document: new Document(),
+      }),
+    );
     mockInquiryService.getUuid.mockResolvedValueOnce('app-uuid');
-    mockRepository.findOne.mockResolvedValue(new InquiryDocument());
+    mockRepository.findOne.mockResolvedValue(
+      new InquiryDocument({
+        document: new Document(),
+      }),
+    );
 
     const res = await service.attachExternalDocument('', {
       type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
