@@ -99,7 +99,7 @@ export class NoiDocumentsComponent implements OnInit {
           },
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -149,7 +149,7 @@ export class NoiDocumentsComponent implements OnInit {
           },
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);

@@ -221,9 +221,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.isSaving = true;
       if (this.data.existingDocument) {
         if (this.data.decisionService && this.data.decisionUuid) {
-          this.data.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
+          await this.data.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
         } else if (this.data.documentService) {
-          this.data.documentService.delete(this.data.existingDocument.uuid);
+          await this.data.documentService.delete(this.data.existingDocument.uuid);
         }
       }
 
@@ -258,7 +258,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
           this.name.value! + this.extension,
         );
       } else if (this.data.documentService) {
-        this.data.documentService.update(this.data.existingDocument.uuid, dto);
+        await this.data.documentService.update(this.data.existingDocument.uuid, dto);
       }
 
       this.dialog.close(true);

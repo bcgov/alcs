@@ -79,7 +79,7 @@ export class DecisionDocumentsComponent implements OnDestroy, OnChanges {
             allowsFileEdit: true,
           },
         })
-        .beforeClosed()
+        .afterClosed()
         .subscribe((isDirty: boolean) => {
           if (isDirty && this.decision) {
             this.decisionService.loadDecision(this.decision.uuid);

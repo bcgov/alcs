@@ -58,7 +58,7 @@ export class DocumentsComponent implements OnInit {
           allowsFileEdit: true,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -101,7 +101,7 @@ export class DocumentsComponent implements OnInit {
           allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
