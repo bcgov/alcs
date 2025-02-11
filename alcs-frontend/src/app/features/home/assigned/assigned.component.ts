@@ -17,6 +17,8 @@ import {
 } from '../../../shared/application-type-pill/application-type-pill.constants';
 import { AssignedToMeFile } from './assigned-table/assigned-table.component';
 import { ApplicationDecisionConditionHomeDto } from '../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationTypeDto } from '../../../services/application/application-code.dto';
+import { ApplicationPill } from '../../../shared/application-type-pill/application-type-pill.component';
 
 @Component({
   selector: 'app-assigned',
@@ -183,6 +185,13 @@ export class AssignedComponent implements OnInit {
   }
 
   private mapApplicationCondition(a: ApplicationDecisionConditionHomeDto): AssignedToMeFile {
+    const pills: ApplicationTypeDto | ApplicationPill[] = [a.decision.application.type];
+    if (a.isReconsideration) {
+      pills.push(RECON_TYPE_LABEL);
+    }
+    if (a.isModification) {
+      pills.push(MODIFICATION_TYPE_LABEL);
+    }
     return {
       title: `${a.conditionCard?.applicationFileNumber} (${a.decision.application.applicant})`,
       activeDays: a.decision.application.activeDays,
@@ -190,7 +199,7 @@ export class AssignedComponent implements OnInit {
       paused: a.decision.application.paused,
       card: a.conditionCard!.card,
       highPriority: a.conditionCard!.card.highPriority,
-      labels: [CONDITION_LABEL],
+      labels: [...pills, CONDITION_LABEL],
     };
   }
 

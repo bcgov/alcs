@@ -113,6 +113,7 @@ export class HomeController {
       const inquiries = await this.inquiryService.getBy(assignedFindOptions);
 
       const conditions = await this.applicationDecisionConditionService.getBy(assignedConditionFindOptions);
+
       return {
         noticeOfIntents: await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
         noticeOfIntentModifications:
