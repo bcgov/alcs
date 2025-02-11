@@ -19,7 +19,7 @@ import { DocumentUploadDialogComponent } from '../../../shared/document-upload-d
   styleUrls: ['./documents.component.scss'],
 })
 export class NotificationDocumentsComponent implements OnInit {
-  displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
+  displayedColumns: string[] = ['source', 'type', 'fileName', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: NotificationDocumentDto[] = [];
   private fileId = '';
 

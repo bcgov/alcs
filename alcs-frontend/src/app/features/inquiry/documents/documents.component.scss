@@ -31,7 +31,7 @@ table {
   }
 
   .actions-column {
-    min-width: 200px;
+    min-width: 146px;
   }
   
   .subheading {
@@ -44,5 +44,8 @@ table {
   }
 }
 
-
-
+.action-button {
+  width: 36px;
+  height: 36px;
+  padding: 6px !important;
+}

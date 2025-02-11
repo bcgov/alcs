@@ -17,7 +17,7 @@ import { DocumentUploadDialogComponent } from '../../../shared/document-upload-d
   styleUrls: ['./documents.component.scss'],
 })
 export class DocumentsComponent implements OnInit {
-  displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
+  displayedColumns: string[] = ['source', 'type', 'fileName', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: PlanningReviewDocumentDto[] = [];
   private fileId = '';
 
