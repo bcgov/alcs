@@ -6,18 +6,18 @@ import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision
 import { UpdateNoticeOfIntentDecisionConditionDto } from './notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionConditionService } from './notice-of-intent-decision-condition.service';
-import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
+import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
 
 describe('NoticeOfIntentDecisionConditionService', () => {
   let service: NoticeOfIntentDecisionConditionService;
   let mockNOIDecisionConditionRepository: DeepMocked<Repository<NoticeOfIntentDecisionCondition>>;
   let mockNOIDecisionConditionTypeRepository: DeepMocked<Repository<NoticeOfIntentDecisionConditionType>>;
-  let mockNoticeOfIntentDecisionConditionDateRepository: DeepMocked<Repository<NoticeOfIntentDecisionConditionDate>>;
+  let mockNoticeOfIntentModificationRepository: DeepMocked<Repository<NoticeOfIntentModification>>;
 
   beforeEach(async () => {
     mockNOIDecisionConditionRepository = createMock();
     mockNOIDecisionConditionTypeRepository = createMock();
-    mockNoticeOfIntentDecisionConditionDateRepository = createMock();
+    mockNoticeOfIntentModificationRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -31,8 +31,8 @@ describe('NoticeOfIntentDecisionConditionService', () => {
           useValue: mockNOIDecisionConditionTypeRepository,
         },
         {
-          provide: getRepositoryToken(NoticeOfIntentDecisionConditionDate),
-          useValue: mockNoticeOfIntentDecisionConditionDateRepository,
+          provide: getRepositoryToken(NoticeOfIntentModification),
+          useValue: mockNoticeOfIntentModificationRepository,
         },
       ],
     }).compile();
