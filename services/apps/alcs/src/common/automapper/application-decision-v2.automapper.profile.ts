@@ -494,7 +494,15 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
 
       createMap(mapper, ApplicationDecision, ApplicationDecisionHomeDto);
 
-      createMap(mapper, Application, ApplicationHomeDto);
+      createMap(
+        mapper,
+        Application,
+        ApplicationHomeDto,
+        forMember(
+          (a) => a.type,
+          mapFrom((ac) => ac.type),
+        ),
+      );
     };
   }
 }

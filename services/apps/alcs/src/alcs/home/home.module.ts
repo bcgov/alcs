@@ -18,6 +18,8 @@ import { ApplicationDecisionConditionComponentPlanNumber } from '../application-
 import { ApplicationDecisionConditionType } from '../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionConditionDate } from '../application-decision/application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { ApplicationDecisionConditionDate } from '../application-decision/applic
       ApplicationDecisionConditionComponentPlanNumber,
       ApplicationDecisionConditionToComponentLot,
       ApplicationDecisionConditionDate,
+      ApplicationModification,
+      ApplicationReconsideration,
     ]),
     ApplicationModule,
     UserModule,

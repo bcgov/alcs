@@ -41,6 +41,7 @@ import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { HolidayService } from '../admin/holiday/holiday.service';
 import { ApplicationDecisionConditionHomeDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
+import { ApplicationDecisionV2Service } from '../application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 
 const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
 
@@ -61,6 +62,7 @@ export class HomeController {
     private inquiryService: InquiryService,
     private holidayService: HolidayService,
     private applicationDecisionConditionService: ApplicationDecisionConditionService,
+    private decisionService: ApplicationDecisionV2Service,
   ) {}
 
   @Get('/assigned')
@@ -113,6 +115,7 @@ export class HomeController {
       const inquiries = await this.inquiryService.getBy(assignedFindOptions);
 
       const conditions = await this.applicationDecisionConditionService.getBy(assignedConditionFindOptions);
+
       return {
         noticeOfIntents: await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
         noticeOfIntentModifications:

@@ -20,6 +20,8 @@ import { Mapper } from 'automapper-core';
 import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
 import { ApplicationDecision } from '../application-decision.entity';
 import { Application } from '../../application/application.entity';
+import { ApplicationModification } from '../application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
@@ -43,6 +45,10 @@ export class ApplicationDecisionConditionService {
     private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
+    @InjectRepository(ApplicationModification)
+    private modificationRepository: Repository<ApplicationModification>,
+    @InjectRepository(ApplicationReconsideration)
+    private reconsiderationRepository: Repository<ApplicationReconsideration>,
     @InjectMapper() private mapper: Mapper,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
@@ -81,8 +87,11 @@ export class ApplicationDecisionConditionService {
       where: findOptions,
       relations: {
         decision: {
+          reconsiders: true,
+          modifies: true,
           application: {
             decisionMeetings: true,
+            type: true,
           },
         },
         conditionCard: {
@@ -99,23 +108,49 @@ export class ApplicationDecisionConditionService {
     const appPausedMap = await this.applicationTimeTrackingService.getPausedStatus(
       conditions.map((c) => c.decision.application),
     );
-    return conditions.map((c) => {
-      const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
-      const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
-      const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
-      return {
-        ...condition,
-        decision: {
-          ...decision,
-          application: {
-            ...application,
-            activeDays: appTimeMap.get(application.uuid)!.activeDays || 0,
-            pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
-            paused: appPausedMap.get(application.uuid) || false,
+    const c = Promise.all(
+      conditions.map(async (c) => {
+        const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
+        const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
+        const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
+        const appModifications = await this.modificationRepository.find({
+          where: {
+            modifiesDecisions: {
+              uuid: c.decision?.uuid,
+            },
           },
-        },
-      };
-    });
+        });
+        const appReconsiderations = await this.reconsiderationRepository.find({
+          where: {
+            reconsidersDecisions: {
+              uuid: c.decision?.uuid,
+            },
+          },
+        });
+
+        return {
+          ...condition,
+          isModification: appModifications.length > 0,
+          isReconsideration: appReconsiderations.length > 0,
+          decision: {
+            ...decision,
+            application: {
+              ...application,
+              activeDays: appTimeMap.get(application.uuid)!.activeDays || 0,
+              pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
+              paused: appPausedMap.get(application.uuid) || false,
+            },
+          },
+        };
+      }),
+    );
+    return (await c).reduce((res: ApplicationDecisionConditionHomeDto[], curr: ApplicationDecisionConditionHomeDto) => {
+      const existing = res.find((e) => e.conditionCard?.cardUuid === curr.conditionCard?.cardUuid);
+      if (!existing) {
+        res.push(curr);
+      }
+      return res;
+    }, []);
   }
 
   async createOrUpdate(
