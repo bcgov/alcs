@@ -55,6 +55,7 @@ export class DocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           documentService: this.inquiryDocumentService,
+          allowsFileEdit: true,
         },
       })
       .beforeClosed()
@@ -97,6 +98,7 @@ export class DocumentsComponent implements OnInit {
           fileId: this.fileId,
           existingDocument: element,
           documentService: this.inquiryDocumentService,
+          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
         },
       })
       .beforeClosed()

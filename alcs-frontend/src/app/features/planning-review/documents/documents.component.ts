@@ -57,6 +57,7 @@ export class DocumentsComponent implements OnInit {
           fileId: this.fileId,
           documentService: this.planningReviewDocumentService,
           allowedVisibilityFlags: ['C'],
+          allowsFileEdit: true,
         },
       })
       .beforeClosed()
@@ -99,6 +100,7 @@ export class DocumentsComponent implements OnInit {
           fileId: this.fileId,
           existingDocument: element,
           documentService: this.planningReviewDocumentService,
+          allowsFileEdit: true,
           allowedVisibilityFlags: ['C'],
         },
       })

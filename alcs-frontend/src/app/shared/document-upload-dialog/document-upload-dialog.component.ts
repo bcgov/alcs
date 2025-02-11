@@ -21,6 +21,11 @@ export enum VisibilityGroup {
   PUBLIC = 'Public',
 }
 
+export interface DocumentTypeConfig {
+  visibilityGroups: VisibilityGroup[];
+  allowsFileEdit: boolean;
+}
+
 @Component({
   selector: 'app-document-upload-dialog',
   templateUrl: './document-upload-dialog.component.html',
@@ -80,7 +85,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       selectableParcels?: SelectableParcelDto[];
       selectableOwners?: SelectableOwnerDto[];
       allowedVisibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
-      documentTypeToVisibilityGroupsMap?: Record<DOCUMENT_TYPE, VisibilityGroup[]>;
+      allowsFileEdit?: boolean;
+      documentTypeOverrides?: Record<DOCUMENT_TYPE, DocumentTypeConfig>;
     },
     protected dialog: MatDialogRef<any>,
     private toastService: ToastService,
@@ -94,15 +100,18 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
       this.title = 'Edit';
-      this.allowsFileEdit = !!(this.data.decisionService || document.system === DOCUMENT_SYSTEM.ALCS);
+
+      this.allowsFileEdit = this.data.allowsFileEdit ?? this.allowsFileEdit;
+
+      if (document.type && this.data.documentTypeOverrides && this.data.documentTypeOverrides[document.type.code]) {
+        this.allowsFileEdit = this.data.documentTypeOverrides[document.type.code].allowsFileEdit;
+      }
 
       if (document.type?.code === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
         this.prepareCertificateOfTitleUpload(document.uuid);
-        this.allowsFileEdit = false;
       }
       if (document.type?.code === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
         this.prepareCorporateSummaryUpload(document.uuid);
-        this.allowsFileEdit = false;
       }
 
       const { fileName, extension } = splitExtension(document.fileName);
@@ -291,8 +300,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.data.documentTypeToVisibilityGroupsMap && this.data.documentTypeToVisibilityGroupsMap[$event.code]) {
-      for (const visibilityGroup of this.data.documentTypeToVisibilityGroupsMap[$event.code]) {
+    if (this.data.documentTypeOverrides && this.data.documentTypeOverrides[$event.code]) {
+      for (const visibilityGroup of this.data.documentTypeOverrides[$event.code].visibilityGroups) {
         if (visibilityGroup === VisibilityGroup.INTERNAL) {
           this.visibleToInternal.setValue(true);
         }

@@ -112,6 +112,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
             existingDocument: existingDocument,
             decisionService: this.decisionService,
             allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+            allowsFileEdit: true,
           },
         })
         .beforeClosed()

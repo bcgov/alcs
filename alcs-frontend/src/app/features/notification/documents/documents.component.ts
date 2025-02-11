@@ -57,6 +57,7 @@ export class NotificationDocumentsComponent implements OnInit {
           fileId: this.fileId,
           documentService: this.notificationDocumentService,
           allowedVisibilityFlags: ['A', 'G', 'P'],
+          allowsFileEdit: true,
         },
       })
       .beforeClosed()
@@ -100,6 +101,7 @@ export class NotificationDocumentsComponent implements OnInit {
           existingDocument: element,
           documentService: this.notificationDocumentService,
           allowedVisibilityFlags: ['A', 'G', 'P'],
+          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
         },
       })
       .beforeClosed()
