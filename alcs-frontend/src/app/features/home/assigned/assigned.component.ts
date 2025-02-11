@@ -19,7 +19,7 @@ import { AssignedToMeFile } from './assigned-table/assigned-table.component';
 import { ApplicationDecisionConditionHomeDto } from '../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationTypeDto } from '../../../services/application/application-code.dto';
 import { ApplicationPill } from '../../../shared/application-type-pill/application-type-pill.component';
-import { NoticeOfIntentDecisionConditionHomeDto } from 'src/app/services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionConditionHomeDto } from '../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-assigned',

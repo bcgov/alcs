@@ -7,17 +7,20 @@ import { UpdateNoticeOfIntentDecisionConditionDto } from './notice-of-intent-dec
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionConditionService } from './notice-of-intent-decision-condition.service';
 import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
+import { Mapper } from 'automapper-core';
 
 describe('NoticeOfIntentDecisionConditionService', () => {
   let service: NoticeOfIntentDecisionConditionService;
   let mockNOIDecisionConditionRepository: DeepMocked<Repository<NoticeOfIntentDecisionCondition>>;
   let mockNOIDecisionConditionTypeRepository: DeepMocked<Repository<NoticeOfIntentDecisionConditionType>>;
   let mockNoticeOfIntentModificationRepository: DeepMocked<Repository<NoticeOfIntentModification>>;
+  let mockMapper: DeepMocked<Mapper>;
 
   beforeEach(async () => {
     mockNOIDecisionConditionRepository = createMock();
     mockNOIDecisionConditionTypeRepository = createMock();
     mockNoticeOfIntentModificationRepository = createMock();
+    mockMapper = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
