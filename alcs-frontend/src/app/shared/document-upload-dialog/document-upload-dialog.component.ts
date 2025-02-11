@@ -120,11 +120,12 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         name: fileName,
         source: document.source,
-        visibleToInternal:
+        visibleToInternal: !!(
           document.visibilityFlags?.includes('A') ||
           document.visibilityFlags?.includes('C') ||
-          document.visibilityFlags?.includes('G'),
-        visibleToPublic: document.visibilityFlags?.includes('P'),
+          document.visibilityFlags?.includes('G')
+        ),
+        visibleToPublic: !!document.visibilityFlags?.includes('P'),
       });
 
       this.existingFile = { name: document.fileName, size: 0 };
