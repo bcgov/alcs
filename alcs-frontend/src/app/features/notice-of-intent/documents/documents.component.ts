@@ -86,13 +86,20 @@ export class NoiDocumentsComponent implements OnInit {
               uuid: owner.uuid,
             })),
           allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
-          documentTypeToVisibilityGroupsMap: {
-            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
-            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          allowsFileEdit: true,
+          documentTypeOverrides: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
+              visibilityGroups: [VisibilityGroup.INTERNAL],
+              allowsFileEdit: false,
+            },
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
+              visibilityGroups: [VisibilityGroup.INTERNAL],
+              allowsFileEdit: false,
+            },
           },
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -129,13 +136,20 @@ export class NoiDocumentsComponent implements OnInit {
               uuid: owner.uuid,
             })),
           allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
-          documentTypeToVisibilityGroupsMap: {
-            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: [VisibilityGroup.INTERNAL],
-            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: [VisibilityGroup.INTERNAL],
+          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+          documentTypeOverrides: {
+            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
+              visibilityGroups: [VisibilityGroup.INTERNAL],
+              allowsFileEdit: false,
+            },
+            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
+              visibilityGroups: [VisibilityGroup.INTERNAL],
+              allowsFileEdit: false,
+            },
           },
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);

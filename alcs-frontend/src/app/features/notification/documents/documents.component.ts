@@ -57,9 +57,10 @@ export class NotificationDocumentsComponent implements OnInit {
           fileId: this.fileId,
           documentService: this.notificationDocumentService,
           allowedVisibilityFlags: ['A', 'G', 'P'],
+          allowsFileEdit: true,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -100,9 +101,10 @@ export class NotificationDocumentsComponent implements OnInit {
           existingDocument: element,
           documentService: this.notificationDocumentService,
           allowedVisibilityFlags: ['A', 'G', 'P'],
+          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);

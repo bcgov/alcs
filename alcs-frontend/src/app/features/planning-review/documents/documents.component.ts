@@ -57,9 +57,10 @@ export class DocumentsComponent implements OnInit {
           fileId: this.fileId,
           documentService: this.planningReviewDocumentService,
           allowedVisibilityFlags: ['C'],
+          allowsFileEdit: true,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -99,10 +100,11 @@ export class DocumentsComponent implements OnInit {
           fileId: this.fileId,
           existingDocument: element,
           documentService: this.planningReviewDocumentService,
+          allowsFileEdit: true,
           allowedVisibilityFlags: ['C'],
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);

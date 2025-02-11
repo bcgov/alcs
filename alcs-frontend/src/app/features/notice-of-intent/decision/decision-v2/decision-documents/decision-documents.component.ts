@@ -95,9 +95,10 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
             existingDocument: existingDocument,
             decisionService: this.decisionService,
             allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+            allowsFileEdit: true,
           },
         })
-        .beforeClosed()
+        .afterClosed()
         .subscribe((isDirty: boolean) => {
           if (isDirty && this.decision) {
             this.decisionService.loadDecision(this.decision.uuid);
