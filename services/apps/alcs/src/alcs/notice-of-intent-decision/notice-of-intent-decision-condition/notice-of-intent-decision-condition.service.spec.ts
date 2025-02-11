@@ -8,6 +8,8 @@ import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-con
 import { NoticeOfIntentDecisionConditionService } from './notice-of-intent-decision-condition.service';
 import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
 import { Mapper } from 'automapper-core';
+import { AutomapperModule } from 'automapper-nestjs';
+import { classes } from 'automapper-classes';
 
 describe('NoticeOfIntentDecisionConditionService', () => {
   let service: NoticeOfIntentDecisionConditionService;
@@ -23,6 +25,11 @@ describe('NoticeOfIntentDecisionConditionService', () => {
     mockMapper = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         NoticeOfIntentDecisionConditionService,
         {
