@@ -1,7 +1,7 @@
 import { MultipartFile } from '@fastify/multipart';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, LessThan, Repository, DataSource, FindOptionsWhere } from 'typeorm';
+import { In, IsNull, LessThan, Repository, DataSource } from 'typeorm';
 import { v4 } from 'uuid';
 import {
   ServiceNotFoundException,
@@ -34,9 +34,6 @@ import { ApplicationDecisionComponentService } from './component/application-dec
 import { ApplicationDecisionConditionDate } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationDecisionConditionDateService } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
 import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
-import { ApplicationDecisionHomeDto } from '../../application-decision-condition/application-decision-condition.dto';
-import { InjectMapper } from 'automapper-nestjs';
-import { Mapper } from 'automapper-core';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -61,7 +58,6 @@ export class ApplicationDecisionV2Service {
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectMapper() private mapper: Mapper,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
