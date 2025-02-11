@@ -95,6 +95,7 @@ export interface ApplicationDecisionDto {
 
 export interface ApplicationHomeDto {
   uuid: string;
+  fileNumber: string;
   applicant: string;
   activeDays: number;
   paused: boolean;

@@ -27,6 +27,26 @@ export class NoticeOfIntentDecisionConditionCardDto {
   noticeOfIntent?: string | null;
 }
 
+export class NoticeOfIntentDecisionConditionHomeCardDto {
+  @AutoMap()
+  @IsUUID()
+  uuid: string;
+
+  @IsArray()
+  conditions: NoticeOfIntentDecisionConditionDto[];
+
+  @AutoMap()
+  @IsString()
+  cardUuid: string;
+
+  @AutoMap()
+  card: CardDto;
+
+  @IsString()
+  @IsOptional()
+  noticeOfIntentFileNumber?: string | null;
+}
+
 export class CreateNoticeOfIntentDecisionConditionCardDto {
   @AutoMap()
   @IsArray()

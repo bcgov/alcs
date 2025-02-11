@@ -41,6 +41,8 @@ import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { HolidayService } from '../admin/holiday/holiday.service';
 import { ApplicationDecisionConditionHomeDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
+import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
+import { NoticeOfIntentDecisionConditionHomeDto } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
 
 const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
 
@@ -61,6 +63,7 @@ export class HomeController {
     private inquiryService: InquiryService,
     private holidayService: HolidayService,
     private applicationDecisionConditionService: ApplicationDecisionConditionService,
+    private noticeOfIntentDecisionConditionService: NoticeOfIntentDecisionConditionService,
   ) {}
 
   @Get('/assigned')
@@ -75,6 +78,7 @@ export class HomeController {
     notifications: NotificationDto[];
     inquiries: InquiryDto[];
     applicationsConditions: ApplicationDecisionConditionHomeDto[];
+    noticeOfIntentsConditions: NoticeOfIntentDecisionConditionHomeDto[];
   }> {
     const userId = req.user.entity.uuid;
     const assignedFindOptions = {
@@ -112,7 +116,9 @@ export class HomeController {
 
       const inquiries = await this.inquiryService.getBy(assignedFindOptions);
 
-      const conditions = await this.applicationDecisionConditionService.getBy(assignedConditionFindOptions);
+      const appConditions = await this.applicationDecisionConditionService.getBy(assignedConditionFindOptions);
+
+      const noiConditions = await this.noticeOfIntentDecisionConditionService.getBy(assignedConditionFindOptions);
 
       return {
         noticeOfIntents: await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
@@ -124,7 +130,8 @@ export class HomeController {
         modifications: await this.modificationService.mapToDtos(modifications),
         notifications: await this.notificationService.mapToDtos(notifications),
         inquiries: await this.inquiryService.mapToDtos(inquiries),
-        applicationsConditions: await this.applicationDecisionConditionService.mapToDtos(conditions),
+        applicationsConditions: await this.applicationDecisionConditionService.mapToDtos(appConditions),
+        noticeOfIntentsConditions: await this.noticeOfIntentDecisionConditionService.mapToDtos(noiConditions),
       };
     } else {
       return {
@@ -137,6 +144,7 @@ export class HomeController {
         notifications: [],
         inquiries: [],
         applicationsConditions: [],
+        noticeOfIntentsConditions: [],
       };
     }
   }
