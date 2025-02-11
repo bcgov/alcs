@@ -41,7 +41,6 @@ import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { HolidayService } from '../admin/holiday/holiday.service';
 import { ApplicationDecisionConditionHomeDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
-import { ApplicationDecisionV2Service } from '../application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 
 const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
 

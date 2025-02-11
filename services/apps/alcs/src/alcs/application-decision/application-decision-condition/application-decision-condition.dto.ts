@@ -107,7 +107,7 @@ export class ApplicationHomeDto {
   @AutoMap()
   applicant: string;
 
-  @AutoMap(() => ApplicationDecisionConditionTypeDto)
+  @AutoMap(() => ApplicationTypeDto)
   type: ApplicationTypeDto;
 
   activeDays: number;
