@@ -62,7 +62,6 @@ export class HomeController {
     private inquiryService: InquiryService,
     private holidayService: HolidayService,
     private applicationDecisionConditionService: ApplicationDecisionConditionService,
-    private decisionService: ApplicationDecisionV2Service,
   ) {}
 
   @Get('/assigned')
