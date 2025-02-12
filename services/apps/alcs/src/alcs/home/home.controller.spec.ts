@@ -38,6 +38,7 @@ import { PlanningReferralService } from '../planning-review/planning-referral/pl
 import { HomeController } from './home.controller';
 import { HolidayService } from '../admin/holiday/holiday.service';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
+import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 
 describe('HomeController', () => {
   let controller: HomeController;
@@ -53,6 +54,7 @@ describe('HomeController', () => {
   let mockInquiryService: DeepMocked<InquiryService>;
   let mockHolidayService: DeepMocked<HolidayService>;
   let mockApplicationDecisionConditionService: DeepMocked<ApplicationDecisionConditionService>;
+  let mockNoticeOfIntentDecisionConditionService: DeepMocked<NoticeOfIntentDecisionConditionService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -67,6 +69,7 @@ describe('HomeController', () => {
     mockInquiryService = createMock();
     mockHolidayService = createMock();
     mockApplicationDecisionConditionService = createMock();
+    mockNoticeOfIntentDecisionConditionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -132,6 +135,10 @@ describe('HomeController', () => {
           provide: ApplicationDecisionConditionService,
           useValue: mockApplicationDecisionConditionService,
         },
+        {
+          provide: NoticeOfIntentDecisionConditionService,
+          useValue: mockNoticeOfIntentDecisionConditionService,
+        },
         ApplicationProfile,
         ApplicationSubtaskProfile,
         UserProfile,
@@ -162,6 +169,8 @@ describe('HomeController', () => {
     mockInquiryService.mapToDtos.mockResolvedValue([]);
     mockApplicationDecisionConditionService.getBy.mockResolvedValue([]);
     mockApplicationDecisionConditionService.mapToDtos.mockResolvedValue([]);
+    mockNoticeOfIntentDecisionConditionService.getBy.mockResolvedValue([]);
+    mockNoticeOfIntentDecisionConditionService.mapToDtos.mockResolvedValue([]);
 
     mockNoticeOfIntentService.getTimes.mockResolvedValue(new Map());
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(new Map());

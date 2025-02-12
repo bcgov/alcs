@@ -107,6 +107,9 @@ export class ApplicationHomeDto {
   @AutoMap()
   applicant: string;
 
+  @AutoMap()
+  fileNumber: string;
+
   @AutoMap(() => ApplicationTypeDto)
   type: ApplicationTypeDto;
 

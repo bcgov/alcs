@@ -32,10 +32,6 @@ export class ApplicationDecisionConditionService {
     assignee: true,
   };
 
-  DEFAULT_RELATIONS = {
-    conditionCard: this.CARD_RELATIONS,
-  };
-
   constructor(
     @InjectRepository(ApplicationDecisionCondition)
     private repository: Repository<ApplicationDecisionCondition>,
