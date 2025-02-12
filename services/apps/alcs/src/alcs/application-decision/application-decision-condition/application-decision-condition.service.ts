@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
@@ -25,7 +25,7 @@ import { ApplicationReconsideration } from '../application-reconsideration/appli
 
 @Injectable()
 export class ApplicationDecisionConditionService {
-  CARD_RELATIONS = {
+  private CARD_RELATIONS = {
     board: true,
     type: true,
     status: true,
@@ -147,6 +147,45 @@ export class ApplicationDecisionConditionService {
       }
       return res;
     }, []);
+  }
+
+  async getWithIncompleteSubtaskByType(subtaskType: string) {
+    return this.repository.find({
+      where: {
+        conditionCard: {
+          card: {
+            subtasks: {
+              completedAt: IsNull(),
+              type: {
+                code: subtaskType,
+              },
+            },
+          },
+        },
+      },
+      relations: {
+        decision: {
+          reconsiders: true,
+          modifies: true,
+          application: {
+            decisionMeetings: true,
+            type: true,
+          },
+        },
+        conditionCard: {
+          card: {
+            board: true,
+            type: true,
+            status: true,
+            assignee: true,
+            subtasks: {
+              card: true,
+              type: true,
+            },
+          },
+        },
+      },
+    });
   }
 
   async createOrUpdate(

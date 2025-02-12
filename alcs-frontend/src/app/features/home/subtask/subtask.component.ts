@@ -62,20 +62,26 @@ export class SubtaskComponent implements OnInit, OnDestroy {
     const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI);
     const notifications = allSubtasks.filter((s) => s.card.type === CardType.NOTIFICATION);
     const inquiries = allSubtasks.filter((s) => s.card.type === CardType.INQUIRY);
+    const applicationConditions = allSubtasks.filter((s) => s.card.type === CardType.APP_CON);
+    const noiConditions = allSubtasks.filter((s) => s.card.type === CardType.NOI_CON);
 
     this.applicationSubtasks = [
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...applicationConditions.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...modifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...reconsiderations.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...applications.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...applicationConditions.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...modifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...reconsiderations.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
     this.noticeOfIntentSubtasks = [
       ...nois.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noiConditions.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...noiModifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...nois.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noiConditions.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...noiModifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 

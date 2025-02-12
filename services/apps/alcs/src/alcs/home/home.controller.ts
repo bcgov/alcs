@@ -39,10 +39,16 @@ import { PlanningReferral } from '../planning-review/planning-referral/planning-
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { HolidayService } from '../admin/holiday/holiday.service';
-import { ApplicationDecisionConditionHomeDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
+import {
+  ApplicationDecisionConditionHomeDto,
+  ApplicationHomeDto,
+} from '../application-decision/application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
 import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { NoticeOfIntentDecisionConditionHomeDto } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
+import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
+import { CardStatusDto } from '../card/card-status/card-status.dto';
+import { NoticeOfIntentDecisionCondition } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.entity';
 
 const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
 
@@ -182,12 +188,24 @@ export class HomeController {
 
     const inquirySubtasks = await this.mapInquiriesToDtos(inquiriesWIthSubtasks);
 
+    const applicationConditionsWithSubtasks =
+      await this.applicationDecisionConditionService.getWithIncompleteSubtaskByType(subtaskType);
+    const applicationConditionsSubtasks = await this.mapApplicationConditionsToDtos(applicationConditionsWithSubtasks);
+
+    const noticeOfIntentConditionsWithSubtasks =
+      await this.noticeOfIntentDecisionConditionService.getWithIncompleteSubtaskByType(subtaskType);
+    const noticeOfIntentConditionsSubtasks = await this.mapNoticeOfIntentConditionsToDtos(
+      noticeOfIntentConditionsWithSubtasks,
+    );
+
     return [
       ...noticeOfIntentSubtasks,
       ...applicationSubtasks,
+      ...applicationConditionsSubtasks,
       ...reconSubtasks,
       ...modificationSubtasks,
       ...noiModificationsSubtasks,
+      ...noticeOfIntentConditionsSubtasks,
       ...planningReferralSubtasks,
       ...notificationSubtasks,
       ...inquirySubtasks,
@@ -249,6 +267,97 @@ export class HomeController {
           title: `${application.fileNumber} (${application.applicant})`,
           appType: application.type,
           parentType: PARENT_TYPE.APPLICATION,
+          subtaskDays:
+            subtask.type.code === CARD_SUBTASK_TYPE.GIS
+              ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
+              : 0,
+        });
+      }
+    }
+    return result;
+  }
+
+  private async mapApplicationConditionsToDtos(applicationConditions: ApplicationDecisionCondition[]) {
+    const applications = applicationConditions.map((c) => c.decision.application);
+    const applicationTimes = await this.timeService.fetchActiveTimes(applications);
+
+    const appPausedMap = await this.timeService.getPausedStatus(applications);
+    const holidays = await this.holidayService.fetchAllHolidays();
+    const result: HomepageSubtaskDTO[] = [];
+
+    const reducedConditions = applicationConditions.reduce(
+      (res: ApplicationDecisionCondition[], curr: ApplicationDecisionCondition) => {
+        const existing = res.find((e) => e.conditionCard?.cardUuid === curr.conditionCard?.cardUuid);
+        if (!existing) {
+          res.push(curr);
+        }
+        return res;
+      },
+      [],
+    );
+
+    for (const condition of reducedConditions) {
+      if (!condition.conditionCard?.card) {
+        continue;
+      }
+      for (const subtask of condition.conditionCard?.card?.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(condition.conditionCard?.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          activeDays: applicationTimes.get(condition.decision.application.uuid)?.activeDays || 0,
+          paused: appPausedMap.get(condition.decision.uuid) || false,
+          title: `${condition.decision.application.fileNumber} (${condition.decision.application.applicant})`,
+          appType: condition.decision.application.type,
+          parentType: PARENT_TYPE.APPLICATION,
+          subtaskDays:
+            subtask.type.code === CARD_SUBTASK_TYPE.GIS
+              ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
+              : 0,
+        });
+      }
+    }
+    return result;
+  }
+
+  private async mapNoticeOfIntentConditionsToDtos(noticeOfIntestConditions: NoticeOfIntentDecisionCondition[]) {
+    const noticeOfIntents = noticeOfIntestConditions.map((c) => c.decision.noticeOfIntent);
+    const uuids = noticeOfIntents.map((noi) => noi.uuid);
+    const timeMap = await this.noticeOfIntentService.getTimes(uuids);
+    const holidays = await this.holidayService.fetchAllHolidays();
+    const result: HomepageSubtaskDTO[] = [];
+
+    const reducedConditions = noticeOfIntestConditions.reduce(
+      (res: NoticeOfIntentDecisionCondition[], curr: NoticeOfIntentDecisionCondition) => {
+        const existing = res.find((e) => e.conditionCard?.cardUuid === curr.conditionCard?.cardUuid);
+        if (!existing) {
+          res.push(curr);
+        }
+        return res;
+      },
+      [],
+    );
+
+    for (const condition of reducedConditions) {
+      if (!condition.conditionCard?.card) {
+        continue;
+      }
+      const activeDays = timeMap.get(condition.decision.noticeOfIntent.uuid)?.activeDays;
+      for (const subtask of condition.conditionCard?.card?.subtasks) {
+        result.push({
+          activeDays: activeDays ?? undefined,
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(condition.conditionCard.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${condition.decision.noticeOfIntent.fileNumber} (${condition.decision.noticeOfIntent.applicant})`,
+          parentType: PARENT_TYPE.NOTICE_OF_INTENT,
           subtaskDays:
             subtask.type.code === CARD_SUBTASK_TYPE.GIS
               ? this.holidayService.calculateBusinessDays(subtask.createdAt, new Date(), holidays)
