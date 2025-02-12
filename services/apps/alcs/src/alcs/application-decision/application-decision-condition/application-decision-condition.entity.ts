@@ -8,6 +8,7 @@ import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationDecisionConditionCard } from './application-decision-condition-card/application-decision-condition-card.entity';
+import { ApplicationDecisionConditionFinancialInstrument } from './application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.entity';
 
 @Entity({ comment: 'Fields present on the application decision conditions' })
 export class ApplicationDecisionCondition extends Base {
@@ -87,4 +88,9 @@ export class ApplicationDecisionCondition extends Base {
     nullable: true,
   })
   conditionCard: ApplicationDecisionConditionCard | null;
+
+  @OneToMany(() => ApplicationDecisionConditionFinancialInstrument, (instrument) => instrument.condition, {
+    cascade: true,
+  })
+  financialInstruments?: ApplicationDecisionConditionFinancialInstrument[] | null;
 }
