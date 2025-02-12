@@ -87,7 +87,7 @@ export class NoticeOfIntentDecisionConditionService {
   async mapToDtos(
     noticeOfIntents: NoticeOfIntentDecisionCondition[],
   ): Promise<NoticeOfIntentDecisionConditionHomeDto[]> {
-    const uuids = noticeOfIntents.map((noi) => noi.uuid);
+    const uuids = noticeOfIntents.map((noi) => noi.decision.noticeOfIntent.uuid);
     const timeMap = await this.getTimes(uuids);
     const c = Promise.all(
       noticeOfIntents.map(async (c) => {
