@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision-condition-code.entity';
@@ -63,6 +63,43 @@ export class NoticeOfIntentDecisionConditionService {
     return this.repository.find({
       where: {
         uuid: In(uuids),
+      },
+    });
+  }
+
+  async getWithIncompleteSubtaskByType(subtaskType: string) {
+    return this.repository.find({
+      where: {
+        conditionCard: {
+          card: {
+            subtasks: {
+              completedAt: IsNull(),
+              type: {
+                code: subtaskType,
+              },
+            },
+          },
+        },
+      },
+      relations: {
+        decision: {
+          modifies: true,
+          noticeOfIntent: {
+            type: true,
+          },
+        },
+        conditionCard: {
+          card: {
+            board: true,
+            type: true,
+            status: true,
+            assignee: true,
+            subtasks: {
+              card: true,
+              type: true,
+            },
+          },
+        },
       },
     });
   }

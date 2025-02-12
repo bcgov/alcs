@@ -184,6 +184,8 @@ describe('HomeController', () => {
     mockNotificationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
     mockPlanningReferralService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
     mockInquiryService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
+    mockApplicationDecisionConditionService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
+    mockNoticeOfIntentDecisionConditionService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
