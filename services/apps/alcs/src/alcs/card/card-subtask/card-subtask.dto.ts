@@ -64,6 +64,9 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
   activeDays?: number;
   paused: boolean;
   subtaskDays?: number;
+  isCondition: boolean;
+  isConditionRecon: boolean;
+  isConditionModi: boolean;
 }
 
 export enum CARD_SUBTASK_TYPE {

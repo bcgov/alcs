@@ -29,6 +29,9 @@ export interface HomepageSubtaskDto extends CardSubtaskDto {
   paused: boolean;
   appType?: ApplicationTypeDto;
   parentType: 'application' | 'reconsideration' | 'modification' | 'planning-review' | 'notification';
+  isCondition: boolean;
+  isConditionModi: boolean;
+  isConditionRecon: boolean;
 }
 
 export enum CARD_SUBTASK_TYPE {
