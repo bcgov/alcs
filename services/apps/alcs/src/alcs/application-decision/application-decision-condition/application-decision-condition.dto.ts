@@ -113,7 +113,7 @@ export class ApplicationHomeDto {
   @AutoMap(() => ApplicationTypeDto)
   type: ApplicationTypeDto;
 
-  activeDays: number;
+  activeDays?: number;
   paused: boolean;
   pausedDays: number;
 }

@@ -106,6 +106,7 @@ export class ApplicationDecisionConditionService {
     );
     const c = Promise.all(
       conditions.map(async (c) => {
+        const wasReleased = c.decision.wasReleased;
         const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
         const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
         const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
@@ -132,7 +133,7 @@ export class ApplicationDecisionConditionService {
             ...decision,
             application: {
               ...application,
-              activeDays: appTimeMap.get(application.uuid)!.activeDays || 0,
+              activeDays: !wasReleased ? appTimeMap.get(application.uuid)!.activeDays || 0 : undefined,
               pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
               paused: appPausedMap.get(application.uuid) || false,
             },

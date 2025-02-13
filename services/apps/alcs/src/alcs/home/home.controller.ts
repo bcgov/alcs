@@ -3,7 +3,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
-import { In, Not } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
@@ -39,16 +39,13 @@ import { PlanningReferral } from '../planning-review/planning-referral/planning-
 import { PlanningReferralService } from '../planning-review/planning-referral/planning-referral.service';
 import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { HolidayService } from '../admin/holiday/holiday.service';
-import {
-  ApplicationDecisionConditionHomeDto,
-  ApplicationHomeDto,
-} from '../application-decision/application-decision-condition/application-decision-condition.dto';
+import { ApplicationDecisionConditionHomeDto } from '../application-decision/application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
 import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { NoticeOfIntentDecisionConditionHomeDto } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
 import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
-import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { NoticeOfIntentDecisionCondition } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
 
@@ -70,6 +67,12 @@ export class HomeController {
     private holidayService: HolidayService,
     private applicationDecisionConditionService: ApplicationDecisionConditionService,
     private noticeOfIntentDecisionConditionService: NoticeOfIntentDecisionConditionService,
+    @InjectRepository(ApplicationModification)
+    private modificationApplicationRepository: Repository<ApplicationModification>,
+    @InjectRepository(ApplicationReconsideration)
+    private reconsiderationApplicationRepository: Repository<ApplicationReconsideration>,
+    @InjectRepository(NoticeOfIntentModification)
+    private modificationNoticeOfIntentRepository: Repository<NoticeOfIntentModification>,
   ) {}
 
   @Get('/assigned')
@@ -222,6 +225,9 @@ export class HomeController {
 
       for (const subtask of recon.card.subtasks) {
         result.push({
+          isCondition: false,
+          isConditionModi: false,
+          isConditionRecon: false,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
@@ -256,6 +262,9 @@ export class HomeController {
       application.decisionMeetings = [];
       for (const subtask of application.card?.subtasks) {
         result.push({
+          isCondition: false,
+          isConditionModi: false,
+          isConditionRecon: false,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
@@ -300,15 +309,34 @@ export class HomeController {
       if (!condition.conditionCard?.card) {
         continue;
       }
+      const appModifications = await this.modificationApplicationRepository.find({
+        where: {
+          modifiesDecisions: {
+            uuid: condition.decision?.uuid,
+          },
+        },
+      });
+      const appReconsiderations = await this.reconsiderationApplicationRepository.find({
+        where: {
+          reconsidersDecisions: {
+            uuid: condition.decision?.uuid,
+          },
+        },
+      });
       for (const subtask of condition.conditionCard?.card?.subtasks) {
         result.push({
+          isCondition: true,
+          isConditionRecon: appReconsiderations.length > 0,
+          isConditionModi: appModifications.length > 0,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
           uuid: subtask.uuid,
           card: this.mapper.map(condition.conditionCard?.card, Card, CardDto),
           completedAt: subtask.completedAt?.getTime(),
-          activeDays: applicationTimes.get(condition.decision.application.uuid)?.activeDays || 0,
+          activeDays: !condition.decision.wasReleased
+            ? applicationTimes.get(condition.decision.application.uuid)?.activeDays || 0
+            : undefined,
           paused: appPausedMap.get(condition.decision.uuid) || false,
           title: `${condition.decision.application.fileNumber} (${condition.decision.application.applicant})`,
           appType: condition.decision.application.type,
@@ -345,9 +373,21 @@ export class HomeController {
       if (!condition.conditionCard?.card) {
         continue;
       }
-      const activeDays = timeMap.get(condition.decision.noticeOfIntent.uuid)?.activeDays;
+      const activeDays = !condition.decision.wasReleased
+        ? timeMap.get(condition.decision.noticeOfIntent.uuid)?.activeDays
+        : undefined;
+      const noiModifications = await this.modificationNoticeOfIntentRepository.find({
+        where: {
+          modifiesDecisions: {
+            uuid: condition.decision?.uuid,
+          },
+        },
+      });
       for (const subtask of condition.conditionCard?.card?.subtasks) {
         result.push({
+          isCondition: true,
+          isConditionModi: noiModifications.length > 0,
+          isConditionRecon: false,
           activeDays: activeDays ?? undefined,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
@@ -374,6 +414,9 @@ export class HomeController {
     for (const planningReferral of planningReferrals) {
       for (const subtask of planningReferral.card.subtasks) {
         result.push({
+          isCondition: false,
+          isConditionModi: false,
+          isConditionRecon: false,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
@@ -406,6 +449,9 @@ export class HomeController {
       if (noticeOfIntent.card) {
         for (const subtask of noticeOfIntent.card.subtasks) {
           result.push({
+            isCondition: false,
+            isConditionModi: false,
+            isConditionRecon: false,
             activeDays: activeDays ?? undefined,
             type: subtask.type,
             createdAt: subtask.createdAt.getTime(),
@@ -436,6 +482,9 @@ export class HomeController {
       }
       for (const subtask of modification.card.subtasks) {
         result.push({
+          isCondition: false,
+          isConditionModi: false,
+          isConditionRecon: false,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
@@ -465,6 +514,9 @@ export class HomeController {
       }
       for (const subtask of modification.card.subtasks) {
         result.push({
+          isCondition: false,
+          isConditionModi: false,
+          isConditionRecon: false,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
@@ -491,6 +543,9 @@ export class HomeController {
       if (notification.card) {
         for (const subtask of notification.card.subtasks) {
           result.push({
+            isCondition: false,
+            isConditionModi: false,
+            isConditionRecon: false,
             type: subtask.type,
             createdAt: subtask.createdAt.getTime(),
             assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
@@ -519,6 +574,9 @@ export class HomeController {
       if (inquiry.card) {
         for (const subtask of inquiry.card.subtasks) {
           result.push({
+            isCondition: false,
+            isConditionModi: false,
+            isConditionRecon: false,
             type: subtask.type,
             createdAt: subtask.createdAt.getTime(),
             assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),

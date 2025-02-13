@@ -7,6 +7,7 @@ import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import {
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
+  CONDITION_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { CardType } from '../../../../shared/card/card.component';
 
@@ -21,6 +22,7 @@ export class SubtaskTableComponent {
 
   MODIFICATION_TYPE_LABEL = MODIFICATION_TYPE_LABEL;
   RECON_TYPE_LABEL = RECON_TYPE_LABEL;
+  CONDITION_LABEL = CONDITION_LABEL;
 
   CardType = CardType;
 
