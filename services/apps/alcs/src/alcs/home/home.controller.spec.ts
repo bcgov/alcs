@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
-import { In, Not } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import {
   initApplicationMockEntity,
   initApplicationModificationMockEntity,
@@ -39,6 +39,9 @@ import { HomeController } from './home.controller';
 import { HolidayService } from '../admin/holiday/holiday.service';
 import { ApplicationDecisionConditionService } from '../application-decision/application-decision-condition/application-decision-condition.service';
 import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
+import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('HomeController', () => {
   let controller: HomeController;
@@ -55,6 +58,9 @@ describe('HomeController', () => {
   let mockHolidayService: DeepMocked<HolidayService>;
   let mockApplicationDecisionConditionService: DeepMocked<ApplicationDecisionConditionService>;
   let mockNoticeOfIntentDecisionConditionService: DeepMocked<NoticeOfIntentDecisionConditionService>;
+  let mockModificationApplicationRepository: DeepMocked<Repository<ApplicationModification>>;
+  let mockReconsiderationApplicationRepository: DeepMocked<Repository<ApplicationReconsideration>>;
+  let mockModificationNoticeOfIntentRepository: DeepMocked<Repository<NoticeOfIntentModification>>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -70,6 +76,9 @@ describe('HomeController', () => {
     mockHolidayService = createMock();
     mockApplicationDecisionConditionService = createMock();
     mockNoticeOfIntentDecisionConditionService = createMock();
+    mockModificationApplicationRepository = createMock();
+    mockReconsiderationApplicationRepository = createMock();
+    mockModificationNoticeOfIntentRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -138,6 +147,18 @@ describe('HomeController', () => {
         {
           provide: NoticeOfIntentDecisionConditionService,
           useValue: mockNoticeOfIntentDecisionConditionService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationModification),
+          useValue: mockModificationApplicationRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationReconsideration),
+          useValue: mockReconsiderationApplicationRepository,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntentModification),
+          useValue: mockModificationNoticeOfIntentRepository,
         },
         ApplicationProfile,
         ApplicationSubtaskProfile,

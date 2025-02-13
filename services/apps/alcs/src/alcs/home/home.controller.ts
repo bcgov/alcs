@@ -72,7 +72,7 @@ export class HomeController {
     @InjectRepository(ApplicationReconsideration)
     private reconsiderationApplicationRepository: Repository<ApplicationReconsideration>,
     @InjectRepository(NoticeOfIntentModification)
-    private modificationNoticeOfIntentRepository: Repository<ApplicationModification>,
+    private modificationNoticeOfIntentRepository: Repository<NoticeOfIntentModification>,
   ) {}
 
   @Get('/assigned')
