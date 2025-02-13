@@ -516,6 +516,16 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
+        Application,
+        ApplicationHomeDto,
+        forMember(
+          (a) => a.type,
+          mapFrom((ac) => ac.type),
+        ),
+      );
+
+      createMap(
+        mapper,
         ApplicationDecisionConditionFinancialInstrument,
         ApplicationDecisionConditionFinancialInstrumentDto,
         forMember(

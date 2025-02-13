@@ -9,8 +9,8 @@ import {
   ApplicationDecisionConditionCardUuidDto,
   ApplicationDecisionConditionHomeCardDto,
 } from './application-decision-condition-card/application-decision-condition-card.dto';
-import { ApplicationDto } from '../../application/application.dto';
 import { ApplicationDecisionConditionFinancialInstrumentDto } from './application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.dto';
+import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -111,7 +111,13 @@ export class ApplicationHomeDto {
   @AutoMap()
   applicant: string;
 
-  activeDays: number;
+  @AutoMap()
+  fileNumber: string;
+
+  @AutoMap(() => ApplicationTypeDto)
+  type: ApplicationTypeDto;
+
+  activeDays?: number;
   paused: boolean;
   pausedDays: number;
 }
@@ -125,13 +131,12 @@ export class ApplicationDecisionHomeDto {
 }
 
 export class ApplicationDecisionConditionHomeDto {
-  @AutoMap()
-  uuid: string;
-
   @AutoMap(() => ApplicationDecisionConditionHomeCardDto)
   conditionCard: ApplicationDecisionConditionHomeCardDto | null;
 
   status?: string | null;
+  isReconsideration: boolean;
+  isModification: boolean;
 
   @AutoMap()
   decision?: ApplicationDecisionHomeDto;

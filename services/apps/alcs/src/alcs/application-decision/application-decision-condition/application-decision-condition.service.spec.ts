@@ -14,12 +14,17 @@ import { classes } from 'automapper-classes';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
 import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
 import { ApplicationPaused } from '../../application/application-paused.entity';
+import { ApplicationModification } from '../application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 
 describe('ApplicationDecisionConditionService', () => {
   let service: ApplicationDecisionConditionService;
   let timeTrackingService: ApplicationTimeTrackingService;
   let mockApplicationDecisionConditionRepository: DeepMocked<Repository<ApplicationDecisionCondition>>;
   let mockAppDecCondTypeRepository: DeepMocked<Repository<ApplicationDecisionConditionType>>;
+  let mockApplicationModificationRepository: DeepMocked<Repository<ApplicationModification>>;
+  let mockApplicationReconsiderationRepository: DeepMocked<Repository<ApplicationReconsideration>>;
+  
   let mockApplicationDecisionConditionComponentPlanNumber: DeepMocked<
     Repository<ApplicationDecisionConditionComponentPlanNumber>
   >;
@@ -38,6 +43,8 @@ describe('ApplicationDecisionConditionService', () => {
     mockMapper = createMock();
     mockApplicationDecisionConditionDate = createMock();
     mockApplicationPausedRepository = createMock();
+    mockApplicationModificationRepository = createMock();
+    mockApplicationReconsiderationRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -71,6 +78,14 @@ describe('ApplicationDecisionConditionService', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionConditionDate),
           useValue: mockApplicationDecisionConditionDate,
+        },
+        {
+          provide: getRepositoryToken(ApplicationModification),
+          useValue: mockApplicationModificationRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationReconsideration),
+          useValue: mockApplicationReconsiderationRepository,
         },
       ],
     }).compile();

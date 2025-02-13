@@ -37,6 +37,35 @@ export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDec
   decisionToCopy?: string;
 }
 
+export interface NoticeOfIntentHomeDto {
+  uuid: string;
+  fileNumber: string;
+  applicant: string;
+  activeDays: number;
+  paused: boolean;
+  pausedDays: number;
+  type: NoticeOfIntentTypeDto;
+}
+
+export interface NoticeOfIntentDecisionHomeDto {
+  uuid: string;
+  noticeOfIntent: NoticeOfIntentHomeDto;
+}
+
+export interface NoticeOfIntentDecisionConditionHomeCardDto {
+  uuid: string;
+  cardUuid: string;
+  card: CardDto;
+  noticeOfIntentFileNumber?: string | null;
+}
+
+export interface NoticeOfIntentDecisionConditionHomeDto {
+  conditionCard: NoticeOfIntentDecisionConditionHomeCardDto | null;
+  status?: string | null;
+  isModification: boolean;
+  decision: NoticeOfIntentDecisionHomeDto;
+}
+
 export interface LinkedResolutionDto {
   uuid: string;
   linkedResolutions: string[];

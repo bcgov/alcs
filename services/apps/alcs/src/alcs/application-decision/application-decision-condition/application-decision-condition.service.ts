@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
@@ -20,18 +20,16 @@ import { Mapper } from 'automapper-core';
 import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
 import { ApplicationDecision } from '../application-decision.entity';
 import { Application } from '../../application/application.entity';
+import { ApplicationModification } from '../application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
-  CARD_RELATIONS = {
+  private CARD_RELATIONS = {
     board: true,
     type: true,
     status: true,
     assignee: true,
-  };
-
-  DEFAULT_RELATIONS = {
-    conditionCard: this.CARD_RELATIONS,
   };
 
   constructor(
@@ -43,6 +41,10 @@ export class ApplicationDecisionConditionService {
     private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
+    @InjectRepository(ApplicationModification)
+    private modificationRepository: Repository<ApplicationModification>,
+    @InjectRepository(ApplicationReconsideration)
+    private reconsiderationRepository: Repository<ApplicationReconsideration>,
     @InjectMapper() private mapper: Mapper,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
@@ -81,8 +83,11 @@ export class ApplicationDecisionConditionService {
       where: findOptions,
       relations: {
         decision: {
+          reconsiders: true,
+          modifies: true,
           application: {
             decisionMeetings: true,
+            type: true,
           },
         },
         conditionCard: {
@@ -99,22 +104,88 @@ export class ApplicationDecisionConditionService {
     const appPausedMap = await this.applicationTimeTrackingService.getPausedStatus(
       conditions.map((c) => c.decision.application),
     );
-    return conditions.map((c) => {
-      const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
-      const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
-      const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
-      return {
-        ...condition,
-        decision: {
-          ...decision,
-          application: {
-            ...application,
-            activeDays: appTimeMap.get(application.uuid)!.activeDays || 0,
-            pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
-            paused: appPausedMap.get(application.uuid) || false,
+    const c = Promise.all(
+      conditions.map(async (c) => {
+        const wasReleased = c.decision.wasReleased;
+        const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
+        const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
+        const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
+        const appModifications = await this.modificationRepository.find({
+          where: {
+            modifiesDecisions: {
+              uuid: c.decision?.uuid,
+            },
+          },
+        });
+        const appReconsiderations = await this.reconsiderationRepository.find({
+          where: {
+            reconsidersDecisions: {
+              uuid: c.decision?.uuid,
+            },
+          },
+        });
+
+        return {
+          ...condition,
+          isModification: appModifications.length > 0,
+          isReconsideration: appReconsiderations.length > 0,
+          decision: {
+            ...decision,
+            application: {
+              ...application,
+              activeDays: !wasReleased ? appTimeMap.get(application.uuid)!.activeDays || 0 : undefined,
+              pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
+              paused: appPausedMap.get(application.uuid) || false,
+            },
+          },
+        };
+      }),
+    );
+    return (await c).reduce((res: ApplicationDecisionConditionHomeDto[], curr: ApplicationDecisionConditionHomeDto) => {
+      const existing = res.find((e) => e.conditionCard?.cardUuid === curr.conditionCard?.cardUuid);
+      if (!existing) {
+        res.push(curr);
+      }
+      return res;
+    }, []);
+  }
+
+  async getWithIncompleteSubtaskByType(subtaskType: string) {
+    return this.repository.find({
+      where: {
+        conditionCard: {
+          card: {
+            subtasks: {
+              completedAt: IsNull(),
+              type: {
+                code: subtaskType,
+              },
+            },
           },
         },
-      };
+      },
+      relations: {
+        decision: {
+          reconsiders: true,
+          modifies: true,
+          application: {
+            decisionMeetings: true,
+            type: true,
+          },
+        },
+        conditionCard: {
+          card: {
+            board: true,
+            type: true,
+            status: true,
+            assignee: true,
+            subtasks: {
+              card: true,
+              type: true,
+            },
+          },
+        },
+      },
     });
   }
 

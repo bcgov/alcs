@@ -14,7 +14,10 @@ import { NoticeOfIntentDecisionComponent } from '../../alcs/notice-of-intent-dec
 import { NoticeOfIntentDecisionConditionType } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-code.entity';
 import {
   NoticeOfIntentDecisionConditionDto,
+  NoticeOfIntentDecisionConditionHomeDto,
   NoticeOfIntentDecisionConditionTypeDto,
+  NoticeOfIntentDecisionHomeDto,
+  NoticeOfIntentHomeDto,
 } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionDocument } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
@@ -45,6 +48,7 @@ import {
   NoticeOfIntentDecisionConditionCardBoardDto,
   NoticeOfIntentDecisionConditionCardDto,
   NoticeOfIntentDecisionConditionCardUuidDto,
+  NoticeOfIntentDecisionConditionHomeCardDto,
 } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
 
 @Injectable()
@@ -406,11 +410,51 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
+        NoticeOfIntentDecisionCondition,
+        NoticeOfIntentDecisionConditionHomeDto,
+        forMember(
+          (dto) => dto.conditionCard,
+          mapFrom((entity) =>
+            entity.conditionCard
+              ? this.mapper.map(
+                  entity.conditionCard,
+                  NoticeOfIntentDecisionConditionCard,
+                  NoticeOfIntentDecisionConditionHomeCardDto,
+                )
+              : null,
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
         NoticeOfIntentDecisionConditionCard,
         NoticeOfIntentDecisionConditionCardUuidDto,
         forMember(
           (dto) => dto.uuid,
           mapFrom((entity) => entity.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionCard,
+        NoticeOfIntentDecisionConditionHomeCardDto,
+        forMember(
+          (dto) => dto.uuid,
+          mapFrom((entity) => entity.uuid),
+        ),
+      );
+
+      createMap(mapper, NoticeOfIntentDecision, NoticeOfIntentDecisionHomeDto);
+
+      createMap(
+        mapper,
+        NoticeOfIntent,
+        NoticeOfIntentHomeDto,
+        forMember(
+          (a) => a.type,
+          mapFrom((ac) => ac.type),
         ),
       );
     };

@@ -95,10 +95,12 @@ export interface ApplicationDecisionDto {
 
 export interface ApplicationHomeDto {
   uuid: string;
+  fileNumber: string;
   applicant: string;
   activeDays: number;
   paused: boolean;
   pausedDays: number;
+  type: ApplicationTypeDto;
 }
 
 export interface ApplicationDecisionHomeDto {
@@ -114,9 +116,10 @@ export interface ApplicationDecisionConditionHomeCardDto {
 }
 
 export interface ApplicationDecisionConditionHomeDto {
-  uuid: string;
   conditionCard: ApplicationDecisionConditionHomeCardDto | null;
   status?: string | null;
+  isReconsideration: boolean;
+  isModification: boolean;
   decision: ApplicationDecisionHomeDto;
 }
 

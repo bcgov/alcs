@@ -12,6 +12,7 @@ import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../notification/notification.dto';
 import { PlanningReferralDto } from '../planning-review/planning-review.dto';
 import { ApplicationDecisionConditionHomeDto } from '../application/decision/application-decision-v2/application-decision-v2.dto';
+import { NoticeOfIntentDecisionConditionHomeDto } from '../notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,7 @@ export class HomeService {
         notifications: NotificationDto[];
         inquiries: InquiryDto[];
         applicationsConditions: ApplicationDecisionConditionHomeDto[];
+        noticeOfIntentsConditions: NoticeOfIntentDecisionConditionHomeDto[];
       }>(`${environment.apiUrl}/home/assigned`),
     );
   }

@@ -18,7 +18,7 @@ import { DocumentUploadDialogComponent } from '../../../shared/document-upload-d
   styleUrls: ['./documents.component.scss'],
 })
 export class DocumentsComponent implements OnInit {
-  displayedColumns: string[] = ['type', 'fileName', 'source', 'uploadedAt', 'actions'];
+  displayedColumns: string[] = ['source', 'type', 'fileName', 'uploadedAt', 'actions'];
   documents: InquiryDocumentDto[] = [];
   private fileId = '';
 
@@ -55,9 +55,10 @@ export class DocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           documentService: this.inquiryDocumentService,
+          allowsFileEdit: true,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -97,9 +98,10 @@ export class DocumentsComponent implements OnInit {
           fileId: this.fileId,
           existingDocument: element,
           documentService: this.inquiryDocumentService,
+          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
