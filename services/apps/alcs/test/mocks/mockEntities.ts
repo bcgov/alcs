@@ -27,6 +27,14 @@ import { Tag } from '../../src/alcs/tag/tag.entity';
 import { NoticeOfIntent } from '../../src/alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentType } from '../../src/alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { ApplicationDecisionConditionCard } from '../../src/alcs/application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
+import { ApplicationDecisionConditionType } from '../../src/alcs/application-decision/application-decision-condition/application-decision-condition-code.entity';
+import { ApplicationDecisionCondition } from '../../src/alcs/application-decision/application-decision-condition/application-decision-condition.entity';
+import {
+  ApplicationDecisionConditionFinancialInstrument,
+  HeldBy,
+  InstrumentStatus,
+  InstrumentType,
+} from '../../src/alcs/application-decision/application-decision-condition/application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.entity';
 
 const initCardStatusMockEntity = (): CardStatus => {
   const cardStatus = new CardStatus();
@@ -411,6 +419,53 @@ const initMockApplicationDecisionConditionCard = (
   return conditionCard;
 };
 
+const initApplicationDecisionConditionTypeMockEntity = (code?: string): ApplicationDecisionConditionType => {
+  const conditionType = new ApplicationDecisionConditionType();
+  conditionType.code = code ? code : 'type_1';
+  conditionType.description = 'condition desc 1';
+  conditionType.label = 'condition_label';
+  conditionType.isActive = true;
+  conditionType.isComponentToConditionChecked = true;
+  conditionType.isDescriptionChecked = true;
+  conditionType.isAdministrativeFeeAmountChecked = false;
+  conditionType.isAdministrativeFeeAmountRequired = null;
+  conditionType.administrativeFeeAmount = null;
+  conditionType.isDateChecked = false;
+  conditionType.isDateRequired = null;
+  conditionType.dateType = null;
+  conditionType.singleDateLabel = null;
+  conditionType.isSecurityAmountChecked = false;
+  conditionType.isSecurityAmountRequired = null;
+  conditionType.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+  conditionType.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
+
+  return conditionType;
+};
+
+const initApplicationDecisionConditionFinancialInstrumentMockEntity = (
+  payee?: string,
+  bank?: string,
+  instrumentNumber?: string,
+  condition?: ApplicationDecisionCondition,
+): ApplicationDecisionConditionFinancialInstrument => {
+  const instrument = new ApplicationDecisionConditionFinancialInstrument();
+  instrument.securityHolderPayee = 'fake-payee';
+  instrument.type = InstrumentType.BANK_DRAFT;
+  instrument.issueDate = new Date(2022, 1, 1);
+  instrument.expiryDate = new Date(2023, 1, 1);
+  instrument.amount = 1000.0;
+  instrument.bank = 'fake-bank';
+  instrument.instrumentNumber = '123456';
+  instrument.heldBy = HeldBy.ALC;
+  instrument.receivedDate = new Date(2022, 1, 1);
+  instrument.notes = 'fake-notes';
+  instrument.status = InstrumentStatus.RECEIVED;
+  instrument.statusDate = new Date(2022, 1, 1);
+  instrument.explanation = 'fake-explanation';
+  instrument.condition = condition ?? new ApplicationDecisionCondition();
+  return instrument;
+};
+
 export {
   initCardStatusMockEntity,
   initApplicationMockEntity,
@@ -436,4 +491,6 @@ export {
   initNoticeOfIntentMockEntity,
   initNoticeOfIntentWithTagsMockEntity,
   initMockApplicationDecisionConditionCard,
+  initApplicationDecisionConditionTypeMockEntity,
+  initApplicationDecisionConditionFinancialInstrumentMockEntity,
 };

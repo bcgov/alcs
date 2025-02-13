@@ -1,6 +1,6 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
@@ -14,6 +14,12 @@ import {
 } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionService } from './application-decision-condition.service';
+import { ApplicationDecisionConditionFinancialInstrumentService } from './application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.service';
+import {
+  ApplicationDecisionConditionFinancialInstrumentDto,
+  CreateUpdateApplicationDecisionConditionFinancialInstrumentDto,
+} from './application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.dto';
+import { ApplicationDecisionConditionFinancialInstrument } from './application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-condition')
@@ -21,6 +27,7 @@ import { ApplicationDecisionConditionService } from './application-decision-cond
 export class ApplicationDecisionConditionController {
   constructor(
     private conditionService: ApplicationDecisionConditionService,
+    private conditionFinancialInstrumentService: ApplicationDecisionConditionFinancialInstrumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -73,6 +80,77 @@ export class ApplicationDecisionConditionController {
       planNumber,
       ApplicationDecisionConditionComponentPlanNumber,
       ApplicationDecisionConditionComponentDto,
+    );
+  }
+
+  @Get('/:uuid/financial-instruments')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getAllFinancialInstruments(
+    @Param('uuid') uuid: string,
+  ): Promise<ApplicationDecisionConditionFinancialInstrumentDto[]> {
+    const financialInstruments = await this.conditionFinancialInstrumentService.getAll(uuid);
+
+    return await this.mapper.mapArray(
+      financialInstruments,
+      ApplicationDecisionConditionFinancialInstrument,
+      ApplicationDecisionConditionFinancialInstrumentDto,
+    );
+  }
+
+  @Get('/:uuid/financial-instruments/:instrumentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getFinancialInstrumentByUuid(
+    @Param('uuid') uuid: string,
+    @Param('instrumentUuid') instrumentUuid: string,
+  ): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
+    const financialInstrument = await this.conditionFinancialInstrumentService.getByUuid(uuid, instrumentUuid);
+    return await this.mapper.map(
+      financialInstrument,
+      ApplicationDecisionConditionFinancialInstrument,
+      ApplicationDecisionConditionFinancialInstrumentDto,
+    );
+  }
+
+  @Post('/:uuid/financial-instruments')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async createFinancialInstrument(
+    @Param('uuid') uuid: string,
+    @Body() dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto,
+  ): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
+    const financialInstrument = await this.conditionFinancialInstrumentService.create(uuid, dto);
+    return await this.mapper.map(
+      financialInstrument,
+      ApplicationDecisionConditionFinancialInstrument,
+      ApplicationDecisionConditionFinancialInstrumentDto,
+    );
+  }
+
+  @Patch('/:uuid/financial-instruments/:instrumentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateFinancialInstrument(
+    @Param('uuid') uuid: string,
+    @Param('instrumentUuid') instrumentUuid: string,
+    @Body() dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto,
+  ): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
+    const financialInstrument = await this.conditionFinancialInstrumentService.update(uuid, instrumentUuid, dto);
+    return await this.mapper.map(
+      financialInstrument,
+      ApplicationDecisionConditionFinancialInstrument,
+      ApplicationDecisionConditionFinancialInstrumentDto,
+    );
+  }
+
+  @Delete('/:uuid/financial-instruments/:instrumentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async deleteFinancialInstrument(
+    @Param('uuid') uuid: string,
+    @Param('instrumentUuid') instrumentUuid: string,
+  ): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
+    const result = await this.conditionFinancialInstrumentService.softRemove(uuid, instrumentUuid);
+    return await this.mapper.map(
+      result,
+      ApplicationDecisionConditionFinancialInstrument,
+      ApplicationDecisionConditionFinancialInstrumentDto,
     );
   }
 }
