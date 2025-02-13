@@ -156,6 +156,7 @@
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="application_decision_uuid" foreignKey="FK_0eff4e8760453f611498a394595" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_component"/>
             <child column="decision_uuid" foreignKey="FK_fdf2b431fe834beeb5c59ef4c67" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition"/>
+            <child column="decision_uuid" foreignKey="FK_479c2feaef6520e2a351f3e7e57" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition_card"/>
             <child column="decision_uuid" foreignKey="FK_7c22f4d93ffca5731e1b65d65c5" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_document"/>
             <child column="application_decision_uuid" foreignKey="FK_00d76c4e26de94d450acd588fd6" implied="false" onDeleteCascade="false" schema="alcs" table="application_modified_decisions"/>
             <child column="application_decision_uuid" foreignKey="FK_3738bed64a93f86c991a817324b" implied="false" onDeleteCascade="false" schema="alcs" table="application_reconsidered_decisions"/>
@@ -200,6 +201,16 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="oats_alr_appl_decision_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_decisions to alcs.application_decisions." size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="30" name="email_sent" nullable="true" remarks="Used to track if/when the email was sent for this decision" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="'{}'::text[]" digits="0" id="31" name="cc_emails" nullable="false" remarks="Tracks extra emails to send the decision email to" size="2147483647" type="_text" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="32" name="is_flagged" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="33" name="reason_flagged" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="34" name="follow_up_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="35" name="flag_edited_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="36" name="flagged_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_ba6fa8d1851029a9859afc35b03" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="37" name="flag_edited_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_93cde17558333a6f39d089928de" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_f1cbebd03275dcbe1a70d46cebf" unique="true">
             <column ascending="true" name="uuid"/>
@@ -348,9 +359,35 @@
             <parent column="code" foreignKey="FK_14b7fff6b85bf51b9ab527e64f6" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition_type"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="oats_condition_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.application_decision_condition." size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="condition_card_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_ae868c3100cf95c50d1052a3923" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition_card"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_992b9bc08f066f248b0c25cbcc0" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="application_decision_condition_card" remarks="Links application decision conditions with cards" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="condition_card_uuid" foreignKey="FK_ae868c3100cf95c50d1052a3923" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_0fe3f690fa9452bf4b66c614083" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="decision_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_479c2feaef6520e2a351f3e7e57" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_e4ba515d1fc9c054f566ea71846" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="REL_0fe3f690fa9452bf4b66c61408" unique="true">
+            <column ascending="true" name="card_uuid"/>
          </index>
       </table>
       <table name="application_decision_condition_component" remarks="Join table that links decision condition with decision components" schema="alcs" type="TABLE">
@@ -1317,6 +1354,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="card_uuid" foreignKey="FK_21eddf92cb75ff3cc0c99b80d86" implied="false" onDeleteCascade="false" schema="alcs" table="application"/>
+            <child column="card_uuid" foreignKey="FK_0fe3f690fa9452bf4b66c614083" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_condition_card"/>
             <child column="card_uuid" foreignKey="FK_cd2e34439334004189a8767b960" implied="false" onDeleteCascade="false" schema="alcs" table="application_modification"/>
             <child column="card_uuid" foreignKey="FK_6d10e08b482effb968defe55357" implied="false" onDeleteCascade="false" schema="alcs" table="application_reconsideration"/>
             <child column="card_uuid" foreignKey="FK_b9537303955ebb0430c46d95997" implied="false" onDeleteCascade="false" schema="alcs" table="card_history"/>
@@ -1324,6 +1362,7 @@
             <child column="card_uuid" foreignKey="FK_acb37fb28b6e19312217e12aaa2" implied="false" onDeleteCascade="false" schema="alcs" table="comment"/>
             <child column="card_uuid" foreignKey="FK_217c73ca560363e2391d59ef75d" implied="false" onDeleteCascade="false" schema="alcs" table="inquiry"/>
             <child column="card_uuid" foreignKey="FK_2f863dc7ab4f76a87b160f32881" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent"/>
+            <child column="card_uuid" foreignKey="FK_f5487b5d4edd09dba2417b266c6" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_condition_card"/>
             <child column="card_uuid" foreignKey="FK_bf0ebc2212d34996113c9de2284" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_modification"/>
             <child column="card_uuid" foreignKey="FK_ea8f1884038f559b573689d8de2" implied="false" onDeleteCascade="false" schema="alcs" table="notification"/>
             <child column="card_uuid" foreignKey="FK_57f6fea41fefa2ca864a33b7950" implied="false" onDeleteCascade="false" schema="alcs" table="planning_referral"/>
@@ -2067,6 +2106,7 @@
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="notice_of_intent_decision_uuid" foreignKey="FK_ac731e8132c6eb334dc44481c33" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_component"/>
             <child column="decision_uuid" foreignKey="FK_88a63053a271ef84bc673e2bf9b" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_condition"/>
+            <child column="decision_uuid" foreignKey="FK_7cf55f3865a915283960cae1eb0" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_condition_card"/>
             <child column="decision_uuid" foreignKey="FK_9f9eadd4b16f8695e04f73ee727" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_document"/>
             <child column="notice_of_intent_decision_uuid" foreignKey="FK_31b5c6e87e4e94df69f38770ed1" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_modified_decisions"/>
          </column>
@@ -2097,6 +2137,16 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="oats_alr_appl_decision_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_decisions to alcs.notice_of_intent_decisions." size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="6" id="23" name="email_sent" nullable="true" remarks="Used to track if/when the email was sent for this decision" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="'{}'::text[]" digits="0" id="24" name="cc_emails" nullable="false" remarks="Tracks extra emails to send the decision email to" size="2147483647" type="_text" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="25" name="is_flagged" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="26" name="reason_flagged" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="27" name="follow_up_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="28" name="flag_edited_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="29" name="flagged_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_9b50f52d4c843ff2656ce04e575" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="30" name="flag_edited_by_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_8b3ab9ae1ef21da9ebe8b358a39" implied="false" onDeleteCascade="false" schema="alcs" table="user"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_5a17436f57102ce6703fed9a247" unique="true">
             <column ascending="true" name="uuid"/>
@@ -2195,9 +2245,35 @@
             <parent column="uuid" foreignKey="FK_88a63053a271ef84bc673e2bf9b" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision"/>
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="oats_condition_id" nullable="true" remarks="This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.notice_of_intent_decision_condition." size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="condition_card_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_a7c48dd8395ba0555ae90dca0cf" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_condition_card"/>
+         </column>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_51e53b1c3920b8957bfe368c46a" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+      </table>
+      <table name="notice_of_intent_decision_condition_card" remarks="Links notice of intent decision conditions with cards" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="condition_card_uuid" foreignKey="FK_a7c48dd8395ba0555ae90dca0cf" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_condition"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="card_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_f5487b5d4edd09dba2417b266c6" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="decision_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_7cf55f3865a915283960cae1eb0" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_f8b06cd95cf71b53a6da5bfbb7d" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="REL_f5487b5d4edd09dba2417b266c" unique="true">
+            <column ascending="true" name="card_uuid"/>
          </index>
       </table>
       <table name="notice_of_intent_decision_condition_component" remarks="Tracks Conditions links Components" schema="alcs" type="TABLE">
@@ -3523,6 +3599,8 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="flag_edited_by_uuid" foreignKey="FK_93cde17558333a6f39d089928de" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision"/>
+            <child column="flagged_by_uuid" foreignKey="FK_ba6fa8d1851029a9859afc35b03" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision"/>
             <child column="created_by_uuid" foreignKey="FK_bf4913015d41f8bb129407e493e" implied="false" onDeleteCascade="false" schema="alcs" table="application_submission"/>
             <child column="created_by_uuid" foreignKey="FK_9e40c625d904c15cc05b9a04ff9" implied="false" onDeleteCascade="false" schema="alcs" table="application_submission_review"/>
             <child column="assignee_uuid" foreignKey="FK_e91ded29d40ce244c61402e65fe" implied="false" onDeleteCascade="false" schema="alcs" table="card"/>
@@ -3533,6 +3611,8 @@
             <child column="closed_by_uuid" foreignKey="FK_3fcfda215d023cf892bf0b3048a" implied="false" onDeleteCascade="false" schema="alcs" table="inquiry"/>
             <child column="actor_uuid" foreignKey="FK_f9d295dbeac38c6b05f0994b415" implied="false" onDeleteCascade="false" schema="alcs" table="message"/>
             <child column="receiver_uuid" foreignKey="FK_23212dcb31290e8972bd4e8aa4d" implied="false" onDeleteCascade="false" schema="alcs" table="message"/>
+            <child column="flag_edited_by_uuid" foreignKey="FK_8b3ab9ae1ef21da9ebe8b358a39" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision"/>
+            <child column="flagged_by_uuid" foreignKey="FK_9b50f52d4c843ff2656ce04e575" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision"/>
             <child column="created_by_uuid" foreignKey="FK_ad65e20b0787e13906e0f36f1cf" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_submission"/>
             <child column="created_by_uuid" foreignKey="FK_99aed25adf97bc0591103e246c2" implied="false" onDeleteCascade="false" schema="alcs" table="notification_submission"/>
             <child column="closed_by_uuid" foreignKey="FK_84caebfef3502f3fb80e168ba44" implied="false" onDeleteCascade="false" schema="alcs" table="planning_review"/>

@@ -216,6 +216,16 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="application_decision.flag_edited_by_uuid references user.uuid via FK_93cde17558333a6f39d089928de"><a href='application_decision.html'>application_decision</a><span class='relatedKey'>.flag_edited_by_uuid</span></td>
+                                                <td class="constraint detail">FK_93cde17558333a6f39d089928de</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="application_decision.flagged_by_uuid references user.uuid via FK_ba6fa8d1851029a9859afc35b03"><a href='application_decision.html'>application_decision</a><span class='relatedKey'>.flagged_by_uuid</span></td>
+                                                <td class="constraint detail">FK_ba6fa8d1851029a9859afc35b03</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="application_submission.created_by_uuid references user.uuid via FK_bf4913015d41f8bb129407e493e"><a href='application_submission.html'>application_submission</a><span class='relatedKey'>.created_by_uuid</span></td>
                                                 <td class="constraint detail">FK_bf4913015d41f8bb129407e493e</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
@@ -263,6 +273,16 @@
                                             <tr>
                                                 <td title="message.receiver_uuid references user.uuid via FK_23212dcb31290e8972bd4e8aa4d"><a href='message.html'>message</a><span class='relatedKey'>.receiver_uuid</span></td>
                                                 <td class="constraint detail">FK_23212dcb31290e8972bd4e8aa4d</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="notice_of_intent_decision.flag_edited_by_uuid references user.uuid via FK_8b3ab9ae1ef21da9ebe8b358a39"><a href='notice_of_intent_decision.html'>notice_of_intent_decision</a><span class='relatedKey'>.flag_edited_by_uuid</span></td>
+                                                <td class="constraint detail">FK_8b3ab9ae1ef21da9ebe8b358a39</td>
+                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td title="notice_of_intent_decision.flagged_by_uuid references user.uuid via FK_9b50f52d4c843ff2656ce04e575"><a href='notice_of_intent_decision.html'>notice_of_intent_decision</a><span class='relatedKey'>.flagged_by_uuid</span></td>
+                                                <td class="constraint detail">FK_9b50f52d4c843ff2656ce04e575</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
@@ -656,169 +676,204 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="485,5,1031,211">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,871,441,1556">
-<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="565,228,951,521">
-<area shape="rect" id="node4" href="card.html" target="_top" title="card" alt="" coords="626,575,890,809">
-<area shape="rect" id="node5" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1079,447,1343,652">
-<area shape="rect" id="node6" href="comment.html" target="_top" title="comment" alt="" coords="1079,669,1343,845">
-<area shape="rect" id="node7" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1392,703,1656,879">
-<area shape="rect" id="node8" href="document.html" target="_top" title="document" alt="" coords="615,899,901,1104">
-<area shape="rect" id="node9" href="inquiry.html" target="_top" title="inquiry" alt="" coords="1075,1533,1348,1885">
-<area shape="rect" id="node10" href="message.html" target="_top" title="message" alt="" coords="668,1157,848,1333">
-<area shape="rect" id="node11" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="499,1351,1017,1527">
-<area shape="rect" id="node12" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="601,1544,915,1779">
-<area shape="rect" id="node13" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1075,1223,1348,1516">
-<area shape="rect" id="node14" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1392,1076,1656,1369">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="575,5,941,445">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="5,1328,441,2013">
+<area shape="rect" id="node3" href="application_submission.html" target="_top" title="application_submission" alt="" coords="485,463,1031,668">
+<area shape="rect" id="node4" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="565,685,951,979">
+<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="626,1032,890,1267">
+<area shape="rect" id="node6" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1079,904,1343,1109">
+<area shape="rect" id="node7" href="comment.html" target="_top" title="comment" alt="" coords="1079,1127,1343,1303">
+<area shape="rect" id="node8" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1392,1160,1656,1336">
+<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="615,1356,901,1561">
+<area shape="rect" id="node10" href="inquiry.html" target="_top" title="inquiry" alt="" coords="1075,2175,1348,2527">
+<area shape="rect" id="node11" href="message.html" target="_top" title="message" alt="" coords="668,1615,848,1791">
+<area shape="rect" id="node12" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="593,1808,923,2160">
+<area shape="rect" id="node13" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="499,2177,1017,2353">
+<area shape="rect" id="node14" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="601,2371,915,2605">
+<area shape="rect" id="node15" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1075,1864,1348,2157">
+<area shape="rect" id="node16" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1392,1717,1656,2011">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/user.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="871,332,1063,420">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="569,753,696,841">
-<area shape="rect" id="node3" href="local_government.html" target="_top" title="local_government" alt="" coords="505,1381,761,1469">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="91,1559,355,1647">
-<area shape="rect" id="node13" href="user.html" target="_top" title="user" alt="" coords="5,856,441,1541">
-<area shape="rect" id="node17" href="board.html" target="_top" title="board" alt="" coords="153,751,293,839">
-<area shape="rect" id="node18" href="card_status.html" target="_top" title="card_status" alt="" coords="125,540,321,628">
-<area shape="rect" id="node19" href="card_type.html" target="_top" title="card_type" alt="" coords="134,645,313,733">
-<area shape="rect" id="node5" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1232,2143,1620,2231">
-<area shape="rect" id="node6" href="document.html" target="_top" title="document" alt="" coords="824,1817,1109,2023">
-<area shape="rect" id="node7" href="application_document.html" target="_top" title="application_document" alt="" coords="1277,216,1575,304">
-<area shape="rect" id="node8" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1265,5,1587,93">
-<area shape="rect" id="node9" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1900,195,2161,283">
-<area shape="rect" id="node10" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1153,321,1699,527">
-<area shape="rect" id="node14" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="859,579,1075,667">
-<area shape="rect" id="node11" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1900,300,2161,388">
-<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1249,111,1603,199">
-<area shape="rect" id="node15" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1233,544,1619,837">
-<area shape="rect" id="node16" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="1767,405,2295,493">
-<area shape="rect" id="node20" href="card_history.html" target="_top" title="card_history" alt="" coords="865,473,1069,561">
-<area shape="rect" id="node21" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="861,684,1073,772">
-<area shape="rect" id="node22" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="501,648,765,736">
-<area shape="rect" id="node23" href="comment.html" target="_top" title="comment" alt="" coords="879,833,1054,921">
-<area shape="rect" id="node24" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1295,855,1557,943">
-<area shape="rect" id="node25" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1889,511,2173,599">
-<area shape="rect" id="node26" href="inquiry.html" target="_top" title="inquiry" alt="" coords="891,1204,1043,1292">
-<area shape="rect" id="node27" href="inquiry_type.html" target="_top" title="inquiry_type" alt="" coords="531,1168,735,1256">
-<area shape="rect" id="node28" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1297,1276,1555,1364">
-<area shape="rect" id="node29" href="inquiry_parcel.html" target="_top" title="inquiry_parcel" alt="" coords="1315,960,1537,1048">
-<area shape="rect" id="node30" href="message.html" target="_top" title="message" alt="" coords="543,975,723,1151">
-<area shape="rect" id="node31" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="847,1381,1087,1469">
-<area shape="rect" id="node32" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="1209,2248,1643,2336">
-<area shape="rect" id="node33" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1253,1381,1599,1469">
-<area shape="rect" id="node34" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1241,1065,1611,1153">
-<area shape="rect" id="node35" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="1876,1323,2185,1411">
-<area shape="rect" id="node36" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1167,1487,1685,1663">
-<area shape="rect" id="node37" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="1876,1428,2185,1516">
-<area shape="rect" id="node38" href="notice_of_intent_submission_to__fcf833b2.html" target="_top" title="notice_of_intent_submission_to_submission_status" alt="" coords="1743,1533,2319,1621">
-<area shape="rect" id="node39" href="notification.html" target="_top" title="notification" alt="" coords="869,1559,1065,1647">
-<area shape="rect" id="node40" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1275,1932,1577,2020">
-<area shape="rect" id="node41" href="notification_parcel.html" target="_top" title="notification_parcel" alt="" coords="1898,1639,2163,1727">
-<area shape="rect" id="node42" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1269,1680,1583,1915">
-<area shape="rect" id="node43" href="notification_submission_to_subm_de1feb40.html" target="_top" title="notification_submission_to_submission_status" alt="" coords="1765,1744,2297,1832">
-<area shape="rect" id="node44" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="1877,1849,2184,1937">
-<area shape="rect" id="node45" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1300,2037,1552,2125">
-<area shape="rect" id="node46" href="planning_review.html" target="_top" title="planning_review" alt="" coords="845,2040,1088,2128">
-<area shape="rect" id="node47" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="485,1969,780,2057">
-<area shape="rect" id="node48" href="planning_review_decision.html" target="_top" title="planning_review_decision" alt="" coords="1260,2495,1592,2583">
-<area shape="rect" id="node49" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="1811,2405,2250,2493">
-<area shape="rect" id="node50" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="1251,2389,1601,2477">
-<area shape="rect" id="node51" href="planning_review_meeting.html" target="_top" title="planning_review_meeting" alt="" coords="1260,2600,1592,2688">
-<area shape="rect" id="node52" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1323,1171,1529,1259">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="871,1631,1063,1719">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="569,1529,696,1617">
+<area shape="rect" id="node3" href="local_government.html" target="_top" title="local_government" alt="" coords="505,2414,761,2502">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="91,2378,355,2466">
+<area shape="rect" id="node9" href="user.html" target="_top" title="user" alt="" coords="5,1630,441,2315">
+<area shape="rect" id="node27" href="board.html" target="_top" title="board" alt="" coords="153,1419,293,1507">
+<area shape="rect" id="node28" href="card_status.html" target="_top" title="card_status" alt="" coords="125,1525,321,1613">
+<area shape="rect" id="node29" href="card_type.html" target="_top" title="card_type" alt="" coords="134,1314,313,1402">
+<area shape="rect" id="node5" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1861,290,2227,730">
+<area shape="rect" id="node6" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="1241,429,1624,517">
+<area shape="rect" id="node7" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1153,534,1712,622">
+<area shape="rect" id="node8" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="1229,323,1636,411">
+<area shape="rect" id="node10" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1271,1111,1594,1199">
+<area shape="rect" id="node11" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="1218,218,1647,306">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1255,1217,1610,1305">
+<area shape="rect" id="node13" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="2417,111,2817,199">
+<area shape="rect" id="node14" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="859,778,1075,866">
+<area shape="rect" id="node15" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="2925,330,3307,418">
+<area shape="rect" id="node16" href="application_decision_condition_card.html" target="_top" title="application_decision_condition_card" alt="" coords="2400,366,2833,454">
+<area shape="rect" id="node17" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="2423,219,2811,307">
+<area shape="rect" id="node18" href="document.html" target="_top" title="document" alt="" coords="824,1950,1109,2155">
+<area shape="rect" id="node19" href="application_document.html" target="_top" title="application_document" alt="" coords="1283,1633,1582,1721">
+<area shape="rect" id="node20" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="2423,997,2810,1085">
+<area shape="rect" id="node21" href="application_owner.html" target="_top" title="application_owner" alt="" coords="1913,1310,2175,1398">
+<area shape="rect" id="node22" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1160,783,1705,989">
+<area shape="rect" id="node23" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="1913,1465,2175,1553">
+<area shape="rect" id="node24" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="2402,1126,2831,1214">
+<area shape="rect" id="node25" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1240,1322,1625,1615">
+<area shape="rect" id="node26" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="1780,919,2308,1007">
+<area shape="rect" id="node30" href="card_history.html" target="_top" title="card_history" alt="" coords="865,1526,1069,1614">
+<area shape="rect" id="node31" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="861,1313,1073,1401">
+<area shape="rect" id="node32" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="501,1310,765,1398">
+<area shape="rect" id="node33" href="comment.html" target="_top" title="comment" alt="" coords="879,1207,1054,1295">
+<area shape="rect" id="node34" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1301,1006,1564,1094">
+<area shape="rect" id="node35" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="1902,814,2186,902">
+<area shape="rect" id="node36" href="inquiry.html" target="_top" title="inquiry" alt="" coords="891,2543,1043,2631">
+<area shape="rect" id="node37" href="inquiry_type.html" target="_top" title="inquiry_type" alt="" coords="531,2555,735,2643">
+<area shape="rect" id="node38" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1303,2466,1562,2554">
+<area shape="rect" id="node39" href="inquiry_parcel.html" target="_top" title="inquiry_parcel" alt="" coords="1322,3134,1543,3222">
+<area shape="rect" id="node40" href="message.html" target="_top" title="message" alt="" coords="543,1721,723,1897">
+<area shape="rect" id="node41" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="847,2350,1087,2438">
+<area shape="rect" id="node42" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="1879,2747,2209,3099">
+<area shape="rect" id="node43" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1247,2923,1618,3011">
+<area shape="rect" id="node44" href="notice_of_intent_decision_outcome.html" target="_top" title="notice_of_intent_decision_outcome" alt="" coords="1221,2782,1644,2870">
+<area shape="rect" id="node45" href="notice_of_intent_decision_component.html" target="_top" title="notice_of_intent_decision_component" alt="" coords="2393,2715,2840,2803">
+<area shape="rect" id="node46" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="2901,2873,3331,2961">
+<area shape="rect" id="node47" href="notice_of_intent_decision_condition_card.html" target="_top" title="notice_of_intent_decision_condition_card" alt="" coords="2376,2962,2857,3050">
+<area shape="rect" id="node48" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="2399,2298,2834,2386">
+<area shape="rect" id="node49" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1260,2325,1605,2413">
+<area shape="rect" id="node50" href="notice_of_intent_modified_decisions.html" target="_top" title="notice_of_intent_modified_decisions" alt="" coords="2399,2857,2834,2945">
+<area shape="rect" id="node51" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="1889,2219,2199,2307">
+<area shape="rect" id="node52" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1173,2131,1692,2307">
+<area shape="rect" id="node53" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="1889,2325,2199,2413">
+<area shape="rect" id="node54" href="notice_of_intent_submission_to__fcf833b2.html" target="_top" title="notice_of_intent_submission_to_submission_status" alt="" coords="1756,2114,2332,2202">
+<area shape="rect" id="node55" href="notification.html" target="_top" title="notification" alt="" coords="869,2245,1065,2333">
+<area shape="rect" id="node56" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1282,2026,1583,2114">
+<area shape="rect" id="node57" href="notification_parcel.html" target="_top" title="notification_parcel" alt="" coords="1911,1741,2177,1829">
+<area shape="rect" id="node58" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1275,1738,1590,1973">
+<area shape="rect" id="node59" href="notification_submission_to_subm_de1feb40.html" target="_top" title="notification_submission_to_submission_status" alt="" coords="1778,1846,2310,1934">
+<area shape="rect" id="node60" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="1891,1635,2197,1723">
+<area shape="rect" id="node61" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1307,3239,1559,3327">
+<area shape="rect" id="node62" href="planning_review.html" target="_top" title="planning_review" alt="" coords="845,2955,1088,3043">
+<area shape="rect" id="node63" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="485,2953,780,3041">
+<area shape="rect" id="node64" href="planning_review_decision.html" target="_top" title="planning_review_decision" alt="" coords="1267,2677,1599,2765">
+<area shape="rect" id="node65" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="1825,2538,2263,2626">
+<area shape="rect" id="node66" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="1258,2571,1607,2659">
+<area shape="rect" id="node67" href="planning_review_meeting.html" target="_top" title="planning_review_meeting" alt="" coords="1267,3345,1599,3433">
+<area shape="rect" id="node68" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1329,3029,1536,3117">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/user.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="oneimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagramImplied" name="oneDegreeRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="744,739,1289,944">
-<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="264,927,700,1612">
-<area shape="rect" id="node4" href="configuration.html" target="_top" title="configuration" alt="" coords="5,1340,220,1457">
-<area shape="rect" id="node3" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="824,5,1209,299">
-<area shape="rect" id="node5" href="card.html" target="_top" title="card" alt="" coords="885,961,1149,1196">
-<area shape="rect" id="node6" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1338,732,1602,937">
-<area shape="rect" id="node7" href="comment.html" target="_top" title="comment" alt="" coords="1338,1052,1602,1228">
-<area shape="rect" id="node8" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1651,1023,1915,1199">
-<area shape="rect" id="node9" href="document.html" target="_top" title="document" alt="" coords="874,1668,1159,1873">
-<area shape="rect" id="node10" href="inquiry.html" target="_top" title="inquiry" alt="" coords="1333,1433,1607,1785">
-<area shape="rect" id="node11" href="message.html" target="_top" title="message" alt="" coords="927,316,1107,492">
-<area shape="rect" id="node12" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="757,509,1276,685">
-<area shape="rect" id="node13" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="859,1927,1174,2161">
-<area shape="rect" id="node14" href="planning_review.html" target="_top" title="planning_review" alt="" coords="880,1357,1153,1651">
-<area shape="rect" id="node15" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1651,1216,1915,1509">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="834,1180,1199,1620">
+<area shape="rect" id="node2" href="user.html" target="_top" title="user" alt="" coords="264,1324,700,2009">
+<area shape="rect" id="node5" href="configuration.html" target="_top" title="configuration" alt="" coords="5,1708,220,1825">
+<area shape="rect" id="node3" href="application_submission.html" target="_top" title="application_submission" alt="" coords="744,1637,1289,1843">
+<area shape="rect" id="node4" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="824,5,1209,299">
+<area shape="rect" id="node6" href="card.html" target="_top" title="card" alt="" coords="885,1860,1149,2095">
+<area shape="rect" id="node7" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1338,1437,1602,1643">
+<area shape="rect" id="node8" href="comment.html" target="_top" title="comment" alt="" coords="1338,528,1602,704">
+<area shape="rect" id="node9" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1651,561,1915,737">
+<area shape="rect" id="node10" href="document.html" target="_top" title="document" alt="" coords="874,2495,1159,2700">
+<area shape="rect" id="node11" href="inquiry.html" target="_top" title="inquiry" alt="" coords="1333,2248,1607,2600">
+<area shape="rect" id="node12" href="message.html" target="_top" title="message" alt="" coords="927,757,1107,933">
+<area shape="rect" id="node13" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="852,316,1181,668">
+<area shape="rect" id="node14" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="757,951,1276,1127">
+<area shape="rect" id="node15" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="859,2717,1174,2952">
+<area shape="rect" id="node16" href="planning_review.html" target="_top" title="planning_review" alt="" coords="880,2184,1153,2477">
+<area shape="rect" id="node17" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1651,2025,1915,2319">
 </map>
                                         <a name='diagram'><img id="oneimpliedDegreeImg" src="../diagrams/tables/user.implied1degrees.png" usemap="#oneDegreeRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twoimpliedDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagramImplied" name="twoDegreesRelationshipsDiagramImplied">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="1223,1337,1415,1425">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="943,967,1069,1055">
-<area shape="rect" id="node3" href="local_government.html" target="_top" title="local_government" alt="" coords="878,2036,1134,2124">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="407,1832,671,1920">
-<area shape="rect" id="node14" href="user.html" target="_top" title="user" alt="" coords="321,1041,757,1727">
-<area shape="rect" id="node19" href="board.html" target="_top" title="board" alt="" coords="469,831,609,919">
-<area shape="rect" id="node20" href="card_status.html" target="_top" title="card_status" alt="" coords="441,936,637,1024">
-<area shape="rect" id="node21" href="card_type.html" target="_top" title="card_type" alt="" coords="450,725,629,813">
-<area shape="rect" id="node11" href="configuration.html" target="_top" title="configuration" alt="" coords="5,1401,220,1489">
-<area shape="rect" id="node5" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1563,1405,1951,1493">
-<area shape="rect" id="node6" href="document.html" target="_top" title="document" alt="" coords="1228,1479,1409,1567">
-<area shape="rect" id="node7" href="application_document.html" target="_top" title="application_document" alt="" coords="1607,1264,1906,1352">
-<area shape="rect" id="node8" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1595,948,1918,1036">
-<area shape="rect" id="node9" href="application_owner.html" target="_top" title="application_owner" alt="" coords="2231,605,2492,693">
-<area shape="rect" id="node10" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1484,725,2029,931">
-<area shape="rect" id="node15" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="1211,877,1427,965">
-<area shape="rect" id="node12" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="2231,1093,2492,1181">
-<area shape="rect" id="node13" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1579,1053,1934,1141">
-<area shape="rect" id="node16" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1564,312,1949,400">
-<area shape="rect" id="node17" href="application_submission_search_view.html" target="_top" title="application_submission_search_view" alt="" coords="321,1973,757,2037">
-<area shape="rect" id="node18" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="2097,816,2625,904">
-<area shape="rect" id="node22" href="card_history.html" target="_top" title="card_history" alt="" coords="1217,772,1421,860">
-<area shape="rect" id="node23" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1213,1232,1425,1320">
-<area shape="rect" id="node24" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="874,1337,1138,1425">
-<area shape="rect" id="node25" href="comment.html" target="_top" title="comment" alt="" coords="1231,1127,1406,1215">
-<area shape="rect" id="node26" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1625,1159,1888,1247">
-<area shape="rect" id="node27" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="2219,711,2503,799">
-<area shape="rect" id="node28" href="holiday_entity.html" target="_top" title="holiday_entity" alt="" coords="429,2055,650,2143">
-<area shape="rect" id="node29" href="inquiry.html" target="_top" title="inquiry" alt="" coords="1243,1760,1395,1848">
-<area shape="rect" id="node30" href="inquiry_type.html" target="_top" title="inquiry_type" alt="" coords="904,1685,1108,1773">
-<area shape="rect" id="node31" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1627,1547,1886,1635">
-<area shape="rect" id="node32" href="inquiry_parcel.html" target="_top" title="inquiry_parcel" alt="" coords="1646,1757,1867,1845">
-<area shape="rect" id="node33" href="inquiry_search_view.html" target="_top" title="inquiry_search_view" alt="" coords="401,2160,678,2224">
-<area shape="rect" id="node34" href="message.html" target="_top" title="message" alt="" coords="916,1072,1096,1248">
-<area shape="rect" id="node35" href="migrations.html" target="_top" title="migrations" alt="" coords="445,2241,634,2329">
-<area shape="rect" id="node36" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="1199,1865,1439,1953">
-<area shape="rect" id="node37" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="2197,2100,2526,2188">
-<area shape="rect" id="node38" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1571,2056,1942,2144">
-<area shape="rect" id="node39" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="2693,1716,3128,1804">
-<area shape="rect" id="node40" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1584,1652,1929,1740">
-<area shape="rect" id="node41" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="2207,395,2516,483">
-<area shape="rect" id="node42" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1497,1863,2016,2039">
-<area shape="rect" id="node43" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="2207,1705,2516,1793">
-<area shape="rect" id="node44" href="notice_of_intent_submission_search_view.html" target="_top" title="notice_of_intent_submission_search_view" alt="" coords="298,2383,781,2447">
-<area shape="rect" id="node45" href="notice_of_intent_submission_to__fcf833b2.html" target="_top" title="notice_of_intent_submission_to_submission_status" alt="" coords="2073,1865,2649,1953">
-<area shape="rect" id="node46" href="notification.html" target="_top" title="notification" alt="" coords="1221,2389,1417,2477">
-<area shape="rect" id="node47" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1606,2619,1907,2707">
-<area shape="rect" id="node48" href="notification_parcel.html" target="_top" title="notification_parcel" alt="" coords="2229,2809,2494,2897">
-<area shape="rect" id="node49" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1599,2865,1914,2953">
-<area shape="rect" id="node50" href="notification_submission_search_view.html" target="_top" title="notification_submission_search_view" alt="" coords="320,2464,759,2528">
-<area shape="rect" id="node51" href="notification_submission_to_subm_de1feb40.html" target="_top" title="notification_submission_to_submission_status" alt="" coords="2095,2915,2627,3003">
-<area shape="rect" id="node52" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="2208,500,2515,588">
-<area shape="rect" id="node53" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1631,2197,1883,2285">
-<area shape="rect" id="node54" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1197,2257,1440,2345">
-<area shape="rect" id="node55" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="859,2241,1153,2329">
-<area shape="rect" id="node56" href="planning_review_decision.html" target="_top" title="planning_review_decision" alt="" coords="1591,2513,1923,2601">
-<area shape="rect" id="node57" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="2142,1983,2581,2071">
-<area shape="rect" id="node58" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="1582,2303,1931,2391">
-<area shape="rect" id="node59" href="planning_review_meeting.html" target="_top" title="planning_review_meeting" alt="" coords="1591,2724,1923,2812">
-<area shape="rect" id="node60" href="planning_review_search_view.html" target="_top" title="planning_review_search_view" alt="" coords="355,2633,723,2697">
-<area shape="rect" id="node61" href="public_application_submission_s_21a213ce.html" target="_top" title="public_application_submission_search_view" alt="" coords="288,2715,791,2779">
-<area shape="rect" id="node62" href="public_notice_of_intent_submiss_882223b5.html" target="_top" title="public_notice_of_intent_submission_search_view" alt="" coords="264,2796,815,2860">
-<area shape="rect" id="node63" href="public_notification_submission__33ffb967.html" target="_top" title="public_notification_submission_search_view" alt="" coords="286,5,793,69">
-<area shape="rect" id="node64" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1653,2408,1860,2496">
-<area shape="rect" id="node65" href="tag.html" target="_top" title="tag" alt="" coords="948,87,1064,175">
-<area shape="rect" id="node66" href="tag_category.html" target="_top" title="tag_category" alt="" coords="434,123,645,211">
-<area shape="rect" id="node67" href="typeorm_metadata.html" target="_top" title="typeorm_metadata" alt="" coords="405,228,673,316">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="1223,1025,1415,1113">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="943,937,1069,1025">
+<area shape="rect" id="node3" href="local_government.html" target="_top" title="local_government" alt="" coords="878,1135,1134,1223">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="407,1320,671,1408">
+<area shape="rect" id="node9" href="user.html" target="_top" title="user" alt="" coords="321,1800,757,2485">
+<area shape="rect" id="node29" href="board.html" target="_top" title="board" alt="" coords="469,935,609,1023">
+<area shape="rect" id="node30" href="card_status.html" target="_top" title="card_status" alt="" coords="441,724,637,812">
+<area shape="rect" id="node31" href="card_type.html" target="_top" title="card_type" alt="" coords="450,829,629,917">
+<area shape="rect" id="node23" href="configuration.html" target="_top" title="configuration" alt="" coords="5,2512,220,2600">
+<area shape="rect" id="node5" href="application_decision.html" target="_top" title="application_decision" alt="" coords="2192,471,2557,911">
+<area shape="rect" id="node6" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="1572,312,1955,400">
+<area shape="rect" id="node7" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1484,417,2043,505">
+<area shape="rect" id="node8" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="1560,207,1967,295">
+<area shape="rect" id="node10" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1602,875,1925,963">
+<area shape="rect" id="node11" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="1549,101,1978,189">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1586,628,1941,716">
+<area shape="rect" id="node13" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="2747,1616,3147,1704">
+<area shape="rect" id="node14" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="1211,2575,1427,2663">
+<area shape="rect" id="node15" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="3256,387,3637,475">
+<area shape="rect" id="node16" href="application_decision_condition_card.html" target="_top" title="application_decision_condition_card" alt="" coords="2731,300,3164,388">
+<area shape="rect" id="node17" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="2753,1511,3141,1599">
+<area shape="rect" id="node18" href="document.html" target="_top" title="document" alt="" coords="1228,2324,1409,2412">
+<area shape="rect" id="node19" href="application_document.html" target="_top" title="application_document" alt="" coords="1614,2001,1913,2089">
+<area shape="rect" id="node20" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="2754,719,3141,807">
+<area shape="rect" id="node21" href="application_owner.html" target="_top" title="application_owner" alt="" coords="2244,3127,2505,3215">
+<area shape="rect" id="node22" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1491,2777,2036,2983">
+<area shape="rect" id="node24" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="2244,2491,2505,2579">
+<area shape="rect" id="node25" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="2733,405,3162,493">
+<area shape="rect" id="node26" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1571,523,1956,611">
+<area shape="rect" id="node27" href="application_submission_search_view.html" target="_top" title="application_submission_search_view" alt="" coords="321,2732,757,2796">
+<area shape="rect" id="node28" href="application_submission_to_submi_587693a5.html" target="_top" title="application_submission_to_submission_status" alt="" coords="2111,2775,2639,2863">
+<area shape="rect" id="node32" href="card_history.html" target="_top" title="card_history" alt="" coords="1217,812,1421,900">
+<area shape="rect" id="node33" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="1213,1915,1425,2003">
+<area shape="rect" id="node34" href="card_subtask_type.html" target="_top" title="card_subtask_type" alt="" coords="874,1951,1138,2039">
+<area shape="rect" id="node35" href="comment.html" target="_top" title="comment" alt="" coords="1231,2180,1406,2268">
+<area shape="rect" id="node36" href="comment_mention.html" target="_top" title="comment_mention" alt="" coords="1632,2528,1895,2616">
+<area shape="rect" id="node37" href="covenant_transferee.html" target="_top" title="covenant_transferee" alt="" coords="2233,3232,2517,3320">
+<area shape="rect" id="node38" href="holiday_entity.html" target="_top" title="holiday_entity" alt="" coords="429,2813,650,2901">
+<area shape="rect" id="node39" href="inquiry.html" target="_top" title="inquiry" alt="" coords="1243,1341,1395,1429">
+<area shape="rect" id="node40" href="inquiry_type.html" target="_top" title="inquiry_type" alt="" coords="904,1364,1108,1452">
+<area shape="rect" id="node41" href="inquiry_document.html" target="_top" title="inquiry_document" alt="" coords="1634,2317,1893,2405">
+<area shape="rect" id="node42" href="inquiry_parcel.html" target="_top" title="inquiry_parcel" alt="" coords="1653,1263,1874,1351">
+<area shape="rect" id="node43" href="inquiry_search_view.html" target="_top" title="inquiry_search_view" alt="" coords="401,2955,678,3019">
+<area shape="rect" id="node44" href="message.html" target="_top" title="message" alt="" coords="916,2056,1096,2232">
+<area shape="rect" id="node45" href="migrations.html" target="_top" title="migrations" alt="" coords="445,3036,634,3124">
+<area shape="rect" id="node46" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="1199,1131,1439,1219">
+<area shape="rect" id="node47" href="notice_of_intent_decision.html" target="_top" title="notice_of_intent_decision" alt="" coords="2210,1548,2539,1636">
+<area shape="rect" id="node48" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1578,1016,1949,1104">
+<area shape="rect" id="node49" href="notice_of_intent_decision_outcome.html" target="_top" title="notice_of_intent_decision_outcome" alt="" coords="1552,1545,1975,1633">
+<area shape="rect" id="node50" href="notice_of_intent_decision_component.html" target="_top" title="notice_of_intent_decision_component" alt="" coords="2724,1405,3171,1493">
+<area shape="rect" id="node51" href="notice_of_intent_decision_condition.html" target="_top" title="notice_of_intent_decision_condition" alt="" coords="3232,1439,3661,1527">
+<area shape="rect" id="node52" href="notice_of_intent_decision_condition_card.html" target="_top" title="notice_of_intent_decision_condition_card" alt="" coords="2707,1195,3188,1283">
+<area shape="rect" id="node53" href="notice_of_intent_decision_document.html" target="_top" title="notice_of_intent_decision_document" alt="" coords="2730,2160,3165,2248">
+<area shape="rect" id="node54" href="notice_of_intent_document.html" target="_top" title="notice_of_intent_document" alt="" coords="1591,2107,1936,2195">
+<area shape="rect" id="node55" href="notice_of_intent_modified_decisions.html" target="_top" title="notice_of_intent_modified_decisions" alt="" coords="2730,1300,3165,1388">
+<area shape="rect" id="node56" href="notice_of_intent_owner.html" target="_top" title="notice_of_intent_owner" alt="" coords="2220,3337,2529,3425">
+<area shape="rect" id="node57" href="notice_of_intent_submission.html" target="_top" title="notice_of_intent_submission" alt="" coords="1504,1703,2023,1879">
+<area shape="rect" id="node58" href="notice_of_intent_parcel.html" target="_top" title="notice_of_intent_parcel" alt="" coords="2220,1959,2529,2047">
+<area shape="rect" id="node59" href="notice_of_intent_submission_search_view.html" target="_top" title="notice_of_intent_submission_search_view" alt="" coords="298,3277,781,3341">
+<area shape="rect" id="node60" href="notice_of_intent_submission_to__fcf833b2.html" target="_top" title="notice_of_intent_submission_to_submission_status" alt="" coords="2087,1705,2663,1793">
+<area shape="rect" id="node61" href="notification.html" target="_top" title="notification" alt="" coords="1221,1236,1417,1324">
+<area shape="rect" id="node62" href="notification_document.html" target="_top" title="notification_document" alt="" coords="1613,2212,1914,2300">
+<area shape="rect" id="node63" href="notification_parcel.html" target="_top" title="notification_parcel" alt="" coords="2242,2916,2507,3004">
+<area shape="rect" id="node64" href="notification_submission.html" target="_top" title="notification_submission" alt="" coords="1606,3036,1921,3124">
+<area shape="rect" id="node65" href="notification_submission_search_view.html" target="_top" title="notification_submission_search_view" alt="" coords="320,3427,759,3491">
+<area shape="rect" id="node66" href="notification_submission_to_subm_de1feb40.html" target="_top" title="notification_submission_to_submission_status" alt="" coords="2109,3021,2641,3109">
+<area shape="rect" id="node67" href="notification_transferee.html" target="_top" title="notification_transferee" alt="" coords="2221,3487,2528,3575">
+<area shape="rect" id="node68" href="planning_referral.html" target="_top" title="planning_referral" alt="" coords="1637,733,1889,821">
+<area shape="rect" id="node69" href="planning_review.html" target="_top" title="planning_review" alt="" coords="1197,1577,1440,1665">
+<area shape="rect" id="node70" href="planning_review_type.html" target="_top" title="planning_review_type" alt="" coords="859,1613,1153,1701">
+<area shape="rect" id="node71" href="planning_review_decision.html" target="_top" title="planning_review_decision" alt="" coords="1597,1896,1929,1984">
+<area shape="rect" id="node72" href="planning_review_decision_document.html" target="_top" title="planning_review_decision_document" alt="" coords="2155,2172,2594,2260">
+<area shape="rect" id="node73" href="planning_review_document.html" target="_top" title="planning_review_document" alt="" coords="1589,2423,1938,2511">
+<area shape="rect" id="node74" href="planning_review_meeting.html" target="_top" title="planning_review_meeting" alt="" coords="1597,1368,1929,1456">
+<area shape="rect" id="node75" href="planning_review_search_view.html" target="_top" title="planning_review_search_view" alt="" coords="355,643,723,707">
+<area shape="rect" id="node76" href="public_application_submission_s_21a213ce.html" target="_top" title="public_application_submission_search_view" alt="" coords="288,1040,791,1104">
+<area shape="rect" id="node77" href="public_notice_of_intent_submiss_882223b5.html" target="_top" title="public_notice_of_intent_submission_search_view" alt="" coords="264,1121,815,1185">
+<area shape="rect" id="node78" href="public_notification_submission__33ffb967.html" target="_top" title="public_notification_submission_search_view" alt="" coords="286,1203,793,1267">
+<area shape="rect" id="node79" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1660,1157,1867,1245">
+<area shape="rect" id="node80" href="tag.html" target="_top" title="tag" alt="" coords="948,2768,1064,2856">
+<area shape="rect" id="node81" href="tag_category.html" target="_top" title="tag_category" alt="" coords="434,2627,645,2715">
+<area shape="rect" id="node82" href="typeorm_metadata.html" target="_top" title="typeorm_metadata" alt="" coords="405,1695,673,1783">
 </map>
                                         <a name='diagram'><img id="twoimpliedDegreeImg" src="../diagrams/tables/user.implied2degrees.png" usemap="#twoDegreesRelationshipsDiagramImplied" class="diagram" border="0" align="left"></a>
                                     </div>

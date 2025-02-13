@@ -78,7 +78,7 @@
                         <div class="col-md-12">
                             <div class="callout callout-info">
                                 <h4>SchemaSpy Analysis of postgres.alcs</h4>
-                                <p>Generated on Thu Dec 19 00:11 UTC 2024</p>
+                                <p>Generated on Thu Feb 13 21:28 UTC 2025</p>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                                 <span class="info-box-icon bg-aqua"><i class="fa fa-table"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">TABLES</span>
-                                    <span class="info-box-number">120</span>
+                                    <span class="info-box-number">122</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -118,7 +118,7 @@
                                 <span class="info-box-icon bg-green"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">COLUMNS</span>
-                                    <span class="info-box-number">1638</span>
+                                    <span class="info-box-number">1668</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -130,7 +130,7 @@
                                 <span class="info-box-icon bg-yellow"><i class="ion ion-key"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Constraints</span>
-                                    <span class="info-box-number">178</span>
+                                    <span class="info-box-number">188</span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -225,9 +225,9 @@
                                     </tr>
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/application_decision.html">application_decision</a></td>
-                                        <td class="detail" align="right">5</td>
-                                        <td class="detail" align="right">7</td>
-                                        <td class="detail" align="right">32</td>
+                                        <td class="detail" align="right">6</td>
+                                        <td class="detail" align="right">9</td>
+                                        <td class="detail" align="right">38</td>
                                         <td class="detail" align="right">-1</td>
                                         <td class="detail" align="right">Table</td>
                                         <td class="comment detail" style="display: table-cell;"><p>Decisions saved to applications, incl. those linked to the recon/modification request</p></td>
@@ -270,7 +270,7 @@
                                     </tr>
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/card.html">card</a></td>
-                                        <td class="detail" align="right">11</td>
+                                        <td class="detail" align="right">13</td>
                                         <td class="detail" align="right">4</td>
                                         <td class="detail" align="right">13</td>
                                         <td class="detail" align="right">-1</td>
@@ -285,6 +285,15 @@
                                         <td class="detail" align="right">-1</td>
                                         <td class="detail" align="right">Table</td>
                                         <td class="comment detail" style="display: table-cell;"><p>Portal Submissions for Notifications</p></td>
+                                    </tr>
+                                    <tr class="tbl even" valign="top">
+                                        <td class="detail"><a href="tables/application_decision_condition_card.html">application_decision_condition_card</a></td>
+                                        <td class="detail" align="right">1</td>
+                                        <td class="detail" align="right">2</td>
+                                        <td class="detail" align="right">8</td>
+                                        <td class="detail" align="right">-1</td>
+                                        <td class="detail" align="right">Table</td>
+                                        <td class="comment detail" style="display: table-cell;"><p>Links application decision conditions with cards</p></td>
                                     </tr>
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/application_decision_condition_type.html">application_decision_condition_type</a></td>
@@ -361,8 +370,8 @@
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/notice_of_intent_decision_condition.html">notice_of_intent_decision_condition</a></td>
                                         <td class="detail" align="right">2</td>
-                                        <td class="detail" align="right">2</td>
-                                        <td class="detail" align="right">13</td>
+                                        <td class="detail" align="right">3</td>
+                                        <td class="detail" align="right">14</td>
                                         <td class="detail" align="right">-1</td>
                                         <td class="detail" align="right">Table</td>
                                         <td class="comment detail" style="display: table-cell;"><p>Decision Conditions for Notice of Intents</p></td>
@@ -555,6 +564,15 @@
                                         <td class="detail" align="right">-1</td>
                                         <td class="detail" align="right">Table</td>
                                         <td class="comment detail" style="display: table-cell;"><p>Code table for possible Notification types</p></td>
+                                    </tr>
+                                    <tr class="tbl even" valign="top">
+                                        <td class="detail"><a href="tables/notice_of_intent_decision_condition_card.html">notice_of_intent_decision_condition_card</a></td>
+                                        <td class="detail" align="right">1</td>
+                                        <td class="detail" align="right">2</td>
+                                        <td class="detail" align="right">8</td>
+                                        <td class="detail" align="right">-1</td>
+                                        <td class="detail" align="right">Table</td>
+                                        <td class="comment detail" style="display: table-cell;"><p>Links notice of intent decision conditions with cards</p></td>
                                     </tr>
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/application_modification_outcome_type.html">application_modification_outcome_type</a></td>
@@ -1000,8 +1018,8 @@
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/application_decision_condition.html">application_decision_condition</a></td>
                                         <td class="detail" align="right">4</td>
-                                        <td class="detail" align="right">2</td>
-                                        <td class="detail" align="right">13</td>
+                                        <td class="detail" align="right">3</td>
+                                        <td class="detail" align="right">14</td>
                                         <td class="detail" align="right">-1</td>
                                         <td class="detail" align="right">Table</td>
                                         <td class="comment detail" style="display: table-cell;"><p>Fields present on the application decision conditions</p></td>
@@ -1125,9 +1143,9 @@
                                     </tr>
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/notice_of_intent_decision.html">notice_of_intent_decision</a></td>
-                                        <td class="detail" align="right">4</td>
-                                        <td class="detail" align="right">4</td>
-                                        <td class="detail" align="right">25</td>
+                                        <td class="detail" align="right">5</td>
+                                        <td class="detail" align="right">6</td>
+                                        <td class="detail" align="right">31</td>
                                         <td class="detail" align="right">-1</td>
                                         <td class="detail" align="right">Table</td>
                                         <td class="comment detail" style="display: table-cell;"><p>Decisions saved to NOIs, linked to the modification request</p></td>
@@ -1206,7 +1224,7 @@
                                     </tr>
                                     <tr class="tbl even" valign="top">
                                         <td class="detail"><a href="tables/user.html">user</a></td>
-                                        <td class="detail" align="right">14</td>
+                                        <td class="detail" align="right">18</td>
                                         <td class="detail" align="right">7</td>
                                         <td class="detail" align="right">21</td>
                                         <td class="detail" align="right">-1</td>

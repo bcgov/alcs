@@ -9,6 +9,8 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_decision":"ceo_criterion_code":w -> "application_ceo_criterion_code":"code":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"chair_review_outcome_code":w -> "application_decision_chair_review_outcome_type":"code":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"decision_maker_code":w -> "application_decision_maker_code":"code":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision":"flag_edited_by_uuid":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision":"flagged_by_uuid":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"modifies_uuid":w -> "application_modification":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_decision":"outcome_code":w -> "application_decision_outcome_code":"code":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"reconsiders_uuid":w -> "application_reconsideration":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
@@ -16,8 +18,11 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_decision_component":"application_decision_uuid":w -> "application_decision":"uuid.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_component":"naru_subtype_code":w -> "naru_subtype":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_component_lot":"elipses":w -> "application_decision_component":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision_condition":"condition_card_uuid":w -> "application_decision_condition_card":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_condition":"decision_uuid":w -> "application_decision":"uuid.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_condition":"type_code":w -> "application_decision_condition_type":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision_condition_card":"card_uuid":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
+  "application_decision_condition_card":"decision_uuid":w -> "application_decision":"uuid.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_condition_component":"elipses":w -> "application_decision_component":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_condition_component":"elipses":w -> "application_decision_condition":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision_condition_component_plan_number":"elipses":w -> "application_decision_component":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -46,12 +51,38 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_reconsideration":"type_code":w -> "application_reconsideration_type":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_reconsidered_decisions":"application_decision_uuid":w -> "application_decision":"uuid.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_reconsidered_decisions":"application_reconsideration_uuid":w -> "application_reconsideration":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_submission":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission":"elipses":w -> "naru_subtype":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission_review":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=teeodot];
+  "application_submission_review":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_tag":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "card":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "card_subtask":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "card_subtask":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "comment":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "comment":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "comment_mention":"elipses":w -> "comment":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "comment_mention":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "document":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "inquiry":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
+  "inquiry":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "inquiry":"elipses":w -> "local_government":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "inquiry":"elipses":w -> "application_region":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "local_government":"elipses":w -> "application_region":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "message":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "message":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notice_of_intent_decision":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notice_of_intent_decision":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notice_of_intent_submission":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notification_submission":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "planning_review":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "planning_review":"elipses":w -> "local_government":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "planning_review":"elipses":w -> "application_region":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "staff_journal":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "staff_journal":"elipses":w -> "user":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "staff_journal":"elipses":w -> "inquiry":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "staff_journal":"elipses":w -> "planning_review":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -124,7 +155,13 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="oats_alr_appl_decision_id" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">oats_alr_appl_decision_id</TD></TR></TABLE></TD><TD PORT="oats_alr_appl_decision_id.type" ALIGN="LEFT">int8[19]</TD></TR>
       <TR><TD PORT="email_sent" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">email_sent</TD></TR></TABLE></TD><TD PORT="email_sent.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
       <TR><TD PORT="cc_emails" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">cc_emails</TD></TR></TABLE></TD><TD PORT="cc_emails.type" ALIGN="LEFT">_text[2147483647]</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="4" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 7</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="is_flagged" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">is_flagged</TD></TR></TABLE></TD><TD PORT="is_flagged.type" ALIGN="LEFT">bool[1]</TD></TR>
+      <TR><TD PORT="reason_flagged" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">reason_flagged</TD></TR></TABLE></TD><TD PORT="reason_flagged.type" ALIGN="LEFT">text[2147483647]</TD></TR>
+      <TR><TD PORT="follow_up_at" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">follow_up_at</TD></TR></TABLE></TD><TD PORT="follow_up_at.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
+      <TR><TD PORT="flag_edited_at" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">flag_edited_at</TD></TR></TABLE></TD><TD PORT="flag_edited_at.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
+      <TR><TD PORT="flagged_by_uuid" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">flagged_by_uuid</TD></TR></TABLE></TD><TD PORT="flagged_by_uuid.type" ALIGN="LEFT">uuid[2147483647]</TD></TR>
+      <TR><TD PORT="flag_edited_by_uuid" COLSPAN="2" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="237" HEIGHT="16">flag_edited_by_uuid</TD></TR></TABLE></TD><TD PORT="flag_edited_by_uuid.type" ALIGN="LEFT">uuid[2147483647]</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="4" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 9</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">6 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_decision.html"
     target="_top"
@@ -184,15 +221,23 @@ digraph "twoDegreesRelationshipsDiagram" {
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="223" HEIGHT="16"><B>application_decision_condition</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="223" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="decision_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="223" HEIGHT="16">decision_uuid</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="type_code" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="223" HEIGHT="16">type_code</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="application_decision_condition.html"
     target="_top"
     tooltip="application_decision_condition"
+  ];
+  "application_decision_condition_card" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="262" HEIGHT="16"><B>application_decision_condition_card</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="application_decision_condition_card.html"
+    target="_top"
+    tooltip="application_decision_condition_card"
   ];
   "application_decision_condition_component" [
    label=<
@@ -470,11 +515,44 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="32" HEIGHT="16"><B>card</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">11 &gt;</TD></TR></TABLE></TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">13 &gt;</TD></TR></TABLE></TD></TR>
     </TABLE>>
     URL="card.html"
     target="_top"
     tooltip="card"
+  ];
+  "card_subtask" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="96" HEIGHT="16"><B>card_subtask</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="card_subtask.html"
+    target="_top"
+    tooltip="card_subtask"
+  ];
+  "comment" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="68" HEIGHT="16"><B>comment</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">1 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="comment.html"
+    target="_top"
+    tooltip="comment"
+  ];
+  "comment_mention" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="134" HEIGHT="16"><B>comment_mention</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="comment_mention.html"
+    target="_top"
+    tooltip="comment_mention"
   ];
   "document" [
    label=<
@@ -487,6 +565,17 @@ digraph "twoDegreesRelationshipsDiagram" {
     target="_top"
     tooltip="document"
   ];
+  "inquiry" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="51" HEIGHT="16"><B>inquiry</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 5</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="inquiry.html"
+    target="_top"
+    tooltip="inquiry"
+  ];
   "local_government" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -497,6 +586,17 @@ digraph "twoDegreesRelationshipsDiagram" {
     URL="local_government.html"
     target="_top"
     tooltip="local_government"
+  ];
+  "message" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="64" HEIGHT="16"><B>message</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="message.html"
+    target="_top"
+    tooltip="message"
   ];
   "naru_subtype" [
    label=<
@@ -509,6 +609,50 @@ digraph "twoDegreesRelationshipsDiagram" {
     target="_top"
     tooltip="naru_subtype"
   ];
+  "notice_of_intent_decision" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="184" HEIGHT="16"><B>notice_of_intent_decision</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 5</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="notice_of_intent_decision.html"
+    target="_top"
+    tooltip="notice_of_intent_decision"
+  ];
+  "notice_of_intent_submission" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="206" HEIGHT="16"><B>notice_of_intent_submission</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="notice_of_intent_submission.html"
+    target="_top"
+    tooltip="notice_of_intent_submission"
+  ];
+  "notification_submission" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="173" HEIGHT="16"><B>notification_submission</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="notification_submission.html"
+    target="_top"
+    tooltip="notification_submission"
+  ];
+  "planning_review" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="119" HEIGHT="16"><B>planning_review</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="planning_review.html"
+    target="_top"
+    tooltip="planning_review"
+  ];
   "staff_journal" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -519,5 +663,26 @@ digraph "twoDegreesRelationshipsDiagram" {
     URL="staff_journal.html"
     target="_top"
     tooltip="staff_journal"
+  ];
+  "user" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="32" HEIGHT="16"><B>user</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/primaryKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">uuid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="display_name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">display_name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="given_name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">given_name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="family_name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">family_name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="idir_user_guid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">idir_user_guid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="idir_user_name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">idir_user_name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="bceid_guid" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">bceid_guid</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="bceid_user_name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">bceid_user_name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="business_name" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="161" HEIGHT="16">business_name</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" CELLPADDING="0" BGCOLOR="#ffffff" COLSPAN="3" ><TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="CENTER" BGCOLOR="#ffffff">  </TD><VR/><TD ALIGN="RIGHT" BGCOLOR="#ffffff">18 &gt;</TD></TR></TABLE></TD></TR>
+    </TABLE>>
+    URL="user.html"
+    target="_top"
+    tooltip="user"
   ];
 }
