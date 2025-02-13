@@ -48,7 +48,7 @@ export class ApplicationDecisionConditionFinancialInstrument extends Base {
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
-  expiryDate?: Date;
+  expiryDate?: Date | null;
 
   @AutoMap()
   @Column({ type: 'decimal', precision: 12, scale: 2, nullable: false, transformer: new ColumnNumericTransformer() })
@@ -79,7 +79,7 @@ export class ApplicationDecisionConditionFinancialInstrument extends Base {
   status: InstrumentStatus;
 
   @AutoMap()
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   statusDate?: Date | null;
 
   @AutoMap()
