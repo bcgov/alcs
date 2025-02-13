@@ -16,19 +16,25 @@
   <ng-container matColumnDef="type">
     <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell class="type-cell" *matCellDef="let element">
-      <ng-container *ngIf="!element.appType" class="center"> - </ng-container>
+      <ng-container *ngIf="!element.appType && !element.isCondition" class="center"> - </ng-container>
       <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType">
       </app-application-type-pill>
       <app-application-type-pill
         [useShortLabel]="true"
-        *ngIf="element.parentType === 'modification'"
+        *ngIf="element.parentType === 'modification' || element.isConditionModi"
         [type]="MODIFICATION_TYPE_LABEL"
       >
       </app-application-type-pill>
       <app-application-type-pill
         [useShortLabel]="true"
-        *ngIf="element.parentType === 'reconsideration'"
+        *ngIf="element.parentType === 'reconsideration' || element.isConditionRecon"
         [type]="RECON_TYPE_LABEL"
+      >
+      </app-application-type-pill>
+      <app-application-type-pill
+        [useShortLabel]="true"
+        *ngIf="element.isCondition"
+        [type]="CONDITION_LABEL"
       >
       </app-application-type-pill>
     </td>

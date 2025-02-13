@@ -5,6 +5,11 @@ import { ApplicationDecisionComponentDto } from '../application-decision-v2/appl
 import { DateLabel, DateType } from './application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
 import { ApplicationDecisionConditionDateDto } from './application-decision-condition-date/application-decision-condition-date.dto';
+import {
+  ApplicationDecisionConditionCardUuidDto,
+  ApplicationDecisionConditionHomeCardDto,
+} from './application-decision-condition-card/application-decision-condition-card.dto';
+import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -88,6 +93,49 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap()
   dates: ApplicationDecisionConditionDateDto[];
+
+  @AutoMap(() => ApplicationDecisionConditionCardUuidDto)
+  conditionCard: ApplicationDecisionConditionCardUuidDto | null;
+
+  status?: string | null;
+}
+
+export class ApplicationHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  applicant: string;
+
+  @AutoMap()
+  fileNumber: string;
+
+  @AutoMap(() => ApplicationTypeDto)
+  type: ApplicationTypeDto;
+
+  activeDays?: number;
+  paused: boolean;
+  pausedDays: number;
+}
+
+export class ApplicationDecisionHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  application: ApplicationHomeDto;
+}
+
+export class ApplicationDecisionConditionHomeDto {
+  @AutoMap(() => ApplicationDecisionConditionHomeCardDto)
+  conditionCard: ApplicationDecisionConditionHomeCardDto | null;
+
+  status?: string | null;
+  isReconsideration: boolean;
+  isModification: boolean;
+
+  @AutoMap()
+  decision?: ApplicationDecisionHomeDto;
 }
 
 export class ComponentToConditionDto {
@@ -132,6 +180,10 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsArray()
   dates?: ApplicationDecisionConditionDateDto[];
+
+  @IsOptional()
+  @IsUUID()
+  conditionCardUuid?: string;
 }
 
 export class UpdateApplicationDecisionConditionServiceDto {
@@ -142,6 +194,7 @@ export class UpdateApplicationDecisionConditionServiceDto {
   administrativeFee?: number;
   description?: string;
   dates?: ApplicationDecisionConditionDateDto[];
+  conditionCardUuid?: string;
 }
 
 export class ApplicationDecisionConditionComponentDto {

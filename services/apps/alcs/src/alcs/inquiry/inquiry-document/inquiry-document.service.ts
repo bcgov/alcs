@@ -114,7 +114,7 @@ export class InquiryDocumentService {
       },
       relations: this.DEFAULT_RELATIONS,
     });
-    if (!document) {
+    if (!document || !document.document) {
       throw new NotFoundException(`Failed to find document ${uuid}`);
     }
     return document;
@@ -132,15 +132,17 @@ export class InquiryDocumentService {
         fileNumber,
       },
     };
-    return this.inquiryDocumentRepository.find({
-      where,
-      order: {
-        document: {
-          uploadedAt: 'DESC',
+    return (
+      await this.inquiryDocumentRepository.find({
+        where,
+        order: {
+          document: {
+            uploadedAt: 'DESC',
+          },
         },
-      },
-      relations: this.DEFAULT_RELATIONS,
-    });
+        relations: this.DEFAULT_RELATIONS,
+      })
+    ).filter((document) => document.document);
   }
 
   async getInlineUrl(document: InquiryDocument) {

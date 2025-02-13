@@ -117,3 +117,11 @@ export const CLOSED_PR_LABEL = {
   borderColor: '#DD8C8F',
   textColor: '#313132',
 };
+
+export const CONDITION_LABEL = {
+  label: 'Condition',
+  shortLabel: 'COND',
+  backgroundColor: '#fff',
+  borderColor: '#454545',
+  textColor: '#000',
+};

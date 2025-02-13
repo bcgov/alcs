@@ -10,8 +10,8 @@ import { NotificationDocumentService } from '../../../services/notification/noti
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
-import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
+import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-notification-documents',
@@ -19,7 +19,7 @@ import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
   styleUrls: ['./documents.component.scss'],
 })
 export class NotificationDocumentsComponent implements OnInit {
-  displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
+  displayedColumns: string[] = ['source', 'type', 'fileName', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: NotificationDocumentDto[] = [];
   private fileId = '';
 
@@ -55,9 +55,12 @@ export class NotificationDocumentsComponent implements OnInit {
         width: '70%',
         data: {
           fileId: this.fileId,
+          documentService: this.notificationDocumentService,
+          allowedVisibilityFlags: ['A', 'G', 'P'],
+          allowsFileEdit: true,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -96,9 +99,12 @@ export class NotificationDocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           existingDocument: element,
+          documentService: this.notificationDocumentService,
+          allowedVisibilityFlags: ['A', 'G', 'P'],
+          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);

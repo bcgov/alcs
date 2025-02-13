@@ -30,6 +30,8 @@ import { UpcomingMeetingBoardMapDto } from '../../services/decision-meeting/deci
 import { IncomingFileService } from '../../services/incoming-file/incoming-file.service';
 import { IncomingFileBoardMapDto } from 'src/app/services/incoming-file/incoming-file.dto';
 import { FileTagService } from '../../services/common/file-tag.service';
+import { ApplicationDecisionConditionCardDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { NoticeOfIntentDecisionConditionCardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -122,6 +124,14 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
       return modification.reviewOutcome === null || modification.reviewOutcome.code !== 'REF';
     }, false);
     this._modifications = modifications;
+    this.setupLinkedCards();
+  }
+
+  _conditionCards: ApplicationDecisionConditionCardDto[] | NoticeOfIntentDecisionConditionCardDto[] = [];
+  @Input() set conditionCards(
+    conditionCards: ApplicationDecisionConditionCardDto[] | NoticeOfIntentDecisionConditionCardDto[],
+  ) {
+    this._conditionCards = conditionCards;
     this.setupLinkedCards();
   }
 
@@ -245,6 +255,14 @@ export class DetailsHeaderComponent implements OnInit, OnDestroy {
         displayName: `Reconsideration #${index + 1}`,
       }));
     result.push(...mappedReconCards);
+
+    const mappedConditionCards = this._conditionCards
+      .filter((conditionCard) => !!conditionCard.card)
+      .map((conditionCard, index) => ({
+        ...conditionCard.card,
+        displayName: `Condition Card #${index + 1}`,
+      }));
+    result.push(...mappedConditionCards);
 
     this.linkedCards = result;
   }

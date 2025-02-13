@@ -77,6 +77,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     this.stringIndex = countToString(this.index);
     if (this.condition) {
       this.dates = Array.isArray(this.condition.dates) ? this.condition.dates : [];
+      if (this.condition.type?.dateType === DateType.SINGLE && this.dates.length <= 0) {
+        await this.addNewDate();
+      }
       this.singleDateFormated =
         this.dates[0] && this.dates[0].date ? moment(this.dates[0].date).format(environment.dateFormat) : undefined;
       this.setPillLabel(this.condition.status);

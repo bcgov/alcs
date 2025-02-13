@@ -8,8 +8,8 @@ import { PlanningReviewDocumentService } from '../../../services/planning-review
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
-import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
+import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-documents',
@@ -17,7 +17,7 @@ import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
   styleUrls: ['./documents.component.scss'],
 })
 export class DocumentsComponent implements OnInit {
-  displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
+  displayedColumns: string[] = ['source', 'type', 'fileName', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: PlanningReviewDocumentDto[] = [];
   private fileId = '';
 
@@ -55,9 +55,12 @@ export class DocumentsComponent implements OnInit {
         width: '70%',
         data: {
           fileId: this.fileId,
+          documentService: this.planningReviewDocumentService,
+          allowedVisibilityFlags: ['C'],
+          allowsFileEdit: true,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);
@@ -96,9 +99,12 @@ export class DocumentsComponent implements OnInit {
         data: {
           fileId: this.fileId,
           existingDocument: element,
+          documentService: this.planningReviewDocumentService,
+          allowsFileEdit: true,
+          allowedVisibilityFlags: ['C'],
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe((isDirty: boolean) => {
         if (isDirty) {
           this.loadDocuments(this.fileId);

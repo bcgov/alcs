@@ -1,0 +1,53 @@
+@use '../../../../../../styles/colors.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 12px 8px;
+  overflow-y: hidden;
+}
+
+.section {
+  width: 100%;
+  padding: 16px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.column-select {
+  width: 10%;
+}
+
+.column-index {
+  width: 10%;
+}
+
+.column-type {
+  width: 30%;
+}
+
+.column-description {
+  width: 50%;
+}
+
+.conditions-table {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.table-container {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.disabled-row {
+  background-color: #f0f0f0;
+  opacity: 0.6;
+  cursor: default;
+}

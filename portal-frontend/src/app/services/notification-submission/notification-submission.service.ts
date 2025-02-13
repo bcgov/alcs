@@ -108,7 +108,9 @@ export class NotificationSubmissionService {
       this.toastService.showSuccessToast('SRW Submitted');
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to submit SRW, please try again');
+      this.toastService.showErrorToast(
+        'Failed to submit SRW, please try again. If the problem persists, contact ALC.Portal@gov.bc.ca.',
+      );
     } finally {
       this.overlayService.hideSpinner();
     }

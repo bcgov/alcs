@@ -1,82 +1,82 @@
 <div mat-dialog-title>
-    <h4>{{title}} optional attachment</h4>
+  <h4>{{ title }} optional attachment</h4>
 </div>
 <div mat-dialog-content>
-    <div class="uploader">
-        <app-file-drag-drop 
-            (uploadFiles)="attachDocument($event)"
-            (openFile)="openFile()"
-            (deleteFile)="deleteFile()"
-            [uploadedFiles]="attachment"
-            [showErrors]="showFileRequiredError"
-            [isRequired]="true"
-            [showVirusError]="showVirusError">
-        </app-file-drag-drop>
-    </div>
-    <mat-error *ngIf="showVirusError" class="left" style="display: flex">
-        <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
-      </mat-error>
-    <form [formGroup]="form">
-        <div class="form-container">
-            <div class="form-field">
-                <mat-form-field appearance="outline" >
-                    <mat-select 
-                        placeholder="Select a Type" 
-                        id="fileType" 
-                        formControlName="fileType" 
-                        (valueChange)="onChangeType($event)">
-                        <mat-option *ngFor="let type of selectableTypes" 
-                            [value]="type.code">
-                            {{ type.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <div
-                *ngIf="
-                    form.controls['fileType']!.invalid &&
-                    (form.controls['fileType']!.dirty ||
-                        form.controls['fileType']!.touched)"
-                    class="field-error"
-                >
-                    <mat-icon>warning</mat-icon>
-                    <div *ngIf="form.controls['fileType']!.errors?.['required']">
-                    This field is required
-                    </div>
-                </div>
-            </div>
-            <div class="form-field">
-                <mat-form-field appearance="outline">
-                    <input matInput 
-                    type="text"
-                    placeholder="Type Description" 
-                    id="fileDescription"
-                    formControlName="fileDescription"
-                    (input)="onChangeDescription()">
-                </mat-form-field>
-                <div
-                *ngIf="
-                    form.controls['fileDescription']!.invalid &&
-                    (form.controls['fileDescription']!.dirty ||
-                        form.controls['fileDescription']!.touched)"
-                    class="field-error"
-                >
-                    <mat-icon>warning</mat-icon>
-                    <div *ngIf="form.controls['fileDescription']!.errors?.['required']">
-                    This field is required
-                    </div>
-                </div>
-            </div>
+  <div class="uploader">
+    <app-file-drag-drop
+      (uploadFiles)="attachDocument($event)"
+      (openFile)="openFile()"
+      (deleteFile)="deleteFile()"
+      [uploadedFiles]="attachment"
+      [showErrors]="showFileRequiredError"
+      [isRequired]="true"
+      [showHasVirusError]="showHasVirusError"
+      [showVirusScanFailedError]="showVirusScanFailedError"
+    >
+    </app-file-drag-drop>
+  </div>
+  <mat-error *ngIf="showHasVirusError" class="left" style="display: flex">
+    <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
+  </mat-error>
+  <form [formGroup]="form">
+    <div class="form-container">
+      <div class="form-field">
+        <mat-form-field appearance="outline">
+          <mat-select
+            placeholder="Select a Type"
+            id="fileType"
+            formControlName="fileType"
+            (valueChange)="onChangeType($event)"
+          >
+            <mat-option *ngFor="let type of selectableTypes" [value]="type.code">
+              {{ type.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div
+          *ngIf="
+            form.controls['fileType']!.invalid &&
+            (form.controls['fileType']!.dirty || form.controls['fileType']!.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="form.controls['fileType']!.errors?.['required']">This field is required</div>
         </div>
-    </form>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            type="text"
+            placeholder="Type Description"
+            id="fileDescription"
+            formControlName="fileDescription"
+            (input)="onChangeDescription()"
+          />
+        </mat-form-field>
+        <div
+          *ngIf="
+            form.controls['fileDescription']!.invalid &&
+            (form.controls['fileDescription']!.dirty || form.controls['fileDescription']!.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="form.controls['fileDescription']!.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
 <mat-dialog-actions align="end">
-    <div class="button-container">
-        <button *ngIf="!this.data.existingDocument" mat-flat-button color="primary" (click)="onAdd()" [disabled]="isSaving">
-            ADD
-        </button>
-        <button *ngIf="this.data.existingDocument" mat-flat-button color="primary" (click)="onEdit()" [disabled]="isSaving">
-            SAVE
-        </button>
-        <button mat-stroked-button color="primary" [mat-dialog-close]="false">CANCEL</button>
-    </div>
+  <div class="button-container">
+    <button *ngIf="!this.data.existingDocument" mat-flat-button color="primary" (click)="onAdd()" [disabled]="isSaving">
+      ADD
+    </button>
+    <button *ngIf="this.data.existingDocument" mat-flat-button color="primary" (click)="onEdit()" [disabled]="isSaving">
+      SAVE
+    </button>
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false">CANCEL</button>
+  </div>
 </mat-dialog-actions>

@@ -78,6 +78,10 @@ import { TagsHeaderComponent } from './tags/tags-header/tags-header.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { TagChipComponent } from './tags/tag-chip/tag-chip.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CommissionerTagsHeaderComponent } from './tags/commissioner-tags-header/commissioner-tags-header.component';
+import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
+import { FlagDialogComponent } from './flag-dialog/flag-dialog.component';
+import { UnFlagDialogComponent } from './unflag-dialog/unflag-dialog.component';
 
 @NgModule({
   declarations: [
@@ -121,6 +125,10 @@ import { DomSanitizer } from '@angular/platform-browser';
     TruncatePipe,
     TagsHeaderComponent,
     TagChipComponent,
+    CommissionerTagsHeaderComponent,
+    DocumentUploadDialogComponent,
+    FlagDialogComponent,
+    UnFlagDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -148,6 +156,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     MatSlideToggleModule,
     MatChipsModule,
     MatAutocompleteModule,
+    MatCheckboxModule,
   ],
   exports: [
     CommonModule,
@@ -224,6 +233,9 @@ import { DomSanitizer } from '@angular/platform-browser';
     TruncatePipe,
     TagsHeaderComponent,
     TagChipComponent,
+    DocumentUploadDialogComponent,
+    FlagDialogComponent,
+    UnFlagDialogComponent,
   ],
 })
 export class SharedModule {
@@ -231,6 +243,10 @@ export class SharedModule {
     matIconRegistry.addSvgIcon(
       'cancel_filled',
       domSanitizer.bypassSecurityTrustResourceUrl('/assets/icons/cancel_filled.svg'),
+    );
+    matIconRegistry.addSvgIcon(
+      'personal_places',
+      domSanitizer.bypassSecurityTrustResourceUrl('/assets/icons/personal_places.svg'),
     );
   }
   static forRoot(): ModuleWithProviders<SharedModule> {

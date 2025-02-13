@@ -10,6 +10,8 @@ import { ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { DocumentsComponent } from './documents.component';
+import { ApplicationParcelService } from '../../../services/application/application-parcel/application-parcel.service';
+import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
 
 describe('DocumentsComponent', () => {
   let component: DocumentsComponent;
@@ -19,6 +21,8 @@ describe('DocumentsComponent', () => {
   let mockDialog: DeepMocked<MatDialog>;
   let mockToastService: DeepMocked<ToastService>;
   let mockAppSubStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockAppSubService: DeepMocked<ApplicationSubmissionService>;
+  let mockAppParcelService: DeepMocked<ApplicationParcelService>;
 
   beforeEach(async () => {
     mockAppDocService = createMock();
@@ -49,6 +53,14 @@ describe('DocumentsComponent', () => {
         {
           provide: ApplicationSubmissionStatusService,
           useValue: mockAppSubStatusService,
+        },
+        {
+          provide: ApplicationSubmissionService,
+          useValue: mockAppSubService,
+        },
+        {
+          provide: ApplicationParcelService,
+          useValue: mockAppParcelService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

@@ -1,8 +1,8 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Mapper } from 'automapper-core';
+import { condition, Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import { IConfig } from 'config';
 import { FindOptionsRelations, Not, Repository } from 'typeorm';
@@ -13,6 +13,9 @@ import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
+import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
+import { ApplicationDecisionConditionCardService } from '../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 @Injectable()
 export class CardService {
@@ -32,6 +35,10 @@ export class CardService {
     @Inject(CONFIG_TOKEN) private config: IConfig,
     private subtaskService: CardSubtaskService,
     private notificationService: MessageService,
+    @Inject(forwardRef(() => ApplicationDecisionConditionCardService))
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
+    @Inject(forwardRef(() => NoticeOfIntentDecisionConditionCardService))
+    private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
   ) {}
 
   async getCardTypes() {
@@ -108,9 +115,7 @@ export class CardService {
     });
 
     if (!existingCard) {
-      throw new ServiceValidationException(
-        `Card for with ${cardUuid} not found`,
-      );
+      throw new ServiceValidationException(`Card for with ${cardUuid} not found`);
     }
 
     const shouldCreateNotification =
@@ -144,15 +149,11 @@ export class CardService {
     });
 
     if (!type) {
-      throw new ServiceValidationException(
-        `Provided type does not exist ${typeCode}`,
-      );
+      throw new ServiceValidationException(`Provided type does not exist ${typeCode}`);
     }
 
     const newCard = new Card();
-    newCard.statusCode = board.statuses.reduce((prev, curr) =>
-      prev.order < curr.order ? prev : curr,
-    )?.status.code;
+    newCard.statusCode = board.statuses.reduce((prev, curr) => (prev.order < curr.order ? prev : curr))?.status.code;
     newCard.typeCode = typeCode;
     newCard.boardUuid = board.uuid;
 
@@ -191,6 +192,14 @@ export class CardService {
     const subtaskUuids = card.subtasks.map((subtask) => subtask.uuid);
     await this.subtaskService.deleteMany(subtaskUuids);
 
+    if (card.typeCode === CARD_TYPE.APP_CON) {
+      await this.applicationDecisionConditionCardService.archiveByBoardCard(card.uuid);
+    }
+
+    if (card.typeCode === CARD_TYPE.NOI_CON) {
+      await this.noticeOfIntentDecisionConditionCardService.archiveByBoardCard(card.uuid);
+    }
+
     card.archived = true;
     await this.cardRepository.save(card);
     await this.cardRepository.softRemove(card);
@@ -215,6 +224,14 @@ export class CardService {
     const subtaskUuids = card.subtasks.map((subtask) => subtask.uuid);
     await this.subtaskService.recoverMany(subtaskUuids);
 
+    if (card.typeCode === CARD_TYPE.APP_CON) {
+      await this.applicationDecisionConditionCardService.recoverByBoardCard(card.uuid);
+    }
+
+    if (card.typeCode === CARD_TYPE.NOI_CON) {
+      await this.noticeOfIntentDecisionConditionCardService.recoverByBoardCard(card.uuid);
+    }
+
     card.archived = false;
     await this.cardRepository.save(card);
     await this.cardRepository.recover(card);
@@ -225,5 +242,12 @@ export class CardService {
       where: { statusCode: code },
       relations: this.DEFAULT_RELATIONS,
     });
+  }
+
+  async softRemoveByUuid(uuid: string) {
+    const card = await this.cardRepository.findOneOrFail({
+      where: { uuid },
+    });
+    await this.cardRepository.softRemove(card);
   }
 }

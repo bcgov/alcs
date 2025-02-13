@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CodeModule } from '../code/code.module';
 import { CardProfile } from '../../common/automapper/card.automapper.profile';
@@ -15,6 +15,9 @@ import { CardType } from './card-type/card-type.entity';
 import { CardController } from './card.controller';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
+import { ApplicationDecisionCondition } from '../application-decision/application-decision-condition/application-decision-condition.entity';
+import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
+import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
 
 @Module({
   imports: [
@@ -25,18 +28,15 @@ import { CardService } from './card.service';
       CardSubtaskType,
       CardSubtask,
       CardHistory,
+      ApplicationDecisionCondition,
     ]),
     CodeModule,
     MessageModule,
+    forwardRef(() => ApplicationDecisionModule),
+    forwardRef(() => NoticeOfIntentDecisionModule),
   ],
   controllers: [CardSubtaskController, CardController],
-  providers: [
-    CardStatusService,
-    CardService,
-    CardSubtaskService,
-    CardSubscriber,
-    CardProfile,
-  ],
+  providers: [CardStatusService, CardService, CardSubtaskService, CardSubscriber, CardProfile],
   exports: [CardStatusService, CardService, CardSubtaskService],
 })
 export class CardModule {}

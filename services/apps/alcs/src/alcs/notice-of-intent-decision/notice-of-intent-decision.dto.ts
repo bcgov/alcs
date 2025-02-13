@@ -1,13 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  IsArray,
-  IsBoolean,
-  IsDate,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import {
   NoticeOfIntentDecisionComponentDto,
@@ -17,6 +9,9 @@ import {
   NoticeOfIntentDecisionConditionDto,
   UpdateNoticeOfIntentDecisionConditionDto,
 } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
+import { UserDto } from '../../user/user.dto';
+import { Type } from 'class-transformer';
+import { NoticeOfIntentDecisionConditionCardUuidDto } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
 
 export class NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
 
@@ -87,6 +82,30 @@ export class UpdateNoticeOfIntentDecisionDto {
   @IsOptional()
   @IsArray()
   ccEmails?: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  isFlagged?: boolean;
+
+  @IsOptional()
+  @IsString()
+  reasonFlagged?: string | null;
+
+  @IsOptional()
+  @IsNumber()
+  followUpAt?: number | null;
+
+  @IsOptional()
+  @IsString()
+  flaggedByUuid?: string | null;
+
+  @IsOptional()
+  @IsString()
+  flagEditedByUuid?: string | null;
+
+  @IsOptional()
+  @IsNumber()
+  flagEditedAt?: number | null;
 }
 
 export class CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
@@ -160,6 +179,27 @@ export class NoticeOfIntentDecisionDto {
 
   @AutoMap(() => [NoticeOfIntentDecisionConditionDto])
   conditions?: NoticeOfIntentDecisionConditionDto[];
+
+  @AutoMap(() => [NoticeOfIntentDecisionConditionCardUuidDto])
+  conditionCards?: NoticeOfIntentDecisionConditionCardUuidDto[];
+
+  @AutoMap(() => Boolean)
+  isFlagged: boolean;
+
+  @AutoMap(() => String)
+  reasonFlagged: string | null;
+
+  @AutoMap(() => Number)
+  followUpAt: number | null;
+
+  @AutoMap(() => UserDto)
+  flaggedBy: UserDto | null;
+
+  @AutoMap(() => UserDto)
+  flagEditedBy: UserDto | null;
+
+  @AutoMap(() => Number)
+  flagEditedAt: number | null;
 }
 
 export class NoticeOfIntentDecisionDocumentDto {

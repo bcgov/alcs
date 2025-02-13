@@ -82,7 +82,7 @@
                 </div>
                 <div class="row">
                   <div class="key"><strong>Phone Number:</strong></div>
-                  <div class="value">{{ phoneNumber.value ?? '' | mask : '(000) 000-0000' }}</div>
+                  <div class="value">{{ phoneNumber.value ?? '' | mask: '(000) 000-0000' }}</div>
                 </div>
                 <div class="row">
                   <div class="key"><strong>Email:</strong></div>
@@ -217,7 +217,8 @@
               (openFile)="openFile($event)"
               [showErrors]="showErrors"
               [isRequired]="needsAuthorizationLetter"
-              [showVirusError]="showVirusError"
+              [showHasVirusError]="showHasVirusError"
+              [showVirusScanFailedError]="showVirusScanFailedError"
             ></app-file-drag-drop>
           </div>
         </div>

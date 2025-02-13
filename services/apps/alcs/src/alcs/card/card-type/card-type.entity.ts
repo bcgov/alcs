@@ -12,6 +12,8 @@ export enum CARD_TYPE {
   NOI_MODI = 'NOIM',
   NOTIFICATION = 'NOTI',
   INQUIRY = 'INQR',
+  APP_CON = 'APPCON',
+  NOI_CON = 'NOICON',
 }
 
 @Entity({

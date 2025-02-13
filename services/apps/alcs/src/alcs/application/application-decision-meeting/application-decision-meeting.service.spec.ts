@@ -3,22 +3,19 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  initApplicationDecisionMeetingMock,
-  initApplicationMockEntity,
-} from '../../../../test/mocks/mockEntities';
+import { initApplicationDecisionMeetingMock, initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
 import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../application-submission-status/submission-status.entity';
 import { ApplicationService } from '../application.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
+import { ApplicationDecisionConditionCard } from '../../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
 
 describe('ApplicationDecisionMeetingService', () => {
   let service: ApplicationDecisionMeetingService;
-  let mockAppDecisionMeetingRepository: DeepMocked<
-    Repository<ApplicationDecisionMeeting>
-  >;
+  let mockAppDecisionMeetingRepository: DeepMocked<Repository<ApplicationDecisionMeeting>>;
+  let mockAppDecisionConditionCardRepository: DeepMocked<Repository<ApplicationDecisionConditionCard>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
@@ -28,8 +25,8 @@ describe('ApplicationDecisionMeetingService', () => {
 
   beforeEach(async () => {
     mockApplicationService = createMock<ApplicationService>();
-    mockAppDecisionMeetingRepository =
-      createMock<Repository<ApplicationDecisionMeeting>>();
+    mockAppDecisionMeetingRepository = createMock<Repository<ApplicationDecisionMeeting>>();
+    mockAppDecisionConditionCardRepository = createMock<Repository<ApplicationDecisionConditionCard>>();
     mockApplicationSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +35,10 @@ describe('ApplicationDecisionMeetingService', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionMeeting),
           useValue: mockAppDecisionMeetingRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionConditionCard),
+          useValue: mockAppDecisionConditionCardRepository,
         },
         {
           provide: ApplicationService,
@@ -50,9 +51,7 @@ describe('ApplicationDecisionMeetingService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationDecisionMeetingService>(
-      ApplicationDecisionMeetingService,
-    );
+    service = module.get<ApplicationDecisionMeetingService>(ApplicationDecisionMeetingService);
 
     mockApplication = initApplicationMockEntity();
     mockMeeting = initApplicationDecisionMeetingMock(mockApplication);
@@ -61,25 +60,15 @@ describe('ApplicationDecisionMeetingService', () => {
       submissionUuid: 'fake',
     });
 
-    mockAppDecisionMeetingRepository = module.get(
-      getRepositoryToken(ApplicationDecisionMeeting),
-    );
+    mockAppDecisionMeetingRepository = module.get(getRepositoryToken(ApplicationDecisionMeeting));
     mockAppDecisionMeetingRepository.find.mockResolvedValue([mockMeeting]);
-    mockAppDecisionMeetingRepository.findOneOrFail.mockResolvedValue(
-      mockMeeting,
-    );
+    mockAppDecisionMeetingRepository.findOneOrFail.mockResolvedValue(mockMeeting);
     mockAppDecisionMeetingRepository.findOne.mockResolvedValue(mockMeeting);
-    mockAppDecisionMeetingRepository.findOneOrFail.mockResolvedValue(
-      mockMeeting,
-    );
+    mockAppDecisionMeetingRepository.findOneOrFail.mockResolvedValue(mockMeeting);
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
     mockApplicationService.getByUuidOrFail.mockResolvedValue(mockApplication);
-    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
-      {} as any,
-    );
-    mockApplicationSubmissionStatusService.getStatusesByFileNumber.mockResolvedValue(
-      [mockSubmissionStatus],
-    );
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue({} as any);
+    mockApplicationSubmissionStatusService.getStatusesByFileNumber.mockResolvedValue([mockSubmissionStatus]);
   });
 
   it('should be defined', () => {
@@ -124,15 +113,9 @@ describe('ApplicationDecisionMeetingService', () => {
 
     expect(mockAppDecisionMeetingRepository.findOne).toBeCalledTimes(0);
     expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
-    ).toBeCalledWith(mockApplication.fileNumber);
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledWith(mockApplication.fileNumber);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledTimes(1);
     expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
       mockSubmissionStatus.submissionUuid,
       SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
@@ -155,15 +138,9 @@ describe('ApplicationDecisionMeetingService', () => {
       where: { uuid: meetingToUpdate.uuid },
     });
     expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
-    ).toBeCalledWith(mockApplication.fileNumber);
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toBeCalledWith(mockApplication.fileNumber);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledTimes(1);
     expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
       mockSubmissionStatus.submissionUuid,
       SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
@@ -179,9 +156,7 @@ describe('ApplicationDecisionMeetingService', () => {
 
     expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(0);
     await expect(service.createOrUpdate(meetingToUpdate)).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Decision meeting not found ${meetingToUpdate.uuid}`,
-      ),
+      new ServiceNotFoundException(`Decision meeting not found ${meetingToUpdate.uuid}`),
     );
   });
 });

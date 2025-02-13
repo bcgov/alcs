@@ -8,6 +8,7 @@ import {
   NOI_DECISION_COMPONENT_TYPE,
   NoticeOfIntentDecisionDto,
   NoticeOfIntentDecisionOutcomeCodeDto,
+  UpdateNoticeOfIntentDecisionDto,
 } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
@@ -16,10 +17,21 @@ import {
   DRAFT_DECISION_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
+  DECISION_CONDITION_COMPLETE_LABEL,
+  DECISION_CONDITION_ONGOING_LABEL,
+  DECISION_CONDITION_PASTDUE_LABEL,
+  DECISION_CONDITION_PENDING_LABEL,
+  DECISION_CONDITION_EXPIRED_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
+import { NoticeOfIntentConditionWithStatus, getEndDate } from '../../../../shared/utils/decision-methods';
+import moment from 'moment';
+import { FlagDialogComponent, FlagDialogIO } from '../../../../shared/flag-dialog/flag-dialog.component';
+import { UserDto } from '../../../../services/user/user.dto';
+import { UserService } from '../../../../services/user/user.service';
+import { UnFlagDialogComponent, UnFlagDialogIO } from '../../../../shared/unflag-dialog/unflag-dialog.component';
 
 type LoadingDecision = NoticeOfIntentDecisionDto & {
   loading: boolean;
@@ -51,6 +63,11 @@ export class DecisionV2Component implements OnInit, OnDestroy {
 
   COMPONENT_TYPE = NOI_DECISION_COMPONENT_TYPE;
 
+  isSummary = false;
+
+  conditions: Record<string, NoticeOfIntentConditionWithStatus[]> = {};
+  profile: UserDto | undefined;
+
   constructor(
     public dialog: MatDialog,
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
@@ -61,6 +78,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private router: Router,
     private activatedRouter: ActivatedRoute,
     private elementRef: ElementRef,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +91,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         this.noticeOfIntent = noticeOfIntent;
       }
     });
+
+    this.userService.$userProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
+      this.profile = profile;
+    });
   }
 
   async loadDecisions(fileNumber: string) {
@@ -81,10 +103,31 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.decisionService.loadDecisions(fileNumber);
 
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      this.decisions = decisions.map((decision) => ({
-        ...decision,
-        loading: false,
-      }));
+      this.decisions = decisions.map((decision) => {
+        decision.conditions.map(async (x) => {
+          if (x.components) {
+            const componentId = x.components[0].uuid;
+            if (componentId) {
+              const conditionStatus = await this.decisionService.getStatus(x.uuid);
+              if (this.conditions[componentId]) {
+                this.conditions[componentId].push({
+                  ...x,
+                  conditionStatus: conditionStatus,
+                });
+              } else {
+                this.conditions[componentId] = [{
+                  ...x,
+                  conditionStatus: conditionStatus,
+                }];
+              }
+            }
+          }
+        });
+        return {
+          ...decision,
+          loading: false,
+        }
+      });
 
       this.scrollToDecision();
 
@@ -214,5 +257,115 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         inline: 'start',
       });
     }
+  }
+
+  toggleSummary() {
+      this.isSummary = !this.isSummary;
+  }
+
+  getConditions(uuid: string | undefined) {
+    return uuid && this.conditions[uuid] ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))] : [];
+  }
+
+  getDate(uuid: string | undefined) {
+    return getEndDate(uuid, this.conditions);
+  }
+
+  async openFile(decisionUuid: string, fileUuid: string, fileName: string) {
+    await this.decisionService.downloadFile(decisionUuid, fileUuid, fileName);
+  }
+
+  private getPillLabel(status: string) {
+    switch (status) {
+      case 'ONGOING':
+        return DECISION_CONDITION_ONGOING_LABEL;
+      case 'COMPLETED':
+        return DECISION_CONDITION_COMPLETE_LABEL;
+      case 'PASTDUE':
+        return DECISION_CONDITION_PASTDUE_LABEL;
+      case 'PENDING':
+        return DECISION_CONDITION_PENDING_LABEL;
+      case 'EXPIRED':
+        return DECISION_CONDITION_EXPIRED_LABEL;
+      default:
+        return DECISION_CONDITION_ONGOING_LABEL;
+    }
+  }
+
+  async flag(decision: LoadingDecision, index: number, isEditing: boolean) {
+    this.dialog
+      .open(FlagDialogComponent, {
+        minWidth: '800px',
+        maxWidth: '800px',
+        maxHeight: '80vh',
+        width: '90%',
+        autoFocus: false,
+        data: {
+          isEditing,
+          decisionNumber: index,
+          reasonFlagged: decision.reasonFlagged,
+          followUpAt: decision.followUpAt,
+        },
+      })
+      .beforeClosed()
+      .subscribe(async ({ isEditing, reasonFlagged, followUpAt, isSaving }: FlagDialogIO) => {
+        if (isSaving) {
+          const updateDto: UpdateNoticeOfIntentDecisionDto = {
+            isDraft: decision.isDraft,
+            isFlagged: true,
+            reasonFlagged,
+            flagEditedByUuid: this.profile?.uuid,
+            flagEditedAt: moment().toDate().getTime(),
+          };
+
+          if (!isEditing) {
+            updateDto.flaggedByUuid = this.profile?.uuid;
+          }
+
+          if (followUpAt !== undefined) {
+            updateDto.followUpAt = followUpAt;
+          }
+
+          await this.decisionService.update(decision.uuid, updateDto);
+          await this.loadDecisions(this.fileNumber);
+        }
+      });
+  }
+
+  async unflag(decision: LoadingDecision, index: number) {
+    this.dialog
+      .open(UnFlagDialogComponent, {
+              minWidth: '800px',
+              maxWidth: '800px',
+              maxHeight: '80vh',
+              width: '90%',
+              autoFocus: false,
+              data: {
+                decisionNumber: index,
+              },
+            })
+      .beforeClosed()
+      .subscribe(async ({confirmed} : UnFlagDialogIO) => {
+        if (confirmed) {
+          await this.decisionService.update(decision.uuid, {
+            isDraft: decision.isDraft,
+            isFlagged: false,
+            reasonFlagged: null,
+            followUpAt: null,
+            flaggedByUuid: null,
+            flagEditedByUuid: null,
+            flagEditedAt: null,
+          });
+          await this.loadDecisions(this.fileNumber);
+        }
+      });
+  }
+
+  formatDate(timestamp?: number | null, includeTime = false): string {
+    if (timestamp === undefined || timestamp === null) {
+      return '';
+    }
+
+    return moment(new Date(timestamp)).format(`YYYY-MMM-DD ${includeTime ? 'hh:mm:ss A' : ''}`);
   }
 }

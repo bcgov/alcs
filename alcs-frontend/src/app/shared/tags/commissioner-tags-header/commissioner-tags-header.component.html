@@ -1,0 +1,8 @@
+<div
+  class="tag-container"
+  [ngClass]="{ hovered: hovered, clicked: clicked }"
+  (mouseleave)="hovered = false"
+  (mouseenter)="hovered = true"
+>
+  <app-tag-chip *ngFor="let tag of tags" [tag]="tag" [removable]="false"></app-tag-chip>
+</div>

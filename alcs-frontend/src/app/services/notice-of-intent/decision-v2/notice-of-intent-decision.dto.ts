@@ -1,5 +1,8 @@
+import { UserDto } from '../../user/user.dto';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { DateLabel, DateType } from '../../application/decision/application-decision-v2/application-decision-v2.dto';
+import { CardDto } from '../../card/card.dto';
+import { NoticeOfIntentTypeDto } from '../notice-of-intent.dto';
 
 export interface UpdateNoticeOfIntentDecisionDto {
   resolutionNumber?: number;
@@ -18,6 +21,12 @@ export interface UpdateNoticeOfIntentDecisionDto {
   decisionComponents?: NoticeOfIntentDecisionComponentDto[];
   conditions?: UpdateNoticeOfIntentDecisionConditionDto[];
   ccEmails?: string[];
+  isFlagged?: boolean;
+  reasonFlagged?: string | null;
+  followUpAt?: number | null;
+  flaggedByUuid?: string | null;
+  flagEditedByUuid?: string | null;
+  flagEditedAt?: number | null;
 }
 
 export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
@@ -26,6 +35,35 @@ export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDec
   resolutionYear: number;
   fileNumber: string;
   decisionToCopy?: string;
+}
+
+export interface NoticeOfIntentHomeDto {
+  uuid: string;
+  fileNumber: string;
+  applicant: string;
+  activeDays: number;
+  paused: boolean;
+  pausedDays: number;
+  type: NoticeOfIntentTypeDto;
+}
+
+export interface NoticeOfIntentDecisionHomeDto {
+  uuid: string;
+  noticeOfIntent: NoticeOfIntentHomeDto;
+}
+
+export interface NoticeOfIntentDecisionConditionHomeCardDto {
+  uuid: string;
+  cardUuid: string;
+  card: CardDto;
+  noticeOfIntentFileNumber?: string | null;
+}
+
+export interface NoticeOfIntentDecisionConditionHomeDto {
+  conditionCard: NoticeOfIntentDecisionConditionHomeCardDto | null;
+  status?: string | null;
+  isModification: boolean;
+  decision: NoticeOfIntentDecisionHomeDto;
 }
 
 export interface LinkedResolutionDto {
@@ -56,6 +94,12 @@ export interface NoticeOfIntentDecisionDto {
   modifiedByResolutions?: string[];
   components: NoticeOfIntentDecisionComponentDto[];
   conditions: NoticeOfIntentDecisionConditionDto[];
+  isFlagged: boolean;
+  reasonFlagged: string | null;
+  followUpAt: number | null;
+  flaggedBy: UserDto | null;
+  flagEditedBy: UserDto | null;
+  flagEditedAt: number | null;
 }
 
 export interface NoticeOfIntentDecisionDocumentDto {
@@ -64,6 +108,7 @@ export interface NoticeOfIntentDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize: number | null;
 }
 
 export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}
@@ -93,6 +138,8 @@ export interface NoticeOfIntentDecisionConditionDto {
   componentUuid: string | null;
   components?: NoticeOfIntentDecisionComponentDto[];
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+  conditionCard?: NoticeOfIntentDecisionConditionCardDto | null;
+  status?: string | null;
   decision: NoticeOfIntentDecisionDto | null;
 }
 
@@ -196,4 +243,41 @@ export enum NOI_DECISION_COMPONENT_TYPE {
   POFO = 'POFO',
   ROSO = 'ROSO',
   PFRS = 'PFRS',
+}
+
+export interface NoticeOfIntentDecisionConditionCardDto {
+  uuid: string;
+  conditions: NoticeOfIntentDecisionConditionDto[];
+  cardUuid: string;
+  card: CardDto;
+  decisionUuid: string;
+  fileNumber: string;
+}
+
+export interface CreateNoticeOfIntentDecisionConditionCardDto {
+  conditionsUuids: string[];
+  decisionUuid: string;
+  cardStatusCode: string;
+}
+
+export interface UpdateNoticeOfIntentDecisionConditionCardDto {
+  conditionsUuids?: string[] | null;
+  cardStatusCode?: string | null;
+}
+
+export interface NoticeOfIntentDecisionConditionCardUuidDto {
+  uuid: string;
+}
+
+export interface NoticeOfIntentDecisionConditionCardBoardDto {
+  uuid: string;
+  conditions: NoticeOfIntentDecisionConditionDto[];
+  card: CardDto;
+  decisionUuid: string;
+  decisionOrder: number;
+  decisionIsFlagged: boolean;
+  fileNumber: string;
+  applicant: string;
+  type?: NoticeOfIntentTypeDto;
+  isModification: boolean;
 }

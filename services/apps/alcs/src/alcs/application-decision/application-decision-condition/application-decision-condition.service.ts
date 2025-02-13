@@ -1,20 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
+  ApplicationDecisionConditionHomeDto,
+  ApplicationDecisionHomeDto,
+  ApplicationHomeDto,
   UpdateApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionServiceDto,
 } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
+import { InjectMapper } from 'automapper-nestjs';
+import { Mapper } from 'automapper-core';
+import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
+import { ApplicationDecision } from '../application-decision.entity';
+import { Application } from '../../application/application.entity';
+import { ApplicationModification } from '../application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 
 @Injectable()
 export class ApplicationDecisionConditionService {
+  private CARD_RELATIONS = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
   constructor(
     @InjectRepository(ApplicationDecisionCondition)
     private repository: Repository<ApplicationDecisionCondition>,
@@ -24,6 +41,12 @@ export class ApplicationDecisionConditionService {
     private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
+    @InjectRepository(ApplicationModification)
+    private modificationRepository: Repository<ApplicationModification>,
+    @InjectRepository(ApplicationReconsideration)
+    private reconsiderationRepository: Repository<ApplicationReconsideration>,
+    @InjectMapper() private mapper: Mapper,
+    private applicationTimeTrackingService: ApplicationTimeTrackingService,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<ApplicationDecisionCondition[]> {
@@ -43,6 +66,124 @@ export class ApplicationDecisionConditionService {
       relations: {
         type: true,
         dates: true,
+      },
+    });
+  }
+
+  async findByUuids(uuids: string[]): Promise<ApplicationDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        uuid: In(uuids),
+      },
+    });
+  }
+
+  getBy(findOptions: FindOptionsWhere<ApplicationDecisionCondition>) {
+    return this.repository.find({
+      where: findOptions,
+      relations: {
+        decision: {
+          reconsiders: true,
+          modifies: true,
+          application: {
+            decisionMeetings: true,
+            type: true,
+          },
+        },
+        conditionCard: {
+          card: this.CARD_RELATIONS,
+        },
+      },
+    });
+  }
+
+  async mapToDtos(conditions: ApplicationDecisionCondition[]): Promise<ApplicationDecisionConditionHomeDto[]> {
+    const appTimeMap = await this.applicationTimeTrackingService.fetchActiveTimes(
+      conditions.map((c) => c.decision.application),
+    );
+    const appPausedMap = await this.applicationTimeTrackingService.getPausedStatus(
+      conditions.map((c) => c.decision.application),
+    );
+    const c = Promise.all(
+      conditions.map(async (c) => {
+        const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
+        const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
+        const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
+        const appModifications = await this.modificationRepository.find({
+          where: {
+            modifiesDecisions: {
+              uuid: c.decision?.uuid,
+            },
+          },
+        });
+        const appReconsiderations = await this.reconsiderationRepository.find({
+          where: {
+            reconsidersDecisions: {
+              uuid: c.decision?.uuid,
+            },
+          },
+        });
+
+        return {
+          ...condition,
+          isModification: appModifications.length > 0,
+          isReconsideration: appReconsiderations.length > 0,
+          decision: {
+            ...decision,
+            application: {
+              ...application,
+              activeDays: undefined,
+              pausedDays: appTimeMap.get(application.uuid)!.pausedDays || 0,
+              paused: appPausedMap.get(application.uuid) || false,
+            },
+          },
+        };
+      }),
+    );
+    return (await c).reduce((res: ApplicationDecisionConditionHomeDto[], curr: ApplicationDecisionConditionHomeDto) => {
+      const existing = res.find((e) => e.conditionCard?.cardUuid === curr.conditionCard?.cardUuid);
+      if (!existing) {
+        res.push(curr);
+      }
+      return res;
+    }, []);
+  }
+
+  async getWithIncompleteSubtaskByType(subtaskType: string) {
+    return this.repository.find({
+      where: {
+        conditionCard: {
+          card: {
+            subtasks: {
+              completedAt: IsNull(),
+              type: {
+                code: subtaskType,
+              },
+            },
+          },
+        },
+      },
+      relations: {
+        decision: {
+          reconsiders: true,
+          modifies: true,
+          application: {
+            decisionMeetings: true,
+            type: true,
+          },
+        },
+        conditionCard: {
+          card: {
+            board: true,
+            type: true,
+            status: true,
+            assignee: true,
+            subtasks: {
+              card: true,
+              type: true,
+            },
+          },
+        },
       },
     });
   }

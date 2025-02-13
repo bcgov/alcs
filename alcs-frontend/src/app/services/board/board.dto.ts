@@ -2,7 +2,9 @@ import { CardType } from '../../shared/card/card.component';
 import { ApplicationModificationDto } from '../application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
+import { ApplicationDecisionConditionCardBoardDto } from '../application/decision/application-decision-v2/application-decision-v2.dto';
 import { InquiryDto } from '../inquiry/inquiry.dto';
+import { NoticeOfIntentDecisionConditionCardBoardDto } from '../notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NotificationDto } from '../notification/notification.dto';
@@ -36,4 +38,6 @@ export interface CardsDto {
   noiModifications: NoticeOfIntentModificationDto[];
   notifications: NotificationDto[];
   inquiries: InquiryDto[];
+  applicationDecisionConditions: ApplicationDecisionConditionCardBoardDto[];
+  noticeOfIntentDecisionConditions: NoticeOfIntentDecisionConditionCardBoardDto[];
 }

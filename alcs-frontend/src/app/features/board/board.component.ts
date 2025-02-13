@@ -31,7 +31,7 @@ import {
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
-import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
+import { CardData, CardSelectedEvent, CardType, ConditionCardData } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
 import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
@@ -46,12 +46,25 @@ import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/c
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import { ReconsiderationDialogComponent } from './dialogs/reconsiderations/reconsideration-dialog.component';
+import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { ApplicationDecisionConditionCardBoardDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionConditionDialogComponent } from './dialogs/application-decision-condition-dialog/application-decision-condition-dialog.component';
+import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardBoardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionConditionDialogComponent } from './dialogs/notice-of-intent-decision-condition-dialog/notice-of-intent-decision-condition-dialog.component';
+
+export const CONDITION_STATUS = {
+  EXPIRED: 'EXPIRED',
+  PASTDUE: 'PASTDUE',
+};
 
 export const BOARD_TYPE_CODES = {
   VETT: 'vett',
   EXEC: 'exec',
   CEO: 'ceo',
   NOI: 'noi',
+  APP_CON: 'appcon',
+  NOI_CON: 'noicon',
 };
 
 @Component({
@@ -133,6 +146,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private inquiryService: InquiryService,
     private titleService: Title,
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
+    private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
   ) {}
 
   ngOnInit() {
@@ -182,7 +197,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDropped($event: { id: string; status: string; cardTypeCode: CardType }) {
+  onDropped($event: { id: string; status: string; cardTypeCode: CardType; conditionCardUuid?: string }) {
     switch ($event.cardTypeCode) {
       case CardType.APP:
         this.applicationService
@@ -200,6 +215,8 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.NOI_MODI:
       case CardType.NOTIFICATION:
       case CardType.INQUIRY:
+      case CardType.APP_CON:
+      case CardType.NOI_CON:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -262,6 +279,13 @@ export class BoardComponent implements OnInit, OnDestroy {
     );
     const mappedNotifications = response.notifications.map(this.mapNotificationToCard.bind(this));
     const mappedInquiries = response.inquiries.map(this.mapInquiryToCard.bind(this));
+    const mappedAppDecisionConditions = response.applicationDecisionConditions.map(
+      this.mapApplicationDecisionConditionToCard.bind(this),
+    );
+    const mappedNoticeOfIntentDecisionConditions = response.noticeOfIntentDecisionConditions.map(
+      this.mapNoticeOfIntentDecisionConditionToCard.bind(this),
+    );
+
     if (boardCode === BOARD_TYPE_CODES.VETT) {
       const vettingSort = (a: CardData, b: CardData) => {
         if (a.highPriority === b.highPriority) {
@@ -314,6 +338,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedPlanningReferrals.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedInquiries.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedAppDecisionConditions.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedNoticeOfIntentDecisionConditions
+          .filter((r) => r.highPriority)
+          .sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
         ...mappedNoticeOfIntents
           .filter((a) => !a.highPriority)
@@ -327,6 +355,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedPlanningReferrals.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedInquiries.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedNotifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedAppDecisionConditions.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedNoticeOfIntentDecisionConditions
+          .filter((r) => !r.highPriority)
+          .sort((a, b) => a.dateReceived - b.dateReceived),
       );
       this.cards = sorted;
     }
@@ -489,6 +521,72 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapApplicationDecisionConditionToCard(
+    applicationDecisionCondition: ApplicationDecisionConditionCardBoardDto,
+  ): ConditionCardData {
+    let isExpired = false;
+    let isPastDue = false;
+
+    for (const condition of applicationDecisionCondition.conditions) {
+      isExpired = isExpired || condition.status === CONDITION_STATUS.EXPIRED;
+      isPastDue = isPastDue || condition.status === CONDITION_STATUS.PASTDUE;
+    }
+
+    return {
+      status: applicationDecisionCondition.card!.status.code,
+      typeLabel: 'Application',
+      title: `${applicationDecisionCondition.fileNumber} (${applicationDecisionCondition.applicant})`,
+      titleTooltip: applicationDecisionCondition.applicant,
+      assignee: applicationDecisionCondition.card!.assignee,
+      id: applicationDecisionCondition.uuid,
+      labels: [applicationDecisionCondition.type!],
+      highPriority: applicationDecisionCondition.card.highPriority,
+      cardType: CardType.APP_CON,
+      cardUuid: applicationDecisionCondition.card.uuid,
+      paused: false,
+      dateReceived: 0,
+      isExpired,
+      isPastDue,
+      isInConditionBoard: this.currentBoardCode === BOARD_TYPE_CODES.APP_CON,
+      decisionIsFlagged: applicationDecisionCondition.decisionIsFlagged,
+      isModification: applicationDecisionCondition.isModification,
+      isReconsideration: applicationDecisionCondition.isReconsideration,
+    };
+  }
+
+  private mapNoticeOfIntentDecisionConditionToCard(
+    noticeOfIntentDecisionCondition: NoticeOfIntentDecisionConditionCardBoardDto,
+  ): ConditionCardData {
+    let isExpired = false;
+    let isPastDue = false;
+
+    for (const condition of noticeOfIntentDecisionCondition.conditions) {
+      isExpired = isExpired || condition.status === CONDITION_STATUS.EXPIRED;
+      isPastDue = isPastDue || condition.status === CONDITION_STATUS.PASTDUE;
+    }
+
+    return {
+      status: noticeOfIntentDecisionCondition.card!.status.code,
+      typeLabel: 'Notice of Intent',
+      title: `${noticeOfIntentDecisionCondition.fileNumber} (${noticeOfIntentDecisionCondition.applicant})`,
+      titleTooltip: noticeOfIntentDecisionCondition.applicant,
+      assignee: noticeOfIntentDecisionCondition.card!.assignee,
+      id: noticeOfIntentDecisionCondition.uuid,
+      labels: [noticeOfIntentDecisionCondition.type!],
+      highPriority: noticeOfIntentDecisionCondition.card.highPriority,
+      cardType: CardType.NOI_CON,
+      cardUuid: noticeOfIntentDecisionCondition.card.uuid,
+      paused: false,
+      dateReceived: 0,
+      isExpired,
+      isPastDue,
+      isInConditionBoard: this.currentBoardCode === BOARD_TYPE_CODES.NOI_CON,
+      decisionIsFlagged: noticeOfIntentDecisionCondition.decisionIsFlagged,
+      isModification: noticeOfIntentDecisionCondition.isModification,
+      isReconsideration: false,
+    };
+  }
+
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
@@ -548,6 +646,24 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.INQUIRY:
           const inquiry = await this.inquiryService.fetchByCardUuid(card.uuid);
           this.openDialog(InquiryDialogComponent, inquiry);
+          break;
+        case CardType.APP_CON:
+          const applicationDecisionCondition = await this.applicationDecisionConditionCardService.getByCard(card.uuid);
+          const app = await this.applicationService.fetchApplication(applicationDecisionCondition?.fileNumber!);
+          this.openDialog(ApplicationDecisionConditionDialogComponent, {
+            decisionConditionCard: applicationDecisionCondition,
+            application: app,
+          });
+          break;
+        case CardType.NOI_CON:
+          const noticeOfIntentDecisionCondition = await this.noticeOfIntentDecisionConditionCardService.getByCard(
+            card.uuid,
+          );
+          const noi = await this.noticeOfIntentService.fetchByFileNumber(noticeOfIntentDecisionCondition?.fileNumber!);
+          this.openDialog(NoticeOfIntentDecisionConditionDialogComponent, {
+            decisionConditionCard: noticeOfIntentDecisionCondition,
+            noticeOfIntent: noi,
+          });
           break;
         default:
           console.error('Card type is not configured for a dialog');

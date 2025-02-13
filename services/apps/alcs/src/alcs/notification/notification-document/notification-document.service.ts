@@ -137,7 +137,7 @@ export class NotificationDocumentService {
       },
       relations: this.DEFAULT_RELATIONS,
     });
-    if (!document) {
+    if (!document || !document.document) {
       throw new NotFoundException(`Failed to find document ${uuid}`);
     }
     return document;
@@ -158,15 +158,17 @@ export class NotificationDocumentService {
     if (visibilityFlags) {
       where.visibilityFlags = ArrayOverlap(visibilityFlags);
     }
-    return this.notificationDocumentRepository.find({
-      where,
-      order: {
-        document: {
-          uploadedAt: 'DESC',
+    return (
+      await this.notificationDocumentRepository.find({
+        where,
+        order: {
+          document: {
+            uploadedAt: 'DESC',
+          },
         },
-      },
-      relations: this.DEFAULT_RELATIONS,
-    });
+        relations: this.DEFAULT_RELATIONS,
+      })
+    ).filter((document) => document.document);
   }
 
   async getInlineUrl(document: NotificationDocument) {

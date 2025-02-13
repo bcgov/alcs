@@ -27,6 +27,8 @@ import { PlanningReferralDto } from '../../services/planning-review/planning-rev
 import { ToastService } from '../../services/toast/toast.service';
 import { CardType } from '../../shared/card/card.component';
 import { BoardComponent } from './board.component';
+import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 describe('BoardComponent', () => {
   let component: BoardComponent;
@@ -46,6 +48,8 @@ describe('BoardComponent', () => {
   let noticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let notificationService: DeepMocked<NotificationService>;
   let inquiryService: DeepMocked<InquiryService>;
+  let applicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
+  let noticeOfIntentDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
 
   let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
 
@@ -100,6 +104,8 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
+      noticeOfIntentDecisionConditions: [],
     });
 
     dialog = createMock();
@@ -115,6 +121,8 @@ describe('BoardComponent', () => {
     noticeOfIntentModificationService = createMock();
     notificationService = createMock();
     inquiryService = createMock();
+    applicationDecisionConditionCardService = createMock();
+    noticeOfIntentDecisionConditionCardService = createMock();
 
     const params = {
       boardCode: 'boardCode',
@@ -185,6 +193,14 @@ describe('BoardComponent', () => {
           useValue: inquiryService,
         },
         {
+          provide: ApplicationDecisionConditionCardService,
+          useValue: applicationDecisionConditionCardService,
+        },
+        {
+          provide: NoticeOfIntentDecisionConditionCardService,
+          useValue: noticeOfIntentDecisionConditionCardService,
+        },
+        {
           provide: Title,
           useValue: titleService,
         },
@@ -227,6 +243,8 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
+      noticeOfIntentDecisionConditions: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -248,6 +266,8 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
+      noticeOfIntentDecisionConditions: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -291,6 +311,8 @@ describe('BoardComponent', () => {
       noiModifications: [],
       notifications: [],
       inquiries: [],
+      applicationDecisionConditions: [],
+      noticeOfIntentDecisionConditions: [],
     });
 
     boardEmitter.next([mockBoard]);

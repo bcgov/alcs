@@ -82,10 +82,14 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException(`Condition ${createDto.conditionUuid} was not found.`);
     }
 
-    if (condition.type.dateType !== DateType.MULTIPLE) {
+    if (!condition.type.isDateChecked) {
       throw new ServiceValidationException(
         `Creating a new date is not supported for condition ${createDto.conditionUuid}`,
       );
+    }
+
+    if (condition.type.dateType !== DateType.MULTIPLE && condition.dates?.length > 0) {
+      throw new ServiceValidationException(`Cannot create more than one date for condition ${createDto.conditionUuid}`);
     }
 
     const newDate = new ApplicationDecisionConditionDate();
@@ -97,7 +101,7 @@ export class ApplicationDecisionConditionDateService {
     return await this.repository.save(newDate);
   }
 
-  async delete(dateUuid: string) {
+  async delete(dateUuid: string, forceSingleDateDeletion: boolean = false) {
     const conditionDate = await this.repository.findOne({
       where: { uuid: dateUuid },
       relations: ['condition', 'condition.type'],
@@ -107,7 +111,7 @@ export class ApplicationDecisionConditionDateService {
       throw new ServiceNotFoundException(`Condition Date ${dateUuid} was not found`);
     }
 
-    if (conditionDate.condition.type.dateType !== DateType.MULTIPLE) {
+    if (!forceSingleDateDeletion && conditionDate.condition.type.dateType !== DateType.MULTIPLE) {
       throw new ServiceValidationException(`Deleting the date ${dateUuid} is not permitted on single date type`);
     }
 

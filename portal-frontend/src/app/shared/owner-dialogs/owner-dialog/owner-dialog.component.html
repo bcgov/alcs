@@ -46,7 +46,8 @@
           id="fileUpload"
           [showErrors]="showFileErrors"
           [isRequired]="true"
-          [showVirusError]="showVirusError"
+          [showHasVirusError]="showHasVirusError"
+          [showVirusScanFailedError]="showVirusScanFailedError"
         ></app-file-drag-drop>
         <mat-form-field style="display: none">
           <input id="corporateSummary" matInput formControlName="corporateSummary" />

@@ -8,6 +8,8 @@ import { NoticeOfIntentModificationService } from '../../notice-of-intent-decisi
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NotificationService } from '../../notification/notification.service';
 import { PlanningReferralService } from '../../planning-review/planning-referral/planning-referral.service';
+import { ApplicationDecisionConditionCardService } from '../../application-decision/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardService } from '../../notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 @Injectable()
 export class UnarchiveCardService {
@@ -20,6 +22,8 @@ export class UnarchiveCardService {
     private notificationService: NotificationService,
     private planningReferralService: PlanningReferralService,
     private inquiryService: InquiryService,
+    private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
+    private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
   ) {}
 
   async fetchByFileId(fileId: string) {
@@ -37,6 +41,8 @@ export class UnarchiveCardService {
     await this.fetchAndMapNOIs(fileId, result);
     await this.fetchAndMapNotifications(fileId, result);
     await this.fetchAndMapInquiries(fileId, result);
+    await this.fetchAndMapApplicationDecisionConditionCards(fileId, result);
+    await this.fetchAndMapNoticeOfIntentDecisionConditionCards(fileId, result);
 
     return result;
   }
@@ -70,8 +76,7 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const modifications =
-      await this.modificationService.getDeletedCards(fileId);
+    const modifications = await this.modificationService.getDeletedCards(fileId);
     for (const modification of modifications) {
       result.push({
         cardUuid: modification.cardUuid ?? '',
@@ -91,8 +96,7 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const reconsiderations =
-      await this.reconsiderationService.getDeletedCards(fileId);
+    const reconsiderations = await this.reconsiderationService.getDeletedCards(fileId);
     for (const reconsideration of reconsiderations) {
       result.push({
         cardUuid: reconsideration.cardUuid ?? '',
@@ -112,8 +116,7 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const noticeOfIntents =
-      await this.noticeOfIntentService.getDeletedCards(fileId);
+    const noticeOfIntents = await this.noticeOfIntentService.getDeletedCards(fileId);
     for (const noi of noticeOfIntents) {
       result.push({
         cardUuid: noi.cardUuid,
@@ -123,8 +126,7 @@ export class UnarchiveCardService {
       });
     }
 
-    const modificationNOIs =
-      await this.noticeOfIntentModificationService.getDeletedCards(fileId);
+    const modificationNOIs = await this.noticeOfIntentModificationService.getDeletedCards(fileId);
 
     for (const noi of modificationNOIs) {
       result.push({
@@ -145,8 +147,7 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const notifications =
-      await this.notificationService.getDeletedCards(fileId);
+    const notifications = await this.notificationService.getDeletedCards(fileId);
     for (const notification of notifications) {
       result.push({
         cardUuid: notification.cardUuid,
@@ -166,8 +167,7 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const planningReferrals =
-      await this.planningReferralService.getDeletedCards(fileId);
+    const planningReferrals = await this.planningReferralService.getDeletedCards(fileId);
     for (const referral of planningReferrals) {
       result.push({
         cardUuid: referral.cardUuid,
@@ -194,6 +194,48 @@ export class UnarchiveCardService {
         createdAt: inquiry.auditCreatedAt.getTime(),
         type: CARD_TYPE.INQUIRY,
         status: inquiry.card!.status.label,
+      });
+    }
+  }
+
+  private async fetchAndMapApplicationDecisionConditionCards(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const conditionCards = await this.applicationDecisionConditionCardService.getDeletedCards(fileId);
+
+    for (const conditionCard of conditionCards) {
+      result.push({
+        cardUuid: conditionCard.cardUuid,
+        createdAt: conditionCard.auditCreatedAt.getTime(),
+        type: CARD_TYPE.APP_CON,
+        status: conditionCard.card!.status.label,
+      });
+    }
+  }
+
+  private async fetchAndMapNoticeOfIntentDecisionConditionCards(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const conditionCards = await this.noticeOfIntentDecisionConditionCardService.getDeletedCards(fileId);
+
+    for (const conditionCard of conditionCards) {
+      result.push({
+        cardUuid: conditionCard.cardUuid,
+        createdAt: conditionCard.auditCreatedAt.getTime(),
+        type: CARD_TYPE.NOI_CON,
+        status: conditionCard.card!.status.label,
       });
     }
   }

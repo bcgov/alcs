@@ -22,6 +22,7 @@ import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crow
 import { scrollToElement } from '../../../../shared/utils/scroll-helper';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { strictEmailValidator } from '../../../../shared/validators/email-validator';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-primary-contact',
@@ -43,7 +44,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isGovernmentUser = false;
   governmentName: string | undefined;
   isDirty = false;
-  showVirusError = false;
+  showHasVirusError = false;
+  showVirusScanFailedError = false;
   hasCrownParcels = false;
 
   ownersList = new FormControl<string | null>(null, [Validators.required]);
@@ -102,8 +104,16 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async attachAuthorizationLetter(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
-    this.showVirusError = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
+      this.showHasVirusError = false;
+      this.showVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   set selectedOwnerUuid(value: string | undefined) {

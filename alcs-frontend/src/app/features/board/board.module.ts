@@ -29,6 +29,8 @@ import { PlanningReviewDialogComponent } from './dialogs/planning-review/plannin
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
 import { ReconsiderationDialogComponent } from './dialogs/reconsiderations/reconsideration-dialog.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
+import { ApplicationDecisionConditionDialogComponent } from './dialogs/application-decision-condition-dialog/application-decision-condition-dialog.component';
+import { NoticeOfIntentDecisionConditionDialogComponent } from './dialogs/notice-of-intent-decision-condition-dialog/notice-of-intent-decision-condition-dialog.component';
 
 const routes: Routes = [
   {
@@ -61,6 +63,8 @@ const routes: Routes = [
     NotificationDialogComponent,
     InquiryDialogComponent,
     CreateInquiryDialogComponent,
+    ApplicationDecisionConditionDialogComponent,
+    NoticeOfIntentDecisionConditionDialogComponent,
   ],
   imports: [
     CommonModule,

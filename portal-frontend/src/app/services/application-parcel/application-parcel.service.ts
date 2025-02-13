@@ -73,24 +73,13 @@ export class ApplicationParcelService {
   }
 
   async attachCertificateOfTitle(fileId: string, parcelUuid: string, file: File) {
-    try {
-      const document = await this.documentService.uploadFile<ApplicationDocumentDto | undefined>(
-        fileId,
-        file,
-        DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
-        DOCUMENT_SOURCE.APPLICANT,
-        `${environment.apiUrl}/application-parcel/${parcelUuid}/attachCertificateOfTitle`
-      );
-      this.toastService.showSuccessToast('Document uploaded');
-      return document;
-    } catch (e) {
-      if (e instanceof HttpErrorResponse && e.status === 403) {
-        throw e;
-      }
-      console.error(e);
-      this.toastService.showErrorToast('Failed to attach document to Parcel, please try again');
-    }
-    return undefined;
+    return await this.documentService.uploadFile<ApplicationDocumentDto | undefined>(
+      fileId,
+      file,
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      DOCUMENT_SOURCE.APPLICANT,
+      `${environment.apiUrl}/application-parcel/${parcelUuid}/attachCertificateOfTitle`,
+    );
   }
 
   async deleteMany(parcelUuids: string[]) {

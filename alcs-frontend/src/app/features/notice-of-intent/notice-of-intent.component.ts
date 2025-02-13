@@ -19,6 +19,8 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { FileTagService } from '../../services/common/file-tag.service';
 import { NoticeOfIntentTagService } from '../../services/notice-of-intent/notice-of-intent-tag/notice-of-intent-tag.service';
+import { NoticeOfIntentDecisionConditionCardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 export const childRoutes = [
   {
@@ -104,6 +106,7 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   fileNumber?: string;
   noticeOfIntent: NoticeOfIntentDto | undefined;
   modifications: NoticeOfIntentModificationDto[] = [];
+  decisionConditionCards: NoticeOfIntentDecisionConditionCardDto[] = [];
 
   isApplicantSubmission = false;
   showSubmittedToAlcMenuItems = false;
@@ -111,6 +114,7 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
+    private decisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
     private route: ActivatedRoute,
     private titleService: Title,
     public noticeOfIntentStatusService: NoticeOfIntentSubmissionStatusService,
@@ -137,6 +141,9 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
 
         this.noticeOfIntentModificationService.fetchByFileNumber(noticeOfIntent.fileNumber);
         this.noticeOfIntent = noticeOfIntent;
+
+        this.decisionConditionCards =
+          (await this.decisionConditionCardService.fetchByNoticeOfIntentFileNumber(noticeOfIntent.fileNumber)) || [];
       }
     });
 

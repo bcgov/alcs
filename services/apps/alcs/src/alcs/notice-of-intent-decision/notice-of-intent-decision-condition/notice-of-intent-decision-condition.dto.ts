@@ -8,6 +8,11 @@ import {
 } from '../../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { Type } from 'class-transformer';
 import { NoticeOfIntentDecisionConditionDateDto } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
+import {
+  NoticeOfIntentDecisionConditionCardUuidDto,
+  NoticeOfIntentDecisionConditionHomeCardDto,
+} from './notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
+import { NoticeOfIntentTypeDto } from '../../notice-of-intent/notice-of-intent-type/notice-of-intent-type.dto';
 
 export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -91,6 +96,49 @@ export class NoticeOfIntentDecisionConditionDto {
 
   @AutoMap()
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+
+  @AutoMap(() => NoticeOfIntentDecisionConditionCardUuidDto)
+  conditionCard: NoticeOfIntentDecisionConditionCardUuidDto | null;
+
+  status?: string | null;
+}
+
+export class NoticeOfIntentHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  applicant: string;
+
+  @AutoMap()
+  fileNumber: string;
+
+  @AutoMap(() => NoticeOfIntentTypeDto)
+  type: NoticeOfIntentTypeDto;
+
+  activeDays: number;
+  paused: boolean;
+  pausedDays: number;
+}
+
+export class NoticeOfIntentDecisionHomeDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  application: NoticeOfIntentHomeDto;
+}
+
+export class NoticeOfIntentDecisionConditionHomeDto {
+  @AutoMap(() => NoticeOfIntentDecisionConditionHomeCardDto)
+  conditionCard: NoticeOfIntentDecisionConditionHomeCardDto | null;
+
+  status?: string | null;
+  isReconsideration: boolean;
+  isModification: boolean;
+
+  @AutoMap()
+  decision?: NoticeOfIntentDecisionHomeDto;
 }
 
 export class ComponentToConditionDto {
@@ -135,6 +183,10 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   @IsOptional()
   @AutoMap()
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+
+  @IsOptional()
+  @IsUUID()
+  conditionCardUuid?: string;
 }
 
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
@@ -145,4 +197,5 @@ export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   administrativeFee?: number;
   description?: string;
   dates?: NoticeOfIntentDecisionConditionDateDto[];
+  conditionCardUuid?: string;
 }

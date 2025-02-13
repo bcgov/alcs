@@ -1,17 +1,11 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import {
-  initApplicationDecisionMock,
-  initApplicationMockEntity,
-} from '../../../../../test/mocks/mockEntities';
+import { initApplicationDecisionMock, initApplicationMockEntity } from '../../../../../test/mocks/mockEntities';
 import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
@@ -26,39 +20,32 @@ import { ApplicationDecisionMakerCode } from '../../application-decision-maker/a
 import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
-import {
-  CreateApplicationDecisionDto,
-  UpdateApplicationDecisionDto,
-} from './application-decision.dto';
+import { CreateApplicationDecisionDto, UpdateApplicationDecisionDto } from './application-decision.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentDto } from './component/application-decision-component.dto';
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
+import { ApplicationDecisionConditionCardService } from '../../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { User } from '../../../../user/user.entity';
+import { ApplicationDecisionConditionDateService } from '../../application-decision-condition/application-decision-condition-date/application-decision-condition-date.service';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
   let mockDecisionRepository: DeepMocked<Repository<ApplicationDecision>>;
-  let mockDecisionDocumentRepository: DeepMocked<
-    Repository<ApplicationDecisionDocument>
-  >;
-  let mockDecisionOutcomeRepository: DeepMocked<
-    Repository<ApplicationDecisionOutcomeCode>
-  >;
-  let mockDecisionMakerCodeRepository: DeepMocked<
-    Repository<ApplicationDecisionMakerCode>
-  >;
-  let mockCeoCriterionCodeRepository: DeepMocked<
-    Repository<ApplicationCeoCriterionCode>
-  >;
+  let mockDecisionDocumentRepository: DeepMocked<Repository<ApplicationDecisionDocument>>;
+  let mockDecisionOutcomeRepository: DeepMocked<Repository<ApplicationDecisionOutcomeCode>>;
+  let mockDecisionMakerCodeRepository: DeepMocked<Repository<ApplicationDecisionMakerCode>>;
+  let mockCeoCriterionCodeRepository: DeepMocked<Repository<ApplicationCeoCriterionCode>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
-  let mockApplicationDecisionComponentTypeRepository: DeepMocked<
-    Repository<ApplicationDecisionComponentType>
-  >;
+  let mockApplicationDecisionComponentTypeRepository: DeepMocked<Repository<ApplicationDecisionComponentType>>;
   let mockDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
   let mockDecisionConditionService: DeepMocked<ApplicationDecisionConditionService>;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
+  let mockUserRepository: DeepMocked<Repository<User>>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockApplicationDecisionConditionCardService: DeepMocked<ApplicationDecisionConditionCardService>;
+  let mockApplicationDecisionConditionDateService: DeepMocked<ApplicationDecisionConditionDateService>;
   let mockdataSource: DeepMocked<DataSource>;
 
   let mockApplication;
@@ -68,21 +55,19 @@ describe('ApplicationDecisionV2Service', () => {
     mockApplicationService = createMock<ApplicationService>();
     mockDocumentService = createMock<DocumentService>();
     mockDecisionRepository = createMock<Repository<ApplicationDecision>>();
-    mockDecisionDocumentRepository =
-      createMock<Repository<ApplicationDecisionDocument>>();
-    mockDecisionOutcomeRepository =
-      createMock<Repository<ApplicationDecisionOutcomeCode>>();
-    mockDecisionMakerCodeRepository =
-      createMock<Repository<ApplicationDecisionMakerCode>>();
-    mockCeoCriterionCodeRepository =
-      createMock<Repository<ApplicationCeoCriterionCode>>();
+    mockDecisionDocumentRepository = createMock<Repository<ApplicationDecisionDocument>>();
+    mockDecisionOutcomeRepository = createMock<Repository<ApplicationDecisionOutcomeCode>>();
+    mockDecisionMakerCodeRepository = createMock<Repository<ApplicationDecisionMakerCode>>();
+    mockCeoCriterionCodeRepository = createMock<Repository<ApplicationCeoCriterionCode>>();
+    mockUserRepository = createMock<Repository<User>>();
     mockApplicationDecisionComponentTypeRepository = createMock();
     mockDecisionComponentService = createMock();
     mockDecisionConditionService = createMock();
     mockNaruSubtypeRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
+    mockApplicationDecisionConditionCardService = createMock();
+    mockApplicationDecisionConditionDateService = createMock();
     mockdataSource = createMock();
-    
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -117,6 +102,10 @@ describe('ApplicationDecisionV2Service', () => {
           useValue: mockNaruSubtypeRepository,
         },
         {
+          provide: getRepositoryToken(User),
+          useValue: mockUserRepository,
+        },
+        {
           provide: ApplicationService,
           useValue: mockApplicationService,
         },
@@ -145,15 +134,21 @@ describe('ApplicationDecisionV2Service', () => {
           useValue: mockApplicationSubmissionStatusService,
         },
         {
+          provide: ApplicationDecisionConditionCardService,
+          useValue: mockApplicationDecisionConditionCardService,
+        },
+        {
+          provide: ApplicationDecisionConditionDateService,
+          useValue: mockApplicationDecisionConditionDateService,
+        },
+        {
           provide: DataSource,
           useValue: mockdataSource,
         },
       ],
     }).compile();
 
-    service = module.get<ApplicationDecisionV2Service>(
-      ApplicationDecisionV2Service,
-    );
+    service = module.get<ApplicationDecisionV2Service>(ApplicationDecisionV2Service);
 
     mockApplication = initApplicationMockEntity();
     mockDecision = initApplicationDecisionMock(mockApplication);
@@ -181,9 +176,7 @@ describe('ApplicationDecisionV2Service', () => {
 
     mockDecisionConditionService.remove.mockResolvedValue({} as any);
 
-    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
-      {} as any,
-    );
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue({} as any);
   });
 
   describe('ApplicationDecisionService Core Tests', () => {
@@ -192,9 +185,7 @@ describe('ApplicationDecisionV2Service', () => {
     });
 
     it('should get decisions by application', async () => {
-      const result = await service.getByAppFileNumber(
-        mockApplication.fileNumber,
-      );
+      const result = await service.getByAppFileNumber(mockApplication.fileNumber);
 
       expect(result).toStrictEqual([mockDecision]);
     });
@@ -218,23 +209,14 @@ describe('ApplicationDecisionV2Service', () => {
       await service.delete(mockDecision.uuid);
 
       expect(mockDecisionRepository.save.mock.calls[0][0].modifies).toBeNull();
-      expect(
-        mockDecisionRepository.save.mock.calls[0][0].reconsiders,
-      ).toBeNull();
+      expect(mockDecisionRepository.save.mock.calls[0][0].reconsiders).toBeNull();
       expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
-      expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(
-        mockApplication.uuid,
-        {
-          decisionDate: null,
-        },
-      );
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).toBeCalledTimes(1);
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).toBeCalledWith(
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(mockApplication.uuid, {
+        decisionDate: null,
+      });
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
         mockApplication.fileNumber,
         SUBMISSION_STATUS.ALC_DECISION,
         null,
@@ -256,12 +238,7 @@ describe('ApplicationDecisionV2Service', () => {
         isDraft: true,
       } as CreateApplicationDecisionDto;
 
-      await service.create(
-        decisionToCreate,
-        mockApplication,
-        undefined,
-        undefined,
-      );
+      await service.create(decisionToCreate, mockApplication, undefined, undefined);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
@@ -300,33 +277,21 @@ describe('ApplicationDecisionV2Service', () => {
         decisionToCopy: 'existing-decision-uuid',
       };
 
-      await service.create(
-        decisionToCreate,
-        mockApplication,
-        undefined,
-        undefined,
-        'mock-uuid',
-      );
+      await service.create(decisionToCreate, mockApplication, undefined, undefined, 'mock-uuid');
 
       expect(mockDecisionRepository.save).toBeCalledTimes(3);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
       const finalDecision = mockDecisionRepository.save.mock.calls[2][0];
 
-      expect(finalDecision.decisionMakerCode).toEqual(
-        decision.decisionMakerCode,
-      );
+      expect(finalDecision.decisionMakerCode).toEqual(decision.decisionMakerCode);
       expect(finalDecision.outcomeCode).toEqual(decision.outcomeCode);
-      expect(finalDecision.isSubjectToConditions).toEqual(
-        decision.isSubjectToConditions,
-      );
+      expect(finalDecision.isSubjectToConditions).toEqual(decision.isSubjectToConditions);
       expect(finalDecision.components?.length).toEqual(1);
       expect(finalDecision.conditions?.length).toEqual(1);
     });
 
     it('should fail create a decision if the resolution number is already in use', async () => {
-      mockDecisionRepository.findOne.mockResolvedValue(
-        {} as ApplicationDecision,
-      );
+      mockDecisionRepository.findOne.mockResolvedValue({} as ApplicationDecision);
       mockDecisionRepository.exist.mockResolvedValueOnce(false);
 
       const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
@@ -339,9 +304,7 @@ describe('ApplicationDecisionV2Service', () => {
         isDraft: true,
       } as CreateApplicationDecisionDto;
 
-      await expect(
-        service.create(decisionToCreate, mockApplication, undefined, undefined),
-      ).rejects.toMatchObject(
+      await expect(service.create(decisionToCreate, mockApplication, undefined, undefined)).rejects.toMatchObject(
         new ServiceValidationException(
           `Resolution number #${decisionToCreate.resolutionNumber}/${decisionToCreate.resolutionYear} is already in use`,
         ),
@@ -367,12 +330,8 @@ describe('ApplicationDecisionV2Service', () => {
         isDraft: true,
       } as CreateApplicationDecisionDto;
 
-      await expect(
-        service.create(decisionToCreate, mockApplication, undefined, undefined),
-      ).rejects.toMatchObject(
-        new ServiceValidationException(
-          'Draft decision already exists for this application.',
-        ),
+      await expect(service.create(decisionToCreate, mockApplication, undefined, undefined)).rejects.toMatchObject(
+        new ServiceValidationException('Draft decision already exists for this application.'),
       );
 
       expect(mockDecisionRepository.save).toBeCalledTimes(0);
@@ -392,18 +351,11 @@ describe('ApplicationDecisionV2Service', () => {
         outcomeCode: 'Outcome',
       } as CreateApplicationDecisionDto;
 
-      await service.create(
-        decisionToCreate,
-        mockApplication,
-        undefined,
-        undefined,
-      );
+      await service.create(decisionToCreate, mockApplication, undefined, undefined);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockApplicationService.update).not.toHaveBeenCalled();
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).not.toHaveBeenCalled();
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).not.toHaveBeenCalled();
     });
 
     it('should update the decision and update the application and submission status if it was the only decision', async () => {
@@ -431,28 +383,16 @@ describe('ApplicationDecisionV2Service', () => {
 
       mockDecisionRepository.find.mockResolvedValue([createdDecision]);
 
-      await service.update(
-        mockDecision.uuid,
-        decisionUpdate,
-        undefined,
-        undefined,
-      );
+      await service.update(mockDecision.uuid, decisionUpdate, undefined, undefined);
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
-      expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(
-        mockApplication.uuid,
-        {
-          decisionDate,
-        },
-      );
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).toBeCalledTimes(1);
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).toBeCalledWith(
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(mockApplication.uuid, {
+        decisionDate,
+      });
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
         mockApplication.fileNumber,
         SUBMISSION_STATUS.ALC_DECISION,
         decisionDate,
@@ -467,28 +407,16 @@ describe('ApplicationDecisionV2Service', () => {
         isDraft: true,
       };
 
-      await service.update(
-        mockDecision.uuid,
-        decisionUpdate,
-        undefined,
-        undefined,
-      );
+      await service.update(mockDecision.uuid, decisionUpdate, undefined, undefined);
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
-      expect(mockApplicationService.updateByUuid).toBeCalledWith(
-        '1111-1111-1111-1111',
-        {
-          decisionDate: null,
-        },
-      );
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).toBeCalledTimes(1);
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).toBeCalledWith(
+      expect(mockApplicationService.updateByUuid).toBeCalledWith('1111-1111-1111-1111', {
+        decisionDate: null,
+      });
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
         mockApplication.fileNumber,
         SUBMISSION_STATUS.ALC_DECISION,
         null,
@@ -499,10 +427,7 @@ describe('ApplicationDecisionV2Service', () => {
       const secondDecision = initApplicationDecisionMock(mockApplication);
       secondDecision.isDraft = true;
       secondDecision.uuid = 'second-uuid';
-      mockDecisionRepository.find.mockResolvedValue([
-        secondDecision,
-        mockDecision,
-      ]);
+      mockDecisionRepository.find.mockResolvedValue([secondDecision, mockDecision]);
       mockDecisionRepository.findOne.mockResolvedValue(secondDecision);
 
       const decisionUpdate: UpdateApplicationDecisionDto = {
@@ -510,19 +435,12 @@ describe('ApplicationDecisionV2Service', () => {
         isDraft: true,
       };
 
-      await service.update(
-        mockDecision.uuid,
-        decisionUpdate,
-        undefined,
-        undefined,
-      );
+      await service.update(mockDecision.uuid, decisionUpdate, undefined, undefined);
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockApplicationService.update).not.toHaveBeenCalled();
-      expect(
-        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-      ).not.toHaveBeenCalled();
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).not.toHaveBeenCalled();
     });
 
     it('should fail on update if the decision is not found', async () => {
@@ -533,17 +451,10 @@ describe('ApplicationDecisionV2Service', () => {
         outcomeCode: 'New Outcome',
         isDraft: true,
       };
-      const promise = service.update(
-        nonExistantUuid,
-        decisionUpdate,
-        undefined,
-        undefined,
-      );
+      const promise = service.update(nonExistantUuid, decisionUpdate, undefined, undefined);
 
       await expect(promise).rejects.toMatchObject(
-        new ServiceNotFoundException(
-          `Decision with UUID ${nonExistantUuid} not found`,
-        ),
+        new ServiceNotFoundException(`Decision with UUID ${nonExistantUuid} not found`),
       );
       expect(mockDecisionRepository.save).toBeCalledTimes(0);
     });
@@ -555,17 +466,10 @@ describe('ApplicationDecisionV2Service', () => {
         isDraft: true,
       };
 
-      const promise = service.update(
-        uuid,
-        decisionUpdate,
-        undefined,
-        undefined,
-      );
+      const promise = service.update(uuid, decisionUpdate, undefined, undefined);
 
       await expect(promise).rejects.toMatchObject(
-        new ServiceValidationException(
-          `Cannot set ceo criterion code unless ceo the decision maker`,
-        ),
+        new ServiceValidationException(`Cannot set ceo criterion code unless ceo the decision maker`),
       );
       expect(mockDecisionRepository.save).toBeCalledTimes(0);
     });
@@ -591,17 +495,10 @@ describe('ApplicationDecisionV2Service', () => {
         isDraft: true,
       };
 
-      const promise = service.update(
-        uuid,
-        decisionUpdate,
-        undefined,
-        undefined,
-      );
+      const promise = service.update(uuid, decisionUpdate, undefined, undefined);
 
       await expect(promise).rejects.toMatchObject(
-        new ServiceValidationException(
-          `Cannot set time extension unless ceo criterion is modification`,
-        ),
+        new ServiceValidationException(`Cannot set time extension unless ceo criterion is modification`),
       );
       expect(mockDecisionRepository.save).toBeCalledTimes(0);
     });
@@ -639,9 +536,7 @@ describe('ApplicationDecisionV2Service', () => {
 
     it('should throw an exception when attaching a document to a non-existent decision', async () => {
       mockDecisionRepository.findOne.mockResolvedValue(null);
-      await expect(
-        service.attachDocument('uuid', {} as any, {} as any),
-      ).rejects.toMatchObject(
+      await expect(service.attachDocument('uuid', {} as any, {} as any)).rejects.toMatchObject(
         new ServiceNotFoundException(`Decision with UUID uuid not found`),
       );
       expect(mockDocumentService.create).not.toHaveBeenCalled();
@@ -651,15 +546,11 @@ describe('ApplicationDecisionV2Service', () => {
       mockDecisionDocumentRepository.softRemove.mockResolvedValue({} as any);
 
       await service.deleteDocument('fake-uuid');
-      expect(mockDecisionDocumentRepository.softRemove).toHaveBeenCalledTimes(
-        1,
-      );
+      expect(mockDecisionDocumentRepository.softRemove).toHaveBeenCalledTimes(1);
     });
 
     it('should call the repository to check if portal user can download document', async () => {
-      mockDecisionDocumentRepository.findOne.mockResolvedValue(
-        new ApplicationDecisionDocument(),
-      );
+      mockDecisionDocumentRepository.findOne.mockResolvedValue(new ApplicationDecisionDocument());
       mockDocumentService.getDownloadUrl.mockResolvedValue('');
 
       await service.getDownloadForPortal('fake-uuid');
@@ -670,9 +561,7 @@ describe('ApplicationDecisionV2Service', () => {
     it('should throw an exception when document not found for deletion', async () => {
       mockDecisionDocumentRepository.findOne.mockResolvedValue(null);
       await expect(service.deleteDocument('fake-uuid')).rejects.toMatchObject(
-        new ServiceNotFoundException(
-          `Failed to find document with uuid fake-uuid`,
-        ),
+        new ServiceNotFoundException(`Failed to find document with uuid fake-uuid`),
       );
       expect(mockDocumentService.softRemove).not.toHaveBeenCalled();
     });
@@ -697,9 +586,7 @@ describe('ApplicationDecisionV2Service', () => {
     it('should throw an exception when document not found for download', async () => {
       mockDecisionDocumentRepository.findOne.mockResolvedValue(null);
       await expect(service.getDownloadUrl('fake-uuid')).rejects.toMatchObject(
-        new ServiceNotFoundException(
-          `Failed to find document with uuid fake-uuid`,
-        ),
+        new ServiceNotFoundException(`Failed to find document with uuid fake-uuid`),
       );
     });
   });

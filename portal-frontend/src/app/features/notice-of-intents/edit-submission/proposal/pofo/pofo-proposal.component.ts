@@ -15,6 +15,7 @@ import { parseStringToBoolean } from '../../../../../shared/utils/string-helper'
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { EditNoiSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-pofo-proposal',
@@ -27,9 +28,12 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   DOCUMENT = DOCUMENT_TYPE;
 
   allowMiningUploads = false;
-  showProposalMapVirus = false;
-  showCrossSectionVirus = false;
-  showReclamationPlanVirus = false;
+  showProposalMapHasVirusError = false;
+  showProposalMapVirusScanFailedError = false;
+  showCrossSectionHasVirusError = false;
+  showCrossSectionVirusScanFailedError = false;
+  showReclamationPlanHasVirusError = false;
+  showReclamationPlanVirusScanFailedError = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];
@@ -117,18 +121,42 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   async attachProposalMap(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.showProposalMapVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.showProposalMapHasVirusError = false;
+      this.showProposalMapVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showProposalMapHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showProposalMapVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachCrossSection(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
-    this.showCrossSectionVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
+      this.showCrossSectionHasVirusError = false;
+      this.showCrossSectionVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showCrossSectionHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showCrossSectionVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   async attachReclamationPlan(file: FileHandle) {
-    const res = await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
-    this.showReclamationPlanVirus = !res;
+    try {
+      await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
+      this.showReclamationPlanHasVirusError = false;
+      this.showReclamationPlanVirusScanFailedError = false;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse) {
+        this.showReclamationPlanHasVirusError = err.status === 400 && err.error.name === 'VirusDetected';
+        this.showReclamationPlanVirusScanFailedError = err.status === 500 && err.error.name === 'VirusScanFailed';
+      }
+    }
   }
 
   protected async save() {

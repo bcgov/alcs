@@ -1,11 +1,10 @@
 import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import { FindOptionsRelations, FindOptionsWhere, IsNull, Like, Not, Repository } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
-import { PORTAL_TO_ALCS_STRUCTURE_MAP } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { ApplicationTimeData } from '../application/application-time-tracking.service';
@@ -44,6 +43,7 @@ export class NoticeOfIntentService {
   };
 
   constructor(
+    @Inject(forwardRef(() => CardService))
     private cardService: CardService,
     @InjectRepository(NoticeOfIntent)
     private repository: Repository<NoticeOfIntent>,

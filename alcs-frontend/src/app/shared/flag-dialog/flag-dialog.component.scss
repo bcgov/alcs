@@ -1,0 +1,47 @@
+@use '../../../styles/colors.scss';
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  color: colors.$black;
+
+  height: 100%;
+  margin-top: 24px;
+}
+
+.reason-flagged {
+  margin-top: 5px;
+}
+
+.follow-up-at {
+  align-self: flex-start;
+}
+
+.button-container {
+  margin: 16px;
+}
+
+.warning {
+  background-color: colors.$secondary-color-light;
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+
+  mat-icon {
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+}
+
+.warning-text {
+  padding-left: 20px;
+}
+
+.no-margin-ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}

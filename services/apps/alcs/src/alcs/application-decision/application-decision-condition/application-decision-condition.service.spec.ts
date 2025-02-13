@@ -8,27 +8,53 @@ import { ApplicationDecisionConditionType } from './application-decision-conditi
 import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionService } from './application-decision-condition.service';
+import { Mapper } from 'automapper-core';
+import { AutomapperModule } from 'automapper-nestjs';
+import { classes } from 'automapper-classes';
+import { ApplicationDecisionConditionDate } from './application-decision-condition-date/application-decision-condition-date.entity';
+import { ApplicationTimeTrackingService } from '../../application/application-time-tracking.service';
+import { ApplicationPaused } from '../../application/application-paused.entity';
+import { ApplicationModification } from '../application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../application-reconsideration/application-reconsideration.entity';
 
 describe('ApplicationDecisionConditionService', () => {
   let service: ApplicationDecisionConditionService;
+  let timeTrackingService: ApplicationTimeTrackingService;
   let mockApplicationDecisionConditionRepository: DeepMocked<Repository<ApplicationDecisionCondition>>;
   let mockAppDecCondTypeRepository: DeepMocked<Repository<ApplicationDecisionConditionType>>;
+  let mockApplicationModificationRepository: DeepMocked<Repository<ApplicationModification>>;
+  let mockApplicationReconsiderationRepository: DeepMocked<Repository<ApplicationReconsideration>>;
+  
   let mockApplicationDecisionConditionComponentPlanNumber: DeepMocked<
     Repository<ApplicationDecisionConditionComponentPlanNumber>
   >;
   let mockApplicationDecisionConditionToComponentLot: DeepMocked<
     Repository<ApplicationDecisionConditionToComponentLot>
   >;
+  let mockApplicationPausedRepository: DeepMocked<Repository<ApplicationPaused>>;
+  let mockMapper: DeepMocked<Mapper>;
+  let mockApplicationDecisionConditionDate: DeepMocked<Repository<ApplicationDecisionConditionDate>>;
 
   beforeEach(async () => {
     mockApplicationDecisionConditionRepository = createMock();
     mockAppDecCondTypeRepository = createMock();
     mockApplicationDecisionConditionComponentPlanNumber = createMock();
     mockApplicationDecisionConditionToComponentLot = createMock();
+    mockMapper = createMock();
+    mockApplicationDecisionConditionDate = createMock();
+    mockApplicationPausedRepository = createMock();
+    mockApplicationModificationRepository = createMock();
+    mockApplicationReconsiderationRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         ApplicationDecisionConditionService,
+        ApplicationTimeTrackingService,
         {
           provide: getRepositoryToken(ApplicationDecisionCondition),
           useValue: mockApplicationDecisionConditionRepository,
@@ -45,10 +71,27 @@ describe('ApplicationDecisionConditionService', () => {
           provide: getRepositoryToken(ApplicationDecisionConditionToComponentLot),
           useValue: mockApplicationDecisionConditionToComponentLot,
         },
+        {
+          provide: getRepositoryToken(ApplicationPaused),
+          useValue: mockApplicationPausedRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionConditionDate),
+          useValue: mockApplicationDecisionConditionDate,
+        },
+        {
+          provide: getRepositoryToken(ApplicationModification),
+          useValue: mockApplicationModificationRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationReconsideration),
+          useValue: mockApplicationReconsiderationRepository,
+        },
       ],
     }).compile();
 
     service = module.get<ApplicationDecisionConditionService>(ApplicationDecisionConditionService);
+    timeTrackingService = module.get<ApplicationTimeTrackingService>(ApplicationTimeTrackingService);
   });
 
   it('should be defined', () => {

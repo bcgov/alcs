@@ -117,21 +117,12 @@ export class ApplicationOwnerService {
   }
 
   async uploadCorporateSummary(applicationFileId: string, file: File) {
-    try {
-      return await this.documentService.uploadFile<{ uuid: string }>(
-        applicationFileId,
-        file,
-        DOCUMENT_TYPE.CORPORATE_SUMMARY,
-        DOCUMENT_SOURCE.APPLICANT,
-        `${this.serviceUrl}/attachCorporateSummary`
-      );
-    } catch (e) {
-      if (e instanceof HttpErrorResponse && e.status === 403) {
-        throw e;
-      }
-      console.error(e);
-      this.toastService.showErrorToast('Failed to attach document to Owner, please try again');
-    }
-    return undefined;
+    return await this.documentService.uploadFile<{ uuid: string }>(
+      applicationFileId,
+      file,
+      DOCUMENT_TYPE.CORPORATE_SUMMARY,
+      DOCUMENT_SOURCE.APPLICANT,
+      `${this.serviceUrl}/attachCorporateSummary`,
+    );
   }
 }

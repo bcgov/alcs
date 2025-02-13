@@ -1,0 +1,207 @@
+<div mat-dialog-title>
+  <div class="close">
+    <h6 class="card-type-label">Notice Of Intent</h6>
+    <button mat-icon-button [mat-dialog-close]="isDirty">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="header-row">
+    <div class="left">
+      <h3 class="card-title">
+        <span class="margin-right">{{ cardTitle }}</span>
+      </h3>
+    </div>
+    <div class="center">
+      <button
+        *ngIf="decision"
+        color="accent"
+        mat-flat-button
+        [mat-dialog-close]="isDirty"
+        [routerLink]="['notice-of-intent', noticeOfIntent.fileNumber, 'decision', 'conditions', decision.uuid]"
+      >
+        View Conditions
+      </button>
+    </div>
+  </div>
+  <div class="pill-row">
+    <app-application-type-pill [type]="noticeOfIntent.type"></app-application-type-pill>
+    <app-application-type-pill
+      *ngIf="noticeOfIntentDecisionConditionCard.isModification"
+      [type]="getStatusPill('MODIFICATION')"
+    ></app-application-type-pill>
+    <app-application-type-pill [type]="getStatusPill('CONDITION')"></app-application-type-pill>
+
+    <mat-icon *ngIf="isFlagged" svgIcon="personal_places" class="flag-icon"></mat-icon>
+  </div>
+  <div class="header-row">
+    <div class="left">
+      <div>
+        <span class="region">{{ noticeOfIntent.localGovernment.name }} - {{ noticeOfIntent.region.label }} Region</span>
+      </div>
+    </div>
+    <div class="right">
+      <button
+        *ngIf="canArchive"
+        matTooltip="Archive Card"
+        class="toggle-priority"
+        (click)="onArchiveCard()"
+        mat-icon-button
+      >
+        <mat-icon>archive</mat-icon>
+      </button>
+      <button
+        *ngIf="card"
+        [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
+        class="toggle-priority"
+        (click)="onTogglePriority()"
+        mat-icon-button
+      >
+        <div
+          class="priority"
+          [ngClass]="{
+            'filled-priority': card.highPriority,
+            'empty-priority': !card.highPriority,
+          }"
+        ></div>
+      </button>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="select-container">
+    <ng-select
+      class="card-type"
+      [items]="boardStatuses"
+      appearance="outline"
+      placeholder="Workflow Stage"
+      bindLabel="label"
+      bindValue="statusCode"
+      [clearable]="false"
+      [(ngModel)]="selectedApplicationStatus"
+      (change)="onStatusSelected($event)"
+    >
+      <ng-template ng-option-tmp let-item="item">
+        <span [innerHTML]="item.label"> </span>
+      </ng-template>
+      <ng-template ng-label-tmp let-item="item">
+        <span [innerHTML]="item.label"> </span>
+      </ng-template>
+    </ng-select>
+    <ng-select
+      class="card-assignee"
+      appearance="outline"
+      [items]="$users | async"
+      placeholder="Assigned Planner"
+      bindLabel="prettyName"
+      bindValue="prettyName"
+      [(ngModel)]="selectedAssigneeName"
+      [searchFn]="filterAssigneeList"
+      (change)="onAssigneeSelected($event)"
+    >
+      <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+        <div class="assignee-card-body">
+          <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.prettyName }}</p>
+          <p class="assignee-card-email" [ngOptionHighlight]="search">{{ item.email }}</p>
+        </div>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="conditions-container">
+    <div class="conditions-header-container">
+      <span class="conditions-header"
+        >Decision #{{ noticeOfIntentDecisionConditionCard.decisionOrder }} - Conditions to Review</span
+      >
+      <div class="buttons-container">
+        <ng-container *ngIf="!isEditing; else editMode">
+          <button class="edit-button" mat-icon-button (click)="editClicked()">
+            <mat-icon class="edit-icon">edit</mat-icon>
+          </button>
+        </ng-container>
+        <ng-template #editMode>
+          <button type="button" mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+          <button type="button" mat-flat-button color="primary" [disabled]="isSaveDisabled()" (click)="onSave()">
+            Save
+          </button>
+        </ng-template>
+      </div>
+    </div>
+    <div
+      class="conditions-table-container"
+      [ngClass]="{
+        'error-state': isSaveDisabled() && isEditing,
+        'no-conditions': dataSource.data.length === 0 && !isEditing,
+      }"
+    >
+      <ng-container *ngIf="dataSource.data.length === 0; else showTable">
+        <div class="no-conditions">No Conditions</div>
+      </ng-container>
+      <ng-template #showTable>
+        <table mat-table class="conditions-table mat-elevation-z2" [dataSource]="dataSource">
+          <ng-container matColumnDef="select">
+            <td mat-cell *matCellDef="let element" class="column-select">
+              <mat-checkbox
+                [disabled]="isConditionDisabled(element.condition)"
+                [(ngModel)]="element.selected"
+              ></mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="condition">
+            <td mat-cell *matCellDef="let element" class="column-condition">
+              {{ element.index }}. {{ element.condition.type.label }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="date">
+            <td mat-cell *matCellDef="let element" class="column-date">
+              <ng-container *ngIf="element.condition.type.isDateChecked">
+                <ng-container *ngIf="element.condition.type.dateType === 'Single'; else multipleDateColumn">
+                  <ng-container *ngIf="element.condition.type.singleDateLabel === 'Due Date'; else singleEndDate">
+                    <span class="date-label">Due Date: </span>
+                  </ng-container>
+                  <ng-template #singleEndDate>
+                    <span class="date-label">End Date: </span>
+                  </ng-template>
+                </ng-container>
+                <ng-template #multipleDateColumn>
+                  <span class="date-label">Due Date: </span>
+                </ng-template>
+                <ng-container *ngIf="getDate(element.condition); else noDate">
+                  {{ getDate(element.condition) }}
+                </ng-container>
+                <ng-template #noDate>
+                  <span class="no-data">No Data</span>
+                </ng-template>
+              </ng-container>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <td mat-cell *matCellDef="let element" class="column-status">
+              <app-application-type-pill [type]="getStatusPill(element.condition.status)"></app-application-type-pill>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayColumns"
+            [class.disabled-row]="isConditionDisabled(row.condition)"
+            matTooltip="Condition is already used by another card"
+            [matTooltipDisabled]="!isConditionDisabled(row.condition)"
+          ></tr>
+        </table>
+      </ng-template>
+    </div>
+  </div>
+  <div class="subtasks-wrapper">
+    <app-subtasks *ngIf="card" [cardUuid]="card.uuid"></app-subtasks>
+  </div>
+  <div class="card-comments-wrapper">
+    <app-comments
+      *ngIf="card"
+      [cardUuid]="card.uuid"
+      [fileNumber]="noticeOfIntent.fileNumber"
+      [notificationTitle]="cardTitle"
+    ></app-comments>
+  </div>
+</mat-dialog-content>

@@ -14,7 +14,10 @@ import { NoticeOfIntentDecisionComponent } from '../../alcs/notice-of-intent-dec
 import { NoticeOfIntentDecisionConditionType } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-code.entity';
 import {
   NoticeOfIntentDecisionConditionDto,
+  NoticeOfIntentDecisionConditionHomeDto,
   NoticeOfIntentDecisionConditionTypeDto,
+  NoticeOfIntentDecisionHomeDto,
+  NoticeOfIntentHomeDto,
 } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionDocument } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
@@ -38,6 +41,15 @@ import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.ent
 import { NoticeOfIntentPortalDecisionDto } from '../../portal/public/notice-of-intent/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionConditionDate } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 import { NoticeOfIntentDecisionConditionDateDto } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.dto';
+import { User } from '../../user/user.entity';
+import { UserDto } from '../../user/user.dto';
+import { NoticeOfIntentDecisionConditionCard } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.entity';
+import {
+  NoticeOfIntentDecisionConditionCardBoardDto,
+  NoticeOfIntentDecisionConditionCardDto,
+  NoticeOfIntentDecisionConditionCardUuidDto,
+  NoticeOfIntentDecisionConditionHomeCardDto,
+} from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
 
 @Injectable()
 export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
@@ -115,6 +127,34 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
             }
           }),
         ),
+        forMember(
+          (ad) => ad.followUpAt,
+          mapFrom((a) => a.followUpAt?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.flaggedBy,
+          mapFrom((a) => (a.flaggedBy ? this.mapper.map(a.flaggedBy, User, UserDto) : a.flaggedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedBy,
+          mapFrom((a) => (a.flagEditedBy ? this.mapper.map(a.flagEditedBy, User, UserDto) : a.flagEditedBy)),
+        ),
+        forMember(
+          (ad) => ad.flagEditedAt,
+          mapFrom((a) => a.flagEditedAt?.getTime()),
+        ),
+        forMember(
+          (dto) => dto.conditionCards,
+          mapFrom((entity) =>
+            entity.conditionCards
+              ? this.mapper.mapArray(
+                  entity.conditionCards,
+                  NoticeOfIntentDecisionConditionCard,
+                  NoticeOfIntentDecisionConditionCardUuidDto,
+                )
+              : [],
+          ),
+        ),
       );
 
       createMap(mapper, NoticeOfIntentSubmissionStatusType, NoticeOfIntentStatusDto);
@@ -161,6 +201,18 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
                   NoticeOfIntentDecisionConditionDateDto,
                 )
               : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.conditionCard,
+          mapFrom((entity) =>
+            entity.conditionCard
+              ? this.mapper.map(
+                  entity.conditionCard,
+                  NoticeOfIntentDecisionConditionCard,
+                  NoticeOfIntentDecisionConditionCardUuidDto,
+                )
+              : null,
           ),
         ),
       );
@@ -309,6 +361,100 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
                 }
               : undefined,
           ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionCard,
+        NoticeOfIntentDecisionConditionCardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(
+                  entity.conditions,
+                  NoticeOfIntentDecisionCondition,
+                  NoticeOfIntentDecisionConditionDto,
+                )
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => (entity.decision.uuid ? entity.decision.uuid : undefined)),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionCard,
+        NoticeOfIntentDecisionConditionCardBoardDto,
+        forMember(
+          (dto) => dto.conditions,
+          mapFrom((entity) =>
+            entity.conditions
+              ? this.mapper.mapArray(
+                  entity.conditions,
+                  NoticeOfIntentDecisionCondition,
+                  NoticeOfIntentDecisionConditionDto,
+                )
+              : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.decisionUuid,
+          mapFrom((entity) => entity.decision.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionCondition,
+        NoticeOfIntentDecisionConditionHomeDto,
+        forMember(
+          (dto) => dto.conditionCard,
+          mapFrom((entity) =>
+            entity.conditionCard
+              ? this.mapper.map(
+                  entity.conditionCard,
+                  NoticeOfIntentDecisionConditionCard,
+                  NoticeOfIntentDecisionConditionHomeCardDto,
+                )
+              : null,
+          ),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionCard,
+        NoticeOfIntentDecisionConditionCardUuidDto,
+        forMember(
+          (dto) => dto.uuid,
+          mapFrom((entity) => entity.uuid),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionCard,
+        NoticeOfIntentDecisionConditionHomeCardDto,
+        forMember(
+          (dto) => dto.uuid,
+          mapFrom((entity) => entity.uuid),
+        ),
+      );
+
+      createMap(mapper, NoticeOfIntentDecision, NoticeOfIntentDecisionHomeDto);
+
+      createMap(
+        mapper,
+        NoticeOfIntent,
+        NoticeOfIntentHomeDto,
+        forMember(
+          (a) => a.type,
+          mapFrom((ac) => ac.type),
         ),
       );
     };

@@ -1,23 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision-condition-code.entity';
 import {
+  NoticeOfIntentDecisionConditionHomeDto,
+  NoticeOfIntentDecisionHomeDto,
+  NoticeOfIntentHomeDto,
   UpdateNoticeOfIntentDecisionConditionDto,
   UpdateNoticeOfIntentDecisionConditionServiceDto,
 } from './notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
+import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
+import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentModification } from '../notice-of-intent-modification/notice-of-intent-modification.entity';
+import { ApplicationTimeData } from '../../application/application-time-tracking.service';
 
 @Injectable()
 export class NoticeOfIntentDecisionConditionService {
+  CARD_RELATIONS = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
   constructor(
     @InjectRepository(NoticeOfIntentDecisionCondition)
     private repository: Repository<NoticeOfIntentDecisionCondition>,
     @InjectRepository(NoticeOfIntentDecisionConditionType)
     private typeRepository: Repository<NoticeOfIntentDecisionConditionType>,
+    @InjectRepository(NoticeOfIntentModification)
+    private modificationRepository: Repository<NoticeOfIntentModification>,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   async getByTypeCode(typeCode: string): Promise<NoticeOfIntentDecisionCondition[]> {
@@ -38,6 +57,113 @@ export class NoticeOfIntentDecisionConditionService {
         type: true,
       },
     });
+  }
+
+  async findByUuids(uuids: string[]): Promise<NoticeOfIntentDecisionCondition[]> {
+    return this.repository.find({
+      where: {
+        uuid: In(uuids),
+      },
+    });
+  }
+
+  async getWithIncompleteSubtaskByType(subtaskType: string) {
+    return this.repository.find({
+      where: {
+        conditionCard: {
+          card: {
+            subtasks: {
+              completedAt: IsNull(),
+              type: {
+                code: subtaskType,
+              },
+            },
+          },
+        },
+      },
+      relations: {
+        decision: {
+          modifies: true,
+          noticeOfIntent: {
+            type: true,
+          },
+        },
+        conditionCard: {
+          card: {
+            board: true,
+            type: true,
+            status: true,
+            assignee: true,
+            subtasks: {
+              card: true,
+              type: true,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  getBy(findOptions: FindOptionsWhere<NoticeOfIntentDecisionCondition>) {
+    return this.repository.find({
+      where: findOptions,
+      relations: {
+        decision: {
+          modifies: true,
+          noticeOfIntent: {
+            type: true,
+          },
+        },
+        conditionCard: {
+          card: this.CARD_RELATIONS,
+        },
+      },
+    });
+  }
+
+  async mapToDtos(
+    noticeOfIntents: NoticeOfIntentDecisionCondition[],
+  ): Promise<NoticeOfIntentDecisionConditionHomeDto[]> {
+    const uuids = noticeOfIntents.map((noi) => noi.decision.noticeOfIntent.uuid);
+    const timeMap = await this.getTimes(uuids);
+    const c = Promise.all(
+      noticeOfIntents.map(async (c) => {
+        const condition = this.mapper.map(c, NoticeOfIntentDecisionCondition, NoticeOfIntentDecisionConditionHomeDto);
+        const decision = this.mapper.map(c.decision, NoticeOfIntentDecision, NoticeOfIntentDecisionHomeDto);
+        const noticeOfIntent = this.mapper.map(c.decision.noticeOfIntent, NoticeOfIntent, NoticeOfIntentHomeDto);
+        const appModifications = await this.modificationRepository.find({
+          where: {
+            modifiesDecisions: {
+              uuid: c.decision?.uuid,
+            },
+          },
+        });
+
+        return {
+          ...condition,
+          isModification: appModifications.length > 0,
+          decision: {
+            ...decision,
+            noticeOfIntent: {
+              ...noticeOfIntent,
+              activeDays: undefined,
+              pausedDays: timeMap.get(noticeOfIntent.uuid)?.pausedDays ?? null,
+              paused: timeMap.get(noticeOfIntent.uuid)?.pausedDays !== null,
+            },
+          },
+        };
+      }),
+    );
+    return (await c).reduce(
+      (res: NoticeOfIntentDecisionConditionHomeDto[], curr: NoticeOfIntentDecisionConditionHomeDto) => {
+        const existing = res.find((e) => e.conditionCard?.cardUuid === curr.conditionCard?.cardUuid);
+        if (!existing) {
+          res.push(curr);
+        }
+        return res;
+      },
+      [],
+    );
   }
 
   async createOrUpdate(
@@ -138,5 +264,32 @@ export class NoticeOfIntentDecisionConditionService {
   ) {
     await this.repository.update(existingCondition.uuid, updates);
     return await this.getOneOrFail(existingCondition.uuid);
+  }
+
+  async getTimes(uuids: string[]) {
+    const activeCounts = (await this.repository.query(
+      `
+        SELECT * from alcs.calculate_noi_active_days($1)`,
+      [`{${uuids.join(', ')}}`],
+    )) as {
+      noi_uuid: string;
+      paused_days: number;
+      active_days: number;
+    }[];
+
+    const results = new Map<string, ApplicationTimeData>();
+    uuids.forEach((appUuid) => {
+      results.set(appUuid, {
+        pausedDays: null,
+        activeDays: null,
+      });
+    });
+    activeCounts.forEach((time) => {
+      results.set(time.noi_uuid, {
+        activeDays: time.active_days,
+        pausedDays: time.paused_days,
+      });
+    });
+    return results;
   }
 }

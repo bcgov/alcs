@@ -27,6 +27,10 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
 import { NoticeOfIntentDecisionConditionDate } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.entity';
 import { NoticeOfIntentDecisionConditionDateService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.service';
 import { NoticeOfIntentDecisionConditionDateController } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-date/notice-of-intent-decision-condition-date.controller';
+import { User } from '../../user/user.entity';
+import { NoticeOfIntentDecisionConditionCard } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.entity';
+import { NoticeOfIntentDecisionConditionCardService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { NoticeOfIntentDecisionConditionCardController } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.controller';
 
 @Module({
   imports: [
@@ -41,9 +45,11 @@ import { NoticeOfIntentDecisionConditionDateController } from './notice-of-inten
       NoticeOfIntentDecisionCondition,
       NoticeOfIntentDecisionConditionType,
       NoticeOfIntentDecisionConditionDate,
+      NoticeOfIntentDecisionConditionCard,
+      User,
     ]),
     forwardRef(() => BoardModule),
-    CardModule,
+    forwardRef(() => CardModule),
     DocumentModule,
     forwardRef(() => NoticeOfIntentModule),
     NoticeOfIntentSubmissionStatusModule,
@@ -56,6 +62,7 @@ import { NoticeOfIntentDecisionConditionDateController } from './notice-of-inten
     NoticeOfIntentDecisionConditionDateService,
     NoticeOfIntentDecisionProfile,
     NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionConditionCardService,
   ],
   controllers: [
     NoticeOfIntentDecisionV2Controller,
@@ -63,7 +70,14 @@ import { NoticeOfIntentDecisionConditionDateController } from './notice-of-inten
     NoticeOfIntentDecisionComponentController,
     NoticeOfIntentDecisionConditionController,
     NoticeOfIntentDecisionConditionDateController,
+    NoticeOfIntentDecisionConditionCardController,
   ],
-  exports: [NoticeOfIntentModificationService, NoticeOfIntentDecisionV2Service],
+  exports: [
+    NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionV2Service,
+    NoticeOfIntentDecisionConditionCardService,
+    NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionConditionCardService,
+  ],
 })
 export class NoticeOfIntentDecisionModule {}

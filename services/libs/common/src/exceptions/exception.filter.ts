@@ -14,8 +14,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     this.logger.error(exception);
 
-    response
-      .status(status)
-      .send(new BaseErrorResponseModel(status, exception.message, request.url));
+    response.status(status).send(new BaseErrorResponseModel(status, exception.name, exception.message, request.url));
   }
 }

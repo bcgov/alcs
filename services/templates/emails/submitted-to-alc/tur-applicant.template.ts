@@ -3,7 +3,7 @@ import { feesTable } from '../partials/fees-table.template';
 import { notificationOnly } from '../partials/notification-only.template';
 
 const turFees = [
-  { type: 'Transportation, Utility, and Recreational Trail Uses', fee: 1500 },
+  { type: 'Transportation, Utility, or Recreational Trail Uses', fee: 1500 },
 ];
 
 export const template = build(

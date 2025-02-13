@@ -52,7 +52,7 @@ export class CardDialogComponent implements OnInit, OnDestroy {
       this.canArchive =
         !!currentUser &&
         !!currentUser.client_roles &&
-        (currentUser.client_roles.includes(ROLES.ADMIN) || currentUser.client_roles.includes(ROLES.APP_SPECIALIST));
+        Object.values(ROLES).some((role) => role !== ROLES.COMMISSIONER && currentUser.client_roles?.includes(role));
     });
 
     this.dialog.backdropClick().subscribe(() => {

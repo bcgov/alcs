@@ -4,7 +4,6 @@ import { NotificationDetailService } from '../../services/notification/notificat
 import { SharedModule } from '../../shared/shared.module';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { NotificationDetailsModule } from './applicant-info/notification-details/notification-details.module';
-import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { NotificationDocumentsComponent } from './documents/documents.component';
 import { IntakeComponent } from './intake/intake.component';
 import { NotificationComponent, postSubmissionRoutes } from './notification.component';
@@ -25,7 +24,6 @@ const routes: Routes = [
     NotificationComponent,
     OverviewComponent,
     NotificationDocumentsComponent,
-    DocumentUploadDialogComponent,
     ApplicantInfoComponent,
     UncancelNotificationDialogComponent,
     IntakeComponent,

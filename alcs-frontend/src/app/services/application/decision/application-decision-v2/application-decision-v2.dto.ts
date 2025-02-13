@@ -1,4 +1,8 @@
+import { UserDto } from '../../../user/user.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
+import { CardDto } from '../../../card/card.dto';
+import { ApplicationTypeDto } from '../../application-code.dto';
+import { ApplicationDto } from '../../application.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -28,6 +32,12 @@ export interface UpdateApplicationDecisionDto {
   conditions?: UpdateApplicationDecisionConditionDto[];
   isDraft?: boolean;
   ccEmails?: string[];
+  isFlagged?: boolean;
+  reasonFlagged?: string | null;
+  followUpAt?: number | null;
+  flaggedByUuid?: string | null;
+  flagEditedByUuid?: string | null;
+  flagEditedAt?: number | null;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -73,6 +83,44 @@ export interface ApplicationDecisionDto {
   components: ApplicationDecisionComponentDto[];
   conditions: ApplicationDecisionConditionDto[];
   wasReleased: boolean;
+  conditionsCards: ApplicationDecisionConditionCardDto[];
+  isFlagged: boolean;
+  reasonFlagged: string | null;
+  followUpAt: number | null;
+  flaggedBy: UserDto | null;
+  flagEditedBy: UserDto | null;
+  flagEditedAt: number | null;
+  application: ApplicationDto;
+}
+
+export interface ApplicationHomeDto {
+  uuid: string;
+  fileNumber: string;
+  applicant: string;
+  activeDays: number;
+  paused: boolean;
+  pausedDays: number;
+  type: ApplicationTypeDto;
+}
+
+export interface ApplicationDecisionHomeDto {
+  uuid: string;
+  application: ApplicationHomeDto;
+}
+
+export interface ApplicationDecisionConditionHomeCardDto {
+  uuid: string;
+  cardUuid: string;
+  card: CardDto;
+  applicationFileNumber?: string | null;
+}
+
+export interface ApplicationDecisionConditionHomeDto {
+  conditionCard: ApplicationDecisionConditionHomeCardDto | null;
+  status?: string | null;
+  isReconsideration: boolean;
+  isModification: boolean;
+  decision: ApplicationDecisionHomeDto;
 }
 
 export interface LinkedResolutionDto {
@@ -92,6 +140,7 @@ export interface ApplicationDecisionDocumentDto {
   mimeType: string;
   uploadedBy: string;
   uploadedAt: number;
+  fileSize?: number;
 }
 
 export interface DecisionMakerDto extends BaseCodeDto {}
@@ -253,6 +302,8 @@ export interface ApplicationDecisionConditionDto {
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: ApplicationDecisionComponentDto[] | null;
   dates?: ApplicationDecisionConditionDateDto[];
+  conditionCard?: ApplicationDecisionConditionCardDto | null;
+  status?: string | null;
   decision: ApplicationDecisionDto | null;
 }
 
@@ -290,4 +341,42 @@ export interface ApplicationDecisionConditionToComponentPlanNumberDto {
   applicationDecisionComponentUuid: string;
   applicationDecisionConditionUuid: string;
   planNumbers: string | null;
+}
+
+export interface ApplicationDecisionConditionCardDto {
+  uuid: string;
+  conditions: ApplicationDecisionConditionDto[];
+  cardUuid: string;
+  card: CardDto;
+  decisionUuid: string;
+  applicationFileNumber: string;
+}
+
+export interface CreateApplicationDecisionConditionCardDto {
+  conditionsUuids: string[];
+  decisionUuid: string;
+  cardStatusCode: string;
+}
+
+export interface UpdateApplicationDecisionConditionCardDto {
+  conditionsUuids?: string[] | null;
+  cardStatusCode?: string | null;
+}
+
+export interface ApplicationDecisionConditionCardUuidDto {
+  uuid: string;
+}
+
+export interface ApplicationDecisionConditionCardBoardDto {
+  uuid: string;
+  conditions: ApplicationDecisionConditionDto[];
+  card: CardDto;
+  decisionUuid: string;
+  decisionOrder: number;
+  decisionIsFlagged: boolean;
+  fileNumber: string;
+  applicant: string;
+  type?: ApplicationTypeDto;
+  isReconsideration: boolean;
+  isModification: boolean;
 }

@@ -10,8 +10,8 @@ import {
 } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { DecisionDocumentUploadDialogComponent } from '../decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../../shared/constants';
+import { DocumentUploadDialogComponent } from '../../../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
   selector: 'app-decision-documents',
@@ -37,7 +37,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<NoticeOfIntentDecisionDocumentDto>();
 
   readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;
-  
+
   constructor(
     private decisionService: NoticeOfIntentDecisionV2Service,
     private dialog: MatDialog,
@@ -85,7 +85,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   private openFileDialog(existingDocument?: NoticeOfIntentDecisionDocumentDto) {
     if (this.decision) {
       this.dialog
-        .open(DecisionDocumentUploadDialogComponent, {
+        .open(DocumentUploadDialogComponent, {
           minWidth: '600px',
           maxWidth: '800px',
           width: '70%',
@@ -93,9 +93,12 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
             fileId: this.fileId,
             decisionUuid: this.decision?.uuid,
             existingDocument: existingDocument,
+            decisionService: this.decisionService,
+            allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+            allowsFileEdit: true,
           },
         })
-        .beforeClosed()
+        .afterClosed()
         .subscribe((isDirty: boolean) => {
           if (isDirty && this.decision) {
             this.decisionService.loadDecision(this.decision.uuid);

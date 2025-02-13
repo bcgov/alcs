@@ -37,7 +37,7 @@
           [fileTypeData]="portalStatusDataService"
           (fileTypeChange)="onPortalStatusChange($event)"
           [preExpanded]="['With ALC']"
-          onclick="event.preventDefault()"
+          id="portal-status"
         />
       </div>
 
@@ -48,7 +48,7 @@
           #fileTypeDropDown
           [fileTypeData]="fileTypeService"
           (fileTypeChange)="onFileTypeChange($event)"
-          onclick="event.preventDefault()"
+          id="file-type"
         />
       </div>
     </div>

@@ -30,6 +30,9 @@ import { ReviewComponent } from './review/review.component';
 import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationTagService } from '../../services/application/application-tag/application-tag.service';
 import { FileTagService } from '../../services/common/file-tag.service';
+import { ApplicationDecisionV2Service } from '../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ApplicationDecisionConditionCardDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 export const unsubmittedRoutes = [
   {
@@ -184,6 +187,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   application: ApplicationDto | undefined;
   reconsiderations: ApplicationReconsiderationDto[] = [];
   modifications: ApplicationModificationDto[] = [];
+  decisionConditionCards: ApplicationDecisionConditionCardDto[] = [];
   submission?: ApplicationSubmissionDto;
 
   isApplicantSubmission = false;
@@ -195,6 +199,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     public applicationSubmissionService: ApplicationSubmissionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
+    private decisionConditionCardService: ApplicationDecisionConditionCardService,
     private route: ActivatedRoute,
     private titleService: Title,
     public applicationStatusService: ApplicationSubmissionStatusService,
@@ -213,6 +218,9 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
+
+        this.decisionConditionCards =
+          (await this.decisionConditionCardService.fetchByApplicationFileNumber(application.fileNumber)) || [];
 
         this.isApplicantSubmission = application.source !== SYSTEM_SOURCE_TYPES.ALCS;
         let wasSubmittedToLfng = false;
