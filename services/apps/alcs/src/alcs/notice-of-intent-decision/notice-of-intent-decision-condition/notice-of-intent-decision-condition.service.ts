@@ -128,7 +128,6 @@ export class NoticeOfIntentDecisionConditionService {
     const timeMap = await this.getTimes(uuids);
     const c = Promise.all(
       noticeOfIntents.map(async (c) => {
-        const wasReleased = c.decision.wasReleased;
         const condition = this.mapper.map(c, NoticeOfIntentDecisionCondition, NoticeOfIntentDecisionConditionHomeDto);
         const decision = this.mapper.map(c.decision, NoticeOfIntentDecision, NoticeOfIntentDecisionHomeDto);
         const noticeOfIntent = this.mapper.map(c.decision.noticeOfIntent, NoticeOfIntent, NoticeOfIntentHomeDto);
@@ -147,7 +146,7 @@ export class NoticeOfIntentDecisionConditionService {
             ...decision,
             noticeOfIntent: {
               ...noticeOfIntent,
-              activeDays: !wasReleased ? timeMap.get(noticeOfIntent.uuid)?.activeDays : null,
+              activeDays: undefined,
               pausedDays: timeMap.get(noticeOfIntent.uuid)?.pausedDays ?? null,
               paused: timeMap.get(noticeOfIntent.uuid)?.pausedDays !== null,
             },
