@@ -288,7 +288,6 @@ export class HomeController {
 
   private async mapApplicationConditionsToDtos(applicationConditions: ApplicationDecisionCondition[]) {
     const applications = applicationConditions.map((c) => c.decision.application);
-    const applicationTimes = await this.timeService.fetchActiveTimes(applications);
 
     const appPausedMap = await this.timeService.getPausedStatus(applications);
     const holidays = await this.holidayService.fetchAllHolidays();
@@ -334,9 +333,7 @@ export class HomeController {
           uuid: subtask.uuid,
           card: this.mapper.map(condition.conditionCard?.card, Card, CardDto),
           completedAt: subtask.completedAt?.getTime(),
-          activeDays: !condition.decision.wasReleased
-            ? applicationTimes.get(condition.decision.application.uuid)?.activeDays || 0
-            : undefined,
+          activeDays: undefined,
           paused: appPausedMap.get(condition.decision.uuid) || false,
           title: `${condition.decision.application.fileNumber} (${condition.decision.application.applicant})`,
           appType: condition.decision.application.type,
@@ -373,9 +370,6 @@ export class HomeController {
       if (!condition.conditionCard?.card) {
         continue;
       }
-      const activeDays = !condition.decision.wasReleased
-        ? timeMap.get(condition.decision.noticeOfIntent.uuid)?.activeDays
-        : undefined;
       const noiModifications = await this.modificationNoticeOfIntentRepository.find({
         where: {
           modifiesDecisions: {
@@ -388,7 +382,7 @@ export class HomeController {
           isCondition: true,
           isConditionModi: noiModifications.length > 0,
           isConditionRecon: false,
-          activeDays: activeDays ?? undefined,
+          activeDays: undefined,
           type: subtask.type,
           createdAt: subtask.createdAt.getTime(),
           assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
