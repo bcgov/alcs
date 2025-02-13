@@ -56,10 +56,12 @@ export class ApplicationDecisionConditionFinancialInstrumentDto {
 
   @AutoMap()
   @IsOptional()
+  @IsNumber()
   statusDate?: number | null;
 
   @AutoMap()
   @IsString()
+  @IsOptional()
   explanation?: string | null;
 }
 
