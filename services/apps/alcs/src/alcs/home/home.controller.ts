@@ -349,9 +349,6 @@ export class HomeController {
   }
 
   private async mapNoticeOfIntentConditionsToDtos(noticeOfIntestConditions: NoticeOfIntentDecisionCondition[]) {
-    const noticeOfIntents = noticeOfIntestConditions.map((c) => c.decision.noticeOfIntent);
-    const uuids = noticeOfIntents.map((noi) => noi.uuid);
-    const timeMap = await this.noticeOfIntentService.getTimes(uuids);
     const holidays = await this.holidayService.fetchAllHolidays();
     const result: HomepageSubtaskDTO[] = [];
 
