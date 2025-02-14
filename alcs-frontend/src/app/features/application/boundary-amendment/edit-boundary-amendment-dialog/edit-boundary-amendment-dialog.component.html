@@ -1,8 +1,24 @@
 <div mat-dialog-title>
-  <h2 class="card-title">{{ data ? 'Edit' : 'Create' }} Boundary Amendment</h2>
+  <h2 class="card-title">{{ data.existingAmendment ? 'Edit' : 'Create' }} Boundary Amendment</h2>
 </div>
 <mat-dialog-content style="height: 100%">
   <form class="content" [formGroup]="form">
+    <div *ngIf="data.existingAmendment" class="full-grid-line">
+      <mat-form-field appearance="outline" class="uuid-readonly">
+        <mat-label for="uuid">UUID</mat-label>
+        <input
+          class="uuid-input"
+          matInput
+          id="uuid"
+          [formControl]="uuid"
+          type="text"
+          readonly
+        />
+        <button matSuffix mat-icon-button (click)="onCopy()">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
     <mat-label for="type" class="toggle-label">Amendment Type*</mat-label>
     <mat-button-toggle-group [formControl]="type" id="type">
       <mat-button-toggle value="Exclude Land from the ALR Boundary"
