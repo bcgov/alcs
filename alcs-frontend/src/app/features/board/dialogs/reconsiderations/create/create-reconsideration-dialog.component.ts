@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import {
   CreateApplicationReconsiderationDto,
+  RECONSIDERATION_TYPE,
   ReconsiderationTypeDto,
 } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
@@ -29,12 +30,13 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   reconTypes: ReconsiderationTypeDto[] = [];
   isLoading = false;
   isDecisionDateEmpty = false;
+  disable331Fields = false;
 
   decisions: { uuid: string; resolution: string }[] = [];
 
   fileNumberControl = new FormControl<string | any>({ value: '', disabled: true }, [Validators.required]);
   applicantControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
-  applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
+  applicationTypeControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   boardControl = new FormControl<string | null>(null, [Validators.required]);
   regionControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
@@ -87,6 +89,7 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
       if (!application.decisionDate) {
         this.isDecisionDateEmpty = true;
       }
+      this.applicationTypeControl.setValue(application.type.code);
     });
 
     this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
@@ -181,5 +184,30 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  async onTypeReconsiderationChange() {
+    if (this.reconTypeControl.value === RECONSIDERATION_TYPE.T_33_1) {
+      this.handleReconType(false);
+    } else {
+      this.handleReconType(true);
+    }
+  }
+
+  private handleReconType(enable: boolean) {
+    if (enable) {
+      this.isNewEvidenceControl.enable();
+      this.isIncorrectFalseInfoControl.enable();
+      this.isNewProposalControl.enable();
+      this.disable331Fields = false;
+    } else {
+      this.isNewEvidenceControl.disable();
+      this.isNewEvidenceControl.setValue(null);
+      this.isIncorrectFalseInfoControl.disable();
+      this.isIncorrectFalseInfoControl.setValue(null);
+      this.isNewProposalControl.disable();
+      this.isNewProposalControl.setValue(null);
+      this.disable331Fields = true;
+    }
   }
 }
