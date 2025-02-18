@@ -11,6 +11,9 @@ import {
   DecisionConditionDateDialogComponent,
   DueDate,
 } from './decision-condition-date-dialog/decision-condition-date-dialog.component';
+import {
+  countToString
+} from '../../../../../../../shared/utils/count-to-string';
 import moment, { Moment } from 'moment';
 import { startWith } from 'rxjs';
 
@@ -32,6 +35,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   @Output() remove = new EventEmitter<void>();
 
   @Input() selectableComponents: SelectableComponent[] = [];
+  @Input() index: number = 0;
 
   uuid: string | undefined;
 
@@ -234,5 +238,9 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         }));
         this.emitChanges();
       });
+  }
+
+  alphaIndex(index: number) {
+    return countToString(index);
   }
 }
