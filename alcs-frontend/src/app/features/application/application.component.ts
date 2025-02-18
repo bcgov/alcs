@@ -218,9 +218,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-
-        this.decisionConditionCards =
-          (await this.decisionConditionCardService.fetchByApplicationFileNumber(application.fileNumber)) || [];
+        this.decisionConditionCardService.fetchByApplicationFileNumber(application.fileNumber);
 
         this.isApplicantSubmission = application.source !== SYSTEM_SOURCE_TYPES.ALCS;
         let wasSubmittedToLfng = false;
@@ -254,6 +252,10 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
     this.modificationService.$modifications.pipe(takeUntil(this.destroy)).subscribe((modifications) => {
       this.modifications = [...modifications].reverse(); //Reverse since we go low to high versus normally high to low
+    });
+
+    this.decisionConditionCardService.$conditionCards.pipe(takeUntil(this.destroy)).subscribe((cards) => {
+      this.decisionConditionCards = cards;
     });
   }
 
