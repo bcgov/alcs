@@ -54,6 +54,8 @@ import { ApplicationDecisionConditionCardController } from '../application-decis
 import { ApplicationDecisionConditionCard } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.entity';
 import { ApplicationDecisionConditionCardService } from '../application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 import { User } from 'apps/alcs/src/user/user.entity';
+import { ApplicationDecisionConditionFinancialInstrument } from '../application-decision-condition/application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.entity';
+import { ApplicationDecisionConditionFinancialInstrumentService } from '../application-decision-condition/application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.service';
 
 @Module({
   imports: [
@@ -84,6 +86,7 @@ import { User } from 'apps/alcs/src/user/user.entity';
       ApplicationBoundaryAmendment,
       ApplicationDecisionConditionCard,
       User,
+      ApplicationDecisionConditionFinancialInstrument,
     ]),
     forwardRef(() => BoardModule),
     forwardRef(() => ApplicationModule),
@@ -105,6 +108,7 @@ import { User } from 'apps/alcs/src/user/user.entity';
     ApplicationConditionToComponentLotService,
     ApplicationBoundaryAmendmentService,
     ApplicationDecisionConditionCardService,
+    ApplicationDecisionConditionFinancialInstrumentService,
   ],
   controllers: [
     ApplicationDecisionV2Controller,
