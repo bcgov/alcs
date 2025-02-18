@@ -98,7 +98,7 @@ describe('GenerateSrwDocumentService', () => {
       name: 'Bruce Wayne',
     });
 
-    const res = await service.generate('fake', userEntity);
+    const res = await service.generate('fake', userEntity, new Date());
 
     expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
     expect(mockLocalGovernmentService.getByUuid).toBeCalledTimes(1);
