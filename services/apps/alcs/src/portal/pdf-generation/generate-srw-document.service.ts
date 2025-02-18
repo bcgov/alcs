@@ -31,18 +31,14 @@ export class GenerateSrwDocumentService {
     private notificationDocumentService: NotificationDocumentService,
     private localGovernmentService: LocalGovernmentService,
     private notificationParcelService: NotificationParcelService,
-    private notificationService: NotificationService,
   ) {}
 
-  async generate(fileNumber: string, user: User) {
-    const submission = await this.notificationSubmissionService.getByFileNumber(
-      fileNumber,
-      user,
-    );
+  async generate(fileNumber: string, user: User, dateSubmitted: Date) {
+    const submission = await this.notificationSubmissionService.getByFileNumber(fileNumber, user);
 
     const documents = await this.notificationDocumentService.list(fileNumber);
 
-    const payload = await this.preparePdfPayload(submission, documents);
+    const payload = await this.preparePdfPayload(submission, documents, dateSubmitted);
 
     return await this.documentGenerationService.generateDocument(
       `${fileNumber}_SRW_Date_Time`,
@@ -51,8 +47,8 @@ export class GenerateSrwDocumentService {
     );
   }
 
-  async generateAndAttach(fileNumber: string, user: User) {
-    const reviewRes = await this.generate(fileNumber, user);
+  async generateAndAttach(fileNumber: string, user: User, dateSubmitted: Date) {
+    const reviewRes = await this.generate(fileNumber, user, dateSubmitted);
 
     if (reviewRes.status === HttpStatus.OK) {
       return await this.notificationDocumentService.attachDocumentAsBuffer({
@@ -76,11 +72,8 @@ export class GenerateSrwDocumentService {
   private async preparePdfPayload(
     submission: NotificationSubmission,
     documents: NotificationDocument[],
+    dateSubmitted: Date,
   ) {
-    const notification = await this.notificationService.getByFileNumber(
-      submission.fileNumber,
-    );
-
     const localGovernment = submission.localGovernmentUuid
       ? await this.localGovernmentService.getByUuid(
           submission.localGovernmentUuid,
@@ -116,12 +109,8 @@ export class GenerateSrwDocumentService {
       .join(', ');
 
     return {
-      generatedDateTime: dayjs
-        .tz(new Date(), 'Canada/Pacific')
-        .format('MMM DD, YYYY hh:mm:ss Z'),
-      dateSubmitted: dayjs
-        .tz(notification.dateSubmittedToAlc, 'Canada/Pacific')
-        .format('MMMM DD, YYYY'),
+      generatedDateTime: dayjs.tz(new Date(), 'Canada/Pacific').format('MMM DD, YYYY hh:mm:ss Z'),
+      dateSubmitted: dayjs.tz(dateSubmitted, 'Canada/Pacific').format('MMMM DD, YYYY'),
       fileNumber: submission.fileNumber,
       applicant: submission.applicant,
       firstName: submission.contactFirstName,

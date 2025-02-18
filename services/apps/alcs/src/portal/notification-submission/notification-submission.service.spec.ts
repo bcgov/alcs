@@ -243,24 +243,18 @@ describe('NotificationSubmissionService', () => {
     mockNotificationService.submit.mockRejectedValue(new Error());
 
     await expect(
-      service.submitToAlcs(
-        noticeOfIntentSubmission as ValidatedNotificationSubmission,
-      ),
-    ).rejects.toMatchObject(
-      new BaseServiceException(`Failed to submit notification: ${fileNumber}`),
-    );
+      service.submitToAlcs(noticeOfIntentSubmission as ValidatedNotificationSubmission, new Date()),
+    ).rejects.toMatchObject(new BaseServiceException(`Failed to submit notification: ${fileNumber}`));
   });
 
   it('should call out to service on submitToAlcs', async () => {
     const notification = new Notification({
       dateSubmittedToAlc: new Date(),
     });
-    mockStatusService.setStatusDate.mockResolvedValue(
-      new NotificationSubmissionToSubmissionStatus(),
-    );
+    mockStatusService.setStatusDate.mockResolvedValue(new NotificationSubmissionToSubmissionStatus());
 
     mockNotificationService.submit.mockResolvedValue(notification);
-    await service.submitToAlcs(mockSubmission);
+    await service.submitToAlcs(mockSubmission, new Date());
 
     expect(mockNotificationService.submit).toBeCalledTimes(1);
     expect(mockStatusService.setStatusDate).toHaveBeenCalledTimes(1);

@@ -117,18 +117,20 @@ export class NotificationController {
       user,
     );
 
+    const notification = await this.notificationService.getByFileNumber(submission.fileNumber);
+
     const documents = await this.notificationDocumentService.list(fileNumber);
     const document = documents.find(
       (document) => document.type?.code === DOCUMENT_TYPE.LTSA_LETTER,
     );
 
     if (document) {
-      const emailDidSend =
-        await this.notificationSubmissionService.sendAndRecordLTSAPackage(
-          submission,
-          document,
-          user,
-        );
+      const emailDidSend = await this.notificationSubmissionService.sendAndRecordLTSAPackage(
+        submission,
+        document,
+        user,
+        notification.dateSubmittedToAlc ?? undefined,
+      );
 
       if (!emailDidSend) {
         throw new BaseServiceException(
