@@ -43,6 +43,7 @@ describe('ApplicationComponent', () => {
     mockAppStatusService = createMock();
 
     mockApplicationDecisionConditionCardService = createMock();
+    mockApplicationDecisionConditionCardService.$conditionCards = new BehaviorSubject<any>([]);
 
     await TestBed.configureTestingModule({
       providers: [
