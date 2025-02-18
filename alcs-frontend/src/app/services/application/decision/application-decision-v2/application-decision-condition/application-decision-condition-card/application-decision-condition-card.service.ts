@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../../../../environments/environment';
-import { firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import {
   ApplicationDecisionConditionCardBoardDto,
   ApplicationDecisionConditionCardDto,
@@ -14,6 +14,8 @@ import { ToastService } from '../../../../../toast/toast.service';
   providedIn: 'root',
 })
 export class ApplicationDecisionConditionCardService {
+  $conditionCards = new BehaviorSubject<ApplicationDecisionConditionCardDto[]>([]);
+
   private url = `${environment.apiUrl}/v2/application-decision-condition-card`;
 
   constructor(
@@ -68,11 +70,13 @@ export class ApplicationDecisionConditionCardService {
     return;
   }
 
-  async fetchByApplicationFileNumber(fileNumber: string): Promise<ApplicationDecisionConditionCardDto[] | undefined> {
+  async fetchByApplicationFileNumber(fileNumber: string): Promise<void> {
     try {
-      return await firstValueFrom(
+      this.clearConditionCards();
+      const conditionCards = await firstValueFrom(
         this.http.get<ApplicationDecisionConditionCardDto[]>(`${this.url}/application/${fileNumber}`),
       );
+      this.$conditionCards.next(conditionCards);
     } catch (e: any) {
       console.error(e);
       this.toastService.showErrorToast(
@@ -80,5 +84,9 @@ export class ApplicationDecisionConditionCardService {
       );
     }
     return;
+  }
+
+  clearConditionCards(): void {
+    this.$conditionCards.next([]);
   }
 }

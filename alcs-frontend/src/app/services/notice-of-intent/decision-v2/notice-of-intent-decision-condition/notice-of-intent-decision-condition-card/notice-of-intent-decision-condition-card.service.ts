@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../../../environments/environment';
 import { ToastService } from '../../../../toast/toast.service';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import {
   CreateNoticeOfIntentDecisionConditionCardDto,
   NoticeOfIntentDecisionConditionCardBoardDto,
@@ -14,6 +14,8 @@ import {
   providedIn: 'root',
 })
 export class NoticeOfIntentDecisionConditionCardService {
+  $conditionCards = new BehaviorSubject<NoticeOfIntentDecisionConditionCardDto[]>([]);
+
   private url = `${environment.apiUrl}/notice-of-intent-decision-condition-card`;
 
   constructor(
@@ -68,17 +70,22 @@ export class NoticeOfIntentDecisionConditionCardService {
     return;
   }
 
-  async fetchByNoticeOfIntentFileNumber(
-    fileNumber: string,
-  ): Promise<NoticeOfIntentDecisionConditionCardDto[] | undefined> {
+  async fetchByNoticeOfIntentFileNumber(fileNumber: string): Promise<void> {
     try {
-      return await firstValueFrom(
+      this.clearConditionCards();
+
+      const conditionCards = await firstValueFrom(
         this.http.get<NoticeOfIntentDecisionConditionCardDto[]>(`${this.url}/noi/${fileNumber}`),
       );
+      this.$conditionCards.next(conditionCards);
     } catch (e: any) {
       console.error(e);
       this.toastService.showErrorToast('Failed to fetch NOI Decision Condition Cards by Application File Number');
     }
     return;
+  }
+
+  clearConditionCards() {
+    this.$conditionCards.next([]);
   }
 }

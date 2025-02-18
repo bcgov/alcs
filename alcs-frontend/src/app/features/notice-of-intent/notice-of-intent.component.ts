@@ -140,15 +140,17 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
         }
 
         this.noticeOfIntentModificationService.fetchByFileNumber(noticeOfIntent.fileNumber);
+        this.decisionConditionCardService.fetchByNoticeOfIntentFileNumber(noticeOfIntent.fileNumber);
         this.noticeOfIntent = noticeOfIntent;
-
-        this.decisionConditionCards =
-          (await this.decisionConditionCardService.fetchByNoticeOfIntentFileNumber(noticeOfIntent.fileNumber)) || [];
       }
     });
 
     this.noticeOfIntentModificationService.$modifications.pipe(takeUntil(this.destroy)).subscribe((value) => {
       this.modifications = value;
+    });
+
+    this.decisionConditionCardService.$conditionCards.pipe(takeUntil(this.destroy)).subscribe((value) => {
+      this.decisionConditionCards = value;
     });
   }
 

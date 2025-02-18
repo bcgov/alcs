@@ -27,6 +27,7 @@ describe('NoticeOfIntentComponent', () => {
     mockNOIModificationService.$modifications = new BehaviorSubject<NoticeOfIntentModificationDto[]>([]);
     mockNOIStatusService = createMock();
     mockNOIDecisionConditionCardService = createMock();
+    mockNOIDecisionConditionCardService.$conditionCards = new BehaviorSubject<any>([]);
 
     await TestBed.configureTestingModule({
       providers: [

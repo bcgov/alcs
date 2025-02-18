@@ -19,6 +19,7 @@ import {
 import { NoticeOfIntentDecisionConditionService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConditionCardDialogComponent } from './condition-card-dialog/condition-card-dialog.component';
+import { NoticeOfIntentDecisionConditionCardService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -67,6 +68,7 @@ export class ConditionsComponent implements OnInit {
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private decisionService: NoticeOfIntentDecisionV2Service,
     private conditionService: NoticeOfIntentDecisionConditionService,
+    private conditionCardService: NoticeOfIntentDecisionConditionCardService,
     private activatedRouter: ActivatedRoute,
     private dialog: MatDialog,
   ) {
@@ -205,6 +207,7 @@ export class ConditionsComponent implements OnInit {
       if (result) {
         if (result.action === 'save' && result.result === true) {
           this.loadDecisions(this.fileNumber);
+          this.conditionCardService.fetchByNoticeOfIntentFileNumber(this.fileNumber);
         }
       }
     });
