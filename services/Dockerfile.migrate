@@ -8,7 +8,7 @@ WORKDIR /opt/app-root/
 
 # OpenShift fixes
 RUN chmod og+rwx /opt/app-root/ /var/run
-ENV NPM_CONFIG_USERCONFIG /opt/app-root/.npmrc
+ENV NPM_CONFIG_USERCONFIG=/opt/app-root/.npmrc
 RUN npm config set cache $/opt/app-root/.npm
 
 COPY package*.json ./
@@ -17,10 +17,10 @@ RUN npm ci
 
 ARG environment=production
 
-ENV NODE_ENV ${environment}
+ENV NODE_ENV=${environment}
 
 ARG NEST_APP=alcs
-ENV NEST_APP ${NEST_APP}
+ENV NEST_APP=${NEST_APP}
 
 COPY . .
 

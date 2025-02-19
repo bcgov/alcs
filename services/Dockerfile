@@ -52,7 +52,7 @@ WORKDIR /opt/app-root/
 RUN chmod og+rwx /opt/app-root/ /var/run
 
 ARG environment=production
-ENV NODE_ENV ${environment}
+ENV NODE_ENV=${environment}
 
 COPY --from=build /opt/app-root/node_modules ./node_modules
 COPY --from=build /opt/app-root/dist/apps/${NEST_APP} ./dist
