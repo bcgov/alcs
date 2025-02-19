@@ -191,10 +191,8 @@ export class ApplicationDecisionConditionCardService {
     });
 
     for (const dto of dtos) {
-      const appModifications = await this.applicationModificationService.getByApplicationDecisionUuid(dto.decisionUuid);
-      const appReconsiderations = await this.applicationReconsiderationService.getByApplicationDecisionUuid(
-        dto.decisionUuid,
-      );
+      const appModifications = await this.applicationModificationService.getByApplication(dto.fileNumber);
+      const appReconsiderations = await this.applicationReconsiderationService.getByApplication(dto.fileNumber);
 
       dto.isModification = appModifications.length > 0;
       dto.isReconsideration = appReconsiderations.length > 0;
