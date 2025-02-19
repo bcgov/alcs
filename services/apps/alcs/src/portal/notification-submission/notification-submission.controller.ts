@@ -156,9 +156,10 @@ export class NotificationSubmissionController {
     if (validationResult.noticeOfIntentSubmission) {
       const validatedApplicationSubmission = validationResult.noticeOfIntentSubmission;
 
-      await this.generatePdf(notificationSubmission, req.user.entity);
-
-      await this.notificationSubmissionService.submitToAlcs(validatedApplicationSubmission);
+      // Ensure PDF and DB record have the same submission date
+      const dateSubmitted = new Date();
+      await this.generatePdf(notificationSubmission, req.user.entity, dateSubmitted);
+      await this.notificationSubmissionService.submitToAlcs(validatedApplicationSubmission, dateSubmitted);
 
       const finalSubmission = await this.notificationSubmissionService.getByUuid(uuid, req.user.entity);
 
@@ -172,15 +173,15 @@ export class NotificationSubmissionController {
     }
   }
 
-  private async generatePdf(submission: NotificationSubmission, user: User) {
-    const savedDocument =
-      await this.generateSrwDocumentService.generateAndAttach(
-        submission.fileNumber,
-        user,
-      );
+  private async generatePdf(submission: NotificationSubmission, user: User, dateSubmitted: Date) {
+    const savedDocument = await this.generateSrwDocumentService.generateAndAttach(
+      submission.fileNumber,
+      user,
+      dateSubmitted,
+    );
 
     if (savedDocument) {
-      await this.notificationSubmissionService.sendAndRecordLTSAPackage(submission, savedDocument, user);
+      await this.notificationSubmissionService.sendAndRecordLTSAPackage(submission, savedDocument, user, dateSubmitted);
     } else {
       throw new BaseServiceException('A document failed to generate', undefined, 'DocumentGenerationError');
     }

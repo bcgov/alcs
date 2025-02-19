@@ -116,16 +116,16 @@ describe('NoticeOfIntentDecisionConditionCardService', () => {
     const mockResponse = [] as NoticeOfIntentDecisionConditionCardDto[];
     mockHttpClient.get.mockReturnValue(of(mockResponse));
 
-    const result = await service.fetchByNoticeOfIntentFileNumber('fileNumber');
-    expect(result).toEqual(mockResponse);
+    await service.fetchByNoticeOfIntentFileNumber('fileNumber');
+    expect(service.$conditionCards.value).toEqual(mockResponse);
     expect(mockHttpClient.get).toHaveBeenCalledWith(`${service['url']}/noi/fileNumber`);
   });
 
   it('should handle error when fetching NOI Decision Condition Cards by file number', async () => {
     mockHttpClient.get.mockReturnValue(throwError(() => new Error('Error')));
 
-    const result = await service.fetchByNoticeOfIntentFileNumber('fileNumber');
-    expect(result).toBeUndefined();
+    await service.fetchByNoticeOfIntentFileNumber('fileNumber');
+    expect(service.$conditionCards.value).toEqual([]);
     expect(mockToastService.showErrorToast).toHaveBeenCalledWith(
       'Failed to fetch NOI Decision Condition Cards by Application File Number',
     );

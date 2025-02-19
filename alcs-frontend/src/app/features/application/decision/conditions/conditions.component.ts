@@ -21,6 +21,7 @@ import {
 import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConditionCardDialogComponent } from './condition-card-dialog/condition-card-dialog.component';
+import { ApplicationDecisionConditionCardService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -71,6 +72,7 @@ export class ConditionsComponent implements OnInit {
     private applicationDetailService: ApplicationDetailService,
     private decisionService: ApplicationDecisionV2Service,
     private conditionService: ApplicationDecisionConditionService,
+    private conditionCardService: ApplicationDecisionConditionCardService,
     private activatedRouter: ActivatedRoute,
     private dialog: MatDialog,
   ) {
@@ -209,6 +211,7 @@ export class ConditionsComponent implements OnInit {
       if (result) {
         if (result.action === 'save' && result.result === true) {
           this.loadDecisions(this.fileNumber);
+          this.conditionCardService.fetchByApplicationFileNumber(this.fileNumber);
         }
       }
     });

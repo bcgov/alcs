@@ -366,14 +366,14 @@ export class NotificationSubmissionService {
     };
   }
 
-  async submitToAlcs(notificationSubmission: ValidatedNotificationSubmission) {
+  async submitToAlcs(notificationSubmission: ValidatedNotificationSubmission, dateSubmitted: Date) {
     try {
       const submittedNotification = await this.notificationService.submit({
         fileNumber: notificationSubmission.fileNumber,
         applicant: notificationSubmission.applicant,
         localGovernmentUuid: notificationSubmission.localGovernmentUuid,
         typeCode: notificationSubmission.typeCode,
-        dateSubmittedToAlc: new Date(),
+        dateSubmittedToAlc: dateSubmitted,
       });
 
       await this.notificationSubmissionStatusService.setStatusDate(
@@ -414,8 +414,9 @@ export class NotificationSubmissionService {
     submission: NotificationSubmission,
     document: NotificationDocument,
     user: User,
+    dateSubmitted?: Date,
   ): Promise<boolean> {
-    const templateData = await this.generateSrwEmailData(submission, document);
+    const templateData = await this.generateSrwEmailData(submission, document, dateSubmitted);
 
     const didSend = await this.emailService.sendEmail({
       to: [templateData.to],
@@ -458,6 +459,7 @@ export class NotificationSubmissionService {
   private async generateSrwEmailData(
     submission: NotificationSubmission,
     pdfDocument: NotificationDocument,
+    dateSubmitted?: Date,
   ) {
     const notification = await this.notificationService.getByFileNumber(
       submission.fileNumber,
@@ -468,9 +470,7 @@ export class NotificationSubmissionService {
       fileNumber: submission.fileNumber,
       contactName: `${submission.contactFirstName} ${submission.contactLastName}`,
       status: 'ALC Response Sent',
-      dateSubmitted: dayjs(notification.dateSubmittedToAlc).format(
-        'MMMM DD, YYYY',
-      ),
+      dateSubmitted: dayjs(dateSubmitted).format('MMMM DD, YYYY'),
       fileName: pdfDocument.document.fileName,
       submittersFileNumber: submission.submittersFileNumber!,
     });
