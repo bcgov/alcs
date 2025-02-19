@@ -68,12 +68,8 @@ export class ApplicationDecisionConditionCardController {
     );
     dto.fileNumber = result.decision.application.fileNumber;
 
-    const appModifications = await this.applicationModificationService.getByApplicationDecisionUuid(
-      result.decision.uuid,
-    );
-    const appReconsiderations = await this.applicationReconsiderationService.getByApplicationDecisionUuid(
-      result.decision.uuid,
-    );
+    const appModifications = await this.applicationModificationService.getByApplication(dto.fileNumber);
+    const appReconsiderations = await this.applicationReconsiderationService.getByApplication(dto.fileNumber);
 
     dto.isModification = appModifications.length > 0;
     dto.isReconsideration = appReconsiderations.length > 0;
