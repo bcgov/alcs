@@ -116,7 +116,7 @@ describe('NoticeOfIntentDecisionConditionCardController', () => {
     conditionCard.decision = { uuid: 'decision-uuid', noticeOfIntent: { fileNumber: 'file-number' } } as any;
 
     mockService.getByBoardCard.mockResolvedValue(conditionCard);
-    mockModificationService.getByNoticeOfIntentDecisionUuid.mockResolvedValue([]);
+    mockModificationService.getByFileNumber.mockResolvedValue([]);
     mockDecisionService.getDecisionOrder.mockResolvedValue(1);
 
     const result = await controller.getByCardUuid(uuid);

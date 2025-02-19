@@ -194,9 +194,7 @@ export class NoticeOfIntentDecisionConditionCardService {
     });
 
     for (const dto of dtos) {
-      const appModifications = await this.noticeOfIntentModificationService.getByNoticeOfIntentDecisionUuid(
-        dto.decisionUuid,
-      );
+      const appModifications = await this.noticeOfIntentModificationService.getByFileNumber(dto.fileNumber);
 
       dto.isModification = appModifications.length > 0;
 
