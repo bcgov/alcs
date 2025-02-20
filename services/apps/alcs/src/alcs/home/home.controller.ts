@@ -56,15 +56,6 @@ const DEFAULT_APP_RELATIONS: FindOptionsRelations<ApplicationModification> = {
     localGovernment: true,
     decisionMeetings: true,
   },
-  card: {
-    board: true,
-    type: true,
-    status: true,
-    assignee: true,
-  },
-  modifiesDecisions: true,
-  resultingDecision: true,
-  reviewOutcome: true,
 };
 
 const DEFAULT_NOI_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
@@ -72,15 +63,6 @@ const DEFAULT_NOI_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = 
     region: true,
     localGovernment: true,
   },
-  card: {
-    board: true,
-    type: true,
-    status: true,
-    assignee: true,
-  },
-  modifiesDecisions: true,
-  resultingDecision: true,
-  reviewOutcome: true,
 };
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
