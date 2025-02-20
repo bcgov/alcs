@@ -143,7 +143,7 @@ describe('ApplicationDecisionConditionFinancialInstrumentService', () => {
       const conditionUuid = 'condition-uuid';
       const dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto = {
         securityHolderPayee: 'holder',
-        type: InstrumentType.BANK_DRAFT,
+        type: InstrumentType.EFT,
         issueDate: new Date().getTime(),
         amount: 100,
         bank: 'bank',
@@ -175,7 +175,7 @@ describe('ApplicationDecisionConditionFinancialInstrumentService', () => {
       const uuid = 'instrument-uuid';
       const dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto = {
         securityHolderPayee: 'holder',
-        type: InstrumentType.BANK_DRAFT,
+        type: InstrumentType.EFT,
         issueDate: new Date().getTime(),
         amount: 100,
         bank: 'bank',
@@ -203,8 +203,8 @@ describe('ApplicationDecisionConditionFinancialInstrumentService', () => {
     });
   });
 
-  describe('softRemove', () => {
-    it('should soft remove a financial instrument', async () => {
+  describe('remove', () => {
+    it('should remove a financial instrument', async () => {
       const conditionUuid = 'condition-uuid';
       const uuid = 'instrument-uuid';
       const condition = new ApplicationDecisionCondition({ uuid: conditionUuid, typeCode: 'BOND' });
@@ -213,15 +213,15 @@ describe('ApplicationDecisionConditionFinancialInstrumentService', () => {
       mockConditionTypeRepository.findOne.mockResolvedValue(mockApplicationDecisionConditionType);
       mockConditionRepository.findOne.mockResolvedValue(condition);
       mockRepository.findOne.mockResolvedValue(financialInstrument);
-      mockRepository.softRemove.mockResolvedValue(financialInstrument);
+      mockRepository.remove.mockResolvedValue(financialInstrument);
 
-      const result = await service.softRemove(conditionUuid, uuid);
+      const result = await service.remove(conditionUuid, uuid);
 
       expect(result).toEqual(financialInstrument);
       expect(mockConditionTypeRepository.findOne).toHaveBeenCalledWith({ where: { code: 'BOND' } });
       expect(mockConditionRepository.findOne).toHaveBeenCalledWith({ where: { uuid: conditionUuid } });
       expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { uuid, condition: { uuid: conditionUuid } } });
-      expect(mockRepository.softRemove).toHaveBeenCalledWith(financialInstrument);
+      expect(mockRepository.remove).toHaveBeenCalledWith(financialInstrument);
     });
   });
 });

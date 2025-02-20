@@ -33,6 +33,8 @@ import { FileTagService } from '../../services/common/file-tag.service';
 import { ApplicationDecisionV2Service } from '../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ApplicationDecisionConditionCardDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { DecisionConditionFinancialInstrumentService } from '../../services/common/decision-condition-financial-instrument/decision-condition-financial-instrument.service';
+import { ApplicationDecisionConditionFinancialInstrumentService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.service';
 
 export const unsubmittedRoutes = [
   {
@@ -175,7 +177,13 @@ export const appChildRoutes = [
   selector: 'app-application',
   templateUrl: './application.component.html',
   styleUrls: ['./application.component.scss'],
-  providers: [{ provide: FileTagService, useClass: ApplicationTagService }],
+  providers: [
+    { provide: FileTagService, useClass: ApplicationTagService },
+    {
+      provide: DecisionConditionFinancialInstrumentService,
+      useClass: ApplicationDecisionConditionFinancialInstrumentService,
+    },
+  ],
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
