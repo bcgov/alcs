@@ -116,7 +116,7 @@ export class NoticeOfIntentHomeDto {
   @AutoMap(() => NoticeOfIntentTypeDto)
   type: NoticeOfIntentTypeDto;
 
-  activeDays: number;
+  activeDays?: number;
   paused: boolean;
   pausedDays: number;
 }
@@ -126,7 +126,7 @@ export class NoticeOfIntentDecisionHomeDto {
   uuid: string;
 
   @AutoMap()
-  application: NoticeOfIntentHomeDto;
+  noticeOfIntent: NoticeOfIntentHomeDto;
 }
 
 export class NoticeOfIntentDecisionConditionHomeDto {
