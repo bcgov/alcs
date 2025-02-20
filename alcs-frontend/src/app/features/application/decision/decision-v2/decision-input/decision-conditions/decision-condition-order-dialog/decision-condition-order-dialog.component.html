@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="section">
+    <h3>Re-order Conditions</h3>
+  </div>
+  <mat-dialog-content style="height: 100%">
+    <table class="date-table" mat-table [dataSource]="data.conditions" multiTemplateDataRows>
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let i = dataIndex">
+          {{ alphaIndex(i + 1) }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.type.label }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.description }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon>drag_indicator</mat-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-dialog-content>
+  <div class="section">
+    <div class="button-row">
+      <button type="button" mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+      <button type="button" mat-flat-button color="primary" (click)="onSave()">
+        Save
+      </button>
+    </div>
+  </div>
+</div>

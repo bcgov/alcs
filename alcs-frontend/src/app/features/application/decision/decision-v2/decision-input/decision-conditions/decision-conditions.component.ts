@@ -21,6 +21,8 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
+import { DecisionConditionOrderDialogComponent } from './decision-condition-order-dialog/decision-condition-order-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export type TempApplicationDecisionConditionDto = UpdateApplicationDecisionConditionDto & { tempUuid?: string };
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
@@ -56,6 +58,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   constructor(
     private decisionService: ApplicationDecisionV2Service,
     private confirmationDialogService: ConfirmationDialogService,
+    protected dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -215,7 +218,24 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
     this.conditionComponents.forEach((component) => component.form.markAllAsTouched());
   }
 
+  emitChanges() {
+    console.log('emit changes');
+  }
+
   openOrderDialog() {
-    alert('open dialog');
+      this.dialog
+        .open(DecisionConditionOrderDialogComponent, {
+          maxHeight: '80vh',
+          minHeight: '40vh',
+          minWidth: '80vh',
+          data: {
+            conditions: this.conditions,
+          },
+        })
+        .beforeClosed()
+        .subscribe(async () => {
+          alert('subscribe');
+          this.emitChanges();
+        });
   }
 }

@@ -1,18 +1,6 @@
 <section>
   <div class="split">
     <h3>Conditions</h3>
-    <div>
-      <button
-        [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
-        type="button"
-        [matMenuTriggerFor]="decisionComponentMenu"
-        mat-flat-button
-        color="primary"
-      >
-        Add Condition ▾
-      </button>
-      <app-error-message *ngIf="showError"></app-error-message>
-    </div>
   </div>
 
   <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
@@ -32,5 +20,20 @@
       [showDateError]="showDateErrors"
       [index]="index"
     ></app-app-decision-condition>
+  </div>
+  <div class="cond-footer">
+    <div>
+      <button mat-stroked-button class="order-button" color="primary" type="button" (click)="openOrderDialog()">Re-Order Conditions</button>
+      <button
+        [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
+        type="button"
+        [matMenuTriggerFor]="decisionComponentMenu"
+        mat-flat-button
+        color="primary"
+      >
+        Add Condition ▾
+      </button>
+      <app-error-message *ngIf="showError"></app-error-message>
+    </div>
   </div>
 </section>
