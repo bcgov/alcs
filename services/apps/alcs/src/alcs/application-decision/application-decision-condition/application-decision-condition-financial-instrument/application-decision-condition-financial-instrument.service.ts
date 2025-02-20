@@ -128,7 +128,7 @@ export class ApplicationDecisionConditionFinancialInstrumentService {
     return this.repository.save(instrument);
   }
 
-  async softRemove(conditionUuid: string, uuid: string): Promise<ApplicationDecisionConditionFinancialInstrument> {
+  async remove(conditionUuid: string, uuid: string): Promise<ApplicationDecisionConditionFinancialInstrument> {
     await this.throwErrorIfFinancialSecurityTypeNotExists();
 
     const condition = await this.applicationDecisionConditionRepository.findOne({ where: { uuid: conditionUuid } });
@@ -147,7 +147,7 @@ export class ApplicationDecisionConditionFinancialInstrumentService {
       throw new ServiceNotFoundException(`Instrument with uuid ${uuid} not found`);
     }
 
-    return await this.repository.softRemove(instrument);
+    return await this.repository.remove(instrument);
   }
 
   private mapDtoToEntity(

@@ -220,11 +220,11 @@ describe('ApplicationDecisionConditionController', () => {
         receivedDate: new Date(),
         status: InstrumentStatus.RECEIVED,
       });
-      mockApplicationDecisionConditionFinancialInstrumentService.softRemove.mockResolvedValue(financialInstrument);
+      mockApplicationDecisionConditionFinancialInstrumentService.remove.mockResolvedValue(financialInstrument);
 
       const result = await controller.deleteFinancialInstrument(conditionUuid, instrumentUuid);
 
-      expect(mockApplicationDecisionConditionFinancialInstrumentService.softRemove).toHaveBeenCalledWith(
+      expect(mockApplicationDecisionConditionFinancialInstrumentService.remove).toHaveBeenCalledWith(
         conditionUuid,
         instrumentUuid,
       );

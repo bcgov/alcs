@@ -146,7 +146,7 @@ export class ApplicationDecisionConditionController {
     @Param('uuid') uuid: string,
     @Param('instrumentUuid') instrumentUuid: string,
   ): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
-    const result = await this.conditionFinancialInstrumentService.softRemove(uuid, instrumentUuid);
+    const result = await this.conditionFinancialInstrumentService.remove(uuid, instrumentUuid);
     return await this.mapper.map(
       result,
       ApplicationDecisionConditionFinancialInstrument,
