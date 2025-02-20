@@ -13,7 +13,7 @@ RUN npm ci
 # Copy the source code to the /app directory
 COPY . .
 
-ENV NODE_OPTIONS "--max-old-space-size=2048"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Build the application
 RUN npm run build --  --output-path=dist --output-hashing=all
@@ -47,7 +47,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 RUN chmod -R go+rwx /usr/share/nginx/html/assets
 
 # provide dynamic scp content-src
-ENV ENABLED_CONNECT_SRC " 'self' http://localhost:* nrs.objectstore.gov.bc.ca"
+ENV ENABLED_CONNECT_SRC=" 'self' http://localhost:* nrs.objectstore.gov.bc.ca"
 
 # When the container starts, replace the settings.json with values from environment variables
 ENTRYPOINT [ "./init.sh" ]

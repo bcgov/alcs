@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   ApplicationDecisionConditionFinancialInstrument,
   InstrumentStatus,
+  InstrumentType,
 } from './application-decision-condition-financial-instrument.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -127,7 +128,7 @@ export class ApplicationDecisionConditionFinancialInstrumentService {
     return this.repository.save(instrument);
   }
 
-  async softRemove(conditionUuid: string, uuid: string): Promise<ApplicationDecisionConditionFinancialInstrument> {
+  async remove(conditionUuid: string, uuid: string): Promise<ApplicationDecisionConditionFinancialInstrument> {
     await this.throwErrorIfFinancialSecurityTypeNotExists();
 
     const condition = await this.applicationDecisionConditionRepository.findOne({ where: { uuid: conditionUuid } });
@@ -146,7 +147,7 @@ export class ApplicationDecisionConditionFinancialInstrumentService {
       throw new ServiceNotFoundException(`Instrument with uuid ${uuid} not found`);
     }
 
-    return await this.repository.softRemove(instrument);
+    return await this.repository.remove(instrument);
   }
 
   private mapDtoToEntity(
@@ -159,6 +160,9 @@ export class ApplicationDecisionConditionFinancialInstrumentService {
     entity.expiryDate = dto.expiryDate ? new Date(dto.expiryDate) : null;
     entity.amount = dto.amount;
     entity.bank = dto.bank;
+    if (dto.type !== InstrumentType.EFT && !dto.instrumentNumber) {
+      throw new ServiceValidationException('Instrument number is required when type is not EFT');
+    }
     entity.instrumentNumber = dto.instrumentNumber ?? null;
     entity.heldBy = dto.heldBy;
     entity.receivedDate = new Date(dto.receivedDate);

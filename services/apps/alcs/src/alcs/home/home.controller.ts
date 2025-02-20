@@ -3,7 +3,7 @@ import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
-import { In, Not, Repository } from 'typeorm';
+import { FindOptionsRelations, In, Not, Repository } from 'typeorm';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
@@ -48,6 +48,22 @@ import { NoticeOfIntentDecisionCondition } from '../notice-of-intent-decision/no
 import { InjectRepository } from '@nestjs/typeorm';
 
 const HIDDEN_CARD_STATUSES = [CARD_STATUS.CANCELLED, CARD_STATUS.DECISION_RELEASED];
+
+const DEFAULT_APP_RELATIONS: FindOptionsRelations<ApplicationModification> = {
+  application: {
+    type: true,
+    region: true,
+    localGovernment: true,
+    decisionMeetings: true,
+  },
+};
+
+const DEFAULT_NOI_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
+  noticeOfIntent: {
+    region: true,
+    localGovernment: true,
+  },
+};
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('home')
@@ -308,20 +324,17 @@ export class HomeController {
       if (!condition.conditionCard?.card) {
         continue;
       }
+
       const appModifications = await this.modificationApplicationRepository.find({
-        where: {
-          modifiesDecisions: {
-            uuid: condition.decision?.uuid,
-          },
-        },
+        where: { application: { fileNumber: condition.decision.application.fileNumber } },
+        relations: DEFAULT_APP_RELATIONS,
       });
+
       const appReconsiderations = await this.reconsiderationApplicationRepository.find({
-        where: {
-          reconsidersDecisions: {
-            uuid: condition.decision?.uuid,
-          },
-        },
+        where: { application: { fileNumber: condition.decision.application.fileNumber } },
+        relations: DEFAULT_APP_RELATIONS,
       });
+
       for (const subtask of condition.conditionCard?.card?.subtasks) {
         result.push({
           isCondition: true,
@@ -368,11 +381,8 @@ export class HomeController {
         continue;
       }
       const noiModifications = await this.modificationNoticeOfIntentRepository.find({
-        where: {
-          modifiesDecisions: {
-            uuid: condition.decision?.uuid,
-          },
-        },
+        where: { noticeOfIntent: { fileNumber: condition.decision.noticeOfIntent.fileNumber } },
+        relations: DEFAULT_NOI_RELATIONS,
       });
       for (const subtask of condition.conditionCard?.card?.subtasks) {
         result.push({
