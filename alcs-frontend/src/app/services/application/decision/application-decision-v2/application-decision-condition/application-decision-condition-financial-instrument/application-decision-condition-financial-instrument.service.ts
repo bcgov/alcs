@@ -7,6 +7,7 @@ import { DecisionConditionFinancialInstrumentService } from '../../../../../comm
 import { environment } from '../../../../../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { InstrumentStatus } from '../../../../../common/decision-condition-financial-instrument/decision-condition-financial-instrument.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -28,48 +29,57 @@ export class ApplicationDecisionConditionFinancialInstrumentService extends Deci
     }
   }
 
-  get(conditionUuid: string, uuid: string): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
+  async get(conditionUuid: string, uuid: string): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
     const url = `${this.baseUrl}/${conditionUuid}/${this.financialInstrumentUrl}/${uuid}`;
 
     try {
-      return firstValueFrom(this.http.get<ApplicationDecisionConditionFinancialInstrumentDto>(url));
+      return await firstValueFrom(this.http.get<ApplicationDecisionConditionFinancialInstrumentDto>(url));
     } catch (e) {
       this.handleError(e);
     }
   }
 
-  create(
+  async create(
     conditionUuid: string,
     dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto,
   ): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
     const url = `${this.baseUrl}/${conditionUuid}/${this.financialInstrumentUrl}`;
 
     try {
-      return firstValueFrom(this.http.post<ApplicationDecisionConditionFinancialInstrumentDto>(url, dto));
+      return await firstValueFrom(this.http.post<ApplicationDecisionConditionFinancialInstrumentDto>(url, dto));
     } catch (e) {
       this.handleError(e);
     }
   }
 
-  update(
+  async update(
     conditionUuid: string,
     uuid: string,
     dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto,
   ): Promise<ApplicationDecisionConditionFinancialInstrumentDto> {
     const url = `${this.baseUrl}/${conditionUuid}/${this.financialInstrumentUrl}/${uuid}`;
 
+    if (dto.status === InstrumentStatus.RECEIVED) {
+      if (dto.statusDate) {
+        delete dto.statusDate;
+      }
+      if (dto.explanation) {
+        delete dto.explanation;
+      }
+    }
+
     try {
-      return firstValueFrom(this.http.patch<ApplicationDecisionConditionFinancialInstrumentDto>(url, dto));
+      return await firstValueFrom(this.http.patch<ApplicationDecisionConditionFinancialInstrumentDto>(url, dto));
     } catch (e) {
       this.handleError(e);
     }
   }
 
-  delete(conditionUuid: string, uuid: string): Promise<void> {
+  async delete(conditionUuid: string, uuid: string): Promise<void> {
     const url = `${this.baseUrl}/${conditionUuid}/${this.financialInstrumentUrl}/${uuid}`;
 
     try {
-      return firstValueFrom(this.http.delete<void>(url));
+      return await firstValueFrom(this.http.delete<void>(url));
     } catch (e) {
       this.handleError(e);
     }

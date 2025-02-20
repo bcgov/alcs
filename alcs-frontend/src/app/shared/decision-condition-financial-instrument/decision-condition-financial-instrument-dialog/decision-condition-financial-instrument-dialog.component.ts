@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogAction } from '../../constants';
 import {
@@ -30,7 +30,7 @@ export class DecisionConditionFinancialInstrumentDialogComponent implements OnIn
   expiryDate = new FormControl<Date | null>(null);
   amount = new FormControl<number | null>(null, Validators.required);
   bank = new FormControl<string | null>('', Validators.required);
-  instrumentNumber = new FormControl<string | null>(null);
+  instrumentNumber = new FormControl<string | null>(null, Validators.required);
   heldBy = new FormControl<HeldBy | null>(null, [Validators.required, this.enumValidator(HeldBy)]);
   receivedDate = new FormControl<Date | null>(null, Validators.required);
   notes = new FormControl<string | null>(null);
@@ -90,6 +90,15 @@ export class DecisionConditionFinancialInstrumentDialogComponent implements OnIn
       this.form.get('explanation')?.updateValueAndValidity();
     });
 
+    this.form.get('type')?.valueChanges.subscribe((type) => {
+      if (type === InstrumentType.EFT) {
+        this.form.get('instrumentNumber')?.setValidators([]);
+      } else {
+        this.form.get('instrumentNumber')?.setValidators([Validators.required]);
+      }
+      this.form.get('instrumentNumber')?.updateValueAndValidity();
+    });
+
     if (this.isEdit && this.data.instrument) {
       const instrument = this.data.instrument;
       this.form.patchValue({
@@ -145,6 +154,7 @@ export class DecisionConditionFinancialInstrumentDialogComponent implements OnIn
     } catch (error: any) {
       console.error(error);
       this.toastService.showErrorToast(error.message || 'An error occurred');
+      this.dialogRef.close({ action: this.isEdit ? DialogAction.EDIT : DialogAction.ADD, successful: false });
     }
   }
 }

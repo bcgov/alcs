@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DecisionConditionFinancialInstrumentDialogComponent } from './decision-condition-financial-instrument-dialog.component';
 
@@ -8,10 +9,13 @@ describe('DecisionConditionFinancialInstrumentDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DecisionConditionFinancialInstrumentDialogComponent]
-    })
-    .compileComponents();
-    
+      declarations: [DecisionConditionFinancialInstrumentDialogComponent],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DecisionConditionFinancialInstrumentDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

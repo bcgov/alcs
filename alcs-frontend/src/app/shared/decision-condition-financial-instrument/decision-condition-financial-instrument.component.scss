@@ -17,3 +17,47 @@
 .header {
   flex-grow: 1;
 }
+
+.table-container {
+  overflow-x: auto; // Enable horizontal scrolling for smaller screens
+}
+
+.instruments-table {
+  width: 100%;
+  border-spacing: 0;
+
+  th.mat-header-cell,
+  td.mat-cell {
+    padding: 2px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .column-amount {
+    width: 10%;
+  }
+
+  .column-type {
+    width: 15%;
+  }
+
+  .column-bank {
+    width: 10%;
+  }
+
+  .column-instrument-number {
+    width: 15%;
+  }
+
+  .column-received-date {
+    width: 15%;
+  }
+
+  .column-status {
+    width: 20%;
+  }
+
+  .column-action {
+    width: 15%;
+  }
+}
