@@ -143,7 +143,7 @@ describe('ApplicationDecisionConditionFinancialInstrumentService', () => {
       const conditionUuid = 'condition-uuid';
       const dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto = {
         securityHolderPayee: 'holder',
-        type: InstrumentType.BANK_DRAFT,
+        type: InstrumentType.EFT,
         issueDate: new Date().getTime(),
         amount: 100,
         bank: 'bank',
@@ -175,7 +175,7 @@ describe('ApplicationDecisionConditionFinancialInstrumentService', () => {
       const uuid = 'instrument-uuid';
       const dto: CreateUpdateApplicationDecisionConditionFinancialInstrumentDto = {
         securityHolderPayee: 'holder',
-        type: InstrumentType.BANK_DRAFT,
+        type: InstrumentType.EFT,
         issueDate: new Date().getTime(),
         amount: 100,
         bank: 'bank',
