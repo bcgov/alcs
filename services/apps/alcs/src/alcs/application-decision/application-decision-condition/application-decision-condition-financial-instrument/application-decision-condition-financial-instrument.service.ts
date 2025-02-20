@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   ApplicationDecisionConditionFinancialInstrument,
   InstrumentStatus,
+  InstrumentType,
 } from './application-decision-condition-financial-instrument.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -159,6 +160,9 @@ export class ApplicationDecisionConditionFinancialInstrumentService {
     entity.expiryDate = dto.expiryDate ? new Date(dto.expiryDate) : null;
     entity.amount = dto.amount;
     entity.bank = dto.bank;
+    if (dto.type !== InstrumentType.EFT && !dto.instrumentNumber) {
+      throw new ServiceValidationException('Instrument number is required when type is not EFT');
+    }
     entity.instrumentNumber = dto.instrumentNumber ?? null;
     entity.heldBy = dto.heldBy;
     entity.receivedDate = new Date(dto.receivedDate);
