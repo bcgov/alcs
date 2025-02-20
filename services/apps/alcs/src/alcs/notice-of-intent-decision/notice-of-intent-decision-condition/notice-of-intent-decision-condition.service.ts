@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecisionConditionType } from './notice-of-intent-decision-condition-code.entity';
@@ -27,6 +27,14 @@ export class NoticeOfIntentDecisionConditionService {
     type: true,
     status: true,
     assignee: true,
+  };
+
+  private DEFAULT_NOI_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
+    noticeOfIntent: {
+      type: true,
+      region: true,
+      localGovernment: true,
+    },
   };
 
   constructor(
@@ -132,11 +140,8 @@ export class NoticeOfIntentDecisionConditionService {
         const decision = this.mapper.map(c.decision, NoticeOfIntentDecision, NoticeOfIntentDecisionHomeDto);
         const noticeOfIntent = this.mapper.map(c.decision.noticeOfIntent, NoticeOfIntent, NoticeOfIntentHomeDto);
         const appModifications = await this.modificationRepository.find({
-          where: {
-            modifiesDecisions: {
-              uuid: c.decision?.uuid,
-            },
-          },
+          where: { noticeOfIntent: { fileNumber: condition?.decision?.noticeOfIntent.fileNumber } },
+          relations: this.DEFAULT_NOI_RELATIONS,
         });
 
         return {
@@ -147,7 +152,7 @@ export class NoticeOfIntentDecisionConditionService {
             noticeOfIntent: {
               ...noticeOfIntent,
               activeDays: undefined,
-              pausedDays: timeMap.get(noticeOfIntent.uuid)?.pausedDays ?? null,
+              pausedDays: timeMap.get(noticeOfIntent.uuid)!.pausedDays || 0,
               paused: timeMap.get(noticeOfIntent.uuid)?.pausedDays !== null,
             },
           },
