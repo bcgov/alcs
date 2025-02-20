@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
+import { FindOptionsRelations, FindOptionsWhere, In, IsNull, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
@@ -30,6 +30,15 @@ export class ApplicationDecisionConditionService {
     type: true,
     status: true,
     assignee: true,
+  };
+
+  private DEFAULT_APP_RELATIONS: FindOptionsRelations<ApplicationModification> = {
+    application: {
+      type: true,
+      region: true,
+      localGovernment: true,
+      decisionMeetings: true,
+    },
   };
 
   constructor(
@@ -109,19 +118,15 @@ export class ApplicationDecisionConditionService {
         const condition = this.mapper.map(c, ApplicationDecisionCondition, ApplicationDecisionConditionHomeDto);
         const decision = this.mapper.map(c.decision, ApplicationDecision, ApplicationDecisionHomeDto);
         const application = this.mapper.map(c.decision.application, Application, ApplicationHomeDto);
+
         const appModifications = await this.modificationRepository.find({
-          where: {
-            modifiesDecisions: {
-              uuid: c.decision?.uuid,
-            },
-          },
+          where: { application: { fileNumber: condition?.decision?.application.fileNumber } },
+          relations: this.DEFAULT_APP_RELATIONS,
         });
+
         const appReconsiderations = await this.reconsiderationRepository.find({
-          where: {
-            reconsidersDecisions: {
-              uuid: c.decision?.uuid,
-            },
-          },
+          where: { application: { fileNumber: condition?.decision?.application.fileNumber } },
+          relations: this.DEFAULT_APP_RELATIONS,
         });
 
         return {
