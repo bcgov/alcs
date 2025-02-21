@@ -1,8 +1,11 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DecisionConditionFinancialInstrumentDto } from '../../services/common/decision-condition-financial-instrument/decision-condition-financial-instrument.dto';
+import {
+  DecisionConditionFinancialInstrumentDto,
+  InstrumentStatus,
+} from '../../services/common/decision-condition-financial-instrument/decision-condition-financial-instrument.dto';
 import { DecisionConditionFinancialInstrumentService } from '../../services/common/decision-condition-financial-instrument/decision-condition-financial-instrument.service';
 import { DialogAction } from '../constants';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
@@ -96,18 +99,17 @@ export class DecisionConditionFinancialInstrumentComponent implements OnInit {
   }
 
   getFormattedStatus(instrument: DecisionConditionFinancialInstrumentDto): string {
-    if (instrument.status === 'Received') {
+    if (instrument.status === InstrumentStatus.RECEIVED) {
       return instrument.status;
     }
 
     if (instrument.receivedDate) {
-      return `${instrument.status} on ${new Date(instrument.receivedDate).toLocaleDateString('en-CA', {
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-      })}`;
+      const date = new Date(instrument.receivedDate);
+      const year = date.getFullYear();
+      const month = date.toLocaleDateString('en-CA', { month: 'short' });
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${instrument.status} on ${year}-${month}-${day}`;
     }
-
-    return instrument.status;
+    return '';
   }
 }
