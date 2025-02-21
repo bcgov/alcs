@@ -3,7 +3,16 @@
     <h3>Re-order Conditions</h3>
   </div>
   <mat-dialog-content style="height: 100%">
-    <table class="date-table" mat-table [dataSource]="data.conditions" multiTemplateDataRows>
+    <table 
+      class="date-table"
+      mat-table 
+      [dataSource]="data.conditions"
+      multiTemplateDataRows
+      cdkDropList
+      cdkDropListAutoScrollStep="10"
+      class="mat-elevation-z3 width-100"
+      >
+      
       <ng-container matColumnDef="index">
         <th mat-header-cell *matHeaderCellDef>#</th>
         <td mat-cell *matCellDef="let i = dataIndex">
@@ -32,8 +41,17 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr
+        *matRowDef="let row; columns: displayedColumns"
+        [ngClass]="{
+          draggable: true,
+        }"
+        cdkDrag
+        cdkDragLockAxis="y"
+        mat-row
+        style="background-color: #fff"
+      ></tr>
     </table>
   </mat-dialog-content>
   <div class="section">
