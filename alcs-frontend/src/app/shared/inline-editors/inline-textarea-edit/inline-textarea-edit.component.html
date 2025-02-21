@@ -28,7 +28,7 @@
       [placeholder]="placeholder"
       #editInput
       [(ngModel)]="pendingValue"
-      (keydown.enter)="confirmEdit()"
+      (keydown.enter)="allowParagraphs ? null : confirmEdit()"
       (keydown.escape)="cancelEdit()"
     ></textarea>
     <div class="button-container">
