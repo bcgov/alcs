@@ -1,29 +1,3 @@
-<div *ngIf="submission?.typeCode !== 'PFRS'">
-  <div class="subheading2">Use End Date</div>
-  <app-inline-datepicker
-    [value]="noticeOfIntent?.proposalEndDate"
-    (save)="updateValue('proposalEndDate', $event)"
-  ></app-inline-datepicker>
-</div>
-
-<div class="input-table">
-  <div *ngIf="submission?.typeCode === 'PFRS'">
-    <div class="subheading2">Use End Date (Placement of Fill)</div>
-    <app-inline-datepicker
-      [value]="noticeOfIntent?.proposalEndDate2"
-      (save)="updateValue('proposalEndDate2', $event)"
-    ></app-inline-datepicker>
-  </div>
-
-  <div *ngIf="submission?.typeCode === 'PFRS'">
-    <div class="subheading2">Use End Date (Removal of Soil)</div>
-    <app-inline-datepicker
-      [value]="noticeOfIntent?.proposalEndDate"
-      (save)="updateValue('proposalEndDate', $event)"
-    ></app-inline-datepicker>
-  </div>
-</div>
-
 <div *ngIf="submission?.soilFillTypeToPlace">
   <div class="subheading2 header">Type, origin and quality of fill proposed to be placed.</div>
   {{ submission?.soilFillTypeToPlace }}
