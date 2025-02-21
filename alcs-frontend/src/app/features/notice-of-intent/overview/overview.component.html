@@ -13,6 +13,7 @@
   <h5>Proposal Summary</h5>
   <app-inline-edit
     [value]="summary"
+    [allowParagraphs]="true"
     placeholder="Add Proposal Summary"
     (save)="onSaveSummary($event)"
   ></app-inline-edit>
