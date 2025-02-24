@@ -17,6 +17,16 @@
       </button>
     </div>
   </div>
+  
+  <div class="quick-filters">
+    <div class="quick-filters-label">Quick Filters:</div>
+    <mat-chip-listbox multiple (change)="onConditionFilterChange($event)" class="quick-filters-list" >
+      <mat-chip-option *ngFor="let label of conditionLabelsByStatus | keyvalue" [value]="label.key" class="quick-filters-button">
+        {{ label.value }}
+      </mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
   <section class="body" *ngIf="decision">
     <div class="decision-container">
       <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions">
@@ -34,7 +44,7 @@
       <div class="no-conditions" *ngIf="decision.conditions.length < 1">
         <app-no-data text="No conditions added. Return to decision draft to add conditions."></app-no-data>
       </div>
-      <div *ngFor="let condition of decision.conditions; let j = index">
+      <div *ngFor="let condition of filterConditions(decision.conditions); let j = index">
         <app-condition
           [ngClass]="{ 'condition-container': true, 'even-condition': j % 2 }"
           [condition]="condition"

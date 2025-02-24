@@ -26,7 +26,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
   fileNumberControl = new FormControl<string | any>({ value: '', disabled: true }, [Validators.required]);
   applicantControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
   descriptionControl = new FormControl<string | null>(null, [Validators.required]);
-  applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
+  applicationTypeControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   regionControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
@@ -68,6 +68,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
       if (!application.decisionDate) {
         this.isDecisionDateEmpty = true;
       }
+      this.applicationTypeControl.setValue(application.type.code);
     });
 
     this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {

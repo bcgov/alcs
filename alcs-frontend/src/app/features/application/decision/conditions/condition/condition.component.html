@@ -200,7 +200,14 @@
 
 <div
   class="full-width"
-  [ngClass]="{ 'description-no-date-container': !(dates !== undefined && condition.type !== null && condition.type !== undefined && condition.type.isDateChecked) }"
+  [ngClass]="{
+    'description-no-date-container': !(
+      dates !== undefined &&
+      condition.type !== null &&
+      condition.type !== undefined &&
+      condition.type.isDateChecked
+    ),
+  }"
 >
   <div class="subheading2">Description</div>
   <span
@@ -218,4 +225,10 @@
       >{{ isReadMoreClicked ? 'Read Less' : 'Read More' }}</a
     >
   </div>
+</div>
+
+<div class="condition-instrument" *ngIf="isFinancialSecurity">
+  <app-decision-condition-financial-instrument
+    [conditionUuid]="condition.uuid"
+  ></app-decision-condition-financial-instrument>
 </div>

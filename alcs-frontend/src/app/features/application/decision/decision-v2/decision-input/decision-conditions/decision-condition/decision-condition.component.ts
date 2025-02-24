@@ -208,7 +208,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
   formatDate(timestamp: number | undefined): string {
     if (!timestamp) {
-      return '';
+      return 'No Data';
     }
     return moment(timestamp).format('YYYY-MMM-DD');
   }

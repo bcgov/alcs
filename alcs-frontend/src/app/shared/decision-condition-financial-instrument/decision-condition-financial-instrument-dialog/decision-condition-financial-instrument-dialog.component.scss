@@ -1,0 +1,72 @@
+@use '../../../../styles/colors';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 48px 36px 24px;
+  width: 100%;
+}
+
+.header {
+  display: block;
+}
+
+.content {
+  display: block;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 18px;
+  flex-grow: 1;
+  margin: 20px 0 0 0;
+
+  & > * {
+    flex: 1;
+  }
+
+  & > :only-child {
+    flex-grow: 1;
+  }
+}
+
+.status-radio-group-container {
+  display: flex;
+  flex-direction: column !important;
+  flex: 1;
+}
+
+.status-radio-group {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-radio-button {
+  margin-bottom: -8px !important;
+}
+
+::ng-deep .mat-mdc-radio-button.mat-accent {
+  --mdc-radio-disabled-selected-icon-color: black;
+  --mdc-radio-disabled-unselected-icon-color: black;
+  --mdc-radio-unselected-hover-icon-color: #212121;
+  --mdc-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
+  --mdc-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
+  --mdc-radio-selected-focus-icon-color: #{colors.$primary-color};
+  --mdc-radio-selected-hover-icon-color: #{colors.$primary-color};
+  --mdc-radio-selected-icon-color: #{colors.$primary-color};
+  --mdc-radio-selected-pressed-icon-color: #{colors.$primary-color};
+  --mat-radio-ripple-color: black;
+  --mat-radio-checked-ripple-color: #{colors.$primary-color};
+  --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}

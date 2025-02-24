@@ -82,6 +82,8 @@ import { CommissionerTagsHeaderComponent } from './tags/commissioner-tags-header
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';
 import { FlagDialogComponent } from './flag-dialog/flag-dialog.component';
 import { UnFlagDialogComponent } from './unflag-dialog/unflag-dialog.component';
+import { DecisionConditionFinancialInstrumentComponent } from './decision-condition-financial-instrument/decision-condition-financial-instrument.component';
+import { DecisionConditionFinancialInstrumentDialogComponent } from './decision-condition-financial-instrument/decision-condition-financial-instrument-dialog/decision-condition-financial-instrument-dialog.component';
 
 @NgModule({
   declarations: [
@@ -129,6 +131,8 @@ import { UnFlagDialogComponent } from './unflag-dialog/unflag-dialog.component';
     DocumentUploadDialogComponent,
     FlagDialogComponent,
     UnFlagDialogComponent,
+    DecisionConditionFinancialInstrumentComponent,
+    DecisionConditionFinancialInstrumentDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -157,6 +161,7 @@ import { UnFlagDialogComponent } from './unflag-dialog/unflag-dialog.component';
     MatChipsModule,
     MatAutocompleteModule,
     MatCheckboxModule,
+    MatRadioModule,
   ],
   exports: [
     CommonModule,
@@ -236,6 +241,8 @@ import { UnFlagDialogComponent } from './unflag-dialog/unflag-dialog.component';
     DocumentUploadDialogComponent,
     FlagDialogComponent,
     UnFlagDialogComponent,
+    DecisionConditionFinancialInstrumentComponent,
+    DecisionConditionFinancialInstrumentDialogComponent,
   ],
 })
 export class SharedModule {

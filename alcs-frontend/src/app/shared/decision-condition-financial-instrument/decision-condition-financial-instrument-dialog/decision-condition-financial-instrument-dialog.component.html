@@ -1,0 +1,141 @@
+<div class="container">
+  <div class="header">
+    <h3>{{ isEdit ? 'Edit Financial Instrument' : 'Add Financial Instrument' }}</h3>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="content">
+      <div class="row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Security Holder/Payee</mat-label>
+          <input matInput formControlName="securityHolderPayee" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let type of instrumentTypes | keyvalue" [value]="type.value">{{
+              type.value
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>Issue Date</mat-label>
+          <input
+            matInput
+            (click)="issueDatePicker.open()"
+            [matDatepicker]="issueDatePicker"
+            formControlName="issueDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="issueDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #issueDatePicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput formControlName="amount" mask="separator.2" thousandSeparator="," />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Held By</mat-label>
+          <mat-select formControlName="heldBy">
+            <mat-option *ngFor="let heldBy of heldByOptions | keyvalue" [value]="heldBy.value">{{
+              heldBy.value
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Bank</mat-label>
+          <input matInput formControlName="bank" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Instrument Number</mat-label>
+          <input matInput formControlName="instrumentNumber" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>Received Date</mat-label>
+          <input
+            matInput
+            (click)="receivedDatePicker.open()"
+            [matDatepicker]="receivedDatePicker"
+            formControlName="receivedDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="receivedDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #receivedDatePicker type="date"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>Expiry Date</mat-label>
+          <input
+            matInput
+            (click)="expiryDatePicker.open()"
+            [matDatepicker]="expiryDatePicker"
+            formControlName="expiryDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notes</mat-label>
+          <textarea matInput formControlName="notes"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <div class="status-radio-group-container">
+          <mat-label>Select Instrument Status</mat-label>
+          <mat-radio-group class="status-radio-group" formControlName="status">
+            <mat-radio-button value="Received"
+              >Received - instrument has been received or for EFTs, CSNR has confirmed</mat-radio-button
+            >
+            <mat-radio-button value="Released"
+              >Released - conditions related to this security were met and security has been released</mat-radio-button
+            >
+            <mat-radio-button value="Cashed">Cashed - the security will not be released</mat-radio-button>
+            <mat-radio-button value="Replaced"
+              >Replaced - this security was replaced by another security</mat-radio-button
+            >
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <ng-container *ngIf="form.get('status')?.value !== 'Received'">
+        <div class="row">
+          <mat-form-field appearance="outline" class="date-picker">
+            <mat-label>Status Date</mat-label>
+            <input
+              matInput
+              (click)="statusDatePicker.open()"
+              [matDatepicker]="statusDatePicker"
+              formControlName="statusDate"
+              required
+            />
+            <mat-datepicker-toggle matSuffix [for]="statusDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #statusDatePicker type="date"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Explanation</mat-label>
+            <textarea matInput formControlName="explanation" required></textarea>
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </div>
+    <mat-dialog-actions class="actions-container" align="end">
+      <button mat-stroked-button color="primary" mat-dialog-close>Close</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid">Save</button>
+    </mat-dialog-actions>
+  </form>
+</div>

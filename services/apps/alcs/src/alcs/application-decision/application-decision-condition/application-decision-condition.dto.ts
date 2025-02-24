@@ -9,6 +9,7 @@ import {
   ApplicationDecisionConditionCardUuidDto,
   ApplicationDecisionConditionHomeCardDto,
 } from './application-decision-condition-card/application-decision-condition-card.dto';
+import { ApplicationDecisionConditionFinancialInstrumentDto } from './application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {
@@ -98,6 +99,9 @@ export class ApplicationDecisionConditionDto {
   conditionCard: ApplicationDecisionConditionCardUuidDto | null;
 
   status?: string | null;
+
+  @AutoMap(() => ApplicationDecisionConditionFinancialInstrumentDto)
+  financialInstruments?: ApplicationDecisionConditionFinancialInstrumentDto[] | null;
 }
 
 export class ApplicationHomeDto {

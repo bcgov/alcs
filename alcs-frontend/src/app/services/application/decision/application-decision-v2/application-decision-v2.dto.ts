@@ -275,6 +275,10 @@ export enum DateType {
   MULTIPLE = 'Multiple',
 }
 
+export enum conditionType {
+  FINANCIAL_SECURITY = 'BOND',
+}
+
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {
   isActive: boolean;
   isComponentToConditionChecked?: boolean | null;

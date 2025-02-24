@@ -9,6 +9,7 @@ import {
   UpdateApplicationDecisionConditionDto,
   DateType,
   ApplicationDecisionConditionDateDto,
+  conditionType,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
@@ -72,6 +73,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   subdComponent?: ApplicationDecisionComponentDto;
   planNumbers: ApplicationDecisionConditionToComponentPlanNumberDto[] = [];
 
+  isFinancialSecurity: boolean = false;
+
   displayColumns: string[] = ['index', 'due', 'completed', 'comment', 'action'];
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -113,6 +116,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       this.isRequireSurveyPlan = this.condition.type?.code === 'RSPL';
       this.isThreeColumn = this.showAdmFeeField && this.showSecurityAmountField;
+
+      this.isFinancialSecurity = this.condition.type?.code === conditionType.FINANCIAL_SECURITY;
 
       this.loadLots();
       this.loadPlanNumber();

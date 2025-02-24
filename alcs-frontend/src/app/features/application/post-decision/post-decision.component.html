@@ -44,17 +44,17 @@
         <ng-container> {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }} </ng-container>
       </div>
 
-      <div>
+      <div *ngIf="reconsideration.type.code !== '33.1'">
         <div class="subheading2">New Evidence</div>
         {{ reconsideration.isNewEvidence | booleanToString }}
       </div>
 
-      <div>
+      <div *ngIf="reconsideration.type.code !== '33.1'">
         <div class="subheading2">Incorrect or False Info</div>
         {{ reconsideration.isIncorrectFalseInfo | booleanToString }}
       </div>
 
-      <div>
+      <div *ngIf="reconsideration.type.code !== '33.1'">
         <div class="subheading2">New Proposal</div>
         {{ reconsideration.isNewProposal | booleanToString }}
       </div>
@@ -91,7 +91,12 @@
         </span>
       </div>
 
-      <div *ngIf="reconsideration.reviewOutcome?.code === 'PRC'">
+      <div *ngIf="!!reconsideration.resultingDecision">
+        <div class="subheading2">Resulting Resolution</div>
+        #{{ reconsideration.resultingDecision.resolutionNumber }}/{{ reconsideration.resultingDecision.resolutionYear }}
+      </div>
+
+      <div *ngIf="reconsideration.decisionOutcome">
         <div class="subheading2">
           Does the reconsideration confirm, reverse, or vary
           {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }}?
@@ -102,11 +107,6 @@
           ></app-inline-decision-outcome>
         </span>
         <span *ngIf="reconsideration.decisionOutcome">{{ reconsideration.decisionOutcome.label }}</span>
-      </div>
-
-      <div *ngIf="!!reconsideration.resultingDecision">
-        <div class="subheading2">Resulting Resolution</div>
-        #{{ reconsideration.resultingDecision.resolutionNumber }}/{{ reconsideration.resultingDecision.resolutionYear }}
       </div>
     </div>
   </div>

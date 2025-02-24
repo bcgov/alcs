@@ -58,6 +58,7 @@
   <h5 class="staff-comments">Staff Comments and Observations</h5>
   <app-inline-edit
     [value]="staffObservations"
+    [allowParagraphs]="true"
     placeholder="Add Staff Comments and Observations"
     (save)="onSaveStaffObservations($event)"
   ></app-inline-edit>
