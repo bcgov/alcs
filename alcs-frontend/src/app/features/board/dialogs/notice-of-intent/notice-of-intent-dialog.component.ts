@@ -20,7 +20,7 @@ import { ApplicationSubmissionStatusPill } from '../../../../shared/application-
 import { RETROACTIVE_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
-import { NOI_ROUTER_LINK_BASE } from 'src/app/shared/constants';
+import { NOI_ROUTER_LINK_BASE } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-notice-of-intent-dialog',

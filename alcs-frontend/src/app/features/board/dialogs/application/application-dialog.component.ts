@@ -18,7 +18,7 @@ import { UserService } from '../../../../services/user/user.service';
 import { ApplicationSubmissionStatusPill } from '../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
-import { APPLICATION_ROUTER_LINK_BASE } from 'src/app/shared/constants';
+import { APPLICATION_ROUTER_LINK_BASE } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-detail-dialog',
