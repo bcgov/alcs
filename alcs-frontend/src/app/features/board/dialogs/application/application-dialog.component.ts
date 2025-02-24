@@ -18,8 +18,7 @@ import { UserService } from '../../../../services/user/user.service';
 import { ApplicationSubmissionStatusPill } from '../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
-
-const ROUTER_LINK_BASE = 'application';
+import { APPLICATION_ROUTER_LINK_BASE } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-detail-dialog',
@@ -66,7 +65,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
 
   async populateApplicationSubmissionStatus(fileNumber: string) {
     let submissionStatus: ApplicationSubmissionToSubmissionStatusDto | null = null;
-    this.routerLink = `${ROUTER_LINK_BASE}/${fileNumber}`;
+    this.routerLink = `${APPLICATION_ROUTER_LINK_BASE}/${fileNumber}`;
     try {
       submissionStatus = await this.applicationSubmissionStatusService.fetchCurrentStatusByFileNumber(
         fileNumber,
@@ -78,7 +77,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
 
     if (submissionStatus) {
       if (submissionStatus.statusTypeCode === SUBMISSION_STATUS.ALC_DECISION) {
-        this.routerLink = `${ROUTER_LINK_BASE}/${fileNumber}/decision`;
+        this.routerLink = `${APPLICATION_ROUTER_LINK_BASE}/${fileNumber}/decision`;
       }
       this.status = {
         backgroundColor: submissionStatus.status.alcsBackgroundColor,

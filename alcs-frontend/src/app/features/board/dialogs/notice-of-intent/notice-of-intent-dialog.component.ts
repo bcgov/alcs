@@ -20,8 +20,7 @@ import { ApplicationSubmissionStatusPill } from '../../../../shared/application-
 import { RETROACTIVE_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
-
-const ROUTER_LINK_BASE = 'notice-of-intent';
+import { NOI_ROUTER_LINK_BASE } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-notice-of-intent-dialog',
@@ -80,7 +79,7 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
 
   private async populateSubmissionStatus(fileNumber: string) {
     let submissionStatus: NoticeOfIntentSubmissionToSubmissionStatusDto | null = null;
-    this.routerLink = `${ROUTER_LINK_BASE}/${fileNumber}`;
+    this.routerLink = `${NOI_ROUTER_LINK_BASE}/${fileNumber}`;
     try {
       submissionStatus = await this.noticeOfIntentSubmissionStatusService.fetchCurrentStatusByFileNumber(
         fileNumber,
@@ -91,7 +90,7 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
     }
     if (submissionStatus) {
       if (submissionStatus.statusTypeCode === NOI_SUBMISSION_STATUS.ALC_DECISION) {
-        this.routerLink = `${ROUTER_LINK_BASE}/${fileNumber}/decision`;
+        this.routerLink = `${NOI_ROUTER_LINK_BASE}/${fileNumber}/decision`;
       }
       this.status = {
         backgroundColor: submissionStatus.status.alcsBackgroundColor,
