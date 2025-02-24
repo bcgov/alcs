@@ -149,3 +149,46 @@ p {
     }
   }
 }
+
+.quick-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  margin-left: 16px;
+}
+
+.quick-filters-label {
+  font-weight: bold;
+}
+
+.quick-filters-button {
+  background-color: transparent !important;
+  border: 2px solid transparent;
+
+  &.mat-mdc-chip-selected {
+    background-color: colors.$grey-dark !important;
+
+    :host::ng-deep & .mdc-evolution-chip__text-label {
+      color: colors.$white !important;
+    }
+
+    &:hover {
+      background-color: colors.$grey !important;
+      border-color: transparent;
+    }
+  }
+
+  &:hover {
+    border-color: colors.$grey-dark;
+
+    :host::ng-deep & .mdc-evolution-chip__text-label {
+      color: colors.$black !important;
+    }
+  }
+
+  :host::ng-deep & .mdc-evolution-chip__graphic {
+    visibility: hidden;
+    width: 0;
+  }
+}

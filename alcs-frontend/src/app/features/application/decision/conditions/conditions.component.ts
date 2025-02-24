@@ -22,6 +22,7 @@ import { ApplicationDecisionConditionService } from '../../../../services/applic
 import { MatDialog } from '@angular/material/dialog';
 import { ConditionCardDialogComponent } from './condition-card-dialog/condition-card-dialog.component';
 import { ApplicationDecisionConditionCardService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { MatChipListboxChange } from '@angular/material/chips';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -52,6 +53,14 @@ export const CONDITION_STATUS = {
   styleUrls: ['./conditions.component.scss'],
 })
 export class ConditionsComponent implements OnInit {
+  conditionLabelsByStatus: Record<keyof typeof CONDITION_STATUS, string> = {
+    COMPLETE: 'Complete',
+    ONGOING: 'Ongoing',
+    PENDING: 'Pending',
+    PASTDUE: 'Past Due',
+    EXPIRED: 'Expired',
+  };
+
   $destroy = new Subject<void>();
 
   decisionUuid: string = '';
@@ -67,6 +76,8 @@ export class ConditionsComponent implements OnInit {
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
   reconLabel = RECON_TYPE_LABEL;
   modificationLabel = MODIFICATION_TYPE_LABEL;
+
+  conditionFilters: string[] = [];
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -215,5 +226,21 @@ export class ConditionsComponent implements OnInit {
         }
       }
     });
+  }
+
+  onConditionFilterChange(change: MatChipListboxChange) {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement?.blur();
+    }
+
+    this.conditionFilters = change.value;
+  }
+
+  filterConditions(conditions: ApplicationDecisionConditionWithStatus[]): ApplicationDecisionConditionWithStatus[] {
+    if (this.conditionFilters.length < 1) {
+      return conditions;
+    }
+
+    return conditions.filter((condition) => this.conditionFilters.includes(condition.status));
   }
 }

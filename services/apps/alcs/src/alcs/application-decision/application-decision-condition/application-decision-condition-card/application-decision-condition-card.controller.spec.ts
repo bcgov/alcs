@@ -121,8 +121,8 @@ describe('ApplicationDecisionConditionCardController', () => {
     conditionCard.decision = { uuid: 'decision-uuid', application: { fileNumber: 'file-number' } } as any;
 
     mockService.getByBoardCard.mockResolvedValue(conditionCard);
-    mockReconsiderationService.getByApplicationDecisionUuid.mockResolvedValue([]);
-    mockModificationService.getByApplicationDecisionUuid.mockResolvedValue([]);
+    mockReconsiderationService.getByApplication.mockResolvedValue([]);
+    mockModificationService.getByApplication.mockResolvedValue([]);
     mockApplicationDecisionService.getDecisionOrder.mockResolvedValue(1);
 
     const result = await controller.getByCardUuid(uuid);

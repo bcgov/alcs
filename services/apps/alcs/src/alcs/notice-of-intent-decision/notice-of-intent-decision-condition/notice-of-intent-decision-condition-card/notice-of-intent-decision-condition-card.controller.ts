@@ -68,9 +68,7 @@ export class NoticeOfIntentDecisionConditionCardController {
     );
     dto.fileNumber = result.decision.noticeOfIntent.fileNumber;
 
-    const appModifications = await this.noticeOfIntentModificationService.getByNoticeOfIntentDecisionUuid(
-      result.decision.uuid,
-    );
+    const appModifications = await this.noticeOfIntentModificationService.getByFileNumber(dto.fileNumber);
 
     dto.isModification = appModifications.length > 0;
 
