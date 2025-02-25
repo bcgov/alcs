@@ -38,7 +38,7 @@ export type DecisionWithConditionComponentLabels = NoticeOfIntentDecisionWithLin
 };
 
 export const CONDITION_STATUS = {
-  COMPLETE: 'complete',
+  COMPLETED: 'completed',
   ONGOING: 'ongoing',
   PENDING: 'pending',
   PASTDUE: 'pastdue',
@@ -52,7 +52,7 @@ export const CONDITION_STATUS = {
 })
 export class ConditionsComponent implements OnInit {
   conditionLabelsByStatus: Record<keyof typeof CONDITION_STATUS, string> = {
-    COMPLETE: 'Complete',
+    COMPLETED: 'Complete',
     ONGOING: 'Ongoing',
     PENDING: 'Pending',
     PASTDUE: 'Past Due',
@@ -151,7 +151,7 @@ export class ConditionsComponent implements OnInit {
     decision.conditions = conditions.sort((a, b) => {
       const order = [
         CONDITION_STATUS.ONGOING,
-        CONDITION_STATUS.COMPLETE,
+        CONDITION_STATUS.COMPLETED,
         CONDITION_STATUS.PASTDUE,
         CONDITION_STATUS.EXPIRED,
       ];
