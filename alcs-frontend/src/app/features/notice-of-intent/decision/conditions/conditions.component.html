@@ -46,6 +46,7 @@
           [isDraftDecision]="decision.isDraft"
           [fileNumber]="fileNumber"
           [index]="j + 1"
+          (statusChange)="onStatusChange(condition, $event)"
         ></app-condition>
       </div>
     </div>

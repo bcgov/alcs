@@ -239,4 +239,8 @@ export class ConditionsComponent implements OnInit {
 
     return conditions.filter((condition) => this.conditionFilters.includes(condition.status));
   }
+
+  onStatusChange(condition: DecisionConditionWithStatus, newStatus: string) {
+    condition.status = newStatus;
+  }
 }
