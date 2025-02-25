@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import moment from 'moment';
 import { NoticeOfIntentDecisionConditionService } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import {
@@ -39,6 +39,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() isDraftDecision!: boolean;
   @Input() fileNumber!: string;
   @Input() index!: number;
+
+  @Output() statusChange: EventEmitter<string> = new EventEmitter();
 
   DateType = DateType;
 
@@ -219,6 +221,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
       this.condition.status = conditionNewStatus.status;
+      this.statusChange.emit(this.condition.status);
       this.setPillLabel(this.condition.status);
     } else {
       console.error('Date with specified UUID not found');
@@ -238,6 +241,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
         const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
         this.condition.status = conditionNewStatus.status;
+        this.statusChange.emit(this.condition.status);
         this.setPillLabel(this.condition.status);
       }
     }
