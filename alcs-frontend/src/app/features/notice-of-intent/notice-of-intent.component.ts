@@ -21,6 +21,8 @@ import { FileTagService } from '../../services/common/file-tag.service';
 import { NoticeOfIntentTagService } from '../../services/notice-of-intent/notice-of-intent-tag/notice-of-intent-tag.service';
 import { NoticeOfIntentDecisionConditionCardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { DecisionConditionFinancialInstrumentService } from '../../services/common/decision-condition-financial-instrument/decision-condition-financial-instrument.service';
+import { NoticeOfIntentDecisionConditionFinancialInstrumentService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.service';
 
 export const childRoutes = [
   {
@@ -96,7 +98,13 @@ const preSubmissionRoutes = [
   selector: 'app-notice-of-intent',
   templateUrl: './notice-of-intent.component.html',
   styleUrls: ['./notice-of-intent.component.scss'],
-  providers: [{ provide: FileTagService, useClass: NoticeOfIntentTagService }],
+  providers: [
+    { provide: FileTagService, useClass: NoticeOfIntentTagService },
+    {
+      provide: DecisionConditionFinancialInstrumentService,
+      useClass: NoticeOfIntentDecisionConditionFinancialInstrumentService,
+    },
+  ],
 })
 export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

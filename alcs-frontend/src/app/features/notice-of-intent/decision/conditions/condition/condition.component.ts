@@ -2,6 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChil
 import moment from 'moment';
 import { NoticeOfIntentDecisionConditionService } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import {
+  ConditionType,
   NoticeOfIntentDecisionConditionDateDto,
   UpdateNoticeOfIntentDecisionConditionDto,
 } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
@@ -64,6 +65,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   conditionStatus: string = '';
   stringIndex: string = '';
 
+  isFinancialSecurity: boolean = false;
+
   displayColumns: string[] = ['index', 'due', 'completed', 'comment', 'action'];
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -106,6 +109,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
         this.addIndex(this.sortDates(this.dates)),
       );
+
+      this.isFinancialSecurity = this.condition.type?.code === ConditionType.FINANCIAL_SECURITY;
     }
   }
 
