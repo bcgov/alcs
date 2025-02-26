@@ -103,7 +103,9 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   onAddNewCondition(typeCode: string) {
     this.mappedConditions.forEach((c) => {
-      c.order++;
+      if (c.order) {
+        c.order++;
+      }
     });
     const matchingType = this.activeTypes.find((type) => type.code === typeCode);
     this.mappedConditions.unshift({

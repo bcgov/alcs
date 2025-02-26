@@ -321,7 +321,7 @@ export interface UpdateApplicationDecisionConditionDto {
   description?: string | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   dates?: ApplicationDecisionConditionDateDto[];
-  order: number;
+  order?: number;
 }
 
 export interface ComponentToCondition {
