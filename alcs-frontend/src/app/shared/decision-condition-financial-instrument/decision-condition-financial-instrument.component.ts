@@ -103,8 +103,8 @@ export class DecisionConditionFinancialInstrumentComponent implements OnInit {
       return instrument.status;
     }
 
-    if (instrument.receivedDate) {
-      const date = new Date(instrument.receivedDate);
+    if (instrument.statusDate) {
+      const date = new Date(instrument.statusDate);
       const year = date.getFullYear();
       const month = date.toLocaleDateString('en-CA', { month: 'short' });
       const day = String(date.getDate()).padStart(2, '0');
