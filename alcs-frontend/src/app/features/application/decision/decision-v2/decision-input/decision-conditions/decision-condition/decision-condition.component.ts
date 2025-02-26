@@ -118,6 +118,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
       description: this.description.value ?? undefined,
       componentsToCondition: selectedOptions,
+      order: this.data.order,
     };
 
     if (this.showSingleDateField) {

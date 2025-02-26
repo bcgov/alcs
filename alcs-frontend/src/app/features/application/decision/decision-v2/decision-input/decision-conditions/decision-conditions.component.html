@@ -23,7 +23,7 @@
   </div>
   <div class="cond-footer">
     <div>
-      <button mat-stroked-button class="order-button" color="primary" type="button" (click)="openOrderDialog()">Re-Order Conditions</button>
+      <button [disabled]="mappedConditions.length <= 1" mat-stroked-button class="order-button" color="primary" type="button" (click)="openOrderDialog()">Re-Order Conditions</button>
       <button
         [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
         type="button"

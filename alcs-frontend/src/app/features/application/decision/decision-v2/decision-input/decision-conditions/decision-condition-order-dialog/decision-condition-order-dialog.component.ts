@@ -1,7 +1,11 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionConditionDto } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { countToString } from '../../../../../../../shared/utils/count-to-string';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-decision-condition-order-dialog',
@@ -10,23 +14,100 @@ import { countToString } from '../../../../../../../shared/utils/count-to-string
 })
 export class DecisionConditionOrderDialogComponent implements OnInit {
   displayedColumns = ['index', 'type', 'description', 'actions'];
+  selectedRecord: string | undefined;
+  overlayRef: OverlayRef | null = null;
+  dataSource = new MatTableDataSource<ApplicationDecisionConditionDto>([]);
+
+  @ViewChild('orderMenu') orderMenu!: TemplateRef<any>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { conditions: { condition: ApplicationDecisionConditionDto; index: number }[]; decision: string },
+    public data: { conditions: ApplicationDecisionConditionDto[]; },
     private dialogRef: MatDialogRef<DecisionConditionOrderDialogComponent>,
+    private overlay: Overlay,
+    private viewContainerRef: ViewContainerRef,
   ) {}
 
-  async ngOnInit() {
-    console.log(this.data);
+  ngOnInit(): void {
+    const orderIndexes = this.data.conditions.map((c) => c.order);
+    const isAllZero = orderIndexes.every((val, i, arr) => val === arr[0] && arr[0] === 0);
+    if (isAllZero) {
+      let index = 0;
+      this.data.conditions.forEach((c) => {
+        c.order = index;
+        index++;
+      });
+    }
+    this.dataSource.data = this.data.conditions.sort((a,b) => a.order - b.order);
+  }
+
+  async onRowDropped(event: CdkDragDrop<ApplicationDecisionConditionDto, any>) {
+    this.moveItem(event.previousIndex, event.currentIndex);
+  }
+
+  async openMenu($event: MouseEvent, record: ApplicationDecisionConditionDto) {
+      this.overlayRef?.detach();
+      $event.preventDefault();
+      this.selectedRecord = record.uuid;
+      const positionStrategy = this.overlay
+        .position()
+        .flexibleConnectedTo({ x: $event.x, y: $event.y })
+        .withPositions([
+          {
+            originX: 'end',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+        ]);
+  
+      this.overlayRef = this.overlay.create({
+        positionStrategy,
+        scrollStrategy: this.overlay.scrollStrategies.close(),
+      });
+  
+      this.overlayRef.attach(
+        new TemplatePortal(this.orderMenu, this.viewContainerRef, {
+          $implicit: record,
+        }),
+      );
+    }
+  
+    sendToBottom(record: ApplicationDecisionConditionDto) {
+      const currentIndex = this.data.conditions.findIndex((item) => item.uuid === record.uuid);
+      this.moveItem(currentIndex, this.data.conditions.length - 1);
+      this.overlayRef?.detach();
+      this.selectedRecord = undefined;
+    }
+  
+    sendToTop(record: ApplicationDecisionConditionDto) {
+      const currentIndex = this.data.conditions.findIndex((item) => item.uuid === record.uuid);
+      this.moveItem(currentIndex, 0);
+      this.overlayRef?.detach();
+      this.selectedRecord = undefined;
+    }
+  
+    clearMenu() {
+      this.overlayRef?.detach();
+      this.selectedRecord = undefined;
+    }
+
+  private moveItem(currentIndex: number, targetIndex: number) {
+    this.data.conditions[currentIndex].order = targetIndex;
+    this.data.conditions[targetIndex].order = currentIndex;
+    this.dataSource.data = this.data.conditions.sort((a,b) => a.order - b.order);
   }
 
   onCancel(): void {
-    this.dialogRef.close({ action: 'cancel' });
+    this.dialogRef.close();
   }
 
   onSave(): void {
-    this.dialogRef.close({ action: 'cancel' });
+    const order = this.data.conditions.map((cond, index) => ({
+      uuid: cond.uuid,
+      order: cond.order,
+    }));
+    this.dialogRef.close(order);
   }
 
   alphaIndex(index: number) {

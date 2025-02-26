@@ -19,6 +19,7 @@ import {
   DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ApplicationDecisionConditionService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
 import { DecisionConditionOrderDialogComponent } from './decision-condition-order-dialog/decision-condition-order-dialog.component';
@@ -56,6 +57,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   decision: ApplicationDecisionDto | undefined;
 
   constructor(
+    private conditionService: ApplicationDecisionConditionService,
     private decisionService: ApplicationDecisionV2Service,
     private confirmationDialogService: ConfirmationDialogService,
     protected dialog: MatDialog,
@@ -100,10 +102,14 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   onAddNewCondition(typeCode: string) {
+    this.mappedConditions.forEach((c) => {
+      c.order++;
+    });
     const matchingType = this.activeTypes.find((type) => type.code === typeCode);
     this.mappedConditions.unshift({
       type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
+      order: 0,
     });
     this.conditionsChange.emit({
       conditions: this.mappedConditions,
@@ -218,10 +224,6 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
     this.conditionComponents.forEach((component) => component.form.markAllAsTouched());
   }
 
-  emitChanges() {
-    console.log('emit changes');
-  }
-
   openOrderDialog() {
       this.dialog
         .open(DecisionConditionOrderDialogComponent, {
@@ -229,13 +231,18 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
           minHeight: '40vh',
           minWidth: '80vh',
           data: {
-            conditions: this.conditions,
+            conditions: this.mappedConditions,
           },
         })
         .beforeClosed()
-        .subscribe(async () => {
-          alert('subscribe');
-          this.emitChanges();
+        .subscribe(async (data) => {
+          if (data) {
+            this.conditionService.updateSort(data);
+            this.conditionsChange.emit({
+              conditions: this.mappedConditions,
+              isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),
+            });
+          }
         });
   }
 }

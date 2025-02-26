@@ -153,4 +153,10 @@ export class ApplicationDecisionConditionController {
       ApplicationDecisionConditionFinancialInstrumentDto,
     );
   }
+
+  @Post('/sort')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async sortConditions(@Body() data: { uuid: string; order: number }[]): Promise<void> {
+    await this.conditionService.setSorting(data);
+  }
 }

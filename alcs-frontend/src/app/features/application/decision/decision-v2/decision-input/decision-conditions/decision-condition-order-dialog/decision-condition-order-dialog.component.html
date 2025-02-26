@@ -1,21 +1,32 @@
+<ng-template #orderMenu let-record>
+  <div class="menu">
+    <div class="menu-item">
+      <button (click)="sendToTop(record)" mat-menu-item>Move to Top</button>
+    </div>
+    <div class="menu-item">
+      <button (click)="sendToBottom(record)" mat-menu-item>Move to Bottom</button>
+    </div>
+  </div>
+</ng-template>
+
 <div class="container">
   <div class="section">
     <h3>Re-order Conditions</h3>
   </div>
   <mat-dialog-content style="height: 100%">
-    <table 
-      class="date-table"
-      mat-table 
-      [dataSource]="data.conditions"
-      multiTemplateDataRows
+    <table
+      (cdkDropListDropped)="onRowDropped($event)"
+      [cdkDropListDisabled]="false"
+      [dataSource]="dataSource"
       cdkDropList
       cdkDropListAutoScrollStep="10"
       class="mat-elevation-z3 width-100"
-      >
+      mat-table
+    >
       
       <ng-container matColumnDef="index">
-        <th mat-header-cell *matHeaderCellDef>#</th>
-        <td mat-cell *matCellDef="let i = dataIndex">
+        <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+        <td mat-cell *matCellDef="let i = index">
           {{ alphaIndex(i + 1) }}
         </td>
       </ng-container>
@@ -43,9 +54,11 @@
 
       <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
       <tr
+        (contextmenu)="openMenu($event, row)"
+        (mousedown)="clearMenu()"
         *matRowDef="let row; columns: displayedColumns"
         [ngClass]="{
-          draggable: true,
+          draggable: true
         }"
         cdkDrag
         cdkDragLockAxis="y"

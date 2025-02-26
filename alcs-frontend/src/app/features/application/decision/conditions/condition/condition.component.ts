@@ -61,7 +61,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   showAdmFeeField = false;
   showSecurityAmountField = false;
   singleDateFormated: string | undefined = undefined;
-  stringIndex: string = '';
 
   isThreeColumn = true;
 
@@ -88,7 +87,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   ) {}
 
   async ngOnInit() {
-    this.stringIndex = countToString(this.index);
     if (this.condition) {
       this.dates = Array.isArray(this.condition.dates) ? this.condition.dates : [];
       if (this.condition.type?.dateType === DateType.SINGLE && this.dates.length <= 0) {
@@ -193,6 +191,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     if (condition) {
       const update = await this.conditionService.update(condition.uuid, {
         [field]: value,
+        order: condition.order,
       });
 
       const labels = this.condition.componentLabelsStr;
@@ -326,5 +325,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         this.setPillLabel(this.condition.status);
       }
     }
+  }
+
+  alphaIndex(index: number) {
+    return countToString(index);
   }
 }
