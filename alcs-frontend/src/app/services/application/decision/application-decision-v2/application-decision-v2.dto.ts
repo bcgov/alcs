@@ -309,6 +309,7 @@ export interface ApplicationDecisionConditionDto {
   conditionCard?: ApplicationDecisionConditionCardDto | null;
   status?: string | null;
   decision: ApplicationDecisionDto | null;
+  order: number;
 }
 
 export interface UpdateApplicationDecisionConditionDto {
@@ -320,6 +321,7 @@ export interface UpdateApplicationDecisionConditionDto {
   description?: string | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   dates?: ApplicationDecisionConditionDateDto[];
+  order?: number;
 }
 
 export interface ComponentToCondition {

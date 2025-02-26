@@ -152,23 +152,7 @@ export class ConditionsComponent implements OnInit {
     decision: ApplicationDecisionWithLinkedResolutionDto,
     conditions: ApplicationDecisionConditionWithStatus[],
   ) {
-    decision.conditions = conditions.sort((a, b) => {
-      const order = [
-        CONDITION_STATUS.ONGOING,
-        CONDITION_STATUS.COMPLETED,
-        CONDITION_STATUS.PASTDUE,
-        CONDITION_STATUS.EXPIRED,
-      ];
-      if (a.status === b.status) {
-        if (a.type && b.type) {
-          return a.type?.label.localeCompare(b.type.label);
-        } else {
-          return -1;
-        }
-      } else {
-        return order.indexOf(a.status) - order.indexOf(b.status);
-      }
-    });
+    decision.conditions = conditions.sort((a, b) => a.order - b.order);
   }
 
   private async mapConditions(

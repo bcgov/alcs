@@ -1,7 +1,5 @@
 <div class="header">
-  <!-- Keep the stringIndex line to add when the feature is implemented -->
-  <!-- <h4 *ngIf="condition.type">{{ stringIndex }}. {{ condition.type.label }}</h4> -->
-  <h4 *ngIf="condition.type">{{ condition.type.label }}</h4>
+  <h4 *ngIf="condition.type">{{ alphaIndex(index) }}. {{ condition.type.label }}</h4>
   <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
 </div>
 <div [ngClass]="isThreeColumn ? 'grid-3' : 'grid-2'">

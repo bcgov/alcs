@@ -102,6 +102,9 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap(() => ApplicationDecisionConditionFinancialInstrumentDto)
   financialInstruments?: ApplicationDecisionConditionFinancialInstrumentDto[] | null;
+
+  @AutoMap()
+  order: number;
 }
 
 export class ApplicationHomeDto {

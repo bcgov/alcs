@@ -61,6 +61,10 @@ export class ApplicationDecisionCondition extends Base {
   @Column()
   decisionUuid: string;
 
+  @AutoMap(() => Number)
+  @Column({ default: 0 })
+  order: number;
+
   @ManyToMany(() => ApplicationDecisionComponent, (component) => component.conditions, { nullable: true })
   @JoinTable({
     name: 'application_decision_condition_component',

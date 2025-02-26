@@ -101,6 +101,9 @@ export class NoticeOfIntentDecisionConditionDto {
   conditionCard: NoticeOfIntentDecisionConditionCardUuidDto | null;
 
   status?: string | null;
+
+  @AutoMap()
+  order: number;
 }
 
 export class NoticeOfIntentHomeDto {
