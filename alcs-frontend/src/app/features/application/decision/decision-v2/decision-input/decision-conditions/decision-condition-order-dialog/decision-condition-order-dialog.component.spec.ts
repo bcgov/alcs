@@ -8,7 +8,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DecisionConditionOrderDialogComponent } from './decision-condition-order-dialog.component';
 
-describe('ConditionCardDialogComponent', () => {
+describe('DecisionConditionOrderDialogComponent', () => {
   let component: DecisionConditionOrderDialogComponent;
   let fixture: ComponentFixture<DecisionConditionOrderDialogComponent>;
 
