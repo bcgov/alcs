@@ -1,0 +1,110 @@
+name: Backport to Develop
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  backport:
+    # Only run if PR was merged (not just closed) and it wasn't from develop
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref != 'develop'
+    name: Backport to Develop
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      BACKPORT_BRANCH: backport/pr-${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Get First Approver
+        id: get-approver
+        run: |
+          # Get reviews for the original PR
+          REVIEWS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews")
+          
+          # Extract first APPROVED reviewer's login
+          FIRST_APPROVER=$(echo "$REVIEWS" | jq -r '.[] | select(.state=="APPROVED") | .user.login' | head -n 1)
+          
+          if [ ! -z "$FIRST_APPROVER" ]; then
+            echo "has_reviewer=true" >> $GITHUB_OUTPUT
+            echo "reviewer=$FIRST_APPROVER" >> $GITHUB_OUTPUT
+          else
+            echo "has_reviewer=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create backport branch
+        run: |
+          # Create a new branch from develop
+          git checkout -b ${{ env.BACKPORT_BRANCH }}
+          
+          # Get the range of commits to cherry-pick
+          BASE_SHA=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          
+          # Cherry pick the range of commits
+          # Using -m 1 to handle merge commits, and --strategy=recursive --strategy-option=theirs to handle conflicts
+          if ! git cherry-pick -m 1 --strategy=recursive --strategy-option=theirs ${BASE_SHA}..${{ github.event.pull_request.merge_commit_sha }}; then
+            if [ -f .git/CHERRY_PICK_HEAD ]; then
+              # We're in a cherry-pick state
+              if git diff --cached --quiet && git diff --quiet; then
+                # No changes in working directory or index - safe to skip
+                git cherry-pick --skip
+              else
+                # There are uncommitted changes - could be conflicts
+                git cherry-pick --abort
+                exit 1
+              fi
+            else
+              # Some other error occurred
+              exit 1
+            fi
+          fi
+          
+          # Push the branch using the token for authentication
+          git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ${{ env.BACKPORT_BRANCH }}
+        
+      - name: Create Pull Request with Reviewer
+        if: steps.get-approver.outputs.has_reviewer == 'true'
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: ${{ env.BACKPORT_BRANCH }}
+          destination_branch: "develop"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Backport: ${{ github.event.pull_request.title }}"
+          pr_body: |
+            Automated backport of changes from main to develop
+            
+            Original PR: [#${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})
+            Original Author: @${{ github.event.pull_request.user.login }}
+          pr_label: "backport"
+          pr_reviewer: ${{ steps.get-approver.outputs.reviewer }}
+
+      - name: Create Pull Request without Reviewer
+        if: steps.get-approver.outputs.has_reviewer != 'true'
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: ${{ env.BACKPORT_BRANCH }}
+          destination_branch: "develop"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Backport: ${{ github.event.pull_request.title }}"
+          pr_body: |
+            Automated backport of changes from main to develop
+            
+            Original PR: [#${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})
+            Original Author: @${{ github.event.pull_request.user.login }}
+          pr_label: "backport" 
