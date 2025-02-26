@@ -13,6 +13,7 @@ import {
   NoticeOfIntentDecisionConditionHomeCardDto,
 } from './notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
 import { NoticeOfIntentTypeDto } from '../../notice-of-intent/notice-of-intent-type/notice-of-intent-type.dto';
+import { NoticeOfIntentDecisionConditionFinancialInstrumentDto } from './notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.dto';
 
 export class NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
   @IsBoolean()
@@ -101,6 +102,9 @@ export class NoticeOfIntentDecisionConditionDto {
   conditionCard: NoticeOfIntentDecisionConditionCardUuidDto | null;
 
   status?: string | null;
+
+  @AutoMap(() => NoticeOfIntentDecisionConditionFinancialInstrumentDto)
+  financialInstruments?: NoticeOfIntentDecisionConditionFinancialInstrumentDto[] | null;
 }
 
 export class NoticeOfIntentHomeDto {

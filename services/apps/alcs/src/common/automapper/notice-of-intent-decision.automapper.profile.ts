@@ -50,6 +50,11 @@ import {
   NoticeOfIntentDecisionConditionCardUuidDto,
   NoticeOfIntentDecisionConditionHomeCardDto,
 } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.dto';
+import {
+  InstrumentStatus,
+  NoticeOfIntentDecisionConditionFinancialInstrument,
+} from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.entity';
+import { NoticeOfIntentDecisionConditionFinancialInstrumentDto } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-condition/notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.dto';
 
 @Injectable()
 export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
@@ -213,6 +218,19 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
                   NoticeOfIntentDecisionConditionCardUuidDto,
                 )
               : null,
+          ),
+        ),
+
+        forMember(
+          (dto) => dto.financialInstruments,
+          mapFrom((entity) =>
+            entity.financialInstruments
+              ? this.mapper.mapArray(
+                  entity.financialInstruments,
+                  NoticeOfIntentDecisionConditionFinancialInstrument,
+                  NoticeOfIntentDecisionConditionFinancialInstrumentDto,
+                )
+              : [],
           ),
         ),
       );
@@ -455,6 +473,42 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         forMember(
           (a) => a.type,
           mapFrom((ac) => ac.type),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecisionConditionFinancialInstrument,
+        NoticeOfIntentDecisionConditionFinancialInstrumentDto,
+        forMember(
+          (dto) => dto.issueDate,
+          mapFrom((entity) => entity.issueDate.getTime()),
+        ),
+        forMember(
+          (dto) => dto.expiryDate,
+          mapFrom((entity) => (entity.expiryDate ? entity.expiryDate.getTime() : undefined)),
+        ),
+        forMember(
+          (dto) => dto.receivedDate,
+          mapFrom((entity) => entity.receivedDate.getTime()),
+        ),
+        forMember(
+          (dto) => dto.statusDate,
+          mapFrom((entity) =>
+            entity.status !== InstrumentStatus.RECEIVED ? entity.statusDate?.getTime() || undefined : undefined,
+          ),
+        ),
+        forMember(
+          (dto) => dto.explanation,
+          mapFrom((entity) => entity.explanation || undefined),
+        ),
+        forMember(
+          (dto) => dto.notes,
+          mapFrom((entity) => entity.notes || undefined),
+        ),
+        forMember(
+          (dto) => dto.instrumentNumber,
+          mapFrom((entity) => entity.instrumentNumber || undefined),
         ),
       );
     };
