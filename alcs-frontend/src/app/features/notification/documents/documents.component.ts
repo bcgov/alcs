@@ -12,6 +12,15 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
+import {
+  DocumentUploadDialogData,
+  DocumentUploadDialogOptions,
+} from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
+
+const DOCUMENT_UPLOAD_DIALOG_OPTIONS: DocumentUploadDialogOptions = {
+  allowedVisibilityFlags: ['A', 'G', 'P'],
+  allowsFileEdit: true,
+};
 
 @Component({
   selector: 'app-notification-documents',
@@ -48,17 +57,17 @@ export class NotificationDocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
+    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
+      fileId: this.fileId,
+      documentService: this.notificationDocumentService,
+    });
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          documentService: this.notificationDocumentService,
-          allowedVisibilityFlags: ['A', 'G', 'P'],
-          allowsFileEdit: true,
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty) => {
@@ -91,18 +100,19 @@ export class NotificationDocumentsComponent implements OnInit {
   }
 
   onEditFile(element: NoticeOfIntentDocumentDto) {
+    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
+      allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+      fileId: this.fileId,
+      existingDocument: element,
+      documentService: this.notificationDocumentService,
+    });
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          existingDocument: element,
-          documentService: this.notificationDocumentService,
-          allowedVisibilityFlags: ['A', 'G', 'P'],
-          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty: boolean) => {

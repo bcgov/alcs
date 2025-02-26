@@ -10,6 +10,15 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
+import {
+  DocumentUploadDialogData,
+  DocumentUploadDialogOptions,
+} from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
+
+const DOCUMENT_UPLOAD_DIALOG_OPTIONS: DocumentUploadDialogOptions = {
+  allowedVisibilityFlags: ['C'],
+  allowsFileEdit: true,
+};
 
 @Component({
   selector: 'app-documents',
@@ -48,17 +57,17 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
+    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
+      fileId: this.fileId,
+      documentService: this.planningReviewDocumentService,
+    });
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          documentService: this.planningReviewDocumentService,
-          allowedVisibilityFlags: ['C'],
-          allowsFileEdit: true,
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty) => {
@@ -91,18 +100,19 @@ export class DocumentsComponent implements OnInit {
   }
 
   onEditFile(element: PlanningReviewDocumentDto) {
+    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
+      allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+      fileId: this.fileId,
+      existingDocument: element,
+      documentService: this.planningReviewDocumentService,
+    });
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          existingDocument: element,
-          documentService: this.planningReviewDocumentService,
-          allowsFileEdit: true,
-          allowedVisibilityFlags: ['C'],
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty: boolean) => {
