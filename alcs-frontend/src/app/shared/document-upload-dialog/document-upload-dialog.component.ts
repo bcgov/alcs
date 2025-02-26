@@ -3,27 +3,21 @@ import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@ang
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastService } from '../../services/toast/toast.service';
-import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
 import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
 import { splitExtension } from '../utils/file';
-import { DecisionService, DocumentService } from './document-upload-dialog.interface';
 import {
   CreateDocumentDto,
-  DocumentDto,
   SelectableOwnerDto,
   SelectableParcelDto,
   UpdateDocumentDto,
 } from './document-upload-dialog.dto';
 import { Subject } from 'rxjs';
+import { DocumentUploadDialogData } from './document-upload-dialog.interface';
 
 export enum VisibilityGroup {
   INTERNAL = 'Internal',
   PUBLIC = 'Public',
-}
-
-export interface DocumentTypeConfig {
-  visibilityGroups: VisibilityGroup[];
-  allowsFileEdit: boolean;
 }
 
 @Component({
@@ -74,20 +68,12 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   internalVisibilityLabel = '';
 
+  selectableParcels: SelectableParcelDto[] = [];
+  selectableOwners: SelectableOwnerDto[] = [];
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {
-      fileId: string;
-      decisionUuid?: string;
-      existingDocument?: DocumentDto;
-      decisionService?: DecisionService;
-      documentService?: DocumentService;
-      selectableParcels?: SelectableParcelDto[];
-      selectableOwners?: SelectableOwnerDto[];
-      allowedVisibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
-      allowsFileEdit?: boolean;
-      documentTypeOverrides?: Record<DOCUMENT_TYPE, DocumentTypeConfig>;
-    },
+    public data: DocumentUploadDialogData,
     protected dialog: MatDialogRef<any>,
     private toastService: ToastService,
   ) {}
@@ -104,7 +90,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.allowsFileEdit = this.data.allowsFileEdit ?? this.allowsFileEdit;
 
       if (document.type && this.data.documentTypeOverrides && this.data.documentTypeOverrides[document.type.code]) {
-        this.allowsFileEdit = this.data.documentTypeOverrides[document.type.code].allowsFileEdit;
+        this.allowsFileEdit = !!this.data.documentTypeOverrides[document.type.code]?.allowsFileEdit;
       }
 
       if (document.type?.code === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
@@ -267,32 +253,54 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   }
 
   async prepareCertificateOfTitleUpload(uuid?: string) {
-    if (this.data.selectableParcels && this.data.selectableParcels.length > 0) {
-      this.parcelId.setValidators([Validators.required]);
-      this.parcelId.updateValueAndValidity();
-      this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+    this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+    this.parcelId.setValidators([Validators.required]);
+    this.parcelId.updateValueAndValidity();
 
-      const selectedParcel = this.data.selectableParcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
-      if (selectedParcel) {
-        this.parcelId.setValue(selectedParcel.uuid);
-      } else if (uuid) {
-        this.showSupersededWarning = true;
-      }
+    if (!this.data.parcelService) {
+      return;
+    }
+
+    this.selectableParcels = await this.data.parcelService.fetchParcels(this.data.fileId);
+
+    if (this.selectableParcels.length < 1) {
+      return;
+    }
+
+    const selectedParcel = this.selectableParcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
+    if (selectedParcel) {
+      this.parcelId.setValue(selectedParcel.uuid);
+    } else if (uuid) {
+      this.showSupersededWarning = true;
     }
   }
 
   async prepareCorporateSummaryUpload(uuid?: string) {
-    if (this.data.selectableOwners && this.data.selectableOwners.length > 0) {
-      this.ownerId.setValidators([Validators.required]);
-      this.ownerId.updateValueAndValidity();
-      this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+    this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+    this.ownerId.setValidators([Validators.required]);
+    this.ownerId.updateValueAndValidity();
 
-      const selectedOwner = this.data.selectableOwners.find((owner) => owner.corporateSummaryUuid === uuid);
-      if (selectedOwner) {
-        this.ownerId.setValue(selectedOwner.uuid);
-      } else if (uuid) {
-        this.showSupersededWarning = true;
-      }
+    if (!this.data.submissionService) {
+      return;
+    }
+
+    const submission = await this.data.submissionService.fetchSubmission(this.data.fileId);
+    this.selectableOwners = submission.owners
+      .filter((owner) => owner.type.code === 'ORGZ')
+      .map((owner) => ({
+        ...owner,
+        label: owner.organizationName ?? owner.displayName,
+      }));
+
+    if (this.selectableOwners.length < 1) {
+      return;
+    }
+
+    const selectedOwner = this.selectableOwners.find((owner) => owner.corporateSummaryUuid === uuid);
+    if (selectedOwner) {
+      this.ownerId.setValue(selectedOwner.uuid);
+    } else if (uuid) {
+      this.showSupersededWarning = true;
     }
   }
 
@@ -302,7 +310,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     }
 
     if (this.data.documentTypeOverrides && this.data.documentTypeOverrides[$event.code]) {
-      for (const visibilityGroup of this.data.documentTypeOverrides[$event.code].visibilityGroups) {
+      for (const visibilityGroup of this.data.documentTypeOverrides[$event.code]?.visibilityGroups ?? []) {
         if (visibilityGroup === VisibilityGroup.INTERNAL) {
           this.visibleToInternal.setValue(true);
         }
