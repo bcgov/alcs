@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="content">
-    <div class="table-container">
+    <div class="table-container" *ngIf="this.instruments.length > 0">
       <table mat-table [dataSource]="dataSource" class="instruments-table mat-elevation-z3" style="width: 100%">
         <!-- Amount Column -->
         <ng-container matColumnDef="Amount">

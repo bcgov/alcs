@@ -8,6 +8,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 export class InlineTextareaEditComponent {
   @Input() value: string = '';
   @Input() placeholder: string = 'Enter a value';
+  @Input() allowParagraphs: boolean = false;
   @Output() save = new EventEmitter<string>();
 
   @ViewChild('editInput') textInput!: ElementRef;

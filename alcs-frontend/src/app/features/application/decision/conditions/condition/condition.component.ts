@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import moment from 'moment';
 import { ApplicationDecisionComponentToConditionLotService } from '../../../../../services/application/decision/application-decision-v2/application-decision-component-to-condition-lot/application-decision-component-to-condition-lot.service';
 import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
@@ -48,6 +48,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() isDraftDecision!: boolean;
   @Input() fileNumber!: string;
   @Input() index!: number;
+
+  @Output() statusChange: EventEmitter<string> = new EventEmitter();
 
   DateType = DateType;
 
@@ -307,6 +309,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     }
     const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
     this.condition.status = conditionNewStatus.status;
+    this.statusChange.emit(this.condition.status);
     this.setPillLabel(this.condition.status);
   }
 
@@ -322,6 +325,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         );
         const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
         this.condition.status = conditionNewStatus.status;
+        this.statusChange.emit(this.condition.status);
         this.setPillLabel(this.condition.status);
       }
     }
