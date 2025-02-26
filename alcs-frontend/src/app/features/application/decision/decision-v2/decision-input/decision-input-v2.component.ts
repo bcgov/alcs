@@ -292,7 +292,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedComment: existingDecision.rescindedComment,
     });
 
-    this.conditions = existingDecision.conditions;
+    this.conditions = existingDecision.conditions.sort((a,b) => a.order - b.order);
 
     if (existingDecision.reconsiders) {
       this.onSelectPostDecision({

@@ -62,6 +62,10 @@ export class NoticeOfIntentDecisionCondition extends Base {
   @Column()
   decisionUuid: string;
 
+  @AutoMap(() => Number)
+  @Column({ default: 0 })
+  order: number;
+
   @ManyToMany(() => NoticeOfIntentDecisionComponent, (component) => component.conditions, { nullable: true })
   @JoinTable({
     name: 'notice_of_intent_decision_condition_component',

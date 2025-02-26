@@ -105,6 +105,9 @@ export class NoticeOfIntentDecisionConditionDto {
 
   @AutoMap(() => NoticeOfIntentDecisionConditionFinancialInstrumentDto)
   financialInstruments?: NoticeOfIntentDecisionConditionFinancialInstrumentDto[] | null;
+
+  @AutoMap()
+  order: number;
 }
 
 export class NoticeOfIntentHomeDto {

@@ -35,6 +35,8 @@ import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dial
 import { DecisionComponent } from './decision.component';
 import { DecisionConditionDateDialogComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition-date-dialog/decision-condition-date-dialog.component';
 import { ConditionCardDialogComponent } from './conditions/condition-card-dialog/condition-card-dialog.component';
+import { DecisionConditionOrderDialogComponent } from './decision-v2/decision-input/decision-conditions/decision-condition-order-dialog/decision-condition-order-dialog.component';
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 
 export const decisionChildRoutes = [
   {
@@ -96,7 +98,8 @@ export const decisionChildRoutes = [
     ConditionComponent,
     BasicComponent,
     ConditionCardDialogComponent,
+    DecisionConditionOrderDialogComponent,
   ],
-  imports: [SharedModule, RouterModule.forChild(decisionChildRoutes), MatTabsModule, MatOptionModule, MatChipsModule],
+  imports: [SharedModule, RouterModule.forChild(decisionChildRoutes), MatTabsModule, MatOptionModule, MatChipsModule, CdkDropList, CdkDrag],
 })
 export class DecisionModule {}
