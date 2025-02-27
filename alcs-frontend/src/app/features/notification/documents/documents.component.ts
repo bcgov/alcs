@@ -57,10 +57,13 @@ export class NotificationDocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
-    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
-      fileId: this.fileId,
-      documentService: this.notificationDocumentService,
-    });
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        fileId: this.fileId,
+        documentService: this.notificationDocumentService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
@@ -100,12 +103,15 @@ export class NotificationDocumentsComponent implements OnInit {
   }
 
   onEditFile(element: NoticeOfIntentDocumentDto) {
-    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
-      allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
-      fileId: this.fileId,
-      existingDocument: element,
-      documentService: this.notificationDocumentService,
-    });
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+        fileId: this.fileId,
+        existingDocument: element,
+        documentService: this.notificationDocumentService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
