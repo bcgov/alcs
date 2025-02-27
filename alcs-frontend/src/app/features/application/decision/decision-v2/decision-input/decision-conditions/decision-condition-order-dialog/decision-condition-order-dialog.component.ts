@@ -17,6 +17,7 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
   selectedRecord: string | undefined;
   overlayRef: OverlayRef | null = null;
   dataSource = new MatTableDataSource<ApplicationDecisionConditionDto>([]);
+  conditionsToOrder: ApplicationDecisionConditionDto[] = [];
 
   @ViewChild('orderMenu') orderMenu!: TemplateRef<any>;
 
@@ -38,7 +39,8 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
         index++;
       });
     }
-    this.dataSource.data = this.data.conditions.sort((a,b) => a.order - b.order);
+    this.conditionsToOrder = structuredClone(this.data.conditions.sort((a,b) => a.order - b.order));
+    this.dataSource.data =  this.conditionsToOrder;
   }
 
   async onRowDropped(event: CdkDragDrop<ApplicationDecisionConditionDto, any>) {
@@ -74,14 +76,14 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
     }
   
     sendToBottom(record: ApplicationDecisionConditionDto) {
-      const currentIndex = this.data.conditions.findIndex((item) => item.uuid === record.uuid);
-      this.moveItem(currentIndex, this.data.conditions.length - 1);
+      const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
+      this.moveItem(currentIndex, this.conditionsToOrder.length - 1);
       this.overlayRef?.detach();
       this.selectedRecord = undefined;
     }
   
     sendToTop(record: ApplicationDecisionConditionDto) {
-      const currentIndex = this.data.conditions.findIndex((item) => item.uuid === record.uuid);
+      const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
       this.moveItem(currentIndex, 0);
       this.overlayRef?.detach();
       this.selectedRecord = undefined;
@@ -93,9 +95,9 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
     }
 
   private moveItem(currentIndex: number, targetIndex: number) {
-    this.data.conditions[currentIndex].order = targetIndex;
-    this.data.conditions[targetIndex].order = currentIndex;
-    this.dataSource.data = this.data.conditions.sort((a,b) => a.order - b.order);
+    this.conditionsToOrder[currentIndex].order = targetIndex;
+    this.conditionsToOrder[targetIndex].order = currentIndex;
+    this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
   }
 
   onCancel(): void {
@@ -107,7 +109,7 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
       uuid: cond.uuid,
       order: cond.order,
     }));
-    this.dialogRef.close(order);
+    this.dialogRef.close({ payload: order, data: this.conditionsToOrder });
   }
 
   alphaIndex(index: number) {
