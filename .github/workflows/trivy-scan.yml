@@ -1,0 +1,78 @@
+name: Weekly Trivy DEV Image Scans
+
+on:
+  schedule:
+    # Runs every week at 02:00 Sunday Morning.
+    - cron:  '0 2 * * 0'
+  workflow_dispatch:
+
+permissions: 
+  packages: read
+  security-events: write
+
+jobs:
+  image-scan-api:
+    name: Scan latest-dev API Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+        with:
+          image-ref: 'ghcr.io/bcgov/alcs-api:latest-dev'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          limit-severities-for-sarif: true
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  image-scan-portal:
+    name: Scan latest-dev Portal Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+        with:
+          image-ref: 'ghcr.io/bcgov/alcs-portal-frontend:latest-dev'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          limit-severities-for-sarif: true
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  image-scan-frontend:
+    name: Scan latest-dev Frontend Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+        with:
+          image-ref: 'ghcr.io/bcgov/alcs-frontend:latest-dev'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          limit-severities-for-sarif: true
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
