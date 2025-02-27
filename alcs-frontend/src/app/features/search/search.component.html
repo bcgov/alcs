@@ -83,6 +83,34 @@
     </div>
     <div class="row">
       <div class="column">
+        <app-file-type-filter-drop-down
+          label="Decision Outcome"
+          #statusTypeDropDown
+          [fileTypeData]="portalStatusDataService"
+          (fileTypeChange)="onPortalStatusChange($event)"
+          [preExpanded]="['With ALC']"
+          id="portal-status"
+        />
+      </div>
+
+      <div class="column">
+        <ng-select
+          appearance="outline"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Decision Maker"
+          bindLabel="label"
+          bindValue="code"
+          formControlName="region"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.label }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
         <div
           class="tag-container"
           [ngClass]="{ hovered: hovered, clicked: clicked }"
