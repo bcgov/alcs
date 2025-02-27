@@ -67,8 +67,15 @@ export class NoiDocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
-    const submission = await this.noiSubmissionService.fetchSubmission(this.fileId);
-    const parcels = await this.noiParcelService.fetchParcels(this.fileId);
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        fileId: this.fileId,
+        documentService: this.noiDocumentService,
+        parcelService: this.noiParcelService,
+        submissionService: this.noiSubmissionService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
@@ -116,8 +123,17 @@ export class NoiDocumentsComponent implements OnInit {
   }
 
   async onEditFile(element: NoticeOfIntentDocumentDto) {
-    const submission = await this.noiSubmissionService.fetchSubmission(this.fileId);
-    const parcels = await this.noiParcelService.fetchParcels(this.fileId);
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+        fileId: this.fileId,
+        existingDocument: element,
+        documentService: this.noiDocumentService,
+        parcelService: this.noiParcelService,
+        submissionService: this.noiSubmissionService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {

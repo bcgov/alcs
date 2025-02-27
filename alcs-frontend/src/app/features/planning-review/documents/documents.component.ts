@@ -48,6 +48,14 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        fileId: this.fileId,
+        documentService: this.planningReviewDocumentService,
+      },
+    };
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
@@ -91,6 +99,16 @@ export class DocumentsComponent implements OnInit {
   }
 
   onEditFile(element: PlanningReviewDocumentDto) {
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+        fileId: this.fileId,
+        existingDocument: element,
+        documentService: this.planningReviewDocumentService,
+      },
+    };
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
