@@ -39,7 +39,7 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
         index++;
       });
     }
-    this.conditionsToOrder = structuredClone(this.data.conditions.sort((a,b) => a.order - b.order));
+    this.conditionsToOrder = this.data.conditions.sort((a,b) => a.order - b.order).map(a => {return {...a}});
     this.dataSource.data =  this.conditionsToOrder;
   }
 

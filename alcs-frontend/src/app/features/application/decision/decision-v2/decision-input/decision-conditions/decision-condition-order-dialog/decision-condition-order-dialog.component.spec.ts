@@ -11,7 +11,6 @@ import { DecisionConditionOrderDialogComponent } from './decision-condition-orde
 describe('DecisionConditionOrderDialogComponent', () => {
   let component: DecisionConditionOrderDialogComponent;
   let fixture: ComponentFixture<DecisionConditionOrderDialogComponent>;
-  let structuredClone: Function;
 
   beforeEach(async () => {
 
@@ -34,9 +33,6 @@ describe('DecisionConditionOrderDialogComponent', () => {
 
     fixture = TestBed.createComponent(DecisionConditionOrderDialogComponent);
     component = fixture.componentInstance;
-    structuredClone = jest.fn(val => {
-      return JSON.parse(JSON.stringify(val));
-    });
     fixture.detectChanges();
   });
 
