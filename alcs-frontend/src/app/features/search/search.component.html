@@ -85,23 +85,22 @@
       <div class="column">
         <app-file-type-filter-drop-down
           label="Decision Outcome"
-          #statusTypeDropDown
-          [fileTypeData]="portalStatusDataService"
-          (fileTypeChange)="onPortalStatusChange($event)"
-          [preExpanded]="['With ALC']"
-          id="portal-status"
+          #decisionOutcomeDropDown
+          [fileTypeData]="decisionOutcomeDataService"
+          (fileTypeChange)="onDecisionOutcomeChange($event)"
+          id="decision-outcome"
         />
       </div>
 
       <div class="column">
         <ng-select
           appearance="outline"
-          [items]="regions"
+          [items]="decisionMakers"
           appendTo="body"
           placeholder="Decision Maker"
           bindLabel="label"
           bindValue="code"
-          formControlName="region"
+          formControlName="decisionMaker"
         >
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
             <div [ngOptionHighlight]="search">{{ item.label }}</div>
