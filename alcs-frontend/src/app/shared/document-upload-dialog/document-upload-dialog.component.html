@@ -86,23 +86,23 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="data.selectableParcels && type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
+    <div *ngIf="selectableParcels && type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Parcel</mat-label>
         <mat-select [formControl]="parcelId">
-          <mat-option *ngFor="let parcel of data.selectableParcels" [value]="parcel.uuid">
-            #{{ parcel.index + 1 }} PID:
+          <mat-option *ngFor="let parcel of selectableParcels; let i = index" [value]="parcel.uuid">
+            #{{ i + 1 }} PID:
             <span *ngIf="parcel.pid">{{ parcel.pid | mask: '000-000-000' }}</span>
             <span *ngIf="!parcel.pid">No Data</span></mat-option
           >
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="data.selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
+    <div *ngIf="selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Organization</mat-label>
         <mat-select [formControl]="ownerId">
-          <mat-option *ngFor="let owner of data.selectableOwners" [value]="owner.uuid">
+          <mat-option *ngFor="let owner of selectableOwners" [value]="owner.uuid">
             {{ owner.label }}
           </mat-option>
         </mat-select>

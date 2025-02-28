@@ -23,6 +23,25 @@ import {
 } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
+import {
+  DocumentUploadDialogData,
+  DocumentUploadDialogOptions,
+} from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
+
+const DOCUMENT_UPLOAD_DIALOG_OPTIONS: DocumentUploadDialogOptions = {
+  allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+  allowsFileEdit: true,
+  documentTypeOverrides: {
+    [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
+      visibilityGroups: [VisibilityGroup.INTERNAL],
+      allowsFileEdit: false,
+    },
+    [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
+      visibilityGroups: [VisibilityGroup.INTERNAL],
+      allowsFileEdit: false,
+    },
+  },
+};
 
 @Component({
   selector: 'app-noi-documents',
@@ -67,37 +86,19 @@ export class NoiDocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
-    const submission = await this.noiSubmissionService.fetchSubmission(this.fileId);
-    const parcels = await this.noiParcelService.fetchParcels(this.fileId);
+    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
+      fileId: this.fileId,
+      documentService: this.noiDocumentService,
+      parcelService: this.noiParcelService,
+      submissionService: this.noiSubmissionService,
+    });
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          documentService: this.noiDocumentService,
-          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
-          selectableOwners: submission.owners
-            .filter((owner) => owner.type.code === 'ORGZ')
-            .map((owner) => ({
-              label: owner.organizationName ?? owner.displayName,
-              uuid: owner.uuid,
-            })),
-          allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
-          allowsFileEdit: true,
-          documentTypeOverrides: {
-            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-          },
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty) => {
@@ -116,38 +117,21 @@ export class NoiDocumentsComponent implements OnInit {
   }
 
   async onEditFile(element: NoticeOfIntentDocumentDto) {
-    const submission = await this.noiSubmissionService.fetchSubmission(this.fileId);
-    const parcels = await this.noiParcelService.fetchParcels(this.fileId);
+    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
+      allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+      fileId: this.fileId,
+      existingDocument: element,
+      documentService: this.noiDocumentService,
+      parcelService: this.noiParcelService,
+      submissionService: this.noiSubmissionService,
+    });
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          existingDocument: element,
-          documentService: this.noiDocumentService,
-          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
-          selectableOwners: submission.owners
-            .filter((owner) => owner.type.code === 'ORGZ')
-            .map((owner) => ({
-              label: owner.organizationName ?? owner.displayName,
-              uuid: owner.uuid,
-            })),
-          allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
-          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
-          documentTypeOverrides: {
-            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-          },
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty: boolean) => {

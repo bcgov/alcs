@@ -1,5 +1,33 @@
-import { DocumentTypeDto } from '../document/document.dto';
-import { CreateDocumentDto, UpdateDocumentDto } from './document-upload-dialog.dto';
+import { DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
+import { VisibilityGroup } from './document-upload-dialog.component';
+import {
+  CreateDocumentDto,
+  DocumentDto,
+  SelectableParcelDto,
+  SubmissionOwnersDto,
+  UpdateDocumentDto,
+} from './document-upload-dialog.dto';
+
+export interface DocumentTypeConfig {
+  visibilityGroups: VisibilityGroup[];
+  allowsFileEdit: boolean;
+}
+
+export interface DocumentUploadDialogOptions {
+  allowedVisibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
+  allowsFileEdit?: boolean;
+  documentTypeOverrides?: Partial<Record<DOCUMENT_TYPE, DocumentTypeConfig>>;
+}
+
+export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {
+  fileId: string;
+  decisionUuid?: string;
+  existingDocument?: DocumentDto;
+  decisionService?: DecisionService;
+  documentService?: DocumentService;
+  parcelService?: ParcelFetchingService;
+  submissionService?: SubmissionFetchingService;
+}
 
 export interface DecisionService {
   uploadFile(decisionUuid: string, file: File): Promise<Object | undefined>;
@@ -14,4 +42,12 @@ export interface DocumentService {
   download(uuid: string, fileName: string, isInline: boolean): Promise<void>;
   fetchTypes(): Promise<DocumentTypeDto[]>;
   delete(uuid: string): Promise<Object>;
+}
+
+export interface ParcelFetchingService {
+  fetchParcels(fileNumber: string): Promise<SelectableParcelDto[]>;
+}
+
+export interface SubmissionFetchingService {
+  fetchSubmission(fileNumber: string): Promise<SubmissionOwnersDto>;
 }

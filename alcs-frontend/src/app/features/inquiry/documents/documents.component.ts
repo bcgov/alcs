@@ -11,6 +11,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
+import { DocumentUploadDialogData } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 
 @Component({
   selector: 'app-documents',
@@ -47,16 +48,18 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
+    const data: DocumentUploadDialogData = {
+      allowsFileEdit: true,
+      fileId: this.fileId,
+      documentService: this.inquiryDocumentService,
+    };
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          documentService: this.inquiryDocumentService,
-          allowsFileEdit: true,
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty) => {
@@ -89,17 +92,19 @@ export class DocumentsComponent implements OnInit {
   }
 
   onEditFile(element: PlanningReviewDocumentDto) {
+    const data: DocumentUploadDialogData = {
+      allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+      fileId: this.fileId,
+      existingDocument: element,
+      documentService: this.inquiryDocumentService,
+    };
+
     this.dialog
       .open(DocumentUploadDialogComponent, {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          existingDocument: element,
-          documentService: this.inquiryDocumentService,
-          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty: boolean) => {
