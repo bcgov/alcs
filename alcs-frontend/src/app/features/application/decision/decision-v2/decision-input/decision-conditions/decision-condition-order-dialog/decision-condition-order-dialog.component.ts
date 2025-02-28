@@ -112,14 +112,14 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
         if (item.order < currentIndex && item.order >= targetIndex) {
           item.order++;
         }
-      } 
-      else if (item.order > currentIndex) {
-        if (item.order <= targetIndex && item.order <= targetIndex) {
+      } else if (item.order > currentIndex) {
+        if (item.order <= targetIndex) {
           item.order--;
         }
       }
     });
     this.conditionsToOrder[currentIndex].order = targetIndex;
+    console.log(currentIndex, targetIndex, this.conditionsToOrder.sort((a,b) => a.order - b.order).map(x => `order: ${x.order} desc: ${x.description}`));
     this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
   }
 
