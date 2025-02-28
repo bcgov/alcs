@@ -18,6 +18,8 @@ import { ApplicationRegion } from './application-code/application-region/applica
 import { ApplicationTypeDto } from './application-code/application-type/application-type.dto';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
 import { CodeService } from './code.service';
+import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionMakerCodeDto } from '../application-decision/application-decision-maker/decision-maker.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('code')
@@ -35,16 +37,8 @@ export class CodeController {
 
     return {
       status: this.mapper.mapArray(types.status, CardStatus, CardStatusDto),
-      type: this.mapper.mapArray(
-        types.type,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
-      region: this.mapper.mapArray(
-        types.region,
-        ApplicationRegion,
-        ApplicationRegionDto,
-      ),
+      type: this.mapper.mapArray(types.type, ApplicationType, ApplicationTypeDto),
+      region: this.mapper.mapArray(types.region, ApplicationRegion, ApplicationRegionDto),
       reconsiderationType: this.mapper.mapArray(
         types.reconsiderationTypes,
         ApplicationReconsiderationType,
@@ -54,6 +48,11 @@ export class CodeController {
         types.applicationStatusTypes,
         ApplicationSubmissionStatusType,
         ApplicationStatusDto,
+      ),
+      decisionMaker: this.mapper.mapArray(
+        types.decisionMakers,
+        ApplicationDecisionMakerCode,
+        ApplicationDecisionMakerCodeDto,
       ),
     };
   }

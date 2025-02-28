@@ -99,6 +99,7 @@ export class NoticeOfIntentDecisionV2Service {
           components: true,
           dates: true,
           conditionCard: true,
+          financialInstruments: true,
         },
         conditionCards: true,
       },

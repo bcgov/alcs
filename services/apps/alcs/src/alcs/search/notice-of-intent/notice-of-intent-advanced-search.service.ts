@@ -139,6 +139,11 @@ export class NoticeOfIntentAdvancedSearchService {
       promises.push(promise);
     }
 
+    if (searchDto.decisionOutcomes && searchDto.decisionOutcomes.length > 0) {
+      const promise = NOI_SEARCH_FILTERS.addDecisionOutcomeResults(searchDto, this.noiRepository);
+      promises.push(promise);
+    }
+
     if (searchDto.governmentName) {
       const promise = NOI_SEARCH_FILTERS.addGovernmentResults(searchDto, this.noiRepository, this.governmentRepository);
       promises.push(promise);

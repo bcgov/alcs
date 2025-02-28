@@ -181,6 +181,14 @@ export class EmailService {
       let errorMessage = e.message;
       if (e.response) {
         errorMessage = e.response.data.detail;
+
+        // Add error details if they exist
+        if (e.response.data.errors) {
+          const errorDetails = e.response.data.errors
+            .map(error => error.message)
+            .join(', ');
+          errorMessage = `${errorMessage}: ${errorDetails}`;
+        }
       }
 
       this.repository.save(

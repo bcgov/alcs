@@ -20,6 +20,7 @@ import { NoticeOfIntentDecisionConditionService } from '../../../../services/not
 import { MatDialog } from '@angular/material/dialog';
 import { ConditionCardDialogComponent } from './condition-card-dialog/condition-card-dialog.component';
 import { NoticeOfIntentDecisionConditionCardService } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { MatChipListboxChange } from '@angular/material/chips';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -37,7 +38,7 @@ export type DecisionWithConditionComponentLabels = NoticeOfIntentDecisionWithLin
 };
 
 export const CONDITION_STATUS = {
-  COMPLETE: 'complete',
+  COMPLETED: 'completed',
   ONGOING: 'ongoing',
   PENDING: 'pending',
   PASTDUE: 'pastdue',
@@ -50,6 +51,14 @@ export const CONDITION_STATUS = {
   styleUrls: ['./conditions.component.scss'],
 })
 export class ConditionsComponent implements OnInit {
+  conditionLabelsByStatus: Record<keyof typeof CONDITION_STATUS, string> = {
+    COMPLETED: 'Complete',
+    ONGOING: 'Ongoing',
+    PENDING: 'Pending',
+    PASTDUE: 'Past Due',
+    EXPIRED: 'Expired',
+  };
+
   $destroy = new Subject<void>();
 
   decisionUuid: string = '';
@@ -63,6 +72,8 @@ export class ConditionsComponent implements OnInit {
   dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
   modificationLabel = MODIFICATION_TYPE_LABEL;
+
+  conditionFilters: string[] = [];
 
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
@@ -140,7 +151,7 @@ export class ConditionsComponent implements OnInit {
     decision.conditions = conditions.sort((a, b) => {
       const order = [
         CONDITION_STATUS.ONGOING,
-        CONDITION_STATUS.COMPLETE,
+        CONDITION_STATUS.COMPLETED,
         CONDITION_STATUS.PASTDUE,
         CONDITION_STATUS.EXPIRED,
       ];
@@ -211,5 +222,25 @@ export class ConditionsComponent implements OnInit {
         }
       }
     });
+  }
+
+  onConditionFilterChange(change: MatChipListboxChange) {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement?.blur();
+    }
+
+    this.conditionFilters = change.value;
+  }
+
+  filterConditions(conditions: DecisionConditionWithStatus[]): DecisionConditionWithStatus[] {
+    if (this.conditionFilters.length < 1) {
+      return conditions;
+    }
+
+    return conditions.filter((condition) => this.conditionFilters.includes(condition.status));
+  }
+
+  onStatusChange(condition: DecisionConditionWithStatus, newStatus: string) {
+    condition.status = newStatus;
   }
 }

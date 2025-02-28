@@ -5,6 +5,7 @@ import moment from 'moment';
 import { ApplicationBoundaryAmendmentDto } from '../../../../services/application/application-boundary-amendments/application-boundary-amendment.dto';
 import { ApplicationBoundaryAmendmentService } from '../../../../services/application/application-boundary-amendments/application-boundary-amendment.service';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-boundary-amendment-dialog',
@@ -12,6 +13,7 @@ import { ApplicationDecisionV2Service } from '../../../../services/application/d
   styleUrls: ['./edit-boundary-amendment-dialog.component.scss'],
 })
 export class EditBoundaryAmendmentDialogComponent implements OnInit {
+  uuid = new FormControl<string | null>(null);
   type = new FormControl<string | any>('', [Validators.required]);
   decisionComponents = new FormControl<string[]>([], [Validators.required]);
   area = new FormControl<string | null>(null, [Validators.required]);
@@ -22,6 +24,7 @@ export class EditBoundaryAmendmentDialogComponent implements OnInit {
   selectableComponents: { label: string; value: string }[] = [];
 
   form: FormGroup = new FormGroup({
+    uuid: this.uuid,
     type: this.type,
     decisionComponents: this.decisionComponents,
     area: this.area,
@@ -33,6 +36,7 @@ export class EditBoundaryAmendmentDialogComponent implements OnInit {
     public matDialogRef: MatDialogRef<EditBoundaryAmendmentDialogComponent>,
     private applicationBoundaryAmendmentService: ApplicationBoundaryAmendmentService,
     private applicationDecisionV2Service: ApplicationDecisionV2Service,
+    private toastService: ToastService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       existingAmendment?: ApplicationBoundaryAmendmentDto;
@@ -45,6 +49,7 @@ export class EditBoundaryAmendmentDialogComponent implements OnInit {
     const existingAmendment = this.data.existingAmendment;
     if (existingAmendment) {
       this.form.patchValue({
+        uuid: existingAmendment.uuid,
         type: existingAmendment.type,
         area: existingAmendment.area,
         year: existingAmendment.year?.toString(),
@@ -95,5 +100,12 @@ export class EditBoundaryAmendmentDialogComponent implements OnInit {
       await this.applicationBoundaryAmendmentService.create(this.data.fileNumber, dto);
     }
     this.matDialogRef.close(true);
+  }
+
+  onCopy() {
+    if (this.uuid.value) {
+      navigator.clipboard.writeText(this.uuid.value);
+      this.toastService.showSuccessToast(`${this.uuid.value} copied to clipboard.`);
+    }
   }
 }

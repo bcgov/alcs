@@ -26,6 +26,11 @@ export class EditReconsiderationDialogComponent implements OnInit {
   reviewOutcomeCodeControl = new FormControl<string | null>(null);
   decisionOutcomeCodeControl = new FormControl<string | null>(null);
   reviewDateControl = new FormControl<Date | null | undefined>(null);
+  isNewProposalControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+  isIncorrectFalseInfoControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+  isNewEvidenceControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+
+  disable331Fields = false;
 
   form: FormGroup = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
@@ -35,9 +40,9 @@ export class EditReconsiderationDialogComponent implements OnInit {
     reviewDate: this.reviewDateControl,
     reconsidersDecisions: new FormControl<string[]>([], [Validators.required]),
     description: new FormControl<string | null>('', [Validators.required]),
-    isNewProposal: new FormControl<string | undefined>(undefined, [Validators.required]),
-    isIncorrectFalseInfo: new FormControl<string | undefined>(undefined, [Validators.required]),
-    isNewEvidence: new FormControl<string | undefined>(undefined, [Validators.required]),
+    isNewProposal: this.isNewProposalControl,
+    isIncorrectFalseInfo: this.isIncorrectFalseInfoControl,
+    isNewEvidence: this.isNewEvidenceControl,
   });
   decisions: { uuid: string; resolution: string }[] = [];
 
@@ -70,6 +75,7 @@ export class EditReconsiderationDialogComponent implements OnInit {
       isIncorrectFalseInfo: parseBooleanToString(data.existingRecon.isIncorrectFalseInfo),
       isNewEvidence: parseBooleanToString(data.existingRecon.isNewEvidence),
     });
+    this.handleReconType(data.existingRecon.type.code === RECONSIDERATION_TYPE.T_33);
   }
 
   ngOnInit(): void {
@@ -93,7 +99,7 @@ export class EditReconsiderationDialogComponent implements OnInit {
     } = this.form.getRawValue();
     const data: UpdateApplicationReconsiderationDto = {
       submittedDate: formatDateForApi(submittedDate!),
-      reviewOutcomeCode: reviewOutcomeCode,
+      reviewOutcomeCode: this.disable331Fields ? 'PRC' : reviewOutcomeCode,
       decisionOutcomeCode: decisionOutcomeCode,
       typeCode: type!,
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
@@ -128,8 +134,10 @@ export class EditReconsiderationDialogComponent implements OnInit {
   async onTypeReconsiderationChange(reconsiderationType: string) {
     if (reconsiderationType === RECONSIDERATION_TYPE.T_33_1) {
       this.reviewOutcomeCodeControl.setValue(null);
+      this.handleReconType(false);
     } else {
       this.reviewOutcomeCodeControl.setValue('PEN');
+      this.handleReconType(true);
     }
   }
 
@@ -137,5 +145,25 @@ export class EditReconsiderationDialogComponent implements OnInit {
     //Clear fields that only show up sometimes
     this.decisionOutcomeCodeControl.setValue(null);
     this.reviewDateControl.setValue(null);
+  }
+
+  private handleReconType(enable: boolean) {
+    if (enable) {
+      this.isNewEvidenceControl.enable();
+      this.isIncorrectFalseInfoControl.enable();
+      this.isNewProposalControl.enable();
+      this.reviewOutcomeCodeControl.enable();
+      this.disable331Fields = false;
+    } else {
+      this.isNewEvidenceControl.disable();
+      this.isNewEvidenceControl.setValue(null);
+      this.isIncorrectFalseInfoControl.disable();
+      this.isIncorrectFalseInfoControl.setValue(null);
+      this.isNewProposalControl.disable();
+      this.isNewProposalControl.setValue(null);
+      this.reviewOutcomeCodeControl.disable();
+      this.reviewOutcomeCodeControl.setValue(null);
+      this.disable331Fields = true;
+    }
   }
 }

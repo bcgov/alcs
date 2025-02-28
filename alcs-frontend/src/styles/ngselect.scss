@@ -16,7 +16,7 @@
 }
 
 .ng-select .ng-arrow {
-  color: colors.$primary-color !important;
+  color: colors.$primary-color;
 }
 
 .ng-select.ng-select-focused .ng-placeholder {
@@ -51,6 +51,10 @@
 .ng-select .ng-select-container.ng-appearance-outline:after {
   border-color: colors.$grey !important;
   height: calc(100% - 0.15em);
+}
+
+.ng-select.ng-select-disabled>.ng-select-container.ng-appearance-outline:after {
+  border-color: colors.$grey-light !important;
 }
 
 .ng-select .ng-select-container .ng-value-container {

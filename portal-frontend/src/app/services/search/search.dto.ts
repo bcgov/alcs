@@ -49,7 +49,7 @@ export interface SearchRequestDto extends PagingRequestDto {
   dateDecidedFrom?: number;
   dateDecidedTo?: number;
   fileTypes: string[];
-  decisionOutcome?: string[];
+  decisionOutcomes?: string[];
 }
 
 export const displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];

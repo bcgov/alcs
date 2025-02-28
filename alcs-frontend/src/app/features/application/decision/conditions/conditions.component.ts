@@ -22,6 +22,7 @@ import { ApplicationDecisionConditionService } from '../../../../services/applic
 import { MatDialog } from '@angular/material/dialog';
 import { ConditionCardDialogComponent } from './condition-card-dialog/condition-card-dialog.component';
 import { ApplicationDecisionConditionCardService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
+import { MatChipListboxChange } from '@angular/material/chips';
 
 export type ConditionComponentLabels = {
   label: string[];
@@ -39,7 +40,7 @@ export type ApplicationDecisionWithConditionComponentLabels = ApplicationDecisio
 };
 
 export const CONDITION_STATUS = {
-  COMPLETE: 'COMPLETE',
+  COMPLETED: 'COMPLETED',
   ONGOING: 'ONGOING',
   PENDING: 'PENDING',
   PASTDUE: 'PASTDUE',
@@ -52,6 +53,14 @@ export const CONDITION_STATUS = {
   styleUrls: ['./conditions.component.scss'],
 })
 export class ConditionsComponent implements OnInit {
+  conditionLabelsByStatus: Record<keyof typeof CONDITION_STATUS, string> = {
+    COMPLETED: 'Complete',
+    ONGOING: 'Ongoing',
+    PENDING: 'Pending',
+    PASTDUE: 'Past Due',
+    EXPIRED: 'Expired',
+  };
+
   $destroy = new Subject<void>();
 
   decisionUuid: string = '';
@@ -67,6 +76,8 @@ export class ConditionsComponent implements OnInit {
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
   reconLabel = RECON_TYPE_LABEL;
   modificationLabel = MODIFICATION_TYPE_LABEL;
+
+  conditionFilters: string[] = [];
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -141,23 +152,7 @@ export class ConditionsComponent implements OnInit {
     decision: ApplicationDecisionWithLinkedResolutionDto,
     conditions: ApplicationDecisionConditionWithStatus[],
   ) {
-    decision.conditions = conditions.sort((a, b) => {
-      const order = [
-        CONDITION_STATUS.ONGOING,
-        CONDITION_STATUS.COMPLETE,
-        CONDITION_STATUS.PASTDUE,
-        CONDITION_STATUS.EXPIRED,
-      ];
-      if (a.status === b.status) {
-        if (a.type && b.type) {
-          return a.type?.label.localeCompare(b.type.label);
-        } else {
-          return -1;
-        }
-      } else {
-        return order.indexOf(a.status) - order.indexOf(b.status);
-      }
-    });
+    decision.conditions = conditions.sort((a, b) => a.order - b.order);
   }
 
   private async mapConditions(
@@ -215,5 +210,25 @@ export class ConditionsComponent implements OnInit {
         }
       }
     });
+  }
+
+  onConditionFilterChange(change: MatChipListboxChange) {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement?.blur();
+    }
+
+    this.conditionFilters = change.value;
+  }
+
+  filterConditions(conditions: ApplicationDecisionConditionWithStatus[]): ApplicationDecisionConditionWithStatus[] {
+    if (this.conditionFilters.length < 1) {
+      return conditions;
+    }
+
+    return conditions.filter((condition) => this.conditionFilters.includes(condition.status));
+  }
+
+  onStatusChange(condition: ApplicationDecisionConditionWithStatus, newStatus: string) {
+    condition.status = newStatus;
   }
 }

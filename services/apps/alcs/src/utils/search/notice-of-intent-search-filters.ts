@@ -60,6 +60,23 @@ export const NOI_SEARCH_FILTERS = {
       })
       .getMany();
   },
+  addDecisionOutcomeResults: (
+    searchDto: SearchRequestDto | InboxRequestDto,
+    appRepository: Repository<NoticeOfIntent>,
+  ) => {
+    return appRepository
+      .createQueryBuilder('noi')
+      .select('noi.fileNumber')
+      .leftJoin(
+        'notice_of_intent_decision',
+        'notice_of_intent_decision',
+        'notice_of_intent_decision.notice_of_intent_uuid = noi.uuid',
+      )
+      .where('notice_of_intent_decision.outcome_code IN (:...outcomeCodes)', {
+        outcomeCodes: searchDto.decisionOutcomes,
+      })
+      .getMany();
+  },
   addNameResults: (
     searchDto: SearchRequestDto | InboxRequestDto,
     noiSubmissionRepository: Repository<NoticeOfIntentSubmission>,

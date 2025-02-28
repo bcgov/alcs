@@ -126,6 +126,7 @@ export class ApplicationDecisionV2Service {
           },
           dates: true,
           conditionCard: true,
+          financialInstruments: true,
         },
         conditionCards: true,
       },

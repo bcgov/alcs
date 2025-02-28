@@ -3,6 +3,7 @@ import { ReconsiderationTypeDto } from '../../application-decision/application-r
 import { CardStatusDto } from '../../card/card-status/card-status.dto';
 import { ApplicationRegionDto } from './application-region/application-region.dto';
 import { ApplicationTypeDto } from './application-type/application-type.dto';
+import { ApplicationDecisionMakerCodeDto } from '../../application-decision/application-decision-maker/decision-maker.dto';
 
 export class MasterCodesDto {
   type: ApplicationTypeDto[];
@@ -10,4 +11,5 @@ export class MasterCodesDto {
   region: ApplicationRegionDto[];
   reconsiderationType: ReconsiderationTypeDto[];
   applicationStatusType: ApplicationStatusDto[];
+  decisionMaker: ApplicationDecisionMakerCodeDto[];
 }

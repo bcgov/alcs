@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import moment from 'moment';
 import { NoticeOfIntentDecisionConditionService } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import {
+  ConditionType,
   NoticeOfIntentDecisionConditionDateDto,
   UpdateNoticeOfIntentDecisionConditionDto,
 } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
@@ -40,6 +41,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() fileNumber!: string;
   @Input() index!: number;
 
+  @Output() statusChange: EventEmitter<string> = new EventEmitter();
+
   DateType = DateType;
 
   dates: NoticeOfIntentDecisionConditionDateDto[] = [];
@@ -61,6 +64,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   isReadMoreVisible = false;
   conditionStatus: string = '';
   stringIndex: string = '';
+
+  isFinancialSecurity: boolean = false;
 
   displayColumns: string[] = ['index', 'due', 'completed', 'comment', 'action'];
 
@@ -104,6 +109,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
         this.addIndex(this.sortDates(this.dates)),
       );
+
+      this.isFinancialSecurity = this.condition.type?.code === ConditionType.FINANCIAL_SECURITY;
     }
   }
 
@@ -219,6 +226,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
       this.condition.status = conditionNewStatus.status;
+      this.statusChange.emit(this.condition.status);
       this.setPillLabel(this.condition.status);
     } else {
       console.error('Date with specified UUID not found');
@@ -238,6 +246,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
         const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
         this.condition.status = conditionNewStatus.status;
+        this.statusChange.emit(this.condition.status);
         this.setPillLabel(this.condition.status);
       }
     }

@@ -11,6 +11,7 @@ import {
 } from './application-code.dto';
 import { ApplicationStatusDto } from './application-submission-status/application-submission-status.dto';
 import { ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
+import { DecisionMakerDto } from './decision/application-decision-v2/application-decision.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -20,11 +21,13 @@ export class ApplicationService {
   $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
   $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
+  $decisionMakers = new BehaviorSubject<DecisionMakerDto[]>([]);
   private baseUrl = `${environment.apiUrl}/application`;
   private statuses: CardStatusDto[] = [];
   private types: ApplicationTypeDto[] = [];
   private regions: ApplicationRegionDto[] = [];
   private applicationStatuses: ApplicationStatusDto[] = [];
+  private decisionMakers: DecisionMakerDto[] = [];
   private isInitialized = false;
 
   constructor(
@@ -119,5 +122,8 @@ export class ApplicationService {
 
     this.applicationStatuses = codes.applicationStatusType;
     this.$applicationStatuses.next(this.applicationStatuses);
+
+    this.decisionMakers = codes.decisionMaker;
+    this.$decisionMakers.next(this.decisionMakers);
   }
 }
