@@ -20,6 +20,7 @@ jobs:
         with:
           target: 'https://alcs-dev-api.apps.silver.devops.gov.bc.ca/docs'
           issue_title: OWASP ZAP API Scan Results
+          artifact_name: zap-api-scan-report
 
   zap-scan-frontend:
     name: OWASP ZAP Frontend Scan
@@ -34,6 +35,7 @@ jobs:
           target: "https://alcs-dev.apps.silver.devops.gov.bc.ca"
           issue_title: OWASP ZAP Frontend Scan Results
           rules_file_name: .zap/frontend.tsv
+          artifact_name: zap-frontend-scan-report
 
   zap-scan-portal:
     name: OWASP ZAP Portal Scan
@@ -48,3 +50,4 @@ jobs:
           target: "https://alcs-dev-portal.apps.silver.devops.gov.bc.ca"
           issue_title: OWASP ZAP Portal Scan Results
           rules_file_name: .zap/portal.tsv
+          artifact_name: zap-portal-scan-report
