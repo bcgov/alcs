@@ -77,7 +77,13 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
   
     sendToBottom(record: ApplicationDecisionConditionDto) {
       const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
-      this.moveItem(currentIndex, this.conditionsToOrder.length - 1);
+      this.conditionsToOrder.sort((a,b) => a.order - b.order).forEach((item) => {
+        if (item.order > currentIndex) {
+          item.order--;
+        }
+      });
+      this.conditionsToOrder[currentIndex].order = this.conditionsToOrder.length;
+      this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
       this.overlayRef?.detach();
       this.selectedRecord = undefined;
     }
@@ -101,8 +107,19 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
     }
 
   private moveItem(currentIndex: number, targetIndex: number) {
+    this.conditionsToOrder.sort((a,b) => a.order - b.order).forEach((item) => {
+      if (currentIndex > targetIndex) {
+        if (item.order < currentIndex && item.order >= targetIndex) {
+          item.order++;
+        }
+      } 
+      else if (item.order > currentIndex) {
+        if (item.order <= targetIndex && item.order <= targetIndex) {
+          item.order--;
+        }
+      }
+    });
     this.conditionsToOrder[currentIndex].order = targetIndex;
-    this.conditionsToOrder[targetIndex].order = currentIndex;
     this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
   }
 
