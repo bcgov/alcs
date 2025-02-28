@@ -81,7 +81,7 @@ export interface SearchRequestDto extends PagingRequestDto {
   dateDecidedTo?: number;
   fileTypes: string[];
   decisionMaker?: string;
-  decisionOutcomes: string[];
+  decisionOutcomes?: string[];
   tagIds?: string[];
   tagCategoryId?: string;
 }
