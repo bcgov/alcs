@@ -119,7 +119,6 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
       }
     });
     this.conditionsToOrder[currentIndex].order = targetIndex;
-    console.log(currentIndex, targetIndex, this.conditionsToOrder.sort((a,b) => a.order - b.order).map(x => `order: ${x.order} desc: ${x.description}`));
     this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
   }
 
