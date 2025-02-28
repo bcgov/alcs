@@ -63,8 +63,15 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
-    const submission = await this.applicationSubmissionService.fetchSubmission(this.fileId);
-    const parcels = await this.applicationParcelService.fetchParcels(this.fileId);
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        fileId: this.fileId,
+        documentService: this.applicationDocumentService,
+        parcelService: this.applicationParcelService,
+        submissionService: this.applicationSubmissionService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
@@ -126,8 +133,17 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onEditFile(element: ApplicationDocumentDto) {
-    const submission = await this.applicationSubmissionService.fetchSubmission(this.fileId);
-    const parcels = await this.applicationParcelService.fetchParcels(this.fileId);
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+        fileId: this.fileId,
+        existingDocument: element,
+        documentService: this.applicationDocumentService,
+        parcelService: this.applicationParcelService,
+        submissionService: this.applicationSubmissionService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
