@@ -270,7 +270,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
       fileNumber: this.formatStringSearchParam(searchControls.fileNumber.value),
       name: this.formatStringSearchParam(searchControls.name.value),
       civicAddress: this.formatStringSearchParam(searchControls.civicAddress.value),
-      decisionOutcome: searchControls.portalDecisionOutcome.value ?? undefined,
+      decisionOutcomes: searchControls.portalDecisionOutcome.value ?? undefined,
       pid: this.formatStringSearchParam(searchControls.pid.value),
       portalStatusCodes: searchControls.portalStatus.value ?? undefined,
       governmentName: this.formatStringSearchParam(searchControls.government.value),
@@ -461,7 +461,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     civicAddress.setValue(storedSearch.civicAddress);
     government.setValue(storedSearch.governmentName);
     portalStatus.setValue(storedSearch.portalStatusCodes ?? null);
-    portalDecisionOutcome.setValue(storedSearch.decisionOutcome ?? null);
+    portalDecisionOutcome.setValue(storedSearch.decisionOutcomes ?? null);
 
     if (storedSearch.dateDecidedTo) {
       dateDecidedTo.setValue(new Date(storedSearch.dateDecidedTo));
