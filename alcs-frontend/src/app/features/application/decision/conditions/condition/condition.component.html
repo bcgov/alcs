@@ -19,7 +19,7 @@
 
   <div *ngIf="showSecurityAmountField">
     <div class="subheading2">Security Amount</div>
-    {{ condition.securityAmount }}
+    {{ condition.securityAmount | number }}
     <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
   </div>
 
