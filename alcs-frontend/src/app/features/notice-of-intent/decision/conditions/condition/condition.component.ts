@@ -20,6 +20,7 @@ import { countToString } from '../../../../../shared/utils/count-to-string';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 type Condition = DecisionConditionWithStatus & {
   componentLabelsStr?: string;
@@ -76,6 +77,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   constructor(
     private conditionService: NoticeOfIntentDecisionConditionService,
     private decisionService: NoticeOfIntentDecisionV2Service,
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   async ngOnInit() {
@@ -234,21 +236,27 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   }
 
   async onDeleteDate(dateUuid: string) {
-    const result = await this.conditionService.deleteDate(dateUuid);
-    if (result) {
-      const index = this.dates.findIndex((date) => date.uuid === dateUuid);
+    this.confirmationDialogService
+      .openDialog({ body: 'Are you sure you want to delete this date?' })
+      .subscribe(async (confirmed) => {
+        if (confirmed) {
+          const result = await this.conditionService.deleteDate(dateUuid);
+          if (result) {
+            const index = this.dates.findIndex((date) => date.uuid === dateUuid);
 
-      if (index !== -1) {
-        this.dates.splice(index, 1);
-        this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
-          this.addIndex(this.sortDates(this.dates)),
-        );
+            if (index !== -1) {
+              this.dates.splice(index, 1);
+              this.dataSource = new MatTableDataSource<NoticeOfIntentDecisionConditionDateWithIndex>(
+                this.addIndex(this.sortDates(this.dates)),
+              );
 
-        const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
-        this.condition.status = conditionNewStatus.status;
-        this.statusChange.emit(this.condition.status);
-        this.setPillLabel(this.condition.status);
-      }
-    }
+              const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
+              this.condition.status = conditionNewStatus.status;
+              this.statusChange.emit(this.condition.status);
+              this.setPillLabel(this.condition.status);
+            }
+          }
+        }
+      });
   }
 }
