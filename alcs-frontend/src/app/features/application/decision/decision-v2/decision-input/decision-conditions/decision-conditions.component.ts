@@ -219,6 +219,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   onValidate() {
     this.conditionComponents.forEach((component) => component.form.markAllAsTouched());
+    this.conditionsChange.emit({
+      conditions: this.mappedConditions,
+      isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),
+    });
   }
 
   openOrderDialog() {
