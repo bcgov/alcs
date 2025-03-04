@@ -4,9 +4,8 @@
     removable: !removable,
     commissioner: isCommissioner,
   }"
-  (click)="handleClick($event)"
-  tabindex="-1"
-  role="presentation"
+  (click)="handleClickOrKeyPress($event)"
+  (keypress)="handleClickOrKeyPress($event)"
 >
   {{ tag.name }}
   <button matChipRemove [attr.aria-label]="'remove ' + tag" *ngIf="removable">

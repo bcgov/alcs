@@ -16,7 +16,7 @@ export class TagChipComponent {
     this.removeClicked.emit(this.tag);
   }
 
-  handleClick(event: MouseEvent) {
+  handleClickOrKeyPress(event: MouseEvent | KeyboardEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
