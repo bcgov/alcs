@@ -9,6 +9,7 @@ import { TagDto } from '../../../services/tag/tag.dto';
 export class TagChipComponent {
   @Input() tag!: TagDto;
   @Input() removable: boolean = true;
+  @Input() isCommissioner: boolean = false;
   @Output() removeClicked = new EventEmitter<TagDto>();
 
   onRemove() {
