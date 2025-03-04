@@ -129,6 +129,11 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       .subscribe((didConfirm) => {
         if (didConfirm) {
           this.mappedConditions.splice(index, 1);
+          this.mappedConditions.forEach((c) => {
+            if (c.order && c.order > index) {
+              c.order--;
+            }
+          });
           this.onChanges();
         }
       });
