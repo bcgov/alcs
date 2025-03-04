@@ -1,4 +1,12 @@
-<mat-chip (removed)="onRemove()" [ngClass]="{ removable: !removable }" (click)="handleClick($event)">
+<mat-chip
+  (removed)="onRemove()"
+  [ngClass]="{
+    removable: !removable,
+    commissioner: isCommissioner,
+  }"
+  (click)="handleClickOrKeyPress($event)"
+  (keypress)="handleClickOrKeyPress($event)"
+>
   {{ tag.name }}
   <button matChipRemove [attr.aria-label]="'remove ' + tag" *ngIf="removable">
     <mat-icon svgIcon="cancel_filled"></mat-icon>

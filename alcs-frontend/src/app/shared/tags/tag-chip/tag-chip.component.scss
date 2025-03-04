@@ -8,3 +8,31 @@ mat-chip {
 .removable {
   margin: 4px;
 }
+
+.commissioner {
+  pointer-events: none !important;
+
+  &,
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: #929292 !important;
+    background-color: #f3f3f3 !important;
+    box-shadow: none !important;
+    cursor: default !important;
+  }
+
+  &::before,
+  &::after {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-mdc-chip-action,
+  ::ng-deep .mdc-evolution-chip__action {
+    pointer-events: none !important;
+  }
+
+  * {
+    transition: none !important;
+  }
+}
