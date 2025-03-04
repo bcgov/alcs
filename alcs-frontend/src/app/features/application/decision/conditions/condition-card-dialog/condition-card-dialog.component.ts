@@ -6,12 +6,12 @@ import {
   ApplicationDecisionConditionDto,
   CreateApplicationDecisionConditionCardDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionConditionDto as OriginalApplicationDecisionConditionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionConditionCardService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 import { BOARD_TYPE_CODES, BoardService } from '../../../../../services/board/board.service';
 import { BoardDto, BoardStatusDto } from '../../../../../services/board/board.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { CardType } from '../../../../../shared/card/card.component';
+import { countToString } from '../../../../../shared/utils/count-to-string';
 
 @Component({
   selector: 'app-condition-card-dialog',
@@ -22,6 +22,7 @@ export class ConditionCardDialogComponent implements OnInit {
   displayColumns: string[] = ['select', 'index', 'type', 'description'];
   conditionBoard: BoardDto | undefined;
   selectedStatus = '';
+  isOrderNull = false;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<{ condition: ApplicationDecisionConditionDto; index: number; selected: boolean }> =
@@ -37,6 +38,8 @@ export class ConditionCardDialogComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    const orderIndexes = this.data.conditions.map((c) => c.condition.order);
+    this.isOrderNull = this.data.conditions.length > 1 && orderIndexes.every((val, i, arr) => val === arr[0] && arr[0] === 0);
     this.dataSource.data = this.data.conditions.map((item) => ({
       condition: item.condition,
       selected: false,
@@ -86,5 +89,9 @@ export class ConditionCardDialogComponent implements OnInit {
       this.toastService.showErrorToast('Failed to create condition card');
       this.dialogRef.close({ action: 'save', result: false });
     }
+  }
+
+  alphaIndex(index: number) {
+    return countToString(index);
   }
 }

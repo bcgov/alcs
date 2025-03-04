@@ -9,6 +9,7 @@ import {
   TreeNode,
 } from '../../../services/search/file-type/file-type-data-source.service';
 import { PortalStatusDataSourceService } from '../../../services/search/portal-status/portal-status-data-source.service';
+import { DecisionOutcomeDataSourceService } from '../../../services/search/decision-outcome/decision-outcome-data-source.service';
 
 @Component({
   selector: 'app-file-type-filter-drop-down[fileTypeData]',
@@ -35,7 +36,7 @@ export class FileTypeFilterDropDownComponent implements OnInit {
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   @Output() fileTypeChange = new EventEmitter<string[]>();
 
-  @Input() fileTypeData!: FileTypeDataSourceService | PortalStatusDataSourceService;
+  @Input() fileTypeData!: FileTypeDataSourceService | PortalStatusDataSourceService | DecisionOutcomeDataSourceService;
   @Input() label!: string;
   @Input() tooltip = '';
   @Input() preExpanded: string[] = [];

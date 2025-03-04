@@ -1,6 +1,6 @@
-<mat-chip-row (removed)="onRemove()" [ngClass]="{ removable: !removable }"
-  >{{ tag.name }}
+<mat-chip (removed)="onRemove()" [ngClass]="{ removable: !removable }" (click)="handleClick($event)">
+  {{ tag.name }}
   <button matChipRemove [attr.aria-label]="'remove ' + tag" *ngIf="removable">
     <mat-icon svgIcon="cancel_filled"></mat-icon>
   </button>
-</mat-chip-row>
+</mat-chip>

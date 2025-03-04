@@ -102,16 +102,11 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   onAddNewCondition(typeCode: string) {
-    this.mappedConditions.forEach((c) => {
-      if (c.order) {
-        c.order++;
-      }
-    });
     const matchingType = this.activeTypes.find((type) => type.code === typeCode);
-    this.mappedConditions.unshift({
+    this.mappedConditions.push({
       type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
-      order: 0,
+      order: this.mappedConditions.length,
     });
     this.conditionsChange.emit({
       conditions: this.mappedConditions,
@@ -224,6 +219,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   onValidate() {
     this.conditionComponents.forEach((component) => component.form.markAllAsTouched());
+    this.conditionsChange.emit({
+      conditions: this.mappedConditions,
+      isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),
+    });
   }
 
   openOrderDialog() {
@@ -237,9 +236,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
           },
         })
         .beforeClosed()
-        .subscribe(async (data) => {
-          if (data) {
-            this.conditionService.updateSort(data);
+        .subscribe(async (result) => {
+          if (result) {
+            this.conditionService.updateSort(result.payload);
+            this.mappedConditions = result.data;
             this.conditionsChange.emit({
               conditions: this.mappedConditions,
               isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),

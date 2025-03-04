@@ -18,6 +18,25 @@ import {
   DocumentUploadDialogComponent,
   VisibilityGroup,
 } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
+import {
+  DocumentUploadDialogData,
+  DocumentUploadDialogOptions,
+} from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
+
+const DOCUMENT_UPLOAD_DIALOG_OPTIONS: DocumentUploadDialogOptions = {
+  allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
+  allowsFileEdit: true,
+  documentTypeOverrides: {
+    [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
+      visibilityGroups: [VisibilityGroup.INTERNAL],
+      allowsFileEdit: false,
+    },
+    [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
+      visibilityGroups: [VisibilityGroup.INTERNAL],
+      allowsFileEdit: false,
+    },
+  },
+};
 
 @Component({
   selector: 'app-documents',
@@ -78,29 +97,7 @@ export class DocumentsComponent implements OnInit {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          documentService: this.applicationDocumentService,
-          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
-          selectableOwners: submission.owners
-            .filter((owner) => owner.type.code === 'ORGZ')
-            .map((owner) => ({
-              label: owner.organizationName ?? owner.displayName,
-              uuid: owner.uuid,
-            })),
-          allowedVisibilityFlags: ['A', 'C', 'G', 'P'],
-          allowsFileEdit: true,
-          documentTypeOverrides: {
-            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-          },
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty) => {
@@ -150,29 +147,7 @@ export class DocumentsComponent implements OnInit {
         minWidth: '600px',
         maxWidth: '800px',
         width: '70%',
-        data: {
-          fileId: this.fileId,
-          existingDocument: element,
-          documentService: this.applicationDocumentService,
-          selectableParcels: parcels.map((parcel, index) => ({ ...parcel, index })),
-          selectableOwners: submission.owners
-            .filter((owner) => owner.type.code === 'ORGZ')
-            .map((owner) => ({
-              label: owner.organizationName ?? owner.displayName,
-              uuid: owner.uuid,
-            })),
-          allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
-          documentTypeOverrides: {
-            [DOCUMENT_TYPE.CERTIFICATE_OF_TITLE]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-            [DOCUMENT_TYPE.CORPORATE_SUMMARY]: {
-              visibilityGroups: [VisibilityGroup.INTERNAL],
-              allowsFileEdit: false,
-            },
-          },
-        },
+        data,
       })
       .afterClosed()
       .subscribe((isDirty: boolean) => {

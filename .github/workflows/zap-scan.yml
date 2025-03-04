@@ -1,0 +1,53 @@
+name: Weekly OWASP ZAP Baseline Scan on DEV Site
+
+on:
+  schedule:
+    # Runs every week at 01:00 Sunday Morning.
+    - cron:  '0 1 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  zap-scan-api:
+    name: OWASP ZAP API Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: API Scan
+        uses: zaproxy/action-api-scan@v0.9.0
+        with:
+          target: 'https://alcs-dev-api.apps.silver.devops.gov.bc.ca/docs'
+          issue_title: OWASP ZAP API Scan Results
+          artifact_name: zap-api-scan-report
+
+  zap-scan-frontend:
+    name: OWASP ZAP Frontend Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Frontend Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: "https://alcs-dev.apps.silver.devops.gov.bc.ca"
+          issue_title: OWASP ZAP Frontend Scan Results
+          rules_file_name: .zap/frontend.tsv
+          artifact_name: zap-frontend-scan-report
+
+  zap-scan-portal:
+    name: OWASP ZAP Portal Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Portal Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: "https://alcs-dev-portal.apps.silver.devops.gov.bc.ca"
+          issue_title: OWASP ZAP Portal Scan Results
+          rules_file_name: .zap/portal.tsv
+          artifact_name: zap-portal-scan-report

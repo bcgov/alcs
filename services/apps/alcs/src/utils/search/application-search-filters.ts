@@ -66,6 +66,34 @@ export const APP_SEARCH_FILTERS = {
       })
       .getMany();
   },
+  addDecisionMakerResults: (searchDto: SearchRequestDto | InboxRequestDto, appRepository: Repository<Application>) => {
+    return appRepository
+      .createQueryBuilder('app')
+      .select('app.fileNumber')
+      .leftJoin('application_decision', 'application_decision', 'application_decision.application_uuid = app.uuid')
+      .leftJoin(
+        'application_decision_maker_code',
+        'application_decision_maker_code',
+        'application_decision_maker_code.code = application_decision.decision_maker_code',
+      )
+      .where('application_decision_maker_code.code IN (:code)', {
+        code: searchDto.decisionMaker,
+      })
+      .getMany();
+  },
+  addDecisionOutcomeResults: (
+    searchDto: SearchRequestDto | InboxRequestDto,
+    appRepository: Repository<Application>,
+  ) => {
+    return appRepository
+      .createQueryBuilder('app')
+      .select('app.fileNumber')
+      .leftJoin('application_decision', 'application_decision', 'application_decision.application_uuid = app.uuid')
+      .where('application_decision.outcome_code IN (:...outcomeCodes)', {
+        outcomeCodes: searchDto.decisionOutcomes,
+      })
+      .getMany();
+  },
   addNameResults: (
     searchDto: SearchRequestDto | InboxRequestDto,
     applicationSubmissionRepository: Repository<ApplicationSubmission>,
