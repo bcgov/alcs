@@ -191,6 +191,10 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsUUID()
   conditionCardUuid?: string;
+
+  @IsOptional()
+  @IsNumber()
+  order?: number;
 }
 
 export class UpdateApplicationDecisionConditionServiceDto {
