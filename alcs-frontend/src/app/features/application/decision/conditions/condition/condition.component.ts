@@ -28,6 +28,7 @@ import { countToString } from '../../../../../shared/utils/count-to-string';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 type Condition = ApplicationDecisionConditionWithStatus & {
   componentLabelsStr?: string;
@@ -86,6 +87,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     private conditionService: ApplicationDecisionConditionService,
     private conditionLotService: ApplicationDecisionComponentToConditionLotService,
     private decisionService: ApplicationDecisionV2Service,
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   async ngOnInit() {
@@ -314,21 +316,27 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   }
 
   async onDeleteDate(dateUuid: string) {
-    const result = await this.conditionService.deleteDate(dateUuid);
-    if (result) {
-      const index = this.dates.findIndex((date) => date.uuid === dateUuid);
+    this.confirmationDialogService
+      .openDialog({ body: 'Are you sure you want to delete this date?' })
+      .subscribe(async (confirmed) => {
+        if (confirmed) {
+          const result = await this.conditionService.deleteDate(dateUuid);
+          if (result) {
+            const index = this.dates.findIndex((date) => date.uuid === dateUuid);
 
-      if (index !== -1) {
-        this.dates.splice(index, 1);
-        this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(
-          this.addIndex(this.sortDates(this.dates)),
-        );
-        const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
-        this.condition.status = conditionNewStatus.status;
-        this.statusChange.emit(this.condition.status);
-        this.setPillLabel(this.condition.status);
-      }
-    }
+            if (index !== -1) {
+              this.dates.splice(index, 1);
+              this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(
+                this.addIndex(this.sortDates(this.dates)),
+              );
+              const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
+              this.condition.status = conditionNewStatus.status;
+              this.statusChange.emit(this.condition.status);
+              this.setPillLabel(this.condition.status);
+            }
+          }
+        }
+      });
   }
 
   alphaIndex(index: number) {
