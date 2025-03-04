@@ -82,12 +82,15 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onUploadFile() {
-    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
-      fileId: this.fileId,
-      documentService: this.applicationDocumentService,
-      parcelService: this.applicationParcelService,
-      submissionService: this.applicationSubmissionService,
-    });
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        fileId: this.fileId,
+        documentService: this.applicationDocumentService,
+        parcelService: this.applicationParcelService,
+        submissionService: this.applicationSubmissionService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
@@ -127,14 +130,17 @@ export class DocumentsComponent implements OnInit {
   }
 
   async onEditFile(element: ApplicationDocumentDto) {
-    const data: DocumentUploadDialogData = Object.assign(DOCUMENT_UPLOAD_DIALOG_OPTIONS, {
-      allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
-      fileId: this.fileId,
-      existingDocument: element,
-      documentService: this.applicationDocumentService,
-      parcelService: this.applicationParcelService,
-      submissionService: this.applicationSubmissionService,
-    });
+    const data: DocumentUploadDialogData = {
+      ...DOCUMENT_UPLOAD_DIALOG_OPTIONS,
+      ...{
+        allowsFileEdit: element.system === DOCUMENT_SYSTEM.ALCS,
+        fileId: this.fileId,
+        existingDocument: element,
+        documentService: this.applicationDocumentService,
+        parcelService: this.applicationParcelService,
+        submissionService: this.applicationSubmissionService,
+      },
+    };
 
     this.dialog
       .open(DocumentUploadDialogComponent, {
