@@ -31,6 +31,8 @@ import { User } from '../../user/user.entity';
 import { NoticeOfIntentDecisionConditionCard } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.entity';
 import { NoticeOfIntentDecisionConditionCardService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 import { NoticeOfIntentDecisionConditionCardController } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.controller';
+import { NoticeOfIntentDecisionConditionFinancialInstrument } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.entity';
+import { NoticeOfIntentDecisionConditionFinancialInstrumentService } from './notice-of-intent-decision-condition/notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.service';
 
 @Module({
   imports: [
@@ -46,6 +48,7 @@ import { NoticeOfIntentDecisionConditionCardController } from './notice-of-inten
       NoticeOfIntentDecisionConditionType,
       NoticeOfIntentDecisionConditionDate,
       NoticeOfIntentDecisionConditionCard,
+      NoticeOfIntentDecisionConditionFinancialInstrument,
       User,
     ]),
     forwardRef(() => BoardModule),
@@ -63,6 +66,7 @@ import { NoticeOfIntentDecisionConditionCardController } from './notice-of-inten
     NoticeOfIntentDecisionProfile,
     NoticeOfIntentModificationService,
     NoticeOfIntentDecisionConditionCardService,
+    NoticeOfIntentDecisionConditionFinancialInstrumentService,
   ],
   controllers: [
     NoticeOfIntentDecisionV2Controller,

@@ -138,6 +138,16 @@ export class ApplicationAdvancedSearchService {
       promises.push(promise);
     }
 
+    if (searchDto.decisionMaker) {
+      const promise = APP_SEARCH_FILTERS.addDecisionMakerResults(searchDto, this.applicationRepository);
+      promises.push(promise);
+    }
+
+    if (searchDto.decisionOutcomes && searchDto.decisionOutcomes.length > 0) {
+      const promise = APP_SEARCH_FILTERS.addDecisionOutcomeResults(searchDto, this.applicationRepository);
+      promises.push(promise);
+    }
+
     if (searchDto.governmentName) {
       const promise = APP_SEARCH_FILTERS.addGovernmentResults(
         searchDto,

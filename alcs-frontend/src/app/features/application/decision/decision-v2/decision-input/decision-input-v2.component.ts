@@ -262,7 +262,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
           (reconsideration.reviewOutcome?.code === 'PRC' && !reconsideration.resultingDecision) ||
-          (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1 && !reconsideration.resultingDecision),
+          (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1),
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsidersDecisions
@@ -292,7 +292,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedComment: existingDecision.rescindedComment,
     });
 
-    this.conditions = existingDecision.conditions;
+    this.conditions = existingDecision.conditions.sort((a,b) => a.order - b.order);
 
     if (existingDecision.reconsiders) {
       this.onSelectPostDecision({

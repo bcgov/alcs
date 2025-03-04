@@ -181,4 +181,11 @@ export class SearchRequestDto extends PagingRequestDto {
   @IsString()
   @IsOptional()
   tagCategoryId?: string;
+
+  @IsArray()
+  decisionOutcomes?: string[];
+
+  @IsString()
+  @IsOptional()
+  decisionMaker?: string;
 }

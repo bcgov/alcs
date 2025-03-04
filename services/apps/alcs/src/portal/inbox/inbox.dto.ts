@@ -92,6 +92,14 @@ export class InboxRequestDto {
   @IsString()
   @IsOptional()
   tagCategoryId?: string;
+
+  @IsString()
+  @IsOptional()
+  decisionMaker?: string;
+
+  @IsArray()
+  @IsOptional()
+  decisionOutcomes?: string[];
 }
 
 // typeorm does not transform property names for the status

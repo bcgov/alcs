@@ -38,7 +38,7 @@
       </mat-form-field>
 
       <div>
-        <mat-label>New Evidence*</mat-label>
+        <mat-label [class.field-disabled]="disable331Fields">New Evidence*</mat-label>
         <mat-button-toggle-group required id="isNewEvidence" formControlName="isNewEvidence">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
@@ -46,7 +46,7 @@
       </div>
 
       <div>
-        <mat-label>Incorrect or False Info*</mat-label>
+        <mat-label [class.field-disabled]="disable331Fields">Incorrect or False Info*</mat-label>
         <mat-button-toggle-group required id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
@@ -54,7 +54,7 @@
       </div>
 
       <div>
-        <mat-label>New Proposal*</mat-label>
+        <mat-label [class.field-disabled]="disable331Fields">New Proposal*</mat-label>
         <mat-button-toggle-group required id="isNewProposal" formControlName="isNewProposal">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
@@ -66,8 +66,8 @@
         <input matInput id="description" formControlName="description" type="text" />
       </mat-form-field>
 
-      <div *ngIf="typeControl.value === '33'" class="full-grid-line toggle-group">
-        <mat-label class="toggle-label">Review Outcome <span>*</span></mat-label>
+      <div class="full-grid-line toggle-group">
+        <mat-label [class.field-disabled]="disable331Fields" class="toggle-label">Review Outcome <span>*</span></mat-label>
         <mat-button-toggle-group
           (change)="onChangeReviewOutcome()"
           id="reviewOutcomeCode"
@@ -80,9 +80,9 @@
         </mat-button-toggle-group>
       </div>
 
-      <div *ngIf="reviewOutcomeCodeControl.value === 'PRC'" class="full-grid-line toggle-group">
+      <div class="full-grid-line toggle-group">
         <mat-label class="toggle-label"
-          >Does the reconsideration confirm, reverse, or vary the previous decision?*<span>*</span></mat-label
+          >Does the reconsideration confirm, reverse, or vary the previous decision?</mat-label
         >
         <mat-button-toggle-group
           id="decisionOutcomeCode"

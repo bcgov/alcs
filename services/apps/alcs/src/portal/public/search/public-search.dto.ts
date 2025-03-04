@@ -112,6 +112,14 @@ export class SearchRequestDto extends PagingRequestDto {
   @IsArray()
   @IsOptional()
   tagCategoryId?: string;
+
+  @IsArray()
+  @IsOptional()
+  decisionMaker?: string;
+
+  @IsArray()
+  @IsOptional()
+  decisionOutcomes?: string[];
 }
 
 // typeorm does not transform property names for the status

@@ -168,7 +168,7 @@
 
           <ng-container matColumnDef="condition">
             <td mat-cell *matCellDef="let element" class="column-condition">
-              {{ element.index }}. {{ element.condition.type.label }}
+              {{ !isOrderNull ? alphaIndex(element.condition.order + 1) + '.' : '' }} {{ element.condition.type.label }}
             </td>
           </ng-container>
 

@@ -34,8 +34,8 @@
         </ng-container>
 
         <ng-container matColumnDef="index">
-          <th mat-header-cell *matHeaderCellDef class="column-index">#</th>
-          <td mat-cell *matCellDef="let element" class="column-index">{{ element.index }}</td>
+          <th mat-header-cell *matHeaderCellDef class="column-index"></th>
+          <td mat-cell *matCellDef="let element" class="column-index">{{ !isOrderNull ? alphaIndex(element.condition.order + 1) : '' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="type">

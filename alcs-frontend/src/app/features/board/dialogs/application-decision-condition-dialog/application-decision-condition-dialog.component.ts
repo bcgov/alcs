@@ -44,6 +44,7 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
   applicationDecisionConditionCard: ApplicationDecisionConditionCardBoardDto = this.data.decisionConditionCard;
   isModification: boolean = false;
   isReconsideration: boolean = false;
+  isOrderNull = false;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<{ condition: ApplicationDecisionConditionDto; index: number; selected: boolean }> =
@@ -95,6 +96,8 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
       true,
     );
     if (decision) {
+      const orderIndexes = decision.conditions.map((c) => c.order);
+      this.isOrderNull = decision.conditions.length > 1 && orderIndexes.every((val, i, arr) => val === arr[0] && arr[0] === 0);
       this.decision = decision;
     }
   }
@@ -258,5 +261,9 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
     );
     this.applicationDecisionConditionCard = applicationDecisionConditionCard!;
     this.populateData();
+  }
+
+  alphaIndex(index: number) {
+    return countToString(index);
   }
 }

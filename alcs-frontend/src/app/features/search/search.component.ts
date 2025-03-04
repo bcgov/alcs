@@ -17,6 +17,7 @@ import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationSubmissionStatusDto } from '../../services/notification/notification.dto';
 import { FileTypeDataSourceService } from '../../services/search/file-type/file-type-data-source.service';
+import { DecisionOutcomeDataSourceService } from '../../services/search/decision-outcome/decision-outcome-data-source.service';
 import { PortalStatusDataSourceService } from '../../services/search/portal-status/portal-status-data-source.service';
 import {
   AdvancedSearchResponseDto,
@@ -39,6 +40,7 @@ import { TagDto } from '../../services/tag/tag.dto';
 import { TagService } from '../../services/tag/tag.service';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { DecisionMakerDto } from '../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
@@ -96,6 +98,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   tagControl = new FormControl();
   localGovernmentControl = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string[]>([]);
+  decisionOutcomeControl = new FormControl<string[]>([]);
+  decisionMakerControl = new FormControl<string | undefined>(undefined);
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   pidControl = new FormControl<string | undefined>(undefined);
   nameControl = new FormControl<string | undefined>(undefined);
@@ -109,6 +113,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     resolutionYear: new FormControl<number | undefined>(undefined),
     legacyId: new FormControl<string | undefined>(undefined),
     portalStatus: this.portalStatusControl,
+    decisionOutcome: this.decisionOutcomeControl,
+    decisionMaker: this.decisionMakerControl,
     componentType: this.componentTypeControl,
     government: this.localGovernmentControl,
     region: new FormControl<string | undefined>(undefined),
@@ -127,6 +133,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   allTags: TagDto[] = [];
   tagCategories: TagCategoryDto[] = [];
   applicationStatuses: ApplicationStatusDto[] = [];
+  decisionMakers: DecisionMakerDto[] = [];
   allStatuses: (ApplicationStatusDto | NoticeOfIntentStatusDto | NotificationSubmissionStatusDto)[] = [];
 
   formEmpty = true;
@@ -151,6 +158,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     private authService: AuthenticationService,
     public fileTypeService: FileTypeDataSourceService,
     public portalStatusDataService: PortalStatusDataSourceService,
+    public decisionOutcomeDataService: DecisionOutcomeDataSourceService,
     public tagCategoryService: TagCategoryService,
     public tagService: TagService,
   ) {
@@ -164,10 +172,11 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.applicationService.$applicationRegions
       .pipe(takeUntil(this.$destroy))
-      .pipe(combineLatestWith(this.applicationService.$applicationStatuses, this.activatedRoute.queryParamMap))
-      .subscribe(([regions, statuses, queryParamMap]) => {
+      .pipe(combineLatestWith(this.applicationService.$applicationStatuses, this.applicationService.$decisionMakers, this.activatedRoute.queryParamMap))
+      .subscribe(([regions, statuses, decisionMakers, queryParamMap]) => {
         this.regions = regions;
         this.applicationStatuses = statuses;
+        this.decisionMakers = decisionMakers;
         this.populateAllStatuses();
 
         const searchText = queryParamMap.get('searchText');
@@ -301,11 +310,25 @@ export class SearchComponent implements OnInit, OnDestroy {
     const resolutionNumberString = this.formatStringSearchParam(this.searchForm.controls.resolutionNumber.value);
     let fileTypes: string[];
     let portalStatusCodes;
+    let decisionMakers;
+    let decisionOutcomes: string[];
 
     if (this.searchForm.controls.componentType.value === null) {
       fileTypes = this.isCommissioner ? this.fileTypeService.getCommissionerListData() : [];
     } else {
       fileTypes = this.searchForm.controls.componentType.value!;
+    }
+
+    if (this.searchForm.controls.decisionOutcome.value === null) {
+      decisionOutcomes = [];
+    } else {
+      decisionOutcomes = this.searchForm.controls.decisionOutcome.value!;
+    }
+
+    if (this.searchForm.controls.decisionOutcome.value === null) {
+      decisionMakers = [];
+    } else {
+      decisionMakers = this.searchForm.controls.decisionMaker.value!;
     }
 
     if (this.searchForm.controls.portalStatus.value?.length === 0) {
@@ -347,6 +370,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       fileTypes: fileTypes,
       tagCategoryId: this.searchForm.controls.tagCategory.value ?? undefined,
       tagIds: this.tags.map((t) => t.uuid),
+      decisionOutcomes: decisionOutcomes,
+      decisionMaker: this.searchForm.controls.decisionMaker.value ?? undefined,
     };
   }
 
@@ -442,6 +467,10 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   onPortalStatusChange(statusCodes: string[]) {
     this.portalStatusControl.setValue(statusCodes);
+  }
+
+  onDecisionOutcomeChange(decisionOutcomes: string[]) {
+    this.decisionOutcomeControl.setValue(decisionOutcomes);
   }
 
   onClick(): void {

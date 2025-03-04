@@ -14,4 +14,9 @@ export class TagChipComponent {
   onRemove() {
     this.removeClicked.emit(this.tag);
   }
+
+  handleClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 }

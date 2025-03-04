@@ -221,6 +221,7 @@ export class ApplicationDecisionConditionService {
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
       condition.approvalDependant = updateDto.approvalDependant ?? null;
+      condition.order = updateDto.order ?? 0;
       if (updateDto.dates) {
         condition.dates = updateDto.dates.map((dateDto) => {
           const dateEntity = new ApplicationDecisionConditionDate();
@@ -322,5 +323,23 @@ export class ApplicationDecisionConditionService {
     }
 
     await this.conditionComponentPlanNumbersRepository.save(conditionToComponent);
+  }
+
+  async setSorting(data: { uuid: string; order: number }[]) {
+    const uuids = data.map((data) => data.uuid);
+    const conditions = await this.repository.find({
+      where: {
+        uuid: In(uuids),
+      },
+    });
+
+    for (const condition of data) {
+      const existingCondition = conditions.find((c) => c.uuid === condition.uuid);
+      if (existingCondition) {
+        existingCondition.order = condition.order;
+      }
+    }
+
+    await this.repository.save(conditions);
   }
 }

@@ -11,23 +11,31 @@ import { ApplicationDecisionV2Service } from '../../../../../../services/applica
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionConditionsComponent } from './decision-conditions.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ApplicationDecisionConditionService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 
 describe('DecisionConditionComponent', () => {
   let component: DecisionConditionsComponent;
   let fixture: ComponentFixture<DecisionConditionsComponent>;
   let mockDecisionService: ApplicationDecisionV2Service;
+  let mockConditionService: ApplicationDecisionConditionService;
 
   beforeEach(async () => {
     mockDecisionService = createMock();
+    mockConditionService = createMock();
     mockDecisionService.$decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
     mockDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
     await TestBed.configureTestingModule({
-      imports: [MatMenuModule],
+      imports: [HttpClientTestingModule, MatMenuModule],
       providers: [
         {
           provide: ApplicationDecisionV2Service,
           useValue: mockDecisionService,
+        },
+        {
+          provide: ApplicationDecisionConditionService,
+          useValue: mockConditionService,
         },
         {
           provide: ConfirmationDialogService,

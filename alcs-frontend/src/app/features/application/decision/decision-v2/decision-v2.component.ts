@@ -125,7 +125,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
           disabledMessage = 'Editing disabled - contact admin';
         }
         decision.conditions.map(async (x) => {
-          if (x.components) {
+          if (x.components && x.components.length > 0) {
             const componentId = x.components[0].uuid;
             if (componentId) {
               const conditionStatus = await this.decisionService.getStatus(x.uuid);
