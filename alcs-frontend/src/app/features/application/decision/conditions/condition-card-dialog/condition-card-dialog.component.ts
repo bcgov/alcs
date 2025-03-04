@@ -19,7 +19,7 @@ import { countToString } from '../../../../../shared/utils/count-to-string';
   styleUrl: './condition-card-dialog.component.scss',
 })
 export class ConditionCardDialogComponent implements OnInit {
-  displayColumns: string[] = ['select', 'index', 'type', 'description'];
+  displayColumns: string[] = ['select', 'condition', 'description'];
   conditionBoard: BoardDto | undefined;
   selectedStatus = '';
   isOrderNull = false;
