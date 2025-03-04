@@ -5,6 +5,8 @@
     commissioner: isCommissioner,
   }"
   (click)="handleClick($event)"
+  tabindex="-1"
+  role="presentation"
 >
   {{ tag.name }}
   <button matChipRemove [attr.aria-label]="'remove ' + tag" *ngIf="removable">
