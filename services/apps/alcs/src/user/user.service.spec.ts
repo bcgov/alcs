@@ -151,7 +151,7 @@ describe('UserService', () => {
     const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
 <a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
 
-    await service.sendNewUserRequestEmail(email, userIdentifier);
+    await service.sendNewUserRequestEmail(userIdentifier, email);
 
     expect(emailServiceMock.sendEmail).toBeCalledWith({
       to: config.get('EMAIL.DEFAULT_ADMINS'),
