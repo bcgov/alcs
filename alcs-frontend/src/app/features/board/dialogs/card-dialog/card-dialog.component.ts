@@ -79,10 +79,9 @@ export class CardDialogComponent implements OnInit, OnDestroy {
 
   filterAssigneeList(term: string, item: AssigneeDto) {
     const termLower = term.toLocaleLowerCase();
-    return (
-      item.email.toLocaleLowerCase().indexOf(termLower) > -1 ||
-      item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1
-    );
+    return item.email
+      ? item.email.toLocaleLowerCase().indexOf(termLower) > -1
+      : false || item.prettyName.toLocaleLowerCase().indexOf(termLower) > -1;
   }
 
   onArchiveCard() {

@@ -21,8 +21,8 @@ export class User extends Base {
   }
 
   @AutoMap()
-  @Column()
-  email: string;
+  @Column({ nullable: true })
+  email?: string;
 
   @AutoMap()
   @Column()

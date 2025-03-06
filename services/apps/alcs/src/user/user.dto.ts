@@ -49,7 +49,7 @@ export class UserDto extends UpdateUserDto {
 }
 
 export class CreateUserDto {
-  email: string;
+  email?: string;
   name?: string;
   displayName: string;
   givenName?: string;
@@ -79,7 +79,7 @@ export class AssigneeDto {
   mentionLabel: string;
 
   @AutoMap()
-  email: string;
+  email?: string;
 
   @AutoMap()
   clientRoles: string[];

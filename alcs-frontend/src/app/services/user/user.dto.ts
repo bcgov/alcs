@@ -23,7 +23,7 @@ export interface AssigneeDto {
   uuid: string;
   initials?: string;
   name: string;
-  email: string;
+  email?: string;
   mentionLabel: string;
   clientRoles: ROLES[];
   prettyName: string;
