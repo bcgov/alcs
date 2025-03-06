@@ -1,5 +1,5 @@
 import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
+import { AutomapperModule, InjectMapper } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -9,13 +9,23 @@ import { NoticeOfIntentDecisionConditionController } from './notice-of-intent-de
 import { UpdateNoticeOfIntentDecisionConditionDto } from './notice-of-intent-decision-condition.dto';
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionConditionService } from './notice-of-intent-decision-condition.service';
+import { NoticeOfIntentDecisionConditionFinancialInstrumentService } from './notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.service';
+import {
+  NoticeOfIntentDecisionConditionFinancialInstrument,
+  HeldBy,
+  InstrumentStatus,
+  InstrumentType,
+} from './notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.entity';
+import { CreateUpdateNoticeOfIntentDecisionConditionFinancialInstrumentDto } from './notice-of-intent-decision-condition-financial-instrument/notice-of-intent-decision-condition-financial-instrument.dto';
 
 describe('NoticeOfIntentDecisionConditionController', () => {
   let controller: NoticeOfIntentDecisionConditionController;
   let mockNOIDecisionConditionService: DeepMocked<NoticeOfIntentDecisionConditionService>;
+  let mockFinancialInstrumentService: DeepMocked<NoticeOfIntentDecisionConditionFinancialInstrumentService>;
 
   beforeEach(async () => {
     mockNOIDecisionConditionService = createMock();
+    mockFinancialInstrumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -29,6 +39,10 @@ describe('NoticeOfIntentDecisionConditionController', () => {
         {
           provide: NoticeOfIntentDecisionConditionService,
           useValue: mockNOIDecisionConditionService,
+        },
+        {
+          provide: NoticeOfIntentDecisionConditionFinancialInstrumentService,
+          useValue: mockFinancialInstrumentService,
         },
         {
           provide: ClsService,
@@ -86,6 +100,127 @@ describe('NoticeOfIntentDecisionConditionController', () => {
       expect(result.administrativeFee).toEqual(updated.administrativeFee);
       expect(result.securityAmount).toEqual(updated.securityAmount);
       expect(result.approvalDependant).toEqual(updated.approvalDependant);
+    });
+  });
+
+  describe('Financial Instruments', () => {
+    const conditionUuid = 'condition-uuid';
+    const instrumentUuid = 'instrument-uuid';
+    const financialInstrumentDto: CreateUpdateNoticeOfIntentDecisionConditionFinancialInstrumentDto = {
+      securityHolderPayee: 'holder',
+      type: InstrumentType.BANK_DRAFT,
+      issueDate: new Date().getTime(),
+      amount: 100,
+      bank: 'bank',
+      heldBy: HeldBy.ALC,
+      receivedDate: new Date().getTime(),
+      status: InstrumentStatus.RECEIVED,
+      instrumentNumber: '123',
+      notes: 'notes',
+      expiryDate: new Date().getTime(),
+      statusDate: new Date().getTime(),
+      explanation: 'explanation',
+    };
+
+    it('should get all financial instruments for a condition', async () => {
+      const financialInstruments = [
+        new NoticeOfIntentDecisionConditionFinancialInstrument({
+          securityHolderPayee: 'holder',
+          type: InstrumentType.BANK_DRAFT,
+          issueDate: new Date(),
+          amount: 100,
+          bank: 'bank',
+          heldBy: HeldBy.ALC,
+          receivedDate: new Date(),
+          status: InstrumentStatus.RECEIVED,
+        }),
+      ];
+      mockFinancialInstrumentService.getAll.mockResolvedValue(financialInstruments);
+
+      const result = await controller.getAllFinancialInstruments(conditionUuid);
+
+      expect(mockFinancialInstrumentService.getAll).toHaveBeenCalledWith(conditionUuid);
+      expect(result).toBeDefined();
+    });
+
+    it('should get a financial instrument by uuid', async () => {
+      const financialInstrument = new NoticeOfIntentDecisionConditionFinancialInstrument({
+        securityHolderPayee: 'holder',
+        type: InstrumentType.BANK_DRAFT,
+        issueDate: new Date(),
+        amount: 100,
+        bank: 'bank',
+        heldBy: HeldBy.ALC,
+        receivedDate: new Date(),
+        status: InstrumentStatus.RECEIVED,
+      });
+      mockFinancialInstrumentService.getByUuid.mockResolvedValue(financialInstrument);
+
+      const result = await controller.getFinancialInstrumentByUuid(conditionUuid, instrumentUuid);
+
+      expect(mockFinancialInstrumentService.getByUuid).toHaveBeenCalledWith(conditionUuid, instrumentUuid);
+      expect(result).toBeDefined();
+    });
+
+    it('should create a financial instrument', async () => {
+      const financialInstrument = new NoticeOfIntentDecisionConditionFinancialInstrument({
+        securityHolderPayee: 'holder',
+        type: InstrumentType.BANK_DRAFT,
+        issueDate: new Date(),
+        amount: 100,
+        bank: 'bank',
+        heldBy: HeldBy.ALC,
+        receivedDate: new Date(),
+        status: InstrumentStatus.RECEIVED,
+      });
+      mockFinancialInstrumentService.create.mockResolvedValue(financialInstrument);
+
+      const result = await controller.createFinancialInstrument(conditionUuid, financialInstrumentDto);
+
+      expect(mockFinancialInstrumentService.create).toHaveBeenCalledWith(conditionUuid, financialInstrumentDto);
+      expect(result).toBeDefined();
+    });
+
+    it('should update a financial instrument', async () => {
+      const financialInstrument = new NoticeOfIntentDecisionConditionFinancialInstrument({
+        securityHolderPayee: 'holder',
+        type: InstrumentType.BANK_DRAFT,
+        issueDate: new Date(),
+        amount: 100,
+        bank: 'bank',
+        heldBy: HeldBy.ALC,
+        receivedDate: new Date(),
+        status: InstrumentStatus.RECEIVED,
+      });
+      mockFinancialInstrumentService.update.mockResolvedValue(financialInstrument);
+
+      const result = await controller.updateFinancialInstrument(conditionUuid, instrumentUuid, financialInstrumentDto);
+
+      expect(mockFinancialInstrumentService.update).toHaveBeenCalledWith(
+        conditionUuid,
+        instrumentUuid,
+        financialInstrumentDto,
+      );
+      expect(result).toBeDefined();
+    });
+
+    it('should delete a financial instrument', async () => {
+      const financialInstrument = new NoticeOfIntentDecisionConditionFinancialInstrument({
+        securityHolderPayee: 'holder',
+        type: InstrumentType.BANK_DRAFT,
+        issueDate: new Date(),
+        amount: 100,
+        bank: 'bank',
+        heldBy: HeldBy.ALC,
+        receivedDate: new Date(),
+        status: InstrumentStatus.RECEIVED,
+      });
+      mockFinancialInstrumentService.remove.mockResolvedValue(financialInstrument);
+
+      const result = await controller.deleteFinancialInstrument(conditionUuid, instrumentUuid);
+
+      expect(mockFinancialInstrumentService.remove).toHaveBeenCalledWith(conditionUuid, instrumentUuid);
+      expect(result).toBeDefined();
     });
   });
 });

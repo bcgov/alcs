@@ -49,6 +49,7 @@ describe('AuthorizationService', () => {
       clientRoles: [],
       bceidGuid: '',
       displayName: '',
+      email: 'test@example.com',
       identityProvider: 'idir',
       uuid: 'user-uuid',
     } as Partial<User> as User);

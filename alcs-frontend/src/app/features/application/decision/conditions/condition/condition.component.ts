@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import moment from 'moment';
 import { ApplicationDecisionComponentToConditionLotService } from '../../../../../services/application/decision/application-decision-v2/application-decision-component-to-condition-lot/application-decision-component-to-condition-lot.service';
 import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
@@ -9,6 +9,7 @@ import {
   UpdateApplicationDecisionConditionDto,
   DateType,
   ApplicationDecisionConditionDateDto,
+  conditionType,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
@@ -27,6 +28,7 @@ import { countToString } from '../../../../../shared/utils/count-to-string';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 type Condition = ApplicationDecisionConditionWithStatus & {
   componentLabelsStr?: string;
@@ -48,6 +50,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() fileNumber!: string;
   @Input() index!: number;
 
+  @Output() statusChange: EventEmitter<string> = new EventEmitter();
+
   DateType = DateType;
 
   dates: ApplicationDecisionConditionDateDto[] = [];
@@ -60,7 +64,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   showAdmFeeField = false;
   showSecurityAmountField = false;
   singleDateFormated: string | undefined = undefined;
-  stringIndex: string = '';
 
   isThreeColumn = true;
 
@@ -72,6 +75,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   subdComponent?: ApplicationDecisionComponentDto;
   planNumbers: ApplicationDecisionConditionToComponentPlanNumberDto[] = [];
 
+  isFinancialSecurity: boolean = false;
+
   displayColumns: string[] = ['index', 'due', 'completed', 'comment', 'action'];
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -82,10 +87,10 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     private conditionService: ApplicationDecisionConditionService,
     private conditionLotService: ApplicationDecisionComponentToConditionLotService,
     private decisionService: ApplicationDecisionV2Service,
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   async ngOnInit() {
-    this.stringIndex = countToString(this.index);
     if (this.condition) {
       this.dates = Array.isArray(this.condition.dates) ? this.condition.dates : [];
       if (this.condition.type?.dateType === DateType.SINGLE && this.dates.length <= 0) {
@@ -113,6 +118,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       this.isRequireSurveyPlan = this.condition.type?.code === 'RSPL';
       this.isThreeColumn = this.showAdmFeeField && this.showSecurityAmountField;
+
+      this.isFinancialSecurity = this.condition.type?.code === conditionType.FINANCIAL_SECURITY;
 
       this.loadLots();
       this.loadPlanNumber();
@@ -188,6 +195,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     if (condition) {
       const update = await this.conditionService.update(condition.uuid, {
         [field]: value,
+        order: condition.order,
       });
 
       const labels = this.condition.componentLabelsStr;
@@ -303,23 +311,35 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     }
     const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
     this.condition.status = conditionNewStatus.status;
+    this.statusChange.emit(this.condition.status);
     this.setPillLabel(this.condition.status);
   }
 
   async onDeleteDate(dateUuid: string) {
-    const result = await this.conditionService.deleteDate(dateUuid);
-    if (result) {
-      const index = this.dates.findIndex((date) => date.uuid === dateUuid);
+    this.confirmationDialogService
+      .openDialog({ body: 'Are you sure you want to delete this date?' })
+      .subscribe(async (confirmed) => {
+        if (confirmed) {
+          const result = await this.conditionService.deleteDate(dateUuid);
+          if (result) {
+            const index = this.dates.findIndex((date) => date.uuid === dateUuid);
 
-      if (index !== -1) {
-        this.dates.splice(index, 1);
-        this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(
-          this.addIndex(this.sortDates(this.dates)),
-        );
-        const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
-        this.condition.status = conditionNewStatus.status;
-        this.setPillLabel(this.condition.status);
-      }
-    }
+            if (index !== -1) {
+              this.dates.splice(index, 1);
+              this.dataSource = new MatTableDataSource<ApplicationDecisionConditionDateWithIndex>(
+                this.addIndex(this.sortDates(this.dates)),
+              );
+              const conditionNewStatus = await this.decisionService.getStatus(this.condition.uuid);
+              this.condition.status = conditionNewStatus.status;
+              this.statusChange.emit(this.condition.status);
+              this.setPillLabel(this.condition.status);
+            }
+          }
+        }
+      });
+  }
+
+  alphaIndex(index: number) {
+    return countToString(index);
   }
 }

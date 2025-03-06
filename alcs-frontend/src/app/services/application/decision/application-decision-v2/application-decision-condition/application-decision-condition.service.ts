@@ -131,4 +131,12 @@ export class ApplicationDecisionConditionService {
       return;
     }
   }
+
+  async updateSort(sortOrder: { uuid: string; order: number }[]) {
+      try {
+        await firstValueFrom(this.http.post<ApplicationDecisionConditionDto[]>(`${this.url}/sort`, sortOrder));
+      } catch (e) {
+        this.toastService.showErrorToast(`Failed to save conditions order`);
+      }
+    }
 }

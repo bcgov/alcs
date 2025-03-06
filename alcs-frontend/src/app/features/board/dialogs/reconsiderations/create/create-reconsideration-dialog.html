@@ -158,25 +158,26 @@
           bindValue="code"
           [clearable]="false"
           formControlName="reconType"
+          (change)="onTypeReconsiderationChange()"
         >
         </ng-select>
       </div>
       <div>
-        <mat-label>New Evidence*</mat-label>
+        <mat-label [class.field-disabled]="disable331Fields">New Evidence*</mat-label>
         <mat-button-toggle-group required id="isNewEvidence" formControlName="isNewEvidence">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
       <div>
-        <mat-label>Incorrect or False Info*</mat-label>
+        <mat-label [class.field-disabled]="disable331Fields">Incorrect or False Info*</mat-label>
         <mat-button-toggle-group required id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
       <div>
-        <mat-label>New Proposal*</mat-label>
+        <mat-label [class.field-disabled]="disable331Fields">New Proposal*</mat-label>
         <mat-button-toggle-group required id="isNewProposal" formControlName="isNewProposal">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>

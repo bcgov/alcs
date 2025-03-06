@@ -196,10 +196,7 @@ export class AuthorizationService {
       );
 
       if (user.clientRoles.length === 0 && !isPortal) {
-        await this.userService.sendNewUserRequestEmail(
-          user.email,
-          user.bceidGuid ?? user.displayName,
-        );
+        await this.userService.sendNewUserRequestEmail(user.bceidGuid ?? user.displayName, user.email);
       }
     }
   }

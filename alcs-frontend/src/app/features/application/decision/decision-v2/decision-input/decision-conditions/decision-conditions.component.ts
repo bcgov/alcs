@@ -19,8 +19,11 @@ import {
   DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ApplicationDecisionConditionService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
+import { DecisionConditionOrderDialogComponent } from './decision-condition-order-dialog/decision-condition-order-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export type TempApplicationDecisionConditionDto = UpdateApplicationDecisionConditionDto & { tempUuid?: string };
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
@@ -54,8 +57,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   decision: ApplicationDecisionDto | undefined;
 
   constructor(
+    private conditionService: ApplicationDecisionConditionService,
     private decisionService: ApplicationDecisionV2Service,
     private confirmationDialogService: ConfirmationDialogService,
+    protected dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -98,9 +103,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   onAddNewCondition(typeCode: string) {
     const matchingType = this.activeTypes.find((type) => type.code === typeCode);
-    this.mappedConditions.unshift({
+    this.mappedConditions.push({
       type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
+      order: this.mappedConditions.length,
     });
     this.conditionsChange.emit({
       conditions: this.mappedConditions,
@@ -123,6 +129,11 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       .subscribe((didConfirm) => {
         if (didConfirm) {
           this.mappedConditions.splice(index, 1);
+          this.mappedConditions.forEach((c) => {
+            if (c.order && c.order > index) {
+              c.order--;
+            }
+          });
           this.onChanges();
         }
       });
@@ -213,5 +224,32 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   onValidate() {
     this.conditionComponents.forEach((component) => component.form.markAllAsTouched());
+    this.conditionsChange.emit({
+      conditions: this.mappedConditions,
+      isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),
+    });
+  }
+
+  openOrderDialog() {
+      this.dialog
+        .open(DecisionConditionOrderDialogComponent, {
+          maxHeight: '80vh',
+          minHeight: '40vh',
+          minWidth: '80vh',
+          data: {
+            conditions: this.mappedConditions,
+          },
+        })
+        .beforeClosed()
+        .subscribe(async (result) => {
+          if (result) {
+            this.conditionService.updateSort(result.payload);
+            this.mappedConditions = result.data;
+            this.conditionsChange.emit({
+              conditions: this.mappedConditions,
+              isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),
+            });
+          }
+        });
   }
 }

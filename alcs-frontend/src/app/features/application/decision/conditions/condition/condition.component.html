@@ -1,7 +1,5 @@
 <div class="header">
-  <!-- Keep the stringIndex line to add when the feature is implemented -->
-  <!-- <h4 *ngIf="condition.type">{{ stringIndex }}. {{ condition.type.label }}</h4> -->
-  <h4 *ngIf="condition.type">{{ condition.type.label }}</h4>
+  <h4 *ngIf="condition.type">{{ alphaIndex(index) }}. {{ condition.type.label }}</h4>
   <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
 </div>
 <div [ngClass]="isThreeColumn ? 'grid-3' : 'grid-2'">
@@ -21,7 +19,7 @@
 
   <div *ngIf="showSecurityAmountField">
     <div class="subheading2">Security Amount</div>
-    {{ condition.securityAmount }}
+    {{ condition.securityAmount | number }}
     <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
   </div>
 
@@ -200,7 +198,14 @@
 
 <div
   class="full-width"
-  [ngClass]="{ 'description-no-date-container': !(dates !== undefined && condition.type !== null && condition.type !== undefined && condition.type.isDateChecked) }"
+  [ngClass]="{
+    'description-no-date-container': !(
+      dates !== undefined &&
+      condition.type !== null &&
+      condition.type !== undefined &&
+      condition.type.isDateChecked
+    ),
+  }"
 >
   <div class="subheading2">Description</div>
   <span
@@ -218,4 +223,10 @@
       >{{ isReadMoreClicked ? 'Read Less' : 'Read More' }}</a
     >
   </div>
+</div>
+
+<div class="condition-instrument" *ngIf="isFinancialSecurity">
+  <app-decision-condition-financial-instrument
+    [conditionUuid]="condition.uuid"
+  ></app-decision-condition-financial-instrument>
 </div>

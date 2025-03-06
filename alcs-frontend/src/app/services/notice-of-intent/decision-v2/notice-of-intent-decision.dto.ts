@@ -4,6 +4,10 @@ import { DateLabel, DateType } from '../../application/decision/application-deci
 import { CardDto } from '../../card/card.dto';
 import { NoticeOfIntentTypeDto } from '../notice-of-intent.dto';
 
+export enum ConditionType {
+  FINANCIAL_SECURITY = 'BOND',
+}
+
 export interface UpdateNoticeOfIntentDecisionDto {
   resolutionNumber?: number;
   resolutionYear?: number;
