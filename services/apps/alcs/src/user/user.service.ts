@@ -124,11 +124,12 @@ export class UserService {
     return null;
   }
 
-  async sendNewUserRequestEmail(email: string, userIdentifier: string) {
+  async sendNewUserRequestEmail(userIdentifier: string, email?: string) {
+    const userText = email ? `${email}: ${userIdentifier}` : `${userIdentifier}`;
     const env = this.config.get('ENV');
     const prefix = env === 'production' ? '' : `[${env}]`;
     const subject = `${prefix} Access Requested to ALCS`;
-    const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
+    const body = `A new user ${userText} has requested access to ALCS.<br/> 
 <a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
 
     await this.emailService.sendEmail({

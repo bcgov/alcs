@@ -195,8 +195,8 @@ export class AuthorizationService {
         this.mapUserFromTokenToCreateDto(payload),
       );
 
-      if (user.clientRoles.length === 0 && !isPortal && user.email !== undefined) {
-        await this.userService.sendNewUserRequestEmail(user.email, user.bceidGuid ?? user.displayName);
+      if (user.clientRoles.length === 0 && !isPortal) {
+        await this.userService.sendNewUserRequestEmail(user.bceidGuid ?? user.displayName, user.email);
       }
     }
   }
