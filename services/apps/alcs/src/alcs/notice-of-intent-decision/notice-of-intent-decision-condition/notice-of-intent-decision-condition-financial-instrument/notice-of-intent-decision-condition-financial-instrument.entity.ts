@@ -39,7 +39,7 @@ export class NoticeOfIntentDecisionConditionFinancialInstrument extends Base {
   securityHolderPayee: string;
 
   @AutoMap()
-  @Column({ type: 'enum', enum: InstrumentType, nullable: false })
+  @Column({ type: 'enum', enum: InstrumentType, nullable: false, enumName: 'noi_instrument_type' })
   type: InstrumentType;
 
   @AutoMap()
@@ -63,7 +63,7 @@ export class NoticeOfIntentDecisionConditionFinancialInstrument extends Base {
   instrumentNumber: string | null;
 
   @AutoMap()
-  @Column({ type: 'enum', enum: HeldBy, nullable: false })
+  @Column({ type: 'enum', enum: HeldBy, nullable: false, enumName: 'noi_instrument_held_by' })
   heldBy: HeldBy;
 
   @AutoMap()
@@ -75,7 +75,13 @@ export class NoticeOfIntentDecisionConditionFinancialInstrument extends Base {
   notes: string | null;
 
   @AutoMap()
-  @Column({ type: 'enum', enum: InstrumentStatus, default: InstrumentStatus.RECEIVED, nullable: false })
+  @Column({
+    type: 'enum',
+    enum: InstrumentStatus,
+    default: InstrumentStatus.RECEIVED,
+    nullable: false,
+    enumName: 'noi_instrument_status',
+  })
   status: InstrumentStatus;
 
   @AutoMap()
