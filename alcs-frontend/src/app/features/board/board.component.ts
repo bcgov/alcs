@@ -596,7 +596,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       data,
     });
 
-    dialogRef.beforeClosed().subscribe((isDirty) => {
+    dialogRef.afterClosed().subscribe((isDirty) => {
       this.setUrl();
 
       if (isDirty && this.selectedBoardCode) {
