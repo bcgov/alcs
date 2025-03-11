@@ -1,4 +1,13 @@
-import { Component, Inject, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionConditionDto } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { countToString } from '../../../../../../../shared/utils/count-to-string';
@@ -23,7 +32,7 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { conditions: ApplicationDecisionConditionDto[]; },
+    public data: { conditions: ApplicationDecisionConditionDto[] },
     private dialogRef: MatDialogRef<DecisionConditionOrderDialogComponent>,
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
@@ -39,8 +48,12 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
         index++;
       });
     }
-    this.conditionsToOrder = this.data.conditions.sort((a,b) => a.order - b.order).map(a => {return {...a}});
-    this.dataSource.data =  this.conditionsToOrder;
+    this.conditionsToOrder = this.data.conditions
+      .sort((a, b) => a.order - b.order)
+      .map((a) => {
+        return { ...a };
+      });
+    this.dataSource.data = this.conditionsToOrder;
   }
 
   async onRowDropped(event: CdkDragDrop<ApplicationDecisionConditionDto, any>) {
@@ -48,78 +61,84 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
   }
 
   async openMenu($event: MouseEvent, record: ApplicationDecisionConditionDto) {
-      this.overlayRef?.detach();
-      $event.preventDefault();
-      this.selectedRecord = record.uuid;
-      const positionStrategy = this.overlay
-        .position()
-        .flexibleConnectedTo({ x: $event.x, y: $event.y })
-        .withPositions([
-          {
-            originX: 'end',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top',
-          },
-        ]);
-  
-      this.overlayRef = this.overlay.create({
-        positionStrategy,
-        scrollStrategy: this.overlay.scrollStrategies.close(),
-      });
-  
-      this.overlayRef.attach(
-        new TemplatePortal(this.orderMenu, this.viewContainerRef, {
-          $implicit: record,
-        }),
-      );
-    }
-  
-    sendToBottom(record: ApplicationDecisionConditionDto) {
-      const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
-      this.conditionsToOrder.sort((a,b) => a.order - b.order).forEach((item) => {
+    this.overlayRef?.detach();
+    $event.preventDefault();
+    this.selectedRecord = record.uuid;
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo({ x: $event.x, y: $event.y })
+      .withPositions([
+        {
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+      ]);
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      scrollStrategy: this.overlay.scrollStrategies.close(),
+    });
+
+    this.overlayRef.attach(
+      new TemplatePortal(this.orderMenu, this.viewContainerRef, {
+        $implicit: record,
+      }),
+    );
+  }
+
+  sendToBottom(record: ApplicationDecisionConditionDto) {
+    const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
+    this.conditionsToOrder
+      .sort((a, b) => a.order - b.order)
+      .forEach((item) => {
         if (item.order > currentIndex) {
           item.order--;
         }
       });
-      this.conditionsToOrder[currentIndex].order = this.conditionsToOrder.length;
-      this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
-      this.overlayRef?.detach();
-      this.selectedRecord = undefined;
-    }
-  
-    sendToTop(record: ApplicationDecisionConditionDto) {
-      const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
-      this.conditionsToOrder.sort((a,b) => a.order - b.order).forEach((item) => {
+    this.conditionsToOrder[currentIndex].order = this.conditionsToOrder.length;
+    this.dataSource.data = this.conditionsToOrder.sort((a, b) => a.order - b.order);
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
+
+  sendToTop(record: ApplicationDecisionConditionDto) {
+    const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
+    this.conditionsToOrder
+      .sort((a, b) => a.order - b.order)
+      .forEach((item) => {
         if (item.order < currentIndex) {
           item.order++;
         }
       });
-      this.conditionsToOrder[currentIndex].order = 0;
-      this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
-      this.overlayRef?.detach();
-      this.selectedRecord = undefined;
-    }
-  
-    clearMenu() {
-      this.overlayRef?.detach();
-      this.selectedRecord = undefined;
-    }
+    this.conditionsToOrder[currentIndex].order = 0;
+    this.dataSource.data = this.conditionsToOrder.sort((a, b) => a.order - b.order);
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
+
+  clearMenu() {
+    this.overlayRef?.detach();
+    this.selectedRecord = undefined;
+  }
 
   private moveItem(currentIndex: number, targetIndex: number) {
-    this.conditionsToOrder.sort((a,b) => a.order - b.order).forEach((item) => {
-      if (currentIndex > targetIndex) {
-        if (item.order < currentIndex && item.order >= targetIndex) {
-          item.order++;
+    this.conditionsToOrder
+      .sort((a, b) => a.order - b.order)
+      .forEach((item) => {
+        if (currentIndex > targetIndex) {
+          if (item.order < currentIndex && item.order >= targetIndex) {
+            item.order++;
+          }
+        } else if (item.order > currentIndex) {
+          if (item.order <= targetIndex) {
+            item.order--;
+          }
         }
-      } else if (item.order > currentIndex) {
-        if (item.order <= targetIndex) {
-          item.order--;
-        }
-      }
-    });
+      });
     this.conditionsToOrder[currentIndex].order = targetIndex;
-    this.dataSource.data = this.conditionsToOrder.sort((a,b) => a.order - b.order);
+    this.dataSource.data = this.conditionsToOrder.sort((a, b) => a.order - b.order);
   }
 
   onCancel(): void {
