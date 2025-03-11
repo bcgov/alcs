@@ -89,30 +89,20 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
   }
 
   sendToBottom(record: ApplicationDecisionConditionDto) {
-    const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
-    this.conditionsToOrder
-      .sort((a, b) => a.order - b.order)
-      .forEach((item) => {
-        if (item.order > currentIndex) {
-          item.order--;
-        }
-      });
-    this.conditionsToOrder[currentIndex].order = this.conditionsToOrder.length;
+    this.conditionsToOrder.forEach((item) => {
+      item.order--;
+    });
+    record.order = this.conditionsToOrder.length - 1;
     this.dataSource.data = this.conditionsToOrder.sort((a, b) => a.order - b.order);
     this.overlayRef?.detach();
     this.selectedRecord = undefined;
   }
 
   sendToTop(record: ApplicationDecisionConditionDto) {
-    const currentIndex = this.conditionsToOrder.findIndex((item) => item.uuid === record.uuid);
-    this.conditionsToOrder
-      .sort((a, b) => a.order - b.order)
-      .forEach((item) => {
-        if (item.order < currentIndex) {
-          item.order++;
-        }
-      });
-    this.conditionsToOrder[currentIndex].order = 0;
+    this.conditionsToOrder.forEach((item) => {
+      item.order++;
+    });
+    record.order = 0;
     this.dataSource.data = this.conditionsToOrder.sort((a, b) => a.order - b.order);
     this.overlayRef?.detach();
     this.selectedRecord = undefined;
