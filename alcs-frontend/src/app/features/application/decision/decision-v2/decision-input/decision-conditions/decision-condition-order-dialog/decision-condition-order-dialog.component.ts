@@ -90,7 +90,9 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
 
   sendToBottom(record: ApplicationDecisionConditionDto) {
     this.conditionsToOrder.forEach((item) => {
-      item.order--;
+      if (item.order > record.order) {
+        item.order--;
+      }
     });
     record.order = this.conditionsToOrder.length - 1;
     this.dataSource.data = this.conditionsToOrder.sort((a, b) => a.order - b.order);
@@ -100,7 +102,9 @@ export class DecisionConditionOrderDialogComponent implements OnInit {
 
   sendToTop(record: ApplicationDecisionConditionDto) {
     this.conditionsToOrder.forEach((item) => {
-      item.order++;
+      if (item.order < record.order) {
+        item.order++;
+      }
     });
     record.order = 0;
     this.dataSource.data = this.conditionsToOrder.sort((a, b) => a.order - b.order);
