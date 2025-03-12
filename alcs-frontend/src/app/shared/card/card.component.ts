@@ -110,7 +110,10 @@ export class CardComponent implements OnInit {
     this.isModification = this.isConditionCard ? (this.cardData as ConditionCardData).isModification : false;
     this.isReconsideration = this.isConditionCard ? (this.cardData as ConditionCardData).isReconsideration : false;
 
-    if (this.cardData.status === 'READ' || (this.isConditionCard && !this.isInConditionBoard)) {
+    if (
+      this.cardData.status === 'READ' &&
+      (!this.isConditionCard || (this.isConditionCard && !this.isInConditionBoard))
+    ) {
       if (this.cardData.decisionMeetings && this.cardData.decisionMeetings.length > 0) {
         this.cardData.latestDecisionDate = this.getLatestDecisionDate();
       }
