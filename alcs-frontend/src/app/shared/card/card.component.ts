@@ -115,10 +115,6 @@ export class CardComponent implements OnInit {
         this.cardData.latestDecisionDate = this.getLatestDecisionDate();
       }
     }
-
-    if (this.isConditionCard) {
-      console.log(this.cardData.decisionMeetings);
-    }
   }
 
   onMouseHover(e: any) {
