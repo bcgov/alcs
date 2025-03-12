@@ -103,18 +103,18 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
     this.cardData.latestDecisionDate = undefined;
 
-    if (this.cardData.status === 'READ') {
-      if (this.cardData.decisionMeetings && this.cardData.decisionMeetings.length > 0) {
-        this.cardData.latestDecisionDate = this.getLatestDecisionDate();
-      }
-    }
-
     this.isConditionCard = this.cardData.cardType === CardType.APP_CON || this.cardData.cardType === CardType.NOI_CON;
     this.isInConditionBoard = this.isConditionCard ? (this.cardData as ConditionCardData).isInConditionBoard : true;
     this.isExpired = this.isConditionCard ? (this.cardData as ConditionCardData).isExpired : false;
     this.isPastDue = this.isConditionCard ? (this.cardData as ConditionCardData).isPastDue : false;
     this.isModification = this.isConditionCard ? (this.cardData as ConditionCardData).isModification : false;
     this.isReconsideration = this.isConditionCard ? (this.cardData as ConditionCardData).isReconsideration : false;
+
+    if (this.cardData.status === 'READ' || (this.isConditionCard && !this.isInConditionBoard)) {
+      if (this.cardData.decisionMeetings && this.cardData.decisionMeetings.length > 0) {
+        this.cardData.latestDecisionDate = this.getLatestDecisionDate();
+      }
+    }
   }
 
   onMouseHover(e: any) {
