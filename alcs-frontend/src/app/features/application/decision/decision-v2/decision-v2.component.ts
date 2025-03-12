@@ -307,7 +307,15 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   getConditions(uuid: string | undefined) {
-    return uuid && this.conditions[uuid] ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))] : [];
+    return uuid && this.conditions[uuid] ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))].sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    }) : [];
   }
 
   getDate(uuid: string | undefined) {
