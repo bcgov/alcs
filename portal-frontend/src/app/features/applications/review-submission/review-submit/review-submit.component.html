@@ -212,7 +212,7 @@
         </div>
       </div>
       <div *ngIf="this.hasCompletedStepsBeforeDocuments" class="review-table">
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
+        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning" class="full-width">
           <div class="subheading2">Resolution Document</div>
           <div>
             <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
@@ -221,7 +221,7 @@
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
           </div>
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
+        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning" class="full-width">
           <div class="subheading2">
             Staff Report <span *ngIf="_applicationReview.isAuthorized === false">(optional)</span>
           </div>
@@ -478,9 +478,9 @@
             Staff Report <span *ngIf="_applicationReview.isAuthorized === false">(optional)</span>
           </div>
           <div>
-            <a class="link" (click)="openFile(document)" *ngFor="let document of staffReport">{{
-              document.fileName
-            }}</a>
+            <div class="document" *ngFor="let document of staffReport">
+              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
+            </div>
             <app-no-data
               [showRequired]="showErrors && _applicationReview.isAuthorized === true"
               *ngIf="staffReport.length === 0"

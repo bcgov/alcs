@@ -237,6 +237,7 @@
             applicationReview.isOCPDesignation ||
             applicationReview.isSubjectToZoning
           "
+          class="full-width"
         >
           <div class="subheading2">Resolution Document</div>
           <div>
@@ -246,7 +247,7 @@
           </div>
           <app-no-data *ngIf="resolutionDocument.length === 0"></app-no-data>
         </div>
-        <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+        <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning" class="full-width">
           <div class="subheading2">
             Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
           </div>
