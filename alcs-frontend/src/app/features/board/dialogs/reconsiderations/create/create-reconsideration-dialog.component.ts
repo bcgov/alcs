@@ -17,6 +17,7 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
 import { MinimalBoardDto } from '../../../../../services/board/board.dto';
 import { BoardService } from '../../../../../services/board/board.service';
+import { CardType } from '../../../../../shared/card/card.component';
 
 @Component({
   selector: 'app-create',
@@ -97,7 +98,9 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     });
 
     this.boardService.$boards.subscribe((boards) => {
-      this.boards = boards.sort((a, b) => (a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1));
+      this.boards = boards
+        .filter((board) => board.allowedCardTypes.includes(CardType.RECON))
+        .sort((a, b) => (a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1));
     });
 
     this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {

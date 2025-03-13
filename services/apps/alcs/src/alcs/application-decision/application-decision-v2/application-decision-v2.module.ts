@@ -56,6 +56,7 @@ import { ApplicationDecisionConditionCardService } from '../application-decision
 import { User } from 'apps/alcs/src/user/user.entity';
 import { ApplicationDecisionConditionFinancialInstrument } from '../application-decision-condition/application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.entity';
 import { ApplicationDecisionConditionFinancialInstrumentService } from '../application-decision-condition/application-decision-condition-financial-instrument/application-decision-condition-financial-instrument.service';
+import { ApplicationDecisionMeeting } from '../../application/application-decision-meeting/application-decision-meeting.entity';
 
 @Module({
   imports: [
@@ -87,6 +88,7 @@ import { ApplicationDecisionConditionFinancialInstrumentService } from '../appli
       ApplicationDecisionConditionCard,
       User,
       ApplicationDecisionConditionFinancialInstrument,
+      ApplicationDecisionMeeting,
     ]),
     forwardRef(() => BoardModule),
     forwardRef(() => ApplicationModule),

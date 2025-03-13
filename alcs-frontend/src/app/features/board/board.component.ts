@@ -551,6 +551,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       decisionIsFlagged: applicationDecisionCondition.decisionIsFlagged,
       isModification: applicationDecisionCondition.isModification,
       isReconsideration: applicationDecisionCondition.isReconsideration,
+      decisionMeetings: applicationDecisionCondition.decisionMeetings,
     };
   }
 
@@ -596,9 +597,11 @@ export class BoardComponent implements OnInit, OnDestroy {
       data,
     });
 
-    dialogRef.beforeClosed().subscribe((isDirty) => {
+    dialogRef.beforeClosed().subscribe(() => {
       this.setUrl();
+    });
 
+    dialogRef.afterClosed().subscribe((isDirty) => {
       if (isDirty && this.selectedBoardCode) {
         this.loadBoard(this.selectedBoardCode);
       }
