@@ -504,4 +504,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.showConditions = false;
     }
   }
+
+  clearResolution() {
+    this.resolutionNumberControl.setValue(null);
+  }
 }
