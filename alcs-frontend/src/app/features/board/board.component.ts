@@ -551,6 +551,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       decisionIsFlagged: applicationDecisionCondition.decisionIsFlagged,
       isModification: applicationDecisionCondition.isModification,
       isReconsideration: applicationDecisionCondition.isReconsideration,
+      decisionMeetings: applicationDecisionCondition.decisionMeetings,
     };
   }
 

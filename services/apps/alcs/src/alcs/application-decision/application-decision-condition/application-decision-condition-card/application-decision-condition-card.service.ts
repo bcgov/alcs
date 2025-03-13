@@ -26,6 +26,7 @@ import { ApplicationTypeDto } from '../../../code/application-code/application-t
 import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
+import { ApplicationDecisionMeetingService } from '../../../application/application-decision-meeting/application-decision-meeting.service';
 
 @Injectable()
 export class ApplicationDecisionConditionCardService {
@@ -65,6 +66,7 @@ export class ApplicationDecisionConditionCardService {
     private cardService: CardService,
     private applicationModificationService: ApplicationModificationService,
     private applicationReconsiderationService: ApplicationReconsiderationService,
+    private applicationDecisionMeetingService: ApplicationDecisionMeetingService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -201,6 +203,11 @@ export class ApplicationDecisionConditionCardService {
         const status = await this.applicationDecisionService.getDecisionConditionStatus(condition.uuid);
         condition.status = status !== '' ? status : undefined;
       }
+
+      const decisionMeetings = await this.applicationDecisionMeetingService.getByAppFileNumber(dto.fileNumber);
+      dto.decisionMeetings = decisionMeetings.map((meeting) => ({
+        date: meeting.date.getTime(),
+      }));
     }
     return dtos;
   }

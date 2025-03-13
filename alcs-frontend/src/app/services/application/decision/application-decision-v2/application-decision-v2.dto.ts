@@ -385,4 +385,9 @@ export interface ApplicationDecisionConditionCardBoardDto {
   type?: ApplicationTypeDto;
   isReconsideration: boolean;
   isModification: boolean;
+  decisionMeetings: DecisionConditionCardMeetingDto[];
+}
+
+export interface DecisionConditionCardMeetingDto {
+  date: number;
 }
