@@ -126,7 +126,6 @@ export class GenerateReviewDocumentService {
     if (resolutionDocument) {
       attachments.push(resolutionDocument);
     }
-      (document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT,
     );
     if (staffReport) {
       attachments.push(staffReport);
