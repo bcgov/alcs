@@ -213,14 +213,16 @@
       <div
         *ngIf="
           (applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning) &&
-          (applicationReview.isAuthorized || staffReport)
+          (applicationReview.isAuthorized || staffReports.length > 0)
         "
       >
         <div class="subheading2">Staff Report</div>
-        <div *ngIf="staffReport">
-          <a (click)="openDocument(staffReport.uuid, staffReport.fileName)">{{ staffReport.fileName }}</a>
+        <div *ngIf="staffReports.length > 0">
+          <div *ngFor="let staffReport of staffReports">
+            <a (click)="openDocument(staffReport.uuid, staffReport.fileName)">{{ staffReport.fileName }}</a>
+          </div>
         </div>
-        <app-no-data *ngIf="!staffReport"></app-no-data>
+        <app-no-data *ngIf="staffReports.length === 0"></app-no-data>
       </div>
       <div>
         <div class="subheading2">Other Attachments</div>
