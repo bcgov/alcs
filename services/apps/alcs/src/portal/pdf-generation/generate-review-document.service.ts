@@ -126,7 +126,6 @@ export class GenerateReviewDocumentService {
     if (resolutionDocument) {
       attachments.push(resolutionDocument);
     }
-    const staffReport = documents.find(
       (document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT,
     );
     if (staffReport) {
