@@ -46,21 +46,14 @@ export class GenerateReviewDocumentService {
   ) {}
 
   async generate(fileNumber: string, user: User) {
-    const submission =
-      await this.applicationSubmissionService.verifyAccessByFileId(
-        fileNumber,
-        user,
-      );
+    const submission = await this.applicationSubmissionService.verifyAccessByFileId(fileNumber, user);
 
-    const review =
-      await this.applicationSubmissionReviewService.getByFileNumber(fileNumber);
+    const review = await this.applicationSubmissionReviewService.getByFileNumber(fileNumber);
     const documents = await this.applicationDocumentService.list(fileNumber);
 
     const payload = await this.preparePdfPayload(submission, review, documents);
 
-    const template = payload.isFirstNationGovernment
-      ? FNG_TEMPLATE_FILENAME
-      : LG_TEMPLATE_FILENAME;
+    const template = payload.isFirstNationGovernment ? FNG_TEMPLATE_FILENAME : LG_TEMPLATE_FILENAME;
 
     return await this.documentGenerationService.generateDocument(
       `${fileNumber}_submission_Date_Time`,
@@ -83,11 +76,7 @@ export class GenerateReviewDocumentService {
         documentType: DOCUMENT_TYPE.ORIGINAL_SUBMISSION,
         source: DOCUMENT_SOURCE.LFNG,
         system: DOCUMENT_SYSTEM.PORTAL,
-        visibilityFlags: [
-          VISIBILITY_FLAG.APPLICANT,
-          VISIBILITY_FLAG.COMMISSIONER,
-          VISIBILITY_FLAG.GOVERNMENT,
-        ],
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.COMMISSIONER, VISIBILITY_FLAG.GOVERNMENT],
       });
     }
   }
@@ -97,47 +86,33 @@ export class GenerateReviewDocumentService {
     review: ApplicationSubmissionReview,
     documents: ApplicationDocument[],
   ) {
-    const dto = this.mapper.map(
-      review,
-      ApplicationSubmissionReview,
-      ApplicationSubmissionReviewDto,
-    );
+    const dto = this.mapper.map(review, ApplicationSubmissionReview, ApplicationSubmissionReviewDto);
 
-    const application = await this.applicationService.getOrFail(
-      submission.fileNumber,
-    );
+    const application = await this.applicationService.getOrFail(submission.fileNumber);
 
     const localGovernment = submission?.localGovernmentUuid
-      ? await this.localGovernmentService.getByUuid(
-          submission.localGovernmentUuid,
-        )
+      ? await this.localGovernmentService.getByUuid(submission.localGovernmentUuid)
       : undefined;
-    dto.isFirstNationGovernment = localGovernment
-      ? localGovernment.isFirstNation
-      : false;
+    dto.isFirstNationGovernment = localGovernment ? localGovernment.isFirstNation : false;
 
     const attachments = documents
       .filter((document) => document.document.source === DOCUMENT_SOURCE.LFNG)
       .filter((document) => document.type?.code === DOCUMENT_TYPE.OTHER);
 
-    const resolutionDocument = documents.find(
-      (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
-    );
+    const resolutionDocument = documents.find((document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
     if (resolutionDocument) {
       attachments.push(resolutionDocument);
     }
-    );
-    if (staffReport) {
-      attachments.push(staffReport);
+    const staffReports = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+    if (staffReports.length > 0) {
+      attachments.push(...staffReports);
     }
 
     const isAuthorized = this.setAuthorization(dto);
 
     return {
       ...dto,
-      generatedDateTime: dayjs
-        .tz(new Date(), 'Canada/Pacific')
-        .format('MMM DD, YYYY hh:mm:ss Z'),
+      generatedDateTime: dayjs.tz(new Date(), 'Canada/Pacific').format('MMM DD, YYYY hh:mm:ss Z'),
       isOCPDesignation: formatBooleanToYesNoString(dto.isOCPDesignation),
       OCPConsistent: formatBooleanToYesNoString(dto.OCPConsistent),
       isSubjectToZoning: formatBooleanToYesNoString(dto.isSubjectToZoning),
