@@ -36,7 +36,12 @@
     </ng-container>
   </div>
   <div *ngIf="contactEmail">
-    <div class="subheading2">Primary Contact Email</div>
+    <div class="subheading2 left">
+      Primary Contact Email
+      <mat-icon class="icon" matTooltip="Updating the email in this field will resend the ALC response.">
+        info_outline
+      </mat-icon>
+    </div>
     <app-inline-text
       [updateOnSave]="false"
       [value]="contactEmail"

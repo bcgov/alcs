@@ -82,7 +82,9 @@ export class IntakeComponent implements OnInit, OnDestroy {
     this.confirmationDialogService
       .openDialog({
         title: 'Change Primary Contact Email',
-        body: 'Any changes made here will also be reflected in the portal. Do you want to continue?',
+        body: '<ul><li>Any changes made here will also be reflected in the Portal.</li>\
+        <li>The ALC response will be emailed to the new address. The LTSA PDF will not be regenerated.</li>\
+        </ul>Do you want to continue?',
       })
       .subscribe(async (didConfirm) => {
         if (didConfirm) {
