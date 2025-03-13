@@ -79,12 +79,15 @@ export class IntakeComponent implements OnInit, OnDestroy {
       return;
     }
 
+    let message =
+      '<ul><li>Any changes made here will also be reflected in the Portal.</li>' +
+      '<li>The ALC response will be emailed to the new address. The LTSA PDF will not be regenerated.</li>' +
+      '</ul>Do you want to continue?';
+
     this.confirmationDialogService
       .openDialog({
         title: 'Change Primary Contact Email',
-        body: '<ul><li>Any changes made here will also be reflected in the Portal.</li>\
-        <li>The ALC response will be emailed to the new address. The LTSA PDF will not be regenerated.</li>\
-        </ul>Do you want to continue?',
+        body: message,
       })
       .subscribe(async (didConfirm) => {
         if (didConfirm) {
