@@ -11,7 +11,7 @@
 
   <div *ngIf="showAdmFeeField">
     <div class="subheading2">Administrative Fee Amount</div>
-    {{ condition.administrativeFee }}
+    {{ condition.administrativeFee | number }}
     <app-no-data
       *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
     ></app-no-data>
