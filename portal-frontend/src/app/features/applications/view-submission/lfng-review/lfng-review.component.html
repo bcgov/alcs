@@ -251,11 +251,11 @@
             Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
           </div>
           <div>
-            <a class="link" (click)="openFile(document)" *ngFor="let document of staffReport">{{
-              document.fileName
-            }}</a>
+            <div class="document" *ngFor="let document of staffReport">
+              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
+            </div>
+            <app-no-data *ngIf="staffReport.length === 0"></app-no-data>
           </div>
-          <app-no-data *ngIf="staffReport.length === 0"></app-no-data>
         </div>
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>
