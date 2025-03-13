@@ -15,8 +15,6 @@ import { PlanningReviewType } from './planning-review-type.entity';
 import { PlanningReview } from './planning-review.entity';
 import { PlanningReviewService } from './planning-review.service';
 
-let mockCodeService: any;
-
 describe('PlanningReviewService', () => {
   let service: PlanningReviewService;
   let mockRepository: DeepMocked<Repository<PlanningReview>>;
@@ -25,6 +23,7 @@ describe('PlanningReviewService', () => {
   let mockCardService: DeepMocked<CardService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
@@ -34,10 +33,6 @@ describe('PlanningReviewService', () => {
     mockFileNumberService = createMock();
     mockLocalGovernmentService = createMock();
     mockCardService = createMock();
-
-    mockCodeService = {
-      fetchCodes: jest.fn(),
-    };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
