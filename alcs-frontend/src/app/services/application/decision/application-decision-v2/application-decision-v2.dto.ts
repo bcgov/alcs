@@ -38,6 +38,7 @@ export interface UpdateApplicationDecisionDto {
   flaggedByUuid?: string | null;
   flagEditedByUuid?: string | null;
   flagEditedAt?: number | null;
+  sendEmail?: boolean;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {

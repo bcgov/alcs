@@ -31,6 +31,7 @@ export interface UpdateNoticeOfIntentDecisionDto {
   flaggedByUuid?: string | null;
   flagEditedByUuid?: string | null;
   flagEditedAt?: number | null;
+  sendEmail?: boolean;
 }
 
 export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {

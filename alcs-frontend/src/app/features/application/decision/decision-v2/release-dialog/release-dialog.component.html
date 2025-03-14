@@ -2,7 +2,7 @@
   <h2 class="card-title">Confirm Release Decision</h2>
 </div>
 <mat-dialog-content class="content">
-  <div class="row">
+  <div *ngIf="!wasReleased" class="row">
     <div class="toggle-label" id="sendEmailLabel">Send Email (with decision document)</div>
     <div class="toggle">
       <mat-slide-toggle

@@ -59,6 +59,7 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
     this.matDialogRef.close({
       confirmed: true,
       ccEmails: this.emails,
+      sendEmail: this.sendEmail,
     });
   }
 
