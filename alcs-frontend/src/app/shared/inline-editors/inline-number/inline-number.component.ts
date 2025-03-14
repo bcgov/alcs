@@ -12,6 +12,8 @@ export class InlineNumberComponent implements AfterContentChecked {
   @Input() placeholder: string = 'Enter a value';
   @Input() decimals = 2;
   @Input() nonZeroEmptyValidation: boolean = false;
+  @Input() hideButtons = false;
+  @Input() disableThousandsSeparator = false;
   @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
