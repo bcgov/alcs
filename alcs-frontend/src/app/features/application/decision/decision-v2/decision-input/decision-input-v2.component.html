@@ -18,7 +18,10 @@
     </div>
 
     <div class="resolution-number-wrapper">
-      <div *ngIf="!resolutionNumberControl.getRawValue()" class="resolution-number-btn-wrapper">
+      <div
+        *ngIf="!resolutionNumberControl.value && !resolutionNumberControl.dirty"
+        class="resolution-number-btn-wrapper"
+      >
         <button
           class="generate-number-btn"
           [loading]="isLoading"
@@ -36,17 +39,66 @@
           *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
         ></app-error-message>
       </div>
-      <div *ngIf="resolutionNumberControl.getRawValue()">
+      <div *ngIf="resolutionNumberControl.value || resolutionNumberControl.dirty">
         <div class="resolution-number">
-          <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
-          <button
-            matTooltip="Delete resolution number"
-            class="delete-icon"
-            mat-icon-button
-            (click)="onDeleteResolutionNumber()"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
+          Res #
+          <app-inline-number
+            resolutionNumberInput
+            class="resolution-number-inline-field"
+            [value]="resolutionNumberControl.value ?? undefined"
+            [decimals]="0"
+            [nonZeroEmptyValidation]="true"
+            [hideButtons]="true"
+            [disableThousandsSeparator]="true"
+            (save)="onSaveResolutionNumber($event)"
+          />
+          <div>&nbsp;/&nbsp;</div>
+          {{ resolutionYearControl.value }}
+          <div class="resolution-number-actions">
+            <div
+              class="resolution-number-cancel-save-wrapper"
+              *ngIf="!!resolutionNumberInput?.isEditing; else editButtonContainer"
+            >
+              <button
+                mat-stroked-button
+                color="primary"
+                type="button"
+                class="resolution-number-cancel-button"
+                (click)="onClickResolutionNumberCancelButton()"
+              >
+                Cancel
+              </button>
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                class="resolution-number-save-button"
+                (click)="onClickResolutionNumberSaveButton()"
+              >
+                Save
+              </button>
+            </div>
+
+            <ng-template #editButtonContainer>
+              <button
+                mat-icon-button
+                type="button"
+                class="resolution-number-edit-button"
+                (click)="onClickResolutionNumberEditButton()"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button
+                matTooltip="Delete resolution number"
+                class="delete-icon"
+                mat-icon-button
+                (click)="onDeleteResolutionNumber()"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </ng-template>
+          </div>
         </div>
       </div>
     </div>

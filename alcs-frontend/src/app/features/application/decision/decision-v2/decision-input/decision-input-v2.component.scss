@@ -143,3 +143,24 @@ form {
     margin-bottom: 3px;
   }
 }
+
+.resolution-number-inline-field {
+  :host::ng-deep & {
+    .inline-number-wrapper {
+      padding: 0 !important;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      width: 100px;
+    }
+  }
+}
+
+.resolution-number-actions {
+  padding-left: 12px;
+}
+
+.resolution-number-cancel-save-wrapper {
+  display: flex;
+  gap: 12px;
+}

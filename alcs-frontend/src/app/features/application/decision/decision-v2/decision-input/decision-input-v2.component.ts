@@ -4,7 +4,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { combineLatestWith, Subject, takeUntil } from 'rxjs';
+import { combineLatestWith, Subject, take, filter, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
@@ -33,6 +33,7 @@ import { parseBooleanToString, parseStringToBoolean } from '../../../../../share
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 import { DecisionComponentsComponent } from './decision-components/decision-components.component';
 import { DecisionConditionsComponent } from './decision-conditions/decision-conditions.component';
+import { InlineNumberComponent } from '../../../../../shared/inline-editors/inline-number/inline-number.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -83,6 +84,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   @ViewChild(DecisionComponentsComponent) decisionComponentsComponent?: DecisionComponentsComponent;
   @ViewChild(DecisionConditionsComponent) decisionConditionsComponent?: DecisionConditionsComponent;
+  @ViewChild(InlineNumberComponent) resolutionNumberInput?: InlineNumberComponent;
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -121,8 +123,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.extractAndPopulateQueryParams();
 
     if (this.fileNumber) {
-      this.loadData();
       this.setupSubscribers();
+      this.loadData();
     }
   }
 
@@ -172,68 +174,68 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private setupSubscribers() {
+    this.modificationService.$modifications
+      .pipe(takeUntil(this.$destroy))
+      .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
+      .subscribe(([modifications, reconsiderations]) => {
+        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
+      });
+
     this.decisionService.$decision
       .pipe(takeUntil(this.$destroy))
-      .pipe(
-        combineLatestWith(
-          this.modificationService.$modifications,
-          this.reconsiderationService.$reconsiderations,
-          this.decisionService.$decisions,
-        ),
-      )
-      .subscribe(([decision, modifications, reconsiderations, decisions]) => {
-        if (decision) {
-          this.existingDecision = decision;
-          this.uuid = decision.uuid;
+      .pipe(filter((decision) => !!decision))
+      .pipe(combineLatestWith(this.decisionService.$decisions))
+      .pipe(take(1))
+      .subscribe(([decision, decisions]) => {
+        if (!decision) {
+          this.resolutionYearControl.enable();
+          return;
         }
 
-        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
+        this.existingDecision = decision;
+        this.uuid = decision.uuid;
 
-        if (this.existingDecision) {
-          this.patchFormWithExistingData(this.existingDecision);
+        this.patchFormWithExistingData(this.existingDecision);
 
-          if (decisions.length > 1) {
-            let minDate = null;
-            this.isFirstDecision = true;
+        if (decisions.length > 1) {
+          let minDate = null;
+          this.isFirstDecision = true;
 
-            for (const decision of decisions) {
-              //Skip ourselves!
-              if (decision.uuid === this.existingDecision.uuid) {
-                continue;
-              }
-
-              if (!minDate && decision.date) {
-                minDate = decision.date;
-              }
-
-              if (minDate && decision.date && decision.date < minDate) {
-                minDate = decision.date;
-              }
-
-              if (this.existingDecision.createdAt > decision.createdAt) {
-                this.isFirstDecision = false;
-              }
+          for (const decision of decisions) {
+            //Skip ourselves!
+            if (decision.uuid === this.existingDecision.uuid) {
+              continue;
             }
 
-            if (minDate && !this.isFirstDecision) {
-              this.minDate = new Date(minDate);
+            if (!minDate && decision.date) {
+              minDate = decision.date;
             }
 
-            if (this.isFirstDecision) {
-              this.form.controls.postDecision.disable();
-            } else {
-              this.form.controls.postDecision.addValidators([Validators.required]);
-              this.form.controls.postDecision.enable();
-              this.onSelectPostDecision({
-                type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
-              });
+            if (minDate && decision.date && decision.date < minDate) {
+              minDate = decision.date;
             }
-          } else {
-            this.isFirstDecision = true;
+
+            if (this.existingDecision.createdAt > decision.createdAt) {
+              this.isFirstDecision = false;
+            }
+          }
+
+          if (minDate && !this.isFirstDecision) {
+            this.minDate = new Date(minDate);
+          }
+
+          if (this.isFirstDecision) {
             this.form.controls.postDecision.disable();
+          } else {
+            this.form.controls.postDecision.addValidators([Validators.required]);
+            this.form.controls.postDecision.enable();
+            this.onSelectPostDecision({
+              type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
+            });
           }
         } else {
-          this.resolutionYearControl.enable();
+          this.isFirstDecision = true;
+          this.form.controls.postDecision.disable();
         }
       });
   }
@@ -504,6 +506,25 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       }
     } else {
       this.toastService.showErrorToast('Resolution year is not selected. Select a resolution year first.');
+    }
+  }
+
+  async onClickResolutionNumberEditButton() {
+    this.resolutionNumberInput?.startEdit();
+  }
+
+  async onClickResolutionNumberCancelButton() {
+    this.resolutionNumberInput?.cancelEdit();
+  }
+
+  async onClickResolutionNumberSaveButton() {
+    this.resolutionNumberInput?.confirmEdit();
+  }
+
+  async onSaveResolutionNumber(resolutionNumberString: string | null) {
+    const resolutionNumber = Number.parseInt(resolutionNumberString ?? '');
+    if (!isNaN(resolutionNumber)) {
+      await this.setResolutionNumber(resolutionNumber);
     }
   }
 
