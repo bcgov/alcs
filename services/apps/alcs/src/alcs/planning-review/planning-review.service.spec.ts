@@ -26,13 +26,13 @@ describe('PlanningReviewService', () => {
   let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
+    mockCodeService = createMock();
     mockCardService = createMock();
     mockRepository = createMock();
     mockTypeRepository = createMock();
     mockReferralRepository = createMock();
     mockFileNumberService = createMock();
     mockLocalGovernmentService = createMock();
-    mockCardService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
