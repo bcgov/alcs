@@ -16,3 +16,5 @@ playwright/.cache/
 .~lock.*
 
 /ora2pg_data
+bin/sync-prod-database/*.tar
+.DS_Store
