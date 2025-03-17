@@ -104,6 +104,8 @@ form {
     .resolution-number {
       display: flex;
       align-items: center;
+      flex-grow: 1;
+
       font-size: 20px;
       color: colors.$grey-dark;
       position: relative;
@@ -177,9 +179,24 @@ form {
 
 .resolution-number-actions {
   padding-left: 12px;
+  flex-grow: 1;
 }
 
 .resolution-number-cancel-save-wrapper {
   display: flex;
   gap: 12px;
+}
+
+.resolution-number-save-button-container {
+  position: relative;
+  flex-grow: 1;
+
+  mat-error {
+    display: flex;
+
+    font-size: 12px !important;
+    font-weight: bold;
+
+    position: absolute;
+  }
 }

@@ -580,7 +580,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       !this.componentsValid ||
       (this.components.length === 0 && requiresComponents) ||
       (this.conditionUpdates.length === 0 && requiresConditions) ||
-      this.requiredDatesAreMissing()
+      this.requiredDatesAreMissing() ||
+      this.resolutionNumberInput?.isEditing
     ) {
       this.form.controls.decisionMaker.markAsDirty();
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
