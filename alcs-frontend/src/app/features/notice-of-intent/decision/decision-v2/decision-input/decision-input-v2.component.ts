@@ -362,7 +362,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.resolutionYearControl.disable();
       this.form.controls.resolutionNumber.setValue(number.toString());
       await this.onSubmit(true);
-    } catch {
+    } finally {
       this.resolutionYearControl.enable();
     }
   }
@@ -503,5 +503,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.conditionUpdates = [];
       this.showConditions = false;
     }
+  }
+
+  clearResolution() {
+    this.resolutionNumberControl.setValue(null);
   }
 }

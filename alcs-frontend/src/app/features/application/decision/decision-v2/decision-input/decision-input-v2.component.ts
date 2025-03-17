@@ -278,7 +278,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
           (reconsideration.reviewOutcome?.code === 'PRC' && !reconsideration.resultingDecision) ||
-          (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1),
+          reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1,
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsidersDecisions
@@ -308,7 +308,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedComment: existingDecision.rescindedComment,
     });
 
-    this.conditions = existingDecision.conditions.sort((a,b) => a.order - b.order);
+    this.conditions = existingDecision.conditions.sort((a, b) => a.order - b.order);
 
     if (existingDecision.reconsiders) {
       this.onSelectPostDecision({
@@ -547,7 +547,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.resolutionYearControl.disable();
       this.form.controls.resolutionNumber.setValue(number);
       await this.onSubmit(true);
-    } catch {
+    } finally {
       this.resolutionYearControl.enable();
     }
   }
@@ -721,5 +721,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         catchError((e) => of({ resolutionNumberAlreadyExists: "Can't check resolution number" })),
       );
     };
+  }
+
+  clearResolution() {
+    this.resolutionNumberControl.setValue(null);
   }
 }
