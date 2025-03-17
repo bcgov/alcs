@@ -1,5 +1,5 @@
-date=2025-03-11 23:16:13+0000
+date=2025-03-17 16:01:43+0000
 os=Linux 6.8.0-1021-azure
-schemaspy-version=7.0.0-SNAPSHOT
-schemaspy-revision=68b3190d0baae3de1d9e5d31b9fe6e41a6e4ad20
+schemaspy-version=7.0.2-SNAPSHOT
+schemaspy-revision=bf4d5fddd535dd213a512a6a521bcadb8260168d
 renderer=Graphviz dot 2.43.0 
