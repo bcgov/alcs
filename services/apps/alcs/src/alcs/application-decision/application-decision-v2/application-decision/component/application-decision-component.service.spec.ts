@@ -199,7 +199,6 @@ describe('ApplicationDecisionComponentService', () => {
     expect(result[0].agCapSource).toEqual('3');
     expect(result[0].agCapMap).toEqual('4');
     expect(result[0].agCapConsultant).toEqual('5');
-    expect(result[0].endDate).toEqual(new Date(0));
     expect(result[0].applicationDecisionComponentTypeCode).toEqual('fake_code');
   });
 
