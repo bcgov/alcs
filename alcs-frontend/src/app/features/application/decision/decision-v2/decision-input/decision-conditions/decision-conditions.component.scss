@@ -31,4 +31,13 @@ section {
 .cond-footer {
   width: 100%;
   text-align: right;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+
+.add-condition-container {
+  display: flex;
+  flex-direction: column;
 }

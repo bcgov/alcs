@@ -46,6 +46,10 @@
     }
   }
 
+  .top-bar {
+    margin-bottom: rem(34);
+  }
+
   .comment-container {
     align-items: flex-start;
     background-color: rgba(colors.$accent-color-light, 0.5);

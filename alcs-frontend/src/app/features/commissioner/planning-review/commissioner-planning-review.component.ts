@@ -29,9 +29,14 @@ export class CommissionerPlanningReviewComponent implements OnInit, OnDestroy {
       const { fileNumber } = routeParams;
       this.fileNumber = fileNumber;
       this.planningReview = await this.commissionerService.fetchPlanningReview(fileNumber);
-      this.titleService.setTitle(
-        `${environment.siteName} | ${this.planningReview.fileNumber} (${this.planningReview.documentName})`,
-      );
+      
+      if (this.planningReview) {
+        const fileNumberStr = this.planningReview.fileNumber?.toString() || 'N/A';
+        const documentNameStr = this.planningReview.documentName?.toString() || 'N/A';
+        this.titleService.setTitle(
+          `${environment.siteName} | ${fileNumberStr} (${documentNameStr})`,
+        );
+      }
     });
   }
 

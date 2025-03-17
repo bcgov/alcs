@@ -126,11 +126,10 @@ export class GenerateReviewDocumentService {
     if (resolutionDocument) {
       attachments.push(resolutionDocument);
     }
-    const staffReport = documents.find(
-      (document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT,
-    );
-    if (staffReport) {
-      attachments.push(staffReport);
+
+    const staffReports = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+    if (staffReports.length > 0) {
+      attachments.push(...staffReports);
     }
 
     const isAuthorized = this.setAuthorization(dto);
