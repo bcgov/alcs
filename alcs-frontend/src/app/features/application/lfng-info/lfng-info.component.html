@@ -201,7 +201,10 @@
       </div>
     </div>
     <div *ngIf="hasCompletedStepsBeforeDocuments" class="review-table">
-      <div *ngIf="isFirstNationGovernment || applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+      <div
+        *ngIf="isFirstNationGovernment || applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning"
+        class="full-row"
+      >
         <div class="subheading2">Resolution Document</div>
         <div>
           <a *ngIf="resolutionDocument" (click)="openDocument(resolutionDocument.uuid, resolutionDocument.fileName)">{{
@@ -215,6 +218,7 @@
           (applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning) &&
           (applicationReview.isAuthorized || staffReports.length > 0)
         "
+        class="full-row"
       >
         <div class="subheading2">Staff Report</div>
         <div *ngIf="staffReports.length > 0">
@@ -224,7 +228,7 @@
         </div>
         <app-no-data *ngIf="staffReports.length === 0"></app-no-data>
       </div>
-      <div>
+      <div class="full-row">
         <div class="subheading2">Other Attachments</div>
         <div>
           <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
