@@ -30,8 +30,15 @@
           [formControl]="valueControl"
         />
       </mat-form-field>
-      <mat-error *ngIf="valueControl.errors?.['nonZero']"><mat-icon>warning</mat-icon>&nbsp;Value cannot be 0</mat-error>
-      <mat-error *ngIf="valueControl.errors?.['required']"><mat-icon>warning</mat-icon>&nbsp;Value cannot be Empty</mat-error>
+
+      <ng-container *ngIf="valueControl.hasError">
+        <mat-error *ngFor="let error of valueControl?.errors | keyvalue"
+          ><mat-icon>warning</mat-icon>&nbsp;
+          <ng-container *ngIf="error.key === 'nonZero'">Value cannot be 0</ng-container>
+          <ng-container *ngIf="error.key === 'required'">Value cannot be Empty</ng-container>
+          <ng-container *ngIf="!['nonZero', 'required'].includes(error.key)">{{ error.value }}</ng-container>
+        </mat-error>
+      </ng-container>
     </form>
     <div class="button-container" *ngIf="!hideButtons">
       <button mat-button (click)="cancelEdit()">CANCEL</button>

@@ -1,5 +1,5 @@
 import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { AsyncValidatorFn, FormControl, Validators } from '@angular/forms';
 import { NonZeroValidator } from '../../validators/value-validator';
 
 @Component({
@@ -22,6 +22,7 @@ export class InlineNumberComponent implements AfterContentChecked {
   @Input() nonZeroEmptyValidation: boolean = false;
   @Input() hideButtons = false;
   @Input() disableThousandsSeparator = false;
+  @Input() asyncValidators: AsyncValidatorFn[] = [];
   @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
@@ -33,6 +34,8 @@ export class InlineNumberComponent implements AfterContentChecked {
   constructor() {}
 
   ngOnInit() {
+    this.valueControl.setAsyncValidators(this.asyncValidators);
+
     if (this.nonZeroEmptyValidation) {
       this.valueControl.setValidators([NonZeroValidator, Validators.required]);
     }
