@@ -40,7 +40,7 @@
         ></app-error-message>
       </div>
       <div *ngIf="resolutionNumberControl.value || resolutionNumberControl.dirty">
-        <div class="resolution-number">
+        <div class="resolution-number" [class.is-editing]="resolutionNumberInput?.isEditing === true">
           Res #
           <app-inline-number
             resolutionNumberInput

@@ -25,15 +25,15 @@
           name="value"
           [placeholder]="placeholder"
           #editInput
-          (keydown.enter)="!valueControl.invalid ? confirmEdit(): preventKeydown($event)"
+          (keydown.enter)="!valueControl.invalid ? confirmEdit() : preventKeydown($event)"
           (keydown.escape)="cancelEdit()"
           [formControl]="valueControl"
         />
       </mat-form-field>
 
       <ng-container *ngIf="valueControl.hasError">
-        <mat-error *ngFor="let error of valueControl?.errors | keyvalue"
-          ><mat-icon>warning</mat-icon>&nbsp;
+        <mat-error class="resolution-number-error" *ngFor="let error of valueControl?.errors | keyvalue"
+          ><mat-icon>warning</mat-icon>
           <ng-container *ngIf="error.key === 'nonZero'">Value cannot be 0</ng-container>
           <ng-container *ngIf="error.key === 'required'">Value cannot be Empty</ng-container>
           <ng-container *ngIf="!['nonZero', 'required'].includes(error.key)">{{ error.value }}</ng-container>
