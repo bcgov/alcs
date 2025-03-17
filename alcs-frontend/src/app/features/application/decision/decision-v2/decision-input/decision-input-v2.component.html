@@ -75,6 +75,7 @@
                 type="button"
                 class="resolution-number-save-button"
                 (click)="onClickResolutionNumberSaveButton()"
+                [disabled]="resolutionNumberInput?.valueControl?.invalid"
               >
                 Save
               </button>
