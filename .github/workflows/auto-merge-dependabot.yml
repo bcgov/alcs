@@ -21,6 +21,9 @@ jobs:
       github.event_name == 'workflow_run' && 
       github.event.workflow_run.conclusion == 'success'
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Auto-merge Dependabot PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
