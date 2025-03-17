@@ -202,7 +202,7 @@ export class ApplicationDecisionV2Service {
     return result;
   }
 
-  async resolutionNumberExists(resolutionNumber: number, resolutionYear: number) {
+  async resolutionNumberExists(resolutionYear: number, resolutionNumber: number) {
     let result: boolean | undefined = undefined;
     try {
       result = await firstValueFrom(

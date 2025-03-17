@@ -254,6 +254,6 @@ export class ApplicationDecisionV2Controller {
     @Param('resolutionYear') resolutionYear: number,
     @Param('resolutionNumber') resolutionNumber: number,
   ): Promise<boolean> {
-    return this.appDecisionService.resolutionNumberExists(resolutionNumber, resolutionYear);
+    return this.appDecisionService.resolutionNumberExists(resolutionYear, resolutionNumber);
   }
 }

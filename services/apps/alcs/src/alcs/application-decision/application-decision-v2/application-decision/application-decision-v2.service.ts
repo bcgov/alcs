@@ -477,7 +477,7 @@ export class ApplicationDecisionV2Service {
     }
   }
 
-  async resolutionNumberExists(resolutionNumber: number, resolutionYear: number): Promise<boolean> {
+  async resolutionNumberExists(resolutionYear: number, resolutionNumber: number): Promise<boolean> {
     return !!(await this.appDecisionRepository.findOne({
       where: {
         resolutionNumber,
