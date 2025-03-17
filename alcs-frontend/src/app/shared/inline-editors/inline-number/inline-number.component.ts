@@ -8,7 +8,15 @@ import { NonZeroValidator } from '../../validators/value-validator';
   styleUrls: ['./inline-number.component.scss'],
 })
 export class InlineNumberComponent implements AfterContentChecked {
-  @Input() value?: string | null;
+  private _value: number | undefined = undefined;
+  @Input() set value(value: string | null | undefined) {
+    if (value) {
+      this._value = Number.parseFloat(value);
+    }
+  }
+  get value(): string | null | undefined {
+    return this._value?.toString();
+  }
   @Input() placeholder: string = 'Enter a value';
   @Input() decimals = 2;
   @Input() nonZeroEmptyValidation: boolean = false;
@@ -20,7 +28,7 @@ export class InlineNumberComponent implements AfterContentChecked {
 
   isEditing = false;
 
-  valueControl = new FormControl<string | null | undefined>(null, []);
+  valueControl = new FormControl<number | null | undefined>(null, []);
 
   constructor() {}
 
@@ -32,7 +40,7 @@ export class InlineNumberComponent implements AfterContentChecked {
 
   startEdit() {
     this.isEditing = true;
-    this.valueControl.setValue(this.value);
+    this.valueControl.setValue(this._value);
   }
 
   ngAfterContentChecked(): void {
@@ -42,9 +50,9 @@ export class InlineNumberComponent implements AfterContentChecked {
   }
 
   confirmEdit() {
-    if (this.valueControl.value !== this.value) {
-      this.save.emit(this.valueControl.value?.toString() ?? null);
-      this.value = this.valueControl.value;
+    if (this.valueControl.value !== this._value) {
+      this.save.emit(this.valueControl.value?.toString() ?? '');
+      this._value = this.valueControl.value ?? undefined;
     }
 
     this.isEditing = false;
@@ -52,7 +60,7 @@ export class InlineNumberComponent implements AfterContentChecked {
 
   cancelEdit() {
     this.isEditing = false;
-    this.valueControl.setValue(this.value);
+    this.valueControl.setValue(this._value);
   }
 
   preventKeydown(event: Event) {

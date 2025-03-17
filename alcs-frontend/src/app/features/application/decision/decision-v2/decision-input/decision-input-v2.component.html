@@ -45,7 +45,7 @@
           <app-inline-number
             resolutionNumberInput
             class="resolution-number-inline-field"
-            [value]="resolutionNumberControl.value ?? undefined"
+            [value]="resolutionNumberControl.value?.toString() ?? undefined"
             [decimals]="0"
             [nonZeroEmptyValidation]="true"
             [hideButtons]="true"

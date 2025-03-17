@@ -1,10 +1,22 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { combineLatestWith, Subject, take, filter, takeUntil } from 'rxjs';
+import {
+  combineLatestWith,
+  Subject,
+  take,
+  filter,
+  takeUntil,
+  Observable,
+  of,
+  debounceTime,
+  switchMap,
+  catchError,
+  pairwise,
+} from 'rxjs';
 import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
@@ -75,7 +87,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   existingDecision: ApplicationDecisionDto | undefined;
   codes?: ApplicationDecisionCodesDto;
 
-  resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
+  resolutionNumberControl = new FormControl<number | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
 
   components: ApplicationDecisionComponentDto[] = [];
@@ -283,7 +295,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       ceoCriterion: existingDecision.ceoCriterion?.code,
       date: existingDecision.date ? new Date(existingDecision.date) : undefined,
       resolutionYear: existingDecision.resolutionYear,
-      resolutionNumber: existingDecision.resolutionNumber?.toString(10) || undefined,
+      resolutionNumber: existingDecision.resolutionNumber,
       chairReviewRequired: parseBooleanToString(existingDecision.chairReviewRequired),
       chairReviewDate: existingDecision.chairReviewDate ? new Date(existingDecision.chairReviewDate) : undefined,
       auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
@@ -431,7 +443,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     const data: CreateApplicationDecisionDto = {
       date: formatDateForApi(date!),
-      resolutionNumber: parseInt(resolutionNumber!),
+      resolutionNumber: resolutionNumber!,
       resolutionYear: resolutionYear!,
       chairReviewRequired: chairReviewRequired === 'true',
       auditDate: auditDate ? formatDateForApi(auditDate) : auditDate,
@@ -521,17 +533,16 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.resolutionNumberInput?.confirmEdit();
   }
 
-  async onSaveResolutionNumber(resolutionNumberString: string | null) {
-    const resolutionNumber = Number.parseInt(resolutionNumberString ?? '');
-    if (!isNaN(resolutionNumber)) {
-      await this.setResolutionNumber(resolutionNumber);
+  async onSaveResolutionNumber(resolutionNumber: string | null) {
+    if (resolutionNumber) {
+      await this.setResolutionNumber(Number.parseInt(resolutionNumber));
     }
   }
 
   private async setResolutionNumber(number: number) {
     try {
       this.resolutionYearControl.disable();
-      this.form.controls.resolutionNumber.setValue(number.toString());
+      this.form.controls.resolutionNumber.setValue(number);
       await this.onSubmit(true);
     } catch {
       this.resolutionYearControl.enable();
