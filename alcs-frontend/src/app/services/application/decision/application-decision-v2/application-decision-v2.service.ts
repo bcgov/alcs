@@ -201,4 +201,16 @@ export class ApplicationDecisionV2Service {
     }
     return result;
   }
+
+  async resolutionNumberExists(resolutionNumber: number, resolutionYear: number) {
+    let result: boolean | undefined = undefined;
+    try {
+      result = await firstValueFrom(
+        this.http.get<boolean>(`${this.url}/resolution-number-exists/${resolutionYear}/${resolutionNumber}`),
+      );
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch resolutionNumber');
+    }
+    return result;
+  }
 }

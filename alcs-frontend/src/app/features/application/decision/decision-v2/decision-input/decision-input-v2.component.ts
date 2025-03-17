@@ -90,6 +90,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   resolutionNumberControl = new FormControl<number | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
 
+  lastResolutionNumber: number | null = null;
+
   components: ApplicationDecisionComponentDto[] = [];
   conditions: ApplicationDecisionConditionDto[] = [];
   conditionUpdates: UpdateApplicationDecisionConditionDto[] = [];
@@ -522,6 +524,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   async onClickResolutionNumberEditButton() {
+    this.lastResolutionNumber = this.resolutionNumberControl.value;
     this.resolutionNumberInput?.startEdit();
   }
 
@@ -688,5 +691,35 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.conditionUpdates = [];
       this.showConditions = false;
     }
+  }
+
+  resolutionNumberAsyncValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      return of(control.value).pipe(
+        debounceTime(300),
+        switchMap(async () => {
+          if (this.lastResolutionNumber === control.value) {
+            return null;
+          }
+
+          if (!this.resolutionYearControl.value) {
+            throw Error('Resolution year must be set');
+          }
+
+          // prevents the message flash by setting isLoading while fetching codes.
+          this.isLoading = true;
+          const resolutionNumberExists = await this.decisionService.resolutionNumberExists(
+            this.resolutionYearControl.value,
+            control.value,
+          );
+          this.isLoading = false;
+
+          return resolutionNumberExists
+            ? { resolutionNumberAlreadyExists: 'Resolution number already in use, pick a different number' }
+            : null;
+        }),
+        catchError((e) => of({ resolutionNumberAlreadyExists: "Can't check resolution number" })),
+      );
+    };
   }
 }

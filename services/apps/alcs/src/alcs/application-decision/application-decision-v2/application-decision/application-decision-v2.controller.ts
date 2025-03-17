@@ -247,4 +247,13 @@ export class ApplicationDecisionV2Controller {
   async getNextAvailableResolutionNumber(@Param('resolutionYear') resolutionYear: number) {
     return this.appDecisionService.generateResolutionNumber(resolutionYear);
   }
+
+  @Get('resolution-number-exists/:resolutionYear/:resolutionNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async resolutionNumberExists(
+    @Param('resolutionYear') resolutionYear: number,
+    @Param('resolutionNumber') resolutionNumber: number,
+  ): Promise<boolean> {
+    return this.appDecisionService.resolutionNumberExists(resolutionYear, resolutionNumber);
+  }
 }

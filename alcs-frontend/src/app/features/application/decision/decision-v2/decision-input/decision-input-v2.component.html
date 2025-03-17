@@ -50,6 +50,7 @@
             [nonZeroEmptyValidation]="true"
             [hideButtons]="true"
             [disableThousandsSeparator]="true"
+            [asyncValidators]="[resolutionNumberAsyncValidator()]"
             (save)="onSaveResolutionNumber($event)"
           />
           <div>&nbsp;/&nbsp;</div>
