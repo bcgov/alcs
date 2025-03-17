@@ -199,7 +199,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .pipe(takeUntil(this.$destroy))
       .pipe(filter((decision) => !!decision))
       .pipe(combineLatestWith(this.decisionService.$decisions))
-      .pipe(take(1))
       .subscribe(([decision, decisions]) => {
         if (!decision) {
           this.resolutionYearControl.enable();
