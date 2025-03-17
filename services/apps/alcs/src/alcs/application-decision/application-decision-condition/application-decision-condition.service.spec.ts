@@ -193,7 +193,7 @@ describe('ApplicationDecisionConditionService', () => {
     mockApplicationDecisionConditionRepository.findOneOrFail.mockResolvedValue(mockCondition);
 
     const result = await service.update(mockCondition, {
-      approvalDependant: false,
+      administrativeFee: 0,
     });
 
     expect(mockApplicationDecisionConditionRepository.update).toHaveBeenCalledTimes(1);

@@ -190,11 +190,9 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   private patchPfrsFields(component: NoticeOfIntentDecisionComponentDto) {
     this.patchRosoFields(component);
     this.patchPofoFields(component);
-    component.endDate2 = this.noticeOfIntent.proposalEndDate2;
   }
 
   private patchPofoFields(component: NoticeOfIntentDecisionComponentDto) {
-    component.endDate = this.noticeOfIntent.proposalEndDate;
     component.soilFillTypeToPlace = this.noticeOfIntentSubmission.soilFillTypeToPlace;
     component.soilToPlaceVolume = this.noticeOfIntentSubmission.soilToPlaceVolume;
     component.soilToPlaceArea = this.noticeOfIntentSubmission.soilToPlaceArea;
@@ -203,7 +201,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private patchRosoFields(component: NoticeOfIntentDecisionComponentDto) {
-    component.endDate = this.noticeOfIntent.proposalEndDate;
     component.soilTypeRemoved = this.noticeOfIntentSubmission.soilTypeRemoved;
     component.soilToRemoveVolume = this.noticeOfIntentSubmission.soilToRemoveVolume;
     component.soilToRemoveArea = this.noticeOfIntentSubmission.soilToRemoveArea;

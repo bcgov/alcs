@@ -41,7 +41,6 @@ export class NoticeOfIntentDecisionConditionController {
     const condition = await this.conditionService.getOneOrFail(uuid);
 
     const updatedCondition = await this.conditionService.update(condition, {
-      approvalDependant: updates.approvalDependant,
       securityAmount: updates.securityAmount,
       administrativeFee: updates.administrativeFee,
       description: updates.description,

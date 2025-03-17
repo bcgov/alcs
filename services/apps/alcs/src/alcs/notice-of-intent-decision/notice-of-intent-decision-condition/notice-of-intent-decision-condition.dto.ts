@@ -74,9 +74,6 @@ export class NoticeOfIntentDecisionConditionDto {
   @AutoMap()
   uuid: string;
 
-  @AutoMap(() => Boolean)
-  approvalDependant: boolean | null;
-
   @AutoMap(() => Number)
   securityAmount: number | null;
 
@@ -168,10 +165,6 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
   componentsToCondition?: ComponentToConditionDto[];
 
   @IsOptional()
-  @IsBoolean()
-  approvalDependant?: boolean;
-
-  @IsOptional()
   @IsNumber()
   securityAmount?: number;
 
@@ -199,7 +192,6 @@ export class UpdateNoticeOfIntentDecisionConditionDto {
 export class UpdateNoticeOfIntentDecisionConditionServiceDto {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
-  approvalDependant?: boolean;
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;

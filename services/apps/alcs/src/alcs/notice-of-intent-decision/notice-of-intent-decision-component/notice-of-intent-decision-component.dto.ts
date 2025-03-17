@@ -32,18 +32,6 @@ export class UpdateNoticeOfIntentDecisionComponentDto {
   noticeOfIntentDecisionComponentTypeCode: string;
 
   @IsOptional()
-  @IsNumber()
-  endDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  endDate2?: number;
-
-  @IsOptional()
-  @IsNumber()
-  expiryDate?: number;
-
-  @IsOptional()
   @IsString()
   soilFillTypeToPlace?: string;
 
@@ -108,10 +96,6 @@ export class NoticeOfIntentDecisionComponentDto {
 
   @AutoMap()
   agCapConsultant?: string;
-
-  endDate?: number;
-  endDate2?: number;
-  expiryDate?: number;
 
   @AutoMap()
   noticeOfIntentDecisionUuid: string;

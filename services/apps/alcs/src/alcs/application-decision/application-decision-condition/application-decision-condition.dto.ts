@@ -71,9 +71,6 @@ export class ApplicationDecisionConditionDto {
   @AutoMap()
   uuid: string;
 
-  @AutoMap(() => Boolean)
-  approvalDependant: boolean | null;
-
   @AutoMap(() => Number)
   securityAmount: number | null;
 
@@ -165,10 +162,6 @@ export class UpdateApplicationDecisionConditionDto {
   componentsToCondition?: ComponentToConditionDto[];
 
   @IsOptional()
-  @IsBoolean()
-  approvalDependant?: boolean;
-
-  @IsOptional()
   @IsNumber()
   securityAmount?: number;
 
@@ -200,7 +193,6 @@ export class UpdateApplicationDecisionConditionDto {
 export class UpdateApplicationDecisionConditionServiceDto {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
-  approvalDependant?: boolean;
   securityAmount?: number;
   administrativeFee?: number;
   description?: string;
