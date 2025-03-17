@@ -17,6 +17,13 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # TypeScript version is constrained to <5.5.0 as @angular-devkit/build-angular@17.3.x
+      # requires typescript@">=5.2 <5.5". This prevents dependabot from suggesting incompatible updates.
+      - dependency-name: "typescript"
+        versions: [">=5.5.0"]
+      # zone.js version is constrained to ~0.14.0 as required by @angular/core@17.3.x
+      - dependency-name: "zone.js"
+        versions: [">=0.15.0"]
     groups:
       npm-security:
         applies-to: security-updates
@@ -44,6 +51,13 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # TypeScript version is constrained to <5.5.0 as @angular-devkit/build-angular@17.3.x
+      # requires typescript@">=5.2 <5.5". This prevents dependabot from suggesting incompatible updates.
+      - dependency-name: "typescript"
+        versions: [">=5.5.0"]
+      # zone.js version is constrained to ~0.14.0 as required by @angular/core@17.3.x
+      - dependency-name: "zone.js"
+        versions: [">=0.15.0"]
     groups:
       npm-security:
         applies-to: security-updates
@@ -71,6 +85,9 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # reflect-metadata version is constrained to ~0.1.13 as required by automapper-classes@8.7.12
+      - dependency-name: "reflect-metadata"
+        versions: [">=0.2.0"]
     groups:
       npm-security:
         applies-to: security-updates
