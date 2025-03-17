@@ -24,10 +24,9 @@ jobs:
       - name: Auto-merge Dependabot PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
-          # Get PR number from branch name
-          PR_NUMBER=$(echo "$HEAD_BRANCH" | grep -o '[0-9]\+' || echo '')
+          # Get PR number from the workflow run event
+          PR_NUMBER=${{ github.event.workflow_run.pull_requests[0].number }}
           
           if [ -n "$PR_NUMBER" ]; then
             # Approve PR
