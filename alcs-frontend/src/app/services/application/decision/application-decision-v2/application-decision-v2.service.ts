@@ -106,7 +106,7 @@ export class ApplicationDecisionV2Service {
       await firstValueFrom(this.http.delete<ApplicationDecisionDto>(`${this.url}/${uuid}`));
       this.toastService.showSuccessToast('Decision deleted');
     } catch (err) {
-      this.toastService.showErrorToast('Failed to delete meeting');
+      this.toastService.showErrorToast('Failed to delete decision');
     }
   }
 
