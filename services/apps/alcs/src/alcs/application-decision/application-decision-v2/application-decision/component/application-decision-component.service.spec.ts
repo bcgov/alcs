@@ -15,9 +15,7 @@ import { ApplicationDecisionComponentService } from './application-decision-comp
 
 describe('ApplicationDecisionComponentService', () => {
   let service: ApplicationDecisionComponentService;
-  let mockApplicationDecisionComponentRepository: DeepMocked<
-    Repository<ApplicationDecisionComponent>
-  >;
+  let mockApplicationDecisionComponentRepository: DeepMocked<Repository<ApplicationDecisionComponent>>;
   let mockApplicationDecisionComponentLotService: DeepMocked<ApplicationDecisionComponentLotService>;
 
   beforeEach(async () => {
@@ -38,9 +36,7 @@ describe('ApplicationDecisionComponentService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationDecisionComponentService>(
-      ApplicationDecisionComponentService,
-    );
+    service = module.get<ApplicationDecisionComponentService>(ApplicationDecisionComponentService);
   });
 
   it('should be defined', () => {
@@ -48,18 +44,12 @@ describe('ApplicationDecisionComponentService', () => {
   });
 
   it('should call repo to get one or fails with correct parameters', async () => {
-    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      new ApplicationDecisionComponent(),
-    );
+    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue(new ApplicationDecisionComponent());
 
     const result = await service.getOneOrFail('fake');
 
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledWith({
       where: { uuid: 'fake' },
       relations: {
         lots: true,
@@ -69,20 +59,13 @@ describe('ApplicationDecisionComponentService', () => {
   });
 
   it('calls componentRepository.softRemove() method and soft removes an array of components', async () => {
-    const components = [
-      new ApplicationDecisionComponent(),
-      new ApplicationDecisionComponent(),
-    ];
+    const components = [new ApplicationDecisionComponent(), new ApplicationDecisionComponent()];
 
-    mockApplicationDecisionComponentRepository.softRemove.mockResolvedValue(
-      {} as ApplicationDecisionComponent,
-    );
+    mockApplicationDecisionComponentRepository.softRemove.mockResolvedValue({} as ApplicationDecisionComponent);
 
     await service.softRemove(components);
 
-    expect(
-      mockApplicationDecisionComponentRepository.softRemove,
-    ).toHaveBeenCalledWith(components);
+    expect(mockApplicationDecisionComponentRepository.softRemove).toHaveBeenCalledWith(components);
   });
 
   it('throws validation error if there are duplicate components', () => {
@@ -137,22 +120,15 @@ describe('ApplicationDecisionComponentService', () => {
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
-    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationDecisionComponent,
-    );
+    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({} as ApplicationDecisionComponent);
 
-    const updateDtos = [
-      new CreateApplicationDecisionComponentDto(),
-      new CreateApplicationDecisionComponentDto(),
-    ];
+    const updateDtos = [new CreateApplicationDecisionComponentDto(), new CreateApplicationDecisionComponentDto()];
 
     const result = await service.createOrUpdate(updateDtos, false);
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledTimes(0);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
   });
 
   it('should update existing components when given a DTO with a UUID', async () => {
@@ -174,12 +150,8 @@ describe('ApplicationDecisionComponentService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledWith({
       where: { uuid: 'fake' },
       relations: {
         lots: true,
@@ -194,7 +166,7 @@ describe('ApplicationDecisionComponentService', () => {
     expect(result[0].applicationDecisionComponentTypeCode).toEqual('fake_code');
   });
 
-  it('should update only changed fields in DTO for a given UID', async() => {
+  it('should update only changed fields in DTO for a given UID', async () => {
     mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({
       uuid: 'fake',
       applicationDecisionComponentTypeCode: 'fake_code',
@@ -203,7 +175,6 @@ describe('ApplicationDecisionComponentService', () => {
       agCapSource: '3',
       agCapMap: '4',
       agCapConsultant: '5',
-      endDate: new Date(0),
     } as ApplicationDecisionComponent);
 
     const mockDto = new CreateApplicationDecisionComponentDto();
@@ -215,68 +186,53 @@ describe('ApplicationDecisionComponentService', () => {
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
     expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockApplicationDecisionComponentRepository.findOneOrFail)
-      .toHaveBeenCalledWith({
-        where: { uuid: 'fake' },
-        relations: {
-          lots: true,
-        },
-      });
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toHaveBeenCalledWith({
+      where: { uuid: 'fake' },
+      relations: {
+        lots: true,
+      },
+    });
 
-      expect(result[0].uuid).toEqual(mockDto.uuid);
-      expect(result[0].alrArea).toEqual(mockDto.alrArea);
-      expect(result[0].agCap).toEqual('2');
-      expect(result[0].agCapSource).toEqual('3');
-      expect(result[0].agCapMap).toEqual('4');
-      expect(result[0].agCapConsultant).toEqual('5');
-      expect(result[0].endDate).toEqual(new Date(0));
-      expect(result[0].applicationDecisionComponentTypeCode).toEqual('fake_code');
-
+    expect(result[0].uuid).toEqual(mockDto.uuid);
+    expect(result[0].alrArea).toEqual(mockDto.alrArea);
+    expect(result[0].agCap).toEqual('2');
+    expect(result[0].agCapSource).toEqual('3');
+    expect(result[0].agCapMap).toEqual('4');
+    expect(result[0].agCapConsultant).toEqual('5');
+    expect(result[0].endDate).toEqual(new Date(0));
+    expect(result[0].applicationDecisionComponentTypeCode).toEqual('fake_code');
   });
 
   it('should persist entity if persist flag is true', async () => {
-    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationDecisionComponent,
-    );
-    mockApplicationDecisionComponentRepository.save.mockResolvedValue(
-      {} as ApplicationDecisionComponent,
-    );
+    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({} as ApplicationDecisionComponent);
+    mockApplicationDecisionComponentRepository.save.mockResolvedValue({} as ApplicationDecisionComponent);
 
     const updateDtos = [new CreateApplicationDecisionComponentDto()];
 
     const result = await service.createOrUpdate(updateDtos, true);
 
     expect(result).toBeDefined();
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledTimes(0);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
     expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(1);
   });
 
   it('should not persist entity if persist flag is false', async () => {
-    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationDecisionComponent,
-    );
-    mockApplicationDecisionComponentRepository.save.mockResolvedValue(
-      {} as ApplicationDecisionComponent,
-    );
+    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({} as ApplicationDecisionComponent);
+    mockApplicationDecisionComponentRepository.save.mockResolvedValue({} as ApplicationDecisionComponent);
 
     const updateDtos = [new CreateApplicationDecisionComponentDto()];
 
     const result = await service.createOrUpdate(updateDtos, false);
 
     expect(result).toBeDefined();
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledTimes(0);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(0);
     expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(0);
   });
 
   it('should update existing components NFU specific fields when given a DTO with a UUID of NFUP type', async () => {
     mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({
       uuid: 'fake',
-      applicationDecisionComponentTypeCode:
-        APPLICATION_DECISION_COMPONENT_TYPE.NFUP,
+      applicationDecisionComponentTypeCode: APPLICATION_DECISION_COMPONENT_TYPE.NFUP,
     } as ApplicationDecisionComponent);
 
     const mockDto = new CreateApplicationDecisionComponentDto();
@@ -286,9 +242,7 @@ describe('ApplicationDecisionComponentService', () => {
     mockDto.agCapSource = '3';
     mockDto.agCapMap = '4';
     mockDto.agCapConsultant = '5';
-    mockDto.applicationDecisionComponentTypeCode =
-      APPLICATION_DECISION_COMPONENT_TYPE.NFUP;
-    mockDto.endDate = 6;
+    mockDto.applicationDecisionComponentTypeCode = APPLICATION_DECISION_COMPONENT_TYPE.NFUP;
     mockDto.nfuSubType = '7';
     mockDto.nfuType = '8';
 
@@ -296,12 +250,8 @@ describe('ApplicationDecisionComponentService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledWith({
       where: { uuid: 'fake' },
       relations: {
         lots: true,
@@ -313,10 +263,7 @@ describe('ApplicationDecisionComponentService', () => {
     expect(result[0].agCapSource).toEqual(mockDto.agCapSource);
     expect(result[0].agCapMap).toEqual(mockDto.agCapMap);
     expect(result[0].agCapConsultant).toEqual(mockDto.agCapConsultant);
-    expect(result[0].applicationDecisionComponentTypeCode).toEqual(
-      APPLICATION_DECISION_COMPONENT_TYPE.NFUP,
-    );
-    expect(result[0].endDate).toEqual(new Date(mockDto.endDate));
+    expect(result[0].applicationDecisionComponentTypeCode).toEqual(APPLICATION_DECISION_COMPONENT_TYPE.NFUP);
     expect(result[0].nfuSubType).toEqual(mockDto.nfuSubType);
     expect(result[0].nfuType).toEqual(mockDto.nfuType);
   });
@@ -344,9 +291,7 @@ describe('ApplicationDecisionComponentService', () => {
     mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({
       lots: [new ApplicationDecisionComponentLot({ uuid: 'remove' })],
     } as ApplicationDecisionComponent);
-    mockApplicationDecisionComponentRepository.save.mockResolvedValue(
-      {} as ApplicationDecisionComponent,
-    );
+    mockApplicationDecisionComponentRepository.save.mockResolvedValue({} as ApplicationDecisionComponent);
     mockApplicationDecisionComponentLotService.softRemove.mockResolvedValue([]);
 
     const updateDtos = [
@@ -367,12 +312,8 @@ describe('ApplicationDecisionComponentService', () => {
     const result = await service.createOrUpdate(updateDtos);
 
     expect(result).toBeDefined();
-    expect(
-      mockApplicationDecisionComponentRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentLotService.softRemove,
-    ).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotService.softRemove).toBeCalledTimes(1);
     expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(1);
   });
 });
