@@ -223,6 +223,74 @@ describe('ApplicationDecisionV2Service', () => {
       );
     });
 
+    it('should throw ServiceValidationException when deleting a decision with linked reconsiderations or modifications', async () => {
+      const uuid = 'fake-uuid';
+
+      const decisionWithLinks = {
+        ...mockDecision,
+        uuid,
+        application: mockApplication,
+        documents: [],
+        conditions: [],
+      };
+
+      mockDecisionRepository.findOne.mockResolvedValueOnce(decisionWithLinks);
+
+      const reconsideration = {
+        uuid: 'recon-uuid',
+        resultingDecision: { uuid: 'result-uuid' },
+        reviewOutcome: { code: 'MOCK' },
+      };
+
+      const modification = {
+        uuid: 'mod-uuid',
+        resultingDecision: { uuid: 'result-uuid' },
+        reviewOutcome: { code: 'MOCK' },
+      };
+
+      mockDecisionRepository.find.mockImplementation((options: any) => {
+        if (options?.relations?.reconsideredBy) {
+          const reconsiderationDecision = new ApplicationDecision();
+          reconsiderationDecision.uuid = decisionWithLinks.uuid;
+          reconsiderationDecision.reconsideredBy = [reconsideration as any];
+          return Promise.resolve([reconsiderationDecision]);
+        }
+
+        if (options?.relations?.modifiedBy) {
+          const modificationDecision = new ApplicationDecision();
+          modificationDecision.uuid = decisionWithLinks.uuid;
+          modificationDecision.modifiedBy = [modification as any];
+          return Promise.resolve([modificationDecision]);
+        }
+
+        return Promise.resolve([]);
+      });
+
+      await expect(service.delete(uuid)).rejects.toThrow(
+        new ServiceValidationException(`Cannot delete decision ${uuid} with linked reconsiderations or modifications`),
+      );
+
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledWith({
+        where: { uuid },
+        relations: {
+          conditions: {
+            dates: true,
+          },
+          outcome: true,
+          documents: {
+            document: true,
+          },
+          application: true,
+          components: true,
+          conditionCards: true,
+        },
+      });
+
+      expect(mockDecisionConditionService.remove).not.toHaveBeenCalled();
+      expect(mockDecisionRepository.softRemove).not.toHaveBeenCalled();
+      expect(mockDecisionRepository.save).not.toHaveBeenCalled();
+    });
+
     it('should create a decision', async () => {
       mockDecisionRepository.find.mockResolvedValue([]);
       mockDecisionRepository.findOne.mockResolvedValue({

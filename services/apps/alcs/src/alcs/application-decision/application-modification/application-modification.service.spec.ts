@@ -5,10 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
-import {
-  initApplicationMockEntity,
-  initApplicationModificationMockEntity,
-} from '../../../../test/mocks/mockEntities';
+import { initApplicationMockEntity, initApplicationModificationMockEntity } from '../../../../test/mocks/mockEntities';
 import { ModificationProfile } from '../../../common/automapper/modification.automapper.profile';
 import { CreateApplicationDto } from '../../application/application.dto';
 import { ApplicationService } from '../../application/application.service';
@@ -17,10 +14,7 @@ import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { ApplicationDecisionV2Service } from '../application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../application-decision.entity';
-import {
-  ApplicationModificationCreateDto,
-  ApplicationModificationUpdateDto,
-} from './application-modification.dto';
+import { ApplicationModificationCreateDto, ApplicationModificationUpdateDto } from './application-modification.dto';
 import { ApplicationModification } from './application-modification.entity';
 import { ApplicationModificationService } from './application-modification.service';
 
@@ -100,9 +94,7 @@ describe('ApplicationModificationService', () => {
         ModificationProfile,
       ],
     }).compile();
-    service = module.get<ApplicationModificationService>(
-      ApplicationModificationService,
-    );
+    service = module.get<ApplicationModificationService>(ApplicationModificationService);
 
     mockModification = initApplicationModificationMockEntity();
     modificationRepoMock.findOneOrFail.mockResolvedValue(mockModification);
@@ -131,9 +123,7 @@ describe('ApplicationModificationService', () => {
     decisionServiceMock.getMany.mockResolvedValue([]);
 
     applicationServiceMock.get.mockResolvedValue(
-      initApplicationMockEntity(
-        mockModificationCreateDto.applicationFileNumber,
-      ),
+      initApplicationMockEntity(mockModificationCreateDto.applicationFileNumber),
     );
   });
 
@@ -163,18 +153,13 @@ describe('ApplicationModificationService', () => {
     } as CreateApplicationDto;
 
     applicationServiceMock.get.mockResolvedValue(null);
-    applicationServiceMock.create.mockResolvedValue(
-      mockApplicationCreateDto as any,
-    );
+    applicationServiceMock.create.mockResolvedValue(mockApplicationCreateDto as any);
 
     await service.create(mockModificationCreateDto, {} as Board);
 
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.create).toBeCalledWith('MODI', {} as Board, false);
-    expect(applicationServiceMock.create).toBeCalledWith(
-      mockApplicationCreateDto,
-      false,
-    );
+    expect(applicationServiceMock.create).toBeCalledWith(mockApplicationCreateDto, false);
   });
 
   it('should successfully create modification and link to existing application', async () => {
@@ -191,9 +176,7 @@ describe('ApplicationModificationService', () => {
     const mockDecision = {
       uuid: decisionUuid,
     };
-    decisionServiceMock.getMany.mockResolvedValue([
-      mockDecision as ApplicationDecision,
-    ]);
+    decisionServiceMock.getMany.mockResolvedValue([mockDecision as ApplicationDecision]);
 
     await service.create(
       {
@@ -208,20 +191,20 @@ describe('ApplicationModificationService', () => {
     expect(applicationServiceMock.create).toBeCalledTimes(0);
     expect(decisionServiceMock.getMany).toHaveBeenCalledTimes(1);
     expect(decisionServiceMock.getMany).toHaveBeenCalledWith([decisionUuid]);
-    expect(
-      modificationRepoMock.save.mock.calls[0][0].modifiesDecisions,
-    ).toEqual([mockDecision]);
+    expect(modificationRepoMock.save.mock.calls[0][0].modifiesDecisions).toEqual([mockDecision]);
   });
 
   it('should successfully update modification', async () => {
     const uuid = 'fake';
+    modificationRepoMock.findOne.mockResolvedValue(mockModification);
+    modificationRepoMock.save.mockResolvedValue(mockModification);
 
     await service.update(uuid, {
       isReviewApproved: true,
     } as ApplicationModificationUpdateDto);
 
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toBeCalledWith({
+      where: { uuid },
     });
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
     expect(modificationRepoMock.save).toHaveBeenCalledWith(mockModification);
@@ -229,15 +212,13 @@ describe('ApplicationModificationService', () => {
 
   it('should throw an exception when updating an modification if it does not exist', async () => {
     const uuid = 'fake';
-    modificationRepoMock.findOneBy.mockResolvedValue(null);
+    modificationRepoMock.findOne.mockResolvedValue(null);
 
-    await expect(
-      service.update(uuid, {} as ApplicationModificationUpdateDto),
-    ).rejects.toMatchObject(
+    await expect(service.update(uuid, {} as ApplicationModificationUpdateDto)).rejects.toMatchObject(
       new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toBeCalledWith({
+      where: { uuid },
     });
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(0);
   });
@@ -245,12 +226,14 @@ describe('ApplicationModificationService', () => {
   it('should archive the card and call softRemove on delete', async () => {
     const uuid = 'fake';
     modificationRepoMock.softRemove.mockResolvedValue({} as any);
+    modificationRepoMock.findOne.mockResolvedValue(mockModification);
     cardServiceMock.archive.mockResolvedValue();
 
     await service.delete(uuid);
 
-    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
+      where: { uuid },
+      relations: { resultingDecision: true },
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.archive).toHaveBeenCalledTimes(1);
@@ -258,16 +241,19 @@ describe('ApplicationModificationService', () => {
 
   it('should not call archive card if modification does not have card attached (only modifications imported from OATS) on delete', async () => {
     const uuid = 'fake';
-    modificationRepoMock.findOneBy.mockResolvedValue(
-      new ApplicationModification(),
-    );
+    modificationRepoMock.findOne.mockResolvedValue(new ApplicationModification());
     modificationRepoMock.softRemove.mockResolvedValue({} as any);
     cardServiceMock.archive.mockResolvedValue();
 
     await service.delete(uuid);
 
-    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toBeCalledWith({
+      where: {
+        uuid,
+      },
+      relations: {
+        resultingDecision: true,
+      },
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
@@ -275,13 +261,18 @@ describe('ApplicationModificationService', () => {
 
   it('should fail on delete if modification does not exist', async () => {
     const uuid = 'fake';
-    modificationRepoMock.findOneBy.mockResolvedValue(null);
+    modificationRepoMock.findOne.mockResolvedValue(null);
 
     await expect(service.delete(uuid)).rejects.toMatchObject(
       new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toBeCalledWith({
+      where: {
+        uuid,
+      },
+      relations: {
+        resultingDecision: true,
+      },
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(0);
   });
@@ -348,8 +339,32 @@ describe('ApplicationModificationService', () => {
     await service.getDeletedCards('file-number');
 
     expect(modificationRepoMock.find).toHaveBeenCalledTimes(1);
-    expect(modificationRepoMock.find.mock.calls[0][0]!.withDeleted).toEqual(
-      true,
+    expect(modificationRepoMock.find.mock.calls[0][0]!.withDeleted).toEqual(true);
+  });
+
+  it('should throw ServiceValidationException when deleting a modification with a resulting decision', async () => {
+    const uuid = 'fake';
+    const mockModificationWithDecision = {
+      ...mockModification,
+      uuid: uuid,
+      resultingDecision: { uuid: 'decision-uuid' },
+    };
+
+    modificationRepoMock.findOne.mockResolvedValue(mockModificationWithDecision);
+
+    await expect(service.delete(uuid)).rejects.toThrow(
+      `Cannot delete modification ${uuid} that has a resulting decision`,
     );
+
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
+      where: {
+        uuid,
+      },
+      relations: {
+        resultingDecision: true,
+      },
+    });
+    expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(0);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
   });
 });

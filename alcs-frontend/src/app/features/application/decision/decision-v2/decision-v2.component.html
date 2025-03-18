@@ -37,7 +37,7 @@
   <div
     class="decision"
     [ngClass]="{
-      draft: decision.isDraft
+      draft: decision.isDraft,
     }"
     [id]="decision.uuid"
   >
@@ -171,11 +171,13 @@
             {{ getDate(component.uuid) }}
             <span class="subheading2">Conditions: </span>
             <ng-container *ngFor="let condition of getConditions(component.uuid)">
-              <app-application-type-pill class="status-pill" *ngIf="condition !== null" [type]="condition"></app-application-type-pill>
+              <app-application-type-pill
+                class="status-pill"
+                *ngIf="condition !== null"
+                [type]="condition"
+              ></app-application-type-pill>
             </ng-container>
-            <ng-container *ngIf="getConditions(component.uuid).length === 0"> 
-              None
-            </ng-container>
+            <ng-container *ngIf="getConditions(component.uuid).length === 0"> None </ng-container>
           </div>
         </ng-container>
         <ng-container *ngIf="['APPR', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
@@ -411,8 +413,27 @@
         </section>
       </ng-container>
       <div class="right">
-        <button *ngIf="decision.isDraft" mat-stroked-button color="warn" (click)="deleteDecision(decision.uuid)">Delete draft</button>
-        <button mat-flat-button color="link" (click)="toggleSummary()">{{ isSummary ? 'View Less' : 'View More' }} <mat-icon iconPositionEnd>{{ isSummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon></button>
+        <div
+          matTooltip="Contact administrator if you need to delete this decision"
+          [matTooltipDisabled]="decision.canBeDeleted"
+        >
+          <button
+            *ngIf="decision.isDraft"
+            mat-stroked-button
+            color="warn"
+            (click)="deleteDecision(decision.uuid)"
+            [disabled]="!decision.canBeDeleted"
+          >
+            <div class="draft-btn-wrapper">
+              Delete draft
+              <mat-icon class="icon" *ngIf="!decision.canBeDeleted">info_outline </mat-icon>
+            </div>
+          </button>
+        </div>
+        <button mat-flat-button color="link" (click)="toggleSummary()">
+          {{ isSummary ? 'View Less' : 'View More' }}
+          <mat-icon iconPositionEnd>{{ isSummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+        </button>
       </div>
     </div>
   </div>

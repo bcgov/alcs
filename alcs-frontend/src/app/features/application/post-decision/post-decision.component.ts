@@ -19,10 +19,12 @@ import { CreateReconsiderationDialogComponent } from '../../board/dialogs/recons
 
 type LoadingReconsiderations = ApplicationReconsiderationDetailedDto & {
   reconsidersDecisionsNumbers: string[];
+  canBeDeleted: boolean;
 };
 
 type LoadingModifications = ApplicationModificationDto & {
   modifiesDecisionsNumbers: string[];
+  canBeDeleted: boolean;
 };
 @Component({
   selector: 'app-post-decision',
@@ -75,6 +77,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
               reconsidersDecisionsNumbers: r.reconsidersDecisions.flatMap(
                 (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
               ),
+              canBeDeleted: !r.resultingDecision,
             })) ?? [];
           this.reconCodes = reconCodes;
           this.modifications =
@@ -83,6 +86,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
               modifiesDecisionsNumbers: m.modifiesDecisions.flatMap(
                 (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
               ),
+              canBeDeleted: !m.resultingDecision,
             })) ?? [];
         }
       });
@@ -184,7 +188,6 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         if (answer) {
           await this.applicationReconsiderationService.delete(uuid);
           await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
-          this.toastService.showSuccessToast('Reconsideration request deleted');
         }
       });
   }

@@ -136,11 +136,6 @@ export class ApplicationDecisionV2Service {
     const decisionsWithModifiedBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
-        modifiedBy: {
-          resultingDecision: {
-            isDraft: false,
-          },
-        },
       },
       relations: {
         modifiedBy: {
@@ -154,11 +149,6 @@ export class ApplicationDecisionV2Service {
     const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
-        reconsideredBy: {
-          resultingDecision: {
-            isDraft: false,
-          },
-        },
       },
       relations: {
         reconsideredBy: {
@@ -496,6 +486,40 @@ export class ApplicationDecisionV2Service {
 
     if (!applicationDecision) {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
+    }
+
+    const decisionsWithModifiedBy = await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: applicationDecision.application.uuid,
+      },
+      relations: {
+        modifiedBy: {
+          resultingDecision: true,
+          reviewOutcome: true,
+        },
+      },
+    });
+
+    const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: applicationDecision.application.uuid,
+      },
+      relations: {
+        reconsideredBy: {
+          resultingDecision: true,
+          reviewOutcome: true,
+        },
+      },
+    });
+
+    const reconsideredBy =
+      decisionsWithReconsideredBy.find((r) => r.uuid === applicationDecision.uuid)?.reconsideredBy || [];
+    const modifiedBy = decisionsWithModifiedBy.find((r) => r.uuid === applicationDecision.uuid)?.modifiedBy || [];
+
+    if (reconsideredBy.length > 0 || modifiedBy.length > 0) {
+      throw new ServiceValidationException(
+        `Cannot delete decision ${applicationDecision.uuid} with linked reconsiderations or modifications`,
+      );
     }
 
     await this.decisionConditionService.remove(applicationDecision.conditions);

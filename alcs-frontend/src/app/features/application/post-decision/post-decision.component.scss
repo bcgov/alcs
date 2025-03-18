@@ -58,12 +58,20 @@ section {
 
   box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 0 10px;
+  overflow: hidden;
 
-  &.recon {
+  display: flex;
+  flex-direction: row;
+
+  .recon {
     background: colors.$accent-color;
   }
 
-  &.modification {
+  .recon-modi-disabled {
+    background: #efefef;
+  }
+
+  .modification {
     background: colors.$secondary-color-dark;
   }
 
@@ -72,6 +80,10 @@ section {
     width: 36px;
     height: 36px;
     line-height: 36px;
+  }
+
+  .button-disabled {
+    color: #929292 !important;
   }
 
   mat-icon {
