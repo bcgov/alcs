@@ -16,18 +16,29 @@
 
 <section>
   <div class="post-decision" *ngFor="let reconsideration of reconsiderations; let i = index">
-    <div class="decision-menu recon">
-      <button (click)="onEditReconsideration(reconsideration)" matTooltip="Edit Request" mat-icon-button>
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button
-        (click)="deleteReconsideration(reconsideration.uuid, reconsiderations.length - i)"
-        matTooltip="Delete Request"
-        mat-icon-button
+    <div class="decision-menu">
+      <div class="recon">
+        <button (click)="onEditReconsideration(reconsideration)" matTooltip="Edit Request" mat-icon-button>
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+      <div
+        [ngClass]="{ 'recon-modi-disabled': !reconsideration.canBeDeleted, recon: reconsideration.canBeDeleted }"
+        [matTooltip]="
+          reconsideration.canBeDeleted ? 'Delete Request' : 'Contact administrator if you need to delete this request'
+        "
       >
-        <mat-icon>delete</mat-icon>
-      </button>
+        <button
+          [ngClass]="{ 'button-disabled': !reconsideration.canBeDeleted }"
+          (click)="deleteReconsideration(reconsideration.uuid, reconsiderations.length - i)"
+          mat-icon-button
+          [disabled]="!reconsideration.canBeDeleted"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </div>
+
     <div class="subheading1">Reconsideration Request #{{ reconsiderations.length - i }}</div>
     <div class="decision-content">
       <div>
@@ -123,17 +134,28 @@
 
 <section>
   <div class="post-decision" *ngFor="let modification of modifications; let i = index">
-    <div class="decision-menu modification">
-      <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button
-        (click)="deleteModification(modification.uuid, modifications.length - i)"
-        matTooltip="Delete Request"
-        mat-icon-button
+    <div class="decision-menu">
+      <div class="modification">
+        <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+      <div
+        [ngClass]="{ 'recon-modi-disabled': !modification.canBeDeleted, modification: modification.canBeDeleted }"
+        [matTooltip]="
+          modification.canBeDeleted ? 'Delete Request' : 'Contact administrator if you need to delete this request'
+        "
       >
-        <mat-icon>delete</mat-icon>
-      </button>
+        <button
+          [ngClass]="{ 'button-disabled': !modification.canBeDeleted }"
+          (click)="deleteModification(modification.uuid, modifications.length - i)"
+          matTooltip="Delete Request"
+          mat-icon-button
+          [disabled]="!modification.canBeDeleted"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </div>
     <div class="subheading1">Modification Request #{{ modifications.length - i }}</div>
     <div class="decision-content">

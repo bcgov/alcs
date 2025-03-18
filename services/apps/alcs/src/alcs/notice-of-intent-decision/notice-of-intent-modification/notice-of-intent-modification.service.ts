@@ -1,4 +1,4 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
@@ -133,7 +133,14 @@ export class NoticeOfIntentModificationService {
   }
 
   async delete(uuid: string) {
-    const modification = await this.getByUuidOrFail(uuid);
+    const modification = await this.getByUuidOrFail(uuid, { resultingDecision: true });
+
+    if (modification.resultingDecision) {
+      throw new ServiceValidationException(
+        `Cannot delete modification ${modification.uuid} that has a resulting decision`,
+      );
+    }
+
     if (modification.cardUuid) {
       await this.cardService.archive(modification.cardUuid);
     }
@@ -182,9 +189,10 @@ export class NoticeOfIntentModificationService {
     });
   }
 
-  private async getByUuidOrFail(uuid: string) {
-    const modification = await this.modificationRepository.findOneBy({
-      uuid,
+  private async getByUuidOrFail(uuid: string, relations?: FindOptionsRelations<NoticeOfIntentModification>) {
+    const modification = await this.modificationRepository.findOne({
+      where: { uuid },
+      relations,
     });
 
     if (!modification) {

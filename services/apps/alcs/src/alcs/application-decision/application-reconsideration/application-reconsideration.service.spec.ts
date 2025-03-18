@@ -27,12 +27,8 @@ import { ApplicationReconsiderationService } from './application-reconsideration
 import { ApplicationReconsiderationType } from './reconsideration-type/application-reconsideration-type.entity';
 
 describe('ReconsiderationService', () => {
-  let reconsiderationRepositoryMock: DeepMocked<
-    Repository<ApplicationReconsideration>
-  >;
-  let reconsiderationTypeRepositoryMock: DeepMocked<
-    Repository<ApplicationReconsiderationType>
-  >;
+  let reconsiderationRepositoryMock: DeepMocked<Repository<ApplicationReconsideration>>;
+  let reconsiderationTypeRepositoryMock: DeepMocked<Repository<ApplicationReconsiderationType>>;
   let service: ApplicationReconsiderationService;
   let codeServiceMock: DeepMocked<CodeService>;
   let applicationServiceMock: DeepMocked<ApplicationService>;
@@ -42,43 +38,41 @@ describe('ReconsiderationService', () => {
   let mockReconsideration;
   let mockReconsiderationCreateDto;
 
-  const DEFAULT_BOARD_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
-    {
-      application: {
-        type: true,
-        region: true,
-        localGovernment: true,
-        decisionMeetings: true,
-      },
-      card: {
-        board: false,
-        type: true,
-        status: true,
-        assignee: true,
-      },
+  const DEFAULT_BOARD_RELATIONS: FindOptionsRelations<ApplicationReconsideration> = {
+    application: {
       type: true,
-    };
+      region: true,
+      localGovernment: true,
+      decisionMeetings: true,
+    },
+    card: {
+      board: false,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+    type: true,
+  };
 
-  const DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
-    {
-      reconsidersDecisions: true,
-      application: {
-        type: true,
-        region: true,
-        localGovernment: true,
-        decisionMeetings: true,
-      },
-      card: {
-        board: true,
-        type: true,
-        status: true,
-        assignee: true,
-      },
+  const DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> = {
+    reconsidersDecisions: true,
+    application: {
       type: true,
-      resultingDecision: true,
-      reviewOutcome: true,
-      decisionOutcome: true,
-    };
+      region: true,
+      localGovernment: true,
+      decisionMeetings: true,
+    },
+    card: {
+      board: true,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+    type: true,
+    resultingDecision: true,
+    reviewOutcome: true,
+    decisionOutcome: true,
+  };
 
   beforeEach(async () => {
     jest.useFakeTimers().setSystemTime(new Date('2022-01-01'));
@@ -136,30 +130,18 @@ describe('ReconsiderationService', () => {
       boardCode: 'fake-board',
     } as ApplicationReconsiderationCreateDto;
 
-    service = module.get<ApplicationReconsiderationService>(
-      ApplicationReconsiderationService,
-    );
+    service = module.get<ApplicationReconsiderationService>(ApplicationReconsiderationService);
 
     mockReconsideration = initApplicationReconsiderationMockEntity();
-    reconsiderationRepositoryMock.findOneOrFail.mockResolvedValue(
-      mockReconsideration,
-    );
-    reconsiderationRepositoryMock.findOne.mockResolvedValue(
-      mockReconsideration,
-    );
+    reconsiderationRepositoryMock.findOneOrFail.mockResolvedValue(mockReconsideration);
+    reconsiderationRepositoryMock.findOne.mockResolvedValue(mockReconsideration);
     reconsiderationRepositoryMock.find.mockResolvedValue([mockReconsideration]);
-    reconsiderationTypeRepositoryMock.find.mockResolvedValue([
-      mockReconsideration.type,
-    ]);
-    reconsiderationTypeRepositoryMock.findOneByOrFail.mockResolvedValue(
-      mockReconsideration.type,
-    );
+    reconsiderationTypeRepositoryMock.find.mockResolvedValue([mockReconsideration.type]);
+    reconsiderationTypeRepositoryMock.findOneByOrFail.mockResolvedValue(mockReconsideration.type);
     reconsiderationRepositoryMock.save.mockResolvedValue({} as any);
 
     applicationServiceMock.get.mockResolvedValue(
-      initApplicationMockEntity(
-        mockReconsiderationCreateDto.applicationFileNumber,
-      ),
+      initApplicationMockEntity(mockReconsiderationCreateDto.applicationFileNumber),
     );
 
     cardServiceMock.create.mockResolvedValue(new Card());
@@ -193,18 +175,13 @@ describe('ReconsiderationService', () => {
     } as CreateApplicationServiceDto;
 
     applicationServiceMock.get.mockResolvedValue(null);
-    applicationServiceMock.create.mockResolvedValue(
-      mockApplicationCreateDto as any,
-    );
+    applicationServiceMock.create.mockResolvedValue(mockApplicationCreateDto as any);
 
     await service.create(mockReconsiderationCreateDto, {} as Board);
 
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
-    expect(applicationServiceMock.create).toBeCalledWith(
-      mockApplicationCreateDto,
-      false,
-    );
+    expect(applicationServiceMock.create).toBeCalledWith(mockApplicationCreateDto, false);
   });
 
   it('should successfully create reconsideration and link to existing application', async () => {
@@ -221,9 +198,7 @@ describe('ReconsiderationService', () => {
     const mockDecision = {
       uuid: decisionUuid,
     };
-    decisionServiceMock.getMany.mockResolvedValue([
-      mockDecision as ApplicationDecision,
-    ]);
+    decisionServiceMock.getMany.mockResolvedValue([mockDecision as ApplicationDecision]);
 
     await service.create(
       {
@@ -238,9 +213,7 @@ describe('ReconsiderationService', () => {
     expect(applicationServiceMock.create).toBeCalledTimes(0);
     expect(decisionServiceMock.getMany).toHaveBeenCalledTimes(1);
     expect(decisionServiceMock.getMany).toHaveBeenCalledWith([decisionUuid]);
-    expect(
-      reconsiderationRepositoryMock.save.mock.calls[0][0].reconsidersDecisions,
-    ).toEqual([mockDecision]);
+    expect(reconsiderationRepositoryMock.save.mock.calls[0][0].reconsidersDecisions).toEqual([mockDecision]);
   });
 
   it('should successfully update reconsideration', async () => {
@@ -254,21 +227,15 @@ describe('ReconsiderationService', () => {
 
     expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(reconsiderationRepositoryMock.save).toHaveBeenCalledWith(
-      mockReconsideration,
-    );
+    expect(reconsiderationRepositoryMock.save).toHaveBeenCalledWith(mockReconsideration);
   });
 
   it('should fail update reconsideration if it does not exist', async () => {
     const uuid = 'fake';
     reconsiderationRepositoryMock.findOne.mockResolvedValue(null);
 
-    await expect(
-      service.update(uuid, {} as ApplicationReconsiderationUpdateDto),
-    ).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Reconsideration with uuid ${uuid} not found`,
-      ),
+    await expect(service.update(uuid, {} as ApplicationReconsiderationUpdateDto)).rejects.toMatchObject(
+      new ServiceNotFoundException(`Reconsideration with uuid ${uuid} not found`),
     );
     expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(0);
@@ -309,9 +276,7 @@ describe('ReconsiderationService', () => {
 
   it('should not call archive card if reconsideration does not have card attached (only reconsiderations imported from OATS) on delete', async () => {
     const uuid = 'fake';
-    reconsiderationRepositoryMock.findOne.mockResolvedValue(
-      new ApplicationReconsideration(),
-    );
+    reconsiderationRepositoryMock.findOne.mockResolvedValue(new ApplicationReconsideration());
     reconsiderationRepositoryMock.softRemove.mockResolvedValue({} as any);
     cardServiceMock.archive.mockResolvedValue();
 
@@ -320,6 +285,7 @@ describe('ReconsiderationService', () => {
     expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledWith({
       relations: {
         type: true,
+        resultingDecision: true,
       },
       where: {
         uuid,
@@ -334,9 +300,7 @@ describe('ReconsiderationService', () => {
     reconsiderationRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(service.delete(uuid)).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Reconsideration with uuid ${uuid} not found`,
-      ),
+      new ServiceNotFoundException(`Reconsideration with uuid ${uuid} not found`),
     );
 
     expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
@@ -352,9 +316,7 @@ describe('ReconsiderationService', () => {
 
     await service.getByCardUuid(cardUuid);
 
-    expect(reconsiderationRepositoryMock.findOneOrFail).toBeCalledWith(
-      findOptions,
-    );
+    expect(reconsiderationRepositoryMock.findOneOrFail).toBeCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getByUuid', async () => {
@@ -366,9 +328,7 @@ describe('ReconsiderationService', () => {
 
     await service.getByUuid(uuid);
 
-    expect(reconsiderationRepositoryMock.findOneOrFail).toBeCalledWith(
-      findOptions,
-    );
+    expect(reconsiderationRepositoryMock.findOneOrFail).toBeCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getSubtasks', async () => {
@@ -409,8 +369,33 @@ describe('ReconsiderationService', () => {
     await service.getDeletedCards('file-number');
 
     expect(reconsiderationRepositoryMock.find).toHaveBeenCalledTimes(1);
-    expect(
-      reconsiderationRepositoryMock.find.mock.calls[0][0]!.withDeleted,
-    ).toEqual(true);
+    expect(reconsiderationRepositoryMock.find.mock.calls[0][0]!.withDeleted).toEqual(true);
+  });
+
+  it('should throw ServiceValidationException when deleting a reconsideration with a resulting decision', async () => {
+    const uuid = 'fake';
+    const mockReconWithDecision = {
+      ...mockReconsideration,
+      uuid: uuid,
+      resultingDecision: { uuid: 'decision-uuid' },
+    };
+
+    reconsiderationRepositoryMock.findOne.mockResolvedValue(mockReconWithDecision);
+
+    await expect(service.delete(uuid)).rejects.toThrow(
+      `Cannot delete reconsideration ${uuid} that has a resulting decision`,
+    );
+
+    expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledWith({
+      relations: {
+        type: true,
+        resultingDecision: true,
+      },
+      where: {
+        uuid,
+      },
+    });
+    expect(reconsiderationRepositoryMock.softRemove).toHaveBeenCalledTimes(0);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
   });
 });

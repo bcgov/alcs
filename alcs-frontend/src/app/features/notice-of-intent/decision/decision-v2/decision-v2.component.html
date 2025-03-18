@@ -37,7 +37,7 @@
   <div
     class="decision"
     [ngClass]="{
-      draft: decision.isDraft
+      draft: decision.isDraft,
     }"
     [id]="decision.uuid"
   >
@@ -128,7 +128,9 @@
             <div>
               <span class="subheading2">Rescinded Date:&nbsp;</span>
               <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
-              <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
+              <app-no-data
+                *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"
+              ></app-no-data>
             </div>
           </div>
           <div *ngIf="decision.outcome?.code === 'RESC'" class="component-summary">
@@ -151,14 +153,18 @@
             {{ getDate(component.uuid) }}
             <span class="subheading2">Conditions: </span>
             <ng-container *ngFor="let condition of getConditions(component.uuid)">
-              <app-application-type-pill class="status-pill" *ngIf="condition !== null" [type]="condition"></app-application-type-pill>
+              <app-application-type-pill
+                class="status-pill"
+                *ngIf="condition !== null"
+                [type]="condition"
+              ></app-application-type-pill>
             </ng-container>
-            <ng-container *ngIf="getConditions(component.uuid).length === 0"> 
-              None
-            </ng-container>
+            <ng-container *ngIf="getConditions(component.uuid).length === 0"> None </ng-container>
           </div>
         </ng-container>
-        <ng-container *ngIf="OUTCOMES_WITH_COMPONENTS.includes(decision.outcome.code) && decision.isSubjectToConditions">
+        <ng-container
+          *ngIf="OUTCOMES_WITH_COMPONENTS.includes(decision.outcome.code) && decision.isSubjectToConditions"
+        >
           <section class="decision-section">
             <div>
               <a [routerLink]="['/notice-of-intent/' + fileNumber + '/decision/conditions/' + decision.uuid]"
@@ -301,8 +307,27 @@
         </section>
       </ng-container>
       <div class="right">
-        <button *ngIf="decision.isDraft" mat-stroked-button color="warn" (click)="deleteDecision(decision.uuid)">Delete draft</button>
-        <button mat-flat-button color="link" (click)="toggleSummary()">{{ isSummary ? 'View Less' : 'View More' }} <mat-icon iconPositionEnd>{{ isSummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon></button>
+        <div
+          matTooltip="Contact administrator if you need to delete this decision"
+          [matTooltipDisabled]="decision.canBeDeleted"
+        >
+          <button
+            *ngIf="decision.isDraft"
+            mat-stroked-button
+            color="warn"
+            (click)="deleteDecision(decision.uuid)"
+            [disabled]="!decision.canBeDeleted"
+          >
+            <div class="draft-btn-wrapper">
+              Delete draft
+              <mat-icon class="icon" *ngIf="!decision.canBeDeleted">info_outline </mat-icon>
+            </div>
+          </button>
+        </div>
+        <button mat-flat-button color="link" (click)="toggleSummary()">
+          {{ isSummary ? 'View Less' : 'View More' }}
+          <mat-icon iconPositionEnd>{{ isSummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+        </button>
       </div>
     </div>
   </div>

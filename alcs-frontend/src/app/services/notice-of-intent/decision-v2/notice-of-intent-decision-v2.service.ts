@@ -103,7 +103,7 @@ export class NoticeOfIntentDecisionV2Service {
       await firstValueFrom(this.http.delete<NoticeOfIntentDecisionDto>(`${this.url}/${uuid}`));
       this.toastService.showSuccessToast('Decision deleted');
     } catch (err) {
-      this.toastService.showErrorToast('Failed to delete meeting');
+      this.toastService.showErrorToast('Failed to delete decision');
     }
   }
 

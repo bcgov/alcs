@@ -406,6 +406,26 @@ export class NoticeOfIntentDecisionV2Service {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
     }
 
+    const decisionsWithModifiedBy = await this.noticeOfIntentDecisionRepository.find({
+      where: {
+        noticeOfIntentUuid: noticeOfIntentDecision.noticeOfIntent.uuid,
+      },
+      relations: {
+        modifiedBy: {
+          resultingDecision: true,
+          reviewOutcome: true,
+        },
+      },
+    });
+
+    const modifiedBy = decisionsWithModifiedBy.find((r) => r.uuid === noticeOfIntentDecision.uuid)?.modifiedBy || [];
+
+    if (modifiedBy.length > 0) {
+      throw new ServiceValidationException(
+        `Cannot delete decision ${noticeOfIntentDecision.uuid} with linked reconsiderations or modifications`,
+      );
+    }
+
     await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
     noticeOfIntentDecision.conditions = [];
 
