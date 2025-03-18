@@ -12,6 +12,7 @@ import { ApplicationRegionDto } from '../../../services/application/application-
 
 type LoadingModifications = NoticeOfIntentModificationDto & {
   modifiesDecisionsNumbers: string[];
+  canBeDeleted: boolean;
 };
 @Component({
   selector: 'app-noi-post-decision',
@@ -49,6 +50,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
               modifiesDecisionsNumbers: m.modifiesDecisions.flatMap(
                 (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
               ),
+              canBeDeleted: !m.resultingDecision,
             })) ?? [];
         }
       });

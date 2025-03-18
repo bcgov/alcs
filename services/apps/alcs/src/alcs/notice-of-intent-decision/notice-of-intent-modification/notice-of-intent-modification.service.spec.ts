@@ -169,13 +169,15 @@ describe('NoticeOfIntentModificationService', () => {
 
   it('should successfully update modification', async () => {
     const uuid = 'fake';
+    modificationRepoMock.findOne.mockResolvedValue(mockModification);
+    modificationRepoMock.save.mockResolvedValue(mockModification);
 
     await service.update(uuid, {
       description: '',
     });
 
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toBeCalledWith({
+      where: { uuid },
     });
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
     expect(modificationRepoMock.save).toHaveBeenCalledWith(mockModification);
@@ -183,13 +185,13 @@ describe('NoticeOfIntentModificationService', () => {
 
   it('should throw an exception when updating an modification if it does not exist', async () => {
     const uuid = 'fake';
-    modificationRepoMock.findOneBy.mockResolvedValue(null);
+    modificationRepoMock.findOne.mockResolvedValue(null);
 
     await expect(service.update(uuid, {} as NoticeOfIntentModificationUpdateDto)).rejects.toMatchObject(
       new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toBeCalledWith({
+      where: { uuid },
     });
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(0);
   });
@@ -197,12 +199,14 @@ describe('NoticeOfIntentModificationService', () => {
   it('should archive the card and call softRemove on delete', async () => {
     const uuid = 'fake';
     modificationRepoMock.softRemove.mockResolvedValue({} as any);
+    modificationRepoMock.findOne.mockResolvedValue(mockModification);
     cardServiceMock.archive.mockResolvedValue();
 
     await service.delete(uuid);
 
-    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
+      where: { uuid },
+      relations: { resultingDecision: true },
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.archive).toHaveBeenCalledTimes(1);
@@ -210,14 +214,19 @@ describe('NoticeOfIntentModificationService', () => {
 
   it('should not call archive card if modification does not have card attached (only modifications imported from OATS) on delete', async () => {
     const uuid = 'fake';
-    modificationRepoMock.findOneBy.mockResolvedValue(new NoticeOfIntentModification());
+    modificationRepoMock.findOne.mockResolvedValue(new NoticeOfIntentModification());
     modificationRepoMock.softRemove.mockResolvedValue({} as any);
     cardServiceMock.archive.mockResolvedValue();
 
     await service.delete(uuid);
 
-    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
+      where: {
+        uuid,
+      },
+      relations: {
+        resultingDecision: true,
+      },
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
@@ -225,13 +234,18 @@ describe('NoticeOfIntentModificationService', () => {
 
   it('should fail on delete if modification does not exist', async () => {
     const uuid = 'fake';
-    modificationRepoMock.findOneBy.mockResolvedValue(null);
+    modificationRepoMock.findOne.mockResolvedValue(null);
 
     await expect(service.delete(uuid)).rejects.toMatchObject(
       new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
-      uuid,
+    expect(modificationRepoMock.findOne).toBeCalledWith({
+      where: {
+        uuid,
+      },
+      relations: {
+        resultingDecision: true,
+      },
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(0);
   });
@@ -297,5 +311,31 @@ describe('NoticeOfIntentModificationService', () => {
 
     expect(modificationRepoMock.find).toHaveBeenCalledTimes(1);
     expect(modificationRepoMock.find.mock.calls[0][0]!.withDeleted).toEqual(true);
+  });
+
+  it('should throw ServiceValidationException when deleting a modification with a resulting decision', async () => {
+    const uuid = 'fake';
+    const mockModificationWithDecision = {
+      ...mockModification,
+      uuid: uuid,
+      resultingDecision: { uuid: 'decision-uuid' },
+    };
+
+    modificationRepoMock.findOne.mockResolvedValue(mockModificationWithDecision);
+
+    await expect(service.delete(uuid)).rejects.toThrow(
+      `Cannot delete modification ${uuid} that has a resulting decision`,
+    );
+
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
+      where: {
+        uuid,
+      },
+      relations: {
+        resultingDecision: true,
+      },
+    });
+    expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(0);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
   });
 });
