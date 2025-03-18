@@ -2,6 +2,57 @@
   <h2 class="card-title">Confirm Release Decision</h2>
 </div>
 <mat-dialog-content class="content">
+  <div *ngIf="!wasReleased" class="row">
+    <div class="toggle-label" id="sendEmailLabel">Send Email (with decision document)</div>
+    <div class="toggle">
+      <mat-slide-toggle
+        [(ngModel)]="sendEmail"
+        aria-labelledby="sendEmailLabel"
+        ></mat-slide-toggle
+      >
+    </div>
+  </div>
+  <div *ngIf="!sendEmail" class="warning-section">
+    <div class="warning">
+      <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Email will not be sent
+    </div>
+  </div>
+  <div *ngIf="sendEmail">
+    <div>
+      <span *ngIf="!wasReleased">Email will be sent to Primary Contact and Local/First Nation Government</span>
+      <span *ngIf="wasReleased">No auto-emails will be sent</span>
+    </div>
+    <div *ngIf="!wasReleased" style="margin-top: 24px; margin-bottom: 24px;">
+      <div style="margin-bottom: 4px">
+        <mat-label>CC additional recipients on decision release email (optional):</mat-label>
+      </div>
+      <mat-form-field style="width: 100%" appearance="outline">
+        <mat-chip-grid #chipGrid aria-label="Enter emails">
+          <mat-chip-row
+            *ngFor="let email of emails"
+            (removed)="onRemoveEmail(email)"
+            [editable]="true"
+            (edited)="editEmail(email, $event)"
+            [aria-description]="'press enter to edit ' + email"
+          >
+            {{ email }}
+            <button matChipRemove [attr.aria-label]="'remove ' + email">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input
+          placeholder="Type and hit ‘space’ to add emails"
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="addEmail($event)"
+          [formControl]="email"
+        />
+      </mat-form-field>
+      <mat-error *ngIf="email.invalid"><mat-icon>warning</mat-icon>&nbsp;Please type a valid email address</mat-error>
+    </div>
+  </div>
   <p>Upon releasing the decision:</p>
   <div class="release-data">
     <div><strong>Visibility:</strong> Applicant, Local/First Nation Government, and Public</div>
@@ -16,41 +67,6 @@
         [type]="cancelledStatus"
       ></app-application-submission-status-type-pill>
     </div>
-    <div>
-      <strong>Email (with decision document) sent to: </strong>
-      <span *ngIf="!wasReleased">Primary Contact and Local/First Nation Government</span>
-      <span *ngIf="wasReleased">No auto-emails will be sent</span>
-    </div>
-  </div>
-  <div *ngIf="!wasReleased" style="margin-top: 24px">
-    <div style="margin-bottom: 4px">
-      <mat-label>CC additional recipients on decision release email (optional):</mat-label>
-    </div>
-    <mat-form-field style="width: 100%" appearance="outline">
-      <mat-chip-grid #chipGrid aria-label="Enter emails">
-        <mat-chip-row
-          *ngFor="let email of emails"
-          (removed)="onRemoveEmail(email)"
-          [editable]="true"
-          (edited)="editEmail(email, $event)"
-          [aria-description]="'press enter to edit ' + email"
-        >
-          {{ email }}
-          <button matChipRemove [attr.aria-label]="'remove ' + email">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
-      </mat-chip-grid>
-      <input
-        placeholder="Type and hit ‘space’ to add emails"
-        [matChipInputFor]="chipGrid"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        [matChipInputAddOnBlur]="true"
-        (matChipInputTokenEnd)="addEmail($event)"
-        [formControl]="email"
-      />
-    </mat-form-field>
-    <mat-error *ngIf="email.invalid"><mat-icon>warning</mat-icon>&nbsp;Please type a valid email address</mat-error>
   </div>
 </mat-dialog-content>
 

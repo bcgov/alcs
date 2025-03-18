@@ -214,7 +214,7 @@ export class NoticeOfIntentDecisionV2Service {
     existingDecision.rescindedDate = formatIncomingDate(updateDto.rescindedDate);
     existingDecision.rescindedComment = updateDto.rescindedComment;
     existingDecision.wasReleased = existingDecision.wasReleased || !updateDto.isDraft;
-    existingDecision.emailSent = updateDto.emailSent;
+    existingDecision.emailSent = updateDto.sendEmail ? updateDto.emailSent : new Date();
     existingDecision.ccEmails = updateDto.ccEmails;
     existingDecision.isFlagged = updateDto.isFlagged;
     existingDecision.reasonFlagged = updateDto.reasonFlagged;

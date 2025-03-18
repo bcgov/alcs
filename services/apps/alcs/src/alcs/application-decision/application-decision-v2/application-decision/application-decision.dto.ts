@@ -132,6 +132,10 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   @IsNumber()
   flagEditedAt?: number | null;
+
+  @IsOptional()
+  @IsBoolean()
+  sendEmail?: boolean;
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {

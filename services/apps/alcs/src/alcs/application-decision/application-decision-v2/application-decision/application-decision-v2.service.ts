@@ -286,7 +286,7 @@ export class ApplicationDecisionV2Service {
     existingDecision.rescindedComment = updateDto.rescindedComment;
     existingDecision.wasReleased = existingDecision.wasReleased || !updateDto.isDraft;
     existingDecision.linkedResolutionOutcomeCode = updateDto.linkedResolutionOutcomeCode;
-    existingDecision.emailSent = updateDto.emailSent;
+    existingDecision.emailSent = updateDto.sendEmail ? updateDto.emailSent : new Date();
     existingDecision.ccEmails = filterUndefined(updateDto.ccEmails, existingDecision.ccEmails);
     existingDecision.isFlagged = updateDto.isFlagged;
     existingDecision.reasonFlagged = updateDto.reasonFlagged;

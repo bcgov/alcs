@@ -275,11 +275,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true, ccEmails: string[] = []) {
+  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true, ccEmails: string[] = [], sendEmail: boolean = true) {
     this.isLoading = true;
 
     try {
-      await this.saveDecision(isDraft, ccEmails);
+      await this.saveDecision(isDraft, ccEmails, sendEmail);
     } finally {
       if (!isStayOnPage) {
         this.onCancel();
@@ -291,8 +291,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  async saveDecision(isDraft: boolean = true, ccEmails: string[]) {
-    const data = this.mapDecisionDataForSave(isDraft, ccEmails);
+  async saveDecision(isDraft: boolean = true, ccEmails: string[], sendEmail: boolean = true) {
+    const data = this.mapDecisionDataForSave(isDraft, ccEmails, sendEmail);
 
     if (this.uuid) {
       await this.decisionService.update(this.uuid, data);
@@ -305,7 +305,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  private mapDecisionDataForSave(isDraft: boolean, ccEmails: string[]) {
+  private mapDecisionDataForSave(isDraft: boolean, ccEmails: string[], sendEmail: boolean = true) {
     const {
       date,
       outcome,
@@ -339,6 +339,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       conditions: this.conditionUpdates,
       decisionMaker: decisionMaker ?? undefined,
       ccEmails,
+      sendEmail,
     };
 
     return data;
@@ -466,9 +467,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           },
         })
         .afterClosed()
-        .subscribe(async (res: { confirmed: boolean; ccEmails: string[] }) => {
+        .subscribe(async (res: { confirmed: boolean; ccEmails: string[], sendEmail: boolean }) => {
           if (res.confirmed) {
-            await this.onSubmit(false, false, res.ccEmails);
+            await this.onSubmit(false, false, res.ccEmails, res.sendEmail);
             await this.noticeOfIntentDetailService.load(this.fileNumber);
           }
         });

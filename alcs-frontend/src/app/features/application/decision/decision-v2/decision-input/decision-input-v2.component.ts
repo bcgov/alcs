@@ -388,11 +388,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.form.controls['criterionModification'].updateValueAndValidity();
   }
 
-  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true, ccEmails: string[] = []) {
+  async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true, ccEmails: string[] = [], sendEmail: boolean = true) {
     this.isLoading = true;
 
     try {
-      await this.saveDecision(isDraft, ccEmails);
+      await this.saveDecision(isDraft, ccEmails, sendEmail);
     } finally {
       if (!isStayOnPage) {
         this.onCancel();
@@ -404,9 +404,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  async saveDecision(isDraft: boolean = true, ccEmails: string[] = []) {
-    const data = this.mapDecisionDataForSave(isDraft, ccEmails);
-
+  async saveDecision(isDraft: boolean = true, ccEmails: string[] = [], sendEmail: boolean = true) {
+    const data = this.mapDecisionDataForSave(isDraft, ccEmails, sendEmail);
     if (this.uuid) {
       await this.decisionService.update(this.uuid, data);
     } else {
@@ -418,7 +417,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  private mapDecisionDataForSave(isDraft: boolean, ccEmails: string[]) {
+  private mapDecisionDataForSave(isDraft: boolean, ccEmails: string[], sendEmail: boolean = true) {
     const {
       date,
       outcome,
@@ -464,6 +463,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       decisionComponents: this.components,
       conditions: this.conditionUpdates,
       ccEmails,
+      sendEmail,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -627,9 +627,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           },
         })
         .afterClosed()
-        .subscribe(async (result: { confirmed: boolean; ccEmails: string[] }) => {
+        .subscribe(async (result: { confirmed: boolean; ccEmails: string[], sendEmail: boolean }) => {
           if (result.confirmed) {
-            await this.onSubmit(false, false, result.ccEmails);
+            await this.onSubmit(false, false, result.ccEmails, result.sendEmail);
             await this.applicationService.loadApplication(this.fileNumber);
           }
         });
