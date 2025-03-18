@@ -1,13 +1,6 @@
 import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationSubmissionDetailedDto } from '../../portal/application-submission/application-submission.dto';
 import { DecisionMeetingDto } from '../meetings/decision-meeting.dto';
@@ -154,18 +147,6 @@ export class UpdateApplicationDto {
   @IsOptional()
   @IsString()
   inclExclApplicantType?: string;
-
-  @IsOptional()
-  @IsNumber()
-  proposalEndDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  proposalEndDate2?: number;
-
-  @IsOptional()
-  @IsNumber()
-  proposalExpiryDate?: number;
 }
 
 export class ApplicationDto {
@@ -265,10 +246,6 @@ export class ApplicationDto {
 
   @AutoMap(() => String)
   legacyId?: string;
-
-  proposalEndDate?: number;
-  proposalEndDate2?: number;
-  proposalExpiryDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -295,9 +272,6 @@ export class ApplicationUpdateServiceDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
-  proposalEndDate?: Date | null;
-  proposalEndDate2?: Date | null;
-  proposalExpiryDate?: Date | null;
   staffObservations?: string | null;
   localGovernmentUuid?: string;
 }

@@ -23,10 +23,7 @@ export class NoticeOfIntentDecisionComponentService {
     });
   }
 
-  async createOrUpdate(
-    updateDtos: CreateNoticeOfIntentDecisionComponentDto[],
-    isPersist = true,
-  ) {
+  async createOrUpdate(updateDtos: CreateNoticeOfIntentDecisionComponentDto[], isPersist = true) {
     const updatedComponents: NoticeOfIntentDecisionComponent[] = [];
 
     for (const updateDto of updateDtos) {
@@ -36,33 +33,14 @@ export class NoticeOfIntentDecisionComponentService {
         component = await this.getOneOrFail(updateDto.uuid);
       } else {
         component = new NoticeOfIntentDecisionComponent();
-        component.noticeOfIntentDecisionComponentTypeCode =
-          updateDto.noticeOfIntentDecisionComponentTypeCode;
+        component.noticeOfIntentDecisionComponentTypeCode = updateDto.noticeOfIntentDecisionComponentTypeCode;
       }
 
       component.alrArea = filterUndefined(updateDto.alrArea, component.alrArea);
       component.agCap = filterUndefined(updateDto.agCap, component.agCap);
-      component.agCapSource = filterUndefined(
-        updateDto.agCapSource,
-        component.agCapSource,
-      );
-      component.agCapMap = filterUndefined(
-        updateDto.agCapMap,
-        component.agCapMap,
-      );
-      component.agCapConsultant = filterUndefined(
-        updateDto.agCapConsultant,
-        component.agCapConsultant,
-      );
-      component.endDate = filterUndefined(
-        formatIncomingDate(updateDto.endDate),
-        component.endDate,
-      );
-
-      component.endDate2 = filterUndefined(
-        formatIncomingDate(updateDto.endDate2),
-        component.endDate2,
-      );
+      component.agCapSource = filterUndefined(updateDto.agCapSource, component.agCapSource);
+      component.agCapMap = filterUndefined(updateDto.agCapMap, component.agCapMap);
+      component.agCapConsultant = filterUndefined(updateDto.agCapConsultant, component.agCapConsultant);
 
       this.patchPofoFields(component, updateDto);
       this.patchRosoFields(component, updateDto);
@@ -81,18 +59,9 @@ export class NoticeOfIntentDecisionComponentService {
     component: NoticeOfIntentDecisionComponent,
     updateDto: CreateNoticeOfIntentDecisionComponentDto,
   ) {
-    component.soilFillTypeToPlace = filterUndefined(
-      updateDto.soilFillTypeToPlace,
-      component.soilFillTypeToPlace,
-    );
-    component.soilToPlaceArea = filterUndefined(
-      updateDto.soilToPlaceArea,
-      component.soilToPlaceArea,
-    );
-    component.soilToPlaceVolume = filterUndefined(
-      updateDto.soilToPlaceVolume,
-      component.soilToPlaceVolume,
-    );
+    component.soilFillTypeToPlace = filterUndefined(updateDto.soilFillTypeToPlace, component.soilFillTypeToPlace);
+    component.soilToPlaceArea = filterUndefined(updateDto.soilToPlaceArea, component.soilToPlaceArea);
+    component.soilToPlaceVolume = filterUndefined(updateDto.soilToPlaceVolume, component.soilToPlaceVolume);
     component.soilToPlaceMaximumDepth = filterUndefined(
       updateDto.soilToPlaceMaximumDepth,
       component.soilToPlaceMaximumDepth,
@@ -107,18 +76,9 @@ export class NoticeOfIntentDecisionComponentService {
     component: NoticeOfIntentDecisionComponent,
     updateDto: CreateNoticeOfIntentDecisionComponentDto,
   ) {
-    component.soilTypeRemoved = filterUndefined(
-      updateDto.soilTypeRemoved,
-      component.soilTypeRemoved,
-    );
-    component.soilToRemoveVolume = filterUndefined(
-      updateDto.soilToRemoveVolume,
-      component.soilToRemoveVolume,
-    );
-    component.soilToRemoveArea = filterUndefined(
-      updateDto.soilToRemoveArea,
-      component.soilToRemoveArea,
-    );
+    component.soilTypeRemoved = filterUndefined(updateDto.soilTypeRemoved, component.soilTypeRemoved);
+    component.soilToRemoveVolume = filterUndefined(updateDto.soilToRemoveVolume, component.soilToRemoveVolume);
+    component.soilToRemoveArea = filterUndefined(updateDto.soilToRemoveArea, component.soilToRemoveArea);
     component.soilToRemoveMaximumDepth = filterUndefined(
       updateDto.soilToRemoveMaximumDepth,
       component.soilToRemoveMaximumDepth,
@@ -129,30 +89,21 @@ export class NoticeOfIntentDecisionComponentService {
     );
   }
 
-  validate(
-    componentsDto: CreateNoticeOfIntentDecisionComponentDto[],
-    isDraftDecision = false,
-  ) {
+  validate(componentsDto: CreateNoticeOfIntentDecisionComponentDto[], isDraftDecision = false) {
     if (!this.checkDuplicates(componentsDto)) {
-      throw new ServiceValidationException(
-        'Only on component of each type is allowed',
-      );
+      throw new ServiceValidationException('Only on component of each type is allowed');
     }
 
     if (!isDraftDecision) {
       if (componentsDto.length < 1) {
-        throw new ServiceValidationException(
-          'Decision components are required',
-        );
+        throw new ServiceValidationException('Decision components are required');
       }
 
       this.validateDecisionComponentFields(componentsDto);
     }
   }
 
-  private checkDuplicates(
-    components: CreateNoticeOfIntentDecisionComponentDto[],
-  ) {
+  private checkDuplicates(components: CreateNoticeOfIntentDecisionComponentDto[]) {
     const typeCounts = {};
 
     for (const { noticeOfIntentDecisionComponentTypeCode } of components) {
@@ -178,9 +129,7 @@ export class NoticeOfIntentDecisionComponentService {
     });
   }
 
-  validateDecisionComponentFields(
-    componentsDto: CreateNoticeOfIntentDecisionComponentDto[],
-  ) {
+  validateDecisionComponentFields(componentsDto: CreateNoticeOfIntentDecisionComponentDto[]) {
     const errors: string[] = [];
 
     for (const component of componentsDto) {
@@ -194,24 +143,15 @@ export class NoticeOfIntentDecisionComponentService {
         errors.push('Agri Source is required');
       }
 
-      if (
-        component.noticeOfIntentDecisionComponentTypeCode ===
-        NOI_DECISION_COMPONENT_TYPE.POFO
-      ) {
+      if (component.noticeOfIntentDecisionComponentTypeCode === NOI_DECISION_COMPONENT_TYPE.POFO) {
         this.validatePofoDecisionComponentFields(component, errors);
       }
 
-      if (
-        component.noticeOfIntentDecisionComponentTypeCode ===
-        NOI_DECISION_COMPONENT_TYPE.ROSO
-      ) {
+      if (component.noticeOfIntentDecisionComponentTypeCode === NOI_DECISION_COMPONENT_TYPE.ROSO) {
         this.validateRosoDecisionComponentFields(component, errors);
       }
 
-      if (
-        component.noticeOfIntentDecisionComponentTypeCode ===
-        NOI_DECISION_COMPONENT_TYPE.PFRS
-      ) {
+      if (component.noticeOfIntentDecisionComponentTypeCode === NOI_DECISION_COMPONENT_TYPE.PFRS) {
         this.validatePofoDecisionComponentFields(component, errors);
         this.validateRosoDecisionComponentFields(component, errors);
       }
@@ -222,14 +162,9 @@ export class NoticeOfIntentDecisionComponentService {
     }
   }
 
-  private validatePofoDecisionComponentFields(
-    component: CreateNoticeOfIntentDecisionComponentDto,
-    errors: string[],
-  ) {
+  private validatePofoDecisionComponentFields(component: CreateNoticeOfIntentDecisionComponentDto, errors: string[]) {
     if (!component.soilFillTypeToPlace) {
-      errors.push(
-        'Type, origin and quality of fill approved to be placed is required',
-      );
+      errors.push('Type, origin and quality of fill approved to be placed is required');
     }
     if (!component.soilToPlaceVolume) {
       errors.push('Volume To Place is required');
@@ -245,10 +180,7 @@ export class NoticeOfIntentDecisionComponentService {
     }
   }
 
-  private validateRosoDecisionComponentFields(
-    component: CreateNoticeOfIntentDecisionComponentDto,
-    errors: string[],
-  ) {
+  private validateRosoDecisionComponentFields(component: CreateNoticeOfIntentDecisionComponentDto, errors: string[]) {
     if (!component.soilTypeRemoved) {
       errors.push('Type of soil approved to be removed is required');
     }

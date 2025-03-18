@@ -197,18 +197,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionComponent,
         ApplicationDecisionComponentDto,
         forMember(
-          (ad) => ad.endDate,
-          mapFrom((a) => a.endDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.endDate2,
-          mapFrom((a) => a.endDate2?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.expiryDate,
-          mapFrom((a) => a.expiryDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.naruSubtype,
           mapFrom((a) => this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto)),
         ),

@@ -42,18 +42,6 @@ export class UpdateApplicationDecisionComponentDto {
   nfuSubType?: string;
 
   @IsOptional()
-  @IsNumber()
-  endDate?: number;
-
-  @IsOptional()
-  @IsNumber()
-  endDate2?: number;
-
-  @IsOptional()
-  @IsNumber()
-  expiryDate?: number;
-
-  @IsOptional()
   @IsString()
   soilFillTypeToPlace?: string;
 
@@ -136,10 +124,6 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap()
   nfuSubType?: string;
-
-  endDate?: number;
-  endDate2?: number;
-  expiryDate?: number;
 
   @AutoMap()
   applicationDecisionUuid: string;

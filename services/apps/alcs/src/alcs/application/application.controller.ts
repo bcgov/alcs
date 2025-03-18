@@ -1,8 +1,5 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import {
   Body,
   Controller,
@@ -28,11 +25,7 @@ import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
 import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 import { CardService } from '../card/card.service';
-import {
-  ApplicationDto,
-  CreateApplicationDto,
-  UpdateApplicationDto,
-} from './application.dto';
+import { ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -49,23 +42,16 @@ export class ApplicationController {
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async get(
-    @Param('fileNumber') fileNumber,
-    @Req() req,
-  ): Promise<ApplicationDto> {
+  async get(@Param('fileNumber') fileNumber, @Req() req): Promise<ApplicationDto> {
     const application = await this.applicationService.getOrFail(fileNumber);
-    const mappedApplication = await this.applicationService.mapToDtos([
-      application,
-    ]);
+    const mappedApplication = await this.applicationService.mapToDtos([application]);
     await this.trackingService.trackView(req.user.entity, fileNumber);
     return mappedApplication[0];
   }
 
   @Post()
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async create(
-    @Body() application: CreateApplicationDto,
-  ): Promise<ApplicationDto> {
+  async create(@Body() application: CreateApplicationDto): Promise<ApplicationDto> {
     const app = await this.applicationService.create({
       ...application,
       dateSubmittedToAlc: formatIncomingDate(application.dateSubmittedToAlc),
@@ -81,48 +67,33 @@ export class ApplicationController {
     @Body() updates: UpdateApplicationDto,
   ): Promise<ApplicationDto> {
     const application = await this.applicationService.getOrFail(fileNumber);
-    const updatedApplication = await this.applicationService.update(
-      application,
-      {
-        dateSubmittedToAlc: formatIncomingDate(updates.dateSubmittedToAlc),
-        applicant: updates.applicant,
-        typeCode: updates.typeCode,
-        regionCode: updates.regionCode,
-        summary: updates.summary,
-        feePaidDate: formatIncomingDate(updates.feePaidDate),
-        feeAmount:
-          updates.feeAmount !== undefined
-            ? parseFloat(updates.feeAmount)
-            : updates.feeAmount,
-        feeSplitWithLg: updates.feeSplitWithLg,
-        feeWaived: updates.feeWaived,
-        dateAcknowledgedIncomplete: formatIncomingDate(
-          updates.dateAcknowledgedIncomplete,
-        ),
-        dateReceivedAllItems: formatIncomingDate(updates.dateReceivedAllItems),
-        dateAcknowledgedComplete: formatIncomingDate(
-          updates.dateAcknowledgedComplete,
-        ),
-        notificationSentDate: formatIncomingDate(updates.notificationSentDate),
-        alrArea: updates.alrArea,
-        agCap: updates.agCap,
-        agCapConsultant: updates.agCapConsultant,
-        agCapMap: updates.agCapMap,
-        agCapSource: updates.agCapSource,
-        proposalEndDate: formatIncomingDate(updates.proposalEndDate),
-        proposalEndDate2: formatIncomingDate(updates.proposalEndDate2),
-        proposalExpiryDate: formatIncomingDate(updates.proposalExpiryDate),
-        nfuUseSubType: updates.nfuUseSubType,
-        nfuUseType: updates.nfuUseType,
-        inclExclApplicantType: updates.inclExclApplicantType,
-        staffObservations: updates.staffObservations,
-        hideFromPortal: updates.hideFromPortal,
-      },
-    );
+    const updatedApplication = await this.applicationService.update(application, {
+      dateSubmittedToAlc: formatIncomingDate(updates.dateSubmittedToAlc),
+      applicant: updates.applicant,
+      typeCode: updates.typeCode,
+      regionCode: updates.regionCode,
+      summary: updates.summary,
+      feePaidDate: formatIncomingDate(updates.feePaidDate),
+      feeAmount: updates.feeAmount !== undefined ? parseFloat(updates.feeAmount) : updates.feeAmount,
+      feeSplitWithLg: updates.feeSplitWithLg,
+      feeWaived: updates.feeWaived,
+      dateAcknowledgedIncomplete: formatIncomingDate(updates.dateAcknowledgedIncomplete),
+      dateReceivedAllItems: formatIncomingDate(updates.dateReceivedAllItems),
+      dateAcknowledgedComplete: formatIncomingDate(updates.dateAcknowledgedComplete),
+      notificationSentDate: formatIncomingDate(updates.notificationSentDate),
+      alrArea: updates.alrArea,
+      agCap: updates.agCap,
+      agCapConsultant: updates.agCapConsultant,
+      agCapMap: updates.agCapMap,
+      agCapSource: updates.agCapSource,
+      nfuUseSubType: updates.nfuUseSubType,
+      nfuUseType: updates.nfuUseType,
+      inclExclApplicantType: updates.inclExclApplicantType,
+      staffObservations: updates.staffObservations,
+      hideFromPortal: updates.hideFromPortal,
+    });
 
-    const mappedApps = await this.applicationService.mapToDtos([
-      updatedApplication,
-    ]);
+    const mappedApps = await this.applicationService.mapToDtos([updatedApplication]);
     return mappedApps[0];
   }
 
@@ -138,11 +109,7 @@ export class ApplicationController {
     const { applicationSubmission, primaryContact, submissionGovernment } =
       await this.statusEmailService.getApplicationEmailData(fileNumber);
 
-    if (
-      primaryContact &&
-      applicationSubmission.status.statusTypeCode !==
-        SUBMISSION_STATUS.IN_PROGRESS
-    ) {
+    if (primaryContact && applicationSubmission.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS) {
       await this.statusEmailService.sendApplicationStatusEmail({
         template,
         status: SUBMISSION_STATUS.CANCELLED,
@@ -169,24 +136,16 @@ export class ApplicationController {
   async getByCardUuid(@Param('uuid') cardUuid): Promise<ApplicationDto> {
     const application = await this.applicationService.getByCard(cardUuid);
     if (application) {
-      const mappedApplication = await this.applicationService.mapToDtos([
-        application,
-      ]);
+      const mappedApplication = await this.applicationService.mapToDtos([application]);
       return mappedApplication[0];
     } else {
-      throw new ServiceNotFoundException(
-        `Failed to find application with card uuid ${cardUuid}`,
-      );
+      throw new ServiceNotFoundException(`Failed to find application with card uuid ${cardUuid}`);
     }
   }
 
   @Patch('/card/:cardUuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async updateCard(
-    @Param('cardUuid') cardUuid: string,
-    @Body() applicationUpdates: UpdateApplicationDto,
-    @Req() req,
-  ) {
+  async updateCard(@Param('cardUuid') cardUuid: string, @Body() applicationUpdates: UpdateApplicationDto, @Req() req) {
     const existingCard = await this.cardService.get(cardUuid);
     if (!existingCard) {
       throw new ServiceValidationException(`Card ${cardUuid} not found`);
@@ -198,9 +157,7 @@ export class ApplicationController {
       throw new NotFoundException(`Card not found with uuid: ${existingCard}`);
     }
 
-    const application = await this.applicationService.getByCard(
-      updatedCard.uuid,
-    );
+    const application = await this.applicationService.getByCard(updatedCard.uuid);
 
     const cardBody = `${application.fileNumber} (${application.applicant})`;
     await this.cardService.update(
@@ -221,8 +178,7 @@ export class ApplicationController {
   @Get('/search/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async searchApplications(@Param('fileNumber') fileNumber: string) {
-    const applications =
-      await this.applicationService.searchApplicationsByFileNumber(fileNumber);
+    const applications = await this.applicationService.searchApplicationsByFileNumber(fileNumber);
     return this.applicationService.mapToDtos(applications);
   }
 }

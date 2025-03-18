@@ -77,27 +77,6 @@ export class ApplicationDecisionComponent extends Base {
   })
   nfuSubType?: string | null;
 
-  @Column({
-    type: 'timestamptz',
-    comment: 'Components end date',
-    nullable: true,
-  })
-  endDate?: Date | null;
-
-  @Column({
-    type: 'timestamptz',
-    comment: 'Components second end date (PFRS only)',
-    nullable: true,
-  })
-  endDate2?: Date | null;
-
-  @Column({
-    type: 'timestamptz',
-    comment: 'Components expiry date',
-    nullable: true,
-  })
-  expiryDate?: Date | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   soilFillTypeToPlace: string | null;

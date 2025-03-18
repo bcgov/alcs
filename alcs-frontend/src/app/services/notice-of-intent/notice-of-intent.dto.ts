@@ -51,8 +51,6 @@ export interface NoticeOfIntentDto {
   agCapMap?: string;
   agCapConsultant?: string;
   staffObservations?: string;
-  proposalEndDate?: number;
-  proposalEndDate2?: number;
   legacyId?: string;
 }
 
@@ -77,8 +75,6 @@ export interface UpdateNoticeOfIntentDto {
   agCapMap?: string;
   agCapConsultant?: string;
   staffObservations?: string;
-  proposalEndDate?: number;
-  proposalEndDate2?: number;
 }
 
 export enum NOI_SUBMISSION_STATUS {

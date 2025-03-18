@@ -84,8 +84,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     switch (uiCode) {
       case 'COPY':
         const component: ApplicationDecisionComponentDto = {
-          endDate: this.application.proposalEndDate,
-          endDate2: this.application.proposalEndDate2,
           applicationDecisionComponentTypeCode: typeCode,
           alrArea: this.application.alrArea,
           agCap: this.application.agCap,
@@ -106,13 +104,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           this.patchNfuFields(component);
         }
 
-        if (
-          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP ||
-          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.COVE
-        ) {
-          this.setExpiryDateFields(component);
-        }
-
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.POFO) {
           this.patchPofoFields(component);
         }
@@ -123,10 +114,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
           this.patchPfrsFields(component);
-        }
-
-        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NARU) {
-          this.patchNaruFields(component);
         }
 
         if (
@@ -227,21 +214,14 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   private patchNfuFields(component: ApplicationDecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
-    component.endDate = this.application.proposalEndDate;
-  }
-
-  private setExpiryDateFields(component: ApplicationDecisionComponentDto) {
-    component.expiryDate = this.application.proposalExpiryDate;
   }
 
   private patchPfrsFields(component: ApplicationDecisionComponentDto) {
     this.patchPofoFields(component);
     this.patchRosoFields(component);
-    component.endDate2 = this.application.proposalEndDate2;
   }
 
   private patchPofoFields(component: ApplicationDecisionComponentDto) {
-    component.endDate = this.application.proposalEndDate;
     component.soilFillTypeToPlace = this.application.submittedApplication?.soilFillTypeToPlace;
     component.soilToPlaceVolume = this.application.submittedApplication?.soilToPlaceVolume;
     component.soilToPlaceArea = this.application.submittedApplication?.soilToPlaceArea;
@@ -250,17 +230,11 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private patchRosoFields(component: ApplicationDecisionComponentDto) {
-    component.endDate = this.application.proposalEndDate;
     component.soilTypeRemoved = this.application.submittedApplication?.soilTypeRemoved;
     component.soilToRemoveVolume = this.application.submittedApplication?.soilToRemoveVolume;
     component.soilToRemoveArea = this.application.submittedApplication?.soilToRemoveArea;
     component.soilToRemoveMaximumDepth = this.application.submittedApplication?.soilToRemoveMaximumDepth;
     component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
-  }
-
-  private patchNaruFields(component: ApplicationDecisionComponentDto) {
-    component.endDate = this.application.proposalEndDate;
-    component.expiryDate = this.application.proposalExpiryDate;
   }
 
   private patchInclExclFields(component: ApplicationDecisionComponentDto) {

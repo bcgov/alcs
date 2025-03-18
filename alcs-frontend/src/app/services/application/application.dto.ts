@@ -286,9 +286,6 @@ export interface ApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
-  proposalEndDate?: number;
-  proposalEndDate2?: number;
-  proposalExpiryDate?: number;
   legacyId?: string;
   tags?: TagDto[];
 }
@@ -321,9 +318,6 @@ export interface UpdateApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
-  proposalEndDate2?: number;
-  proposalEndDate?: number;
-  proposalExpiryDate?: number;
 }
 
 export interface CovenantTransfereeDto {

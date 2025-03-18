@@ -135,7 +135,6 @@ export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
 
 export interface NoticeOfIntentDecisionConditionDto {
   uuid: string;
-  approvalDependant: boolean | null;
   securityAmount: number | null;
   administrativeFee: number | null;
   description: string | null;
@@ -164,7 +163,6 @@ export interface NoticeOfIntentDecisionConditionDateDto {
 export interface UpdateNoticeOfIntentDecisionConditionDto {
   uuid?: string;
   componentsToCondition?: ComponentToCondition[];
-  approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
@@ -182,8 +180,6 @@ export interface UpdateNoticeOfIntentDecisionComponentDto {
   agCapMap?: string;
   agCapConsultant?: string;
   noticeOfIntentDecisionComponentTypeCode: string;
-  endDate?: number;
-  expiryDate?: number;
   soilFillTypeToPlace?: string;
   soilToPlaceVolume?: number | null;
   soilToPlaceArea?: number | null;
@@ -198,8 +194,7 @@ export interface UpdateNoticeOfIntentDecisionComponentDto {
 
 export interface NoticeOfIntentDecisionComponentDto
   extends PofoDecisionComponentDto,
-    RosoDecisionComponentDto,
-    PfrsDecisionComponentDto {
+    RosoDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -210,13 +205,9 @@ export interface NoticeOfIntentDecisionComponentDto
   noticeOfIntentDecisionComponentTypeCode: string;
   noticeOfIntentDecisionComponentType?: NoticeOfIntentDecisionComponentTypeDto;
 }
-
-export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
-  endDate2?: number | null;
-}
+export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {}
 
 export interface PofoDecisionComponentDto {
-  endDate?: number | null;
   soilFillTypeToPlace?: string | null;
   soilToPlaceArea?: number | null;
   soilToPlaceVolume?: number | null;
@@ -225,7 +216,6 @@ export interface PofoDecisionComponentDto {
 }
 
 export interface RosoDecisionComponentDto {
-  endDate?: number | null;
   soilTypeRemoved?: string | null;
   soilToRemoveVolume?: number | null;
   soilToRemoveArea?: number | null;

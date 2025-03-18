@@ -45,11 +45,6 @@ export class DecisionComponentComponent implements OnInit {
   maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   averageDepthToRemove = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
 
-  //pfrs
-  endDate2 = new FormControl<Date | null>(null);
-
-  // general
-  endDate = new FormControl<Date | null>(null);
   alrArea = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   agCap = new FormControl<string | null>(null, [Validators.required]);
   agCapSource = new FormControl<string | null>(null, [Validators.required]);
@@ -145,20 +140,15 @@ export class DecisionComponentComponent implements OnInit {
   private patchPfrsFields() {
     this.patchPofoFields();
     this.patchRosoFields();
-    this.form.addControl('endDate2', this.endDate2);
-
-    this.endDate2.setValue(this.data.endDate2 ? new Date(this.data.endDate2) : null);
   }
 
   private patchPofoFields() {
-    this.form.addControl('endDate', this.endDate);
     this.form.addControl('fillTypeToPlace', this.fillTypeToPlace);
     this.form.addControl('areaToPlace', this.areaToPlace);
     this.form.addControl('volumeToPlace', this.volumeToPlace);
     this.form.addControl('maximumDepthToPlace', this.maximumDepthToPlace);
     this.form.addControl('averageDepthToPlace', this.averageDepthToPlace);
 
-    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
     this.fillTypeToPlace.setValue(this.data.soilFillTypeToPlace ?? null);
     this.areaToPlace.setValue(this.data.soilToPlaceArea ?? null);
     this.volumeToPlace.setValue(this.data.soilToPlaceVolume ?? null);
@@ -167,14 +157,12 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private patchRosoFields() {
-    this.form.addControl('endDate', this.endDate);
     this.form.addControl('soilTypeRemoved', this.soilTypeRemoved);
     this.form.addControl('areaToRemove', this.areaToRemove);
     this.form.addControl('volumeToRemove', this.volumeToRemove);
     this.form.addControl('maximumDepthToRemove', this.maximumDepthToRemove);
     this.form.addControl('averageDepthToRemove', this.averageDepthToRemove);
 
-    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
     this.soilTypeRemoved.setValue(this.data.soilTypeRemoved ?? null);
     this.areaToRemove.setValue(this.data.soilToRemoveArea ?? null);
     this.volumeToRemove.setValue(this.data.soilToRemoveVolume ?? null);
@@ -184,7 +172,6 @@ export class DecisionComponentComponent implements OnInit {
 
   private getPofoDataChange(): PofoDecisionComponentDto {
     return {
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
       soilFillTypeToPlace: this.fillTypeToPlace.value ?? null,
       soilToPlaceArea: this.areaToPlace.value ? this.areaToPlace.value : null,
       soilToPlaceVolume: this.volumeToPlace.value ? this.volumeToPlace.value: null,
@@ -195,7 +182,6 @@ export class DecisionComponentComponent implements OnInit {
 
   private getRosoDataChange(): RosoDecisionComponentDto {
     return {
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
       soilTypeRemoved: this.soilTypeRemoved.value ? this.soilTypeRemoved.value : null,
       soilToRemoveArea: this.areaToRemove.value ? this.areaToRemove.value : null,
       soilToRemoveVolume: this.volumeToRemove.value ? this.volumeToRemove.value : null,
@@ -206,8 +192,6 @@ export class DecisionComponentComponent implements OnInit {
 
   private getPfrsDataChange(): PfrsDecisionComponentDto {
     return {
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
-      endDate2: this.endDate2.value ? formatDateForApi(this.endDate2.value) : null,
       soilTypeRemoved: this.soilTypeRemoved.value ? this.soilTypeRemoved.value : null,
       soilToRemoveArea: this.areaToRemove.value ? this.areaToRemove.value : null,
       soilToRemoveVolume: this.volumeToRemove.value ? this.volumeToRemove.value : null,

@@ -62,9 +62,7 @@ describe('ApplicationDecisionConditionController', () => {
     it('should update the condition and return updated condition', async () => {
       // Arrange
       const uuid = 'example-uuid';
-      const date = new Date();
       const updates: UpdateApplicationDecisionConditionDto = {
-        approvalDependant: true,
         securityAmount: 1000,
         administrativeFee: 50,
         description: 'example description',
@@ -72,7 +70,6 @@ describe('ApplicationDecisionConditionController', () => {
 
       const condition = new ApplicationDecisionCondition({
         uuid,
-        approvalDependant: false,
         securityAmount: 500,
         administrativeFee: 25,
         description: 'existing description',
@@ -80,7 +77,6 @@ describe('ApplicationDecisionConditionController', () => {
 
       const updated = new ApplicationDecisionCondition({
         uuid,
-        approvalDependant: updates.approvalDependant,
         securityAmount: updates.securityAmount,
         administrativeFee: updates.administrativeFee,
         description: updates.description,
@@ -98,7 +94,6 @@ describe('ApplicationDecisionConditionController', () => {
       expect(result.description).toEqual(updated.description);
       expect(result.administrativeFee).toEqual(updated.administrativeFee);
       expect(result.securityAmount).toEqual(updated.securityAmount);
-      expect(result.approvalDependant).toEqual(updated.approvalDependant);
     });
   });
 

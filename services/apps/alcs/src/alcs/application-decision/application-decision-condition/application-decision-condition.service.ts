@@ -220,7 +220,6 @@ export class ApplicationDecisionConditionService {
       condition.administrativeFee = updateDto.administrativeFee ?? null;
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
-      condition.approvalDependant = updateDto.approvalDependant ?? null;
       condition.order = updateDto.order ?? 0;
       if (updateDto.dates) {
         condition.dates = updateDto.dates.map((dateDto) => {

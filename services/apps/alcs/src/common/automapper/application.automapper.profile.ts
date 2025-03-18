@@ -76,18 +76,6 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.notificationSentDate?.getTime()),
         ),
         forMember(
-          (a) => a.proposalEndDate,
-          mapFrom((ad) => ad.proposalEndDate?.getTime()),
-        ),
-        forMember(
-          (a) => a.proposalEndDate2,
-          mapFrom((ad) => ad.proposalEndDate2?.getTime()),
-        ),
-        forMember(
-          (a) => a.proposalExpiryDate,
-          mapFrom((ad) => ad.proposalExpiryDate?.getTime()),
-        ),
-        forMember(
           (ad) => ad.card,
           mapFrom((a) => {
             return this.mapper.map(a.card, Card, CardDto);
@@ -95,13 +83,7 @@ export class ApplicationProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.decisionMeetings,
-          mapFrom((a) =>
-            this.mapper.mapArray(
-              a.decisionMeetings,
-              ApplicationDecisionMeeting,
-              DecisionMeetingDto,
-            ),
-          ),
+          mapFrom((a) => this.mapper.mapArray(a.decisionMeetings, ApplicationDecisionMeeting, DecisionMeetingDto)),
         ),
       );
 
