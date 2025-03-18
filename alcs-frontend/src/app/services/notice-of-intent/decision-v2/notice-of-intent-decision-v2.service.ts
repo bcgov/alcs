@@ -197,4 +197,16 @@ export class NoticeOfIntentDecisionV2Service {
     }
     return result;
   }
+
+  async resolutionNumberExists(resolutionYear: number, resolutionNumber: number) {
+    let result: boolean | undefined = undefined;
+    try {
+      result = await firstValueFrom(
+        this.http.get<boolean>(`${this.url}/resolution-number-exists/${resolutionYear}/${resolutionNumber}`),
+      );
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch resolutionNumber');
+    }
+    return result;
+  }
 }

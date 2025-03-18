@@ -718,4 +718,13 @@ export class NoticeOfIntentDecisionV2Service {
 
     return decisionOrder + 1;
   }
+
+  async resolutionNumberExists(resolutionYear: number, resolutionNumber: number): Promise<boolean> {
+    return !!(await this.noticeOfIntentDecisionRepository.findOne({
+      where: {
+        resolutionNumber,
+        resolutionYear,
+      },
+    }));
+  }
 }
