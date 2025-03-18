@@ -134,18 +134,6 @@
 
 <section>
   <div class="post-decision" *ngFor="let modification of modifications; let i = index">
-    <!-- <div class="decision-menu modification">
-      <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button
-        (click)="deleteModification(modification.uuid, modifications.length - i)"
-        matTooltip="Delete Request"
-        mat-icon-button
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div> -->
     <div class="decision-menu">
       <div class="modification">
         <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
