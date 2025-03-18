@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { combineLatestWith, Subject, takeUntil } from 'rxjs';
+import { catchError, combineLatestWith, debounceTime, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import {
   CreateNoticeOfIntentDecisionDto,
@@ -25,6 +25,7 @@ import { OUTCOMES_WITH_COMPONENTS } from '../decision-v2.component';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 import { DecisionComponentsComponent } from './decision-components/decision-components.component';
 import { DecisionConditionsComponent } from './decision-conditions/decision-conditions.component';
+import { InlineNumberComponent } from '../../../../../shared/inline-editors/inline-number/inline-number.component';
 
 type MappedPostDecision = {
   label: string;
@@ -58,8 +59,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   existingDecision: NoticeOfIntentDecisionDto | undefined;
   codes?: NoticeOfIntentDecisionCodesDto;
 
-  resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
+  resolutionNumberControl = new FormControl<number | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
+
+  lastResolutionNumber: number | null = null;
 
   components: NoticeOfIntentDecisionComponentDto[] = [];
   conditions: NoticeOfIntentDecisionConditionDto[] = [];
@@ -67,6 +70,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   @ViewChild(DecisionComponentsComponent) decisionComponentsComponent?: DecisionComponentsComponent;
   @ViewChild(DecisionConditionsComponent) decisionConditionsComponent?: DecisionConditionsComponent;
+  @ViewChild(InlineNumberComponent) resolutionNumberInput?: InlineNumberComponent;
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -150,59 +154,60 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private setupSubscribers() {
+    this.modificationService.$modifications.pipe(takeUntil(this.$destroy)).subscribe((modifications) => {
+      this.mapPostDecisionsToControls(modifications, this.existingDecision);
+    });
+
     this.decisionService.$decision
-      .pipe(combineLatestWith(this.modificationService.$modifications, this.decisionService.$decisions))
+      .pipe(combineLatestWith(this.decisionService.$decisions))
       .pipe(takeUntil(this.$destroy))
-      .subscribe(([decision, modifications, decisions]) => {
-        if (decision) {
-          this.existingDecision = decision;
-          this.uuid = decision.uuid;
+      .subscribe(([decision, decisions]) => {
+        if (!decision) {
+          this.resolutionYearControl.enable();
+          return;
         }
 
-        this.mapPostDecisionsToControls(modifications, this.existingDecision);
+        this.existingDecision = decision;
+        this.uuid = decision.uuid;
 
-        if (this.existingDecision) {
-          this.patchFormWithExistingData(this.existingDecision);
+        this.patchFormWithExistingData(this.existingDecision);
 
-          if (decisions.length > 1) {
-            let minDate = null;
-            this.isFirstDecision = true;
+        if (decisions.length > 1) {
+          let minDate = null;
+          this.isFirstDecision = true;
 
-            for (const decision of decisions) {
-              //Skip ourselves!
-              if (decision.uuid === this.existingDecision.uuid) {
-                continue;
-              }
-
-              if (!minDate && decision.date) {
-                minDate = decision.date;
-              }
-
-              if (minDate && decision.date && decision.date < minDate) {
-                minDate = decision.date;
-              }
-
-              if (this.existingDecision.createdAt > decision.createdAt) {
-                this.isFirstDecision = false;
-              }
+          for (const decision of decisions) {
+            //Skip ourselves!
+            if (decision.uuid === this.existingDecision.uuid) {
+              continue;
             }
 
-            if (minDate && !this.isFirstDecision) {
-              this.minDate = new Date(minDate);
+            if (!minDate && decision.date) {
+              minDate = decision.date;
             }
 
-            if (this.isFirstDecision) {
-              this.form.controls.postDecision.disable();
-            } else {
-              this.form.controls.postDecision.enable();
-              this.form.controls.postDecision.addValidators([Validators.required]);
+            if (minDate && decision.date && decision.date < minDate) {
+              minDate = decision.date;
             }
-          } else {
-            this.isFirstDecision = true;
+
+            if (this.existingDecision.createdAt > decision.createdAt) {
+              this.isFirstDecision = false;
+            }
+          }
+
+          if (minDate && !this.isFirstDecision) {
+            this.minDate = new Date(minDate);
+          }
+
+          if (this.isFirstDecision) {
             this.form.controls.postDecision.disable();
+          } else {
+            this.form.controls.postDecision.enable();
+            this.form.controls.postDecision.addValidators([Validators.required]);
           }
         } else {
-          this.resolutionYearControl.enable();
+          this.isFirstDecision = true;
+          this.form.controls.postDecision.disable();
         }
       });
   }
@@ -232,7 +237,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       decisionMakerName: existingDecision.decisionMakerName,
       date: existingDecision.date ? new Date(existingDecision.date) : undefined,
       resolutionYear: existingDecision.resolutionYear,
-      resolutionNumber: existingDecision.resolutionNumber?.toString(10) || undefined,
+      resolutionNumber: existingDecision.resolutionNumber,
       auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
       postDecision: existingDecision.modifies?.uuid,
       isSubjectToConditions: parseBooleanToString(existingDecision.isSubjectToConditions),
@@ -318,7 +323,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     const data: CreateNoticeOfIntentDecisionDto = {
       date: formatDateForApi(date!),
-      resolutionNumber: parseInt(resolutionNumber!),
+      resolutionNumber: resolutionNumber ?? undefined,
       resolutionYear: resolutionYear!,
       decisionMakerName,
       auditDate: auditDate ? formatDateForApi(auditDate) : auditDate,
@@ -357,10 +362,29 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
+  async onClickResolutionNumberEditButton() {
+    this.lastResolutionNumber = this.resolutionNumberControl.value;
+    this.resolutionNumberInput?.startEdit();
+  }
+
+  async onClickResolutionNumberCancelButton() {
+    this.resolutionNumberInput?.cancelEdit();
+  }
+
+  async onClickResolutionNumberSaveButton() {
+    this.resolutionNumberInput?.confirmEdit();
+  }
+
+  async onSaveResolutionNumber(resolutionNumber: string | null) {
+    if (resolutionNumber) {
+      await this.setResolutionNumber(Number.parseInt(resolutionNumber));
+    }
+  }
+
   private async setResolutionNumber(number: number) {
     try {
       this.resolutionYearControl.disable();
-      this.form.controls.resolutionNumber.setValue(number.toString());
+      this.form.controls.resolutionNumber.setValue(number);
       await this.onSubmit(true);
     } finally {
       this.resolutionYearControl.enable();
@@ -394,7 +418,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       !this.componentsValid ||
       (this.components.length === 0 && requiresComponents) ||
       (this.conditionUpdates.length === 0 && requiresConditions) ||
-      this.requiredDatesAreMissing()
+      this.requiredDatesAreMissing() ||
+      this.resolutionNumberInput?.isEditing
     ) {
       this.form.controls.decisionMaker.markAsDirty();
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
@@ -503,6 +528,36 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.conditionUpdates = [];
       this.showConditions = false;
     }
+  }
+
+  resolutionNumberAsyncValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      return of(control.value).pipe(
+        debounceTime(300),
+        switchMap(async () => {
+          if (this.lastResolutionNumber === control.value) {
+            return null;
+          }
+
+          if (!this.resolutionYearControl.value) {
+            throw Error('Resolution year must be set');
+          }
+
+          // prevents the message flash by setting isLoading while fetching codes.
+          this.isLoading = true;
+          const resolutionNumberExists = await this.decisionService.resolutionNumberExists(
+            this.resolutionYearControl.value,
+            control.value,
+          );
+          this.isLoading = false;
+
+          return resolutionNumberExists
+            ? { resolutionNumberAlreadyExists: 'Resolution number already in use, pick a different number' }
+            : null;
+        }),
+        catchError((e) => of({ resolutionNumberAlreadyExists: "Can't check resolution number" })),
+      );
+    };
   }
 
   clearResolution() {

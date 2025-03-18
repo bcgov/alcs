@@ -206,4 +206,13 @@ export class NoticeOfIntentDecisionV2Controller {
   async getNextAvailableResolutionNumber(@Param('resolutionYear') resolutionYear: number) {
     return this.noticeOfIntentDecisionV2Service.generateResolutionNumber(resolutionYear);
   }
+
+  @Get('resolution-number-exists/:resolutionYear/:resolutionNumber')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async resolutionNumberExists(
+    @Param('resolutionYear') resolutionYear: number,
+    @Param('resolutionNumber') resolutionNumber: number,
+  ): Promise<boolean> {
+    return this.noticeOfIntentDecisionV2Service.resolutionNumberExists(resolutionYear, resolutionNumber);
+  }
 }

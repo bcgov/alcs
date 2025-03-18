@@ -477,6 +477,15 @@ export class ApplicationDecisionV2Service {
     }
   }
 
+  async resolutionNumberExists(resolutionYear: number, resolutionNumber: number): Promise<boolean> {
+    return !!(await this.appDecisionRepository.findOne({
+      where: {
+        resolutionNumber,
+        resolutionYear,
+      },
+    }));
+  }
+
   async delete(uuid) {
     const applicationDecision = await this.appDecisionRepository.findOne({
       where: { uuid },
