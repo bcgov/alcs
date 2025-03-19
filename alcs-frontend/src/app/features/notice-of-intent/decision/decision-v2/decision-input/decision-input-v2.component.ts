@@ -4,7 +4,17 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { catchError, combineLatestWith, debounceTime, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import {
+  catchError,
+  combineLatestWith,
+  debounceTime,
+  filter,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import {
   CreateNoticeOfIntentDecisionDto,
