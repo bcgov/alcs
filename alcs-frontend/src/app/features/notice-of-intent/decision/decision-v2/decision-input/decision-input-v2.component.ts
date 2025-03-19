@@ -4,7 +4,17 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { catchError, combineLatestWith, debounceTime, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import {
+  catchError,
+  combineLatestWith,
+  debounceTime,
+  filter,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import {
   CreateNoticeOfIntentDecisionDto,
@@ -159,11 +169,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     });
 
     this.decisionService.$decision
-      .pipe(combineLatestWith(this.decisionService.$decisions))
       .pipe(takeUntil(this.$destroy))
+      .pipe(filter((decision) => !!decision))
+      .pipe(combineLatestWith(this.decisionService.$decisions))
       .subscribe(([decision, decisions]) => {
         if (!decision) {
-          this.resolutionYearControl.enable();
           return;
         }
 
@@ -209,6 +219,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           this.isFirstDecision = true;
           this.form.controls.postDecision.disable();
         }
+
+        this.resolutionYearControl.enable();
       });
   }
 
