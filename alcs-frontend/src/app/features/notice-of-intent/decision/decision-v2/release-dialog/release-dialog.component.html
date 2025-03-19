@@ -20,7 +20,6 @@
   <div *ngIf="sendEmail">
     <div>
       <span *ngIf="!wasReleased">Email will be sent to Primary Contact and Local/First Nation Government</span>
-      <span *ngIf="wasReleased">No auto-emails will be sent</span>
     </div>
     <div *ngIf="!wasReleased" style="margin-top: 24px; margin-bottom: 24px;">
       <div style="margin-bottom: 4px">
@@ -67,6 +66,7 @@
         [type]="cancelledStatus"
       ></app-application-submission-status-type-pill>
     </div>
+    <div *ngIf="wasReleased"><strong>Email (with decision document) sent to:</strong> No auto-emails will be sent</div>
   </div>
 </mat-dialog-content>
 
