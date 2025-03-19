@@ -10,6 +10,7 @@ import { ApplicationDto, SUBMISSION_STATUS } from '../../../services/application
 import { TimelineEventDto } from '../../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { UncancelApplicationDialogComponent } from './uncancel-application-dialog/uncancel-application-dialog.component';
+import { CancelApplicationDialogComponent } from './cancel-application-dialog/cancel-application-dialog.component';
 
 @Component({
   selector: 'app-overview',
@@ -50,18 +51,26 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   async onCancelApplication() {
-    this.confirmationDialogService
-      .openDialog({
-        body: `Are you sure you want to cancel this Application?`,
-        cancelButtonText: 'No',
-        title: 'Cancel Application',
-      })
-      .subscribe(async (didConfirm) => {
-        if (didConfirm && this.application) {
-          await this.applicationDetailService.cancelApplication(this.application.fileNumber);
-          await this.loadStatusHistory(this.application.fileNumber);
-        }
-      });
+      if (this.application) {
+        this.dialog
+          .open(CancelApplicationDialogComponent, {
+            minWidth: '1080px',
+            maxWidth: '1080px',
+            maxHeight: '80vh',
+            width: '90%',
+            autoFocus: false,
+            data: {
+              fileNumber: this.application.fileNumber,
+            },
+          })
+          .beforeClosed()
+          .subscribe(async ({didConfirm, sendEmail}) => {
+            if (didConfirm && this.application) {
+              await this.applicationDetailService.cancelApplication(this.application.fileNumber, sendEmail);
+              await this.loadStatusHistory(this.application.fileNumber);
+            }
+          });
+      }
   }
 
   async onUncancelApplication() {

@@ -57,6 +57,7 @@ export class ApplicationSubmissionStatusService {
     submissionUuid: string,
     statusTypeCode: string,
     effectiveDate?: Date | null,
+    sendEmail: boolean = true,
   ) {
     const status = await this.statusesRepository.findOneOrFail({
       where: {
@@ -73,6 +74,9 @@ export class ApplicationSubmissionStatusService {
     date = dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
 
     status.effectiveDate = effectiveDate !== null ? date : effectiveDate;
+    if (!sendEmail) {
+      status.emailSentDate = new Date();
+    }
 
     return this.statusesRepository.save(status);
   }
@@ -81,13 +85,10 @@ export class ApplicationSubmissionStatusService {
     fileNumber: string,
     statusTypeCode: string,
     effectiveDate?: Date | null,
+    sendEmail: boolean = true,
   ) {
     const submission = await this.getSubmission(fileNumber);
-    return await this.setStatusDate(
-      submission.uuid,
-      statusTypeCode,
-      effectiveDate,
-    );
+    return await this.setStatusDate(submission.uuid, statusTypeCode, effectiveDate, sendEmail);
   }
 
   async getStatusesByUuid(submissionUuid: string) {

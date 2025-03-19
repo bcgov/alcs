@@ -89,10 +89,10 @@ export class ApplicationService {
     }
   }
 
-  async cancelApplication(fileNumber: string) {
+  async cancelApplication(fileNumber: string, sendEmail: boolean = true) {
     await this.setup();
     try {
-      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}/${fileNumber}/cancel`, {}));
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}/${fileNumber}/cancel?sendEmail=${sendEmail}`, {}));
     } catch (e) {
       this.toastService.showErrorToast('Failed to cancel Application');
     }
