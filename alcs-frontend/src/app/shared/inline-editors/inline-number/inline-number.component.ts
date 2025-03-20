@@ -24,6 +24,7 @@ export class InlineNumberComponent implements AfterContentChecked {
   @Input() disableThousandsSeparator = false;
   @Input() asyncValidators: AsyncValidatorFn[] = [];
   @Output() save = new EventEmitter<string | null>();
+  @Output() cancel = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
 
@@ -64,6 +65,7 @@ export class InlineNumberComponent implements AfterContentChecked {
   cancelEdit() {
     this.isEditing = false;
     this.valueControl.setValue(this._value);
+    this.cancel.emit();
   }
 
   preventKeydown(event: Event) {

@@ -58,6 +58,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   conditionsValid = true;
   componentsValid = true;
   showErrors = false;
+  showResolutionNumberSaveError = false;
   index = 1;
 
   fileNumber: string = '';
@@ -392,6 +393,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     if (resolutionNumber) {
       await this.setResolutionNumber(Number.parseInt(resolutionNumber));
     }
+    this.showResolutionNumberSaveError = false;
+  }
+
+  async onCancelResolutionNumber() {
+    this.showResolutionNumberSaveError = false;
   }
 
   private async setResolutionNumber(number: number) {
@@ -413,6 +419,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   private runValidation() {
     this.form.markAllAsTouched();
     this.showErrors = true;
+    this.showResolutionNumberSaveError = true;
     const requiresConditions = this.showConditions;
     const requiresComponents = this.showComponents && this.requireComponents;
 
