@@ -57,6 +57,8 @@ export class InlineNumberComponent implements AfterContentChecked {
     if (this.valueControl.value !== this._value) {
       this.save.emit(this.valueControl.value?.toString() ?? '');
       this._value = this.valueControl.value ?? undefined;
+    } else {
+      this.cancel.emit();
     }
 
     this.isEditing = false;
