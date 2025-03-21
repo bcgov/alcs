@@ -129,7 +129,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         return {
           ...decision,
           loading: false,
-          canBeDeleted: !(decision.modifiedBy?.length! > 0),
+          canBeDeleted: decision.canDraftBeDeleted,
         };
       });
 

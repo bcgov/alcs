@@ -204,6 +204,8 @@ export class NoticeOfIntentDecisionDto {
 
   @AutoMap(() => Number)
   flagEditedAt: number | null;
+
+  canDraftBeDeleted: boolean;
 }
 
 export class NoticeOfIntentDecisionDocumentDto {

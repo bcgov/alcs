@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
@@ -53,42 +53,46 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.applicationDetailService.$application
       .pipe(
-        tap(() => {
-          this.applicationReconsiderationService.fetchCodes();
+        tap((application) => {
+          if (application) {
+            this.fileNumber = application.fileNumber;
+            this.applicant = application.applicant;
+            this.localGovernment = application.localGovernment;
+            this.region = application.region;
+
+            this.applicationReconsiderationService.fetchCodes();
+            this.applicationReconsiderationService.fetchByApplication(application.fileNumber);
+            this.modificationService.fetchByApplication(application.fileNumber);
+          }
         }),
+        takeUntil(this.$destroy),
       )
-      .pipe(
-        combineLatestWith(
-          this.applicationReconsiderationService.$reconsiderations,
-          this.applicationReconsiderationService.$codes,
-          this.modificationService.$modifications,
-        ),
-      )
+      .subscribe();
+
+    combineLatest([
+      this.applicationReconsiderationService.$reconsiderations,
+      this.applicationReconsiderationService.$codes,
+      this.modificationService.$modifications,
+    ])
       .pipe(takeUntil(this.$destroy))
-      .subscribe(([application, reconsiderations, reconCodes, modifications]) => {
-        if (application) {
-          this.fileNumber = application.fileNumber;
-          this.applicant = application.applicant;
-          this.localGovernment = application.localGovernment;
-          this.region = application.region;
-          this.reconsiderations =
-            reconsiderations?.map((r) => ({
-              ...r,
-              reconsidersDecisionsNumbers: r.reconsidersDecisions.flatMap(
-                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
-              ),
-              canBeDeleted: !r.resultingDecision,
-            })) ?? [];
-          this.reconCodes = reconCodes;
-          this.modifications =
-            modifications?.map((m) => ({
-              ...m,
-              modifiesDecisionsNumbers: m.modifiesDecisions.flatMap(
-                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
-              ),
-              canBeDeleted: !m.resultingDecision,
-            })) ?? [];
-        }
+      .subscribe(([reconsiderations, reconCodes, modifications]) => {
+        this.reconCodes = reconCodes;
+
+        this.reconsiderations =
+          reconsiderations?.map((r) => ({
+            ...r,
+            reconsidersDecisionsNumbers: r.reconsidersDecisions.flatMap(
+              (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
+            ),
+            canBeDeleted: !r.resultingDecision,
+          })) ?? [];
+
+        this.modifications =
+          modifications?.map((m) => ({
+            ...m,
+            modifiesDecisionsNumbers: m.modifiesDecisions.flatMap((d) => `#${d.resolutionNumber}/${d.resolutionYear}`),
+            canBeDeleted: !m.resultingDecision,
+          })) ?? [];
       });
   }
 

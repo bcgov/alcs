@@ -272,6 +272,8 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Number)
   flagEditedAt: number | null;
+
+  canDraftBeDeleted: boolean;
 }
 
 export class LinkedResolutionDto {

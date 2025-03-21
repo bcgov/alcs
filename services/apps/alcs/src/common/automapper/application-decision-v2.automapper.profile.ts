@@ -187,6 +187,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (ad) => ad.flagEditedAt,
           mapFrom((a) => a.flagEditedAt?.getTime()),
         ),
+        forMember(
+          (ad) => ad.canDraftBeDeleted,
+          mapFrom((a) => !(a.reconsideredBy?.length > 0 || a.modifiedBy?.length > 0)),
+        ),
       );
 
       createMap(mapper, ApplicationDecisionOutcomeCode, ApplicationDecisionOutcomeCodeDto);

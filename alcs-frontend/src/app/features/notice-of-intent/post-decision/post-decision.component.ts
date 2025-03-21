@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { combineLatestWith, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
@@ -36,24 +36,31 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.noticeOfIntentDetailService.$noticeOfIntent
-      .pipe(combineLatestWith(this.modificationService.$modifications))
-      .pipe(takeUntil(this.$destroy))
-      .subscribe(([application, modifications]) => {
-        if (application) {
-          this.fileNumber = application.fileNumber;
-          this.applicant = application.applicant;
-          this.localGovernment = application.localGovernment;
-          this.region = application.region;
-          this.modifications =
-            modifications?.map((m) => ({
-              ...m,
-              modifiesDecisionsNumbers: m.modifiesDecisions.flatMap(
-                (d) => `#${d.resolutionNumber}/${d.resolutionYear}`,
-              ),
-              canBeDeleted: !m.resultingDecision,
-            })) ?? [];
-        }
-      });
+      .pipe(
+        tap((noticeOfIntent) => {
+          if (noticeOfIntent) {
+            this.fileNumber = noticeOfIntent.fileNumber;
+            this.applicant = noticeOfIntent.applicant;
+            this.localGovernment = noticeOfIntent.localGovernment;
+            this.region = noticeOfIntent.region;
+
+            // Now we have the fileNumber, fetch fresh modifications
+            this.modificationService.fetchByFileNumber(noticeOfIntent.fileNumber);
+          }
+        }),
+        takeUntil(this.$destroy),
+      )
+      .subscribe();
+
+    // Second subscription to monitor modifications updates
+    this.modificationService.$modifications.pipe(takeUntil(this.$destroy)).subscribe((modifications) => {
+      this.modifications =
+        modifications?.map((m) => ({
+          ...m,
+          modifiesDecisionsNumbers: m.modifiesDecisions.flatMap((d) => `#${d.resolutionNumber}/${d.resolutionYear}`),
+          canBeDeleted: !m.resultingDecision,
+        })) ?? [];
+    });
   }
 
   onCreateModification() {
