@@ -109,11 +109,6 @@ export class NoticeOfIntentDecisionV2Service {
     const decisionsWithModifiedBy = await this.noticeOfIntentDecisionRepository.find({
       where: {
         noticeOfIntentUuid,
-        modifiedBy: {
-          resultingDecision: {
-            isDraft: false,
-          },
-        },
       },
       relations: {
         modifiedBy: {

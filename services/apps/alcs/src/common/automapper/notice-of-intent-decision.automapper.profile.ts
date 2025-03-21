@@ -160,6 +160,10 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               : [],
           ),
         ),
+        forMember(
+          (ad) => ad.canDraftBeDeleted,
+          mapFrom((a) => !(a.modifiedBy?.length > 0)),
+        ),
       );
 
       createMap(mapper, NoticeOfIntentSubmissionStatusType, NoticeOfIntentStatusDto);

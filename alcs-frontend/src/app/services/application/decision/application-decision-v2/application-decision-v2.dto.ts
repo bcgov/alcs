@@ -92,6 +92,7 @@ export interface ApplicationDecisionDto {
   flagEditedBy: UserDto | null;
   flagEditedAt: number | null;
   application: ApplicationDto;
+  canDraftBeDeleted: boolean;
 }
 
 export interface ApplicationHomeDto {

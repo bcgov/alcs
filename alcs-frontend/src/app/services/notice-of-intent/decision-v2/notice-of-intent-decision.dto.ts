@@ -105,6 +105,7 @@ export interface NoticeOfIntentDecisionDto {
   flaggedBy: UserDto | null;
   flagEditedBy: UserDto | null;
   flagEditedAt: number | null;
+  canDraftBeDeleted: boolean;
 }
 
 export interface NoticeOfIntentDecisionDocumentDto {
@@ -192,9 +193,7 @@ export interface UpdateNoticeOfIntentDecisionComponentDto {
   soilToRemoveAverageDepth?: number | null;
 }
 
-export interface NoticeOfIntentDecisionComponentDto
-  extends PofoDecisionComponentDto,
-    RosoDecisionComponentDto {
+export interface NoticeOfIntentDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;

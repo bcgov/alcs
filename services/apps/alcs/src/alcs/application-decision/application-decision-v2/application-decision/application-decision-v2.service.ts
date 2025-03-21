@@ -136,11 +136,6 @@ export class ApplicationDecisionV2Service {
     const decisionsWithModifiedBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
-        modifiedBy: {
-          resultingDecision: {
-            isDraft: false,
-          },
-        },
       },
       relations: {
         modifiedBy: {
@@ -154,11 +149,6 @@ export class ApplicationDecisionV2Service {
     const decisionsWithReconsideredBy = await this.appDecisionRepository.find({
       where: {
         applicationUuid: application.uuid,
-        reconsideredBy: {
-          resultingDecision: {
-            isDraft: false,
-          },
-        },
       },
       relations: {
         reconsideredBy: {
