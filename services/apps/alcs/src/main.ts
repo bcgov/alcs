@@ -117,7 +117,45 @@ function setupLogger() {
   });
 
   const messageFormat = winston.format.printf((info) => {
-    return `${info.timestamp} [${info.level.toUpperCase()}]${info.context ? ` [${info.context}]` : ''} ${info.message} ${info[SPLAT] ? `\n${info[SPLAT]}` : ''}`;
+    // Handle SPLAT - if multiple items, use the last one as the Controller name
+    let controller = info[SPLAT] ? 
+      (Array.isArray(info[SPLAT]) ? info[SPLAT].pop() : info[SPLAT]) : 
+      null;
+    
+    // If the last item is an object, don't use it as controller
+    if (typeof controller === 'object') {
+      controller = null;
+    }
+
+    // If the environment is production, return the log message as a JSON object for parsing in Loki
+    if (config.get('ENV') === 'production') {
+      const { timestamp, level, message, ...rest } = info;
+      return JSON.stringify({
+        timestamp,
+        level,
+        ...(controller ? { controller } : {}),
+        message,
+        ...rest
+      });
+    }
+
+    // Build the log message
+    let message = `${info.timestamp} [${info.level.toUpperCase()}]`;
+
+    // Add the controller and context if present
+    if (controller) message += ` [${controller}]`;
+    if (info.context) message += ` [${info.context}]`;
+    
+    // Add the main message
+    message += ` ${info.message}`;
+    
+    // Handle any additional metadata
+    const { timestamp: ts, level: lvl, message: msg, context, ...metadata } = info;
+    if (Object.keys(metadata).length > 0) {
+      message += `\n${JSON.stringify(metadata, null, 2).replace(/\\n/g, '\n')}`;
+    }
+    
+    return message;
   });
 
   const colorFormat = winston.format.colorize({
@@ -209,7 +247,7 @@ async function bootstrap() {
 
   // start app n port
   await app.listen(port, '0.0.0.0', () => {
-    console.log('[WEB]', config.get<string>('ALCS.BASE_URL'));
+    logger.info('Server started', { url: config.get<string>('ALCS.BASE_URL') });
   });
 }
 
