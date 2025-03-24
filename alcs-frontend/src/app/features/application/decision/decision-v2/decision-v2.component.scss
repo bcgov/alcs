@@ -69,15 +69,18 @@ hr {
     grid-column: 1/2;
 
     .days {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       margin-right: 6px;
-      margin-top: 4px;
 
       .mat-icon {
         font-size: 19px !important;
         line-height: 21px !important;
         width: 19px;
-        vertical-align: sub;
+        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
+        margin: 0 4px 0 0;
       }
     }
   }
