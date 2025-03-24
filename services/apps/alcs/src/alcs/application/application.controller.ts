@@ -110,7 +110,13 @@ export class ApplicationController {
     const { applicationSubmission, primaryContact, submissionGovernment } =
       await this.statusEmailService.getApplicationEmailData(fileNumber);
 
-    if (primaryContact && applicationSubmission.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS) {
+    const boolSendEmail = sendEmail === 'false' ? false : true;
+
+    if (
+      primaryContact &&
+      applicationSubmission.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS &&
+      boolSendEmail
+    ) {
       await this.statusEmailService.sendApplicationStatusEmail({
         template,
         status: SUBMISSION_STATUS.CANCELLED,
@@ -122,7 +128,7 @@ export class ApplicationController {
         ccEmails: [],
       });
     }
-    await this.applicationService.cancel(fileNumber, sendEmail);
+    await this.applicationService.cancel(fileNumber);
   }
 
   @Post('/:fileNumber/uncancel')

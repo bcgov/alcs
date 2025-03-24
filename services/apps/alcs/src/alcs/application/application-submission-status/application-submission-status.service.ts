@@ -53,12 +53,7 @@ export class ApplicationSubmissionStatusService {
     return newStatuses;
   }
 
-  async setStatusDate(
-    submissionUuid: string,
-    statusTypeCode: string,
-    effectiveDate?: Date | null,
-    sendEmail: boolean = true,
-  ) {
+  async setStatusDate(submissionUuid: string, statusTypeCode: string, effectiveDate?: Date | null) {
     const status = await this.statusesRepository.findOneOrFail({
       where: {
         submissionUuid,
@@ -74,21 +69,13 @@ export class ApplicationSubmissionStatusService {
     date = dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
 
     status.effectiveDate = effectiveDate !== null ? date : effectiveDate;
-    if (!sendEmail) {
-      status.emailSentDate = new Date();
-    }
 
     return this.statusesRepository.save(status);
   }
 
-  async setStatusDateByFileNumber(
-    fileNumber: string,
-    statusTypeCode: string,
-    effectiveDate?: Date | null,
-    sendEmail: boolean = true,
-  ) {
+  async setStatusDateByFileNumber(fileNumber: string, statusTypeCode: string, effectiveDate?: Date | null) {
     const submission = await this.getSubmission(fileNumber);
-    return await this.setStatusDate(submission.uuid, statusTypeCode, effectiveDate, sendEmail);
+    return await this.setStatusDate(submission.uuid, statusTypeCode, effectiveDate);
   }
 
   async getStatusesByUuid(submissionUuid: string) {
