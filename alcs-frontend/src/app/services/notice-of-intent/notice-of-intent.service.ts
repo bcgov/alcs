@@ -67,9 +67,9 @@ export class NoticeOfIntentService {
     return [];
   }
 
-  async cancel(fileNumber: string) {
+  async cancel(fileNumber: string, sendEmail: boolean = true) {
     try {
-      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.url}/${fileNumber}/cancel`, {}));
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.url}/${fileNumber}/cancel?sendEmail=${sendEmail}`, {}));
     } catch (e) {
       this.toastService.showErrorToast('Failed to cancel Notice of Intent');
     }
