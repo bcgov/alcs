@@ -293,9 +293,11 @@ export class ApplicationDocumentController {
   private async saveUploadedFile(req, fileNumber: string) {
     const documentType = req.body.documentType.value as DOCUMENT_TYPE;
     const file = req.body.file;
-    const fileName = req.body.fileName.value as string;
+    let fileName = req.body.fileName.value as string;
     const documentSource = req.body.source.value as DOCUMENT_SOURCE;
     const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+
+    fileName = fileName.replace(/[–—]/g, '-'); // Replace en-dash, em-dash with hyphen
 
     //Set Default description to prevent issues when returning to Government
     let description: string | undefined;
