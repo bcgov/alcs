@@ -27,8 +27,8 @@ export class NoticeOfIntentDetailService {
     return updatedNoticeOfIntent;
   }
 
-  async cancel(fileNumber: string) {
-    await this.noticeOfIntentService.cancel(fileNumber);
+  async cancel(fileNumber: string, sendEmail: boolean = true) {
+    await this.noticeOfIntentService.cancel(fileNumber, sendEmail);
     await this.load(fileNumber);
   }
 

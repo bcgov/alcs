@@ -31,8 +31,8 @@ export class ApplicationDetailService {
     return updatedApp;
   }
 
-  async cancelApplication(fileNumber: string) {
-    await this.applicationService.cancelApplication(fileNumber);
+  async cancelApplication(fileNumber: string, sendEmail: boolean = true) {
+    await this.applicationService.cancelApplication(fileNumber, sendEmail);
     await this.loadApplication(fileNumber);
   }
 

@@ -53,11 +53,7 @@ export class ApplicationSubmissionStatusService {
     return newStatuses;
   }
 
-  async setStatusDate(
-    submissionUuid: string,
-    statusTypeCode: string,
-    effectiveDate?: Date | null,
-  ) {
+  async setStatusDate(submissionUuid: string, statusTypeCode: string, effectiveDate?: Date | null) {
     const status = await this.statusesRepository.findOneOrFail({
       where: {
         submissionUuid,
@@ -77,17 +73,9 @@ export class ApplicationSubmissionStatusService {
     return this.statusesRepository.save(status);
   }
 
-  async setStatusDateByFileNumber(
-    fileNumber: string,
-    statusTypeCode: string,
-    effectiveDate?: Date | null,
-  ) {
+  async setStatusDateByFileNumber(fileNumber: string, statusTypeCode: string, effectiveDate?: Date | null) {
     const submission = await this.getSubmission(fileNumber);
-    return await this.setStatusDate(
-      submission.uuid,
-      statusTypeCode,
-      effectiveDate,
-    );
+    return await this.setStatusDate(submission.uuid, statusTypeCode, effectiveDate);
   }
 
   async getStatusesByUuid(submissionUuid: string) {

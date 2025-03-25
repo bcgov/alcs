@@ -18,6 +18,7 @@ import { ParcelPrepComponent } from './proposal/parcel-prep/parcel-prep.componen
 import { PreparationComponent } from './proposal/preparation/preparation.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { SoilProposalComponent } from './proposal/soil/soil.component';
+import { CancelNoticeOfIntentDialogComponent } from './overview/cancel-notice-of-intent-dialog/cancel-notice-of-intent-dialog.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,7 @@ const routes: Routes = [
     ParcelPrepComponent,
     SoilProposalComponent,
     UncancelNoticeOfIntentDialogComponent,
+    CancelNoticeOfIntentDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), NoticeOfIntentDetailsModule],
 })

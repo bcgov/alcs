@@ -37,6 +37,7 @@ import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
+import { CancelApplicationDialogComponent } from './overview/cancel-application-dialog/cancel-application-dialog.component';
 
 const routes: Routes = [
   {
@@ -81,6 +82,7 @@ const routes: Routes = [
     InclProposalComponent,
     ParcelPrepComponent,
     UncancelApplicationDialogComponent,
+    CancelApplicationDialogComponent,
     ReturnApplicationDialogComponent,
     BoundaryAmendmentComponent,
     EditBoundaryAmendmentDialogComponent,

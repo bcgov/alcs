@@ -152,7 +152,7 @@ describe('NoticeOfIntentController', () => {
     } as any);
     mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
-    await controller.cancel('file-number');
+    await controller.cancel('file-number', true);
 
     expect(
       mockSubmissionStatusService.setStatusDateByFileNumber,
@@ -184,7 +184,7 @@ describe('NoticeOfIntentController', () => {
     } as any);
     mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
-    await controller.cancel('file-number');
+    await controller.cancel('file-number', true);
 
     expect(
       mockSubmissionStatusService.setStatusDateByFileNumber,

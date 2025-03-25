@@ -419,7 +419,7 @@ describe('ApplicationController', () => {
     statusEmailService.sendApplicationStatusEmail.mockResolvedValue();
     applicationService.cancel.mockResolvedValue();
 
-    await controller.cancel(mockApplicationEntity.uuid);
+    await controller.cancel(mockApplicationEntity.uuid, true);
 
     expect(applicationService.cancel).toHaveBeenCalledTimes(1);
     expect(statusEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
@@ -459,7 +459,7 @@ describe('ApplicationController', () => {
     statusEmailService.sendApplicationStatusEmail.mockResolvedValue();
     applicationService.cancel.mockResolvedValue();
 
-    await controller.cancel(mockApplicationEntity.uuid);
+    await controller.cancel(mockApplicationEntity.uuid, true);
 
     expect(applicationService.cancel).toHaveBeenCalledTimes(1);
     expect(statusEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(

@@ -10,6 +10,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -105,11 +106,17 @@ export class ApplicationController {
 
   @Post('/:fileNumber/cancel')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async cancel(@Param('fileNumber') fileNumber): Promise<void> {
+  async cancel(@Param('fileNumber') fileNumber, @Query('sendEmail') sendEmail): Promise<void> {
     const { applicationSubmission, primaryContact, submissionGovernment } =
       await this.statusEmailService.getApplicationEmailData(fileNumber);
 
-    if (primaryContact && applicationSubmission.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS) {
+    const boolSendEmail = sendEmail === 'false' ? false : true;
+
+    if (
+      primaryContact &&
+      applicationSubmission.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS &&
+      boolSendEmail
+    ) {
       await this.statusEmailService.sendApplicationStatusEmail({
         template,
         status: SUBMISSION_STATUS.CANCELLED,
@@ -121,7 +128,6 @@ export class ApplicationController {
         ccEmails: [],
       });
     }
-
     await this.applicationService.cancel(fileNumber);
   }
 

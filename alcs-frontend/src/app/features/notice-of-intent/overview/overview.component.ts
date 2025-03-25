@@ -12,6 +12,7 @@ import {
 } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { UncancelNoticeOfIntentDialogComponent } from './uncancel-notice-of-intent-dialog/uncancel-notice-of-intent-dialog.component';
+import { CancelNoticeOfIntentDialogComponent } from './cancel-notice-of-intent-dialog/cancel-notice-of-intent-dialog.component';
 
 @Component({
   selector: 'app-overview',
@@ -79,18 +80,26 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   async onCancel() {
-    this.confirmationDialogService
-      .openDialog({
-        body: `Are you sure you want to cancel this Notice of Intent?`,
-        cancelButtonText: 'No',
-        title: 'Cancel Notice of Intent',
-      })
-      .subscribe(async (didConfirm) => {
-        if (didConfirm && this.noticeOfIntent) {
-          await this.noticeOfIntentDetailService.cancel(this.noticeOfIntent.fileNumber);
-          await this.loadStatusHistory(this.noticeOfIntent.fileNumber);
-        }
-      });
+    if (this.noticeOfIntent) {
+      this.dialog
+        .open(CancelNoticeOfIntentDialogComponent, {
+          minWidth: '1080px',
+          maxWidth: '1080px',
+          maxHeight: '80vh',
+          width: '90%',
+          autoFocus: false,
+          data: {
+            fileNumber: this.noticeOfIntent.fileNumber,
+          },
+        })
+        .beforeClosed()
+        .subscribe(async ({didConfirm, sendEmail}) => {
+          if (didConfirm && this.noticeOfIntent) {
+            await this.noticeOfIntentDetailService.cancel(this.noticeOfIntent.fileNumber, sendEmail);
+            await this.loadStatusHistory(this.noticeOfIntent.fileNumber);
+          }
+        });
+    }
   }
 
   async onUncancel() {
