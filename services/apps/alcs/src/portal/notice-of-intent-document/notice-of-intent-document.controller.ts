@@ -182,6 +182,7 @@ export class NoticeOfIntentDocumentController {
         req.user.entity,
       );
 
+    data.fileName = data.fileName.replace(/[–—]/g, '-');
     const document = await this.documentService.createDocumentRecord({
       ...data,
       system: DOCUMENT_SYSTEM.PORTAL,
