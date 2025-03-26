@@ -50,7 +50,8 @@
           [condition]="condition"
           [isDraftDecision]="decision.isDraft"
           [fileNumber]="fileNumber"
-          [index]="j + 1"
+          [index]="condition.order"
+          [displayIndex]="displayIndexes"
           (statusChange)="onStatusChange(condition, $event)"
         ></app-condition>
       </div>
