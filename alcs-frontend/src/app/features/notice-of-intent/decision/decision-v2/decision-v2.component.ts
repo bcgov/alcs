@@ -36,6 +36,7 @@ import { UnFlagDialogComponent, UnFlagDialogIO } from '../../../../shared/unflag
 type LoadingDecision = NoticeOfIntentDecisionDto & {
   loading: boolean;
   canBeDeleted: boolean;
+  index: number;
 };
 
 export const OUTCOMES_WITH_COMPONENTS = ['APPR', 'APPA', 'RESC'];
@@ -201,9 +202,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   async deleteDecision(uuid: string) {
+    const index = this.decisions.find((x) => x.uuid === uuid)?.index;
     this.confirmationDialogService
       .openDialog({
-        body: 'Are you sure you want to delete the selected decision?',
+        body: `Are you sure you want to delete Decision #${index} ?`,
       })
       .subscribe(async (confirmed) => {
         if (confirmed) {
