@@ -320,7 +320,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
 
     if (this.searchForm.controls.decisionOutcome.value === null) {
-      decisionOutcomes = [];
+      decisionOutcomes = this.isCommissioner ? this.decisionOutcomeDataService.getCommissionerListData() : [];
     } else {
       decisionOutcomes = this.searchForm.controls.decisionOutcome.value!;
     }

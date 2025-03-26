@@ -33,6 +33,17 @@ const TREE_DATA: TreeNode[] = [
   },
 ];
 
+const COMMISSIONER_TREE_DATA: TreeNode[] = [
+  {
+    item: { label: 'Approved', value: 'APPR' },
+  },
+  {
+    item: { label: 'Refused', value: 'REFU' },
+  },
+];
+
+const COMMISSIONER_LIST_DATA = ['APPR', 'REFU'];
+
 @Injectable({ providedIn: 'root' })
 export class DecisionOutcomeDataSourceService {
   dataChange = new BehaviorSubject<TreeNode[]>([]);
@@ -43,13 +54,21 @@ export class DecisionOutcomeDataSourceService {
     return this.dataChange.value;
   }
 
-  constructor() {
+  constructor(public authService: AuthenticationService) {
+    this.authService.$currentUser.subscribe((currentUser) => {
+      if (currentUser) {
+        this.isCommissioner =
+          currentUser.client_roles && currentUser.client_roles.length === 1
+            ? currentUser.client_roles.includes(ROLES.COMMISSIONER)
+            : false;
+      }
+    });
     this.initialize();
   }
 
   initialize() {
-    this.treeData = TREE_DATA;
-    this.isCommissioner ? this.dataChange.next(TREE_DATA) : this.dataChange.next(TREE_DATA);
+    this.treeData = this.isCommissioner ? COMMISSIONER_TREE_DATA : TREE_DATA;
+    this.isCommissioner ? this.dataChange.next(COMMISSIONER_TREE_DATA) : this.dataChange.next(TREE_DATA);
   }
 
   public filter(filterText: string) {
@@ -81,6 +100,6 @@ export class DecisionOutcomeDataSourceService {
   }
 
   public getCommissionerListData() {
-    return this.treeData;
+    return COMMISSIONER_LIST_DATA;
   }
 }
