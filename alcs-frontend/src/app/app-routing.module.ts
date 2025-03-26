@@ -7,11 +7,20 @@ import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 import { ALL_ROLES, ROLES } from './services/authentication/authentication.service';
 import { HasRolesGuard } from './services/authentication/hasRoles.guard';
+import { DocumentFileLoader } from './shared/document-file-loader/document-file-loader.component';
 
 export const ROLES_ALLOWED_APPLICATIONS = [ROLES.ADMIN, ROLES.LUP, ROLES.APP_SPECIALIST, ROLES.GIS, ROLES.SOIL_OFFICER];
 export const ROLES_ALLOWED_BOARDS = ROLES_ALLOWED_APPLICATIONS;
 
 const routes: Routes = [
+  {
+    path: 'document/:uuid',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: ROLES_ALLOWED_APPLICATIONS,
+    },
+    component: DocumentFileLoader,
+  },
   {
     path: 'board',
     canActivate: [HasRolesGuard],
