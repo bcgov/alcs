@@ -295,6 +295,10 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           (a) => a.uploadedAt,
           mapFrom((ad) => ad.document.uploadedAt.getTime()),
         ),
+        forMember(
+          (a) => a.documentUuid,
+          mapFrom((ad) => ad.document.uuid),
+        ),
       );
 
       createMap(mapper, NoticeOfIntentModificationOutcomeType, NoticeOfIntentModificationOutcomeCodeDto);

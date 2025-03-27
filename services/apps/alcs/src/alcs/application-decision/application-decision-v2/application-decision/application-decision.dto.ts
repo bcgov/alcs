@@ -284,6 +284,9 @@ export class DecisionDocumentDto {
   uuid: string;
 
   @AutoMap()
+  documentUuid: string;
+
+  @AutoMap()
   fileName: string;
 
   @AutoMap()

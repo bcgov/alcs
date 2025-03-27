@@ -193,7 +193,7 @@
         <div class="full-width">
           <div class="document split" *ngFor="let document of decision.documents">
             <div>
-              <a (click)="openFile(decision.uuid, document.uuid, document.fileName)">{{ document.fileName }}</a>
+              <a routerLink="/document/{{ document.documentUuid }}" target="_blank">{{ document.fileName }}</a>
               &nbsp;({{ document.fileSize ? (document.fileSize | filesize) : '' }})
             </div>
             <button class="center" mat-button (click)="openFile(decision.uuid, document.uuid, document.fileName)">

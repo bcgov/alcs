@@ -171,7 +171,7 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let file of proposalMap" (click)="openFile(file)">
+    <a *ngFor="let file of proposalMap" routerLink="/document/{{ file.documentUuid }}" target="_blank">
       {{ file.fileName }}
     </a>
   </div>
@@ -179,14 +179,14 @@
   <ng-container *ngIf="_applicationSubmission.soilIsNewStructure === false">
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of crossSections" (click)="openFile(file)">
+      <a *ngFor="let file of crossSections" routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
     </div>
 
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
+      <a *ngFor="let file of reclamationPlans" routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
     </div>
@@ -195,7 +195,7 @@
   <ng-container *ngIf="_applicationSubmission.soilIsNewStructure === true">
     <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of buildingPlans" (click)="openFile(file)">
+      <a *ngFor="let file of buildingPlans" routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
       <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
