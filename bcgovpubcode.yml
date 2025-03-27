@@ -42,10 +42,10 @@ product_information:
 product_technology_information:
   backend_frameworks:
     - name: NestJS
-      version: '9.3'
+      version: '10.3'
   backend_languages_version:
     - name: TypeScript
-      version: 4.7.4
+      version: 5.4.3
   ci_cd_tools:
     - ArgoCD
     - GitHub-Actions
@@ -56,10 +56,10 @@ product_technology_information:
     - Object-Storage
   frontend_frameworks:
     - name: Angular
-      version: '15'
+      version: '17'
   frontend_languages:
     - name: TypeScript
-      version: '4.9'
+      version: '5.4'
   hosting_platforms:
     - Private-Cloud-Openshift
 version: 1
