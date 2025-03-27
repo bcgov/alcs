@@ -47,12 +47,15 @@ product_technology_information:
     - name: TypeScript
       version: 5.4.3
   ci_cd_tools:
-    - ArgoCD
+    - name: ArgoCD
+      version: 2.13
     - GitHub-Actions
     - Helm
   data_storage_platforms:
-    - Postgresql
-    - Redis
+    - name: Postgresql
+      version: 12.4
+    - name: Redis
+      version: 0.0.2
     - Object-Storage
   frontend_frameworks:
     - name: Angular
