@@ -564,20 +564,6 @@
         "tableType": "Table",
         "keyClass": "",
         "keyTitle": "",
-        "name": "proposal_end_date",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>The date at which the proposal use ends</p>"
-    },
-    {
-        "tableName": "application",
-        "tableFileName": "application",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
         "name": "staff_observations",
         "type": "text",
         "length": 2147483647,
@@ -585,20 +571,6 @@
         "autoUpdated": "",
         "defaultValue": "null",
         "comments": "<p>ALC Staff Observations and Comments</p>"
-    },
-    {
-        "tableName": "application",
-        "tableFileName": "application",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "proposal_expiry_date",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>The date at which the proposal expires</p>"
     },
     {
         "tableName": "application",
@@ -627,20 +599,6 @@
         "autoUpdated": "",
         "defaultValue": "null",
         "comments": "<p>Application Id that is applicable only to paper version applications from 70s - 80s</p>"
-    },
-    {
-        "tableName": "application",
-        "tableFileName": "application",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "proposal_end_date2",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>The date at which the placement of fill ends (PFRS only)</p>"
     },
     {
         "tableName": "application",
@@ -1780,20 +1738,6 @@
         "tableName": "application_decision_component",
         "tableFileName": "application_decision_component",
         "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "end_date",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>Components end date</p>"
-    },
-    {
-        "tableName": "application_decision_component",
-        "tableFileName": "application_decision_component",
-        "tableType": "Table",
         "keyClass": "foreignKey",
         "keyTitle": "Foreign Key",
         "name": "<i class='icon ion-key iconkey' style='padding-left: 5px;'></i>application_decision_component_type_code",
@@ -1845,20 +1789,6 @@
         "autoUpdated": "",
         "defaultValue": "null",
         "comments": "<p>Non-farm use sub type</p>"
-    },
-    {
-        "tableName": "application_decision_component",
-        "tableFileName": "application_decision_component",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "expiry_date",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>Components expiry date</p>"
     },
     {
         "tableName": "application_decision_component",
@@ -2027,20 +1957,6 @@
         "autoUpdated": "",
         "defaultValue": "null",
         "comments": "<p>Stores the applicant type for inclusion and exclusion components</p>"
-    },
-    {
-        "tableName": "application_decision_component",
-        "tableFileName": "application_decision_component",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "end_date2",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>Components second end date (PFRS only)</p>"
     },
     {
         "tableName": "application_decision_component",
@@ -2404,20 +2320,6 @@
         "nullable": "",
         "autoUpdated": "",
         "defaultValue": "gen_random_uuid()",
-        "comments": ""
-    },
-    {
-        "tableName": "application_decision_condition",
-        "tableFileName": "application_decision_condition",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "approval_dependant",
-        "type": "bool",
-        "length": 1,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
         "comments": ""
     },
     {
@@ -13486,20 +13388,6 @@
         "tableType": "Table",
         "keyClass": "",
         "keyTitle": "",
-        "name": "proposal_end_date",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>The date at which the proposal use ends</p>"
-    },
-    {
-        "tableName": "notice_of_intent",
-        "tableFileName": "notice_of_intent",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
         "name": "legacy_id",
         "type": "text",
         "length": 2147483647,
@@ -13507,20 +13395,6 @@
         "autoUpdated": "",
         "defaultValue": "null",
         "comments": "<p>NOI Id that is applicable only to paper version applications from 70s - 80s</p>"
-    },
-    {
-        "tableName": "notice_of_intent",
-        "tableFileName": "notice_of_intent",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "proposal_end_date2",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>The date at which the placement of fill ends (PFRS only)</p>"
     },
     {
         "tableName": "notice_of_intent",
@@ -14144,34 +14018,6 @@
         "tableType": "Table",
         "keyClass": "",
         "keyTitle": "",
-        "name": "end_date",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>Components end date</p>"
-    },
-    {
-        "tableName": "notice_of_intent_decision_component",
-        "tableFileName": "notice_of_intent_decision_component",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "expiry_date",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>Components` expiry date</p>"
-    },
-    {
-        "tableName": "notice_of_intent_decision_component",
-        "tableFileName": "notice_of_intent_decision_component",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
         "name": "soil_fill_type_to_place",
         "type": "text",
         "length": 2147483647,
@@ -14333,20 +14179,6 @@
         "autoUpdated": "",
         "defaultValue": "null",
         "comments": ""
-    },
-    {
-        "tableName": "notice_of_intent_decision_component",
-        "tableFileName": "notice_of_intent_decision_component",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "end_date2",
-        "type": "timestamptz",
-        "length": 35,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
-        "comments": "<p>Components second end date (PFRS only)</p>"
     },
     {
         "tableName": "notice_of_intent_decision_component",
@@ -14556,20 +14388,6 @@
         "nullable": "",
         "autoUpdated": "",
         "defaultValue": "gen_random_uuid()",
-        "comments": ""
-    },
-    {
-        "tableName": "notice_of_intent_decision_condition",
-        "tableFileName": "notice_of_intent_decision_condition",
-        "tableType": "Table",
-        "keyClass": "",
-        "keyTitle": "",
-        "name": "approval_dependant",
-        "type": "bool",
-        "length": 1,
-        "nullable": "√",
-        "autoUpdated": "",
-        "defaultValue": "null",
         "comments": ""
     },
     {
