@@ -150,6 +150,12 @@ export class DocumentService {
     });
   }
 
+  async getDownloadUrlAndFileNameByUuid(uuid: string, openInline = false): Promise<{ url: string; fileName: string }> {
+    const document = await this.getDocument(uuid);
+
+    return { url: await this.getDownloadUrl(document, openInline), fileName: document.fileName };
+  }
+
   async createDocumentRecord(data: CreateDocumentDto) {
     const command = new GetObjectCommand({
       Bucket: this.config.get('STORAGE.BUCKET'),
