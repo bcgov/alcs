@@ -187,6 +187,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (ad) => ad.flagEditedAt,
           mapFrom((a) => a.flagEditedAt?.getTime()),
         ),
+        forMember(
+          (ad) => ad.canDraftBeDeleted,
+          mapFrom((a) => !(a.reconsideredBy?.length > 0 || a.modifiedBy?.length > 0)),
+        ),
       );
 
       createMap(mapper, ApplicationDecisionOutcomeCode, ApplicationDecisionOutcomeCodeDto);
@@ -196,18 +200,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionComponent,
         ApplicationDecisionComponentDto,
-        forMember(
-          (ad) => ad.endDate,
-          mapFrom((a) => a.endDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.endDate2,
-          mapFrom((a) => a.endDate2?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.expiryDate,
-          mapFrom((a) => a.expiryDate?.getTime()),
-        ),
         forMember(
           (ad) => ad.naruSubtype,
           mapFrom((a) => this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto)),

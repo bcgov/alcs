@@ -5,13 +5,11 @@ import {
   ApplicationDecisionCodesDto,
   ApplicationDecisionComponentDto,
   DecisionComponentTypeDto,
-  NaruDecisionComponentDto,
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
   ProposedDecisionLotDto,
   RosoDecisionComponentDto,
   SubdDecisionComponentDto,
-  ExpiryDateDecisionComponentDto,
   PfrsDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
@@ -42,10 +40,6 @@ export class DecisionComponentComponent implements OnInit {
   // nfu
   nfuType = new FormControl<string | null>(null, [Validators.required]);
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
-  endDate = new FormControl<Date | null>(null);
-
-  // turp & cove
-  expiryDate = new FormControl<Date | null>(null);
 
   // pofo, pfrs
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
@@ -53,9 +47,6 @@ export class DecisionComponentComponent implements OnInit {
   areaToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
   averageDepthToPlace = new FormControl<number | null>(null, [Validators.required, Validators.min(MIN_SOIL_FIELDS)]);
-
-  //pfrs
-  endDate2 = new FormControl<Date | null>(null);
 
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
@@ -104,7 +95,6 @@ export class DecisionComponentComponent implements OnInit {
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
         case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
-          this.addExpiryDateField();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
           this.patchPofoFields();
@@ -181,7 +171,6 @@ export class DecisionComponentComponent implements OnInit {
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
       case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
-        dataChange = { ...dataChange, ...this.getExpiryDateDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
         dataChange = { ...dataChange, ...this.getPofoDataChange() };
@@ -193,7 +182,6 @@ export class DecisionComponentComponent implements OnInit {
         dataChange = { ...dataChange, ...this.getPfrsDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
-        dataChange = { ...dataChange, ...this.getNaruDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
         dataChange = { ...dataChange, ...this.getSubdDataChange() };
@@ -212,35 +200,23 @@ export class DecisionComponentComponent implements OnInit {
   private patchNfuFields() {
     this.form.addControl('nfuType', this.nfuType);
     this.form.addControl('nfuSubType', this.nfuSubType);
-    this.form.addControl('endDate', this.endDate);
 
     this.nfuType.setValue(this.data.nfuType ? this.data.nfuType : null);
     this.nfuSubType.setValue(this.data.nfuSubType ? this.data.nfuSubType : null);
-    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
-  }
-
-  private addExpiryDateField() {
-    this.form.addControl('expiryDate', this.expiryDate);
-
-    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
   }
 
   private patchPfrsFields() {
     this.patchPofoFields();
     this.patchRosoFields();
-    this.form.addControl('endDate2', this.endDate2);
-    this.endDate2.setValue(this.data.endDate2 ? new Date(this.data.endDate2) : null);
   }
 
   private patchPofoFields() {
-    this.form.addControl('endDate', this.endDate);
     this.form.addControl('fillTypeToPlace', this.fillTypeToPlace);
     this.form.addControl('areaToPlace', this.areaToPlace);
     this.form.addControl('volumeToPlace', this.volumeToPlace);
     this.form.addControl('maximumDepthToPlace', this.maximumDepthToPlace);
     this.form.addControl('averageDepthToPlace', this.averageDepthToPlace);
 
-    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
     this.fillTypeToPlace.setValue(this.data.soilFillTypeToPlace ?? null);
     this.areaToPlace.setValue(this.data.soilToPlaceArea ?? null);
     this.volumeToPlace.setValue(this.data.soilToPlaceVolume ?? null);
@@ -249,14 +225,12 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private patchRosoFields() {
-    this.form.addControl('endDate', this.endDate);
     this.form.addControl('soilTypeRemoved', this.soilTypeRemoved);
     this.form.addControl('areaToRemove', this.areaToRemove);
     this.form.addControl('volumeToRemove', this.volumeToRemove);
     this.form.addControl('maximumDepthToRemove', this.maximumDepthToRemove);
     this.form.addControl('averageDepthToRemove', this.averageDepthToRemove);
 
-    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
     this.soilTypeRemoved.setValue(this.data.soilTypeRemoved ?? null);
     this.areaToRemove.setValue(this.data.soilToRemoveArea ?? null);
     this.volumeToRemove.setValue(this.data.soilToRemoveVolume ?? null);
@@ -266,47 +240,31 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchNaruFields() {
     this.form.addControl('naruEndDate', this.naruEndDate);
-    this.form.addControl('expiryDate', this.expiryDate);
-
-    this.naruEndDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
-    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
   }
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
-    this.form.addControl('expiryDate', this.expiryDate);
 
     const lots = this.data.lots?.sort((a, b) => a.index - b.index) ?? null;
 
-    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
     this.subdApprovedLots.setValue(lots);
   }
 
   private patchInclExclFields() {
     this.form.addControl('applicantType', this.applicantType);
-    this.form.addControl('expiryDate', this.expiryDate);
 
     this.applicantType.setValue(this.data.inclExclApplicantType ?? null);
-    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
   }
 
   private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
       nfuSubType: this.nfuSubType.value ? this.nfuSubType.value : null,
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
-    };
-  }
-
-  private getExpiryDateDataChange(): ExpiryDateDecisionComponentDto {
-    return {
-      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 
   private getPofoDataChange(): PofoDecisionComponentDto {
     return {
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
       soilFillTypeToPlace: this.fillTypeToPlace.value ? this.fillTypeToPlace.value : null,
       soilToPlaceArea: this.areaToPlace.value ? this.areaToPlace.value : null,
       soilToPlaceVolume: this.volumeToPlace.value ? this.volumeToPlace.value : null,
@@ -317,7 +275,6 @@ export class DecisionComponentComponent implements OnInit {
 
   private getRosoDataChange(): RosoDecisionComponentDto {
     return {
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
       soilTypeRemoved: this.soilTypeRemoved.value ? this.soilTypeRemoved.value : null,
       soilToRemoveArea: this.areaToRemove.value ? this.areaToRemove.value : null,
       soilToRemoveVolume: this.volumeToRemove.value ? this.volumeToRemove.value : null,
@@ -328,8 +285,6 @@ export class DecisionComponentComponent implements OnInit {
 
   private getPfrsDataChange(): PfrsDecisionComponentDto {
     return {
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
-      endDate2: this.endDate2.value ? formatDateForApi(this.endDate2.value) : null,
       soilTypeRemoved: this.soilTypeRemoved.value ? this.soilTypeRemoved.value : null,
       soilToRemoveArea: this.areaToRemove.value ? this.areaToRemove.value : null,
       soilToRemoveVolume: this.volumeToRemove.value ? this.volumeToRemove.value : null,
@@ -340,13 +295,6 @@ export class DecisionComponentComponent implements OnInit {
       soilToPlaceVolume: this.volumeToPlace.value ? this.volumeToPlace.value : null,
       soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ? this.maximumDepthToPlace.value : null,
       soilToPlaceAverageDepth: this.averageDepthToPlace.value ? this.averageDepthToPlace.value : null,
-    };
-  }
-
-  private getNaruDataChange(): NaruDecisionComponentDto {
-    return {
-      endDate: this.naruEndDate.value ? formatDateForApi(this.naruEndDate.value) : null,
-      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 
@@ -361,14 +309,12 @@ export class DecisionComponentComponent implements OnInit {
     );
     return {
       lots: update ?? undefined,
-      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 
   private getInclExclDataChange() {
     return {
       inclExclApplicantType: this.applicantType.value ?? undefined,
-      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 }

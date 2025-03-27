@@ -105,8 +105,15 @@ form {
     .resolution-number {
       display: flex;
       align-items: center;
+      flex-grow: 1;
+
       font-size: 20px;
       color: colors.$grey-dark;
+      position: relative;
+
+      &.is-editing {
+        padding-bottom: 25px;
+      }
 
       .delete-icon {
         color: colors.$error-color;
@@ -142,5 +149,62 @@ form {
     color: colors.$grey-dark;
     display: block;
     margin-bottom: 3px;
+  }
+}
+
+.resolution-number-inline-field {
+  :host::ng-deep & {
+    .inline-number-wrapper {
+      padding: 0 !important;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      width: 100px;
+      padding-inline: 8px;
+    }
+
+    .mat-mdc-form-field-infix {
+      min-height: auto;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .resolution-number-error {
+      display: flex;
+      gap: 5px;
+      height: 16px;
+
+      font-size: 14px;
+      line-height: 16px;
+      font-weight: bold;
+
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  }
+}
+
+.resolution-number-actions {
+  padding-left: 12px;
+  flex-grow: 1;
+}
+
+.resolution-number-cancel-save-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.resolution-number-save-button-container {
+  position: relative;
+  flex-grow: 1;
+
+  mat-error {
+    display: flex;
+
+    font-size: 12px !important;
+    font-weight: bold;
+
+    position: absolute;
   }
 }

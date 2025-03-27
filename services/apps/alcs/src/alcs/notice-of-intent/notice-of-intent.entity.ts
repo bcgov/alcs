@@ -208,20 +208,6 @@ export class NoticeOfIntent extends Base {
 
   @Column({
     type: 'timestamptz',
-    comment: 'The date at which the proposal use ends',
-    nullable: true,
-  })
-  proposalEndDate?: Date | null;
-
-  @Column({
-    type: 'timestamptz',
-    comment: 'The date at which the placement of fill ends (PFRS only)',
-    nullable: true,
-  })
-  proposalEndDate2?: Date | null;
-
-  @Column({
-    type: 'timestamptz',
     comment: 'The date at which the noi was created in OATS',
     nullable: true,
   })

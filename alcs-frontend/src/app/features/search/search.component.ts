@@ -320,7 +320,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
 
     if (this.searchForm.controls.decisionOutcome.value === null) {
-      decisionOutcomes = [];
+      decisionOutcomes = this.isCommissioner ? this.decisionOutcomeDataService.getCommissionerListData() : [];
     } else {
       decisionOutcomes = this.searchForm.controls.decisionOutcome.value!;
     }
@@ -514,7 +514,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     const filterValue = value.toLowerCase();
     return this.allTags.filter((tag) => {
       if (filterValue) {
-        return !this.tags.includes(tag) && tag.name.toLowerCase().includes(filterValue);
+        return (
+          !this.tags.includes(tag) &&
+          (tag.name.toLowerCase().includes(filterValue) || tag.category?.name.toLowerCase().includes(filterValue))
+        );
       } else {
         return !this.tags.includes(tag);
       }

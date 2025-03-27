@@ -35,6 +35,8 @@ import { UnFlagDialogComponent, UnFlagDialogIO } from '../../../../shared/unflag
 
 type LoadingDecision = NoticeOfIntentDecisionDto & {
   loading: boolean;
+  canBeDeleted: boolean;
+  index: number;
 };
 
 export const OUTCOMES_WITH_COMPONENTS = ['APPR', 'APPA', 'RESC'];
@@ -115,10 +117,12 @@ export class DecisionV2Component implements OnInit, OnDestroy {
                   conditionStatus: conditionStatus,
                 });
               } else {
-                this.conditions[componentId] = [{
-                  ...x,
-                  conditionStatus: conditionStatus,
-                }];
+                this.conditions[componentId] = [
+                  {
+                    ...x,
+                    conditionStatus: conditionStatus,
+                  },
+                ];
               }
             }
           }
@@ -126,7 +130,8 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         return {
           ...decision,
           loading: false,
-        }
+          canBeDeleted: decision.canDraftBeDeleted,
+        };
       });
 
       this.scrollToDecision();
@@ -197,9 +202,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   async deleteDecision(uuid: string) {
+    const index = this.decisions.find((x) => x.uuid === uuid)?.index;
     this.confirmationDialogService
       .openDialog({
-        body: 'Are you sure you want to delete the selected decision?',
+        body: `Are you sure you want to delete Decision #${index} ?`,
       })
       .subscribe(async (confirmed) => {
         if (confirmed) {
@@ -211,7 +217,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
           });
           await this.decisionService.delete(uuid);
           await this.noticeOfIntentDetailService.load(this.fileNumber);
-          this.toastService.showSuccessToast('Decision deleted');
         }
       });
   }
@@ -260,11 +265,21 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   toggleSummary() {
-      this.isSummary = !this.isSummary;
+    this.isSummary = !this.isSummary;
   }
 
   getConditions(uuid: string | undefined) {
-    return uuid && this.conditions[uuid] ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))] : [];
+    return uuid && this.conditions[uuid]
+      ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))].sort((a, b) => {
+          if (a.label < b.label) {
+            return -1;
+          }
+          if (a.label > b.label) {
+            return 1;
+          }
+          return 0;
+        })
+      : [];
   }
 
   getDate(uuid: string | undefined) {
@@ -335,17 +350,17 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   async unflag(decision: LoadingDecision, index: number) {
     this.dialog
       .open(UnFlagDialogComponent, {
-              minWidth: '800px',
-              maxWidth: '800px',
-              maxHeight: '80vh',
-              width: '90%',
-              autoFocus: false,
-              data: {
-                decisionNumber: index,
-              },
-            })
+        minWidth: '800px',
+        maxWidth: '800px',
+        maxHeight: '80vh',
+        width: '90%',
+        autoFocus: false,
+        data: {
+          decisionNumber: index,
+        },
+      })
       .beforeClosed()
-      .subscribe(async ({confirmed} : UnFlagDialogIO) => {
+      .subscribe(async ({ confirmed }: UnFlagDialogIO) => {
         if (confirmed) {
           await this.decisionService.update(decision.uuid, {
             isDraft: decision.isDraft,

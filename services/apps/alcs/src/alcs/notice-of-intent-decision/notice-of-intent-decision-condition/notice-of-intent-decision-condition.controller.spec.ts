@@ -63,9 +63,7 @@ describe('NoticeOfIntentDecisionConditionController', () => {
     it('should update the condition and return updated condition', async () => {
       // Arrange
       const uuid = 'example-uuid';
-      const date = new Date();
       const updates: UpdateNoticeOfIntentDecisionConditionDto = {
-        approvalDependant: true,
         securityAmount: 1000,
         administrativeFee: 50,
         description: 'example description',
@@ -73,7 +71,6 @@ describe('NoticeOfIntentDecisionConditionController', () => {
 
       const condition = new NoticeOfIntentDecisionCondition({
         uuid,
-        approvalDependant: false,
         securityAmount: 500,
         administrativeFee: 25,
         description: 'existing description',
@@ -81,7 +78,6 @@ describe('NoticeOfIntentDecisionConditionController', () => {
 
       const updated = new NoticeOfIntentDecisionCondition({
         uuid,
-        approvalDependant: updates.approvalDependant,
         securityAmount: updates.securityAmount,
         administrativeFee: updates.administrativeFee,
         description: updates.description,
@@ -99,7 +95,6 @@ describe('NoticeOfIntentDecisionConditionController', () => {
       expect(result.description).toEqual(updated.description);
       expect(result.administrativeFee).toEqual(updated.administrativeFee);
       expect(result.securityAmount).toEqual(updated.securityAmount);
-      expect(result.approvalDependant).toEqual(updated.approvalDependant);
     });
   });
 

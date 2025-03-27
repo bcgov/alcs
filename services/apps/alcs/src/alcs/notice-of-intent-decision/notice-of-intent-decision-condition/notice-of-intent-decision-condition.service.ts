@@ -198,7 +198,6 @@ export class NoticeOfIntentDecisionConditionService {
       condition.administrativeFee = updateDto.administrativeFee ?? null;
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
-      condition.approvalDependant = updateDto.approvalDependant ?? null;
       if (updateDto.dates) {
         condition.dates = updateDto.dates.map((dateDto) => {
           const dateEntity = new NoticeOfIntentDecisionConditionDate();

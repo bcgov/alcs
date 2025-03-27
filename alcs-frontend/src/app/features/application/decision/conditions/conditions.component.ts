@@ -18,7 +18,6 @@ import {
   RECON_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
-import { ApplicationDecisionConditionService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConditionCardDialogComponent } from './condition-card-dialog/condition-card-dialog.component';
 import { ApplicationDecisionConditionCardService } from '../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
@@ -71,6 +70,7 @@ export class ConditionsComponent implements OnInit {
   application: ApplicationDto | undefined;
   codes!: ApplicationDecisionCodesDto;
   today!: number;
+  displayIndexes: boolean = true;
 
   dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
@@ -82,7 +82,6 @@ export class ConditionsComponent implements OnInit {
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private decisionService: ApplicationDecisionV2Service,
-    private conditionService: ApplicationDecisionConditionService,
     private conditionCardService: ApplicationDecisionConditionCardService,
     private activatedRouter: ActivatedRoute,
     private dialog: MatDialog,
@@ -121,6 +120,8 @@ export class ConditionsComponent implements OnInit {
           decisions.map(async (decision) => {
             if (decision.uuid === this.decisionUuid) {
               const conditions = await this.mapConditions(decision, decisions);
+              const orderIndexes = conditions.map((c) => c.order);
+              this.displayIndexes = !orderIndexes.every((val, i, arr) => val === arr[0] && arr[0] === 0);
               this.sortConditions(decision, conditions);
 
               this.decision = decision as ApplicationDecisionWithConditionComponentLabels;

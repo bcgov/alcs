@@ -13,48 +13,6 @@
       >
         Download PDF
       </button>
-      <button
-        mat-flat-button
-        color="primary"
-        *ngIf="application && application.canEdit"
-        [routerLink]="'/application/' + application.fileNumber + '/edit'"
-      >
-        <div class="continue-button-content">
-          <span>Continue Application</span>
-          <mat-icon>keyboard_double_arrow_right</mat-icon>
-        </div>
-      </button>
-      <button
-        (click)="onReview(application.fileNumber)"
-        mat-flat-button
-        color="primary"
-        *ngIf="
-          application &&
-          application.canReview &&
-          (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-            application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
-            application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
-        "
-      >
-        <div class="continue-button-content">
-          <span
-            *ngIf="
-              application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-              application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
-            "
-            (click)="onReview(application.fileNumber)"
-            class="subheading2"
-            >Continue Application Review</span
-          >
-          <span
-            *ngIf="application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG"
-            (click)="onReview(application.fileNumber)"
-            class="subheading2"
-            >Start Application Review</span
-          >
-          <mat-icon>keyboard_double_arrow_right</mat-icon>
-        </div>
-      </button>
     </div>
   </div>
   <app-warning-banner
@@ -279,6 +237,7 @@
             applicationReview.isOCPDesignation ||
             applicationReview.isSubjectToZoning
           "
+          class="full-width"
         >
           <div class="subheading2">Resolution Document</div>
           <div>
@@ -288,16 +247,16 @@
           </div>
           <app-no-data *ngIf="resolutionDocument.length === 0"></app-no-data>
         </div>
-        <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+        <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning" class="full-width">
           <div class="subheading2">
             Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
           </div>
           <div>
-            <a class="link" (click)="openFile(document)" *ngFor="let document of staffReport">{{
-              document.fileName
-            }}</a>
+            <div class="document" *ngFor="let document of staffReport">
+              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
+            </div>
+            <app-no-data *ngIf="staffReport.length === 0"></app-no-data>
           </div>
-          <app-no-data *ngIf="staffReport.length === 0"></app-no-data>
         </div>
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>

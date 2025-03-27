@@ -1,5 +1,5 @@
 <div class="header">
-  <h4 *ngIf="condition.type">{{ alphaIndex(index) }}. {{ condition.type.label }}</h4>
+  <h4 *ngIf="condition.type"><span *ngIf="displayIndex">{{ alphaIndex(index + 1) }}.</span> {{ condition.type.label }}</h4>
   <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
 </div>
 <div [ngClass]="isThreeColumn ? 'grid-3' : 'grid-2'">
@@ -11,7 +11,7 @@
 
   <div *ngIf="showAdmFeeField">
     <div class="subheading2">Administrative Fee Amount</div>
-    {{ condition.administrativeFee }}
+    {{ condition.administrativeFee | number }}
     <app-no-data
       *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
     ></app-no-data>

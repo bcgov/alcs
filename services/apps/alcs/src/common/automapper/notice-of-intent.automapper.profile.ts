@@ -61,14 +61,6 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
           mapFrom((ad) => ad.decisionDate?.getTime()),
         ),
         forMember(
-          (a) => a.proposalEndDate,
-          mapFrom((ad) => ad.proposalEndDate?.getTime()),
-        ),
-        forMember(
-          (a) => a.proposalEndDate2,
-          mapFrom((ad) => ad.proposalEndDate2?.getTime()),
-        ),
-        forMember(
           (a) => a.activeDays,
           mapFrom((_) => 0),
         ),

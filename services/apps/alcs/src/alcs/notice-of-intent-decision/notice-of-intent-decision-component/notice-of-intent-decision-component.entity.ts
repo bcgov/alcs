@@ -9,13 +9,10 @@ import { NoticeOfIntentDecisionComponentType } from './notice-of-intent-decision
 @Entity({
   comment: 'Decision Components for Notice of Intents',
 })
-@Index(
-  ['noticeOfIntentDecisionComponentTypeCode', 'noticeOfIntentDecisionUuid'],
-  {
-    unique: true,
-    where: '"audit_deleted_date_at" is null',
-  },
-)
+@Index(['noticeOfIntentDecisionComponentTypeCode', 'noticeOfIntentDecisionUuid'], {
+  unique: true,
+  where: '"audit_deleted_date_at" is null',
+})
 export class NoticeOfIntentDecisionComponent extends Base {
   constructor(data?: Partial<NoticeOfIntentDecisionComponent>) {
     super();
@@ -66,27 +63,6 @@ export class NoticeOfIntentDecisionComponent extends Base {
     nullable: true,
   })
   agCapConsultant?: string | null;
-
-  @Column({
-    type: 'timestamptz',
-    comment: 'Components end date',
-    nullable: true,
-  })
-  endDate?: Date | null;
-
-  @Column({
-    type: 'timestamptz',
-    comment: 'Components second end date (PFRS only)',
-    nullable: true,
-  })
-  endDate2?: Date | null;
-
-  @Column({
-    type: 'timestamptz',
-    comment: 'Components` expiry date',
-    nullable: true,
-  })
-  expiryDate?: Date | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })

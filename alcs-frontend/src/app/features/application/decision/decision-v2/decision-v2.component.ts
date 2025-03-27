@@ -40,6 +40,7 @@ type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
   hasDuplicateComponents: boolean;
   disabledMessage: string;
+  canBeDeleted: boolean;
 };
 
 @Component({
@@ -129,17 +130,19 @@ export class DecisionV2Component implements OnInit, OnDestroy {
             const componentId = x.components[0].uuid;
             if (componentId) {
               const conditionStatus = await this.decisionService.getStatus(x.uuid);
-              
+
               if (this.conditions[componentId]) {
                 this.conditions[componentId].push({
                   ...x,
                   conditionStatus: conditionStatus,
                 });
               } else {
-                this.conditions[componentId] = [{
-                  ...x,
-                  conditionStatus: conditionStatus,
-                }];
+                this.conditions[componentId] = [
+                  {
+                    ...x,
+                    conditionStatus: conditionStatus,
+                  },
+                ];
               }
             }
           }
@@ -149,6 +152,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
           loading: false,
           hasDuplicateComponents: duplicateComponentCodes.length > 0,
           disabledMessage,
+          canBeDeleted: decision.canDraftBeDeleted,
         };
       });
 
@@ -223,9 +227,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   async deleteDecision(uuid: string) {
+    const index = this.decisions.find((x) => x.uuid === uuid)?.index;
     this.confirmationDialogService
       .openDialog({
-        body: 'Are you sure you want to delete the selected decision?',
+        body: `Are you sure you want to delete Decision #${index} ?`,
       })
       .subscribe(async (confirmed) => {
         if (confirmed) {
@@ -237,7 +242,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
           });
           await this.decisionService.delete(uuid);
           await this.applicationDetailService.loadApplication(this.fileNumber);
-          this.toastService.showSuccessToast('Decision deleted');
         }
       });
   }
@@ -307,7 +311,17 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   getConditions(uuid: string | undefined) {
-    return uuid && this.conditions[uuid] ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))] : [];
+    return uuid && this.conditions[uuid]
+      ? [...new Set(this.conditions[uuid].map((x) => this.getPillLabel(x.conditionStatus.status)))].sort((a, b) => {
+          if (a.label < b.label) {
+            return -1;
+          }
+          if (a.label > b.label) {
+            return 1;
+          }
+          return 0;
+        })
+      : [];
   }
 
   getDate(uuid: string | undefined) {

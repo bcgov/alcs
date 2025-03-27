@@ -31,6 +31,7 @@ export interface UpdateNoticeOfIntentDecisionDto {
   flaggedByUuid?: string | null;
   flagEditedByUuid?: string | null;
   flagEditedAt?: number | null;
+  sendEmail?: boolean;
 }
 
 export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
@@ -104,6 +105,7 @@ export interface NoticeOfIntentDecisionDto {
   flaggedBy: UserDto | null;
   flagEditedBy: UserDto | null;
   flagEditedAt: number | null;
+  canDraftBeDeleted: boolean;
 }
 
 export interface NoticeOfIntentDecisionDocumentDto {
@@ -134,7 +136,6 @@ export interface NoticeOfIntentDecisionConditionTypeDto extends BaseCodeDto {
 
 export interface NoticeOfIntentDecisionConditionDto {
   uuid: string;
-  approvalDependant: boolean | null;
   securityAmount: number | null;
   administrativeFee: number | null;
   description: string | null;
@@ -163,7 +164,6 @@ export interface NoticeOfIntentDecisionConditionDateDto {
 export interface UpdateNoticeOfIntentDecisionConditionDto {
   uuid?: string;
   componentsToCondition?: ComponentToCondition[];
-  approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
@@ -181,8 +181,6 @@ export interface UpdateNoticeOfIntentDecisionComponentDto {
   agCapMap?: string;
   agCapConsultant?: string;
   noticeOfIntentDecisionComponentTypeCode: string;
-  endDate?: number;
-  expiryDate?: number;
   soilFillTypeToPlace?: string;
   soilToPlaceVolume?: number | null;
   soilToPlaceArea?: number | null;
@@ -195,10 +193,7 @@ export interface UpdateNoticeOfIntentDecisionComponentDto {
   soilToRemoveAverageDepth?: number | null;
 }
 
-export interface NoticeOfIntentDecisionComponentDto
-  extends PofoDecisionComponentDto,
-    RosoDecisionComponentDto,
-    PfrsDecisionComponentDto {
+export interface NoticeOfIntentDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -209,13 +204,9 @@ export interface NoticeOfIntentDecisionComponentDto
   noticeOfIntentDecisionComponentTypeCode: string;
   noticeOfIntentDecisionComponentType?: NoticeOfIntentDecisionComponentTypeDto;
 }
-
-export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
-  endDate2?: number | null;
-}
+export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {}
 
 export interface PofoDecisionComponentDto {
-  endDate?: number | null;
   soilFillTypeToPlace?: string | null;
   soilToPlaceArea?: number | null;
   soilToPlaceVolume?: number | null;
@@ -224,7 +215,6 @@ export interface PofoDecisionComponentDto {
 }
 
 export interface RosoDecisionComponentDto {
-  endDate?: number | null;
   soilTypeRemoved?: string | null;
   soilToRemoveVolume?: number | null;
   soilToRemoveArea?: number | null;

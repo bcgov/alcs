@@ -21,7 +21,7 @@ import { ReturnApplicationDialogComponent } from './return-application-dialog/re
 export class LfngInfoComponent implements OnInit {
   applicationReview: ApplicationReviewDto | undefined;
   resolutionDocument: ApplicationDocumentDto | undefined;
-  staffReport: ApplicationDocumentDto | undefined;
+  staffReports: ApplicationDocumentDto[] = [];
   otherAttachments: ApplicationDocumentDto[] = [];
   submission?: ApplicationSubmissionDto;
   requiresReview = true;
@@ -80,7 +80,7 @@ export class LfngInfoComponent implements OnInit {
   private async loadDocuments(fileNumber: string) {
     const documents = await this.applicationDocumentService.getReviewDocuments(fileNumber);
     this.resolutionDocument = documents.find((doc) => doc.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
-    this.staffReport = documents.find((doc) => doc.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
+    this.staffReports = documents.filter((doc) => doc.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
     this.otherAttachments = documents.filter((doc) => doc.type?.code === DOCUMENT_TYPE.OTHER);
   }
 

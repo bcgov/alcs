@@ -160,27 +160,15 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
               : [],
           ),
         ),
+        forMember(
+          (ad) => ad.canDraftBeDeleted,
+          mapFrom((a) => a.modifiedBy?.length <= 0),
+        ),
       );
 
       createMap(mapper, NoticeOfIntentSubmissionStatusType, NoticeOfIntentStatusDto);
 
-      createMap(
-        mapper,
-        NoticeOfIntentDecisionComponent,
-        NoticeOfIntentDecisionComponentDto,
-        forMember(
-          (ad) => ad.endDate,
-          mapFrom((a) => a.endDate?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.endDate2,
-          mapFrom((a) => a.endDate2?.getTime()),
-        ),
-        forMember(
-          (ad) => ad.expiryDate,
-          mapFrom((a) => a.expiryDate?.getTime()),
-        ),
-      );
+      createMap(mapper, NoticeOfIntentDecisionComponent, NoticeOfIntentDecisionComponentDto);
 
       createMap(mapper, NoticeOfIntentDecisionComponentType, NoticeOfIntentDecisionComponentTypeDto);
 

@@ -1,10 +1,10 @@
 <div class="inline-number-wrapper">
   <span class="left" *ngIf="!isEditing">
-    <a (click)="startEdit()" class="add" *ngIf="value === null"> Add amount </a>
+    <a (click)="startEdit()" class="add" *ngIf="value === null && !hideButtons"> Add amount </a>
     <span *ngIf="value !== null">
       {{ value }}
     </span>
-    <button *ngIf="value !== null" class="edit-button" mat-icon-button (click)="startEdit()">
+    <button *ngIf="value !== null && !hideButtons" class="edit-button" mat-icon-button (click)="startEdit()">
       <mat-icon class="edit-icon">edit</mat-icon>
     </button>
   </span>
@@ -20,20 +20,27 @@
           matInput
           class="editable"
           [mask]="'separator.' + decimals"
-          thousandSeparator=","
+          [thousandSeparator]="disableThousandsSeparator ? '' : ','"
           separatorLimit="99999999"
           name="value"
           [placeholder]="placeholder"
           #editInput
-          (keydown.enter)="!valueControl.invalid ? confirmEdit(): preventKeydown($event)"
+          (keydown.enter)="!valueControl.invalid ? confirmEdit() : preventKeydown($event)"
           (keydown.escape)="cancelEdit()"
           [formControl]="valueControl"
         />
       </mat-form-field>
-      <mat-error *ngIf="valueControl.errors?.['nonZero']"><mat-icon>warning</mat-icon>&nbsp;Value cannot be 0</mat-error>
-      <mat-error *ngIf="valueControl.errors?.['required']"><mat-icon>warning</mat-icon>&nbsp;Value cannot be Empty</mat-error>
+
+      <ng-container *ngIf="valueControl.hasError">
+        <mat-error class="resolution-number-error" *ngFor="let error of valueControl?.errors | keyvalue"
+          ><mat-icon>warning</mat-icon>
+          <ng-container *ngIf="error.key === 'nonZero'">Value cannot be 0</ng-container>
+          <ng-container *ngIf="error.key === 'required'">Value cannot be Empty</ng-container>
+          <ng-container *ngIf="!['nonZero', 'required'].includes(error.key)">{{ error.value }}</ng-container>
+        </mat-error>
+      </ng-container>
     </form>
-    <div class="button-container">
+    <div class="button-container" *ngIf="!hideButtons">
       <button mat-button (click)="cancelEdit()">CANCEL</button>
       <button 
         mat-button 

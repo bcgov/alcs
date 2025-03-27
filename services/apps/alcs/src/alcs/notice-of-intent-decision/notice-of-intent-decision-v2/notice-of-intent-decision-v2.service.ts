@@ -109,11 +109,6 @@ export class NoticeOfIntentDecisionV2Service {
     const decisionsWithModifiedBy = await this.noticeOfIntentDecisionRepository.find({
       where: {
         noticeOfIntentUuid,
-        modifiedBy: {
-          resultingDecision: {
-            isDraft: false,
-          },
-        },
       },
       relations: {
         modifiedBy: {
@@ -214,7 +209,7 @@ export class NoticeOfIntentDecisionV2Service {
     existingDecision.rescindedDate = formatIncomingDate(updateDto.rescindedDate);
     existingDecision.rescindedComment = updateDto.rescindedComment;
     existingDecision.wasReleased = existingDecision.wasReleased || !updateDto.isDraft;
-    existingDecision.emailSent = updateDto.emailSent;
+    existingDecision.emailSent = updateDto.sendEmail ? updateDto.emailSent : new Date();
     existingDecision.ccEmails = updateDto.ccEmails;
     existingDecision.isFlagged = updateDto.isFlagged;
     existingDecision.reasonFlagged = updateDto.reasonFlagged;
@@ -404,6 +399,26 @@ export class NoticeOfIntentDecisionV2Service {
 
     if (!noticeOfIntentDecision) {
       throw new ServiceNotFoundException(`Failed to find decision with uuid ${uuid}`);
+    }
+
+    const decisionsWithModifiedBy = await this.noticeOfIntentDecisionRepository.find({
+      where: {
+        noticeOfIntentUuid: noticeOfIntentDecision.noticeOfIntent.uuid,
+      },
+      relations: {
+        modifiedBy: {
+          resultingDecision: true,
+          reviewOutcome: true,
+        },
+      },
+    });
+
+    const modifiedBy = decisionsWithModifiedBy.find((r) => r.uuid === noticeOfIntentDecision.uuid)?.modifiedBy || [];
+
+    if (modifiedBy.length > 0) {
+      throw new ServiceValidationException(
+        `Cannot delete decision ${noticeOfIntentDecision.uuid} with linked reconsiderations or modifications`,
+      );
     }
 
     await this.decisionConditionService.remove(noticeOfIntentDecision.conditions);
@@ -717,5 +732,14 @@ export class NoticeOfIntentDecisionV2Service {
     }
 
     return decisionOrder + 1;
+  }
+
+  async resolutionNumberExists(resolutionYear: number, resolutionNumber: number): Promise<boolean> {
+    return !!(await this.noticeOfIntentDecisionRepository.findOne({
+      where: {
+        resolutionNumber,
+        resolutionYear,
+      },
+    }));
   }
 }

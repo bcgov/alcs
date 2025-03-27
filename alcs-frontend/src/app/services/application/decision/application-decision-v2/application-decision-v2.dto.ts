@@ -38,6 +38,7 @@ export interface UpdateApplicationDecisionDto {
   flaggedByUuid?: string | null;
   flagEditedByUuid?: string | null;
   flagEditedAt?: number | null;
+  sendEmail?: boolean;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -91,6 +92,7 @@ export interface ApplicationDecisionDto {
   flagEditedBy: UserDto | null;
   flagEditedAt: number | null;
   application: ApplicationDto;
+  canDraftBeDeleted: boolean;
 }
 
 export interface ApplicationHomeDto {
@@ -176,26 +178,15 @@ export interface ProposedDecisionLotDto {
 export interface NfuDecisionComponentDto {
   nfuType?: string | null;
   nfuSubType?: string | null;
-  endDate?: number | null;
-}
-
-export interface ExpiryDateDecisionComponentDto {
-  expiryDate?: number | null;
 }
 
 export interface NaruDecisionComponentDto {
-  expiryDate?: number | null;
-  endDate?: number | null;
   naruSubtypeCode?: string | null;
   naruSubtype?: NaruSubtypesDto | null;
 }
 
-export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
-  endDate2?: number | null;
-}
-
+export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {}
 export interface PofoDecisionComponentDto {
-  endDate?: number | null;
   soilFillTypeToPlace?: string | null;
   soilToPlaceArea?: number | null;
   soilToPlaceVolume?: number | null;
@@ -204,7 +195,6 @@ export interface PofoDecisionComponentDto {
 }
 
 export interface RosoDecisionComponentDto {
-  endDate?: number | null;
   soilTypeRemoved?: string | null;
   soilToRemoveVolume?: number | null;
   soilToRemoveArea?: number | null;
@@ -215,7 +205,6 @@ export interface RosoDecisionComponentDto {
 export interface SubdDecisionComponentDto {
   // subdApprovedLots?: ProposedDecisionLotDto[];
   lots?: ProposedDecisionLotDto[];
-  expiryDate?: number | null;
 }
 
 export interface InclExclDecisionComponentDto {
@@ -224,7 +213,6 @@ export interface InclExclDecisionComponentDto {
 
 export interface ApplicationDecisionComponentDto
   extends NfuDecisionComponentDto,
-    ExpiryDateDecisionComponentDto,
     PofoDecisionComponentDto,
     RosoDecisionComponentDto,
     NaruDecisionComponentDto,
@@ -299,7 +287,6 @@ export interface NaruSubtypesDto extends BaseCodeDto {}
 export interface ApplicationDecisionConditionDto {
   uuid: string;
   componentUuid?: string;
-  approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
@@ -315,7 +302,6 @@ export interface ApplicationDecisionConditionDto {
 export interface UpdateApplicationDecisionConditionDto {
   uuid?: string;
   componentsToCondition?: ComponentToCondition[] | null;
-  approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
@@ -385,4 +371,9 @@ export interface ApplicationDecisionConditionCardBoardDto {
   type?: ApplicationTypeDto;
   isReconsideration: boolean;
   isModification: boolean;
+  decisionMeetings: DecisionConditionCardMeetingDto[];
+}
+
+export interface DecisionConditionCardMeetingDto {
+  date: number;
 }

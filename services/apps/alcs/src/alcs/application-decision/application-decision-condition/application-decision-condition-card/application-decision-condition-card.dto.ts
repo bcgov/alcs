@@ -114,10 +114,18 @@ export class ApplicationDecisionConditionCardBoardDto {
 
   @IsBoolean()
   isModification?: boolean;
+
+  @IsArray()
+  decisionMeetings: DecisionConditionCardMeetingDto[];
 }
 
 export class UpdateApplicationDecisionConditionBoardCardDto {
   @AutoMap()
   @IsString()
   cardStatusCode: string;
+}
+
+export class DecisionConditionCardMeetingDto {
+  @IsNumber()
+  date: number;
 }

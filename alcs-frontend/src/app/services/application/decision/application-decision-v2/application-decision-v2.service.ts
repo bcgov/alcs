@@ -106,7 +106,7 @@ export class ApplicationDecisionV2Service {
       await firstValueFrom(this.http.delete<ApplicationDecisionDto>(`${this.url}/${uuid}`));
       this.toastService.showSuccessToast('Decision deleted');
     } catch (err) {
-      this.toastService.showErrorToast('Failed to delete meeting');
+      this.toastService.showErrorToast('Failed to delete decision');
     }
   }
 
@@ -196,6 +196,18 @@ export class ApplicationDecisionV2Service {
     let result: number | undefined = undefined;
     try {
       result = await firstValueFrom(this.http.get<number>(`${this.url}/next-resolution-number/${resolutionYear}`));
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to fetch resolutionNumber');
+    }
+    return result;
+  }
+
+  async resolutionNumberExists(resolutionYear: number, resolutionNumber: number) {
+    let result: boolean | undefined = undefined;
+    try {
+      result = await firstValueFrom(
+        this.http.get<boolean>(`${this.url}/resolution-number-exists/${resolutionYear}/${resolutionNumber}`),
+      );
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch resolutionNumber');
     }

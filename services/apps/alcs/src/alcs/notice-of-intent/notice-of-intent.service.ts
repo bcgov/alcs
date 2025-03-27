@@ -252,16 +252,6 @@ export class NoticeOfIntentService {
 
     noticeOfIntent.staffObservations = filterUndefined(updateDto.staffObservations, noticeOfIntent.staffObservations);
 
-    noticeOfIntent.proposalEndDate = filterUndefined(
-      formatIncomingDate(updateDto.proposalEndDate),
-      noticeOfIntent.proposalEndDate,
-    );
-
-    noticeOfIntent.proposalEndDate2 = filterUndefined(
-      formatIncomingDate(updateDto.proposalEndDate2),
-      noticeOfIntent.proposalEndDate2,
-    );
-
     noticeOfIntent.hideFromPortal = filterUndefined(updateDto.hideFromPortal, noticeOfIntent.hideFromPortal);
 
     if (updateDto.typeCode) {

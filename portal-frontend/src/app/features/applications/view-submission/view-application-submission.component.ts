@@ -13,6 +13,8 @@ import { ApplicationSubmissionService } from '../../../services/application-subm
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { openFileInline } from '../../../shared/utils/file';
+import { MatDialog } from '@angular/material/dialog';
+import { ReturnApplicationDialogComponent } from '../review-submission/return-application-dialog/return-application-dialog.component';
 
 @Component({
   selector: 'app-view-application-submission',
@@ -38,7 +40,8 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
     private applicationDocumentService: ApplicationDocumentService,
     private route: ActivatedRoute,
     private router: Router,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -80,6 +83,22 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
 
   onCancelWrapper(event: any) {
     this.onCancel(event);
+  }
+
+  onReturnApplication() {
+    this.dialog
+      .open(ReturnApplicationDialogComponent, {
+        panelClass: 'no-padding',
+        data: {
+          fileId: this.application?.fileNumber,
+        },
+      })
+      .beforeClosed()
+      .subscribe(async (result: boolean) => {
+        if (result) {
+          await this.router.navigateByUrl('/home');
+        }
+      });
   }
 
   async onReview(fileId: string) {

@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -91,9 +92,10 @@ export class NoticeOfIntentController {
 
   @Post('/:fileNumber/cancel')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async cancel(@Param('fileNumber') fileNumber: string) {
-    const noticeOfIntentSubmission =
-      await this.noticeOfIntentSubmissionService.get(fileNumber);
+  async cancel(@Param('fileNumber') fileNumber: string, @Query('sendEmail') sendEmail) {
+    const noticeOfIntentSubmission = await this.noticeOfIntentSubmissionService.get(fileNumber);
+
+    const boolSendEmail = sendEmail === 'false' ? false : true;
 
     await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
       fileNumber,
@@ -101,14 +103,12 @@ export class NoticeOfIntentController {
     );
 
     const { primaryContact, submissionGovernment } =
-      await this.statusEmailService.getNoticeOfIntentEmailData(
-        noticeOfIntentSubmission,
-      );
+      await this.statusEmailService.getNoticeOfIntentEmailData(noticeOfIntentSubmission);
 
     if (
       primaryContact &&
-      noticeOfIntentSubmission.status.statusTypeCode !==
-        NOI_SUBMISSION_STATUS.IN_PROGRESS
+      noticeOfIntentSubmission.status.statusTypeCode !== NOI_SUBMISSION_STATUS.IN_PROGRESS &&
+      boolSendEmail
     ) {
       await this.statusEmailService.sendNoticeOfIntentStatusEmail({
         template,

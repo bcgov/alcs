@@ -132,6 +132,10 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   @IsNumber()
   flagEditedAt?: number | null;
+
+  @IsOptional()
+  @IsBoolean()
+  sendEmail?: boolean;
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -268,6 +272,8 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Number)
   flagEditedAt: number | null;
+
+  canDraftBeDeleted: boolean;
 }
 
 export class LinkedResolutionDto {

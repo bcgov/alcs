@@ -201,6 +201,61 @@ describe('NoticeOfIntentDecisionV2Service', () => {
       );
     });
 
+    it('should throw ServiceValidationException when deleting a decision with linked reconsiderations or modifications', async () => {
+      const uuid = 'fake-uuid';
+
+      const decisionWithLinks = {
+        ...mockDecision,
+        uuid,
+        noticeOfIntent: mockNoticeOfIntent,
+        documents: [],
+        conditions: [],
+      };
+
+      mockDecisionRepository.findOne.mockResolvedValueOnce(decisionWithLinks);
+
+      const modification = {
+        uuid: 'mod-uuid',
+        resultingDecision: { uuid: 'result-uuid' },
+        reviewOutcome: { code: 'MOCK' },
+      };
+
+      mockDecisionRepository.find.mockImplementation((options: any) => {
+        if (options?.relations?.modifiedBy) {
+          const modificationDecision = new NoticeOfIntentDecision();
+          modificationDecision.uuid = decisionWithLinks.uuid;
+          modificationDecision.modifiedBy = [modification as any];
+          return Promise.resolve([modificationDecision]);
+        }
+
+        return Promise.resolve([]);
+      });
+
+      await expect(service.delete(uuid)).rejects.toThrow(
+        new ServiceValidationException(`Cannot delete decision ${uuid} with linked reconsiderations or modifications`),
+      );
+
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledWith({
+        where: { uuid },
+        relations: {
+          conditions: {
+            dates: true,
+          },
+          outcome: true,
+          documents: {
+            document: true,
+          },
+          noticeOfIntent: true,
+          components: true,
+          conditionCards: true,
+        },
+      });
+
+      expect(mockDecisionConditionService.remove).not.toHaveBeenCalled();
+      expect(mockDecisionRepository.softRemove).not.toHaveBeenCalled();
+      expect(mockDecisionRepository.save).not.toHaveBeenCalled();
+    });
+
     it('should create a decision', async () => {
       mockDecisionRepository.find.mockResolvedValue([]);
       mockDecisionRepository.findOne.mockResolvedValue({

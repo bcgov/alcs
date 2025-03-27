@@ -106,6 +106,10 @@ export class UpdateNoticeOfIntentDecisionDto {
   @IsOptional()
   @IsNumber()
   flagEditedAt?: number | null;
+
+  @IsOptional()
+  @IsBoolean()
+  sendEmail?: boolean;
 }
 
 export class CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
@@ -200,6 +204,8 @@ export class NoticeOfIntentDecisionDto {
 
   @AutoMap(() => Number)
   flagEditedAt: number | null;
+
+  canDraftBeDeleted: boolean;
 }
 
 export class NoticeOfIntentDecisionDocumentDto {

@@ -23,6 +23,7 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
   firstDecision = false;
   releasedStatus: ApplicationSubmissionStatusPill | undefined;
   cancelledStatus: ApplicationSubmissionStatusPill | undefined;
+  sendEmail = true;
 
   readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
   emails: string[] = [];
@@ -58,6 +59,7 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
     this.matDialogRef.close({
       confirmed: true,
       ccEmails: this.emails,
+      sendEmail: this.sendEmail,
     });
   }
 

@@ -14,11 +14,15 @@
         appendTo="body"
         placeholder="Select Year for Resolution Number*"
         [clearable]="false"
+        (change)="clearResolution()"
       ></ng-select>
     </div>
 
     <div class="resolution-number-wrapper">
-      <div *ngIf="!resolutionNumberControl.getRawValue()" class="resolution-number-btn-wrapper">
+      <div
+        *ngIf="!resolutionNumberControl.value && !resolutionNumberControl.dirty"
+        class="resolution-number-btn-wrapper"
+      >
         <button
           class="generate-number-btn"
           [loading]="isLoading"
@@ -36,17 +40,81 @@
           *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
         ></app-error-message>
       </div>
-      <div *ngIf="resolutionNumberControl.getRawValue()">
-        <div class="resolution-number">
-          <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
-          <button
-            matTooltip="Delete resolution number"
-            class="delete-icon"
-            mat-icon-button
-            (click)="onDeleteResolutionNumber()"
+      <div
+        class="resolution-number"
+        *ngIf="resolutionNumberControl.value || resolutionNumberControl.dirty"
+        [class.is-editing]="resolutionNumberInput?.isEditing === true"
+      >
+        Res #
+        <app-inline-number
+          resolutionNumberInput
+          class="resolution-number-inline-field"
+          [value]="resolutionNumberControl.value?.toString() ?? undefined"
+          [decimals]="0"
+          [nonZeroEmptyValidation]="true"
+          [hideButtons]="true"
+          [disableThousandsSeparator]="true"
+          [asyncValidators]="[resolutionNumberAsyncValidator()]"
+          (save)="onSaveResolutionNumber($event)"
+          (cancel)="onCancelResolutionNumber()"
+        />
+        <div>&nbsp;/&nbsp;</div>
+        {{ resolutionYearControl.value }}
+        <div class="resolution-number-actions">
+          <div
+            class="resolution-number-cancel-save-wrapper"
+            *ngIf="!!resolutionNumberInput?.isEditing; else editButtonContainer"
           >
-            <mat-icon>delete</mat-icon>
-          </button>
+            <button
+              mat-stroked-button
+              color="primary"
+              type="button"
+              class="resolution-number-cancel-button"
+              (click)="onClickResolutionNumberCancelButton()"
+            >
+              Cancel
+            </button>
+
+            <div class="resolution-number-save-button-container">
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                class="resolution-number-save-button"
+                (click)="onClickResolutionNumberSaveButton()"
+                [disabled]="resolutionNumberInput?.valueControl?.invalid"
+                [ngClass]="{
+                  'error-field-outlined': showResolutionNumberSaveError,
+                  'ng-invalid': showResolutionNumberSaveError,
+                }"
+              >
+                Save
+              </button>
+              <mat-error *ngIf="showResolutionNumberSaveError"
+                ><mat-icon>warning</mat-icon> This field is required</mat-error
+              >
+            </div>
+          </div>
+
+          <ng-template #editButtonContainer>
+            <button
+              mat-icon-button
+              type="button"
+              class="resolution-number-edit-button"
+              (click)="onClickResolutionNumberEditButton()"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button
+              matTooltip="Delete resolution number"
+              class="delete-icon"
+              mat-icon-button
+              (click)="onDeleteResolutionNumber()"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -164,7 +232,7 @@
   <div>
     <app-decision-documents
       (beforeDocumentUpload)="onSubmit(true, true)"
-      [showError]="form.touched && !existingDecision?.documents?.length"
+      [showError]="showErrors && !existingDecision?.documents?.length"
     ></app-decision-documents>
   </div>
 
@@ -174,7 +242,7 @@
     [fileNumber]="fileNumber"
     [components]="components"
     (componentsChange)="onComponentChange($event)"
-    [showError]="form.touched && components.length < 1 && requireComponents"
+    [showError]="showErrors && components.length < 1 && requireComponents"
   >
   </app-decision-components>
 
@@ -186,8 +254,8 @@
       [components]="components"
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
-      [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
-      [showDateErrors]="form.touched && requiredDatesAreMissing()"
+      [showError]="showErrors && conditionUpdates.length < 1 && showConditions"
+      [showDateErrors]="showErrors && requiredDatesAreMissing()"
     ></app-noi-decision-conditions>
   </div>
 

@@ -69,15 +69,18 @@ hr {
     grid-column: 1/2;
 
     .days {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       margin-right: 6px;
-      margin-top: 4px;
 
       .mat-icon {
         font-size: 19px !important;
         line-height: 21px !important;
         width: 19px;
         vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
+        margin: 0 4px 0 0;
       }
     }
   }
@@ -283,4 +286,17 @@ hr {
 .flag-details-edited-details {
   font-size: 12px;
   color: colors.$grey;
+}
+
+.draft-btn-wrapper {
+  display: flex;
+  gap: 4px;
+  justify-content: baseline;
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+  font-size: 20px;
+  margin-top: 6px;
 }

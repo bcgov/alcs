@@ -20,10 +20,6 @@ export class NoticeOfIntentDecisionCondition extends Base {
     }
   }
 
-  @AutoMap(() => Boolean)
-  @Column({ type: 'boolean', nullable: true })
-  approvalDependant: boolean | null;
-
   @AutoMap(() => Number)
   @Column({
     type: 'decimal',

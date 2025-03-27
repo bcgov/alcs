@@ -1,4 +1,4 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException, ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mapper } from 'automapper-core';
@@ -203,7 +203,14 @@ export class ApplicationReconsiderationService {
   }
 
   async delete(uuid: string) {
-    const reconToDelete = await this.fetchAndValidateReconsideration(uuid);
+    const reconToDelete = await this.fetchAndValidateReconsideration(uuid, { type: true, resultingDecision: true });
+
+    if (reconToDelete.resultingDecision) {
+      throw new ServiceValidationException(
+        `Cannot delete reconsideration ${reconToDelete.uuid} that has a resulting decision`,
+      );
+    }
+
     if (reconToDelete.cardUuid) {
       await this.cardService.archive(reconToDelete.cardUuid);
     }
@@ -211,10 +218,13 @@ export class ApplicationReconsiderationService {
     return this.reconsiderationRepository.softRemove([reconToDelete]);
   }
 
-  private async fetchAndValidateReconsideration(uuid: string) {
+  private async fetchAndValidateReconsideration(
+    uuid: string,
+    relations?: FindOptionsRelations<ApplicationReconsideration>,
+  ) {
     const recon = await this.reconsiderationRepository.findOne({
       where: { uuid },
-      relations: {
+      relations: relations || {
         type: true,
       },
     });

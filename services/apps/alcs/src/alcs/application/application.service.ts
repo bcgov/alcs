@@ -249,10 +249,7 @@ export class ApplicationService {
   }
 
   async cancel(fileNumber: string): Promise<void> {
-    await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
-      fileNumber,
-      SUBMISSION_STATUS.CANCELLED,
-    );
+    await this.applicationSubmissionStatusService.setStatusDateByFileNumber(fileNumber, SUBMISSION_STATUS.CANCELLED);
     return;
   }
 

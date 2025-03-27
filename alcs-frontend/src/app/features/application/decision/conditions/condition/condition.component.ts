@@ -49,6 +49,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() isDraftDecision!: boolean;
   @Input() fileNumber!: string;
   @Input() index!: number;
+  @Input() displayIndex!: boolean;
 
   @Output() statusChange: EventEmitter<string> = new EventEmitter();
 
