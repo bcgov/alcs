@@ -421,7 +421,7 @@ export class NoticeOfIntentService {
           await this.noticeOfIntentTagService.addTagToNoticeOfIntent(createDto.fileNumber, tag);
         } catch (e) {
           this.logger.error(
-            `Could not add tag ${tag} to application number ${createDto.fileNumber} with error: ${e.error}`,
+            `Could not add tag ${tag} to application number ${createDto.fileNumber}`, e.error,
           );
         }
       }
