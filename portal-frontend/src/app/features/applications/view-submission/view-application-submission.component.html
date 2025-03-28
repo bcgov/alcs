@@ -16,13 +16,31 @@
 <div class="header top-bar">
   <button (click)="onNavigateHome()" mat-button color="accent"><mat-icon>chevron_left</mat-icon>Return to Inbox</button>
   <div class="btns-wrapper">
-    <button mat-flat-button color="accent" (click)="onReturnApplication()" *ngIf="
-      application && 
-      (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-        application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
-    ">
-      Return Application
-    </button>
+    <div
+          matTooltip="Start application review in order to return"
+          [matTooltipDisabled]="application && application.status.code !== SUBMISSION_STATUS.SUBMITTED_TO_LG"
+          class="return-tooltip"
+        >
+      <button
+        (click)="onReturnApplication()"
+        [disabled]="isLoading || (application && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)"
+        mat-flat-button
+        color="accent"
+        class="return-button"
+        *ngIf="
+          application && 
+          (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
+            application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
+        "
+      >
+          
+            <div>
+              <span>Return Application</span>
+              <mat-icon class="icon" *ngIf="application && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG">info_outline</mat-icon>
+            </div>
+      </button>
+    </div>
     <button
       mat-flat-button
       color="primary"
