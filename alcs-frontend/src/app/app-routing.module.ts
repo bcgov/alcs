@@ -17,7 +17,7 @@ const routes: Routes = [
     path: 'document/:uuid',
     canActivate: [HasRolesGuard],
     data: {
-      roles: ROLES_ALLOWED_APPLICATIONS,
+      roles: ALL_ROLES,
     },
     component: DocumentFileLoader,
   },
