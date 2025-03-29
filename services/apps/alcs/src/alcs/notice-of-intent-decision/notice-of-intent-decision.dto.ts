@@ -212,6 +212,9 @@ export class NoticeOfIntentDecisionDocumentDto {
   @AutoMap()
   uuid: string;
 
+  @AutoMap()
+  documentUuid: string;
+
   fileName: string;
   fileSize: number;
   mimeType: string;

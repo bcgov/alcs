@@ -43,6 +43,9 @@ export class CommissionerApplicationDto {
 
   @AutoMap()
   decisions?: CommissionerDecisionDto[];
+
+  @AutoMap(() => String)
+  summary: string | null;
 }
 
 export class CommissionerPlanningReviewDto {

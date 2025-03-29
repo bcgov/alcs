@@ -28,7 +28,7 @@
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let notice of proposalMap" (click)="openFile(notice)">
+    <a *ngFor="let notice of proposalMap" routerLink="/document/{{ notice.documentUuid }}" target="_blank">
       {{ notice.fileName }}
     </a>
   </div>
@@ -40,7 +40,7 @@
     <div class="subheading2 grid-1">Proof of Homesite Severance Qualification</div>
     <div class="grid-double">
       <div *ngFor="let document of homesiteDocuments">
-        <a (click)="openFile(document)">
+        <a routerLink="/document/{{ document.documentUuid }}" target="_blank">
           {{ document.fileName }}
         </a>
       </div>

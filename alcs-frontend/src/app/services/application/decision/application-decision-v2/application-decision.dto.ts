@@ -64,6 +64,7 @@ export interface LinkedResolutionDto {
 
 export interface ApplicationDecisionDocumentDto {
   uuid: string;
+  documentUuid: string;
   fileName: string;
   mimeType: string;
   uploadedBy: string;

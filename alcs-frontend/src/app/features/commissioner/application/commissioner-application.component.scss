@@ -1,3 +1,5 @@
+@use '../../../../styles/colors';
+
 .layout {
   display: flex;
   flex-direction: row;
@@ -15,4 +17,19 @@
 .content {
   margin-top: 36px;
   padding: 0 80px 64px;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+
+  .summary-content {
+    white-space: pre-wrap;
+    padding: 16px 16px 18px 8px;
+    border: 1px solid colors.$grey;
+    border-radius: 4px;
+  }
 }

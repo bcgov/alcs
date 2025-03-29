@@ -59,7 +59,9 @@
     <div class="subheading2 grid-1">Certificate Of Title</div>
     <div class="grid-double">
       <div *ngIf="parcel.certificateOfTitle">
-        <a (click)="onOpenFile(parcel.certificateOfTitle)">{{ parcel.certificateOfTitle.fileName }}</a>
+        <a routerLink="/document/{{ parcel.certificateOfTitle.documentUuid }}" target="_blank">{{
+          parcel.certificateOfTitle.fileName
+        }}</a>
       </div>
       <app-no-data *ngIf="!parcel.certificateOfTitle"></app-no-data>
     </div>
@@ -118,9 +120,12 @@
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
         <div>
-          <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary)">{{
-              owner.corporateSummary.fileName
-            }}</a>
+          <a
+            *ngIf="owner.corporateSummary"
+            routerLink="/document/{{ owner.corporateSummary.documentUuid }}"
+            target="_blank"
+            >{{ owner.corporateSummary.fileName }}</a
+          >
           <div class="no-data" *ngIf="!owner.corporateSummary">
             <div *ngIf="owner.type.code === 'INDV'" class="no-data-text">Not Applicable</div>
             <div *ngIf="owner.type.code !== 'INDV'" class="no-data-text">No Data</div>

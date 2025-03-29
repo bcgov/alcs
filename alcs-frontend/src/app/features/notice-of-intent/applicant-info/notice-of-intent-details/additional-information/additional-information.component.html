@@ -87,7 +87,7 @@
 
     <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of buildingPlans" (click)="openFile(file)">
+      <a *ngFor="let file of buildingPlans" routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
       <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
