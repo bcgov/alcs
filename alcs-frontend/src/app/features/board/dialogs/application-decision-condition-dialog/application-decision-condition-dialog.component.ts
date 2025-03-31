@@ -113,8 +113,10 @@ export class ApplicationDecisionConditionDialogComponent extends CardDialogCompo
         condition,
         index: index + 1,
         selected: this.isConditionSelected(condition),
-      }));
-
+      }))
+      .sort((a, b) => {
+        return a.condition.order - b.condition.order
+      });
     this.dataSource.data = data;
   }
 
