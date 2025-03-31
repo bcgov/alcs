@@ -117,8 +117,13 @@ export class OwnerDialogComponent {
 
       this.isLoading = true;
 
+      let shouldContinue = false;
       if (this.type.value === OWNER_TYPE.INDIVIDUAL) {
-        this.removeCorporateSummary();
+        shouldContinue = await this.removeCorporateSummary();
+        if (!shouldContinue) {
+          this.isLoading = false;
+          return;
+        }
       }
 
       let documentUuid;
@@ -178,8 +183,14 @@ export class OwnerDialogComponent {
     if (this.form.valid) {
       this.isLoading = true;
 
+      let shouldContinue = false;
       if (this.type.value === OWNER_TYPE.INDIVIDUAL) {
-        this.removeCorporateSummary();
+        shouldContinue = await this.removeCorporateSummary();
+
+        if (!shouldContinue) {
+          this.isLoading = false;
+          return;
+        }
       }
 
       let document;
@@ -235,27 +246,33 @@ export class OwnerDialogComponent {
     }
   }
 
-  removeCorporateSummary() {
-    if (this.data.isDraft) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            if (this.pendingFile) {
-              this.pendingFile = undefined;
+  removeCorporateSummary(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      if (this.data.isDraft && (this.pendingFile || this.files.length > 0)) {
+        this.dialog
+          .open(RemoveFileConfirmationDialogComponent)
+          .beforeClosed()
+          .subscribe(async (didConfirm) => {
+            if (didConfirm) {
+              if (this.pendingFile) {
+                this.pendingFile = undefined;
+              }
+              this.corporateSummary.setValue(null);
+              this.files = [];
+              resolve(true); // User confirmed, continue with the operation
+            } else {
+              resolve(false); // User canceled, don't continue
             }
-            this.corporateSummary.setValue(null);
-            this.files = [];
-          }
-        });
-    } else {
-      if (this.pendingFile) {
-        this.pendingFile = undefined;
+          });
+      } else {
+        if (this.pendingFile) {
+          this.pendingFile = undefined;
+        }
+        this.corporateSummary.setValue(null);
+        this.files = [];
+        resolve(true); // No confirmation dialog needed, continue
       }
-      this.corporateSummary.setValue(null);
-      this.files = [];
-    }
+    });
   }
 
   async openCorporateSummary() {
