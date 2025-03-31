@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
 import { QueryRunner, Repository } from 'typeorm';
 import { getNextDayToPacific, getStartOfDayToPacific } from '../../../utils/pacific-date-time-helper';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
+import { formatNameSearchString } from '../../../utils/search-helper';
 import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { PlanningReferral } from '../../planning-review/planning-referral/planning-referral.entity';
@@ -196,13 +196,13 @@ export class PlanningReviewAdvancedSearchService {
   }
 
   private addNameResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
-    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+    const formattedSearchString = formatNameSearchString(searchDto.name!);
 
     const promise = this.planningReviewRepository
       .createQueryBuilder('planningReview')
       .select('planningReview.fileNumber')
-      .where('LOWER(planningReview.document_name) LIKE ANY (:names)', {
-        names: formattedSearchString,
+      .where('LOWER(planningReview.document_name) LIKE :name', {
+        name: formattedSearchString,
       })
       .getMany();
     promises.push(promise);

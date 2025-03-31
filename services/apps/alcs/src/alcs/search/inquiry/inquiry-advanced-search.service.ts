@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as hash from 'object-hash';
 import { QueryRunner, Repository } from 'typeorm';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
+import { formatNameSearchString } from '../../../utils/search-helper';
 import { processSearchPromises } from '../../../utils/search/search-intersection';
 import { InquiryParcel } from '../../inquiry/inquiry-parcel/inquiry-parcel.entity';
 import { Inquiry } from '../../inquiry/inquiry.entity';
@@ -192,21 +192,21 @@ export class InquiryAdvancedSearchService {
   }
 
   private addNameResults(searchDto: SearchRequestDto, promises: Promise<{ fileNumber: string }[]>[]) {
-    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+    const formattedSearchString = formatNameSearchString(searchDto.name!);
     const promise = this.inquiryRepository
       .createQueryBuilder('inquiry')
       .select('inquiry.fileNumber')
-      .where("LOWER(inquiry.inquirer_first_name || ' ' || inquiry.inquirer_last_name) LIKE ANY (:names)", {
-        names: formattedSearchString,
+      .where("LOWER(CONCAT_WS(' ', inquiry.inquirer_first_name, inquiry.inquirer_last_name)) LIKE :name", {
+        name: formattedSearchString,
       })
-      .orWhere('LOWER(inquiry.inquirer_first_name) LIKE ANY (:names)', {
-        names: formattedSearchString,
+      .orWhere('LOWER(inquiry.inquirer_first_name) LIKE :name', {
+        name: formattedSearchString,
       })
-      .orWhere('LOWER(inquiry.inquirer_last_name) LIKE ANY (:names)', {
-        names: formattedSearchString,
+      .orWhere('LOWER(inquiry.inquirer_last_name) LIKE :name', {
+        name: formattedSearchString,
       })
-      .orWhere('LOWER(inquiry.inquirer_organization) LIKE ANY (:names)', {
-        names: formattedSearchString,
+      .orWhere('LOWER(inquiry.inquirer_organization) LIKE :name', {
+        name: formattedSearchString,
       })
       .getMany();
     promises.push(promise);

@@ -1,18 +1,18 @@
-export const formatStringToPostgresSearchStringArrayWithWildCard = (
-  input: string,
-): string => {
-  input = input.trim();
-  const splitString = input.split(' ');
-  let output = '';
+export const formatNameSearchString = (input: string): string | null => {
+  return input
+    .split(/\s+/)
+    .filter((word) => word !== '')
+    .map((word) => {
+      const matches = word
+        .toLowerCase()
+        .match(/^(\%)?([^\s]+?)(\%)?$/)
+        ?.map((match) => match ?? '');
 
-  if (splitString.length === 1) {
-    output = splitString.map((word) => `%${word}%`.toLowerCase()).join(',');
-    return `{${output}}`;
-  }
+      if (!matches) {
+        return null;
+      }
 
-  output = splitString
-    .map((word) => `%${word}%`.trim().toLowerCase())
-    .join(',');
-  output += `,%${input}%`;
-  return `{${output}}`;
+      return matches[1] + matches[2].replace(/%/g, '') + matches[3];
+    })
+    .join(' ');
 };
