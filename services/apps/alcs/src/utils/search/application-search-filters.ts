@@ -8,7 +8,7 @@ import { ApplicationParcel } from '../../portal/application-submission/applicati
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { InboxRequestDto } from '../../portal/inbox/inbox.dto';
 import { SearchRequestDto } from '../../portal/public/search/public-search.dto';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../search-helper';
+import { formatNameSearchString } from '../search-helper';
 
 export const APP_SEARCH_FILTERS = {
   addFileNumberResults: (
@@ -98,29 +98,30 @@ export const APP_SEARCH_FILTERS = {
     searchDto: SearchRequestDto | InboxRequestDto,
     applicationSubmissionRepository: Repository<ApplicationSubmission>,
   ) => {
-    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
-    return applicationSubmissionRepository
+    const formattedSearchString = formatNameSearchString(searchDto.name!);
+
+    let query = applicationSubmissionRepository
       .createQueryBuilder('appSub')
       .select('appSub.fileNumber')
       .leftJoin(ApplicationOwner, 'application_owner', 'application_owner.application_submission_uuid = appSub.uuid')
       .andWhere(
-        new Brackets((qb) =>
-          qb
-            .where("LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)", {
-              names: formattedSearchString,
+        new Brackets((qb) => {
+          qb.where("LOWER(CONCAT_WS(' ', application_owner.first_name, application_owner.last_name)) LIKE :name", {
+            name: formattedSearchString,
+          })
+            .orWhere('LOWER(application_owner.first_name) LIKE :name', {
+              name: formattedSearchString,
             })
-            .orWhere('LOWER(application_owner.first_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
+            .orWhere('LOWER(application_owner.last_name) LIKE :name', {
+              name: formattedSearchString,
             })
-            .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            })
-            .orWhere('LOWER(application_owner.organization_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
-            }),
-        ),
-      )
-      .getMany();
+            .orWhere('LOWER(application_owner.organization_name) LIKE :name', {
+              name: formattedSearchString,
+            });
+        }),
+      );
+
+    return query.getMany();
   },
   addGovernmentResults: async (
     searchDto: SearchRequestDto,
