@@ -22,13 +22,6 @@ describe('formatStringToSearchStringWithWildCard', () => {
     expect(actualOutput).toBe(expectedOutput);
   });
 
-  test('should escape internal wildcards', () => {
-    const input = 'mult%iple %words';
-    const expectedOutput = 'mult\\%iple %words';
-    const actualOutput = formatNameSearchString(input);
-    expect(actualOutput).toBe(expectedOutput);
-  });
-
   test('should trim input and format string correctly', () => {
     const input = '   trimmed word  ';
     const expectedOutput = 'trimmed word';

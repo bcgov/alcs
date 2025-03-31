@@ -12,7 +12,7 @@ export const formatNameSearchString = (input: string): string | null => {
         return null;
       }
 
-      return matches[1] + matches[2].replace('/%/g', `\\%`) + matches[3];
+      return matches[1] + matches[2].replace(/%/g, '') + matches[3];
     })
     .join(' ');
 };
