@@ -1,6 +1,6 @@
 ---
 name: User Story
-about: A new feature or something a user would try to accomplish with the app/software.
+about: A new feature or something a user would try to accomplish with the app/software
 title: ''
 labels: User Story
 assignees: ''
