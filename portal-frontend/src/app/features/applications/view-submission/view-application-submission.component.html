@@ -28,7 +28,8 @@
         color="accent"
         class="return-button"
         *ngIf="
-          application && 
+          application &&
+          application.canReview &&
           (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
           application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
             application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
