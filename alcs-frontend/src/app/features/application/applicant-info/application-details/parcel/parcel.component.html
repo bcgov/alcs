@@ -65,7 +65,9 @@
       [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-certificate-of-title'"
     >
       <div *ngIf="parcel.certificateOfTitle">
-        <a (click)="openFile(parcel.certificateOfTitle)">{{ parcel.certificateOfTitle.fileName }}</a>
+        <a routerLink="/document/{{ parcel.certificateOfTitle.documentUuid }}" target="_blank">{{
+          parcel.certificateOfTitle.fileName
+        }}</a>
       </div>
       <app-no-data *ngIf="!parcel.certificateOfTitle"></app-no-data>
     </div>
@@ -130,7 +132,11 @@
           {{ owner.email }}
         </div>
         <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-corporate-summary'">
-          <a *ngIf="owner.corporateSummary" (click)="openFile(owner.corporateSummary)">
+          <a
+            *ngIf="owner.corporateSummary"
+            routerLink="/document/{{ owner.corporateSummary.documentUuid }}"
+            target="_blank"
+          >
             {{ owner.corporateSummary.fileName }}
           </a>
           <div class="no-data" *ngIf="!owner.corporateSummary">

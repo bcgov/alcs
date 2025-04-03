@@ -28,7 +28,7 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let file of proposalMap" (click)="openFile(file)">
+    <a *ngFor="let file of proposalMap" routerLink="/document/{{ file.documentUuid }}" target="_blank">
       {{ file.fileName }}
     </a>
   </div>
@@ -36,7 +36,7 @@
   <div class="subheading2 grid-1">Notice of Public Hearing (Advertisement)</div>
   <div class="grid-double">
     <div *ngFor="let file of noticeOfPublicHearing">
-      <a (click)="openFile(file)">
+      <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
     </div>
@@ -45,7 +45,7 @@
   <div class="subheading2 grid-1">Proof of Signage</div>
   <div class="grid-double">
     <div *ngFor="let file of proofOfSignage">
-      <a (click)="openFile(file)">
+      <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
     </div>
@@ -54,7 +54,7 @@
   <div class="subheading2 grid-1">Report of Public Hearing</div>
   <div class="grid-double">
     <div *ngFor="let file of reportOfPublicHearing">
-      <a (click)="openFile(file)">
+      <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
     </div>

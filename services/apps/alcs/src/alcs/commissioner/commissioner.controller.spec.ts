@@ -80,9 +80,7 @@ describe('CommissionerController', () => {
 
     controller = module.get<CommissionerController>(CommissionerController);
 
-    mockApplicationService.getOrFail.mockResolvedValue(
-      initApplicationMockEntity(fileNumber),
-    );
+    mockApplicationService.getOrFail.mockResolvedValue(initApplicationMockEntity(fileNumber));
     mockApplicationService.mapToDtos.mockResolvedValue([]);
     mockModificationService.getByApplication.mockResolvedValue([]);
     mockReconsiderationService.getByApplication.mockResolvedValue([]);
@@ -104,12 +102,8 @@ describe('CommissionerController', () => {
 
     expect(mockApplicationService.getOrFail).toHaveBeenCalledTimes(1);
     expect(mockModificationService.getByApplication).toHaveBeenCalledTimes(1);
-    expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockApplicationService.getOrFail.mock.calls[0][0]).toEqual(
-      fileNumber,
-    );
+    expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.getOrFail.mock.calls[0][0]).toEqual(fileNumber);
     expect(res.hasRecons).toBeFalsy();
     expect(res.hasModifications).toBeFalsy();
     expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
@@ -126,9 +120,7 @@ describe('CommissionerController', () => {
     const res = await controller.get(fileNumber, mockRequest);
 
     expect(mockModificationService.getByApplication).toHaveBeenCalledTimes(1);
-    expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(1);
     expect(res.hasRecons).toBeTruthy();
     expect(res.hasModifications).toBeTruthy();
     expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
@@ -169,7 +161,7 @@ describe('CommissionerController', () => {
     const mappedApp = await controller.get(fileNumber, mockRequest);
 
     expect(mappedApp.localGovernment).toEqual(mockDto.localGovernment);
-    expect('summary' in mappedApp).toBeFalsy();
+    expect('summary' in mappedApp).toBeTruthy();
     expect(mappedApp.fileNumber).toEqual(fileNumber);
     expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });

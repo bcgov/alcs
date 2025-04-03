@@ -138,6 +138,7 @@ export interface ApplicationDecisionWithLinkedResolutionDto extends ApplicationD
 
 export interface ApplicationDecisionDocumentDto {
   uuid: string;
+  documentUuid: string;
   fileName: string;
   mimeType: string;
   uploadedBy: string;

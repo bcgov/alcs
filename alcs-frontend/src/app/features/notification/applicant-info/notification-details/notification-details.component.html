@@ -80,7 +80,7 @@
     <div class="subheading2 grid-1">Upload Terms of the SRW</div>
     <div class="grid-double">
       <div *ngFor="let document of srwTerms">
-        <a (click)="openFile(document)">
+        <a routerLink="/document/{{ document.documentUuid }}" target="_blank">
           {{ document.fileName }}
         </a>
       </div>
@@ -95,7 +95,7 @@
       <div class="subheading2">Control Number</div>
       <ng-container *ngFor="let document of surveyPlans">
         <div>
-          <a (click)="openFile(document)">
+          <a routerLink="/document/{{ document.documentUuid }}" target="_blank">
             {{ document.fileName }}
           </a>
         </div>
@@ -119,7 +119,7 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div>
-          <a (click)="openFile(file)">{{ file.fileName }}</a>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
         </div>
         <div>
           {{ file.type?.label }}
