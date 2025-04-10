@@ -5,8 +5,14 @@ import { LoginComponent } from './features/login/login.component';
 import { MaintenanceComponent } from './features/maintenance/maintenance.component';
 import { AlcsAuthGuard } from './services/authentication/alcs-auth.guard';
 import { AuthGuard } from './services/authentication/auth.guard';
+import { DocumentFileLoader } from './shared/document-file-loader/document-file-loader.component';
 
 const routes: Routes = [
+  {
+    path: 'document/:uuid',
+    canActivate: [AuthGuard],
+    component: DocumentFileLoader,
+  },
   {
     title: 'Login',
     path: 'login',

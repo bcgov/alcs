@@ -236,6 +236,7 @@ export class OwnerDialogComponent {
           fileName: this.pendingFile.name,
           fileSize: this.pendingFile.size,
           uuid: '',
+          documentUuid: '',
           source: DOCUMENT_SOURCE.APPLICANT,
           uploadedAt: Date.now(),
           uploadedBy: '',

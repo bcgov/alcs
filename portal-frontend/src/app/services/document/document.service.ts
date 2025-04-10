@@ -71,10 +71,17 @@ export class DocumentService {
           fileSize: file.size,
           fileKey: fileKey,
           source,
-        })
+        }),
       );
     } finally {
       this.overlayService.hideSpinner();
     }
+  }
+
+  async getDownloadUrlAndFileName(uuid: string, isInline = true): Promise<{ url: string; fileName: string }> {
+    const url =
+      `${this.serviceUrl}/getDownloadUrlAndFileName/${uuid}` + (isInline ? `?isInline=${isInline.toString()}` : '');
+
+    return await firstValueFrom(this.httpClient.get<{ url: string; fileName: string }>(url));
   }
 }
