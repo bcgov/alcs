@@ -13,6 +13,7 @@ import { RosoDetailsComponent } from './roso-details/roso-details.component';
 import { SubdDetailsComponent } from './subd-details/subd-details.component';
 import { TurDetailsComponent } from './tur-details/tur-details.component';
 import { ExclDetailsComponent } from './excl-details/excl-details.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { ExclDetailsComponent } from './excl-details/excl-details.component';
     InclDetailsComponent,
     CoveDetailsComponent,
   ],
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, RouterModule],
   exports: [ApplicationDetailsComponent],
 })
 export class ApplicationDetailsModule {}

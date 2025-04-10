@@ -30,6 +30,7 @@ import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
 import { IncomingFileModule } from './incoming-files/incoming-file.module';
 import { TagModule } from './tag/tag.module';
+import { AlcsDocumentModule } from '../alcs/document/document.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { TagModule } from './tag/tag.module';
     MaintenanceModule,
     IncomingFileModule,
     TagModule,
+    AlcsDocumentModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -91,6 +93,7 @@ import { TagModule } from './tag/tag.module';
       { path: 'alcs', module: TagModule },
       { path: 'alcs', module: MaintenanceModule },
       { path: 'alcs', module: IncomingFileModule },
+      { path: 'alcs', module: AlcsDocumentModule },
     ]),
   ],
   controllers: [],

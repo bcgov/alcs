@@ -84,7 +84,9 @@
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file)" data-testid="authorization-letter">{{ file.fileName }}</a>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank" data-testid="authorization-letter">{{
+            file.fileName
+          }}</a>
         </div>
       </div>
     </ng-container>
@@ -229,7 +231,7 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1" data-testid="optional-document-file-name">
-          <a (click)="openFile(file)">{{ file.fileName }}</a>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
         </div>
         <div class="grid-2" data-testid="optional-document-type">
           {{ file.type?.label }}

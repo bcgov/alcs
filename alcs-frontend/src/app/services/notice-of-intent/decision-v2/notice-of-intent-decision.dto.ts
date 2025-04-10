@@ -110,6 +110,7 @@ export interface NoticeOfIntentDecisionDto {
 
 export interface NoticeOfIntentDecisionDocumentDto {
   uuid: string;
+  documentUuid: string;
   fileName: string;
   mimeType: string;
   uploadedBy: string;

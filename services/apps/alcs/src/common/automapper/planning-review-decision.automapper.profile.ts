@@ -59,6 +59,10 @@ export class PlanningReviewDecisionProfile extends AutomapperProfile {
           (dto) => dto.uploadedAt,
           mapFrom((entity) => entity.document.uploadedAt.getTime()),
         ),
+        forMember(
+          (dto) => dto.documentUuid,
+          mapFrom((entity) => entity.document.uuid),
+        ),
       );
       createMap(mapper, DocumentCode, DocumentTypeDto);
     };

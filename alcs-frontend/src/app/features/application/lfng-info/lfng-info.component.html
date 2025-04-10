@@ -207,7 +207,7 @@
       >
         <div class="subheading2">Resolution Document</div>
         <div>
-          <a *ngIf="resolutionDocument" (click)="openDocument(resolutionDocument.uuid, resolutionDocument.fileName)">{{
+          <a *ngIf="resolutionDocument" routerLink="/document/{{ resolutionDocument.documentUuid }}" target="_blank">{{
             resolutionDocument.fileName
           }}</a>
         </div>
@@ -223,7 +223,7 @@
         <div class="subheading2">Staff Report</div>
         <div *ngIf="staffReports.length > 0">
           <div *ngFor="let staffReport of staffReports">
-            <a (click)="openDocument(staffReport.uuid, staffReport.fileName)">{{ staffReport.fileName }}</a>
+            <a routerLink="/document/{{ staffReport.documentUuid }}" target="_blank">{{ staffReport.fileName }}</a>
           </div>
         </div>
         <app-no-data *ngIf="staffReports.length === 0"></app-no-data>
@@ -233,7 +233,7 @@
         <div>
           <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           <div *ngFor="let attachment of otherAttachments">
-            <a (click)="openDocument(attachment.uuid, attachment.fileName)">{{ attachment.fileName }}</a>
+            <a routerLink="/document/{{ attachment.documentUuid }}" target="_blank">{{ attachment.fileName }}</a>
           </div>
         </div>
       </div>

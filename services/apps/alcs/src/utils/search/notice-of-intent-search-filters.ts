@@ -6,7 +6,7 @@ import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/no
 import { NoticeOfIntentParcel } from '../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { SearchRequestDto } from '../../portal/public/search/public-search.dto';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../search-helper';
+import { formatNameSearchString } from '../search-helper';
 
 export const NOI_SEARCH_FILTERS = {
   addFileNumberResults: (searchDto: SearchRequestDto | InboxRequestDto, noiRepository: Repository<NoticeOfIntent>) => {
@@ -81,7 +81,7 @@ export const NOI_SEARCH_FILTERS = {
     searchDto: SearchRequestDto | InboxRequestDto,
     noiSubmissionRepository: Repository<NoticeOfIntentSubmission>,
   ) => {
-    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+    const formattedSearchString = formatNameSearchString(searchDto.name!);
     return noiSubmissionRepository
       .createQueryBuilder('noiSub')
       .select('noiSub.fileNumber')
@@ -94,19 +94,19 @@ export const NOI_SEARCH_FILTERS = {
         new Brackets((qb) =>
           qb
             .where(
-              "LOWER(notice_of_intent_owner.first_name || ' ' || notice_of_intent_owner.last_name) LIKE ANY (:names)",
+              "LOWER(CONCAT_WS(' ', notice_of_intent_owner.first_name, notice_of_intent_owner.last_name)) LIKE :name",
               {
-                names: formattedSearchString,
+                name: formattedSearchString,
               },
             )
-            .orWhere('LOWER(notice_of_intent_owner.first_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
+            .orWhere('LOWER(notice_of_intent_owner.first_name) LIKE :name', {
+              name: formattedSearchString,
             })
-            .orWhere('LOWER(notice_of_intent_owner.last_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
+            .orWhere('LOWER(notice_of_intent_owner.last_name) LIKE :name', {
+              name: formattedSearchString,
             })
-            .orWhere('LOWER(notice_of_intent_owner.organization_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
+            .orWhere('LOWER(notice_of_intent_owner.organization_name) LIKE :name', {
+              name: formattedSearchString,
             }),
         ),
       )

@@ -84,6 +84,7 @@ import { FlagDialogComponent } from './flag-dialog/flag-dialog.component';
 import { UnFlagDialogComponent } from './unflag-dialog/unflag-dialog.component';
 import { DecisionConditionFinancialInstrumentComponent } from './decision-condition-financial-instrument/decision-condition-financial-instrument.component';
 import { DecisionConditionFinancialInstrumentDialogComponent } from './decision-condition-financial-instrument/decision-condition-financial-instrument-dialog/decision-condition-financial-instrument-dialog.component';
+import { DocumentFileLoader } from './document-file-loader/document-file-loader.component';
 
 @NgModule({
   declarations: [
@@ -133,6 +134,7 @@ import { DecisionConditionFinancialInstrumentDialogComponent } from './decision-
     UnFlagDialogComponent,
     DecisionConditionFinancialInstrumentComponent,
     DecisionConditionFinancialInstrumentDialogComponent,
+    DocumentFileLoader,
   ],
   imports: [
     CommonModule,

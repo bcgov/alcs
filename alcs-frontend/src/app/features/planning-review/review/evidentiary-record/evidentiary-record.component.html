@@ -38,10 +38,12 @@
     <th *matHeaderCellDef mat-header-cell>File Name</th>
     <td *matCellDef="let element" mat-cell>
       <a
-        (click)="onOpen(element.uuid, element.fileName)" 
+        routerLink="/document/{{ element.documentUuid }}"
+        target="_blank"
         [matTooltip]="element.fileName"
-        [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen">
-        {{ element.fileName | truncate: fileNameTruncLen}}
+        [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen"
+      >
+        {{ element.fileName | truncate: fileNameTruncLen }}
       </a>
     </td>
   </ng-container>

@@ -14,9 +14,11 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Document Name</th>
     <td mat-cell *matCellDef="let element">
       <a
-        (click)="openFile(element.uuid, element.fileName)" 
+        routerLink="/document/{{ element.documentUuid }}"
+        target="_blank"
         [matTooltip]="element.fileName"
-        [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen">
+        [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen"
+      >
         {{ element.fileName }}
       </a>
     </td>
