@@ -44,4 +44,8 @@ export class Board extends Base {
   @AutoMap()
   @Column({})
   showOnSchedule: boolean;
+
+  @AutoMap()
+  @Column({ default: false })
+  hasAssigneeFilter: boolean;
 }
