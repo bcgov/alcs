@@ -13,7 +13,7 @@
           <mat-select multiple="true" [(ngModel)]="selectedAssignees" placeholder="Assignee">
             <mat-select-trigger>{{ generateAssigneeFilterTriggerText(selectedAssignees) }}</mat-select-trigger>
             <mat-option *ngFor="let assignee of assignees" [value]="assignee">
-              {{ assignee.name }}
+              {{ assignee.name }}{{ this.currentUser?.uuid === assignee.uuid ? ' (Me)' : '' }}
             </mat-option>
           </mat-select>
         </mat-form-field>

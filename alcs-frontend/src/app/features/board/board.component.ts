@@ -52,7 +52,8 @@ import { ApplicationDecisionConditionDialogComponent } from './dialogs/applicati
 import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 import { NoticeOfIntentDecisionConditionCardBoardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionConditionDialogComponent } from './dialogs/notice-of-intent-decision-condition-dialog/notice-of-intent-decision-condition-dialog.component';
-import { AssigneeDto } from '../../services/user/user.dto';
+import { AssigneeDto, UserDto } from '../../services/user/user.dto';
+import { UserService } from '../../services/user/user.service';
 
 export const CONDITION_STATUS = {
   EXPIRED: 'EXPIRED',
@@ -135,6 +136,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     ],
   ]);
 
+  currentUser: UserDto | undefined = undefined;
+
   constructor(
     private applicationService: ApplicationService,
     private boardService: BoardService,
@@ -153,6 +156,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
     private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
+    private userService: UserService,
   ) {}
 
   ngOnInit() {
@@ -183,6 +187,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       if (selectedBoard) {
         this.setupBoard(selectedBoard);
       }
+    });
+
+    this.userService.$userProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
+      this.currentUser = user;
     });
   }
 
