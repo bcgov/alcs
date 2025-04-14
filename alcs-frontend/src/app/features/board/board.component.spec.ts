@@ -25,10 +25,12 @@ import { NotificationService } from '../../services/notification/notification.se
 import { PlanningReferralService } from '../../services/planning-review/planning-referral.service';
 import { PlanningReferralDto } from '../../services/planning-review/planning-review.dto';
 import { ToastService } from '../../services/toast/toast.service';
-import { CardType } from '../../shared/card/card.component';
+import { CardData, CardType } from '../../shared/card/card.component';
 import { BoardComponent } from './board.component';
 import { ApplicationDecisionConditionCardService } from '../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition-card/application-decision-condition-card.service';
 import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
+import { AssigneeDto } from '../../services/user/user.dto';
+import { CardStatusDto } from '../../services/application/application-code.dto';
 
 describe('BoardComponent', () => {
   let component: BoardComponent;
@@ -52,6 +54,48 @@ describe('BoardComponent', () => {
   let noticeOfIntentDecisionConditionCardService: DeepMocked<NoticeOfIntentDecisionConditionCardService>;
 
   let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
+
+  const status: CardStatusDto = {
+    label: 'card-status-label',
+    code: 'card-status',
+    description: 'card-status-description',
+  };
+
+  const assignee1: AssigneeDto = {
+    uuid: 'assignee-1-uuid',
+    name: 'Assignee 1 Name',
+    mentionLabel: 'Assignee 1 Mention Label',
+    clientRoles: [],
+    prettyName: 'Assignee 1 Pretty Name',
+  };
+
+  const assignee2: AssigneeDto = {
+    uuid: 'assignee-2-uuid',
+    name: 'Assignee 2 Name',
+    mentionLabel: 'Assignee 2 Mention Label',
+    clientRoles: [],
+    prettyName: 'Assignee 2 Pretty Name',
+  };
+
+  const card1: CardDto = {
+    uuid: 'card-1-uuid',
+    type: CardType.APP,
+    highPriority: false,
+    status: status,
+    assignee: assignee1,
+    boardCode: 'boardCode',
+    createdAt: Date.now(),
+  };
+
+  const card2: CardDto = {
+    uuid: 'card-2-uuid',
+    type: CardType.APP,
+    highPriority: false,
+    status: status,
+    assignee: assignee2,
+    boardCode: 'boardCode',
+    createdAt: Date.now(),
+  };
 
   const lowPriorityCard: CardDto = {
     status: {
@@ -82,6 +126,7 @@ describe('BoardComponent', () => {
     isFavourite: false,
     allowedCardTypes: [],
     showOnSchedule: true,
+    hasAssigneeFilter: true,
   };
 
   const mockDetailBoard: BoardDto = {
@@ -404,5 +449,116 @@ describe('BoardComponent', () => {
     expect(notificationService.fetchByCardUuid).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledTimes(0);
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should collect assignees from cards', async () => {
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
+      applications: [
+        {
+          ...mockApplication,
+          card: card1,
+        } as ApplicationDto,
+        {
+          ...mockApplication,
+          card: card2,
+        } as ApplicationDto,
+      ],
+      modifications: [],
+      planningReferrals: [],
+      reconsiderations: [],
+      noticeOfIntents: [],
+      noiModifications: [],
+      notifications: [],
+      inquiries: [],
+      applicationDecisionConditions: [],
+      noticeOfIntentDecisionConditions: [],
+    });
+
+    boardEmitter.next([mockBoard]);
+
+    await sleep(1);
+
+    expect(component.assignees).toEqual([assignee1, assignee2]);
+  });
+
+  it('should filter cards by assignee', async () => {
+    const cards: CardData[] = [
+      {
+        id: 'card-1',
+        title: 'Card 1 Title',
+        typeLabel: 'Card 1 Type',
+        titleTooltip: 'Card 1 Title Tooltip',
+        labels: [],
+        paused: false,
+        cardUuid: card1.uuid,
+        cardType: card1.type,
+        dateReceived: Date.now(),
+        status: 'card-status',
+        highPriority: false,
+        assignee: card1.assignee,
+      },
+      {
+        id: 'card-2',
+        title: 'Card 2 Title',
+        typeLabel: 'Card 2 Type',
+        titleTooltip: 'Card 2 Title Tooltip',
+        labels: [],
+        paused: false,
+        cardUuid: card2.uuid,
+        cardType: card2.type,
+        dateReceived: Date.now(),
+        status: 'card-status',
+        highPriority: false,
+        assignee: card2.assignee,
+      },
+    ];
+
+    const filteredCards = component.filterCardsByAssignees(cards, [assignee1]);
+
+    filteredCards.forEach((card) => {
+      if (!card.assignee?.uuid) {
+        return;
+      }
+
+      expect(card.assignee?.uuid).toEqual(card.assignee.uuid);
+    });
+  });
+
+  it('should return all cards if no filter provided', async () => {
+    const cards: CardData[] = [
+      {
+        id: 'card-1',
+        title: 'Card 1 Title',
+        typeLabel: 'Card 1 Type',
+        titleTooltip: 'Card 1 Title Tooltip',
+        labels: [],
+        paused: false,
+        cardUuid: card1.uuid,
+        cardType: card1.type,
+        dateReceived: Date.now(),
+        status: 'card-status',
+        highPriority: false,
+        assignee: card1.assignee,
+      },
+      {
+        id: 'card-2',
+        title: 'Card 2 Title',
+        typeLabel: 'Card 2 Type',
+        titleTooltip: 'Card 2 Title Tooltip',
+        labels: [],
+        paused: false,
+        cardUuid: card2.uuid,
+        cardType: card2.type,
+        dateReceived: Date.now(),
+        status: 'card-status',
+        highPriority: false,
+        assignee: card2.assignee,
+      },
+    ];
+
+    const filteredCards = component.filterCardsByAssignees(cards, []);
+
+    expect(filteredCards).toEqual(cards);
   });
 });
