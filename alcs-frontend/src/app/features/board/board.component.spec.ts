@@ -31,6 +31,7 @@ import { ApplicationDecisionConditionCardService } from '../../services/applicat
 import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 import { AssigneeDto } from '../../services/user/user.dto';
 import { CardStatusDto } from '../../services/application/application-code.dto';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('BoardComponent', () => {
   let component: BoardComponent;
@@ -176,7 +177,7 @@ describe('BoardComponent', () => {
     queryParamMapEmitter = new BehaviorSubject(new Map());
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatMenuModule],
+      imports: [RouterTestingModule, MatMenuModule, HttpClientTestingModule],
       providers: [
         {
           provide: ApplicationService,
