@@ -46,7 +46,7 @@ export class AuthorizationController {
 
       path = `authorized?t=${token.access_token}&r=${token.refresh_token}`;
     } catch (e) {
-      console.log(e);
+      this.logger.error(e);
 
       path = 'login?login_failed=true';
     } finally {
@@ -92,7 +92,7 @@ export class AuthorizationController {
         loginUrl: loginUrl,
       };
     } catch (e) {
-      console.log(e);
+      this.logger.error(e);
     }
   }
 }
