@@ -52,6 +52,8 @@ import { ApplicationDecisionConditionDialogComponent } from './dialogs/applicati
 import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 import { NoticeOfIntentDecisionConditionCardBoardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionConditionDialogComponent } from './dialogs/notice-of-intent-decision-condition-dialog/notice-of-intent-decision-condition-dialog.component';
+import { AssigneeDto, UserDto } from '../../services/user/user.dto';
+import { UserService } from '../../services/user/user.service';
 
 export const CONDITION_STATUS = {
   EXPIRED: 'EXPIRED',
@@ -85,6 +87,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     label: string;
     dialog: ComponentType<any>;
   }[] = [];
+
+  hasAssigneeFilter: boolean = false;
+  assignees: AssigneeDto[] = [];
+  selectedAssignees: AssigneeDto[] = [];
 
   private createCardMap = new Map<
     CardType,
@@ -130,6 +136,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     ],
   ]);
 
+  currentUser: UserDto | undefined = undefined;
+
   constructor(
     private applicationService: ApplicationService,
     private boardService: BoardService,
@@ -148,6 +156,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private applicationDecisionConditionCardService: ApplicationDecisionConditionCardService,
     private noticeOfIntentDecisionConditionCardService: NoticeOfIntentDecisionConditionCardService,
+    private userService: UserService,
   ) {}
 
   ngOnInit() {
@@ -178,6 +187,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       if (selectedBoard) {
         this.setupBoard(selectedBoard);
       }
+    });
+
+    this.userService.$userProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
+      this.currentUser = user;
     });
   }
 
@@ -245,6 +258,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     const board = response.board;
 
     this.boardTitle = board.title;
+    this.hasAssigneeFilter = board.hasAssigneeFilter;
 
     const creatableCards: {
       label: string;
@@ -266,6 +280,13 @@ export class BoardComponent implements OnInit, OnDestroy {
       allowedTransitions: allStatuses,
     }));
     this.mapAndSortCards(response, boardCode);
+
+    this.assignees = this.cards.reduce((acc: AssigneeDto[], card: CardData) => {
+      if (card.assignee && !acc.some((a) => a.uuid === card.assignee?.uuid)) {
+        acc.push(card.assignee);
+      }
+      return acc;
+    }, []);
   }
 
   private mapAndSortCards(response: CardsDto, boardCode: string) {
@@ -676,5 +697,22 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.toastService.showErrorToast('There was an issue loading the card, please try again');
       console.error(err);
     }
+  }
+
+  filterCardsByAssignees(cards: CardData[], selectedAssignees: AssigneeDto[]): CardData[] {
+    if (selectedAssignees.length === 0) {
+      return cards;
+    }
+
+    return cards.filter(
+      (card) =>
+        card.assignee && selectedAssignees.some((selectedAssignee) => card.assignee?.uuid === selectedAssignee.uuid),
+    );
+  }
+
+  generateAssigneeFilterTriggerText(selectedAssignees: AssigneeDto[]): string {
+    return `Assignee ${
+      selectedAssignees.length === 1 ? `› ${selectedAssignees[0].name}` : `(${selectedAssignees.length})`
+    }`;
   }
 }

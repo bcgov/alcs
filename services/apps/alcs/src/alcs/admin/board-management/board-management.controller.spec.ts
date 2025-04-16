@@ -63,6 +63,7 @@ describe('BoardManagementController', () => {
       code: '',
       createCardTypes: [],
       showOnSchedule: false,
+      hasAssigneeFilter: false,
       statuses: [],
       title: '',
     });
@@ -78,6 +79,7 @@ describe('BoardManagementController', () => {
       code: '',
       createCardTypes: [],
       showOnSchedule: false,
+      hasAssigneeFilter: false,
       statuses: [],
       title: '',
     });

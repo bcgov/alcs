@@ -84,6 +84,7 @@ describe('NotificationDialogComponent', () => {
       code: '',
       createCardTypes: [],
       showOnSchedule: false,
+      hasAssigneeFilter: false,
       statuses: [],
       title: '',
     });

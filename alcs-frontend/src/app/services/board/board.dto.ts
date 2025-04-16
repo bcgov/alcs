@@ -14,6 +14,7 @@ export interface MinimalBoardDto {
   code: string;
   title: string;
   showOnSchedule: boolean;
+  hasAssigneeFilter: boolean;
   allowedCardTypes: CardType[];
 }
 

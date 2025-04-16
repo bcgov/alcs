@@ -7,6 +7,17 @@
       </h2>
     </div>
     <div>
+      <div *ngIf="hasAssigneeFilter" class="assignee-filter">
+        <mat-label>Filter: </mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select multiple="true" [(ngModel)]="selectedAssignees" placeholder="Assignee">
+            <mat-select-trigger>{{ generateAssigneeFilterTriggerText(selectedAssignees) }}</mat-select-trigger>
+            <mat-option *ngFor="let assignee of assignees" [value]="assignee">
+              {{ assignee.name }}{{ this.currentUser?.uuid === assignee.uuid ? ' (Me)' : '' }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <ng-container *ngIf="creatableCards.length === 1">
         <button mat-flat-button color="primary" (click)="onOpenCreateDialog(creatableCards[0].dialog)">
           + {{ creatableCards[0].label }}
@@ -24,7 +35,7 @@
   </div>
   <div class="board-content">
     <app-drag-drop-board
-      [cards]="cards"
+      [cards]="filterCardsByAssignees(cards, selectedAssignees)"
       [columns]="columns"
       (cardSelected)="onSelected($event)"
       (cardDropped)="onDropped($event)"

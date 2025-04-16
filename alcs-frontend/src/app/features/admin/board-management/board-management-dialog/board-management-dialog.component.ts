@@ -34,6 +34,7 @@ export class BoardManagementDialogComponent implements OnInit {
   permittedCardTypes = new FormControl<CardType[]>([], [Validators.required]);
   createCardTypes = new FormControl<CardType[]>([]);
   showOnSchedule = new FormControl<string>('true', [Validators.required]);
+  hasAssigneeFilter = new FormControl<boolean>(false, [Validators.required]);
 
   step = 1;
 
@@ -43,6 +44,7 @@ export class BoardManagementDialogComponent implements OnInit {
     permittedCardTypes: this.permittedCardTypes,
     createCardTypes: this.createCardTypes,
     showOnSchedule: this.showOnSchedule,
+    hasAssigneeFilter: this.hasAssigneeFilter,
   });
 
   isLoading = false;
@@ -101,6 +103,7 @@ export class BoardManagementDialogComponent implements OnInit {
         createCardTypes: board.createCardTypes,
         permittedCardTypes: board.allowedCardTypes,
         showOnSchedule: board.showOnSchedule ? 'true' : 'false',
+        hasAssigneeFilter: board.hasAssigneeFilter,
       });
 
       await this.loadCardStatuses(board);
@@ -158,6 +161,7 @@ export class BoardManagementDialogComponent implements OnInit {
       allowedCardTypes: this.permittedCardTypes.value ?? [],
       createCardTypes: this.createCardTypes.value ?? [],
       showOnSchedule: this.showOnSchedule.value === 'true',
+      hasAssigneeFilter: this.hasAssigneeFilter.value ?? false,
     };
 
     if (this.isEdit) {

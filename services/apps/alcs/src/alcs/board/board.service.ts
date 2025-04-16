@@ -137,6 +137,7 @@ export class BoardService {
       (code) => cardTypes.find((cardType) => cardType.code === code)!,
     );
     board.showOnSchedule = updateDto.showOnSchedule;
+    board.hasAssigneeFilter = updateDto.hasAssigneeFilter;
 
     await this.boardRepository.save(board);
     await this.setBoardStatuses(board, updateDto);
