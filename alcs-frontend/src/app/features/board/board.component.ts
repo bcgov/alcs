@@ -712,7 +712,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   generateAssigneeFilterTriggerText(selectedAssignees: AssigneeDto[]): string {
     return `Assignee ${
-      selectedAssignees.length === 1 ? `› ${selectedAssignees[0].name}` : `(${selectedAssignees.length})`
+      selectedAssignees.length === 1 ? `› ${selectedAssignees[0].prettyName}` : `(${selectedAssignees.length})`
     }`;
   }
 }
