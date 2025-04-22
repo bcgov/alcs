@@ -19,7 +19,7 @@ export class DocumentFileLoader {
 
   ngAfterViewInit() {
     if (this.uuid !== null) {
-      // this.open(this.uuid);
+      this.open(this.uuid);
     }
   }
 
