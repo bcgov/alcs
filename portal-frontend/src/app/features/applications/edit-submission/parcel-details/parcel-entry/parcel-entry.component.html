@@ -237,7 +237,6 @@
       [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
       (uploadFiles)="attachFile($event, parcel.uuid)"
       (deleteFile)="deleteFile($event)"
-      (openFile)="openFile($event)"
       (beforeFileUploadOpened)="saveParcelProgress()"
       [showErrors]="showErrors"
       [isRequired]="isCertificateOfTitleRequired"

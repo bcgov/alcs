@@ -11,7 +11,7 @@
     <ng-container matColumnDef="fileName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Document Name</th>
       <td mat-cell *matCellDef="let element">
-        <a (click)="openFile(element)">{{ element.fileName }}</a>
+        <a routerLink="/document/{{ element.documentUuid }}" target="_blank">{{ element.fileName }}</a>
       </td>
     </ng-container>
 

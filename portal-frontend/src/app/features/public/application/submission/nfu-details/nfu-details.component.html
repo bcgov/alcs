@@ -22,7 +22,7 @@
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
+    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
       {{ map.fileName }}
     </a>
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>

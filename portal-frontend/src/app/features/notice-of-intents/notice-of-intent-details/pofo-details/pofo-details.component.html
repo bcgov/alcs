@@ -107,7 +107,7 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
+    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
       {{ map.fileName }}
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
@@ -125,7 +125,7 @@
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double">
       <div *ngFor="let file of crossSections">
-        <a (click)="openFile(file)">
+        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
           {{ file.fileName }}
         </a>
       </div>
@@ -135,7 +135,7 @@
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double">
       <div *ngFor="let file of reclamationPlans">
-        <a (click)="openFile(file)">
+        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
           {{ file.fileName }}
         </a>
       </div>

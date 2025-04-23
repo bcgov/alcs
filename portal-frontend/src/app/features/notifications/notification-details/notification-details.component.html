@@ -132,7 +132,7 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          <a (click)="openFile(file)">{{ file.fileName }}</a>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
         </div>
         <div class="grid-2">
           {{ file.type?.label }}
@@ -152,7 +152,6 @@
         *ngFor="let file of otherFiles; let last = last"
         [file]="file"
         [isLast]="last"
-        (fileClicked)="openFile(file)"
       >
       </app-optional-attachments-mobile-card>
       <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>

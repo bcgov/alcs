@@ -23,7 +23,7 @@
     <span *ngIf="owner.organizationName">{{ owner.organizationName }}</span>
     <span *ngIf="owner.phoneNumber">Phone: {{ owner.phoneNumber | mask: '(000) 000-0000' }}</span>
     <span *ngIf="owner.email">Email: {{ owner.email }}</span>
-    <a *ngIf="owner.corporateSummary" (click)="onOpenFile()">
+    <a *ngIf="owner.corporateSummary" routerLink="/document/{{ owner.corporateSummary.documentUuid }}" target="_blank">
       {{ owner.corporateSummary.fileName }}
     </a>
   </mat-card-content>

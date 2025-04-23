@@ -85,9 +85,13 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
-              document.fileName
-            }}</a>
+            <a
+              class="link"
+              routerLink="/document/{{ document.documentUuid }}"
+              target="_blank"
+              *ngFor="let document of resolutionDocument"
+              >{{ document.fileName }}</a
+            >
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
           </div>
         </div>
@@ -95,7 +99,9 @@
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
             <div class="document" *ngFor="let document of otherAttachments">
-              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
+              <a class="link" routerLink="/document/{{ document.documentUuid }}" target="_blank">{{
+                document.fileName
+              }}</a>
             </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>
@@ -196,9 +202,13 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
-              document.fileName
-            }}</a>
+            <a
+              class="link"
+              routerLink="/document/{{ document.documentUuid }}"
+              target="_blank"
+              *ngFor="let document of resolutionDocument"
+              >{{ document.fileName }}</a
+            >
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
           </div>
         </div>
@@ -206,7 +216,9 @@
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
             <div *ngFor="let document of otherAttachments">
-              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
+              <a class="link" routerLink="/document/{{ document.documentUuid }}" target="_blank">{{
+                document.fileName
+              }}</a>
             </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           </div>

@@ -8,6 +8,7 @@ import { PfrsDetailsComponent } from './pfrs-details/pfrs-details.component';
 import { PofoDetailsComponent } from './pofo-details/pofo-details.component';
 import { RosoDetailsComponent } from './roso-details/roso-details.component';
 import { AdditionalInformationComponent } from './additional-information/additional-information.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { AdditionalInformationComponent } from './additional-information/additio
     NoticeOfIntentDetailsComponent,
     AdditionalInformationComponent,
   ],
-  imports: [CommonModule, SharedModule, NgxMaskPipe],
+  imports: [CommonModule, SharedModule, NgxMaskPipe, RouterModule],
   exports: [NoticeOfIntentDetailsComponent],
 })
 export class NoticeOfIntentDetailsModule {}

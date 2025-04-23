@@ -63,7 +63,7 @@
           [showRequired]="showErrors && needsAuthorizationLetter"
         ></app-no-data>
         <div *ngFor="let file of authorizationLetters">
-          <a (click)="openFile(file)">{{ file.fileName }}</a>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
         </div>
         <app-validation-error *ngIf="!needsAuthorizationLetter && authorizationLetters.length > 0">
           Authorization letters are not required, please remove them
@@ -217,7 +217,7 @@
 
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          <a (click)="openFile(file)">{{ file.fileName }}</a>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
         </div>
         <div class="grid-2">
           {{ file.type?.label }}
@@ -233,11 +233,11 @@
       </div>
     </div>
     <div *ngIf="isMobile">
-      <app-optional-attachments-mobile-card 
-        *ngFor="let file of otherFiles; let last = last" 
+      <app-optional-attachments-mobile-card
+        *ngFor="let file of otherFiles; let last = last"
         [file]="file"
         [isLast]="last"
-        (fileClicked)="openFile(file)">
+      >
       </app-optional-attachments-mobile-card>
       <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
     </div>

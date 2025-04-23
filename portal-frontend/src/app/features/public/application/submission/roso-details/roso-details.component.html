@@ -199,7 +199,7 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
+    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
       {{ map.fileName }}
     </a>
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
@@ -208,7 +208,7 @@
   <ng-container *ngIf="applicationSubmission.soilIsNewStructure === false">
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of crossSections" (click)="openFile(file)">
+      <a *ngFor="let file of crossSections" routerLink="/document/{{ file.documentUuid }}" target="_blank">
         {{ file.fileName }}
       </a>
       <app-no-data *ngIf="crossSections.length === 0"></app-no-data>
