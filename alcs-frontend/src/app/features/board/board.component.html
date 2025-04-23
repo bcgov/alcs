@@ -6,14 +6,14 @@
         <app-favorite-button [boardCode]="selectedBoardCode" [isFavorite]="boardIsFavourite"></app-favorite-button>
       </h2>
     </div>
-    <div>
+    <div class="board-actions">
       <div *ngIf="hasAssigneeFilter" class="assignee-filter">
         <mat-label>Filter: </mat-label>
         <mat-form-field appearance="outline">
           <mat-select multiple="true" [(ngModel)]="selectedAssignees" placeholder="Assignee">
             <mat-select-trigger>{{ generateAssigneeFilterTriggerText(selectedAssignees) }}</mat-select-trigger>
             <mat-option *ngFor="let assignee of assignees" [value]="assignee">
-              {{ assignee.name }}{{ this.currentUser?.uuid === assignee.uuid ? ' (Me)' : '' }}
+              {{ assignee.prettyName }}{{ this.currentUser?.uuid === assignee.uuid ? ' (Me)' : '' }}
             </mat-option>
           </mat-select>
         </mat-form-field>
