@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { FileHandle } from './drag-drop.directive';
@@ -17,6 +27,7 @@ export class FileDragDropComponent implements OnInit {
   @Input() allowMultiple = false;
   @Input() disabled = false;
   @Input() uploadedFiles: (ApplicationDocumentDto & { errorMessage?: string })[] = [];
+  @Input() pendingFile?: FileHandle;
   @Input() isRequired = false;
   @Input() showErrors = false;
   @Input() showHasVirusError = false;
@@ -66,6 +77,13 @@ export class FileDragDropComponent implements OnInit {
       const url = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(file));
       this.uploadFiles.emit({ file, url });
       this.fileUpload.nativeElement.value = '';
+    }
+  }
+
+  onPendingFileClicked(event: MouseEvent) {
+    if (this.pendingFile) {
+      event.preventDefault();
+      window.open(URL.createObjectURL(this.pendingFile.file), '_blank');
     }
   }
 }

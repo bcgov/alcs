@@ -40,6 +40,7 @@
         <h6></h6>
         <app-file-drag-drop
           [uploadedFiles]="files"
+          [pendingFile]="pendingFile"
           (uploadFiles)="attachFile($event)"
           (deleteFile)="removeCorporateSummary()"
           id="fileUpload"
