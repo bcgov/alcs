@@ -189,18 +189,17 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private setupSubscribers() {
-    this.modificationService.$modifications
-      .pipe(takeUntil(this.$destroy))
-      .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
-      .subscribe(([modifications, reconsiderations]) => {
-        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
-      });
-
     this.decisionService.$decision
       .pipe(takeUntil(this.$destroy))
       .pipe(filter((decision) => !!decision))
-      .pipe(combineLatestWith(this.decisionService.$decisions))
-      .subscribe(([decision, decisions]) => {
+      .pipe(
+        combineLatestWith(
+          this.modificationService.$modifications,
+          this.reconsiderationService.$reconsiderations,
+          this.decisionService.$decisions,
+        ),
+      )
+      .subscribe(([decision, modifications, reconsiderations, decisions]) => {
         if (!decision) {
           return;
         }
@@ -208,6 +207,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         this.existingDecision = decision;
         this.uuid = decision.uuid;
 
+        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
         this.patchFormWithExistingData(this.existingDecision);
 
         if (decisions.length > 1) {
