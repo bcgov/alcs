@@ -55,6 +55,8 @@ import { ParcelOwnerMobileCardComponent } from './mobile/parcel-owner-mobile-car
 import { TransfereeMobileCardComponent } from './mobile/transferee-mobile-card/transferee-mobile-card.component';
 import { NaruResidenceMobileCardComponent } from './mobile/naru-residence-mobile-card/naru-residence-mobile-card.component';
 import { StructureMobileCardComponent } from './mobile/structure-mobile-card/structure-mobile-card.component';
+import { DocumentFileLoader } from './document-file-loader/document-file-loader.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   providers: [
@@ -89,6 +91,7 @@ import { StructureMobileCardComponent } from './mobile/structure-mobile-card/str
     MatExpansionModule,
     MatCardModule,
     MatMenuModule,
+    RouterModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -117,6 +120,7 @@ import { StructureMobileCardComponent } from './mobile/structure-mobile-card/str
     TransfereeMobileCardComponent,
     NaruResidenceMobileCardComponent,
     StructureMobileCardComponent,
+    DocumentFileLoader,
   ],
   exports: [
     CommonModule,

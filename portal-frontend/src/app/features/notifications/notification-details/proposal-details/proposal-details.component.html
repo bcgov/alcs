@@ -19,7 +19,7 @@
 
   <div class="subheading2 grid-1">Upload Terms of the SRW</div>
   <div class="grid-double">
-    <a *ngFor="let file of srwTerms" (click)="openFile(file)">
+    <a *ngFor="let file of srwTerms" routerLink="/document/{{ file.documentUuid }}" target="_blank">
       {{ file.fileName }}
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="srwTerms.length === 0"></app-no-data>
@@ -39,7 +39,7 @@
     <div><strong>Control Number</strong></div>
     <ng-container *ngFor="let file of surveyPlans">
       <div>
-        <a (click)="openFile(file)">{{ file.fileName }}</a>
+        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
       </div>
       <div>
         {{ file.surveyPlanNumber }}

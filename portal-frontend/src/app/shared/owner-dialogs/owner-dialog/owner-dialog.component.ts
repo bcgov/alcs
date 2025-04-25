@@ -56,7 +56,7 @@ export class OwnerDialogComponent {
     email: this.email,
     corporateSummary: this.corporateSummary,
   });
-  private pendingFile: File | undefined;
+  pendingFile: FileHandle | undefined;
   private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
@@ -128,7 +128,7 @@ export class OwnerDialogComponent {
 
       let documentUuid;
       if (this.pendingFile) {
-        documentUuid = await this.uploadPendingFile(this.pendingFile);
+        documentUuid = await this.uploadPendingFile(this.pendingFile.file);
         if (!documentUuid) {
           return;
         }
@@ -195,7 +195,7 @@ export class OwnerDialogComponent {
 
       let document;
       if (this.pendingFile) {
-        document = await this.uploadPendingFile(this.pendingFile);
+        document = await this.uploadPendingFile(this.pendingFile.file);
       } else {
         document = this.type.value === OWNER_TYPE.ORGANIZATION ? this.data.existingOwner?.corporateSummary : null;
       }
@@ -225,7 +225,7 @@ export class OwnerDialogComponent {
   }
 
   async attachFile(fileHandle: FileHandle) {
-    this.pendingFile = fileHandle.file;
+    this.pendingFile = fileHandle;
     this.corporateSummary.setValue('pending');
     const corporateSummaryType = this.documentCodes.find((code) => code.code === DOCUMENT_TYPE.CORPORATE_SUMMARY);
     if (corporateSummaryType) {
@@ -233,9 +233,10 @@ export class OwnerDialogComponent {
       this.files = [
         {
           type: corporateSummaryType,
-          fileName: this.pendingFile.name,
-          fileSize: this.pendingFile.size,
+          fileName: this.pendingFile.file.name,
+          fileSize: this.pendingFile.file.size,
           uuid: '',
+          documentUuid: '',
           source: DOCUMENT_SOURCE.APPLICANT,
           uploadedAt: Date.now(),
           uploadedBy: '',
@@ -277,8 +278,8 @@ export class OwnerDialogComponent {
 
   async openCorporateSummary() {
     if (this.pendingFile) {
-      const fileURL = URL.createObjectURL(this.pendingFile);
-      openFileInline(fileURL, this.pendingFile.name);
+      const fileURL = URL.createObjectURL(this.pendingFile.file);
+      openFileInline(fileURL, this.pendingFile.file.name);
     } else if (this.existingUuid && this.data.existingOwner?.corporateSummary?.uuid) {
       const res = await this.data.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
       if (res) {

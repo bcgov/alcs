@@ -80,6 +80,7 @@ export class OtherAttachmentsUploadDialogComponent implements OnInit {
     this.attachment = [
       {
         uuid: '',
+        documentUuid: '',
         fileName: file.file.name,
         type: null,
         fileSize: file.file.size,

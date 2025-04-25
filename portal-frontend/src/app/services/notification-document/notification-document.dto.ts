@@ -4,6 +4,7 @@ export interface NotificationDocumentDto {
   type: DocumentTypeDto | null;
   description?: string | null;
   uuid: string;
+  documentUuid: string;
   fileName: string;
   fileSize: number;
   uploadedBy: string;

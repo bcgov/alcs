@@ -5,9 +5,9 @@
   <div class="uploader">
     <app-file-drag-drop
       (uploadFiles)="attachDocument($event)"
-      (openFile)="openFile()"
       (deleteFile)="deleteFile()"
       [uploadedFiles]="attachment"
+      [pendingFile]="pendingFile"
       [showErrors]="showFileRequiredError"
       [isRequired]="true"
       [showHasVirusError]="showHasVirusError"

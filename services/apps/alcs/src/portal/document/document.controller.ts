@@ -1,15 +1,6 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { BadRequestException, Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
-import {
-  DOCUMENT_TYPE,
-  DOCUMENT_TYPES,
-} from '../../document/document-code.entity';
+import { DOCUMENT_TYPE, DOCUMENT_TYPES } from '../../document/document-code.entity';
 import { DocumentService } from '../../document/document.service';
 
 @Controller('document')
@@ -30,5 +21,13 @@ export class DocumentController {
       );
     }
     return this.documentService.getUploadUrl(`${fileId}/portal`);
+  }
+
+  @Get('/getDownloadUrlAndFileName/:uuid')
+  async getDownloadUrlAndFileName(
+    @Param('uuid') uuid: string,
+    @Query('isInline') isInline: boolean = false,
+  ): Promise<{ url: string; fileName: string }> {
+    return await this.documentService.getDownloadUrlAndFileNameByUuid(uuid, isInline);
   }
 }

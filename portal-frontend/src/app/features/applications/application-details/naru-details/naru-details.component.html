@@ -234,7 +234,7 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
+    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
       {{ map.fileName }}
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
@@ -242,7 +242,7 @@
 
   <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
   <div class="grid-double">
-    <a *ngFor="let plan of buildingPlans" (click)="openFile(plan)">
+    <a *ngFor="let plan of buildingPlans" routerLink="/document/{{ plan.documentUuid }}" target="_blank">
       {{ plan.fileName }}
     </a>
     <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
