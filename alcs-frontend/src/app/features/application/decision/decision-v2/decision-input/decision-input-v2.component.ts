@@ -190,7 +190,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   private setupSubscribers() {
     this.decisionService.$decision
-      .pipe(takeUntil(this.$destroy))
       .pipe(filter((decision) => !!decision))
       .pipe(
         combineLatestWith(
@@ -199,6 +198,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           this.decisionService.$decisions,
         ),
       )
+      .pipe(takeUntil(this.$destroy))
       .subscribe(([decision, modifications, reconsiderations, decisions]) => {
         if (!decision) {
           return;
