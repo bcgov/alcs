@@ -6,17 +6,20 @@ import { PublicApplicationService } from './application/public-application.servi
 import { PublicNoticeOfIntentService } from './notice-of-intent/public-notice-of-intent.service';
 import { PublicNotificationService } from './notification/public-notification.service';
 import { PublicController } from './public.controller';
+import { DocumentService } from '../../document/document.service';
 
 describe('PublicController', () => {
   let controller: PublicController;
   let mockAppService: DeepMocked<PublicApplicationService>;
   let mockNOIService: DeepMocked<PublicNoticeOfIntentService>;
   let mockNotificationService: DeepMocked<PublicNotificationService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockAppService = createMock();
     mockNOIService = createMock();
     mockNotificationService = createMock();
+    mockDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -31,6 +34,10 @@ describe('PublicController', () => {
         {
           provide: PublicNotificationService,
           useValue: mockNotificationService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provide: ClsService,
