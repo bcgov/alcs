@@ -190,11 +190,9 @@ export class DocumentService {
       [uuid],
     );
 
-    if (fileDocuments.length > 1) {
-      console.log('issue');
-    }
-
-    if (!fileDocuments[0].visibility_flags.includes(VISIBILITY_FLAG.PUBLIC)) {
+    // Unlikely a document is attached to more than one file document, but if it
+    // is, as long as any of them have made the doc public, show it
+    if (!fileDocuments.some((doc) => doc.visibility_flags.includes(VISIBILITY_FLAG.PUBLIC))) {
       throw new ServiceNotFoundException('Failed to find document');
     }
 
