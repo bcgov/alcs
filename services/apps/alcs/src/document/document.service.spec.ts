@@ -10,7 +10,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { mockClient } from 'aws-sdk-client-mock';
 import * as config from 'config';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ClamAVService } from '../clamav/clamav.service';
 import { User } from '../user/user.entity';
 import {
@@ -31,11 +31,13 @@ describe('DocumentService', () => {
   const mockS3Client = mockClient(S3Client);
   let mockRepository: DeepMocked<Repository<Document>>;
   let mockClamAVService: DeepMocked<ClamAVService>;
+  let mockDataSource: DeepMocked<DataSource>;
 
   beforeEach(async () => {
     mockS3Client.reset();
     mockRepository = createMock();
     mockClamAVService = createMock();
+    mockDataSource = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -51,6 +53,10 @@ describe('DocumentService', () => {
         {
           provide: ClamAVService,
           useValue: mockClamAVService,
+        },
+        {
+          provide: DataSource,
+          useValue: mockDataSource,
         },
       ],
     }).compile();

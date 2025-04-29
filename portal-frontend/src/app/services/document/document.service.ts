@@ -12,6 +12,7 @@ import { UploadDocumentUrlDto } from './document.dto';
 })
 export class DocumentService {
   private serviceUrl = `${environment.apiUrl}/document`;
+  private publicServiceUrl = `${environment.authUrl}/public/document`;
   private httpClientNoAuth: HttpClient | null = null;
 
   constructor(
@@ -78,9 +79,15 @@ export class DocumentService {
     }
   }
 
-  async getDownloadUrlAndFileName(uuid: string, isInline = true): Promise<{ url: string; fileName: string }> {
+  async getDownloadUrlAndFileName(
+    uuid: string,
+    isInline: boolean,
+    isAuthenticated: boolean,
+  ): Promise<{ url: string; fileName: string }> {
     const url =
-      `${this.serviceUrl}/getDownloadUrlAndFileName/${uuid}` + (isInline ? `?isInline=${isInline.toString()}` : '');
+      (isAuthenticated ? this.serviceUrl : this.publicServiceUrl) +
+      `/download-url-and-filename/${uuid}` +
+      (isInline ? `?isInline=${isInline.toString()}` : '');
 
     return await firstValueFrom(this.httpClient.get<{ url: string; fileName: string }>(url));
   }

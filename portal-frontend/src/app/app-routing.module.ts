@@ -10,7 +10,6 @@ import { DocumentFileLoader } from './shared/document-file-loader/document-file-
 const routes: Routes = [
   {
     path: 'document/:uuid',
-    canActivate: [AuthGuard],
     component: DocumentFileLoader,
   },
   {

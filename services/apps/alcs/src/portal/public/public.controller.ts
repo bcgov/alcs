@@ -1,8 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { PublicApplicationService } from './application/public-application.service';
 import { PublicNoticeOfIntentService } from './notice-of-intent/public-notice-of-intent.service';
 import { PublicNotificationService } from './notification/public-notification.service';
+import { DocumentService } from '../../document/document.service';
 
 @Public()
 @Controller('/public')
@@ -11,6 +12,7 @@ export class PublicController {
     private publicAppService: PublicApplicationService,
     private publicNoticeOfIntentService: PublicNoticeOfIntentService,
     private publicNotificationService: PublicNotificationService,
+    private documentService: DocumentService,
   ) {}
 
   @Get('/application/:fileId')
@@ -74,5 +76,13 @@ export class PublicController {
     @Param('uuid') documentUuid: string,
   ) {
     return await this.publicNotificationService.getInlineUrl(documentUuid);
+  }
+
+  @Get('/document/download-url-and-filename/:uuid')
+  async getDownloadUrlAndFileName(
+    @Param('uuid') uuid: string,
+    @Query('isInline') isInline: boolean = false,
+  ): Promise<{ url: string; fileName: string }> {
+    return await this.documentService.getPublicDownloadUrlAndFileNameByUuid(uuid, isInline);
   }
 }
