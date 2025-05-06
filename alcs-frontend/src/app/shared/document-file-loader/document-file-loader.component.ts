@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DocumentService } from '../../services/common/document/document.service';
 
 @Component({
-  selector: 'app-temp',
+  selector: 'document-file-loader',
   templateUrl: './document-file-loader.component.html',
   styleUrl: './document-file-loader.component.scss',
 })

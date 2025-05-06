@@ -5,7 +5,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-temp',
+  selector: 'document-file-loader',
   templateUrl: './document-file-loader.component.html',
   styleUrl: './document-file-loader.component.scss',
 })
