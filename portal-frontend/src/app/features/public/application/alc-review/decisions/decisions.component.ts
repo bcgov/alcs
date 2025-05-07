@@ -13,7 +13,6 @@ export class PublicDecisionsComponent {
   constructor(private documentService: DocumentService) {}
 
   async downloadFile(uuid: string) {
-    console.log('howdy');
     const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
