@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentService } from '../../services/document/document.service';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { Subject, takeUntil } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'document-file-loader',
@@ -23,13 +23,18 @@ export class DocumentFileLoader implements OnDestroy {
   ngAfterViewInit() {
     this.uuid = this.route.snapshot.paramMap.get('uuid');
 
-    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
-      const isAuthenticated = !!user;
+    this.authenticationService.$currentProfile
+      .pipe(
+        takeUntil(this.$destroy),
+        filter((user) => user !== undefined),
+      )
+      .subscribe((user) => {
+        const isAuthenticated = !!user;
 
-      if (this.uuid !== null) {
-        this.open(this.uuid, isAuthenticated);
-      }
-    });
+        if (this.uuid !== null) {
+          this.open(this.uuid, isAuthenticated);
+        }
+      });
   }
 
   ngOnDestroy(): void {
