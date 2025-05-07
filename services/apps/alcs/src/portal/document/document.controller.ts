@@ -23,7 +23,7 @@ export class DocumentController {
     return this.documentService.getUploadUrl(`${fileId}/portal`);
   }
 
-  @Get('/getDownloadUrlAndFileName/:uuid')
+  @Get('/download-url-and-filename/:uuid')
   async getDownloadUrlAndFileName(
     @Param('uuid') uuid: string,
     @Query('isInline') isInline: boolean = false,
