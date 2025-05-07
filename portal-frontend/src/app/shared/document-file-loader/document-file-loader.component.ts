@@ -23,18 +23,13 @@ export class DocumentFileLoader implements OnDestroy {
   ngAfterViewInit() {
     this.uuid = this.route.snapshot.paramMap.get('uuid');
 
-    this.authenticationService.$currentProfile
-      .pipe(
-        takeUntil(this.$destroy),
-        filter((user) => user !== undefined),
-      )
-      .subscribe((user) => {
-        const isAuthenticated = !!user;
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
+      const isAuthenticated = !!user;
 
-        if (this.uuid !== null) {
-          this.open(this.uuid, isAuthenticated);
-        }
-      });
+      if (this.uuid !== null) {
+        this.open(this.uuid, isAuthenticated);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -43,16 +38,20 @@ export class DocumentFileLoader implements OnDestroy {
   }
 
   async open(uuid: string, isAuthenticated: boolean) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, true, isAuthenticated);
-    const object = window.document.createElement('object');
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, true, isAuthenticated);
+      const object = window.document.createElement('object');
 
-    object.data = url;
+      object.data = url;
 
-    object.style.borderWidth = '0';
-    object.style.width = '100%';
-    object.style.height = '100%';
+      object.style.borderWidth = '0';
+      object.style.width = '100%';
+      object.style.height = '100%';
 
-    window.document.documentElement.replaceChild(object, document.body);
-    window.document.title = fileName;
+      window.document.documentElement.replaceChild(object, document.body);
+      window.document.title = fileName;
+    } catch (e) {
+      console.warn('Attempted to get private document without authentication', e);
+    }
   }
 }
