@@ -159,9 +159,10 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
-      {{ map.fileName }}
-    </a>
+    <ng-container *ngFor="let map of proposalMap">
+      <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
+      <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
+    </ng-container>
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
@@ -184,9 +185,10 @@
   <ng-container *ngIf="noiSubmission.soilIsExtractionOrMining || noiSubmission.soilIsAreaWideFilling">
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of crossSections" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
+      <ng-container *ngFor="let file of crossSections">
+        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+      </ng-container>
       <app-no-data *ngIf="crossSections.length === 0"></app-no-data>
     </div>
 

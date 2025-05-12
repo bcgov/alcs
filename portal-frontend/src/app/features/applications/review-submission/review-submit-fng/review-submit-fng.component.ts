@@ -4,7 +4,6 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../../../services/application-submission/application-submission.dto';
@@ -16,7 +15,8 @@ import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationFngSteps } from '../review-submission.component';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { SubmitConfirmationDialogComponent } from '../submit-confirmation-dialog/submit-confirmation-dialog.component';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
   selector: 'app-review-submit-fng[stepper]',
@@ -47,7 +47,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
-    private applicationDocumentService: ApplicationDocumentService,
+    private documentService: DocumentService,
     private toastService: ToastService,
     private pdfGenerationService: PdfGenerationService,
     private codeService: CodeService,
@@ -121,11 +121,10 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     }
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 
   private runValidation() {

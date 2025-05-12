@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentOwnerDto } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
-import { NoticeOfIntentOwnerService } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
 import {
   NoticeOfIntentParcelDto,
   NoticeOfIntentParcelUpdateDto,
@@ -14,8 +12,9 @@ import { NoticeOfIntentParcelService } from '../../../../services/notice-of-inte
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../../services/document/document.service';
 
 export class NoticeOfIntentParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -66,9 +65,8 @@ export class ParcelComponent {
 
   constructor(
     private noticeOfIntentParcelService: NoticeOfIntentParcelService,
-    private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    private ownerService: NoticeOfIntentOwnerService,
-    private router: Router
+    private documentService: DocumentService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -101,11 +99,10 @@ export class ParcelComponent {
     }
   }
 
-  async onOpenFile(file: NoticeOfIntentDocumentDto) {
-    const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 
   private validateParcelBasic(parcel: NoticeOfIntentParcelDto) {
@@ -191,5 +188,4 @@ export class ParcelComponent {
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
-
 }

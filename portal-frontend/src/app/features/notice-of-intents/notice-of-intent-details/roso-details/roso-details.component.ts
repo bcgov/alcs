@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
   selector: 'app-roso-details[noiSubmission]',
@@ -36,7 +36,10 @@ export class RosoDetailsComponent {
   reclamationPlans: NoticeOfIntentDocumentDto[] = [];
   noticeOfWorks: NoticeOfIntentDocumentDto[] = [];
 
-  constructor(private router: Router, private noticeOfIntentDocumentService: NoticeOfIntentDocumentService) {}
+  constructor(
+    private router: Router,
+    private documentService: DocumentService,
+  ) {}
 
   async onEditSection(step: number) {
     if (this.draftMode) {
@@ -48,10 +51,9 @@ export class RosoDetailsComponent {
     }
   }
 
-  async openFile(file: NoticeOfIntentDocumentDto) {
-    const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 }

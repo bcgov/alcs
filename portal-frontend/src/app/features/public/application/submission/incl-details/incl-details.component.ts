@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { PublicApplicationSubmissionDto } from '../../../../../services/public/public-application.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
-import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile } from '../../../../../shared/utils/file';
+import { DocumentService } from '../../../../../services/document/document.service';
 
 @Component({
   selector: 'app-incl-details',
@@ -24,12 +23,11 @@ export class InclDetailsComponent {
     );
   }
 
-  constructor(private router: Router, private publicService: PublicService) {}
+  constructor(private documentService: DocumentService) {}
 
-  async openFile(file: PublicDocumentDto) {
-    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+
+    downloadFile(url, fileName);
   }
 }

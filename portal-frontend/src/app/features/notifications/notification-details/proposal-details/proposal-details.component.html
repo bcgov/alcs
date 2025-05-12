@@ -19,9 +19,10 @@
 
   <div class="subheading2 grid-1">Upload Terms of the SRW</div>
   <div class="grid-double">
-    <a *ngFor="let file of srwTerms" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-      {{ file.fileName }}
-    </a>
+    <ng-container *ngFor="let file of srwTerms">
+      <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+      <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+    </ng-container>
     <app-no-data [showRequired]="showErrors" *ngIf="srwTerms.length === 0"></app-no-data>
   </div>
 
@@ -39,7 +40,8 @@
     <div><strong>Control Number</strong></div>
     <ng-container *ngFor="let file of surveyPlans">
       <div>
-        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
       </div>
       <div>
         {{ file.surveyPlanNumber }}

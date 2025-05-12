@@ -52,9 +52,10 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
-      {{ map.fileName }}
-    </a>
+    <ng-container *ngFor="let map of proposalMap">
+      <a *ngIf="isMobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
+      <a *ngIf="!isMobile" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
+    </ng-container>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
@@ -70,9 +71,8 @@
     <div class="subheading2 grid-1">Draft Covenant</div>
     <div class="grid-double">
       <div *ngFor="let file of srwTerms">
-        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
-          {{ file.fileName }}
-        </a>
+        <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        <a *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
       </div>
       <app-no-data
         [showRequired]="showErrors && !!_applicationSubmission.coveHasDraft"

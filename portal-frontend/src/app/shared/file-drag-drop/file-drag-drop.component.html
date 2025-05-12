@@ -7,13 +7,16 @@
         error: !!file.errorMessage && !disabled,
       }"
     >
-      <a
-        class="file-name"
-        routerLink="/document/{{ file.documentUuid }}"
-        (click)="onPendingFileClicked($event)"
-        target="_blank"
-        >{{ file.fileName }}</a
-      >
+      <a *ngIf="pendingFile" class="file-name" [href]="pendingFile.url" target="_blank">
+        {{ file.fileName }}
+      </a>
+      <a *ngIf="!pendingFile" class="file-name mobile" (click)="downloadFile(file.documentUuid)" target="_blank">
+        {{ file.fileName }}
+      </a>
+      <a *ngIf="!pendingFile" class="file-name desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">
+        {{ file.fileName }}
+      </a>
+
       <div class="file-size-cta-container">
         <div class="file-size">
           <span class="file-size-parentheses">(</span>

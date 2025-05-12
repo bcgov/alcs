@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { ApplicationPortalDecisionDto } from '../../../../../services/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../../services/application-decision/application-decision.service';
 import { DocumentService } from '../../../../../services/document/document.service';
+import { downloadFile } from '../../../../../shared/utils/file';
 
 @Component({
   selector: 'app-decisions[fileNumber]',
@@ -26,16 +27,9 @@ export class DecisionsComponent implements OnInit, OnChanges {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = url;
-    downloadLink.download = fileName;
-    if (window.webkitURL == null) {
-      downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
-      downloadLink.style.display = 'none';
-      document.body.appendChild(downloadLink);
-    }
-    downloadLink.click();
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 
   private async loadDecisions() {

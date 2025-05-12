@@ -4,12 +4,12 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
-import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionDetailedDto } from '../../../services/notification-submission/notification-submission.dto';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
-import { openFileInline } from '../../../shared/utils/file';
+import { downloadFile } from '../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../services/document/document.service';
 
 @Component({
   selector: 'app-notification-details',
@@ -36,8 +36,8 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private codeService: CodeService,
-    private notificationDocumentService: NotificationDocumentService,
-    private router: Router
+    private documentService: DocumentService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -66,11 +66,10 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async openFile(file: NotificationDocumentDto) {
-    const res = await this.notificationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 
   async onNavigateToStep(step: number) {
@@ -96,5 +95,4 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
-
 }

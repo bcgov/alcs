@@ -4,14 +4,14 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentOwnerDto } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
-import { openFileInline } from '../../../shared/utils/file';
+import { downloadFile } from '../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../services/document/document.service';
 
 @Component({
   selector: 'app-noi-details',
@@ -42,9 +42,9 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private codeService: CodeService,
-    private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private documentService: DocumentService,
     private noticeOfIntentParcelService: NoticeOfIntentParcelService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -84,11 +84,10 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async openFile(file: NoticeOfIntentDocumentDto) {
-    const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 
   async onNavigateToStep(step: number) {

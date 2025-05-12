@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
+import { downloadFile } from '../../../../shared/utils/file';
 
 @Component({
   selector: 'app-excl-details',
@@ -40,7 +40,10 @@ export class ExclDetailsComponent {
   proofOfSignage: ApplicationDocumentDto[] = [];
   reportOfPublicHearing: ApplicationDocumentDto[] = [];
 
-  constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private router: Router,
+    private documentService: DocumentService,
+  ) {}
 
   async onEditSection(step: number) {
     if (this.draftMode) {
@@ -52,10 +55,9 @@ export class ExclDetailsComponent {
     }
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 }

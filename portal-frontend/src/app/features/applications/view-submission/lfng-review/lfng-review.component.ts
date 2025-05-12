@@ -11,7 +11,8 @@ import {
 } from '../../../../services/application-submission/application-submission.dto';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
   selector: 'app-lfng-review',
@@ -40,8 +41,8 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,
     private pdfGenerationService: PdfGenerationService,
-    private applicationDocumentService: ApplicationDocumentService,
-    private router: Router
+    private documentService: DocumentService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -107,11 +108,10 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 
   async onReview(fileId: string) {

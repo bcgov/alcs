@@ -1,15 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import {
   STRUCTURE_TYPE_LABEL_MAP,
   STRUCTURE_TYPES,
 } from '../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
   selector: 'app-pfrs-details[applicationSubmission]',
@@ -70,7 +70,10 @@ export class PfrsDetailsComponent {
   buildingPlans: ApplicationDocumentDto[] = [];
   noticeOfWork: ApplicationDocumentDto[] = [];
 
-  constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private router: Router,
+    private documentService: DocumentService,
+  ) {}
 
   async onEditSection(step: number) {
     if (this.draftMode) {
@@ -82,11 +85,10 @@ export class PfrsDetailsComponent {
     }
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 
   mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {

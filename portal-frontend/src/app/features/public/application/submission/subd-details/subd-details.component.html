@@ -38,9 +38,10 @@
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
-      {{ map.fileName }}
-    </a>
+    <ng-container *ngFor="let map of proposalMap">
+      <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
+      <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
+    </ng-container>
     <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?</div>

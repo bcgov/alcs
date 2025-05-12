@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import {
   NotificationDocumentDto,
@@ -19,6 +18,8 @@ import { EditNotificationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { ChangeSurveyPlanConfirmationDialogComponent } from './change-survey-plan-confirmation-dialog/change-survey-plan-confirmation-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { downloadFile } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
   selector: 'app-proposal',
@@ -55,11 +56,11 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   showSurveyPlanVirusScanFailedError = false;
 
   constructor(
-    private router: Router,
     private notificationSubmissionService: NotificationSubmissionService,
     notificationDocumentService: NotificationDocumentService,
     dialog: MatDialog,
     toastService: ToastService,
+    private documentService: DocumentService,
   ) {
     super(notificationDocumentService, dialog, toastService);
   }
@@ -205,5 +206,11 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
       }
       return file;
     });
+  }
+
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 }

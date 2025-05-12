@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationDocumentDto } from '../../../../services/notification-document/notification-document.dto';
-import { NotificationDocumentService } from '../../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionDetailedDto } from '../../../../services/notification-submission/notification-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
   selector: 'app-proposal-details[notificationSubmission]',
@@ -31,16 +31,18 @@ export class ProposalDetailsComponent {
   surveyPlans: NotificationDocumentDto[] = [];
   srwTerms: NotificationDocumentDto[] = [];
 
-  constructor(private router: Router, private notificationDocumentService: NotificationDocumentService) {}
+  constructor(
+    private router: Router,
+    private documentService: DocumentService,
+  ) {}
 
   async onEditSection(step: number) {
     await this.router.navigateByUrl(`notification/${this._notificationSubmission?.fileNumber}/edit/${step}?errors=t`);
   }
 
-  async openFile(file: NotificationDocumentDto) {
-    const res = await this.notificationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
+  async downloadFile(uuid: string) {
+    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+    downloadFile(url, fileName);
   }
 }
