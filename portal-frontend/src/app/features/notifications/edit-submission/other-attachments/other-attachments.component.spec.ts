@@ -12,6 +12,8 @@ import { NotificationSubmissionService } from '../../../../services/notification
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { OtherAttachmentsComponent } from './other-attachments.component';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('OtherAttachmentsComponent', () => {
   let component: OtherAttachmentsComponent;
@@ -20,6 +22,8 @@ describe('OtherAttachmentsComponent', () => {
   let mockNotificationDocumentService: DeepMocked<NotificationDocumentService>;
   let mockRouter: DeepMocked<Router>;
   let mockCodeService: DeepMocked<CodeService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let documentPipe = new BehaviorSubject<NotificationDocumentDto[]>([]);
 
@@ -28,6 +32,8 @@ describe('OtherAttachmentsComponent', () => {
     mockNotificationDocumentService = createMock();
     mockRouter = createMock();
     mockCodeService = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -46,6 +52,14 @@ describe('OtherAttachmentsComponent', () => {
         {
           provide: CodeService,
           useValue: mockCodeService,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provide: MatDialog,

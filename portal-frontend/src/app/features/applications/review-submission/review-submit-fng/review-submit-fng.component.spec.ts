@@ -14,6 +14,8 @@ import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-ge
 
 import { ReviewSubmitFngComponent } from './review-submit-fng.component';
 import { ToastService } from '../../../../services/toast/toast.service';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('ReviewSubmitFngComponent', () => {
   let component: ReviewSubmitFngComponent;
@@ -24,6 +26,8 @@ describe('ReviewSubmitFngComponent', () => {
   let mockToastService: DeepMocked<ToastService>;
   let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
   let mockCodeService: DeepMocked<CodeService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let applicationPipe = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
@@ -38,6 +42,8 @@ describe('ReviewSubmitFngComponent', () => {
     mockPdfGenerationService = createMock();
     mockAppSubmissionService = createMock();
     mockCodeService = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -64,6 +70,14 @@ describe('ReviewSubmitFngComponent', () => {
         {
           provide: CodeService,
           useValue: mockCodeService,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provide: MatDialog,
