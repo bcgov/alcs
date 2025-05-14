@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
+import { downloadFile } from '../../../../shared/utils/file';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-nfu-details[applicationSubmission]',
@@ -22,22 +23,29 @@ export class NfuDetailsComponent {
     this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
   }
 
-  constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private router: Router,
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   async onEditSection(step: number) {
     if (this.draftMode) {
       await this.router.navigateByUrl(
-        `/alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`
+        `/alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`,
       );
     } else {
       await this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
     }
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 }

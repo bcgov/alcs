@@ -8,6 +8,7 @@ import { NoticeOfIntentOwnerService } from '../../../../services/notice-of-inten
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { ParcelComponent } from './parcel.component';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('ParcelComponent', () => {
   let component: ParcelComponent;
@@ -16,11 +17,13 @@ describe('ParcelComponent', () => {
   let mockNoiParcelService: DeepMocked<NoticeOfIntentParcelService>;
   let mockNoiOwnerService: DeepMocked<NoticeOfIntentOwnerService>;
   let mockNoiDocService: DeepMocked<NoticeOfIntentDocumentService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockNoiParcelService = createMock();
     mockNoiOwnerService = createMock();
     mockNoiDocService = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelComponent],
@@ -36,6 +39,10 @@ describe('ParcelComponent', () => {
         {
           provide: NoticeOfIntentDocumentService,
           useValue: mockNoiDocService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provides: Router,

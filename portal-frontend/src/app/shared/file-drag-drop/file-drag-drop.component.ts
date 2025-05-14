@@ -1,17 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { FileHandle } from './drag-drop.directive';
+import { downloadFile } from '../utils/file';
+import { DocumentService } from '../../services/document/document.service';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-file-drag-drop',
@@ -37,7 +30,11 @@ export class FileDragDropComponent implements OnInit {
 
   @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {}
 
@@ -80,10 +77,13 @@ export class FileDragDropComponent implements OnInit {
     }
   }
 
-  onPendingFileClicked(event: MouseEvent) {
-    if (this.pendingFile) {
-      event.preventDefault();
-      window.open(URL.createObjectURL(this.pendingFile.file), '_blank');
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 }

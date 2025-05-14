@@ -20,21 +20,25 @@
       <div class="subheading2">Decision Document</div>
       <div class="document split" *ngFor="let document of decision.documents">
         <div>
-          <a routerLink="/document/{{ document.documentUuid }}" target="_blank">{{ document.fileName }}</a>
+          <a class="mobile" (click)="downloadFile(document.documentUuid)">{{ document.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ document.documentUuid }}" target="_blank">{{
+            document.fileName
+          }}</a>
           &nbsp;({{ document.fileSize | filesize }})
         </div>
-        <button class="center" mat-button (click)="openFile(document)">
+        <button class="center" mat-button (click)="downloadFile(document.documentUuid)">
           <mat-icon>file_download</mat-icon>
           Download
         </button>
       </div>
       <div class="document responsive left" *ngFor="let document of decision.documents">
         <div class="document-name">
-          <a routerLink="/document/{{ document.documentUuid }}" target="_blank">{{ document.fileName }}</a>
+          <a (click)="downloadFile(document.documentUuid)">{{ document.fileName }}</a>
         </div>
         <div class="split">
           <div>{{ document.fileSize | filesize }}</div>
-          <button class="center" mat-button (click)="openFile(document)">
+          <button class="center" mat-button (click)="downloadFile(document.documentUuid)">
+            ">
             <mat-icon>file_download</mat-icon>
             Download
           </button>

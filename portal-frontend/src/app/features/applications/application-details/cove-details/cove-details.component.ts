@@ -1,13 +1,14 @@
 import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { CovenantTransfereeDto } from '../../../../services/covenant-transferee/covenant-transferee.dto';
 import { CovenantTransfereeService } from '../../../../services/covenant-transferee/covenant-transferee.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../../services/document/document.service';
+import { downloadFile } from '../../../../shared/utils/file';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-cove-details',
@@ -41,8 +42,9 @@ export class CoveDetailsComponent {
 
   constructor(
     private router: Router,
-    private applicationDocumentService: ApplicationDocumentService,
     private covenantTransfereeService: CovenantTransfereeService,
+    private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   async onEditSection(step: number) {
@@ -55,10 +57,13 @@ export class CoveDetailsComponent {
     }
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

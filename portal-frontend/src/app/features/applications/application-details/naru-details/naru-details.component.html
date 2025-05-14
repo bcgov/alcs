@@ -234,17 +234,19 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.documentUuid }}" target="_blank">
-      {{ map.fileName }}
-    </a>
+    <ng-container *ngFor="let map of proposalMap">
+      <a *ngIf="isMobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
+      <a *ngIf="!isMobile" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
+    </ng-container>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
   <div class="grid-double">
-    <a *ngFor="let plan of buildingPlans" routerLink="/document/{{ plan.documentUuid }}" target="_blank">
-      {{ plan.fileName }}
-    </a>
+    <ng-container *ngFor="let file of buildingPlans">
+      <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+      <a *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+    </ng-container>
     <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
   </div>
 

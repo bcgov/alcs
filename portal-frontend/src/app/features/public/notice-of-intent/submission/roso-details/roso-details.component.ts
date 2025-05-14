@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { PublicNoticeOfIntentSubmissionDto } from '../../../../../services/public/public-notice-of-intent.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
-import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile } from '../../../../../shared/utils/file';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-roso-details[noiSubmission]',
@@ -22,12 +22,18 @@ export class RosoDetailsComponent {
   crossSections: PublicDocumentDto[] = [];
   proposalMap: PublicDocumentDto[] = [];
 
-  constructor(private router: Router, private publicService: PublicService) {}
+  constructor(
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
-  async openFile(file: PublicDocumentDto) {
-    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.noiSubmission.fileNumber, file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 }

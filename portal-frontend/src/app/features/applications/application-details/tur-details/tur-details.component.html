@@ -40,16 +40,18 @@
   </div>
   <div class="subheading2 grid-1">Proof of Serving Notice</div>
   <div class="grid-double" data-testid="tur-proof-of-serving-notice">
-    <a *ngFor="let notice of servingNotice" routerLink="/document/{{ notice.documentUuid }}" target="_blank">
-      {{ notice.fileName }}
-    </a>
+    <ng-container *ngFor="let file of servingNotice">
+      <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+      <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+    </ng-container>
     <app-no-data [showRequired]="showErrors" *ngIf="servingNotice.length === 0"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double" data-testid="tur-proposal-map">
-    <a *ngFor="let file of proposalMap" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-      {{ file.fileName }}
-    </a>
+    <ng-container *ngFor="let file of proposalMap">
+      <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+      <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+    </ng-container>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
   <div *ngIf="showEdit" class="edit-button">

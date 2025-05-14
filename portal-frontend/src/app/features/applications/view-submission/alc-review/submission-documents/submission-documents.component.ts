@@ -4,7 +4,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile, openFileInline } from '../../../../../shared/utils/file';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-submission-documents',
@@ -22,7 +24,11 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<ApplicationDocumentDto> = new MatTableDataSource<ApplicationDocumentDto>();
 
-  constructor(private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private applicationDocumentService: ApplicationDocumentService,
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
@@ -30,25 +36,13 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
-    }
-  }
-
   async downloadFile(uuid: string) {
-    const res = await this.applicationDocumentService.downloadFile(uuid);
-    if (res) {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = res.url;
-      downloadLink.download = res.url.split('/').pop()!;
-      if (window.webkitURL == null) {
-        downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
-        downloadLink.style.display = 'none';
-        document.body.appendChild(downloadLink);
-      }
-      downloadLink.click();
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

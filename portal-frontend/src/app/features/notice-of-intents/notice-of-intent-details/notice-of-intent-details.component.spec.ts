@@ -10,6 +10,8 @@ import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent-
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 import { NoticeOfIntentDetailsComponent } from './notice-of-intent-details.component';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../services/document/document.service';
 
 describe('NoticeOfIntentDetailsComponent', () => {
   let component: NoticeOfIntentDetailsComponent;
@@ -18,6 +20,8 @@ describe('NoticeOfIntentDetailsComponent', () => {
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockRouter: DeepMocked<Router>;
   let mockNoiParcelService: DeepMocked<NoticeOfIntentParcelService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let noiDocumentPipe = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
 
@@ -26,6 +30,8 @@ describe('NoticeOfIntentDetailsComponent', () => {
     mockNoiDocumentService = createMock();
     mockRouter = createMock();
     mockNoiParcelService = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -45,6 +51,14 @@ describe('NoticeOfIntentDetailsComponent', () => {
           provide: NoticeOfIntentParcelService,
           useValue: mockNoiParcelService,
         },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
+        },
       ],
       declarations: [NoticeOfIntentDetailsComponent],
       schemas: [NO_ERRORS_SCHEMA],
@@ -53,7 +67,7 @@ describe('NoticeOfIntentDetailsComponent', () => {
     fixture = TestBed.createComponent(NoticeOfIntentDetailsComponent);
     component = fixture.componentInstance;
     component.$noticeOfIntentSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(
-      undefined
+      undefined,
     );
     component.$noiDocuments = noiDocumentPipe;
 

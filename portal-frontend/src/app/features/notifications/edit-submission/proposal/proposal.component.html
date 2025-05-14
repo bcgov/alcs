@@ -132,8 +132,9 @@
     <table class="table" mat-table [dataSource]="surveyPlans">
       <ng-container matColumnDef="fileName">
         <th mat-header-cell *matHeaderCellDef>File Name</th>
-        <td mat-cell *matCellDef="let element">
-          <a routerLink="/document/{{ element.documentUuid }}" target="_blank">{{ element.fileName }}</a>
+        <td mat-cell *matCellDef="let file">
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
         </td>
       </ng-container>
 

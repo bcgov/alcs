@@ -4,16 +4,22 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 
 import { SubdDetailsComponent } from './subd-details.component';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('SubdDetailsComponent', () => {
   let component: SubdDetailsComponent;
   let fixture: ComponentFixture<SubdDetailsComponent>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockAppParcelService: DeepMocked<ApplicationParcelService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
-    mockAppParcelService = createMock();
     mockAppDocumentService = createMock();
+    mockAppParcelService = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [SubdDetailsComponent],
@@ -25,6 +31,14 @@ describe('SubdDetailsComponent', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockAppParcelService,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     }).compileComponents();

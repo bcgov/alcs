@@ -1,14 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeepMocked } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NOI_SUBMISSION_STATUS } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 import { AdditionalInformationComponent } from './additional-information.component';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('RosoAdditionalInformationComponent', () => {
   let component: AdditionalInformationComponent;
   let fixture: ComponentFixture<AdditionalInformationComponent>;
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   const emptySubmission = {
     applicant: '',
@@ -79,12 +83,24 @@ describe('RosoAdditionalInformationComponent', () => {
   };
 
   beforeEach(async () => {
+    mockNoiDocumentService = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
+
     await TestBed.configureTestingModule({
       declarations: [AdditionalInformationComponent],
       providers: [
         {
           provide: NoticeOfIntentDocumentService,
           useValue: mockNoiDocumentService,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     }).compileComponents();

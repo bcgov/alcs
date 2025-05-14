@@ -1,11 +1,11 @@
 import { Component, HostListener, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { PublicApplicationSubmissionDto } from '../../../../../services/public/public-application.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
-import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile } from '../../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-naru-details[applicationSubmission]',
@@ -25,14 +25,17 @@ export class NaruDetailsComponent {
   }
 
   constructor(
-    private router: Router,
-    private publicService: PublicService,
+    private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
-  async openFile(file: PublicDocumentDto) {
-    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

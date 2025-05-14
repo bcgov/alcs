@@ -98,7 +98,10 @@
         [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-certificate-of-title'"
       >
         <div *ngIf="parcel.certificateOfTitle">
-          <a routerLink="/document/{{ parcel.certificateOfTitle.documentUuid }}" target="_blank">{{
+          <a *ngIf="isMobile" (click)="downloadFile(parcel.certificateOfTitle.documentUuid)">{{
+            parcel.certificateOfTitle.fileName
+          }}</a>
+          <a *ngIf="!isMobile" routerLink="/document/{{ parcel.certificateOfTitle.documentUuid }}" target="_blank">{{
             parcel.certificateOfTitle.fileName
           }}</a>
         </div>
@@ -177,12 +180,14 @@
               {{ owner.email }}
             </div>
             <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-corporate-summary'">
-              <a
-                *ngIf="owner.corporateSummary"
-                routerLink="/document/{{ owner.corporateSummary.documentUuid }}"
-                target="_blank"
-                >{{ owner.corporateSummary.fileName }}</a
-              >
+              <ng-container *ngIf="owner.corporateSummary">
+                <a *ngIf="isMobile" (click)="downloadFile(owner.corporateSummary.documentUuid)">{{
+                  owner.corporateSummary.fileName
+                }}</a>
+                <a *ngIf="!isMobile" routerLink="/document/{{ owner.corporateSummary.documentUuid }}" target="_blank">{{
+                  owner.corporateSummary.fileName
+                }}</a>
+              </ng-container>
               <div class="no-data" *ngIf="!owner.corporateSummary">
                 <div class="no-data-text">Not Applicable</div>
               </div>

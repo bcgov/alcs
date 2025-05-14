@@ -8,6 +8,7 @@ import { ApplicationOwnerService } from '../../../../services/application-owner/
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ParcelComponent } from './parcel.component';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('ParcelComponent', () => {
   let component: ParcelComponent;
@@ -15,10 +16,12 @@ describe('ParcelComponent', () => {
 
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockApplicationParcelService = createMock();
     mockAppDocService = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelComponent],
@@ -30,6 +33,10 @@ describe('ParcelComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provides: Router,

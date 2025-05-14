@@ -1,7 +1,6 @@
 import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import {
@@ -9,8 +8,10 @@ import {
   STRUCTURE_TYPES,
   STRUCTURE_TYPE_LABEL_MAP,
 } from '../../edit-submission/additional-information/additional-information.component';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../../services/document/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-additional-information',
@@ -62,7 +63,11 @@ export class AdditionalInformationComponent {
   isSoilStructureResidentialAccessoryUseReasonVisible = false;
   isSoilOtherStructureVisible = false;
 
-  constructor(private router: Router, private noticeOfIntentDocumentService: NoticeOfIntentDocumentService) {}
+  constructor(
+    private router: Router,
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   private setVisibilityForResidentialFields() {
     this.isSoilStructureResidentialUseReasonVisible = !!this._noiSubmission?.soilProposedStructures.some(
@@ -104,10 +109,13 @@ export class AdditionalInformationComponent {
     }
   }
 
-  async openFile(file: NoticeOfIntentDocumentDto) {
-    const res = await this.noticeOfIntentDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

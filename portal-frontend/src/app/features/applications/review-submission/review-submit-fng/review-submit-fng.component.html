@@ -85,22 +85,22 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a
-              class="link"
-              routerLink="/document/{{ document.documentUuid }}"
-              target="_blank"
-              *ngFor="let document of resolutionDocument"
-              >{{ document.fileName }}</a
-            >
+            <ng-container *ngFor="let file of resolutionDocument">
+              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
+              }}</a>
+            </ng-container>
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
-            <div class="document" *ngFor="let document of otherAttachments">
-              <a class="link" routerLink="/document/{{ document.documentUuid }}" target="_blank">{{
-                document.fileName
+            <div class="document" *ngFor="let file of otherAttachments">
+              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
               }}</a>
             </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
@@ -202,22 +202,22 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a
-              class="link"
-              routerLink="/document/{{ document.documentUuid }}"
-              target="_blank"
-              *ngFor="let document of resolutionDocument"
-              >{{ document.fileName }}</a
-            >
+            <ng-container *ngFor="let file of resolutionDocument">
+              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
+              }}</a>
+            </ng-container>
             <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
-            <div *ngFor="let document of otherAttachments">
-              <a class="link" routerLink="/document/{{ document.documentUuid }}" target="_blank">{{
-                document.fileName
+            <div *ngFor="let file of otherAttachments">
+              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
               }}</a>
             </div>
             <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>

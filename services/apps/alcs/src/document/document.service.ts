@@ -190,9 +190,35 @@ export class DocumentService {
       [uuid],
     );
 
+    const decisionDocuments = await this.dataSource.query(
+      `
+      select
+        add.uuid
+      from
+        alcs.application_decision_document add 
+        join alcs.application_decision ad on ad.uuid = add.decision_uuid
+      where 
+        add.document_uuid = $1
+        and ad.is_draft = false
+      union
+      select
+        noidd.uuid
+      from
+        alcs.notice_of_intent_decision_document noidd
+        join alcs.notice_of_intent_decision noid on noid.uuid = noidd.decision_uuid
+      where
+        noidd.document_uuid = $1
+        and noid.is_draft = false
+      `,
+      [uuid],
+    );
+
     // Unlikely a document is attached to more than one file document, but if it
     // is, as long as any of them have made the doc public, show it
-    if (!fileDocuments.some((doc) => doc.visibility_flags.includes(VISIBILITY_FLAG.PUBLIC))) {
+    if (
+      !fileDocuments.some((doc) => doc.visibility_flags.includes(VISIBILITY_FLAG.PUBLIC)) &&
+      decisionDocuments.length === 0
+    ) {
       throw new ServiceNotFoundException('Failed to find document');
     }
 

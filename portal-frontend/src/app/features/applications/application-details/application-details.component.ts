@@ -13,8 +13,10 @@ import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
-import { openFileInline } from '../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../services/document/document.service';
+import { downloadFile } from '../../../shared/utils/file';
+import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-application-details',
@@ -47,7 +49,9 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     private codeService: CodeService,
     private applicationDocumentService: ApplicationDocumentService,
     private applicationParcelService: ApplicationParcelService,
-    private router: Router
+    private router: Router,
+    private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -85,10 +89,13 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

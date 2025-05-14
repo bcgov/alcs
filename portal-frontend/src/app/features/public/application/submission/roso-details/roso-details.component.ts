@@ -1,15 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { PublicApplicationSubmissionDto } from '../../../../../services/public/public-application.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
-import { PublicService } from '../../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile } from '../../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import {
   STRUCTURE_TYPE_LABEL_MAP,
   STRUCTURE_TYPES,
 } from '../../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-roso-details[applicationSubmission]',
@@ -62,12 +62,18 @@ export class RosoDetailsComponent {
   crossSections: PublicDocumentDto[] = [];
   proposalMap: PublicDocumentDto[] = [];
 
-  constructor(private router: Router, private publicService: PublicService) {}
+  constructor(
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
-  async openFile(file: PublicDocumentDto) {
-    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

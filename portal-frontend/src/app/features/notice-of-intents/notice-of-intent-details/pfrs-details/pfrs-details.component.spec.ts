@@ -4,16 +4,19 @@ import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-in
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 
 import { PfrsDetailsComponent } from './pfrs-details.component';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('PfrsDetailsComponent', () => {
   let component: PfrsDetailsComponent;
   let fixture: ComponentFixture<PfrsDetailsComponent>;
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockNoiParcelService: DeepMocked<NoticeOfIntentParcelService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
-    mockNoiParcelService = createMock();
     mockNoiDocumentService = createMock();
+    mockNoiParcelService = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [PfrsDetailsComponent],
@@ -25,6 +28,10 @@ describe('PfrsDetailsComponent', () => {
         {
           provide: NoticeOfIntentParcelService,
           useValue: mockNoiParcelService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     }).compileComponents();
