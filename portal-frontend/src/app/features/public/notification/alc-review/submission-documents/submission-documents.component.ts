@@ -5,7 +5,9 @@ import { Subject } from 'rxjs';
 import { PublicNotificationSubmissionDto } from '../../../../../services/public/public-notification.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile, openFileInline } from '../../../../../shared/utils/file';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-submission-documents',
@@ -22,7 +24,11 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<PublicDocumentDto> = new MatTableDataSource<PublicDocumentDto>();
 
-  constructor(private publicService: PublicService) {}
+  constructor(
+    private publicService: PublicService,
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.documents);
@@ -36,17 +42,12 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const res = await this.publicService.getNotificationDownloadFileUrl(this.submission.fileNumber, uuid);
-    if (res) {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = res.url;
-      downloadLink.download = res.url.split('/').pop()!;
-      if (window.webkitURL == null) {
-        downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
-        downloadLink.style.display = 'none';
-        document.body.appendChild(downloadLink);
-      }
-      downloadLink.click();
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 
