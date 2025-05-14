@@ -3,6 +3,7 @@ import { NoticeOfIntentPortalDecisionDto } from '../../../../../services/notice-
 import { NoticeOfIntentDecisionService } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.service';
 import { DocumentService } from '../../../../../services/document/document.service';
 import { downloadFile } from '../../../../../shared/utils/file';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-decisions[fileNumber]',
@@ -16,6 +17,7 @@ export class DecisionsComponent implements OnInit, OnChanges {
   constructor(
     private decisionService: NoticeOfIntentDecisionService,
     private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -27,9 +29,13 @@ export class DecisionsComponent implements OnInit, OnChanges {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 
   private async loadDecisions() {

@@ -209,8 +209,12 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 }

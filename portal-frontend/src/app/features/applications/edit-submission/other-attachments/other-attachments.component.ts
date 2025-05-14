@@ -127,8 +127,12 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   async downloadFile(uuid: string) {
     console.log('Downloading file with uuid:', uuid);
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 }

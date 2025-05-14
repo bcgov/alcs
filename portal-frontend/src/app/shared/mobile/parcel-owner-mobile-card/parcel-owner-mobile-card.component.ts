@@ -3,6 +3,7 @@ import { ApplicationOwnerDto } from '../../../services/application-owner/applica
 import { NoticeOfIntentOwnerDto } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { downloadFile } from '../../utils/file';
 import { DocumentService } from '../../../services/document/document.service';
+import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-parcel-owner-mobile-card',
@@ -18,7 +19,10 @@ export class ParcelOwnerMobileCardComponent implements OnInit {
   @Output() removeClicked = new EventEmitter<ApplicationOwnerDto | NoticeOfIntentOwnerDto>();
   @Output() openFileClicked = new EventEmitter<ApplicationOwnerDto | NoticeOfIntentOwnerDto>();
 
-  constructor(private documentService: DocumentService) {}
+  constructor(
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {}
 
@@ -31,8 +35,12 @@ export class ParcelOwnerMobileCardComponent implements OnInit {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 }

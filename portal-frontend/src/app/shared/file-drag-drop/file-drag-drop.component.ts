@@ -4,6 +4,7 @@ import { ApplicationDocumentDto } from '../../services/application-document/appl
 import { FileHandle } from './drag-drop.directive';
 import { downloadFile } from '../utils/file';
 import { DocumentService } from '../../services/document/document.service';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-file-drag-drop',
@@ -32,6 +33,7 @@ export class FileDragDropComponent implements OnInit {
   constructor(
     private sanitizer: DomSanitizer,
     private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {}
@@ -76,8 +78,12 @@ export class FileDragDropComponent implements OnInit {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 }

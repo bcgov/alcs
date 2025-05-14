@@ -6,6 +6,7 @@ import { ApplicationDocumentDto } from '../../../../../services/application-docu
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { downloadFile, openFileInline } from '../../../../../shared/utils/file';
 import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-submission-documents',
@@ -26,6 +27,7 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
     private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -35,9 +37,13 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 
   ngOnDestroy(): void {

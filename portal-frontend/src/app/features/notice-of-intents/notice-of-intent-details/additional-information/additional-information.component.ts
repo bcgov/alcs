@@ -11,6 +11,7 @@ import {
 import { downloadFile } from '../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { DocumentService } from '../../../../services/document/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-additional-information',
@@ -65,6 +66,7 @@ export class AdditionalInformationComponent {
   constructor(
     private router: Router,
     private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   private setVisibilityForResidentialFields() {
@@ -108,9 +110,13 @@ export class AdditionalInformationComponent {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 
   mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {

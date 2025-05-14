@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NoticeOfIntentPortalDecisionDto } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.dto';
 import { downloadFile } from '../../../../../shared/utils/file';
 import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-public-decisions',
@@ -11,11 +12,18 @@ import { DocumentService } from '../../../../../services/document/document.servi
 export class PublicDecisionsComponent {
   @Input() decisions: NoticeOfIntentPortalDecisionDto[] = [];
 
-  constructor(private documentService: DocumentService) {}
+  constructor(
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 }

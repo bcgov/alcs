@@ -13,6 +13,7 @@ import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-ge
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { downloadFile } from '../../../../shared/utils/file';
 import { DocumentService } from '../../../../services/document/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-lfng-review',
@@ -43,6 +44,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     private pdfGenerationService: PdfGenerationService,
     private documentService: DocumentService,
     private router: Router,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -109,9 +111,13 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 
   async onReview(fileId: string) {

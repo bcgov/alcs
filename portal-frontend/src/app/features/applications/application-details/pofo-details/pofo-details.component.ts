@@ -10,6 +10,7 @@ import {
   STRUCTURE_TYPES,
 } from '../../../notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { DocumentService } from '../../../../services/document/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-pofo-details[applicationSubmission]',
@@ -71,6 +72,7 @@ export class PofoDetailsComponent {
   constructor(
     private router: Router,
     private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   async onEditSection(step: number) {
@@ -84,9 +86,13 @@ export class PofoDetailsComponent {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 
   mapStructureTypeValueToLabel(value: STRUCTURE_TYPES | null): string | null {

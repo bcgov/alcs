@@ -16,6 +16,7 @@ import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { DocumentService } from '../../../services/document/document.service';
 import { downloadFile } from '../../../shared/utils/file';
+import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-application-details',
@@ -50,6 +51,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     private applicationParcelService: ApplicationParcelService,
     private router: Router,
     private documentService: DocumentService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -88,9 +90,13 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 
   async onNavigateToStep(step: number) {

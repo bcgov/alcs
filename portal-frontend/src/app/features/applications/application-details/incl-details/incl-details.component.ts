@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../../../services/authentication/authe
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { downloadFile } from '../../../../shared/utils/file';
 import { DocumentService } from '../../../../services/document/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-incl-details',
@@ -51,6 +52,7 @@ export class InclDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private documentService: DocumentService,
     private authenticationService: AuthenticationService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -73,9 +75,13 @@ export class InclDetailsComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
 
-    downloadFile(url, fileName);
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 
   ngOnDestroy(): void {
