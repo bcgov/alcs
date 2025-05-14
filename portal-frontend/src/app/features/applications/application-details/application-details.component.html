@@ -350,6 +350,7 @@
         *ngFor="let file of otherFiles; let last = last"
         [file]="file"
         [isLast]="last"
+        (fileClicked)="downloadFile(file.documentUuid)"
       >
       </app-optional-attachments-mobile-card>
       <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
