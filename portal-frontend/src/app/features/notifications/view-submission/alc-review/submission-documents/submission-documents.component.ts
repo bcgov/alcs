@@ -25,9 +25,9 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<NotificationDocumentDto> = new MatTableDataSource<NotificationDocumentDto>();
 
   constructor(
-    private notificationDocumentService: NotificationDocumentService,
-    private documentService: DocumentService,
-    private toastService: ToastService,
+    private readonly notificationDocumentService: NotificationDocumentService,
+    private readonly documentService: DocumentService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {

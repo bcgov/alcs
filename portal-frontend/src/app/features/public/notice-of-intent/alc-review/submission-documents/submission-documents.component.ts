@@ -27,9 +27,9 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private publicService: PublicService,
-    private documentService: DocumentService,
-    private toastService: ToastService,
+    private readonly publicService: PublicService,
+    private readonly documentService: DocumentService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
