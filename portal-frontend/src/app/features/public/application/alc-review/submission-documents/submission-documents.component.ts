@@ -5,7 +5,9 @@ import { Subject } from 'rxjs';
 import { PublicApplicationSubmissionDto } from '../../../../../services/public/public-application.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile, openFileInline } from '../../../../../shared/utils/file';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 type PublicDocumentWithoutTypeDto = Omit<PublicDocumentDto, 'type'>;
 
@@ -26,7 +28,11 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<PublicDocumentDto> = new MatTableDataSource<PublicDocumentDto>();
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private publicService: PublicService) {}
+  constructor(
+    private readonly publicService: PublicService,
+    private readonly documentService: DocumentService,
+    private readonly toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.dataSource.data = this.applicationDocuments;
@@ -54,17 +60,13 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const res = await this.publicService.getApplicationDownloadFileUrl(this.applicationSubmission.fileNumber, uuid);
-    if (res) {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = res.url;
-      downloadLink.download = res.url.split('/').pop()!;
-      if (window.webkitURL == null) {
-        downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
-        downloadLink.style.display = 'none';
-        document.body.appendChild(downloadLink);
-      }
-      downloadLink.click();
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      console.error('Failed to download file', e);
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 
