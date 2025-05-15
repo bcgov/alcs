@@ -189,18 +189,17 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private setupSubscribers() {
-    this.modificationService.$modifications
-      .pipe(takeUntil(this.$destroy))
-      .pipe(combineLatestWith(this.reconsiderationService.$reconsiderations))
-      .subscribe(([modifications, reconsiderations]) => {
-        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
-      });
-
     this.decisionService.$decision
-      .pipe(takeUntil(this.$destroy))
       .pipe(filter((decision) => !!decision))
-      .pipe(combineLatestWith(this.decisionService.$decisions))
-      .subscribe(([decision, decisions]) => {
+      .pipe(
+        combineLatestWith(
+          this.modificationService.$modifications,
+          this.reconsiderationService.$reconsiderations,
+          this.decisionService.$decisions,
+        ),
+      )
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(([decision, modifications, reconsiderations, decisions]) => {
         if (!decision) {
           return;
         }
@@ -208,33 +207,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         this.existingDecision = decision;
         this.uuid = decision.uuid;
 
+        this.mapPostDecisionsToControls(modifications, reconsiderations, this.existingDecision);
         this.patchFormWithExistingData(this.existingDecision);
 
         if (decisions.length > 1) {
-          let minDate = null;
-          this.isFirstDecision = true;
-
-          for (const decision of decisions) {
-            //Skip ourselves!
-            if (decision.uuid === this.existingDecision.uuid) {
-              continue;
-            }
-
-            if (!minDate && decision.date) {
-              minDate = decision.date;
-            }
-
-            if (minDate && decision.date && decision.date < minDate) {
-              minDate = decision.date;
-            }
-
-            if (this.existingDecision.createdAt > decision.createdAt) {
-              this.isFirstDecision = false;
-            }
-          }
-
-          if (minDate && !this.isFirstDecision) {
-            this.minDate = new Date(minDate);
+          if (this.existingDecision) {
+            this.setFirstDecision(decision, decisions);
           }
 
           if (this.isFirstDecision) {
@@ -247,12 +225,44 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
             });
           }
         } else {
-          this.isFirstDecision = true;
           this.form.controls.postDecision.disable();
         }
 
         this.resolutionYearControl.enable();
       });
+  }
+
+  setFirstDecision(decision: ApplicationDecisionDto, decisions: ApplicationDecisionDto[]) {
+    if (!this.existingDecision) {
+      return;
+    }
+
+    this.isFirstDecision = true;
+
+    let minDate = null;
+
+    for (const decision of decisions) {
+      //Skip ourselves!
+      if (decision.uuid === this.existingDecision.uuid) {
+        continue;
+      }
+
+      if (!minDate && decision.date) {
+        minDate = decision.date;
+      }
+
+      if (minDate && decision.date && decision.date < minDate) {
+        minDate = decision.date;
+      }
+
+      if (this.existingDecision.createdAt > decision.createdAt) {
+        this.isFirstDecision = false;
+      }
+    }
+
+    if (minDate && !this.isFirstDecision) {
+      this.minDate = new Date(minDate);
+    }
   }
 
   private mapPostDecisionsToControls(

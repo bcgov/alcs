@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.spinner {
+  --spinner-size: 75px;
+
+  width: var(--spinner-size) !important;
+  height: var(--spinner-size) !important;
+}

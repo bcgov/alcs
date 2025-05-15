@@ -15,3 +15,17 @@
     grid-template-columns: 1fr 1fr 2fr;
   }
 }
+
+.mobile {
+  @media screen and (min-width: $tabletBreakpoint) {
+    display: none;
+  }
+}
+
+.desktop {
+  display: none;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    display: inline;
+  }
+}

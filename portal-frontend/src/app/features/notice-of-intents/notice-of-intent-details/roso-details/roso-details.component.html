@@ -106,9 +106,10 @@
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
-      {{ map.fileName }}
-    </a>
+    <ng-container *ngFor="let map of proposalMap">
+      <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
+      <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
+    </ng-container>
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
@@ -123,17 +124,19 @@
   <ng-container *ngIf="_noiSubmission?.soilIsExtractionOrMining">
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of crossSections" (click)="openFile(file)">
-        {{ file.fileName }}
-      </a>
+      <ng-container *ngFor="let file of crossSections">
+        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+      </ng-container>
       <app-no-data [showRequired]="showErrors" *ngIf="crossSections.length === 0"></app-no-data>
     </div>
 
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
-        {{ file.fileName }}
-      </a>
+      <ng-container *ngFor="let file of reclamationPlans">
+        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+      </ng-container>
       <app-no-data [showRequired]="showErrors" *ngIf="reclamationPlans.length === 0"></app-no-data>
     </div>
 
@@ -150,9 +153,10 @@
     <ng-container *ngIf="_noiSubmission.soilHasSubmittedNotice">
       <div class="subheading2 grid-1">Notice of Work</div>
       <div class="grid-double multiple-documents">
-        <a *ngFor="let file of noticeOfWorks" (click)="openFile(file)">
-          {{ file.fileName }}
-        </a>
+        <ng-container *ngFor="let file of noticeOfWorks">
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        </ng-container>
         <app-no-data [showRequired]="showErrors" *ngIf="noticeOfWorks.length === 0"></app-no-data>
       </div>
     </ng-container>

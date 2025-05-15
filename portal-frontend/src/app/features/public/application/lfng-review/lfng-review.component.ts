@@ -5,9 +5,10 @@ import {
   PublicApplicationSubmissionReviewDto,
 } from '../../../../services/public/public-application.dto';
 import { PublicDocumentDto } from '../../../../services/public/public.dto';
-import { PublicService } from '../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-public-lfng-review',
@@ -22,7 +23,10 @@ export class PublicLfngReviewComponent implements OnInit {
   SUBMISSION_STATUS = SUBMISSION_STATUS;
   resolutionDocument: PublicDocumentDto[] = [];
 
-  constructor(private publicService: PublicService) {}
+  constructor(
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.resolutionDocument = this.applicationDocuments.filter(
@@ -30,10 +34,13 @@ export class PublicLfngReviewComponent implements OnInit {
     );
   }
 
-  async openFile(file: PublicDocumentDto) {
-    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, false);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 }

@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ApplicationPortalDecisionDto } from '../../../../../services/application-decision/application-decision.dto';
 import { ApplicationDecisionService } from '../../../../../services/application-decision/application-decision.service';
-import { openFileInline } from '../../../../../shared/utils/file';
-import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { downloadFile } from '../../../../../shared/utils/file';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-decisions[fileNumber]',
@@ -13,7 +14,11 @@ export class DecisionsComponent implements OnInit, OnChanges {
   @Input() fileNumber = '';
   decisions: ApplicationPortalDecisionDto[] = [];
 
-  constructor(private decisionService: ApplicationDecisionService) {}
+  constructor(
+    private decisionService: ApplicationDecisionService,
+    private documentService: DocumentService,
+    private toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.loadDecisions();
@@ -23,10 +28,13 @@ export class DecisionsComponent implements OnInit, OnChanges {
     this.loadDecisions();
   }
 
-  async openFile(file: ApplicationDocumentDto) {
-    const res = await this.decisionService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

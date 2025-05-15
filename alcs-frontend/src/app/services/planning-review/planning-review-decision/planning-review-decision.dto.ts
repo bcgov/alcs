@@ -31,6 +31,7 @@ export interface PlanningReviewDecisionDto {
 
 export interface PlanningReviewDecisionDocumentDto {
   uuid: string;
+  documentUuid: string;
   fileName: string;
   fileSize: number;
   mimeType: string;

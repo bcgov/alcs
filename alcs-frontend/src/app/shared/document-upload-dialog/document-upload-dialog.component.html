@@ -37,9 +37,11 @@
           Remove
         </button>
       </div>
-      <div *ngIf="existingFile" class="file">
+      <div *ngIf="existingFile && data.existingDocument" class="file">
         <div>
-          <a (click)="openExistingFile()">{{ existingFile.name }}</a>
+          <a routerLink="/document/{{ data.existingDocument?.documentUuid }}" target="_blank">{{
+            existingFile.name
+          }}</a>
         </div>
         <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
           <mat-icon>close</mat-icon>

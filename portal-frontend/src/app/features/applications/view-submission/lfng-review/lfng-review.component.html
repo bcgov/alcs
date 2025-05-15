@@ -241,9 +241,12 @@
         >
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
-              document.fileName
-            }}</a>
+            <ng-container *ngFor="let file of resolutionDocument">
+              <a class="link" class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
+              }}</a>
+            </ng-container>
           </div>
           <app-no-data *ngIf="resolutionDocument.length === 0"></app-no-data>
         </div>
@@ -252,8 +255,11 @@
             Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
           </div>
           <div>
-            <div class="document" *ngFor="let document of staffReport">
-              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
+            <div class="document" *ngFor="let file of staffReport">
+              <a class="link" class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
+              }}</a>
             </div>
             <app-no-data *ngIf="staffReport.length === 0"></app-no-data>
           </div>
@@ -261,8 +267,11 @@
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
-            <div class="document" *ngFor="let document of governmentOtherAttachments">
-              <a class="link" (click)="openFile(document)">{{ document.fileName }}</a>
+            <div class="document" *ngFor="let file of governmentOtherAttachments">
+              <a class="link" class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
+              }}</a>
             </div>
             <app-no-data *ngIf="governmentOtherAttachments.length === 0"></app-no-data>
           </div>

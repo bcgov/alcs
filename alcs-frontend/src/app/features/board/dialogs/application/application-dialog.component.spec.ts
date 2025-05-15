@@ -92,6 +92,7 @@ describe('ApplicationDialogComponent', () => {
       code: '',
       createCardTypes: [],
       showOnSchedule: false,
+      hasAssigneeFilter: false,
       statuses: [],
       title: '',
     });

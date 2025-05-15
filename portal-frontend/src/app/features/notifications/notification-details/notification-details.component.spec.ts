@@ -9,20 +9,26 @@ import { NotificationDocumentService } from '../../../services/notification-docu
 import { NotificationSubmissionDetailedDto } from '../../../services/notification-submission/notification-submission.dto';
 
 import { NotificationDetailsComponent } from './notification-details.component';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../services/document/document.service';
 
 describe('NoticeOfIntentDetailsComponent', () => {
   let component: NotificationDetailsComponent;
   let fixture: ComponentFixture<NotificationDetailsComponent>;
   let mockCodeService: DeepMocked<CodeService>;
-  let mockDocumentService: DeepMocked<NotificationDocumentService>;
+  let mockNotiDocumentService: DeepMocked<NotificationDocumentService>;
   let mockRouter: DeepMocked<Router>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let documentPipe = new BehaviorSubject<NotificationDocumentDto[]>([]);
 
   beforeEach(async () => {
     mockCodeService = createMock();
-    mockDocumentService = createMock();
+    mockNotiDocumentService = createMock();
     mockRouter = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -32,11 +38,19 @@ describe('NoticeOfIntentDetailsComponent', () => {
         },
         {
           provide: NotificationDocumentService,
-          useValue: mockDocumentService,
+          useValue: mockNotiDocumentService,
         },
         {
           provide: Router,
           useValue: mockRouter,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
       declarations: [NotificationDetailsComponent],

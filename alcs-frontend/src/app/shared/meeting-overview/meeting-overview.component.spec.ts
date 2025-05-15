@@ -100,6 +100,7 @@ describe('MeetingOverviewComponent', () => {
         code: 'boardCode',
         allowedCardTypes: [],
         showOnSchedule: true,
+        hasAssigneeFilter: true,
       },
     ]);
 

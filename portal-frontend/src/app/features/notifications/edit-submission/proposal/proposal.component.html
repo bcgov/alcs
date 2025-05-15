@@ -74,7 +74,6 @@
         [uploadedFiles]="terms"
         (uploadFiles)="attachSRWTerms($event)"
         (deleteFile)="onDeleteFile($event)"
-        (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
         [showHasVirusError]="showSRWTermsHasVirusError"
@@ -118,7 +117,6 @@
         [uploadedFiles]="[]"
         (uploadFiles)="attachSurveyPlan($event)"
         (deleteFile)="onDeleteFile($event)"
-        (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="surveyPlans.length === 0"
         [disabled]="!allowSurveyPlanUploads"
@@ -134,8 +132,9 @@
     <table class="table" mat-table [dataSource]="surveyPlans">
       <ng-container matColumnDef="fileName">
         <th mat-header-cell *matHeaderCellDef>File Name</th>
-        <td mat-cell *matCellDef="let element">
-          <a (click)="openFile(element)">{{ element.fileName }}</a>
+        <td mat-cell *matCellDef="let file">
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
         </td>
       </ng-container>
 

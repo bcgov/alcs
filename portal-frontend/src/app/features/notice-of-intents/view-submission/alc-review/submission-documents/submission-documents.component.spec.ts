@@ -5,14 +5,20 @@ import { ApplicationDocumentService } from '../../../../../services/application-
 import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 
 import { SubmissionDocumentsComponent } from './submission-documents.component';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { HttpClient } from '@angular/common/http';
 
 describe('SubmissionDocumentsComponent', () => {
   let component: SubmissionDocumentsComponent;
   let fixture: ComponentFixture<SubmissionDocumentsComponent>;
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockNoiDocumentService = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [SubmissionDocumentsComponent],
@@ -20,6 +26,14 @@ describe('SubmissionDocumentsComponent', () => {
         {
           provide: NoticeOfIntentDocumentService,
           useValue: mockNoiDocumentService,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

@@ -9,6 +9,7 @@ import { ParcelComponent } from './parcel/parcel.component';
 import { PfrsDetailsComponent } from './pfrs-details/pfrs-details.component';
 import { PofoDetailsComponent } from './pofo-details/pofo-details.component';
 import { RosoDetailsComponent } from './roso-details/roso-details.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { RosoDetailsComponent } from './roso-details/roso-details.component';
     NoticeOfIntentDetailsComponent,
     AdditionalInformationComponent,
   ],
-  imports: [CommonModule, SharedModule, NgxMaskPipe, MatProgressSpinnerModule, NgIf],
+  imports: [CommonModule, SharedModule, NgxMaskPipe, MatProgressSpinnerModule, NgIf, RouterModule],
   exports: [NoticeOfIntentDetailsComponent],
 })
 export class NoticeOfIntentDetailsModule {}

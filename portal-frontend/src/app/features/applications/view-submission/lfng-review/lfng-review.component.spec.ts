@@ -9,6 +9,7 @@ import { ApplicationSubmissionDetailedDto } from '../../../../services/applicati
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 
 import { LfngReviewComponent } from './lfng-review.component';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('LfngReviewComponent', () => {
   let component: LfngReviewComponent;
@@ -17,11 +18,13 @@ describe('LfngReviewComponent', () => {
   let mockAppSubReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockAppSubReviewService = createMock();
     mockPdfGenerationService = createMock();
     mockAppDocumentService = createMock();
+    mockDocumentService = createMock();
 
     mockAppSubReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
       undefined
@@ -40,6 +43,10 @@ describe('LfngReviewComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
       declarations: [LfngReviewComponent],

@@ -18,6 +18,7 @@ describe('AdminBoardManagementService', () => {
     statuses: [],
     title: '',
     showOnSchedule: false,
+    hasAssigneeFilter: false,
   };
 
   beforeEach(() => {

@@ -11,6 +11,8 @@ import { NotificationSubmissionService } from '../../../../services/notification
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { ProposalComponent } from './proposal.component';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('ProposalComponent', () => {
   let component: ProposalComponent;
@@ -18,12 +20,16 @@ describe('ProposalComponent', () => {
   let mockNotificationSubmissionService: DeepMocked<NotificationSubmissionService>;
   let mockNotificationDocumentService: DeepMocked<NotificationDocumentService>;
   let mockRouter: DeepMocked<Router>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let documentPipe = new BehaviorSubject<NotificationDocumentDto[]>([]);
 
   beforeEach(async () => {
     mockNotificationSubmissionService = createMock();
     mockRouter = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
     mockNotificationDocumentService = createMock();
 
     await TestBed.configureTestingModule({
@@ -35,6 +41,14 @@ describe('ProposalComponent', () => {
         {
           provide: Router,
           useValue: mockRouter,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provide: NotificationDocumentService,

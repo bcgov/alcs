@@ -3,14 +3,17 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 
 import { NaruDetailsComponent } from './naru-details.component';
+import { DocumentService } from '../../../../services/document/document.service';
 
 describe('NaruDetailsComponent', () => {
   let component: NaruDetailsComponent;
   let fixture: ComponentFixture<NaruDetailsComponent>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockAppDocumentService = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [NaruDetailsComponent],
@@ -18,6 +21,10 @@ describe('NaruDetailsComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
     }).compileComponents();

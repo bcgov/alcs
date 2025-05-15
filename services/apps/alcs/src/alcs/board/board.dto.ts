@@ -22,6 +22,10 @@ export class MinimalBoardDto {
   @IsBoolean()
   showOnSchedule: boolean;
 
+  @AutoMap()
+  @IsBoolean()
+  hasAssigneeFilter: boolean;
+
   @IsArray()
   allowedCardTypes: string[];
 }

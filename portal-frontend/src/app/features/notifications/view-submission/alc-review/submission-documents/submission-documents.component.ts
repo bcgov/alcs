@@ -4,7 +4,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { NotificationDocumentDto } from '../../../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../../../services/notification-document/notification-document.service';
-import { openFileInline } from '../../../../../shared/utils/file';
+import { downloadFile, openFileInline } from '../../../../../shared/utils/file';
+import { DocumentService } from '../../../../../services/document/document.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-submission-documents',
@@ -22,7 +24,11 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<NotificationDocumentDto> = new MatTableDataSource<NotificationDocumentDto>();
 
-  constructor(private notificationDocumentService: NotificationDocumentService) {}
+  constructor(
+    private readonly notificationDocumentService: NotificationDocumentService,
+    private readonly documentService: DocumentService,
+    private readonly toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     this.$notificationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
@@ -38,9 +44,13 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const res = await this.notificationDocumentService.downloadFile(uuid);
-    if (res) {
-      window.open(res.url, '_blank');
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      console.error('Failed to download file', e);
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

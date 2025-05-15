@@ -56,7 +56,7 @@ export class OwnerDialogComponent {
     email: this.email,
     corporateSummary: this.corporateSummary,
   });
-  private pendingFile: File | undefined;
+  pendingFile: FileHandle | undefined;
   private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
@@ -117,13 +117,18 @@ export class OwnerDialogComponent {
 
       this.isLoading = true;
 
+      let shouldContinue = false;
       if (this.type.value === OWNER_TYPE.INDIVIDUAL) {
-        this.removeCorporateSummary();
+        shouldContinue = await this.removeCorporateSummary();
+        if (!shouldContinue) {
+          this.isLoading = false;
+          return;
+        }
       }
 
       let documentUuid;
       if (this.pendingFile) {
-        documentUuid = await this.uploadPendingFile(this.pendingFile);
+        documentUuid = await this.uploadPendingFile(this.pendingFile.file);
         if (!documentUuid) {
           return;
         }
@@ -178,13 +183,19 @@ export class OwnerDialogComponent {
     if (this.form.valid) {
       this.isLoading = true;
 
+      let shouldContinue = false;
       if (this.type.value === OWNER_TYPE.INDIVIDUAL) {
-        this.removeCorporateSummary();
+        shouldContinue = await this.removeCorporateSummary();
+
+        if (!shouldContinue) {
+          this.isLoading = false;
+          return;
+        }
       }
 
       let document;
       if (this.pendingFile) {
-        document = await this.uploadPendingFile(this.pendingFile);
+        document = await this.uploadPendingFile(this.pendingFile.file);
       } else {
         document = this.type.value === OWNER_TYPE.ORGANIZATION ? this.data.existingOwner?.corporateSummary : null;
       }
@@ -214,7 +225,7 @@ export class OwnerDialogComponent {
   }
 
   async attachFile(fileHandle: FileHandle) {
-    this.pendingFile = fileHandle.file;
+    this.pendingFile = fileHandle;
     this.corporateSummary.setValue('pending');
     const corporateSummaryType = this.documentCodes.find((code) => code.code === DOCUMENT_TYPE.CORPORATE_SUMMARY);
     if (corporateSummaryType) {
@@ -222,9 +233,10 @@ export class OwnerDialogComponent {
       this.files = [
         {
           type: corporateSummaryType,
-          fileName: this.pendingFile.name,
-          fileSize: this.pendingFile.size,
+          fileName: this.pendingFile.file.name,
+          fileSize: this.pendingFile.file.size,
           uuid: '',
+          documentUuid: '',
           source: DOCUMENT_SOURCE.APPLICANT,
           uploadedAt: Date.now(),
           uploadedBy: '',
@@ -235,33 +247,39 @@ export class OwnerDialogComponent {
     }
   }
 
-  removeCorporateSummary() {
-    if (this.data.isDraft) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            if (this.pendingFile) {
-              this.pendingFile = undefined;
+  removeCorporateSummary(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      if (this.data.isDraft && (this.pendingFile || this.files.length > 0)) {
+        this.dialog
+          .open(RemoveFileConfirmationDialogComponent)
+          .beforeClosed()
+          .subscribe(async (didConfirm) => {
+            if (didConfirm) {
+              if (this.pendingFile) {
+                this.pendingFile = undefined;
+              }
+              this.corporateSummary.setValue(null);
+              this.files = [];
+              resolve(true); // User confirmed, continue with the operation
+            } else {
+              resolve(false); // User canceled, don't continue
             }
-            this.corporateSummary.setValue(null);
-            this.files = [];
-          }
-        });
-    } else {
-      if (this.pendingFile) {
-        this.pendingFile = undefined;
+          });
+      } else {
+        if (this.pendingFile) {
+          this.pendingFile = undefined;
+        }
+        this.corporateSummary.setValue(null);
+        this.files = [];
+        resolve(true); // No confirmation dialog needed, continue
       }
-      this.corporateSummary.setValue(null);
-      this.files = [];
-    }
+    });
   }
 
   async openCorporateSummary() {
     if (this.pendingFile) {
-      const fileURL = URL.createObjectURL(this.pendingFile);
-      openFileInline(fileURL, this.pendingFile.name);
+      const fileURL = URL.createObjectURL(this.pendingFile.file);
+      openFileInline(fileURL, this.pendingFile.file.name);
     } else if (this.existingUuid && this.data.existingOwner?.corporateSummary?.uuid) {
       const res = await this.data.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
       if (res) {

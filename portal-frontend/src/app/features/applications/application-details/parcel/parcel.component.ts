@@ -2,7 +2,6 @@ import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import {
   ApplicationParcelDto,
@@ -13,8 +12,10 @@ import { ApplicationParcelService } from '../../../../services/application-parce
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
-import { openFileInline } from '../../../../shared/utils/file';
+import { downloadFile } from '../../../../shared/utils/file';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
+import { DocumentService } from '../../../../services/document/document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -67,8 +68,9 @@ export class ParcelComponent {
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
-    private applicationDocumentService: ApplicationDocumentService,
-    private router: Router
+    private documentService: DocumentService,
+    private router: Router,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -101,10 +103,13 @@ export class ParcelComponent {
     }
   }
 
-  async onOpenFile(file: ApplicationDocumentDto) {
-    const res = await this.applicationDocumentService.openFile(file.uuid);
-    if (res) {
-      openFileInline(res.url, file.fileName);
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
     }
   }
 

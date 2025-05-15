@@ -1,20 +1,21 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
-import { BaseServiceException, ServiceValidationException } from '@app/common/exceptions/base.exception';
+import {
+  BaseServiceException,
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '@app/common/exceptions/base.exception';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { MultipartFile } from '@fastify/multipart';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { ClamAVService } from '../clamav/clamav.service';
 import { User } from '../user/user.entity';
-import {
-  CreateDocumentDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_SYSTEM,
-} from './document.dto';
+import { CreateDocumentDto, DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from './document.dto';
 import { Document } from './document.entity';
+import { VISIBILITY_FLAG } from '../alcs/application/application-document/application-document.entity';
 
 const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
 const DEFAULT_S3_TAGS = 'ORCS-Classification=85100-20';
@@ -31,6 +32,7 @@ export class DocumentService {
     @InjectRepository(Document)
     private documentRepository: Repository<Document>,
     private clamAvService: ClamAVService,
+    private dataSource: DataSource,
   ) {
     this.dataStore = new S3Client({
       region: 'us-east-1',
@@ -148,6 +150,79 @@ export class DocumentService {
     return getSignedUrl(this.dataStore, command, {
       expiresIn: this.documentTimeout,
     });
+  }
+
+  async getDownloadUrlAndFileNameByUuid(uuid: string, openInline = false): Promise<{ url: string; fileName: string }> {
+    const document = await this.getDocument(uuid);
+
+    return { url: await this.getDownloadUrl(document, openInline), fileName: document.fileName };
+  }
+
+  async getPublicDownloadUrlAndFileNameByUuid(
+    uuid: string,
+    openInline = false,
+  ): Promise<{ url: string; fileName: string }> {
+    const document = await this.getDocument(uuid);
+
+    const fileDocuments = await this.dataSource.query(
+      `
+      select
+        ad.visibility_flags
+      from
+        alcs.application_document ad 
+      where 
+        ad.document_uuid = $1
+      union
+      select
+        noid.visibility_flags
+      from
+        alcs.notice_of_intent_document noid
+      where
+        noid.document_uuid = $1
+      union
+      select
+        nd2.visibility_flags
+      from
+        alcs.notification_document nd2
+      where 
+        nd2.document_uuid = $1
+      `,
+      [uuid],
+    );
+
+    const decisionDocuments = await this.dataSource.query(
+      `
+      select
+        add.uuid
+      from
+        alcs.application_decision_document add 
+        join alcs.application_decision ad on ad.uuid = add.decision_uuid
+      where 
+        add.document_uuid = $1
+        and ad.is_draft = false
+      union
+      select
+        noidd.uuid
+      from
+        alcs.notice_of_intent_decision_document noidd
+        join alcs.notice_of_intent_decision noid on noid.uuid = noidd.decision_uuid
+      where
+        noidd.document_uuid = $1
+        and noid.is_draft = false
+      `,
+      [uuid],
+    );
+
+    // Unlikely a document is attached to more than one file document, but if it
+    // is, as long as any of them have made the doc public, show it
+    if (
+      !fileDocuments.some((doc) => doc.visibility_flags.includes(VISIBILITY_FLAG.PUBLIC)) &&
+      decisionDocuments.length === 0
+    ) {
+      throw new ServiceNotFoundException('Failed to find document');
+    }
+
+    return { url: await this.getDownloadUrl(document, openInline), fileName: document.fileName };
   }
 
   async createDocumentRecord(data: CreateDocumentDto) {

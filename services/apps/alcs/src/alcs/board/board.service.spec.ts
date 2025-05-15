@@ -159,6 +159,7 @@ describe('BoardsService', () => {
       code: '',
       createCardTypes: [],
       showOnSchedule: false,
+      hasAssigneeFilter: false,
       statuses: [],
       title: '',
     });
@@ -178,6 +179,7 @@ describe('BoardsService', () => {
         code: 'SAMPLE',
         createCardTypes: [],
         showOnSchedule: false,
+        hasAssigneeFilter: false,
         statuses: [],
         title: '',
       }),

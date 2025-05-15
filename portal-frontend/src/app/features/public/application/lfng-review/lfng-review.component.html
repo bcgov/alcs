@@ -145,9 +145,12 @@
         <div>
           <div class="subheading2">Resolution Document</div>
           <div>
-            <a class="link" (click)="openFile(document)" *ngFor="let document of resolutionDocument">{{
-              document.fileName
-            }}</a>
+            <ng-container *ngFor="let file of resolutionDocument">
+              <a class="link" class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              <a class="link" class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                file.fileName
+              }}</a>
+            </ng-container>
           </div>
         </div>
       </div>

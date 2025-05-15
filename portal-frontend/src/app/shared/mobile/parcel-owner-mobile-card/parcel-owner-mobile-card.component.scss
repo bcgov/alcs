@@ -1,4 +1,5 @@
 @use '../../../../styles/colors';
+@use '../../../../styles/functions' as *;
 
 mat-card {
   width: 100%;
@@ -46,4 +47,18 @@ span {
   background-color: transparent;
   border-bottom: none;
   padding: 10px;
+}
+
+.mobile {
+  @media screen and (min-width: $tabletBreakpoint) {
+    display: none;
+  }
+}
+
+.desktop {
+  display: none;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    display: inline;
+  }
 }

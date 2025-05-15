@@ -10,6 +10,8 @@ import { ApplicationSubmissionDetailedDto } from '../../../services/application-
 import { CodeService } from '../../../services/code/code.service';
 
 import { ApplicationDetailsComponent } from './application-details.component';
+import { HttpClient } from '@angular/common/http';
+import { DocumentService } from '../../../services/document/document.service';
 
 describe('ApplicationDetailsComponent', () => {
   let component: ApplicationDetailsComponent;
@@ -18,6 +20,8 @@ describe('ApplicationDetailsComponent', () => {
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
   let mockParcelService: DeepMocked<ApplicationParcelService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
@@ -26,6 +30,8 @@ describe('ApplicationDetailsComponent', () => {
     mockAppDocumentService = createMock();
     mockRouter = createMock();
     mockParcelService = createMock();
+    mockHttpClient = createMock();
+    mockDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -44,6 +50,14 @@ describe('ApplicationDetailsComponent', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockParcelService,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
       ],
       declarations: [ApplicationDetailsComponent],

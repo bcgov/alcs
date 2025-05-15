@@ -9,6 +9,7 @@ export class AuthGuard implements CanActivate {
   constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
   async canActivate(): Promise<boolean> {
+    await new Promise((r) => setTimeout(r, 20));
     const hasToken = await this.authenticationService.getToken();
     if (hasToken) {
       return true;

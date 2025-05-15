@@ -20,6 +20,7 @@ import { PublicNotificationService } from './notification/public-notification.se
 import { PublicController } from './public.controller';
 import { PublicSearchModule } from './search/public-search.module';
 import { PublicStatusController } from './status/public-status.controller';
+import { DocumentModule } from '../../document/document.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { PublicStatusController } from './status/public-status.controller';
     NoticeOfIntentDecisionModule,
     NotificationModule,
     NotificationSubmissionModule,
+    DocumentModule,
     RouterModule.register([{ path: 'public', module: PublicSearchModule }]),
   ],
   controllers: [

@@ -41,6 +41,14 @@
         </mat-button-toggle-group>
       </div>
 
+      <div class="full-width">
+        <mat-label>Include filtering by assignee</mat-label>
+        <mat-button-toggle-group [formControl]="hasAssigneeFilter">
+          <mat-button-toggle [value]="true">Yes</mat-button-toggle>
+          <mat-button-toggle [value]="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
       <div>
         <div>Click to add columns*</div>
         <div class="subtext">Disabled columns have cards and cannot be removed from the board</div>

@@ -1,14 +1,12 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
   ApplicationDocumentUpdateDto,
 } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../services/code/code.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/dto/document.dto';
@@ -18,6 +16,8 @@ import { FilesStepComponent } from '../files-step.partial';
 import { OtherAttachmentsUploadDialogComponent } from './other-attachments-upload-dialog/other-attachments-upload-dialog.component';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { HttpErrorResponse } from '@angular/common/http';
+import { downloadFile } from '../../../../shared/utils/file';
+import { DocumentService } from '../../../../services/document/document.service';
 
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
@@ -42,8 +42,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
-    private router: Router,
-    private applicationService: ApplicationSubmissionService,
+    private documentService: DocumentService,
     private codeService: CodeService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
@@ -124,5 +123,15 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
     this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
+  async downloadFile(uuid: string) {
+    try {
+      const { url, fileName } = await this.documentService.getDownloadUrlAndFileName(uuid, false, true);
+
+      downloadFile(url, fileName);
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to download file');
+    }
   }
 }

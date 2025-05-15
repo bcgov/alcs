@@ -35,7 +35,10 @@
       <ng-container matColumnDef="fileName">
         <th mat-header-cell *matHeaderCellDef>File Name</th>
         <td mat-cell *matCellDef="let element">
-          <a (click)="openFile(element)">{{ element.fileName }}</a>
+          <a *ngIf="isMobile" (click)="downloadFile(element.documentUuid)">{{ element.fileName }}</a>
+          <a *ngIf="!isMobile" routerLink="/document/{{ element.documentUuid }}" target="_blank">{{
+            element.fileName
+          }}</a>
         </td>
       </ng-container>
 
@@ -64,7 +67,8 @@
         [isLast]="last"
         (removeClicked)="onDeleteFile(otherFile)"
         (editClicked)="onAddEditAttachment(otherFile)"
-        (fileClicked)="openFile(otherFile)">
+        (fileClicked)="downloadFile(otherFile.documentUuid)"
+      >
       </app-other-attachment-mobile-card>
       <div *ngIf="otherFiles.length === 0" class="no-data-text">No attachments added.</div>
     </div>

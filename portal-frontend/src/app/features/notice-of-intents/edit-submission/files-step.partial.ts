@@ -28,7 +28,7 @@ export abstract class FilesStepComponent extends StepComponent {
   protected constructor(
     protected noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     protected dialog: MatDialog,
-    private toastService: ToastService
+    protected toastService: ToastService,
   ) {
     super();
   }

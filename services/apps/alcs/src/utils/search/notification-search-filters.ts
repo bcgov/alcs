@@ -6,7 +6,7 @@ import { NotificationParcel } from '../../portal/notification-submission/notific
 import { NotificationSubmission } from '../../portal/notification-submission/notification-submission.entity';
 import { NotificationTransferee } from '../../portal/notification-submission/notification-transferee/notification-transferee.entity';
 import { SearchRequestDto } from '../../portal/public/search/public-search.dto';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../search-helper';
+import { formatNameSearchString } from '../search-helper';
 
 export const NOTIFICATION_SEARCH_FILTERS = {
   addFileNumberResults: (
@@ -50,7 +50,7 @@ export const NOTIFICATION_SEARCH_FILTERS = {
     searchDto: SearchRequestDto | InboxRequestDto,
     notificationSubRepository: Repository<NotificationSubmission>,
   ) => {
-    const formattedSearchString = formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
+    const formattedSearchString = formatNameSearchString(searchDto.name!);
     return notificationSubRepository
       .createQueryBuilder('notiSub')
       .select('notiSub.fileNumber')
@@ -63,19 +63,19 @@ export const NOTIFICATION_SEARCH_FILTERS = {
         new Brackets((qb) =>
           qb
             .where(
-              "LOWER(notification_transferee.first_name || ' ' || notification_transferee.last_name) LIKE ANY (:names)",
+              "LOWER(CONCAT_WS(' ', notification_transferee.first_name, notification_transferee.last_name)) LIKE :name",
               {
-                names: formattedSearchString,
+                name: formattedSearchString,
               },
             )
-            .orWhere('LOWER(notification_transferee.first_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
+            .orWhere('LOWER(notification_transferee.first_name) LIKE :name', {
+              name: formattedSearchString,
             })
-            .orWhere('LOWER(notification_transferee.last_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
+            .orWhere('LOWER(notification_transferee.last_name) LIKE :name', {
+              name: formattedSearchString,
             })
-            .orWhere('LOWER(notification_transferee.organization_name) LIKE ANY (:names)', {
-              names: formattedSearchString,
+            .orWhere('LOWER(notification_transferee.organization_name) LIKE :name', {
+              name: formattedSearchString,
             }),
         ),
       )
