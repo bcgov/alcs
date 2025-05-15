@@ -65,6 +65,7 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
 
       downloadFile(url, fileName);
     } catch (e) {
+      console.warn('Failed to download file', e);
       this.toastService.showErrorToast('Failed to download file');
     }
   }
