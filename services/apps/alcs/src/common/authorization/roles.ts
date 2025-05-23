@@ -6,6 +6,7 @@ export enum AUTH_ROLE {
   GIS = 'GIS',
   AGROLOGIST = 'Agrologist',
   SOIL_OFFICER = 'Soil Officer',
+  C_AND_E = 'C&E',
 }
 
 export const ROLES_ALLOWED_APPLICATIONS = [
