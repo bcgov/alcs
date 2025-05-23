@@ -10,6 +10,7 @@ import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import * as config from 'config';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
 import { ComplianceAndEnforcementProfile } from './compliance-and-enforcement.automapper.profile';
+import { ServiceNotFoundException } from '../../../../../libs/common/src/exceptions/base.exception';
 
 const mockComplianceAndEnforcement = new ComplianceAndEnforcement({
   uuid: '1',
@@ -123,9 +124,16 @@ describe('ComplianceAndEnforcementService', () => {
     it('should delete a record and return confirmation', async () => {
       const deleteResult = { affected: 1, raw: '' };
       mockComplianceAndEnforcementRepository.delete.mockResolvedValue(deleteResult);
-      const result = await service.delete('1');
+      mockComplianceAndEnforcementRepository.findOneBy.mockResolvedValue(mockComplianceAndEnforcement);
+      expect(await service.delete('1')).toEqual(deleteResult);
+      expect(mockComplianceAndEnforcementRepository.findOneBy).toHaveBeenCalledWith({ uuid: '1' });
       expect(mockComplianceAndEnforcementRepository.delete).toHaveBeenCalledWith('1');
-      expect(result).toEqual(deleteResult);
+    });
+
+    it('should raise an error if not found', async () => {
+      mockComplianceAndEnforcementRepository.findOneBy.mockResolvedValue(null);
+      await expect(service.delete('1')).rejects.toThrow(ServiceNotFoundException);
+      expect(mockComplianceAndEnforcementRepository.findOneBy).toHaveBeenCalledWith({ uuid: '1' });
     });
   });
 });
