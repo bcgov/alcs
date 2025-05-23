@@ -5,7 +5,10 @@ import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
-import { ServiceConflictException } from '../../../../../libs/common/src/exceptions/base.exception';
+import {
+  ServiceConflictException,
+  ServiceNotFoundException,
+} from '../../../../../libs/common/src/exceptions/base.exception';
 
 @Injectable()
 export class ComplianceAndEnforcementService {
@@ -30,6 +33,11 @@ export class ComplianceAndEnforcementService {
         fileNumber: fileNumber,
       },
     });
+
+    if (entity === null) {
+      throw new ServiceNotFoundException('A C&E file with this file number does not exist.');
+    }
+
     return this.mapper.map(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
