@@ -79,6 +79,17 @@ const routes: Routes = [
     loadChildren: () => import('./features/inquiry/inquiry.module').then((m) => m.InquiryModule),
   },
   {
+    path: 'compliance-and-enforcement',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: [ROLES.C_AND_E],
+    },
+    loadChildren: () =>
+      import('./features/compliance-and-enforcement/compliance-and-enforcement.module').then(
+        (m) => m.ComplianceAndEnforcementModule,
+      ),
+  },
+  {
     path: 'schedule',
     canActivate: [HasRolesGuard],
     data: {

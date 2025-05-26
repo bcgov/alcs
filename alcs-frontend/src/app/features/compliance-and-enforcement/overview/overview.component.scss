@@ -1,0 +1,13 @@
+@use '../../../../styles/colors.scss' as colors;
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  margin-top: 24px;
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+}
