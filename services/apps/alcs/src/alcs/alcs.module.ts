@@ -31,6 +31,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
 import { IncomingFileModule } from './incoming-files/incoming-file.module';
 import { TagModule } from './tag/tag.module';
 import { AlcsDocumentModule } from '../alcs/document/document.module';
+import { ComplianceAndEnforcementModule } from './compliance-and-enforcement/compliance-and-enforcement.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { AlcsDocumentModule } from '../alcs/document/document.module';
     NotificationModule,
     NotificationTimelineModule,
     InquiryModule,
+    ComplianceAndEnforcementModule,
     MeetingModule,
     PlanningReviewTimelineModule,
     MaintenanceModule,
@@ -88,6 +90,7 @@ import { AlcsDocumentModule } from '../alcs/document/document.module';
       { path: 'alcs', module: NotificationSubmissionStatusModule },
       { path: 'alcs', module: NotificationTimelineModule },
       { path: 'alcs', module: InquiryModule },
+      { path: 'alcs', module: ComplianceAndEnforcementModule },
       { path: 'alcs', module: MeetingModule },
       { path: 'alcs', module: PlanningReviewTimelineModule },
       { path: 'alcs', module: TagModule },
