@@ -37,7 +37,9 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
         ),
         forMember(
           (dto) => dto.allegedActivity,
-          mapFrom((entity) => entity.allegedActivity.map((activity) => activity as string)),
+          mapFrom((entity) =>
+            entity.allegedActivity ? entity.allegedActivity.map((activity) => activity as string) : [],
+          ),
         ),
       );
 
