@@ -72,7 +72,7 @@ describe('DraftComponent', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to load C&E file');
   });
 
-  it('calls saveDraft when onSaveDraftClicked is triggered', async () => {
+  it('calls service update when onSaveDraftClicked is triggered', async () => {
     const changes: UpdateComplianceAndEnforcementDto = {};
     component.file = { uuid: '12345', fileNumber: '12345' } as ComplianceAndEnforcementDto;
     component.overviewComponent = { $changes: { getValue: () => changes } } as OverviewComponent;
@@ -95,17 +95,5 @@ describe('DraftComponent', () => {
     component.ngOnDestroy();
 
     expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('saveDraft shows error if service fails', async () => {
-    component.file = { uuid: '12345', fileNumber: '12345' } as ComplianceAndEnforcementDto;
-
-    mockComplianceAndEnforcementService.update.mockImplementation(() => {
-      throw new Error('fail');
-    });
-
-    await component.saveDraft('12345', {});
-
-    expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to save C&E file draft');
   });
 });
