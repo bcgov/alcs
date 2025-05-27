@@ -35,6 +35,10 @@ export class OverviewComponent implements OnDestroy {
   });
 
   @Input() set parentForm(parentForm: FormGroup) {
+    if (!parentForm || parentForm.contains('overview')) {
+      return;
+    }
+
     parentForm.addControl('overview', this.form);
   }
 
