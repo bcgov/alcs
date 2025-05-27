@@ -64,7 +64,7 @@ export class OverviewComponent implements OnDestroy {
       return;
     }
 
-    this.form.valueChanges.pipe(takeUntil(this.$destroy), distinctUntilChanged()).subscribe((form) => {
+    this.form.valueChanges.pipe(takeUntil(this.$destroy)).subscribe((form) => {
       this.$changes.next({
         dateSubmitted: form.dateSubmitted?.toDate().getTime() ?? null,
         initialSubmissionType: form.initialSubmissionType as InitialSubmissionType,
