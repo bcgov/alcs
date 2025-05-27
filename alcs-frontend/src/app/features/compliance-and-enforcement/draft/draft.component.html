@@ -1,0 +1,13 @@
+<div class="container">
+  <h2>C&E File ID: {{ file?.fileNumber }}</h2>
+
+  <form [formGroup]="form">
+    <section class="form-section">
+      <app-compliance-and-enforcement-overview #overviewComponent [parentForm]="form" [file]="file" />
+    </section>
+
+    <div class="button-container">
+      <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft</button>
+    </div>
+  </form>
+</div>
