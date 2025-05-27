@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { OverviewComponent } from './overview/overview.component';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { DraftComponent } from './create/draft.component';
+import { DraftComponent } from './draft/draft.component';
 
 const routes: Routes = [
   {
