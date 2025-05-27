@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  catchError,
   combineLatest,
   debounceTime,
   EMPTY,
@@ -57,20 +58,23 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
         debounceTime(1000),
-        switchMap(([overviewUpdate]) => {
-          if (!this.file?.uuid) {
-            return EMPTY;
-          }
-
-          const updateDto: UpdateComplianceAndEnforcementDto = {
-            ...overviewUpdate,
-          };
-
-          return this.saveDraft(this.file.uuid, updateDto);
+        switchMap(([overviewUpdate]) =>
+          this.file?.uuid
+            ? this.saveDraft(this.file.uuid, {
+                ...overviewUpdate,
+              })
+            : EMPTY,
+        ),
+        catchError((error) => {
+          console.error('Error saving C&E file draft', error);
+          this.toastService.showErrorToast('Failed to save C&E file draft');
+          return EMPTY;
         }),
         takeUntil(this.$destroy),
       )
-      .subscribe();
+      .subscribe(() => {
+        this.toastService.showSuccessToast('C&E file draft saved');
+      });
   }
 
   async loadFile(fileNumber: string) {
@@ -85,12 +89,10 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   saveDraft(uuid: string, updateDto: UpdateComplianceAndEnforcementDto): Observable<ComplianceAndEnforcementDto> {
     try {
-      const $file = this.complianceAndEnforcementService.update(uuid, updateDto);
-      this.toastService.showSuccessToast('C&E file draft saved');
-      return $file;
+      return this.complianceAndEnforcementService.update(uuid, updateDto);
     } catch (error) {
-      console.error('Error updating C&E file', error);
-      this.toastService.showErrorToast('Failed to update C&E file');
+      console.error('Error saving C&E file draft', error);
+      this.toastService.showErrorToast('Failed to save C&E file draft');
       return EMPTY;
     }
   }
