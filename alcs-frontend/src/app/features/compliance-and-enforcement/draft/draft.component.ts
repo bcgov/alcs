@@ -60,7 +60,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         debounceTime(1000),
         switchMap(([overviewUpdate]) =>
           this.file?.uuid
-            ? this.saveDraft(this.file.uuid, {
+            ? this.complianceAndEnforcementService.update(this.file.uuid, {
                 ...overviewUpdate,
               })
             : EMPTY,
@@ -87,16 +87,6 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  saveDraft(uuid: string, updateDto: UpdateComplianceAndEnforcementDto): Observable<ComplianceAndEnforcementDto> {
-    try {
-      return this.complianceAndEnforcementService.update(uuid, updateDto);
-    } catch (error) {
-      console.error('Error saving C&E file draft', error);
-      this.toastService.showErrorToast('Failed to save C&E file draft');
-      return EMPTY;
-    }
-  }
-
   async onSaveDraftClicked() {
     if (!this.overviewComponent || !this.file?.uuid) {
       return;
@@ -104,11 +94,17 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const overviewUpdate = this.overviewComponent.$changes.getValue();
 
-    await firstValueFrom(
-      this.saveDraft(this.file.uuid, {
-        ...overviewUpdate,
-      }),
-    );
+    try {
+      await firstValueFrom(
+        this.complianceAndEnforcementService.update(this.file.uuid, {
+          ...overviewUpdate,
+        }),
+      );
+      this.toastService.showSuccessToast('C&E file draft saved');
+    } catch (error) {
+      console.error('Error saving C&E file draft', error);
+      this.toastService.showErrorToast('Failed to save C&E file draft');
+    }
   }
 
   ngOnDestroy(): void {
