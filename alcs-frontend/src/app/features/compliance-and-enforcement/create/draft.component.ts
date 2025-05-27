@@ -96,18 +96,17 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onSaveDraftClicked() {
-    if (!this.overviewComponent) {
+    if (!this.overviewComponent || !this.file?.uuid) {
       return;
     }
 
     const overviewUpdate = this.overviewComponent.$changes.getValue();
-    const updateDto: UpdateComplianceAndEnforcementDto = {
-      ...overviewUpdate,
-    };
 
-    if (this.file?.uuid) {
-      await firstValueFrom(this.saveDraft(this.file.uuid, updateDto));
-    }
+    await firstValueFrom(
+      this.saveDraft(this.file.uuid, {
+        ...overviewUpdate,
+      }),
+    );
   }
 
   ngOnDestroy(): void {
