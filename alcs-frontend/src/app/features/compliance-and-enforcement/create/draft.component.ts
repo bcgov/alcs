@@ -28,7 +28,6 @@ import { FormGroup } from '@angular/forms';
 export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  fileNumber: string | null = null;
   file?: ComplianceAndEnforcementDto;
   form = new FormGroup({ overview: new FormGroup({}), submitter: new FormGroup({}) });
 
@@ -41,10 +40,10 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.fileNumber = this.route.snapshot.paramMap.get('fileNumber');
+    const fileNumber = this.route.snapshot.paramMap.get('fileNumber');
 
-    if (this.fileNumber) {
-      this.loadFile(this.fileNumber);
+    if (fileNumber) {
+      this.loadFile(fileNumber);
     }
   }
 
