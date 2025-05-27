@@ -6,8 +6,7 @@ import {
   InitialSubmissionType,
   UpdateComplianceAndEnforcementDto,
 } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import { Moment } from 'moment';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({

@@ -8,9 +8,9 @@ import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from '
   providedIn: 'root',
 })
 export class ComplianceAndEnforcementService {
-  private url = `${environment.apiUrl}/compliance-and-enforcement`;
+  private readonly url = `${environment.apiUrl}/compliance-and-enforcement`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   async fetchAll() {
     await firstValueFrom(this.http.get<ComplianceAndEnforcementDto[]>(this.url));

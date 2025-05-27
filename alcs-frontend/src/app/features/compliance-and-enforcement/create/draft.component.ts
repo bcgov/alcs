@@ -35,9 +35,9 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(OverviewComponent) overviewComponent?: OverviewComponent;
 
   constructor(
-    private complianceAndEnforcementService: ComplianceAndEnforcementService,
-    private route: ActivatedRoute,
-    private toastService: ToastService,
+    private readonly complianceAndEnforcementService: ComplianceAndEnforcementService,
+    private readonly route: ActivatedRoute,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
