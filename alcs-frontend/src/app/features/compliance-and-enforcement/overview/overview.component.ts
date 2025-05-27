@@ -43,6 +43,8 @@ export class OverviewComponent implements OnDestroy {
     {},
   );
 
+  subscribed = false;
+
   @Input()
   set file(file: ComplianceAndEnforcementDto | undefined) {
     if (!file) {
@@ -58,17 +60,22 @@ export class OverviewComponent implements OnDestroy {
     });
     this.form.enable();
 
+    // Prevent resubscription
+    if (this.subscribed) {
+      return;
+    }
+
     this.form.valueChanges.pipe(takeUntil(this.$destroy), distinctUntilChanged()).subscribe((form) => {
-      const updateDto: UpdateComplianceAndEnforcementDto = {
+      this.$changes.next({
         dateSubmitted: form.dateSubmitted?.toDate().getTime() ?? null,
         initialSubmissionType: form.initialSubmissionType as InitialSubmissionType,
         allegedContraventionNarrative: form.allegedContraventionNarrative ?? '',
         allegedActivity: form.allegedActivity as AllegedActivity[],
         intakeNotes: form.intakeNotes ?? '',
-      };
-
-      this.$changes.next(updateDto);
+      });
     });
+
+    this.subscribed = true;
   }
 
   ngOnDestroy(): void {
