@@ -50,7 +50,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (!this.overviewComponent) {
-      console.warn('Overview or Submitter component not initialized');
+      console.warn('Not all form sections initialized');
       return;
     }
 
