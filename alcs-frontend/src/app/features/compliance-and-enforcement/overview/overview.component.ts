@@ -31,7 +31,7 @@ export class OverviewComponent implements OnDestroy {
       Validators.required,
       Validators.minLength(1),
     ]),
-    intakeNotes: new FormControl<string>({ value: '', disabled: true }, [Validators.required]),
+    intakeNotes: new FormControl<string>({ value: '', disabled: true }),
   });
 
   @Input() set parentForm(parentForm: FormGroup) {
