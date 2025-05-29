@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   hasApplicationSpecialist = false;
   hasAgrologist = false;
   showPeerReview = false;
+  hasCAndE = false;
   userProfile: UserDto | undefined;
 
   SUBTASK_TYPE = CARD_SUBTASK_TYPE;
@@ -64,6 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           currentUser.client_roles.filter((role) => {
             return role === ROLES.LUP || role === ROLES.SOIL_OFFICER;
           }).length > 0;
+        this.hasCAndE = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.C_AND_E);
       }
     });
   }
