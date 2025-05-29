@@ -6,6 +6,9 @@ import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authe
 import { CARD_SUBTASK_TYPE } from '../../services/card/card-subtask/card-subtask.dto';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
+import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +32,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthenticationService,
     private userService: UserService,
-    private titleService: Title
+    private titleService: Title,
+    private complianceAndEnforcementService: ComplianceAndEnforcementService,
+    private toastService: ToastService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -68,4 +74,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   protected readonly ROLES = ROLES;
+
+  async createComplianceAndEnforcementFile() {
+    try {
+      const fileNumber = (await this.complianceAndEnforcementService.create({})).fileNumber;
+      this.toastService.showSuccessToast('C&E file draft created');
+      this.router.navigateByUrl(`/compliance-and-enforcement/${fileNumber}/draft`);
+    } catch (error) {
+      console.error('Error creating C&E file draft', error);
+      this.toastService.showErrorToast('Failed to create C&E file draft');
+    }
+  }
 }
