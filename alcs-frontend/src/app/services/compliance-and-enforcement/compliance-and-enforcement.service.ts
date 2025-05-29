@@ -21,7 +21,7 @@ export class ComplianceAndEnforcementService {
   }
 
   async create(updateDto: UpdateComplianceAndEnforcementDto) {
-    return await firstValueFrom(this.http.post<UpdateComplianceAndEnforcementDto>(this.url, updateDto));
+    return await firstValueFrom(this.http.post<ComplianceAndEnforcementDto>(this.url, updateDto));
   }
 
   update(uuid: string, updateDto: UpdateComplianceAndEnforcementDto): Observable<ComplianceAndEnforcementDto> {
