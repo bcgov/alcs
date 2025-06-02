@@ -17,8 +17,8 @@ import { CreateDocumentDto, DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from './document.
 import { Document } from './document.entity';
 import { VISIBILITY_FLAG } from '../alcs/application/application-document/application-document.entity';
 
-const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
-const DEFAULT_S3_TAGS = 'ORCS-Classification=85100-20';
+const ORCS_LABEL = 'ORCS Classification';
+const DEFAULT_DOC_TAGS = ['85100-20'];
 
 @Injectable()
 export class DocumentService {
@@ -59,7 +59,7 @@ export class DocumentService {
       Key: fileKey,
       Body: await file.toBuffer(),
       ACL: 'bucket-owner-full-control',
-      Tagging: DEFAULT_S3_TAGS,
+      Tagging: this.formatTagsForS3(DEFAULT_DOC_TAGS),
       ContentType: file.mimetype,
       ContentLength: file.file.bytesRead,
     });
@@ -94,7 +94,7 @@ export class DocumentService {
       Key: fileKey,
       Body: file,
       ACL: 'bucket-owner-full-control',
-      Tagging: DEFAULT_S3_TAGS,
+      Tagging: this.formatTagsForS3(DEFAULT_DOC_TAGS),
       ContentType: mimeType,
       ContentLength: fileSize,
     });
@@ -127,7 +127,7 @@ export class DocumentService {
       Bucket: this.bucket,
       Key: fileKey,
       ACL: 'bucket-owner-full-control',
-      Tagging: DEFAULT_S3_TAGS,
+      Tagging: this.formatTagsForS3(DEFAULT_DOC_TAGS),
     });
 
     return {
@@ -263,7 +263,7 @@ export class DocumentService {
         source: data.source,
         system: data.system,
         uploadedBy: data.uploadedBy,
-        tags: DEFAULT_DB_TAGS,
+        tags: this.formatTagsForDb(DEFAULT_DOC_TAGS),
       }),
     );
   }
@@ -291,5 +291,13 @@ export class DocumentService {
     document.fileName = updates.fileName;
     document.source = updates.source;
     await this.documentRepository.save(document);
+  }
+
+  formatTagsForDb(tags: string[]): string[] {
+    return tags.map((tag) => `${ORCS_LABEL}: ${tag}`);
+  }
+
+  formatTagsForS3(tags: string[]): string {
+    return tags.map((tag) => `${ORCS_LABEL.replace(/\ /g, '-')}=${tag}`).join('&');
   }
 }
