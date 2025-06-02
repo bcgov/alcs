@@ -41,6 +41,8 @@ export enum DOCUMENT_SOURCE {
   LFNG = 'L/FNG',
   AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',
+  BC_GOVERNMENT = 'BC Government',
+  OTHER_AGENCY = 'Other Agency',
 }
 
 export interface DocumentTypeDto extends BaseCodeDto {
