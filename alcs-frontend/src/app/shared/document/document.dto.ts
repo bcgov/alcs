@@ -37,12 +37,25 @@ export enum DOCUMENT_TYPE {
 }
 
 export enum DOCUMENT_SOURCE {
-  APPLICANT = 'Applicant',
+  // All types
   ALC = 'ALC',
   LFNG = 'L/FNG',
-  AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',
+  BC_GOVERNMENT = 'BC Government',
+  OTHER_AGENCY = 'Other Agency',
+
+  // app, NOI, noti, inquiry, planning review only
+  APPLICANT = 'Applicant',
+  AFFECTED_PARTY = 'Affected Party',
+
+  // C&E only
+  AGENT = 'Agent',
+  COMPLAINANT = 'Complainant',
+  PROPERTY_OWNER = 'Property Owner',
+  TENANT = 'Tenant',
 }
+
+export enum C_AND_E_DOCUMENT_SOURCES {}
 
 export enum DOCUMENT_SYSTEM {
   ALCS = 'ALCS',
