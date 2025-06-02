@@ -47,7 +47,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   visibleToPublic = new FormControl<boolean>(false, [Validators.required]);
 
   documentTypes: DocumentTypeDto[] = [];
-  documentSources = Object.values(DOCUMENT_SOURCE);
+  documentSources: DOCUMENT_SOURCE[] = [];
 
   form = new FormGroup({
     name: this.name,
@@ -82,6 +82,16 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     this.loadDocumentTypes();
 
     this.internalVisibilityLabel = this.buildInternalVisibilityLabel();
+
+    this.documentSources = this.data.allowedDocumentSources ?? [
+      DOCUMENT_SOURCE.ALC,
+      DOCUMENT_SOURCE.LFNG,
+      DOCUMENT_SOURCE.PUBLIC,
+      DOCUMENT_SOURCE.BC_GOVERNMENT,
+      DOCUMENT_SOURCE.OTHER_AGENCY,
+      DOCUMENT_SOURCE.APPLICANT,
+      DOCUMENT_SOURCE.AFFECTED_PARTY,
+    ];
 
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
