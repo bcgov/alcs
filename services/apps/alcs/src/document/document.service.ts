@@ -52,6 +52,7 @@ export class DocumentService {
     user: User,
     source = DOCUMENT_SOURCE.ALC,
     system: DOCUMENT_SYSTEM,
+    tags?: string[],
   ) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
@@ -59,7 +60,7 @@ export class DocumentService {
       Key: fileKey,
       Body: await file.toBuffer(),
       ACL: 'bucket-owner-full-control',
-      Tagging: this.formatTagsForS3(DEFAULT_DOC_TAGS),
+      Tagging: this.formatTagsForS3(tags ?? DEFAULT_DOC_TAGS),
       ContentType: file.mimetype,
       ContentLength: file.file.bytesRead,
     });
@@ -72,6 +73,7 @@ export class DocumentService {
       fileName,
       source,
       system,
+      tags: this.formatTagsForDb(tags ?? DEFAULT_DOC_TAGS),
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -87,6 +89,7 @@ export class DocumentService {
     user: User,
     source = DOCUMENT_SOURCE.ALC,
     system: DOCUMENT_SYSTEM,
+    tags?: string[],
   ) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
@@ -94,7 +97,7 @@ export class DocumentService {
       Key: fileKey,
       Body: file,
       ACL: 'bucket-owner-full-control',
-      Tagging: this.formatTagsForS3(DEFAULT_DOC_TAGS),
+      Tagging: this.formatTagsForS3(tags ?? DEFAULT_DOC_TAGS),
       ContentType: mimeType,
       ContentLength: fileSize,
     });
@@ -107,6 +110,7 @@ export class DocumentService {
       fileName,
       source,
       system,
+      tags: this.formatTagsForDb(tags ?? DEFAULT_DOC_TAGS),
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -121,13 +125,13 @@ export class DocumentService {
     await this.documentRepository.softRemove(documents);
   }
 
-  async getUploadUrl(filePath: string) {
+  async getUploadUrl(filePath: string, tags?: string[]) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: fileKey,
       ACL: 'bucket-owner-full-control',
-      Tagging: this.formatTagsForS3(DEFAULT_DOC_TAGS),
+      Tagging: this.formatTagsForS3(tags ?? DEFAULT_DOC_TAGS),
     });
 
     return {
@@ -263,7 +267,7 @@ export class DocumentService {
         source: data.source,
         system: data.system,
         uploadedBy: data.uploadedBy,
-        tags: this.formatTagsForDb(DEFAULT_DOC_TAGS),
+        tags: this.formatTagsForDb(data.tags ?? DEFAULT_DOC_TAGS),
       }),
     );
   }
