@@ -23,7 +23,7 @@ export class CreateDocumentDto {
   uploadedBy?: User | null;
   source: DOCUMENT_SOURCE;
   system: DOCUMENT_SYSTEM;
-  tags: string[];
+  tags?: string[];
 }
 
 export class DocumentTypeDto extends BaseCodeDto {
