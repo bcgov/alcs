@@ -3,11 +3,22 @@ import { BaseCodeDto } from '../common/dtos/base.dto';
 import { User } from '../user/user.entity';
 
 export enum DOCUMENT_SOURCE {
-  APPLICANT = 'Applicant',
+  // All types
   ALC = 'ALC',
   LFNG = 'L/FNG',
-  AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',
+  BC_GOVERNMENT = 'BC Government',
+  OTHER_AGENCY = 'Other Agency',
+
+  // app, NOI, noti, inquiry, planning review only
+  APPLICANT = 'Applicant',
+  AFFECTED_PARTY = 'Affected Party',
+
+  // C&E only
+  AGENT = 'Agent',
+  COMPLAINANT = 'Complainant',
+  PROPERTY_OWNER = 'Property Owner',
+  TENANT = 'Tenant',
 }
 
 export enum DOCUMENT_SYSTEM {
