@@ -1,6 +1,6 @@
 name: deploy
 
-on: 
+on:
   workflow_call:
     inputs:
       environment:
@@ -19,39 +19,39 @@ jobs:
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-22.04
     steps:
-    - name: Lowercase repo owner
-      id: lowercase_repo_owner
-      uses: ASzc/change-string-case-action@v6
-      with:
-        string: ${{ github.repository_owner }}
+      - name: Lowercase repo owner
+        id: lowercase_repo_owner
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ github.repository_owner }}
 
-    - name: Authenticate to OpenShift
-      run: |
-        DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
-        oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
-        
-    - name: Import Images
-      run: |
-        import() { \
-          echo "Importing $1" ; \
-          oc import-image $1:${{ github.sha }} --from ghcr.io/bcgov/$1:${{ github.sha }} -n ${{secrets.LICENSE_PLATE}}-tools ;}
-        
-        import alcs-api
-        import alcs-frontend
-        import alcs-migrate
-        import alcs-portal-frontend
+      - name: Authenticate to OpenShift
+        run: |
+          DOCKER_IMAGE=ghcr.io/${{ steps.lowercase_repo_owner.outputs.lowercase }}/alcs-api
+          oc login --token=${{ secrets.OC_TOKEN }} --server=${{ secrets.OC_SERVER }}
 
-    - name: Repository Dispatch
-      uses: peter-evans/repository-dispatch@v3
-      with:
-        token: ${{ secrets.GITOPS_PAT }}
-        repository: ${{ env.GITOPS_REPO }}
-        event-type: deploy-${{ inputs.environment }}
-        client-payload: |
-          {
-            "alcs-api": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-api:${{ github.sha }}",
-            "alcs-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-frontend:${{ github.sha }}",
-            "alcs-migrate": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-migrate:${{ github.sha }}",
-            "alcs-portal-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-frontend:${{ github.sha }}",
-            "commitMessage": "${{ github.sha }}"
-          }
+      - name: Import Images
+        run: |
+          import() { \
+            echo "Importing $1" ; \
+            oc import-image $1:${{ github.sha }} --from ghcr.io/bcgov/$1:${{ github.sha }} -n ${{secrets.LICENSE_PLATE}}-tools ;}
+
+          import alcs-api
+          import alcs-frontend
+          import alcs-migrate
+          import alcs-portal-frontend
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITOPS_DEPLOY_KEY }}
+          repository: ${{ env.GITOPS_REPO }}
+          event-type: deploy-${{ inputs.environment }}
+          client-payload: |
+            {
+              "alcs-api": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-api:${{ github.sha }}",
+              "alcs-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-frontend:${{ github.sha }}",
+              "alcs-migrate": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-migrate:${{ github.sha }}",
+              "alcs-portal-frontend": "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-frontend:${{ github.sha }}",
+              "commitMessage": "${{ github.sha }}"
+            }
