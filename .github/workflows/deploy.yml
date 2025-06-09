@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ssh-key: ${{ secrets.GITOPS_DEPLOY_KEY }}
-          repository: ${{ secrets.GITOPS_REPO }}
+          repository: ${{ env.GITOPS_REPO }}
 
       - name: "Configure git"
         # From https://github.com/orgs/community/discussions/26560#discussioncomment-3531273
