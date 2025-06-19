@@ -6,14 +6,19 @@ import { BehaviorSubject } from 'rxjs';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
-
 import { HomeComponent } from './home.component';
+import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { Router } from '@angular/router';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let mockAuthService: DeepMocked<AuthenticationService>;
   let mockUserService: DeepMocked<UserService>;
+  let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
+  let mockToastService: DeepMocked<ToastService>;
+  let mockRouter: DeepMocked<Router>;
 
   beforeEach(async () => {
     mockAuthService = createMock();
@@ -27,6 +32,10 @@ describe('HomeComponent', () => {
       email: 'secret',
     });
 
+    mockComplianceAndEnforcementService = createMock();
+    mockToastService = createMock();
+    mockRouter = createMock();
+
     await TestBed.configureTestingModule({
       declarations: [HomeComponent],
       imports: [HttpClientTestingModule, RouterTestingModule],
@@ -38,6 +47,18 @@ describe('HomeComponent', () => {
         {
           provide: UserService,
           useValue: mockUserService,
+        },
+        {
+          provide: ComplianceAndEnforcementService,
+          useValue: mockComplianceAndEnforcementService,
+        },
+        {
+          provide: ToastService,
+          useValue: mockToastService,
+        },
+        {
+          provide: Router,
+          useValue: mockRouter,
         },
       ],
     }).compileComponents();
@@ -56,5 +77,55 @@ describe('HomeComponent', () => {
     const welcomeTitle = compiled.querySelector('.welcome-title');
     expect(welcomeTitle).toBeTruthy();
     expect(welcomeTitle.textContent.trim()).toEqual('Welcome agent to ALCS');
+  });
+
+  describe('createComplianceAndEnforcementFile', () => {
+    it('shows success toast if service create fails', async () => {
+      mockComplianceAndEnforcementService.create.mockRejectedValue(new Error());
+
+      await component.createComplianceAndEnforcementFile();
+
+      expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to create C&E file draft');
+    });
+
+    it('shows error toast if service create fails', async () => {
+      mockComplianceAndEnforcementService.create.mockResolvedValue({
+        uuid: '12345',
+        fileNumber: '12345',
+        dateSubmitted: null,
+        dateOpened: null,
+        dateClosed: null,
+        initialSubmissionType: null,
+        allegedContraventionNarrative: '',
+        allegedActivity: [],
+        intakeNotes: '',
+      });
+
+      await component.createComplianceAndEnforcementFile();
+
+      expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('C&E file draft created');
+    });
+
+    it('shows error toast if service create fails', async () => {
+      const responseDto = {
+        uuid: '12345',
+        fileNumber: '12345',
+        dateSubmitted: null,
+        dateOpened: null,
+        dateClosed: null,
+        initialSubmissionType: null,
+        allegedContraventionNarrative: '',
+        allegedActivity: [],
+        intakeNotes: '',
+      };
+
+      mockComplianceAndEnforcementService.create.mockResolvedValue(responseDto);
+
+      await component.createComplianceAndEnforcementFile();
+
+      expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(
+        `/compliance-and-enforcement/${responseDto.fileNumber}/draft`,
+      );
+    });
   });
 });

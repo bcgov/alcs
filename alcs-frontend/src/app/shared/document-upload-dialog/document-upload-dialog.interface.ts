@@ -1,4 +1,4 @@
-import { DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
 import { VisibilityGroup } from './document-upload-dialog.component';
 import {
   CreateDocumentDto,
@@ -17,6 +17,7 @@ export interface DocumentUploadDialogOptions {
   allowedVisibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
   allowsFileEdit?: boolean;
   documentTypeOverrides?: Partial<Record<DOCUMENT_TYPE, DocumentTypeConfig>>;
+  allowedDocumentSources?: DOCUMENT_SOURCE[];
 }
 
 export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {

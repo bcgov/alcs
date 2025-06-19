@@ -3,7 +3,7 @@ import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@ang
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastService } from '../../services/toast/toast.service';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
+import { DEFAULT_DOCUMENT_SOURCES, DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
 import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
 import { splitExtension } from '../utils/file';
 import {
@@ -47,7 +47,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   visibleToPublic = new FormControl<boolean>(false, [Validators.required]);
 
   documentTypes: DocumentTypeDto[] = [];
-  documentSources = Object.values(DOCUMENT_SOURCE);
+  documentSources: DOCUMENT_SOURCE[] = [];
 
   form = new FormGroup({
     name: this.name,
@@ -82,6 +82,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     this.loadDocumentTypes();
 
     this.internalVisibilityLabel = this.buildInternalVisibilityLabel();
+
+    this.documentSources = this.data.allowedDocumentSources ?? DEFAULT_DOCUMENT_SOURCES;
 
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;

@@ -37,12 +37,43 @@ export enum DOCUMENT_TYPE {
 }
 
 export enum DOCUMENT_SOURCE {
-  APPLICANT = 'Applicant',
+  // All types
   ALC = 'ALC',
   LFNG = 'L/FNG',
-  AFFECTED_PARTY = 'Affected Party',
   PUBLIC = 'Public',
+  BC_GOVERNMENT = 'BC Government',
+  OTHER_AGENCY = 'Other Agency',
+
+  // app, NOI, noti, inquiry, planning review only
+  APPLICANT = 'Applicant',
+  AFFECTED_PARTY = 'Affected Party',
+
+  // C&E only
+  AGENT = 'Agent',
+  COMPLAINANT = 'Complainant',
+  PROPERTY_OWNER = 'Property Owner',
+  TENANT = 'Tenant',
 }
+
+export const DEFAULT_DOCUMENT_SOURCES = [
+  DOCUMENT_SOURCE.ALC,
+  DOCUMENT_SOURCE.LFNG,
+  DOCUMENT_SOURCE.PUBLIC,
+  DOCUMENT_SOURCE.BC_GOVERNMENT,
+  DOCUMENT_SOURCE.OTHER_AGENCY,
+  DOCUMENT_SOURCE.APPLICANT,
+  DOCUMENT_SOURCE.AFFECTED_PARTY,
+];
+
+export const C_AND_E_DOCUMENT_SOURCES = [
+  DOCUMENT_SOURCE.ALC,
+  DOCUMENT_SOURCE.LFNG,
+  DOCUMENT_SOURCE.PUBLIC,
+  DOCUMENT_SOURCE.BC_GOVERNMENT,
+  DOCUMENT_SOURCE.OTHER_AGENCY,
+  DOCUMENT_SOURCE.APPLICANT,
+  DOCUMENT_SOURCE.AFFECTED_PARTY,
+];
 
 export enum DOCUMENT_SYSTEM {
   ALCS = 'ALCS',

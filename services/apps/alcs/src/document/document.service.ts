@@ -17,8 +17,8 @@ import { CreateDocumentDto, DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from './document.
 import { Document } from './document.entity';
 import { VISIBILITY_FLAG } from '../alcs/application/application-document/application-document.entity';
 
-const DEFAULT_DB_TAGS = ['ORCS Classification: 85100-20'];
-const DEFAULT_S3_TAGS = 'ORCS-Classification=85100-20';
+const ORCS_LABEL = 'ORCS Classification';
+const DEFAULT_DOC_TAGS = ['85100-20'];
 
 @Injectable()
 export class DocumentService {
@@ -52,6 +52,7 @@ export class DocumentService {
     user: User,
     source = DOCUMENT_SOURCE.ALC,
     system: DOCUMENT_SYSTEM,
+    tags?: string[],
   ) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
@@ -59,7 +60,7 @@ export class DocumentService {
       Key: fileKey,
       Body: await file.toBuffer(),
       ACL: 'bucket-owner-full-control',
-      Tagging: DEFAULT_S3_TAGS,
+      Tagging: this.formatTagsForS3(tags ?? DEFAULT_DOC_TAGS),
       ContentType: file.mimetype,
       ContentLength: file.file.bytesRead,
     });
@@ -72,6 +73,7 @@ export class DocumentService {
       fileName,
       source,
       system,
+      tags: this.formatTagsForDb(tags ?? DEFAULT_DOC_TAGS),
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -87,6 +89,7 @@ export class DocumentService {
     user: User,
     source = DOCUMENT_SOURCE.ALC,
     system: DOCUMENT_SYSTEM,
+    tags?: string[],
   ) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
@@ -94,7 +97,7 @@ export class DocumentService {
       Key: fileKey,
       Body: file,
       ACL: 'bucket-owner-full-control',
-      Tagging: DEFAULT_S3_TAGS,
+      Tagging: this.formatTagsForS3(tags ?? DEFAULT_DOC_TAGS),
       ContentType: mimeType,
       ContentLength: fileSize,
     });
@@ -107,6 +110,7 @@ export class DocumentService {
       fileName,
       source,
       system,
+      tags: this.formatTagsForDb(tags ?? DEFAULT_DOC_TAGS),
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -121,13 +125,13 @@ export class DocumentService {
     await this.documentRepository.softRemove(documents);
   }
 
-  async getUploadUrl(filePath: string) {
+  async getUploadUrl(filePath: string, tags?: string[]) {
     const fileKey = `${filePath}/${v4()}`;
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: fileKey,
       ACL: 'bucket-owner-full-control',
-      Tagging: DEFAULT_S3_TAGS,
+      Tagging: this.formatTagsForS3(tags ?? DEFAULT_DOC_TAGS),
     });
 
     return {
@@ -263,7 +267,7 @@ export class DocumentService {
         source: data.source,
         system: data.system,
         uploadedBy: data.uploadedBy,
-        tags: DEFAULT_DB_TAGS,
+        tags: this.formatTagsForDb(data.tags ?? DEFAULT_DOC_TAGS),
       }),
     );
   }
@@ -291,5 +295,13 @@ export class DocumentService {
     document.fileName = updates.fileName;
     document.source = updates.source;
     await this.documentRepository.save(document);
+  }
+
+  formatTagsForDb(tags: string[]): string[] {
+    return tags.map((tag) => `${ORCS_LABEL}: ${tag}`);
+  }
+
+  formatTagsForS3(tags: string[]): string {
+    return tags.map((tag) => `${ORCS_LABEL.replace(/\ /g, '-')}=${tag}`).join('&');
   }
 }

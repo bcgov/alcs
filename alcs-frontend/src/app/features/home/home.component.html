@@ -2,6 +2,13 @@
   <div class="welcome-title">
     <h1>Welcome {{ userProfile?.prettyName }} to ALCS</h1>
   </div>
+  <div class="actions">
+    <ng-container *ngIf="hasCAndE">
+      <button mat-flat-button color="primary" type="button" (click)="createComplianceAndEnforcementFile()">
+        + New C&E File
+      </button>
+    </ng-container>
+  </div>
   <div *ngIf="hasOtherRole">
     <app-assigned></app-assigned>
   </div>

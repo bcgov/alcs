@@ -1,0 +1,44 @@
+<h3>Overview</h3>
+
+<form [formGroup]="form">
+  <mat-form-field appearance="outline" class="date-picker">
+    <mat-label>Date Submitted</mat-label>
+    <input
+      matInput
+      (click)="datePicker.open()"
+      [matDatepicker]="datePicker"
+      name="date-submitted"
+      formControlName="dateSubmitted"
+    />
+    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+    <mat-datepicker #datePicker type="date"></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Initial Submission Type</mat-label>
+    <mat-select multiple="false" formControlName="initialSubmissionType">
+      <mat-option *ngFor="let type of initialSubmissionTypes" [value]="type.value">
+        {{ type.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Alleged Contravention Narrative</mat-label>
+    <textarea matInput formControlName="allegedContraventionNarrative" rows="3"></textarea>
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Alleged Activity</mat-label>
+    <mat-select multiple="true" formControlName="allegedActivity">
+      <mat-option *ngFor="let activity of allegedActivities" [value]="activity.value">
+        {{ activity.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Intake Notes</mat-label>
+    <textarea matInput formControlName="intakeNotes" rows="3"></textarea>
+  </mat-form-field>
+</form>
