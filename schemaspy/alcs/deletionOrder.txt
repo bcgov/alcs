@@ -3,6 +3,7 @@ notice_of_intent_parcel_ownership_type
 health_check
 file_viewed
 email_status
+compliance_and_enforcement
 staff_journal
 application_submission_review
 notification_transferee

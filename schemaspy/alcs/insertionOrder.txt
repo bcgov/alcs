@@ -117,6 +117,7 @@ covenant_transferee
 notification_transferee
 application_submission_review
 staff_journal
+compliance_and_enforcement
 email_status
 file_viewed
 health_check

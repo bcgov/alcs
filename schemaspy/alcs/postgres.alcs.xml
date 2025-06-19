@@ -1564,6 +1564,29 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
+      <table name="compliance_and_enforcement" remarks="Compliance and enforcement file" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="true" defaultValue="nextval('alcs.alcs_file_number_seq'::regclass)" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="7" name="date_submitted" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="date_opened" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="date_closed" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="initial_submission_type" nullable="true" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_initial_submission_type_enum&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="11" name="alleged_contravention_narrative" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'{}'::alcs.compliance_and_enforcement_alleged_activity_enum[]" digits="0" id="12" name="alleged_activity" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;_compliance_and_enforcement_alleged_activity_enum&quot;" typeCode="2003"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="13" name="intake_notes" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_f4122d7d87ff1aafd2de22c3bd4" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="UQ_1ec3378cb5c34a48af1426840e7" unique="true">
+            <column ascending="true" name="file_number"/>
+         </index>
+      </table>
       <table name="configuration" remarks="Stores real time config values editable by ALCS Admin." schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
             <child column="first_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_owner"/>
