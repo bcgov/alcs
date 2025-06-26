@@ -58,25 +58,25 @@ jobs:
         id: api-image-update
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-api:${{ github.sha }}"' -i namespaces/dev/images-api_patch.yaml
+          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-api:${{ github.sha }}"' -i namespaces/${{ inputs.environment }}/images-api_patch.yaml
 
       - name: Update Migrate Image
         id: migrate-image-update
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-migrate:${{ github.sha }}"' -i namespaces/dev/images-migrate_patch.yaml
+          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-migrate:${{ github.sha }}"' -i namespaces/${{ inputs.environment }}/images-migrate_patch.yaml
 
       - name: Update ALCS Frontend Image
         id: fe-image-update
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-frontend:${{ github.sha }}"' -i namespaces/dev/images-alcs_patch.yaml
+          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-frontend:${{ github.sha }}"' -i namespaces/${{ inputs.environment }}/images-alcs_patch.yaml
 
       - name: Update Portal Frontend Image
         id: portal-fe-image-update
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-frontend:${{ github.sha }}"' -i namespaces/dev/images-portal_patch.yaml
+          cmd: yq eval '.spec.template.spec.containers[0].image = "image-registry.apps.silver.devops.gov.bc.ca/a5cf88-tools/alcs-portal-frontend:${{ github.sha }}"' -i namespaces/${{ inputs.environment }}/images-portal_patch.yaml
 
       - name: Commit and push update
         run: |
