@@ -1,6 +1,11 @@
 import { AutoMap } from 'automapper-classes';
-import { IsNumber, IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsNumber, IsString, IsEnum, IsOptional, IsArray, ValidateNested } from 'class-validator';
 import { AllegedActivity, InitialSubmissionType } from './compliance-and-enforcement.entity';
+import {
+  ComplianceAndEnforcementSubmitterDto,
+  UpdateComplianceAndEnforcementSubmitterDto,
+} from './submitter/submitter.dto';
+import { Type } from 'class-transformer';
 
 export class ComplianceAndEnforcementDto {
   @AutoMap()
@@ -29,6 +34,9 @@ export class ComplianceAndEnforcementDto {
 
   @AutoMap()
   intakeNotes: string;
+
+  @AutoMap()
+  submitters?: ComplianceAndEnforcementSubmitterDto[];
 }
 
 export class UpdateComplianceAndEnforcementDto {
@@ -59,4 +67,10 @@ export class UpdateComplianceAndEnforcementDto {
   @IsOptional()
   @IsString()
   intakeNotes?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateComplianceAndEnforcementSubmitterDto)
+  submitters?: UpdateComplianceAndEnforcementSubmitterDto[];
 }

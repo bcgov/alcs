@@ -4,6 +4,11 @@ import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from './compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
 import { In } from 'typeorm';
+import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
+import {
+  ComplianceAndEnforcementSubmitterDto,
+  UpdateComplianceAndEnforcementSubmitterDto,
+} from './submitter/submitter.dto';
 
 @Injectable()
 export class ComplianceAndEnforcementProfile extends AutomapperProfile {
@@ -39,6 +44,18 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
           (dto) => dto.allegedActivity,
           mapFrom((entity) =>
             entity.allegedActivity ? entity.allegedActivity.map((activity) => activity as string) : [],
+          ),
+        ),
+        forMember(
+          (dto) => dto.submitters,
+          mapFrom((entity) =>
+            entity.submitters !== undefined
+              ? this.mapper.mapArray(
+                  entity.submitters,
+                  ComplianceAndEnforcementSubmitter,
+                  ComplianceAndEnforcementSubmitterDto,
+                )
+              : entity.submitters,
           ),
         ),
       );
@@ -81,6 +98,18 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
             dto.allegedActivity !== undefined
               ? dto.allegedActivity.map((activity) => activity as AllegedActivity)
               : dto.allegedActivity,
+          ),
+        ),
+        forMember(
+          (entity) => entity.submitters,
+          mapFrom((dto) =>
+            dto.submitters !== undefined
+              ? this.mapper.mapArray(
+                  dto.submitters,
+                  UpdateComplianceAndEnforcementSubmitterDto,
+                  ComplianceAndEnforcementSubmitter,
+                )
+              : undefined,
           ),
         ),
       );
