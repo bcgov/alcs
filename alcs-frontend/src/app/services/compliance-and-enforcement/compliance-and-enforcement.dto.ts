@@ -1,3 +1,8 @@
+import {
+  ComplianceAndEnforcementSubmitterDto,
+  UpdateComplianceAndEnforcementSubmitterDto,
+} from './submitter/submitter.dto';
+
 export enum InitialSubmissionType {
   COMPLAINT = 'Complaint',
   REFERRAL = 'Referral',
@@ -22,6 +27,7 @@ export interface ComplianceAndEnforcementDto {
   allegedContraventionNarrative: string;
   allegedActivity: AllegedActivity[];
   intakeNotes: string;
+  submitters: ComplianceAndEnforcementSubmitterDto[];
 }
 
 export interface UpdateComplianceAndEnforcementDto {
@@ -32,4 +38,5 @@ export interface UpdateComplianceAndEnforcementDto {
   allegedContraventionNarrative?: string;
   allegedActivity?: AllegedActivity[];
   intakeNotes?: string;
+  submitters?: UpdateComplianceAndEnforcementSubmitterDto[];
 }

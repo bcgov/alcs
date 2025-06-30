@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   async createComplianceAndEnforcementFile() {
     try {
-      const fileNumber = (await this.complianceAndEnforcementService.create({})).fileNumber;
+      const fileNumber = (await this.complianceAndEnforcementService.create({}, true)).fileNumber;
       this.toastService.showSuccessToast('C&E file draft created');
       this.router.navigateByUrl(`/compliance-and-enforcement/${fileNumber}/draft`);
     } catch (error) {
