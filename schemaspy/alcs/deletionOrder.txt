@@ -3,7 +3,6 @@ notice_of_intent_parcel_ownership_type
 health_check
 file_viewed
 email_status
-compliance_and_enforcement
 staff_journal
 application_submission_review
 notification_transferee
@@ -27,6 +26,7 @@ notice_of_intent_meeting
 notice_of_intent_decision_document
 notice_of_intent_decision_condition_component
 message
+compliance_and_enforcement_submitter
 comment_mention
 board_status
 board_create_card_types_card_type
@@ -100,6 +100,7 @@ notice_of_intent_decision_outcome
 notice_of_intent_decision_condition_type
 notice_of_intent_decision_component_type
 inquiry_type
+compliance_and_enforcement
 card_subtask_type
 application_type
 application_submission_status_type

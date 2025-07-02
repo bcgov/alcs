@@ -21,6 +21,7 @@ application_reconsideration_type
 application_submission_status_type
 application_type
 card_subtask_type
+compliance_and_enforcement
 inquiry_type
 notice_of_intent_decision_component_type
 notice_of_intent_decision_condition_type
@@ -94,6 +95,7 @@ board_allowed_card_types_card_type
 board_create_card_types_card_type
 board_status
 comment_mention
+compliance_and_enforcement_submitter
 message
 notice_of_intent_decision_condition_component
 notice_of_intent_decision_document
@@ -117,7 +119,6 @@ covenant_transferee
 notification_transferee
 application_submission_review
 staff_journal
-compliance_and_enforcement
 email_status
 file_viewed
 health_check
