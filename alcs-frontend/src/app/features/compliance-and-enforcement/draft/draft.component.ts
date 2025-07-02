@@ -56,7 +56,6 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
         tap((overview) => {
-          console.log('overview changes');
           if (overview.initialSubmissionType) {
             this.initialSubmissionType = overview.initialSubmissionType;
           }
@@ -86,7 +85,6 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
             : this.complianceAndEnforcementSubmitterService.create({ ...submitter, fileUuid: this.file?.uuid }),
         ),
         tap((submitter) => {
-          console.log('submitter changes', submitter);
           if (!this.submitter) {
             this.submitter = submitter;
           }
