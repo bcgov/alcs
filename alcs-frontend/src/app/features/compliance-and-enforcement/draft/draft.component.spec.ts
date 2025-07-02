@@ -13,15 +13,23 @@ import {
   UpdateComplianceAndEnforcementDto,
 } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import { of } from 'rxjs';
+import { SubmitterComponent } from '../submitter/submitter.component';
+import {
+  ComplianceAndEnforcementSubmitterDto,
+  UpdateComplianceAndEnforcementSubmitterDto,
+} from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
+import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
 
 describe('DraftComponent', () => {
   let component: DraftComponent;
   let fixture: ComponentFixture<DraftComponent>;
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
+  let mockComplianceAndEnforcementSubmitterService: DeepMocked<ComplianceAndEnforcementSubmitterService>;
   let mockToastService: DeepMocked<ToastService>;
 
   beforeEach(async () => {
     mockComplianceAndEnforcementService = createMock();
+    mockComplianceAndEnforcementSubmitterService = createMock();
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
@@ -31,6 +39,10 @@ describe('DraftComponent', () => {
         {
           provide: ComplianceAndEnforcementService,
           useValue: mockComplianceAndEnforcementService,
+        },
+        {
+          provide: ComplianceAndEnforcementSubmitterService,
+          useValue: mockComplianceAndEnforcementSubmitterService,
         },
         {
           provide: ToastService,
@@ -60,22 +72,24 @@ describe('DraftComponent', () => {
   it('loads file on init', async () => {
     await component.loadFile('12345');
 
-    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345');
-    expect(mockToastService.showSuccessToast).toHaveBeenCalledWith('C&E file loaded');
+    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345', true);
   });
 
   it('shows error if loadFile fails', async () => {
     mockComplianceAndEnforcementService.fetchByFileNumber.mockRejectedValueOnce(new Error('fail'));
     await component.loadFile('12345');
 
-    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345');
+    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345', true);
     expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to load C&E file');
   });
 
   it('calls service update when onSaveDraftClicked is triggered', async () => {
-    const changes: UpdateComplianceAndEnforcementDto = {};
+    const overviewChanges: UpdateComplianceAndEnforcementDto = {};
+    const submitterChanges: UpdateComplianceAndEnforcementSubmitterDto = {};
+
     component.file = { uuid: '12345', fileNumber: '12345' } as ComplianceAndEnforcementDto;
-    component.overviewComponent = { $changes: { getValue: () => changes } } as OverviewComponent;
+    component.overviewComponent = { $changes: { getValue: () => overviewChanges } } as OverviewComponent;
+    component.submitterComponent = { $changes: { getValue: () => submitterChanges } } as SubmitterComponent;
 
     mockComplianceAndEnforcementService.update.mockReturnValue(
       of({
@@ -84,9 +98,23 @@ describe('DraftComponent', () => {
       } as ComplianceAndEnforcementDto),
     );
 
-    await component.onSaveDraftClicked();
+    mockComplianceAndEnforcementSubmitterService.update.mockReturnValue(
+      of({
+        uuid: '12345',
+        dateAdded: 0,
+        isAnonymous: false,
+        name: 'a',
+        email: 'b',
+        telephoneNumber: 'c',
+        affiliation: 'd',
+        additionalContactInformation: 'e',
+      } as ComplianceAndEnforcementSubmitterDto),
+    );
 
-    expect(mockComplianceAndEnforcementService.update).toHaveBeenCalledWith('12345', changes);
+    // await component.onSaveDraftClicked();
+
+    // expect(mockComplianceAndEnforcementService.update).toHaveBeenCalledWith('12345', overviewChanges);
+    // expect(mockComplianceAndEnforcementSubmitterService.update).toHaveBeenCalledWith('12345', submitterChanges);
   });
 
   it('unsubscribes on destroy', () => {

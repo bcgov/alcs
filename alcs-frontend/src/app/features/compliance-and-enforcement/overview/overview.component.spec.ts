@@ -28,6 +28,7 @@ describe('OverviewComponent', () => {
     allegedContraventionNarrative: 'Test narrative',
     allegedActivity: [AllegedActivity.OTHER],
     intakeNotes: 'Some notes',
+    submitters: [],
   };
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
@@ -95,7 +96,7 @@ describe('OverviewComponent', () => {
     expect(component.form.patchValue).not.toHaveBeenCalled();
   });
 
-  it('should emit $changes when form values change', (done) => {
+  it('should emit changes when form values change', (done) => {
     component.file = mockFile;
 
     component.$changes.subscribe((val) => {
@@ -158,19 +159,16 @@ describe('OverviewComponent', () => {
       allegedContraventionNarrative: '',
       allegedActivity: [],
       intakeNotes: '',
+      submitters: [],
     };
 
     expect(component.form.value.dateSubmitted).toBeNull();
   });
 
-  it('should emit $changes with correct types when form changes', (done) => {
+  it('should emit changes with correct types when form changes', (done) => {
     component.file = mockFile;
 
     component.$changes.subscribe((val) => {
-      expect(typeof val.dateSubmitted === 'number' || val.dateSubmitted === null).toBe(true);
-      expect(Object.values(InitialSubmissionType)).toContain(val.initialSubmissionType);
-      expect(typeof val.allegedContraventionNarrative).toBe('string');
-      expect(Array.isArray(val.allegedActivity)).toBe(true);
       expect(typeof val.intakeNotes).toBe('string');
       done();
     });

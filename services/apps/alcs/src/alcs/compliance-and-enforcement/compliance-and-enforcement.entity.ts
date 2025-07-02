@@ -1,7 +1,8 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
+import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
 
 export enum InitialSubmissionType {
   COMPLAINT = 'Complaint',
@@ -62,4 +63,8 @@ export class ComplianceAndEnforcement extends Base {
   @AutoMap()
   @Column({ type: 'text', default: '' })
   intakeNotes: string;
+
+  @AutoMap()
+  @OneToMany(() => ComplianceAndEnforcementSubmitter, (submitter) => submitter.file, { cascade: true })
+  submitters: ComplianceAndEnforcementSubmitter[];
 }

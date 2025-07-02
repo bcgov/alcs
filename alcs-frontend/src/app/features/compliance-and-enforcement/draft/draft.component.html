@@ -4,6 +4,12 @@
   <form [formGroup]="form">
     <section class="form-section">
       <app-compliance-and-enforcement-overview #overviewComponent [parentForm]="form" [file]="file" />
+      <app-compliance-and-enforcement-submitter
+        #submitterComponent
+        [parentForm]="form"
+        [submitter]="submitter"
+        [initialSubmissionType]="initialSubmissionType"
+      />
     </section>
 
     <div class="button-container">
