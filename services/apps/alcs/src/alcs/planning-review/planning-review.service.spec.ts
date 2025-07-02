@@ -33,6 +33,7 @@ describe('PlanningReviewService', () => {
     mockFileNumberService = createMock();
     mockLocalGovernmentService = createMock();
     mockCardService = createMock();
+    mockCodeService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
