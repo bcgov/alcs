@@ -10,13 +10,23 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 import { ClsMiddleware } from 'nestjs-cls';
-import { S3StreamLogger } from 's3-streamlogger';
+import { S3StreamLogger, S3StreamLoggerOptions } from 's3-streamlogger';
 import { install } from 'source-map-support';
 import { SPLAT } from 'triple-beam';
 import * as winston from 'winston';
 import { createLogger } from 'winston';
 import { generateModuleGraph } from './commands/graph';
 import { MainModule } from './main.module';
+import { S3ClientConfig } from '@aws-sdk/client-s3';
+
+// S3StreamLogger passes its config to S3Client, but doesn't accept all the
+// properties of S3ClientConfig. This allows those properties.
+interface SafeS3StreamLoggerOptions extends S3StreamLoggerOptions {
+  config: S3StreamLoggerOptions['config'] & {
+    forcePathStyle: boolean;
+    endpoint: string;
+  };
+}
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -96,7 +106,7 @@ const registerMultiPart = async (app: NestFastifyApplication) => {
 };
 
 function setupLogger() {
-  const s3Stream = new S3StreamLogger({
+  const s3StreamOptions: SafeS3StreamLoggerOptions = {
     rotate_every: 1000 * 60 * 60 * 24, //1 Day
     folder: 'logs',
     bucket: config.get<string>('STORAGE.BUCKET'),
@@ -110,7 +120,9 @@ function setupLogger() {
       forcePathStyle: true,
       endpoint: config.get('STORAGE.URL'),
     },
-  });
+  };
+
+  const s3Stream = new S3StreamLogger(s3StreamOptions);
 
   const timeStampFormat = winston.format.timestamp({
     format: 'YYYY-MMM-DD HH:mm:ss',
