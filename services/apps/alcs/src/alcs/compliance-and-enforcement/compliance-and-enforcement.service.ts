@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
+import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from './compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
@@ -9,6 +9,7 @@ import {
   ServiceConflictException,
   ServiceNotFoundException,
 } from '../../../../../libs/common/src/exceptions/base.exception';
+import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
 
 @Injectable()
 export class ComplianceAndEnforcementService {
@@ -16,6 +17,7 @@ export class ComplianceAndEnforcementService {
     @InjectRepository(ComplianceAndEnforcement)
     private repository: Repository<ComplianceAndEnforcement>,
     @InjectMapper() private mapper: Mapper,
+    private readonly submitterService: ComplianceAndEnforcementSubmitterService,
   ) {}
 
   async fetchAll(): Promise<ComplianceAndEnforcementDto[]> {
@@ -27,10 +29,13 @@ export class ComplianceAndEnforcementService {
     return this.mapper.mapArray(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async fetchByFileNumber(fileNumber: string): Promise<ComplianceAndEnforcementDto> {
+  async fetchByUuid(uuid: string, withSubmitters = false): Promise<ComplianceAndEnforcementDto> {
     const entity = await this.repository.findOne({
       where: {
-        fileNumber: fileNumber,
+        uuid,
+      },
+      relations: {
+        submitters: withSubmitters,
       },
     });
 
@@ -41,9 +46,34 @@ export class ComplianceAndEnforcementService {
     return this.mapper.map(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async create(dto: UpdateComplianceAndEnforcementDto): Promise<ComplianceAndEnforcementDto> {
+  async fetchByFileNumber(fileNumber: string, withSubmitters = false): Promise<ComplianceAndEnforcementDto> {
+    const entity = await this.repository.findOne({
+      where: {
+        fileNumber,
+      },
+      relations: {
+        submitters: withSubmitters,
+      },
+    });
+
+    if (entity === null) {
+      throw new ServiceNotFoundException('A C&E file with this file number does not exist.');
+    }
+
+    return this.mapper.map(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
+  }
+
+  async create(
+    dto: UpdateComplianceAndEnforcementDto,
+    createInitialSubmitter = false,
+  ): Promise<ComplianceAndEnforcementDto> {
     const entity = this.mapper.map(dto, UpdateComplianceAndEnforcementDto, ComplianceAndEnforcement);
+
     const savedEntity = await this.repository.save(entity);
+
+    if (createInitialSubmitter) {
+      await this.submitterService.create({ fileUuid: entity.uuid });
+    }
 
     return this.mapper.map(savedEntity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }

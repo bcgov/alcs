@@ -88,8 +88,8 @@ describe('ComplianceAndEnforcementController', () => {
         intakeNotes: '',
       };
       mockComplianceAndEnforcementService.fetchByFileNumber.mockResolvedValue(result);
-      expect(await controller.fetchByFileNumber('1')).toEqual(result);
-      expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('1');
+      expect(await controller.fetchByFileNumber('1', true)).toEqual(result);
+      expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('1', true);
     });
   });
 
@@ -108,8 +108,8 @@ describe('ComplianceAndEnforcementController', () => {
         intakeNotes: '',
       };
       mockComplianceAndEnforcementService.create.mockResolvedValue(resultDto);
-      expect(await controller.create(createDto)).toEqual(resultDto);
-      expect(mockComplianceAndEnforcementService.create).toHaveBeenCalledWith(createDto);
+      expect(await controller.create(createDto, true)).toEqual(resultDto);
+      expect(mockComplianceAndEnforcementService.create).toHaveBeenCalledWith(createDto, true);
     });
   });
 

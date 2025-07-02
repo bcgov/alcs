@@ -1,0 +1,45 @@
+<form [formGroup]="form">
+  <div class="header full-width">
+    <h3>Submitter</h3>
+
+    <mat-slide-toggle formControlName="isAnonymous" (change)="setAnonymity($event.checked)">
+      &nbsp;Mark as Anonymous
+    </mat-slide-toggle>
+  </div>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Name</mat-label>
+    <input type="text" matInput formControlName="name" />
+  </mat-form-field>
+
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input type="text" matInput formControlName="email" />
+    </mat-form-field>
+    <mat-error *ngIf="form.controls['email'].invalid"
+      ><mat-icon>warning</mat-icon>&nbsp;Please type a valid email address</mat-error
+    >
+  </div>
+
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>Telephone</mat-label>
+      <input mask="(000) 000-0000" maxlength="14" type="text" matInput formControlName="telephoneNumber" />
+    </mat-form-field>
+
+    <mat-error *ngIf="form.controls['telephoneNumber'].invalid"
+      ><mat-icon>warning</mat-icon>&nbsp;Please type a valid telephone number</mat-error
+    >
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Affiliation</mat-label>
+    <input type="text" matInput formControlName="affiliation" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Additional Contact Information</mat-label>
+    <input type="text" matInput formControlName="additionalContactInformation" />
+  </mat-form-field>
+</form>

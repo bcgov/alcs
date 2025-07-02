@@ -99,6 +99,7 @@ describe('HomeComponent', () => {
         allegedContraventionNarrative: '',
         allegedActivity: [],
         intakeNotes: '',
+        submitters: [],
       });
 
       await component.createComplianceAndEnforcementFile();
@@ -117,6 +118,7 @@ describe('HomeComponent', () => {
         allegedContraventionNarrative: '',
         allegedActivity: [],
         intakeNotes: '',
+        submitters: [],
       };
 
       mockComplianceAndEnforcementService.create.mockResolvedValue(responseDto);

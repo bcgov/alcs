@@ -16,12 +16,22 @@ export class ComplianceAndEnforcementService {
     await firstValueFrom(this.http.get<ComplianceAndEnforcementDto[]>(this.url));
   }
 
-  async fetchByFileNumber(fileNumber: string) {
-    return await firstValueFrom(this.http.get<ComplianceAndEnforcementDto>(`${this.url}/${fileNumber}`));
+  async fetchByFileNumber(fileNumber: string, withSubmitters = false): Promise<ComplianceAndEnforcementDto> {
+    return await firstValueFrom(
+      this.http.get<ComplianceAndEnforcementDto>(`${this.url}/${fileNumber}?withSubmitters=${withSubmitters}`),
+    );
   }
 
-  async create(updateDto: UpdateComplianceAndEnforcementDto) {
-    return await firstValueFrom(this.http.post<ComplianceAndEnforcementDto>(this.url, updateDto));
+  async create(
+    updateDto: UpdateComplianceAndEnforcementDto,
+    createInitialSubmitter = false,
+  ): Promise<ComplianceAndEnforcementDto> {
+    return await firstValueFrom(
+      this.http.post<ComplianceAndEnforcementDto>(
+        `${this.url}?createInitialSubmitter=${createInitialSubmitter}`,
+        updateDto,
+      ),
+    );
   }
 
   update(uuid: string, updateDto: UpdateComplianceAndEnforcementDto): Observable<ComplianceAndEnforcementDto> {

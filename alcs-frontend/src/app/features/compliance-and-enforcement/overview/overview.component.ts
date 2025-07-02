@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
   AllegedActivity,
   ComplianceAndEnforcementDto,
@@ -16,6 +16,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class OverviewComponent implements OnDestroy {
   $destroy = new Subject<void>();
+
+  isPatching = false;
+  isSubscribed = false;
 
   initialSubmissionTypes = Object.entries(InitialSubmissionType).map(([key, value]) => ({ key, value }));
   allegedActivities = Object.entries(AllegedActivity).map(([key, value]) => ({ key, value }));
@@ -46,39 +49,40 @@ export class OverviewComponent implements OnDestroy {
     {},
   );
 
-  subscribed = false;
-
   @Input()
   set file(file: ComplianceAndEnforcementDto | undefined) {
-    if (!file) {
-      return;
+    if (file) {
+      this.isPatching = true;
+      this.form.disable();
+      this.form.patchValue({
+        dateSubmitted: file.dateSubmitted ? moment(file.dateSubmitted) : null,
+        initialSubmissionType: file.initialSubmissionType,
+        allegedContraventionNarrative: file.allegedContraventionNarrative,
+        allegedActivity: file.allegedActivity,
+        intakeNotes: file.intakeNotes,
+      });
+      this.form.enable();
+      this.isPatching = false;
     }
-
-    this.form.patchValue({
-      dateSubmitted: file.dateSubmitted ? moment(file.dateSubmitted) : null,
-      initialSubmissionType: file.initialSubmissionType,
-      allegedContraventionNarrative: file.allegedContraventionNarrative,
-      allegedActivity: file.allegedActivity,
-      intakeNotes: file.intakeNotes,
-    });
-    this.form.enable();
 
     // Prevent resubscription
-    if (this.subscribed) {
-      return;
-    }
+    if (!this.isSubscribed) {
+      this.form.valueChanges.pipe(takeUntil(this.$destroy)).subscribe((form) => {
+        if (this.isPatching) {
+          return;
+        }
 
-    this.form.valueChanges.pipe(takeUntil(this.$destroy)).subscribe((form) => {
-      this.$changes.next({
-        dateSubmitted: form.dateSubmitted?.toDate().getTime() ?? null,
-        initialSubmissionType: form.initialSubmissionType as InitialSubmissionType,
-        allegedContraventionNarrative: form.allegedContraventionNarrative ?? '',
-        allegedActivity: form.allegedActivity as AllegedActivity[],
-        intakeNotes: form.intakeNotes ?? '',
+        this.$changes.next({
+          dateSubmitted: form.dateSubmitted?.toDate().getTime() ?? null,
+          initialSubmissionType: form.initialSubmissionType as InitialSubmissionType,
+          allegedContraventionNarrative: form.allegedContraventionNarrative ?? '',
+          allegedActivity: form.allegedActivity as AllegedActivity[],
+          intakeNotes: form.intakeNotes ?? '',
+        });
       });
-    });
 
-    this.subscribed = true;
+      this.isSubscribed = true;
+    }
   }
 
   ngOnDestroy(): void {
