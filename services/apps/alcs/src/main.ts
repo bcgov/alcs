@@ -152,7 +152,7 @@ function setupLogger() {
       debug: 5,
       verbose: 6,
     },
-    transports: config.get('ENV') === 'production' ? [consoleTransport, s3Transport] : [consoleTransport, s3Transport],
+    transports: config.get('ENV') === 'production' ? [consoleTransport, s3Transport] : [consoleTransport],
   });
 }
 
