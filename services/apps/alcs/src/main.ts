@@ -10,23 +10,14 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as config from 'config';
 import { ClsMiddleware } from 'nestjs-cls';
-import { S3StreamLogger, S3StreamLoggerOptions } from 's3-streamlogger';
 import { install } from 'source-map-support';
 import { SPLAT } from 'triple-beam';
 import * as winston from 'winston';
 import { createLogger } from 'winston';
 import { generateModuleGraph } from './commands/graph';
 import { MainModule } from './main.module';
-import { S3ClientConfig } from '@aws-sdk/client-s3';
-
-// S3StreamLogger passes its config to S3Client, but doesn't accept all the
-// properties of S3ClientConfig. This allows those properties.
-interface SafeS3StreamLoggerOptions extends S3StreamLoggerOptions {
-  config: S3StreamLoggerOptions['config'] & {
-    forcePathStyle: boolean;
-    endpoint: string;
-  };
-}
+import { S3Client } from '@aws-sdk/client-s3';
+import { RotatingS3Writable } from './s3-logger/s3-logger';
 
 const registerSwagger = (app: NestFastifyApplication) => {
   const documentBuilderConfig = new DocumentBuilder()
@@ -106,23 +97,22 @@ const registerMultiPart = async (app: NestFastifyApplication) => {
 };
 
 function setupLogger() {
-  const s3StreamOptions: SafeS3StreamLoggerOptions = {
-    rotate_every: 1000 * 60 * 60 * 24, //1 Day
-    folder: 'logs',
-    bucket: config.get<string>('STORAGE.BUCKET'),
-    name_format: '%Y-%b-%d-console.log', //https://www.npmjs.com/package/strftime
-    config: {
-      region: 'us-east-1',
-      credentials: {
-        accessKeyId: config.get('STORAGE.ACCESS_KEY'),
-        secretAccessKey: config.get('STORAGE.SECRET_KEY'),
-      },
-      forcePathStyle: true,
-      endpoint: config.get('STORAGE.URL'),
+  const s3Client = new S3Client({
+    region: 'us-east-1',
+    credentials: {
+      accessKeyId: config.get('STORAGE.ACCESS_KEY'),
+      secretAccessKey: config.get('STORAGE.SECRET_KEY'),
     },
-  };
+    forcePathStyle: true,
+    endpoint: config.get('STORAGE.URL'),
+  });
 
-  const s3Stream = new S3StreamLogger(s3StreamOptions);
+  const s3Stream = new RotatingS3Writable({
+    bucket: config.get<string>('STORAGE.BUCKET'),
+    folder: 'logs',
+    rotateEvery: 1000 * 60 * 60 * 24, // 1 day
+    s3Client,
+  });
 
   const timeStampFormat = winston.format.timestamp({
     format: 'YYYY-MMM-DD HH:mm:ss',
@@ -145,20 +135,11 @@ function setupLogger() {
   const s3Transport = new winston.transports.Stream({
     level: config.get('LOG_LEVEL'),
     stream: s3Stream,
-    format: winston.format.combine(
-      winston.format.errors({ stack: true }),
-      timeStampFormat,
-      messageFormat,
-    ),
+    format: winston.format.combine(winston.format.errors({ stack: true }), timeStampFormat, messageFormat),
   });
   const consoleTransport = new winston.transports.Console({
     level: config.get('LOG_LEVEL'),
-    format: winston.format.combine(
-      winston.format.errors({ stack: true }),
-      timeStampFormat,
-      messageFormat,
-      colorFormat,
-    ),
+    format: winston.format.combine(winston.format.errors({ stack: true }), timeStampFormat, messageFormat, colorFormat),
   });
 
   return createLogger({
@@ -171,10 +152,7 @@ function setupLogger() {
       debug: 5,
       verbose: 6,
     },
-    transports:
-      config.get('ENV') === 'production'
-        ? [consoleTransport, s3Transport]
-        : [consoleTransport],
+    transports: config.get('ENV') === 'production' ? [consoleTransport, s3Transport] : [consoleTransport],
   });
 }
 
