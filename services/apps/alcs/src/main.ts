@@ -110,7 +110,7 @@ function setupLogger() {
   const s3Stream = new RotatingS3Writable({
     bucket: config.get<string>('STORAGE.BUCKET'),
     folder: 'logs',
-    rotateEvery: 1000 * 30, // 1 day
+    rotateEvery: 1000 * 60 * 60 * 24, // 1 day
     s3Client,
   });
 
