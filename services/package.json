@@ -57,7 +57,6 @@
     "dayjs": "^1.11.10",
     "handlebars": "^4.7.8",
     "keycloak-connect": "^24.0.2",
-    "mjml": "^4.15.3",
     "nest-keycloak-connect": "^1.10.0",
     "nest-winston": "^1.10.2",
     "nestjs-cls": "^4.5.0",
