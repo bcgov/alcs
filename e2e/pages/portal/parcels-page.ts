@@ -229,7 +229,7 @@ export class ParcelsPage {
   // ---------------
 
   parcelHeading(parcelNumber: number): Locator {
-    return this.page.getByRole('button', { name: new RegExp(`^\s*Parcel #${parcelNumber}`) });
+    return this.page.getByRole('button', { name: new RegExp(`^\\s*Parcel #${parcelNumber}`) });
   }
 
   // parcelNumber is 1-indexed (i.e., the user-facing parcel number)
