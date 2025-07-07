@@ -53,7 +53,7 @@ ENV ENABLED_CONNECT_SRC=" 'self' http://localhost:* nrs.objectstore.gov.bc.ca"
 ENV MAINTENANCE_MODE="false"
 
 # Update libxml2 to patch the security vulnerabilities
-RUN apk add --no-cache libxml2
+RUN apk update && apk add --no-cache libxml2 && apk upgrade --available
 
 # When the container starts, replace the settings.json with values from environment variables
 ENTRYPOINT [ "./init.sh" ]
