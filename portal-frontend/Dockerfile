@@ -49,5 +49,8 @@ RUN chmod -R go+rwx /usr/share/nginx/html/assets
 # provide dynamic scp content-src
 ENV ENABLED_CONNECT_SRC=" 'self' http://localhost:* nrs.objectstore.gov.bc.ca"
 
+# Update libxml2 to patch the security vulnerabilities
+RUN apk add --no-cache libxml2
+
 # When the container starts, replace the settings.json with values from environment variables
 ENTRYPOINT [ "./init.sh" ]
