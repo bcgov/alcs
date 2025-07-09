@@ -85,7 +85,7 @@
     "@types/config": "^3.3.4",
     "@types/express": "^4.17.23",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.19.2",
+    "@types/node": "^20.19.6",
     "@types/node-jose": "^1.1.13",
     "@types/object-hash": "^3.0.6",
     "@types/source-map-support": "^0.5.10",
