@@ -247,6 +247,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private async setupBoard(board: BoardWithFavourite) {
     // clear cards to remove flickering
     this.cards = [];
+    this.selectedAssignees = [];
     this.titleService.setTitle(`${environment.siteName} | ${board.title} Board`);
     this.boardIsFavourite = board.isFavourite;
 
