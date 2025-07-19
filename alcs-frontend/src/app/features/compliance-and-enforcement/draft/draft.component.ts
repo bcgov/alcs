@@ -12,6 +12,9 @@ import { FormGroup } from '@angular/forms';
 import { SubmitterComponent } from '../submitter/submitter.component';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
+import { PropertyComponent } from '../property/property.component';
+import { ComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
+import { ComplianceAndEnforcementPropertyService } from '../../../services/compliance-and-enforcement/property/property.service';
 
 @Component({
   selector: 'app-compliance-and-enforcement-draft',
@@ -25,15 +28,18 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   file?: ComplianceAndEnforcementDto;
   initialSubmissionType?: InitialSubmissionType;
   submitter?: ComplianceAndEnforcementSubmitterDto;
+  property?: ComplianceAndEnforcementPropertyDto;
 
-  form = new FormGroup({ overview: new FormGroup({}), submitter: new FormGroup({}) });
+  form = new FormGroup({ overview: new FormGroup({}), submitter: new FormGroup({}), property: new FormGroup({}) });
 
   @ViewChild(OverviewComponent) overviewComponent?: OverviewComponent;
   @ViewChild(SubmitterComponent) submitterComponent?: SubmitterComponent;
+  @ViewChild(PropertyComponent) propertyComponent?: PropertyComponent;
 
   constructor(
     private readonly complianceAndEnforcementService: ComplianceAndEnforcementService,
     private readonly complianceAndEnforcementSubmitterService: ComplianceAndEnforcementSubmitterService,
+    private readonly complianceAndEnforcementPropertyService: ComplianceAndEnforcementPropertyService,
     private readonly route: ActivatedRoute,
     private readonly toastService: ToastService,
   ) {}
@@ -47,7 +53,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.overviewComponent || !this.submitterComponent) {
+    if (!this.overviewComponent || !this.submitterComponent || !this.propertyComponent) {
       console.warn('Not all form sections component not initialized');
       return;
     }
@@ -99,6 +105,47 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => {
         this.toastService.showSuccessToast('C&E submitter draft saved');
       });
+
+    this.propertyComponent.$changes
+      .pipe(
+        skip(1), // Skip the initial emission to prevent save on load
+        debounceTime(1000),
+        switchMap((property) =>
+          this.property?.uuid
+            ? this.complianceAndEnforcementPropertyService.update(this.property.uuid, property)
+            : this.file?.uuid
+            ?           this.complianceAndEnforcementPropertyService.create({ 
+            fileUuid: this.file.uuid,
+            civicAddress: property.civicAddress || '',
+            legalDescription: property.legalDescription || '',
+            localGovernmentUuid: property.localGovernmentUuid || '',
+            regionCode: (property.regionCode ?? '') as string,
+            latitude: property.latitude || 0,
+            longitude: property.longitude || 0,
+            ownershipTypeCode: property.ownershipTypeCode || 'SMPL',
+            pid: property.pid || null,
+            pin: property.pin || null,
+            areaHectares: property.areaHectares || 0,
+            alrPercentage: property.alrPercentage || 0,
+            alcHistory: property.alcHistory || ''
+          })
+            : EMPTY,
+        ),
+        tap((property) => {
+          if (!this.property) {
+            this.property = property;
+          }
+        }),
+        catchError((error) => {
+          console.error('Error saving C&E property draft', error);
+          this.toastService.showErrorToast('Failed to save C&E property draft');
+          return EMPTY;
+        }),
+        takeUntil(this.$destroy),
+      )
+      .subscribe(() => {
+        this.toastService.showSuccessToast('C&E property draft saved');
+      });
   }
 
   async loadFile(fileNumber: string) {
@@ -106,6 +153,11 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       this.file = await this.complianceAndEnforcementService.fetchByFileNumber(fileNumber, true);
       this.submitter = this.file.submitters[0];
       this.initialSubmissionType = this.file.initialSubmissionType ?? undefined;
+      
+      // Load property data
+      if (this.file.uuid) {
+        this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid) || undefined;
+      }
     } catch (error) {
       console.error('Error loading C&E file', error);
       this.toastService.showErrorToast('Failed to load C&E file');
@@ -113,15 +165,17 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onSaveDraftClicked() {
-    if (!this.overviewComponent || !this.submitterComponent || !this.file?.uuid) {
+    if (!this.overviewComponent || !this.submitterComponent || !this.propertyComponent || !this.file?.uuid) {
       return;
     }
 
     const overviewUpdate = this.overviewComponent.$changes.getValue();
     const submitterUpdate = this.submitterComponent.$changes.getValue();
+    const propertyUpdate = this.propertyComponent.$changes.getValue();
 
     try {
       await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, overviewUpdate));
+      
       if (this.submitter?.uuid) {
         await firstValueFrom(
           this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitterUpdate),
@@ -129,6 +183,31 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create(submitterUpdate));
       }
+
+      if (this.property?.uuid) {
+        await firstValueFrom(
+          this.complianceAndEnforcementPropertyService.update(this.property.uuid, propertyUpdate),
+        );
+      } else {
+        this.property = await firstValueFrom(
+          this.complianceAndEnforcementPropertyService.create({
+            fileUuid: this.file.uuid,
+            civicAddress: propertyUpdate.civicAddress || '',
+            legalDescription: propertyUpdate.legalDescription || '',
+            localGovernmentUuid: propertyUpdate.localGovernmentUuid || '',
+            regionCode: propertyUpdate.regionCode || '',
+            latitude: propertyUpdate.latitude || 0,
+            longitude: propertyUpdate.longitude || 0,
+            ownershipTypeCode: propertyUpdate.ownershipTypeCode || 'SMPL',
+            pid: propertyUpdate.pid || null,
+            pin: propertyUpdate.pin || null,
+            areaHectares: propertyUpdate.areaHectares || 0,
+            alrPercentage: propertyUpdate.alrPercentage || 0,
+            alcHistory: propertyUpdate.alcHistory || ''
+          }),
+        );
+      }
+
       this.toastService.showSuccessToast('C&E file draft saved');
     } catch (error) {
       console.error('Error saving C&E file draft', error);
