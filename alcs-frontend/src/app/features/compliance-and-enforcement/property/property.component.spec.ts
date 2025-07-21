@@ -6,17 +6,18 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
 import { PropertyComponent } from './property.component';
 
 describe('PropertyComponent', () => {
   let component: PropertyComponent;
   let fixture: ComponentFixture<PropertyComponent>;
-  let mockLocalGovernmentService: any;
+  let mockLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
 
   beforeEach(async () => {
-    mockLocalGovernmentService = jasmine.createSpyObj('ApplicationLocalGovernmentService', ['list']);
-    mockLocalGovernmentService.list.and.returnValue(Promise.resolve([]));
+    mockLocalGovernmentService = createMock();
+    mockLocalGovernmentService.list.mockResolvedValue([]);
 
     await TestBed.configureTestingModule({
       declarations: [PropertyComponent],
