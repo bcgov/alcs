@@ -18,7 +18,7 @@ export class ComplianceAndEnforcementPropertyDto {
   localGovernmentUuid: string;
 
   @AutoMap()
-  regionCode: string | null;
+  regionCode: string;
 
   @AutoMap()
   latitude: number;
@@ -48,31 +48,31 @@ export class ComplianceAndEnforcementPropertyDto {
 export class UpdateComplianceAndEnforcementPropertyDto {
   @IsOptional()
   @IsString()
-  civicAddress?: string;
+  civicAddress?: string | null;
 
   @IsOptional()
   @IsString()
-  legalDescription?: string;
+  legalDescription?: string | null;
 
   @IsOptional()
   @IsUUID()
-  localGovernmentUuid?: string;
+  localGovernmentUuid?: string | null;
 
   @IsOptional()
   @IsString()
-  regionCode?: string;
+  regionCode?: string | null;
 
   @IsOptional()
   @IsNumber()
-  latitude?: number;
+  latitude?: number | null;
 
   @IsOptional()
   @IsNumber()
-  longitude?: number;
+  longitude?: number | null;
 
   @IsOptional()
   @IsString()
-  ownershipTypeCode?: string;
+  ownershipTypeCode?: string | null;
 
   @IsOptional()
   @IsString()
@@ -84,17 +84,17 @@ export class UpdateComplianceAndEnforcementPropertyDto {
 
   @IsOptional()
   @IsNumber()
-  areaHectares?: number;
+  areaHectares?: number | null;
 
   @IsOptional()
   @IsNumber()
-  alrPercentage?: number;
+  alrPercentage?: number | null;
 
   @IsOptional()
   @IsString()
-  alcHistory?: string;
+  alcHistory?: string | null;
 
   @IsOptional()
   @IsUUID()
-  fileUuid?: string;
+  fileUuid?: string | null;
 } 

@@ -20,19 +20,19 @@ export interface ComplianceAndEnforcementPropertyDto {
 }
 
 export interface UpdateComplianceAndEnforcementPropertyDto {
-  civicAddress?: string;
-  legalDescription?: string;
-  localGovernmentUuid?: string;
-  regionCode?: string;
-  latitude?: number;
-  longitude?: number;
-  ownershipTypeCode?: string;
+  civicAddress?: string | null;
+  legalDescription?: string | null;
+  localGovernmentUuid?: string | null;
+  regionCode?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  ownershipTypeCode?: string | null;
   pid?: string | null;
   pin?: string | null;
-  areaHectares?: number;
-  alrPercentage?: number;
-  alcHistory?: string;
-  fileUuid?: string;
+  areaHectares?: number | null;
+  alrPercentage?: number | null;
+  alcHistory?: string | null;
+  fileUuid?: string | null;
 }
 
 export interface CreateComplianceAndEnforcementPropertyDto {

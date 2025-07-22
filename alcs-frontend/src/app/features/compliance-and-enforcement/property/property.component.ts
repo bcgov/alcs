@@ -111,13 +111,13 @@ export class PropertyComponent implements OnDestroy {
           legalDescription: form.legalDescription ?? '',
           localGovernmentUuid: form.localGovernmentUuid ?? '',
           regionCode: form.regionCode ?? '',
-          latitude: form.latitude ?? 0,
-          longitude: form.longitude ?? 0,
+          latitude: form.latitude,
+          longitude: form.longitude,
           ownershipTypeCode: form.ownershipTypeCode ?? PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE,
           pid: form.pidOrPin === 'PID' ? form.pid : null,
           pin: form.pidOrPin === 'PIN' ? form.pin : null,
-          areaHectares: form.areaHectares ?? 0,
-          alrPercentage: form.alrPercentage ?? 0,
+          areaHectares: form.areaHectares,
+          alrPercentage: form.alrPercentage,
           alcHistory: form.alcHistory ?? '',
         });
       });

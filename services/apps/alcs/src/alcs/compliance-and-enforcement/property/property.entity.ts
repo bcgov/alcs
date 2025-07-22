@@ -17,31 +17,31 @@ export class ComplianceAndEnforcementProperty {
   uuid: string;
 
   @AutoMap()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   civicAddress: string;
 
   @AutoMap()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   legalDescription: string;
 
   @AutoMap()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   localGovernmentUuid: string;
 
   @AutoMap()
-  @Column({ type: 'text', nullable: true })
-  regionCode: string | null;
+  @Column({ type: 'text', default: '' })
+  regionCode: string;
 
   @AutoMap()
-  @Column({ type: 'decimal', precision: 10, scale: 7 })
+  @Column({ type: 'decimal', precision: 10, scale: 7, default: 0 })
   latitude: number;
 
   @AutoMap()
-  @Column({ type: 'decimal', precision: 10, scale: 7 })
+  @Column({ type: 'decimal', precision: 10, scale: 7, default: 0 })
   longitude: number;
 
   @AutoMap()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: 'SMPL' })
   ownershipTypeCode: string;
 
   @AutoMap()
@@ -53,15 +53,15 @@ export class ComplianceAndEnforcementProperty {
   pin: string | null;
 
   @AutoMap()
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   areaHectares: number;
 
   @AutoMap()
-  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   alrPercentage: number;
 
   @AutoMap()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   alcHistory: string;
 
   @ManyToOne(() => ComplianceAndEnforcement, (file) => file.properties)
