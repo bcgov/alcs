@@ -16,15 +16,10 @@ export class ComplianceAndEnforcementPropertyService {
 
   constructor(private readonly http: HttpClient) {}
 
-  async fetchByFileUuid(fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto | null> {
-    try {
-      return await firstValueFrom(
-        this.http.get<ComplianceAndEnforcementPropertyDto>(`${this.url}/${fileUuid}`),
-      );
-    } catch (error) {
-      // Property might not exist yet
-      return null;
-    }
+  async fetchByFileUuid(fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto> {
+    return await firstValueFrom(
+      this.http.get<ComplianceAndEnforcementPropertyDto>(`${this.url}/${fileUuid}`),
+    );
   }
 
   create(

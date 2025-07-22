@@ -110,27 +110,29 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
         debounceTime(1000),
-        switchMap((property) =>
-          this.property?.uuid
-            ? this.complianceAndEnforcementPropertyService.update(this.property.uuid, property)
-            : this.file?.uuid
-            ?           this.complianceAndEnforcementPropertyService.create({ 
-            fileUuid: this.file.uuid,
-            civicAddress: property.civicAddress || '',
-            legalDescription: property.legalDescription || '',
-            localGovernmentUuid: property.localGovernmentUuid || '',
-            regionCode: (property.regionCode ?? '') as string,
-            latitude: property.latitude || 0,
-            longitude: property.longitude || 0,
-            ownershipTypeCode: property.ownershipTypeCode || 'SMPL',
-            pid: property.pid || null,
-            pin: property.pin || null,
-            areaHectares: property.areaHectares || 0,
-            alrPercentage: property.alrPercentage || 0,
-            alcHistory: property.alcHistory || ''
-          })
-            : EMPTY,
-        ),
+        switchMap((property) => {
+          if (this.property?.uuid) {
+            return this.complianceAndEnforcementPropertyService.update(this.property.uuid, property);
+          } else if (this.file?.uuid) {
+            return this.complianceAndEnforcementPropertyService.create({ 
+              fileUuid: this.file.uuid,
+              civicAddress: property.civicAddress || '',
+              legalDescription: property.legalDescription || '',
+              localGovernmentUuid: property.localGovernmentUuid || '',
+              regionCode: (property.regionCode ?? '') as string,
+              latitude: property.latitude || 0,
+              longitude: property.longitude || 0,
+              ownershipTypeCode: property.ownershipTypeCode || 'SMPL',
+              pid: property.pid || null,
+              pin: property.pin || null,
+              areaHectares: property.areaHectares || 0,
+              alrPercentage: property.alrPercentage || 0,
+              alcHistory: property.alcHistory || ''
+            });
+          } else {
+            return EMPTY;
+          }
+        }),
         tap((property) => {
           if (!this.property) {
             this.property = property;
@@ -156,7 +158,16 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       
       // Load property data
       if (this.file.uuid) {
-        this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid) || undefined;
+        try {
+          this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid);
+        } catch (error: any) {
+          // Property might not exist yet (404 is expected)
+          if (error.status !== 404) {
+            console.error('Error loading property data', error);
+            this.toastService.showErrorToast('Failed to load property data');
+          }
+          this.property = undefined;
+        }
       }
     } catch (error) {
       console.error('Error loading C&E file', error);

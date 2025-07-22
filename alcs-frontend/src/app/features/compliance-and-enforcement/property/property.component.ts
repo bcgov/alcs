@@ -14,6 +14,16 @@ const PARCEL_OWNERSHIP_TYPE = {
   CROWN: 'CRWN',
 };
 
+// Define regions enum
+const REGION = {
+  ISLA: 'Island',
+  INTR: 'Interior',
+  KOOT: 'Kootenay',
+  NRTH: 'North',
+  OKAN: 'Okanagan',
+  SOUL: 'South Coast',
+} as const;
+
 @Component({
   selector: 'app-compliance-and-enforcement-property',
   templateUrl: './property.component.html',
@@ -26,16 +36,10 @@ export class PropertyComponent implements OnDestroy {
   isSubscribed = false;
 
   PARCEL_OWNERSHIP_TYPE = PARCEL_OWNERSHIP_TYPE;
+  REGION = REGION;
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   filteredLocalGovernments: ApplicationLocalGovernmentDto[] = [];
-  regions = [
-    { code: 'ISLA', label: 'Island' },
-    { code: 'INTR', label: 'Interior' },
-    { code: 'KOOT', label: 'Kootenay' },
-    { code: 'NRTH', label: 'North' },
-    { code: 'OKAN', label: 'Okanagan' },
-    { code: 'SOUL', label: 'South Coast' },
-  ];
+  regions = Object.entries(REGION).map(([code, label]) => ({ code, label }));
 
   form = new FormGroup({
     civicAddress: new FormControl<string>('', [Validators.required]),
