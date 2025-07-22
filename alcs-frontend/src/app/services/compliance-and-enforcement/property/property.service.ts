@@ -12,7 +12,7 @@ import {
   providedIn: 'root',
 })
 export class ComplianceAndEnforcementPropertyService {
-  private readonly url = `${environment.apiUrl}/compliance-and-enforcement-property`;
+  private readonly url = `${environment.apiUrl}/compliance-and-enforcement/property`;
 
   constructor(private readonly http: HttpClient) {}
 
