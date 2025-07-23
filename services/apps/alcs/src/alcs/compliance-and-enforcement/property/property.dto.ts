@@ -1,5 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import { IsNumber, IsString, IsOptional, IsUUID } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsUUID } from 'class-validator';
 
 export class ComplianceAndEnforcementPropertyDto {
   @AutoMap()
@@ -47,6 +47,14 @@ export class ComplianceAndEnforcementPropertyDto {
 
 export class UpdateComplianceAndEnforcementPropertyDto {
   @IsOptional()
+  @IsNumber()
+  latitude?: number | null;
+
+  @IsOptional()
+  @IsNumber()
+  longitude?: number | null;
+
+  @IsOptional()
   @IsString()
   civicAddress?: string | null;
 
@@ -61,14 +69,6 @@ export class UpdateComplianceAndEnforcementPropertyDto {
   @IsOptional()
   @IsString()
   regionCode?: string | null;
-
-  @IsOptional()
-  @IsNumber()
-  latitude?: number | null;
-
-  @IsOptional()
-  @IsNumber()
-  longitude?: number | null;
 
   @IsOptional()
   @IsString()
@@ -95,6 +95,6 @@ export class UpdateComplianceAndEnforcementPropertyDto {
   alcHistory?: string | null;
 
   @IsOptional()
-  @IsUUID()
-  fileUuid?: string | null;
+  @AutoMap()
+  fileUuid?: string;
 } 

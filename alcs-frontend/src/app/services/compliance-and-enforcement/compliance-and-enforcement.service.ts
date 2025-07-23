@@ -25,10 +25,11 @@ export class ComplianceAndEnforcementService {
   async create(
     updateDto: UpdateComplianceAndEnforcementDto,
     createInitialSubmitter = false,
+    createInitialProperty = false,
   ): Promise<ComplianceAndEnforcementDto> {
     return await firstValueFrom(
       this.http.post<ComplianceAndEnforcementDto>(
-        `${this.url}?createInitialSubmitter=${createInitialSubmitter}`,
+        `${this.url}?createInitialSubmitter=${createInitialSubmitter}&createInitialProperty=${createInitialProperty}`,
         updateDto,
       ),
     );

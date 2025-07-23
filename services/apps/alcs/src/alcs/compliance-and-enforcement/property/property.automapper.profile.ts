@@ -1,8 +1,9 @@
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
-import { createMap, Mapper } from 'automapper-core';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { Injectable } from '@nestjs/common';
 import { ComplianceAndEnforcementProperty } from './property.entity';
 import { ComplianceAndEnforcementPropertyDto, UpdateComplianceAndEnforcementPropertyDto } from './property.dto';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementPropertyProfile extends AutomapperProfile {
@@ -22,6 +23,10 @@ export class ComplianceAndEnforcementPropertyProfile extends AutomapperProfile {
         mapper,
         UpdateComplianceAndEnforcementPropertyDto,
         ComplianceAndEnforcementProperty,
+        forMember(
+          (entity) => entity.file,
+          mapFrom((dto) => new ComplianceAndEnforcement({ uuid: dto.fileUuid })),
+        ),
       );
     };
   }

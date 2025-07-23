@@ -12,8 +12,8 @@ import { FormGroup } from '@angular/forms';
 import { SubmitterComponent } from '../submitter/submitter.component';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
-import { PropertyComponent } from '../property/property.component';
-import { ComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
+import { PropertyComponent, cleanPropertyUpdate } from '../property/property.component';
+import { ComplianceAndEnforcementPropertyDto, UpdateComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
 import { ComplianceAndEnforcementPropertyService } from '../../../services/compliance-and-enforcement/property/property.service';
 
 @Component({
@@ -111,23 +111,21 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         skip(1), // Skip the initial emission to prevent save on load
         debounceTime(1000),
         switchMap((property) => {
+          // Only auto-save if there are meaningful changes (non-empty fields)
+          const hasActualData = Object.values(cleanPropertyUpdate(property)).some(value => 
+            value !== null && value !== undefined && value !== '' && value !== 0
+          );
+
+          if (!hasActualData) {
+            return EMPTY; // Prevents saving on empty that was occurring when starting a new file
+          }
+
           if (this.property?.uuid) {
             return this.complianceAndEnforcementPropertyService.update(this.property.uuid, property);
           } else if (this.file?.uuid) {
             return this.complianceAndEnforcementPropertyService.create({ 
               fileUuid: this.file.uuid,
-              civicAddress: property.civicAddress || '',
-              legalDescription: property.legalDescription || '',
-              localGovernmentUuid: property.localGovernmentUuid || '',
-              regionCode: (property.regionCode ?? '') as string,
-              latitude: property.latitude || 0,
-              longitude: property.longitude || 0,
-              ownershipTypeCode: property.ownershipTypeCode || 'SMPL',
-              pid: property.pid || null,
-              pin: property.pin || null,
-              areaHectares: property.areaHectares || 0,
-              alrPercentage: property.alrPercentage || 0,
-              alcHistory: property.alcHistory || ''
+              ...cleanPropertyUpdate(property)
             });
           } else {
             return EMPTY;
@@ -160,6 +158,9 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.file.uuid) {
         try {
           this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid);
+          if (this.propertyComponent && this.property) {
+            this.propertyComponent.property = this.property;
+          }
         } catch (error: any) {
           // Property might not exist yet (404 is expected)
           if (error.status !== 404) {
@@ -203,18 +204,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         this.property = await firstValueFrom(
           this.complianceAndEnforcementPropertyService.create({
             fileUuid: this.file.uuid,
-            civicAddress: propertyUpdate.civicAddress || '',
-            legalDescription: propertyUpdate.legalDescription || '',
-            localGovernmentUuid: propertyUpdate.localGovernmentUuid || '',
-            regionCode: propertyUpdate.regionCode || '',
-            latitude: propertyUpdate.latitude || 0,
-            longitude: propertyUpdate.longitude || 0,
-            ownershipTypeCode: propertyUpdate.ownershipTypeCode || 'SMPL',
-            pid: propertyUpdate.pid || null,
-            pin: propertyUpdate.pin || null,
-            areaHectares: propertyUpdate.areaHectares || 0,
-            alrPercentage: propertyUpdate.alrPercentage || 0,
-            alcHistory: propertyUpdate.alcHistory || ''
+            ...cleanPropertyUpdate(propertyUpdate)
           }),
         );
       }

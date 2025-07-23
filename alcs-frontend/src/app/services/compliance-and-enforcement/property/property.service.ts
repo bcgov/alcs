@@ -4,7 +4,6 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   ComplianceAndEnforcementPropertyDto,
-  CreateComplianceAndEnforcementPropertyDto,
   UpdateComplianceAndEnforcementPropertyDto,
 } from './property.dto';
 
@@ -23,7 +22,7 @@ export class ComplianceAndEnforcementPropertyService {
   }
 
   create(
-    createDto: CreateComplianceAndEnforcementPropertyDto,
+    createDto: UpdateComplianceAndEnforcementPropertyDto,
   ): Observable<ComplianceAndEnforcementPropertyDto> {
     return this.http.post<ComplianceAndEnforcementPropertyDto>(this.url, createDto);
   }

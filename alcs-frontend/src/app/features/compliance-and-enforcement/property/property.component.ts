@@ -24,6 +24,33 @@ const REGION = {
   SOUL: 'South Coast',
 } as const;
 
+// Clean up the property update object to remove null, undefined, and empty strings, needed to save draft effectively
+export function cleanPropertyUpdate(update: UpdateComplianceAndEnforcementPropertyDto): UpdateComplianceAndEnforcementPropertyDto {
+  const cleaned: any = {};
+  for (const [key, value] of Object.entries(update)) {
+    if (
+      value !== null &&
+      value !== undefined &&
+      !(typeof value === 'string' && value.trim() === '') &&
+      !(typeof value === 'number' && value === 0) &&
+      // Filter out default values
+      !(key === 'ownershipTypeCode' && value === 'SMPL')
+    ) {
+      cleaned[key] = value;
+    }
+  }
+  // Always omit localGovernmentUuid if blank, null, or undefined
+  if (cleaned.localGovernmentUuid === '' || cleaned.localGovernmentUuid === null || cleaned.localGovernmentUuid === undefined) {
+    delete cleaned.localGovernmentUuid;
+  }
+  return cleaned;
+}
+
+function toNumberOrUndefined(val: any) {
+  const num = Number(val);
+  return isNaN(num) ? undefined : num;
+}
+
 @Component({
   selector: 'app-compliance-and-enforcement-property',
   templateUrl: './property.component.html',
@@ -82,14 +109,14 @@ export class PropertyComponent implements OnDestroy {
         legalDescription: property.legalDescription,
         localGovernmentUuid: property.localGovernmentUuid,
         regionCode: property.regionCode,
-        latitude: property.latitude,
-        longitude: property.longitude,
+        latitude: Number(property.latitude),
+        longitude: Number(property.longitude),
         ownershipTypeCode: property.ownershipTypeCode,
         pidOrPin: pidOrPin,
         pid: property.pid || '',
         pin: property.pin || '',
-        areaHectares: property.areaHectares,
-        alrPercentage: property.alrPercentage,
+        areaHectares: Number(property.areaHectares),
+        alrPercentage: Number(property.alrPercentage),
         alcHistory: property.alcHistory,
       });
 
@@ -106,20 +133,20 @@ export class PropertyComponent implements OnDestroy {
           return;
         }
 
-        this.$changes.next({
+        this.$changes.next(cleanPropertyUpdate({
           civicAddress: form.civicAddress ?? '',
           legalDescription: form.legalDescription ?? '',
-          localGovernmentUuid: form.localGovernmentUuid ?? '',
+          localGovernmentUuid: form.localGovernmentUuid && form.localGovernmentUuid.trim() !== '' ? form.localGovernmentUuid : undefined,
           regionCode: form.regionCode ?? '',
-          latitude: form.latitude,
-          longitude: form.longitude,
+          latitude: toNumberOrUndefined(form.latitude),
+          longitude: toNumberOrUndefined(form.longitude),
           ownershipTypeCode: form.ownershipTypeCode ?? PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE,
           pid: form.pidOrPin === 'PID' ? form.pid : null,
           pin: form.pidOrPin === 'PIN' ? form.pin : null,
-          areaHectares: form.areaHectares,
-          alrPercentage: form.alrPercentage,
+          areaHectares: toNumberOrUndefined(form.areaHectares),
+          alrPercentage: toNumberOrUndefined(form.alrPercentage),
           alcHistory: form.alcHistory ?? '',
-        });
+        }));
       });
 
       this.isSubscribed = true;
