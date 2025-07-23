@@ -63,4 +63,4 @@ export class ComplianceAndEnforcementPropertyService {
   async delete(uuid: string): Promise<DeleteResult> {
     return await this.repository.delete({ uuid });
   }
-} 
+}

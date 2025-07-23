@@ -49,4 +49,4 @@ export interface CreateComplianceAndEnforcementPropertyDto {
   alrPercentage: number;
   alcHistory: string;
   fileUuid: string;
-} 
+}

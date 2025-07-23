@@ -70,4 +70,4 @@ export class ComplianceAndEnforcementProperty {
   @AutoMap()
   @Column()
   fileUuid: string;
-} 
+}

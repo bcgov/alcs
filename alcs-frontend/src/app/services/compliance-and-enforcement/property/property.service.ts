@@ -37,4 +37,4 @@ export class ComplianceAndEnforcementPropertyService {
   async delete(uuid: string): Promise<void> {
     return await firstValueFrom(this.http.delete<void>(`${this.url}/${uuid}`));
   }
-} 
+}

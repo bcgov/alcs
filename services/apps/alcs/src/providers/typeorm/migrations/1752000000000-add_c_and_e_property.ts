@@ -15,4 +15,4 @@ export class AddCAndEProperty1752000000000 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "alcs"."compliance_and_enforcement_property"`);
     }
 
-} 
+}
