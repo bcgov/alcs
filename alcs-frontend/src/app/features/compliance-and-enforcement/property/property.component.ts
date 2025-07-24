@@ -31,8 +31,6 @@ export function cleanPropertyUpdate(update: UpdateComplianceAndEnforcementProper
     if (
       value !== null &&
       value !== undefined &&
-      !(typeof value === 'string' && value.trim() === '') &&
-      !(typeof value === 'number' && value === 0) &&
       // Filter out default values
       !(key === 'ownershipTypeCode' && value === 'SMPL')
     ) {
