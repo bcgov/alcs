@@ -1,6 +1,7 @@
 import { AutoMap } from 'automapper-classes';
 import { BaseCodeDto } from '../common/dtos/base.dto';
 import { User } from '../user/user.entity';
+import { UserDto } from '../user/user.dto';
 
 export enum DOCUMENT_SOURCE {
   // All types
@@ -26,18 +27,60 @@ export enum DOCUMENT_SYSTEM {
   PORTAL = 'Portal',
 }
 
+export class DocumentTypeDto extends BaseCodeDto {
+  @AutoMap()
+  oatsCode: string;
+}
+
+export class DocumentDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap()
+  documentUuid: string;
+
+  @AutoMap()
+  type?: DocumentTypeDto;
+
+  @AutoMap()
+  description?: string;
+
+  @AutoMap()
+  visibilityFlags?: string[];
+
+  @AutoMap()
+  source: DOCUMENT_SOURCE;
+
+  @AutoMap()
+  system: DOCUMENT_SYSTEM;
+
+  @AutoMap()
+  fileName: string;
+
+  @AutoMap()
+  mimeType: string;
+
+  @AutoMap()
+  uploadedBy: UserDto;
+
+  @AutoMap()
+  uploadedAt: number;
+
+  @AutoMap()
+  evidentiaryRecordSorting?: number;
+
+  @AutoMap()
+  fileSize?: number;
+}
+
 export class CreateDocumentDto {
+  typeCode?: string;
   mimeType: string;
   fileKey: string;
   fileName: string;
-  fileSize: number;
+  fileSize?: number;
   uploadedBy?: User | null;
   source: DOCUMENT_SOURCE;
   system: DOCUMENT_SYSTEM;
   tags?: string[];
-}
-
-export class DocumentTypeDto extends BaseCodeDto {
-  @AutoMap()
-  oatsCode: string;
 }

@@ -110,7 +110,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="data.allowedVisibilityFlags" class="double">
+    <div *ngIf="data.allowedVisibilityFlags && data.allowedVisibilityFlags.length > 0" class="double">
       <mat-label>Visible To:</mat-label>
       <div
         *ngIf="

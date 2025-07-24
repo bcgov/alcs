@@ -12,6 +12,8 @@ import { FormGroup } from '@angular/forms';
 import { SubmitterComponent } from '../submitter/submitter.component';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
+import { DocumentUploadDialogOptions } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 
 @Component({
   selector: 'app-compliance-and-enforcement-draft',
@@ -19,6 +21,20 @@ import { ComplianceAndEnforcementSubmitterService } from '../../../services/comp
   styleUrls: ['./draft.component.scss'],
 })
 export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
+  submissionDocumentOptions: DocumentUploadDialogOptions = {
+    allowedVisibilityFlags: [],
+    allowsFileEdit: true,
+    allowedDocumentSources: [
+      DOCUMENT_SOURCE.COMPLAINANT,
+      DOCUMENT_SOURCE.PUBLIC,
+      DOCUMENT_SOURCE.LFNG,
+      DOCUMENT_SOURCE.BC_GOVERNMENT,
+      DOCUMENT_SOURCE.OTHER_AGENCY,
+      DOCUMENT_SOURCE.ALC,
+    ],
+    allowedDocumentTypes: [DOCUMENT_TYPE.COMPLAINT, DOCUMENT_TYPE.REFERRAL],
+  };
+
   $destroy = new Subject<void>();
 
   fileNumber?: string;

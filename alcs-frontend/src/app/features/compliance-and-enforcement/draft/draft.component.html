@@ -12,6 +12,15 @@
       />
     </section>
 
+    <section class="form-section">
+      <app-compliance-and-enforcement-documents
+        #submissionDocumentsComponent
+        [title]="'Complaint/Referral Submission'"
+        [fileNumber]="fileNumber"
+        [options]="submissionDocumentOptions"
+      />
+    </section>
+
     <div class="button-container">
       <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft</button>
     </div>

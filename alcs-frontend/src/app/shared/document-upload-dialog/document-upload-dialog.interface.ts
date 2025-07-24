@@ -18,6 +18,7 @@ export interface DocumentUploadDialogOptions {
   allowsFileEdit?: boolean;
   documentTypeOverrides?: Partial<Record<DOCUMENT_TYPE, DocumentTypeConfig>>;
   allowedDocumentSources?: DOCUMENT_SOURCE[];
+  allowedDocumentTypes?: DOCUMENT_TYPE[];
 }
 
 export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {
@@ -41,7 +42,7 @@ export interface DocumentService {
   update(uuid: string, updateDto: UpdateDocumentDto): Promise<Object>;
   upload(fileNumber: string, createDto: CreateDocumentDto): Promise<Object | undefined>;
   download(uuid: string, fileName: string, isInline: boolean): Promise<void>;
-  fetchTypes(): Promise<DocumentTypeDto[]>;
+  fetchTypes(allowedCodes?: DOCUMENT_TYPE[]): Promise<DocumentTypeDto[]>;
   delete(uuid: string): Promise<Object>;
 }
 
