@@ -34,6 +34,10 @@ export enum DOCUMENT_TYPE {
   //SRW
   SRW_TERMS = 'SRTD',
   SURVEY_PLAN = 'SURV',
+
+  // C&E
+  COMPLAINT = 'CMPL',
+  BC_ASSESSMENT_REPORT = 'BCAR',
 }
 
 export enum DOCUMENT_SOURCE {
