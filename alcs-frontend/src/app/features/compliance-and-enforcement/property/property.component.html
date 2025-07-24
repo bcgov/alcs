@@ -1,0 +1,101 @@
+<form [formGroup]="form">
+  <div class="header full-width">
+    <h3>Property</h3>
+  </div>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Civic Address</mat-label>
+    <textarea matInput formControlName="civicAddress" rows="1"></textarea>
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Legal Description</mat-label>
+    <textarea matInput formControlName="legalDescription" rows="1"></textarea>
+  </mat-form-field>
+
+  <div class="government-region-fields">
+    <mat-form-field appearance="outline">
+      <mat-label>Local or First Nation Government</mat-label>
+      <mat-select formControlName="localGovernmentUuid" (selectionChange)="onLocalGovernmentChange($event)">
+        <mat-option *ngFor="let lg of filteredLocalGovernments" [value]="lg.uuid">
+          {{ lg.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Region</mat-label>
+      <mat-select formControlName="regionCode">
+        <mat-option *ngFor="let region of regions" [value]="region.code">
+          {{ region.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="coordinate-fields">
+    <div class="coordinate-field">
+      <mat-form-field appearance="outline">
+        <mat-label>Latitude</mat-label>
+        <input type="number" matInput formControlName="latitude" step="0.000001" />
+      </mat-form-field>
+      <div class="coordinate-help">Valid Range is 48 to 61. Example: 49.55555</div>
+    </div>
+
+    <div class="coordinate-field">
+      <mat-form-field appearance="outline">
+        <mat-label>Longitude</mat-label>
+        <input type="number" matInput formControlName="longitude" step="0.000001" />
+      </mat-form-field>
+      <div class="coordinate-help">Valid Range is -140 to -113. Example: -153.44444</div>
+    </div>
+  </div>
+
+  <div class="ownership-type-section">
+    <label class="ownership-type-label">Ownership Type</label>
+    <mat-button-toggle-group formControlName="ownershipTypeCode" class="ownership-toggle-group">
+      <mat-button-toggle value="SMPL">Fee Simple</mat-button-toggle>
+      <mat-button-toggle value="CRWN">Crown</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="pid-pin-section">
+    <div class="pid-pin-fields">
+      <mat-form-field appearance="outline">
+        <mat-label>Select to Choose PID or PIN</mat-label>
+        <mat-select formControlName="pidOrPin" (selectionChange)="onPidOrPinChange($event)">
+          <mat-option value="PID">PID</mat-option>
+          <mat-option value="PIN">PIN</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.get('pidOrPin')?.value === 'PID'" appearance="outline">
+        <mat-label>Enter PID</mat-label>
+        <input matInput formControlName="pid" mask="000-000-000" placeholder="XXX-XXX-XXX" />
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.get('pidOrPin')?.value === 'PIN'" appearance="outline">
+        <mat-label>Enter PIN</mat-label>
+        <input matInput formControlName="pin" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="area-fields">
+    <mat-form-field appearance="outline">
+      <mat-label>Area (ha)</mat-label>
+      <input type="number" matInput formControlName="areaHectares" step="0.01" min="0" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>% within ALR</mat-label>
+      <input type="number" matInput formControlName="alrPercentage" step="0.1" min="0" max="100" />
+      <span matTextSuffix>%</span>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>ALC History</mat-label>
+    <textarea matInput formControlName="alcHistory" rows="4" placeholder="Enter ALC history details..."></textarea>
+  </mat-form-field>
+</form>

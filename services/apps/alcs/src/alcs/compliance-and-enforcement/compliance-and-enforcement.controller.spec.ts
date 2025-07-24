@@ -109,7 +109,7 @@ describe('ComplianceAndEnforcementController', () => {
       };
       mockComplianceAndEnforcementService.create.mockResolvedValue(resultDto);
       expect(await controller.create(createDto, true)).toEqual(resultDto);
-      expect(mockComplianceAndEnforcementService.create).toHaveBeenCalledWith(createDto, true);
+      expect(mockComplianceAndEnforcementService.create).toHaveBeenCalledWith(createDto, true, false);
     });
   });
 
