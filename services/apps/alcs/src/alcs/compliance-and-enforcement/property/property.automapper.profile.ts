@@ -17,6 +17,14 @@ export class ComplianceAndEnforcementPropertyProfile extends AutomapperProfile {
         mapper,
         ComplianceAndEnforcementProperty,
         ComplianceAndEnforcementPropertyDto,
+        forMember(
+          (dto) => dto.pid,
+          mapFrom((entity) => entity.pid),
+        ),
+        forMember(
+          (dto) => dto.pin,
+          mapFrom((entity) => entity.pin),
+        ),
       );
 
       createMap(
@@ -26,6 +34,14 @@ export class ComplianceAndEnforcementPropertyProfile extends AutomapperProfile {
         forMember(
           (entity) => entity.file,
           mapFrom((dto) => new ComplianceAndEnforcement({ uuid: dto.fileUuid })),
+        ),
+        forMember(
+          (entity) => entity.pid,
+          mapFrom((dto) => dto.pid),
+        ),
+        forMember(
+          (entity) => entity.pin,
+          mapFrom((dto) => dto.pin),
         ),
       );
     };

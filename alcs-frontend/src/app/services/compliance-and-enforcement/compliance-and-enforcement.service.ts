@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -17,8 +17,11 @@ export class ComplianceAndEnforcementService {
   }
 
   async fetchByFileNumber(fileNumber: string, withSubmitters = false): Promise<ComplianceAndEnforcementDto> {
+    let params = new HttpParams();
+    params = params.set('withSubmitters', withSubmitters.toString());
+    
     return await firstValueFrom(
-      this.http.get<ComplianceAndEnforcementDto>(`${this.url}/${fileNumber}?withSubmitters=${withSubmitters}`),
+      this.http.get<ComplianceAndEnforcementDto>(`${this.url}/${fileNumber}`, { params }),
     );
   }
 
@@ -27,11 +30,12 @@ export class ComplianceAndEnforcementService {
     createInitialSubmitter = false,
     createInitialProperty = false,
   ): Promise<ComplianceAndEnforcementDto> {
+    let params = new HttpParams()
+      .set('createInitialSubmitter', createInitialSubmitter.toString())
+      .set('createInitialProperty', createInitialProperty.toString());
+    
     return await firstValueFrom(
-      this.http.post<ComplianceAndEnforcementDto>(
-        `${this.url}?createInitialSubmitter=${createInitialSubmitter}&createInitialProperty=${createInitialProperty}`,
-        updateDto,
-      ),
+      this.http.post<ComplianceAndEnforcementDto>(this.url, updateDto, { params }),
     );
   }
 

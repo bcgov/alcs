@@ -29,8 +29,9 @@ export function cleanPropertyUpdate(update: UpdateComplianceAndEnforcementProper
   const cleaned: any = {};
   for (const [key, value] of Object.entries(update)) {
     if (
-      value !== null &&
       value !== undefined &&
+      // Allow null values for pid/pin so they can be cleared
+      (value !== null || key === 'pid' || key === 'pin') &&
       // Filter out default values
       !(key === 'ownershipTypeCode' && value === 'SMPL')
     ) {
@@ -139,8 +140,8 @@ export class PropertyComponent implements OnDestroy {
           latitude: toNumberOrUndefined(form.latitude),
           longitude: toNumberOrUndefined(form.longitude),
           ownershipTypeCode: form.ownershipTypeCode ?? PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE,
-          pid: form.pidOrPin === 'PID' ? form.pid : null,
-          pin: form.pidOrPin === 'PIN' ? form.pin : null,
+          pid: form.pidOrPin === 'PID' ? (form.pid || null) : null,
+          pin: form.pidOrPin === 'PIN' ? (form.pin || null) : null,
           areaHectares: toNumberOrUndefined(form.areaHectares),
           alrPercentage: toNumberOrUndefined(form.alrPercentage),
           alcHistory: form.alcHistory ?? '',
