@@ -5,6 +5,7 @@ export enum DOCUMENT_TYPE {
   DECISION_DOCUMENT = 'DPAC',
   OTHER = 'OTHR',
   ORIGINAL_APPLICATION = 'ORIG',
+  REFERRAL = 'REFR',
 
   //Government Review
   RESOLUTION_DOCUMENT = 'RESO',

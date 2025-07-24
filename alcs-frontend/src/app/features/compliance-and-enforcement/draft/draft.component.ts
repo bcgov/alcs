@@ -27,8 +27,15 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   submissionDocumentOptions: DocumentUploadDialogOptions = {
     allowedVisibilityFlags: [],
     allowsFileEdit: true,
-    allowedDocumentSources: [DOCUMENT_SOURCE.COMPLAINANT],
-    allowedDocumentTypes: [DOCUMENT_TYPE.COMPLAINT],
+    allowedDocumentSources: [
+      DOCUMENT_SOURCE.COMPLAINANT,
+      DOCUMENT_SOURCE.PUBLIC,
+      DOCUMENT_SOURCE.LFNG,
+      DOCUMENT_SOURCE.BC_GOVERNMENT,
+      DOCUMENT_SOURCE.OTHER_AGENCY,
+      DOCUMENT_SOURCE.ALC,
+    ],
+    allowedDocumentTypes: [DOCUMENT_TYPE.COMPLAINT, DOCUMENT_TYPE.REFERRAL],
   };
 
   $destroy = new Subject<void>();
