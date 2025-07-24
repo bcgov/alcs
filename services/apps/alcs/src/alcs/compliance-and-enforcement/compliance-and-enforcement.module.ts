@@ -12,25 +12,49 @@ import { ComplianceAndEnforcementPropertyController } from './property/property.
 import { ComplianceAndEnforcementPropertyProfile } from './property/property.automapper.profile';
 import { ComplianceAndEnforcementPropertyService } from './property/property.service';
 import { ComplianceAndEnforcementProperty } from './property/property.entity';
+import { ComplianceAndEnforcementDocumentController } from './document/document.controller';
+import { ComplianceAndEnforcementDocumentService } from './document/document.service';
+import { ComplianceAndEnforcementDocumentProfile } from './document/document.automapper.profile';
+import { ComplianceAndEnforcementDocument } from './document/document.entity';
+import { DocumentCode } from '../../document/document-code.entity';
+import { DocumentModule } from '../../document/document.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ComplianceAndEnforcement, ComplianceAndEnforcementSubmitter, ComplianceAndEnforcementProperty])],
-  controllers: [ComplianceAndEnforcementController, ComplianceAndEnforcementSubmitterController, ComplianceAndEnforcementPropertyController],
+  imports: [
+    TypeOrmModule.forFeature([
+      ComplianceAndEnforcement,
+      ComplianceAndEnforcementSubmitter,
+      ComplianceAndEnforcementProperty,
+      ComplianceAndEnforcementDocument,
+      DocumentCode,
+    ]),
+    DocumentModule,
+  ],
+  controllers: [
+    ComplianceAndEnforcementController,
+    ComplianceAndEnforcementSubmitterController,
+    ComplianceAndEnforcementPropertyController,
+    ComplianceAndEnforcementDocumentController,
+  ],
   providers: [
     ComplianceAndEnforcementService,
     ComplianceAndEnforcementSubmitterService,
     ComplianceAndEnforcementPropertyService,
+    ComplianceAndEnforcementDocumentService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
+    ComplianceAndEnforcementDocumentProfile,
   ],
   exports: [
     ComplianceAndEnforcementService,
     ComplianceAndEnforcementSubmitterService,
     ComplianceAndEnforcementPropertyService,
+    ComplianceAndEnforcementDocumentService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
+    ComplianceAndEnforcementDocumentProfile,
   ],
 })
 export class ComplianceAndEnforcementModule {}

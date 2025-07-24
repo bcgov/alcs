@@ -84,6 +84,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     this.internalVisibilityLabel = this.buildInternalVisibilityLabel();
 
     this.documentSources = this.data.allowedDocumentSources ?? DEFAULT_DOCUMENT_SOURCES;
+    if (this.documentSources.length === 1) {
+      this.source.setValue(this.documentSources[0]);
+    }
 
     if (this.data.existingDocument) {
       const document = this.data.existingDocument;
@@ -406,9 +409,13 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   private async loadDocumentTypes() {
     if (this.data.documentService) {
-      const docTypes = await this.data.documentService.fetchTypes();
+      const docTypes = await this.data.documentService.fetchTypes(this.data.allowedDocumentTypes);
       docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
       this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
+
+      if (this.documentTypes.length === 1) {
+        this.type.setValue(this.documentTypes[0].code);
+      }
     } else if (this.data.decisionService) {
       this.documentTypes = [
         {

@@ -13,8 +13,10 @@ import { SubmitterComponent } from '../submitter/submitter.component';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
 import { PropertyComponent, cleanPropertyUpdate } from '../property/property.component';
-import { ComplianceAndEnforcementPropertyDto, UpdateComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
+import { ComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
 import { ComplianceAndEnforcementPropertyService } from '../../../services/compliance-and-enforcement/property/property.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
+import { DocumentUploadDialogOptions } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 
 @Component({
   selector: 'app-compliance-and-enforcement-draft',
@@ -22,6 +24,13 @@ import { ComplianceAndEnforcementPropertyService } from '../../../services/compl
   styleUrls: ['./draft.component.scss'],
 })
 export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
+  submissionDocumentOptions: DocumentUploadDialogOptions = {
+    allowedVisibilityFlags: [],
+    allowsFileEdit: true,
+    allowedDocumentSources: [DOCUMENT_SOURCE.COMPLAINANT],
+    allowedDocumentTypes: [DOCUMENT_TYPE.COMPLAINT],
+  };
+
   $destroy = new Subject<void>();
 
   fileNumber?: string;
@@ -112,8 +121,8 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         debounceTime(1000),
         switchMap((property) => {
           // Only auto-save if there are meaningful changes (non-empty fields)
-          const hasActualData = Object.values(cleanPropertyUpdate(property)).some(value => 
-            value !== null && value !== undefined && value !== '' && value !== 0
+          const hasActualData = Object.values(cleanPropertyUpdate(property)).some(
+            (value) => value !== null && value !== undefined && value !== '' && value !== 0,
           );
 
           if (!hasActualData) {
@@ -123,9 +132,9 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.property?.uuid) {
             return this.complianceAndEnforcementPropertyService.update(this.property.uuid, property);
           } else if (this.file?.uuid) {
-            return this.complianceAndEnforcementPropertyService.create({ 
+            return this.complianceAndEnforcementPropertyService.create({
               fileUuid: this.file.uuid,
-              ...cleanPropertyUpdate(property)
+              ...cleanPropertyUpdate(property),
             });
           } else {
             return EMPTY;
@@ -153,7 +162,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       this.file = await this.complianceAndEnforcementService.fetchByFileNumber(fileNumber, true);
       this.submitter = this.file.submitters[0];
       this.initialSubmissionType = this.file.initialSubmissionType ?? undefined;
-      
+
       // Load property data
       if (this.file.uuid) {
         try {
@@ -187,7 +196,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, overviewUpdate));
-      
+
       if (this.submitter?.uuid) {
         await firstValueFrom(
           this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitterUpdate),
@@ -197,14 +206,12 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       if (this.property?.uuid) {
-        await firstValueFrom(
-          this.complianceAndEnforcementPropertyService.update(this.property.uuid, propertyUpdate),
-        );
+        await firstValueFrom(this.complianceAndEnforcementPropertyService.update(this.property.uuid, propertyUpdate));
       } else {
         this.property = await firstValueFrom(
           this.complianceAndEnforcementPropertyService.create({
             fileUuid: this.file.uuid,
-            ...cleanPropertyUpdate(propertyUpdate)
+            ...cleanPropertyUpdate(propertyUpdate),
           }),
         );
       }
