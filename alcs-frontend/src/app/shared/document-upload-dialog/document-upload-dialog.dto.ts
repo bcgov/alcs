@@ -1,3 +1,4 @@
+import { Section } from '../../services/compliance-and-enforcement/documents/document.service';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DOCUMENT_TYPE, DocumentTypeDto } from '../../shared/document/document.dto';
 import { BaseCodeDto } from '../dto/base.dto';
 
@@ -9,6 +10,7 @@ export interface UpdateDocumentDto {
   source?: DOCUMENT_SOURCE;
   visibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
   file?: File;
+  section?: Section;
 }
 
 export interface CreateDocumentDto extends UpdateDocumentDto {

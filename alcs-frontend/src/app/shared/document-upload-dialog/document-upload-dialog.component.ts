@@ -205,6 +205,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags,
       parcelUuid: this.parcelId.value ?? undefined,
       ownerUuid: this.ownerId.value ?? undefined,
+      section: this.data.section ?? undefined,
     };
 
     if (file) {

@@ -2,6 +2,7 @@ import { AutoMap } from 'automapper-classes';
 import { BaseCodeDto } from '../common/dtos/base.dto';
 import { User } from '../user/user.entity';
 import { UserDto } from '../user/user.dto';
+import { Section } from '../alcs/compliance-and-enforcement/document/document.entity';
 
 export enum DOCUMENT_SOURCE {
   // All types
@@ -83,4 +84,5 @@ export class CreateDocumentDto {
   source: DOCUMENT_SOURCE;
   system: DOCUMENT_SYSTEM;
   tags?: string[];
+  section?: Section;
 }

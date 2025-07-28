@@ -2,10 +2,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
+import {
+  ComplianceAndEnforcementDocumentDto,
+  CreateComplianceAndEnforcementDocumentDto,
+  UpdateComplianceAndEnforcementDocumentDto,
+} from './document.dto';
 import { DOCUMENT_TYPE, DocumentTypeDto } from '../../../shared/document/document.dto';
 import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
-import { CreateDocumentDto, UpdateDocumentDto } from '../../application/application-document/application-document.dto';
+
+export enum Section {
+  SUBMISSION = 'Submission',
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,14 +22,14 @@ export class ComplianceAndEnforcementDocumentService {
 
   constructor(private readonly http: HttpClient) {}
 
-  list(fileNumber?: string, typeCodes: string[] = []): Promise<ComplianceAndEnforcementDocumentDto[]> {
+  list(fileNumber?: string, section?: Section): Promise<ComplianceAndEnforcementDocumentDto[]> {
     let params = new HttpParams();
 
     if (fileNumber) {
       params = params.set('fileNumber', fileNumber);
     }
-    for (const typeCode of typeCodes) {
-      params = params.append('typeCodes', typeCode);
+    if (section) {
+      params = params.append('section', section);
     }
 
     return firstValueFrom(this.http.get<ComplianceAndEnforcementDocumentDto[]>(this.url, { params }));
@@ -35,7 +42,10 @@ export class ComplianceAndEnforcementDocumentService {
     return firstValueFrom(this.http.patch<ComplianceAndEnforcementDocumentDto>(`${this.url}/${uuid}`, updateDto));
   }
 
-  async upload(fileNumber: string, createDto: CreateDocumentDto): Promise<ComplianceAndEnforcementDocumentDto> {
+  async upload(
+    fileNumber: string,
+    createDto: CreateComplianceAndEnforcementDocumentDto,
+  ): Promise<ComplianceAndEnforcementDocumentDto> {
     let formData = this.convertDtoToFormData(createDto);
 
     return firstValueFrom(this.http.post<ComplianceAndEnforcementDocumentDto>(`${this.url}/${fileNumber}`, formData));
@@ -66,21 +76,25 @@ export class ComplianceAndEnforcementDocumentService {
     return firstValueFrom(this.http.delete<ComplianceAndEnforcementDocumentDto>(`${this.url}/${uuid}`));
   }
 
-  private convertDtoToFormData(dto: UpdateDocumentDto | CreateDocumentDto): FormData {
+  private convertDtoToFormData(
+    dto: UpdateComplianceAndEnforcementDocumentDto & CreateComplianceAndEnforcementDocumentDto,
+  ): FormData {
     let formData: FormData = new FormData();
 
-    formData.append('documentType', dto.typeCode);
-    formData.append('source', dto.source);
-    formData.append('visibilityFlags', dto.visibilityFlags.join(', '));
-    formData.append('fileName', dto.fileName);
+    if (dto.typeCode) {
+      formData.append('documentType', dto.typeCode);
+    }
+    if (dto.source) {
+      formData.append('source', dto.source);
+    }
+    if (dto.fileName) {
+      formData.append('fileName', dto.fileName);
+    }
     if (dto.file) {
       formData.append('file', dto.file, dto.file.name);
     }
-    if (dto.parcelUuid) {
-      formData.append('parcelUuid', dto.parcelUuid);
-    }
-    if (dto.ownerUuid) {
-      formData.append('ownerUuid', dto.ownerUuid);
+    if (dto.section) {
+      formData.append('section', dto.section);
     }
 
     return formData;

@@ -1,4 +1,5 @@
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DocumentTypeDto } from '../../../shared/document/document.dto';
+import { Section } from './document.service';
 
 export interface ComplianceAndEnforcementDocumentDto {
   uuid: string;
@@ -13,19 +14,14 @@ export interface ComplianceAndEnforcementDocumentDto {
   fileSize?: number;
 }
 
-export interface CreateComplianceAndEnforcementDocumentDto {
-  typeCode: string;
-
-  source: DOCUMENT_SOURCE;
-  fileName: string;
-  file: File;
-}
-
 export interface UpdateComplianceAndEnforcementDocumentDto {
   typeCode?: string;
 
   source?: DOCUMENT_SOURCE;
   fileName?: string;
-  file?: File;
-  visibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
+  section?: Section;
+}
+
+export interface CreateComplianceAndEnforcementDocumentDto extends UpdateComplianceAndEnforcementDocumentDto {
+  file: File;
 }

@@ -4,7 +4,7 @@ import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
-enum Section {
+export enum Section {
   SUBMISSION = 'Submission',
 }
 

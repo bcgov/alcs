@@ -22,6 +22,7 @@ import { DeleteResult } from 'typeorm';
 import { CreateDocumentDto, DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DocumentTypeDto } from '../../../document/document.dto';
 import { User } from '../../../user/user.entity';
 import { v4 } from 'uuid';
+import { Section } from './document.entity';
 
 @Controller('compliance-and-enforcement/document')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -33,9 +34,9 @@ export class ComplianceAndEnforcementDocumentController {
   @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
   async list(
     @Query('fileNumber') fileNumber?: string,
-    @Query('typeCodes') typeCodes?: string[],
+    @Query('section') section?: Section,
   ): Promise<ComplianceAndEnforcementDocumentDto[]> {
-    return await this.service.list(fileNumber, typeCodes);
+    return await this.service.list(fileNumber, section);
   }
 
   @Post('/:fileNumber')
@@ -52,6 +53,7 @@ export class ComplianceAndEnforcementDocumentController {
       fileKey: `compliance-and-enforcement/${fileNumber}/${v4()}`,
       source: req.body.source.value as DOCUMENT_SOURCE,
       system: DOCUMENT_SYSTEM.ALCS,
+      section: req.body.section.value as Section,
     };
 
     return await this.service.create(fileNumber, req.user.entity as User, req.body.file, dto);

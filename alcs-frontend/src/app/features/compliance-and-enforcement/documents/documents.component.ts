@@ -11,7 +11,10 @@ import {
 } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ComplianceAndEnforcementDocumentService } from '../../../services/compliance-and-enforcement/documents/document.service';
+import {
+  ComplianceAndEnforcementDocumentService,
+  Section,
+} from '../../../services/compliance-and-enforcement/documents/document.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -29,6 +32,7 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDes
   @Input() title?: string;
   @Input() fileNumber?: string;
   @Input() options?: DocumentUploadDialogOptions;
+  @Input() section?: Section;
 
   displayedColumns: string[] = ['source', 'type', 'fileName', 'uploadedAt', 'actions'];
 
@@ -62,6 +66,7 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDes
         fileId: this.fileNumber,
         existingDocument: document,
         documentService: this.documentService,
+        section: this.section,
       },
     };
 
@@ -104,9 +109,10 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDes
 
     const data: DocumentUploadDialogData = {
       ...this.options,
-      documentService: this.documentService,
       ...{
+        documentService: this.documentService,
         fileId: this.fileNumber,
+        section: this.section,
       },
     };
 
@@ -127,7 +133,7 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDes
 
   async loadDocuments() {
     if (this.fileNumber) {
-      const documents = await this.documentService.list(this.fileNumber, this.options?.allowedDocumentTypes ?? []);
+      const documents = await this.documentService.list(this.fileNumber, this.section);
       this.dataSource.data = documents;
     }
   }

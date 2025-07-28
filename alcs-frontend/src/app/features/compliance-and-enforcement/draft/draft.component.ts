@@ -17,6 +17,7 @@ import { ComplianceAndEnforcementPropertyDto } from '../../../services/complianc
 import { ComplianceAndEnforcementPropertyService } from '../../../services/compliance-and-enforcement/property/property.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { DocumentUploadDialogOptions } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
+import { Section } from '../../../services/compliance-and-enforcement/documents/document.service';
 
 @Component({
   selector: 'app-compliance-and-enforcement-draft',
@@ -24,6 +25,8 @@ import { DocumentUploadDialogOptions } from '../../../shared/document-upload-dia
   styleUrls: ['./draft.component.scss'],
 })
 export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
+  Section = Section;
+
   submissionDocumentOptions: DocumentUploadDialogOptions = {
     allowedVisibilityFlags: [],
     allowsFileEdit: true,

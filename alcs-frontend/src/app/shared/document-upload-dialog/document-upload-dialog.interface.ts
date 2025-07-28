@@ -1,3 +1,4 @@
+import { Section } from '../../services/compliance-and-enforcement/documents/document.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
 import { VisibilityGroup } from './document-upload-dialog.component';
 import {
@@ -19,6 +20,7 @@ export interface DocumentUploadDialogOptions {
   documentTypeOverrides?: Partial<Record<DOCUMENT_TYPE, DocumentTypeConfig>>;
   allowedDocumentSources?: DOCUMENT_SOURCE[];
   allowedDocumentTypes?: DOCUMENT_TYPE[];
+  section?: Section;
 }
 
 export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {

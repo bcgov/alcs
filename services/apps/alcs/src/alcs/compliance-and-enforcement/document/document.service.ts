@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DeleteResult, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ComplianceAndEnforcementDocument } from './document.entity';
+import { ComplianceAndEnforcementDocument, Section } from './document.entity';
 import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
@@ -29,13 +29,13 @@ export class ComplianceAndEnforcementDocumentService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  async list(fileNumber?: string, types: string[] = []): Promise<ComplianceAndEnforcementDocumentDto[]> {
+  async list(fileNumber?: string, section?: Section): Promise<ComplianceAndEnforcementDocumentDto[]> {
     const entities = await this.repository.find({
       where: {
         file: {
           fileNumber: fileNumber,
         },
-        type: types.length > 0 ? In(types) : undefined,
+        section,
       },
       relations: ['type', 'document'],
       order: {
@@ -84,6 +84,7 @@ export class ComplianceAndEnforcementDocumentService {
       file,
       document,
       type,
+      section: createDto.section,
     });
 
     const savedEntity = await this.repository.save(entity);
