@@ -1,14 +1,16 @@
+import { Section } from '../../services/compliance-and-enforcement/documents/document.service';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DOCUMENT_TYPE, DocumentTypeDto } from '../../shared/document/document.dto';
 import { BaseCodeDto } from '../dto/base.dto';
 
 export interface UpdateDocumentDto {
-  file?: File;
   parcelUuid?: string;
   ownerUuid?: string;
-  fileName: string;
-  typeCode: DOCUMENT_TYPE;
-  source: DOCUMENT_SOURCE;
+  fileName?: string;
+  typeCode?: DOCUMENT_TYPE;
+  source?: DOCUMENT_SOURCE;
   visibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
+  file?: File;
+  section?: Section;
 }
 
 export interface CreateDocumentDto extends UpdateDocumentDto {
@@ -25,7 +27,6 @@ export interface DocumentDto {
   system: DOCUMENT_SYSTEM;
   fileName: string;
   mimeType: string;
-  uploadedBy: string;
   uploadedAt: number;
   evidentiaryRecordSorting?: number;
   fileSize?: number;

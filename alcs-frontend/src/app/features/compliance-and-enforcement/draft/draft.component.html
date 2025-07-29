@@ -10,14 +10,18 @@
         [submitter]="submitter"
         [initialSubmissionType]="initialSubmissionType"
       />
+
+      <app-compliance-and-enforcement-documents
+        #submissionDocumentsComponent
+        [title]="'Complaint/Referral Submission'"
+        [fileNumber]="fileNumber"
+        [options]="submissionDocumentOptions"
+        [section]="Section.SUBMISSION"
+      />
     </section>
 
     <section class="form-section">
-      <app-compliance-and-enforcement-property
-        #propertyComponent
-        [parentForm]="form"
-        [property]="property"
-      />
+      <app-compliance-and-enforcement-property #propertyComponent [parentForm]="form" [property]="property" />
     </section>
 
     <div class="button-container">
