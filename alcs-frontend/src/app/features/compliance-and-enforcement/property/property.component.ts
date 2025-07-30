@@ -77,6 +77,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
   isPatching = false;
   isSubscribed = false;
+  isInitialized = false;
 
   PARCEL_OWNERSHIP_TYPE = PARCEL_OWNERSHIP_TYPE;
   localGovernments: ApplicationLocalGovernmentDto[] = [];
@@ -156,12 +157,16 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
       this.form.enable();
       this.isPatching = false;
+
+      setTimeout(() => {
+        this.isInitialized = true;
+      }, 100);
     }
 
     // Prevent resubscription
     if (!this.isSubscribed) {
       this.form.valueChanges.pipe(takeUntil(this.$destroy)).subscribe((form) => {
-        if (this.isPatching) {
+        if (this.isPatching || !this.isInitialized) {
           return;
         }
 
@@ -210,6 +215,13 @@ export class PropertyComponent implements OnInit, OnDestroy {
     this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
     });
+
+    // If no property is set initially, set initialized to true after a delay to allow for any initial setup
+    setTimeout(() => {
+      if (!this.isInitialized) {
+        this.isInitialized = true;
+      }
+    }, 500);
   }
 
   async loadLocalGovernments() {
