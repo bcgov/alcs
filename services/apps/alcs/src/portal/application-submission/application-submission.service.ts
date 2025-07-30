@@ -427,7 +427,7 @@ export class ApplicationSubmissionService {
 
   async getForNonGovernmentBusinessByFileId(fileNumber: string, user: User) {
     if (!user.bceidBusinessGuid) {
-      throw new Error('Must be business BCeID');
+      throw new Error('Must have business BCeID GUID to access this submission');
     }
 
     const existingApplication = await this.applicationSubmissionRepository.findOne({
