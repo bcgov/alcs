@@ -158,9 +158,6 @@ export class PropertyComponent implements OnInit, OnDestroy {
       this.form.enable();
       this.isPatching = false;
 
-      setTimeout(() => {
-        this.isInitialized = true;
-      }, 100);
     }
 
     // Prevent resubscription
@@ -217,11 +214,9 @@ export class PropertyComponent implements OnInit, OnDestroy {
     });
 
     // If no property is set initially, set initialized to true after a delay to allow for any initial setup
-    setTimeout(() => {
       if (!this.isInitialized) {
         this.isInitialized = true;
       }
-    }, 500);
   }
 
   async loadLocalGovernments() {
