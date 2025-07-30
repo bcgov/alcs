@@ -135,6 +135,15 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDes
     if (this.fileNumber) {
       const documents = await this.documentService.list(this.fileNumber, this.section);
       this.dataSource.data = documents;
+      this.dataSource.sortingDataAccessor = (item, property) => {
+        switch (property) {
+          case 'type':
+            return item.type?.oatsCode;
+          default: // @ts-ignore Does not like using String for Key access, but that's what Angular provides
+            return item[property];
+        }
+      };
+      this.dataSource.sort = this.sort;
     }
   }
 
