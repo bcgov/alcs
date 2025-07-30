@@ -31,7 +31,6 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     allowedVisibilityFlags: [],
     allowsFileEdit: true,
     allowedDocumentSources: [
-      DOCUMENT_SOURCE.COMPLAINANT,
       DOCUMENT_SOURCE.PUBLIC,
       DOCUMENT_SOURCE.LFNG,
       DOCUMENT_SOURCE.BC_GOVERNMENT,
