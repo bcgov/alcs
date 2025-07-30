@@ -100,11 +100,7 @@ export class ApplicationSubmissionReviewController {
       ? await this.applicationSubmissionService.getForNonGovernmentBusinessByFileId(fileNumber, req.user.entity)
       : await this.applicationSubmissionService.getByFileNumber(fileNumber, req.user.entity);
 
-    const applicationSubmission =
-      await this.applicationSubmissionService.getByFileNumber(
-        fileNumber,
-        req.user.entity,
-      );
+    const applicationReview = await this.applicationSubmissionReviewService.getByFileNumber(fileNumber);
 
     if (!applicationSubmission) {
       throw new NotFoundException(
