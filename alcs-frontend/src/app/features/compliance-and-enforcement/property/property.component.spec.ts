@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,17 +8,23 @@ import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { BehaviorSubject } from 'rxjs';
 import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../services/application/application.service';
+import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
 import { PropertyComponent } from './property.component';
 
 describe('PropertyComponent', () => {
   let component: PropertyComponent;
   let fixture: ComponentFixture<PropertyComponent>;
   let mockLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockLocalGovernmentService = createMock();
     mockLocalGovernmentService.list.mockResolvedValue([]);
+    mockApplicationService = createMock();
+    mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
     await TestBed.configureTestingModule({
       declarations: [PropertyComponent],
@@ -27,11 +34,13 @@ describe('PropertyComponent', () => {
         MatInputModule,
         MatSelectModule,
         MatButtonToggleModule,
+        MatAutocompleteModule,
         NoopAnimationsModule,
         HttpClientTestingModule,
       ],
       providers: [
         { provide: ApplicationLocalGovernmentService, useValue: mockLocalGovernmentService },
+        { provide: ApplicationService, useValue: mockApplicationService },
       ],
     }).compileComponents();
 
