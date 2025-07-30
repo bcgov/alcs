@@ -96,8 +96,9 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    const applicationReview =
-      await this.applicationSubmissionReviewService.getByFileNumber(fileNumber);
+    const applicationSubmission = req.user.entity.bceidBusinessGuid
+      ? await this.applicationSubmissionService.getForNonGovernmentBusinessByFileId(fileNumber, req.user.entity)
+      : await this.applicationSubmissionService.getByFileNumber(fileNumber, req.user.entity);
 
     const applicationSubmission =
       await this.applicationSubmissionService.getByFileNumber(
