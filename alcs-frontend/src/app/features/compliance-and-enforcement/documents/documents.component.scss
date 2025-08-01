@@ -1,0 +1,15 @@
+@use '../../../../styles/colors.scss' as colors;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.documents {
+  box-shadow: none;
+}
+
+.text-center {
+  padding-top: 10px;
+}

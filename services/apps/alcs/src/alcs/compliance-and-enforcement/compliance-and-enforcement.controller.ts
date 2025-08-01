@@ -34,8 +34,9 @@ export class ComplianceAndEnforcementController {
   async create(
     @Body() createDto: UpdateComplianceAndEnforcementDto,
     @Query('createInitialSubmitter') createInitialSubmitter: boolean = false,
+    @Query('createInitialProperty') createInitialProperty: boolean = false,
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.create(createDto, createInitialSubmitter);
+    return await this.service.create(createDto, createInitialSubmitter, createInitialProperty);
   }
 
   @Patch('/:uuid')

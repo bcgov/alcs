@@ -107,7 +107,7 @@
         #{{ reconsideration.resultingDecision.resolutionNumber }}/{{ reconsideration.resultingDecision.resolutionYear }}
       </div>
 
-      <div *ngIf="reconsideration.decisionOutcome">
+      <div *ngIf="reconsideration.reviewOutcome?.code === 'PRC' || reconsideration.type.code === '33.1'">
         <div class="subheading2">
           Does the reconsideration confirm, reverse, or vary
           {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }}?

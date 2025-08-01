@@ -6,6 +6,7 @@ export enum DOCUMENT_TYPE {
   //ALCS
   DECISION_DOCUMENT = 'DPAC',
   OTHER = 'OTHR',
+  REFERRAL = 'REFR',
 
   //Government Review
   RESOLUTION_DOCUMENT = 'RESO',
