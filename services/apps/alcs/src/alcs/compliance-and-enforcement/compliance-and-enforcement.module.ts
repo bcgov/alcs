@@ -16,6 +16,10 @@ import { ComplianceAndEnforcementDocumentController } from './document/document.
 import { ComplianceAndEnforcementDocumentService } from './document/document.service';
 import { ComplianceAndEnforcementDocumentProfile } from './document/document.automapper.profile';
 import { ComplianceAndEnforcementDocument } from './document/document.entity';
+import { ComplianceAndEnforcementResponsiblePartyController } from './responsible-parties/responsible-parties.controller';
+import { ComplianceAndEnforcementResponsiblePartyService } from './responsible-parties/responsible-parties.service';
+import { ComplianceAndEnforcementResponsiblePartyProfile } from './responsible-parties/responsible-parties.automapper.profile';
+import { ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDirector } from './responsible-parties/entities';
 import { DocumentCode } from '../../document/document-code.entity';
 import { DocumentModule } from '../../document/document.module';
 
@@ -26,6 +30,8 @@ import { DocumentModule } from '../../document/document.module';
       ComplianceAndEnforcementSubmitter,
       ComplianceAndEnforcementProperty,
       ComplianceAndEnforcementDocument,
+      ComplianceAndEnforcementResponsibleParty,
+      ComplianceAndEnforcementResponsiblePartyDirector,
       DocumentCode,
     ]),
     DocumentModule,
@@ -35,26 +41,31 @@ import { DocumentModule } from '../../document/document.module';
     ComplianceAndEnforcementSubmitterController,
     ComplianceAndEnforcementPropertyController,
     ComplianceAndEnforcementDocumentController,
+    ComplianceAndEnforcementResponsiblePartyController,
   ],
   providers: [
     ComplianceAndEnforcementService,
     ComplianceAndEnforcementSubmitterService,
     ComplianceAndEnforcementPropertyService,
     ComplianceAndEnforcementDocumentService,
+    ComplianceAndEnforcementResponsiblePartyService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
     ComplianceAndEnforcementDocumentProfile,
+    ComplianceAndEnforcementResponsiblePartyProfile,
   ],
   exports: [
     ComplianceAndEnforcementService,
     ComplianceAndEnforcementSubmitterService,
     ComplianceAndEnforcementPropertyService,
     ComplianceAndEnforcementDocumentService,
+    ComplianceAndEnforcementResponsiblePartyService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
     ComplianceAndEnforcementDocumentProfile,
+    ComplianceAndEnforcementResponsiblePartyProfile,
   ],
 })
 export class ComplianceAndEnforcementModule {}

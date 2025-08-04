@@ -1,0 +1,299 @@
+<div class="responsible-parties-container">
+  <div class="header">
+    <h3>Allegedly Responsible Parties</h3>
+    <button
+      mat-flat-button
+      color="primary"
+      [matMenuTriggerFor]="addPartyMenu"
+      [disabled]="isPropertyCrown"
+    >
+      + ADD PARTY
+    </button>
+
+    <mat-menu #addPartyMenu="matMenu">
+      <button mat-menu-item *ngFor="let type of responsiblePartyTypes" (click)="addParty()">
+        {{ type.value }}
+      </button>
+    </mat-menu>
+  </div>
+
+  <div *ngIf="isPropertyCrown" class="crown-notice">
+    <mat-icon>info</mat-icon>
+    <span>Responsible parties are not required for Crown ownership properties.</span>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Loading responsible parties...</span>
+  </div>
+
+  <!-- Responsible Parties Forms -->
+  <div *ngFor="let partyForm of form.controls; let i = index" class="party-card">
+    <form [formGroup]="partyForm">
+
+      <!-- Party Header -->
+      <div class="party-header">
+        <mat-form-field appearance="outline" class="party-type-field">
+          <mat-label>Party Type</mat-label>
+          <mat-select
+            formControlName="partyType"
+            (selectionChange)="onPartyTypeChange(i, $event)"
+          >
+            <mat-option *ngFor="let type of responsiblePartyTypes" [value]="type.value">
+              {{ type.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="party-actions">
+          <mat-slide-toggle
+            formControlName="isPrevious"
+            class="previous-toggle"
+          >
+            Mark as Previous
+          </mat-slide-toggle>
+          <button
+            mat-button
+            color="warn"
+            (click)="deleteParty(i)"
+            class="delete-button"
+          >
+            DELETE
+          </button>
+        </div>
+      </div>
+
+      <!-- FOIPPA Category Toggle -->
+      <div class="foippa-category-section">
+        <label class="foippa-category-label">FOIPPA Category*</label>
+        <mat-button-toggle-group
+          class="foippa-toggle-group"
+          [value]="partyForm.get('foippaCategory')?.value"
+          (change)="onFoippaCategoryChange(i, $event.value)"
+        >
+          <mat-button-toggle [value]="FOIPPACategory.INDIVIDUAL">
+            {{ FOIPPACategory.INDIVIDUAL }}
+          </mat-button-toggle>
+          <mat-button-toggle [value]="FOIPPACategory.ORGANIZATION">
+            {{ FOIPPACategory.ORGANIZATION }}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Individual Fields -->
+      <div *ngIf="isIndividual(i)" class="individual-section">
+        <div class="individual-main-fields">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="individualName" />
+            <mat-error *ngIf="partyForm.get('individualName')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            *ngIf="isPropertyOwner(i)"
+            appearance="outline"
+            class="owner-since-field"
+          >
+            <mat-label>Owner Since</mat-label>
+            <input
+              matInput
+              (click)="individualOwnerSincePicker.open()"
+              [matDatepicker]="individualOwnerSincePicker"
+              formControlName="ownerSince"
+              readonly
+            />
+            <mat-datepicker-toggle matSuffix [for]="individualOwnerSincePicker"></mat-datepicker-toggle>
+            <mat-datepicker #individualOwnerSincePicker type="date"></mat-datepicker>
+            <mat-error *ngIf="partyForm.get('ownerSince')?.hasError('required')">
+              Owner Since date is required for Property Owners
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mailing Address</mat-label>
+          <textarea matInput formControlName="individualMailingAddress" rows="2"></textarea>
+          <mat-error *ngIf="partyForm.get('individualMailingAddress')?.hasError('required')">
+            Mailing Address is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- To be used later potentially or I was confused by the ticket -->
+      <!--   <div class="individual-contact-fields"> -->
+      <!--     <mat-form-field appearance="outline"> -->
+      <!--       <mat-label>Telephone</mat-label> -->
+      <!--       <input matInput formControlName="individualTelephone" /> -->
+      <!--     </mat-form-field> -->
+      <!---->
+      <!--     <mat-form-field appearance="outline"> -->
+      <!--       <mat-label>Email</mat-label> -->
+      <!--       <input matInput formControlName="individualEmail" /> -->
+      <!--       <mat-error *ngIf="partyForm.get('individualEmail')?.hasError('email')"> -->
+      <!--         Please enter a valid email address -->
+      <!--       </mat-error> -->
+      <!--     </mat-form-field> -->
+      <!--   </div> -->
+      <!---->
+      <!--   <mat-form-field appearance="outline" class="full-width"> -->
+      <!--     <mat-label>Note</mat-label> -->
+      <!--     <textarea matInput formControlName="individualNote" rows="3"></textarea> -->
+      <!--   </mat-form-field> -->
+      <!-- </div> -->
+
+      <!-- Organization Fields -->
+      <div *ngIf="isOrganization(i)" class="organization-section">
+        <div class="organization-main-fields">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Organization Name*</mat-label>
+            <input matInput formControlName="organizationName" />
+            <mat-error *ngIf="partyForm.get('organizationName')?.hasError('required')">
+              Organization Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            *ngIf="isPropertyOwner(i)"
+            appearance="outline"
+            class="owner-since-field"
+          >
+            <mat-label>Owner Since*</mat-label>
+            <input
+              matInput
+              (click)="organizationOwnerSincePicker.open()"
+              [matDatepicker]="organizationOwnerSincePicker"
+              formControlName="ownerSince"
+              readonly
+            />
+            <mat-datepicker-toggle matSuffix [for]="organizationOwnerSincePicker"></mat-datepicker-toggle>
+            <mat-datepicker #organizationOwnerSincePicker type="date"></mat-datepicker>
+            <mat-error *ngIf="partyForm.get('ownerSince')?.hasError('required')">
+              Owner Since date is required for Property Owners
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="organization-contact-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Telephone</mat-label>
+            <input matInput formControlName="organizationTelephone" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="organizationEmail" />
+            <mat-error *ngIf="partyForm.get('organizationEmail')?.hasError('email')">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+                </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Note</mat-label>
+          <textarea matInput formControlName="organizationNote" rows="1"></textarea>
+        </mat-form-field>
+
+        <!-- Directors Section -->
+        <div class="directors-section">
+          <div class="directors-header">
+            <label class="directors-label" style="font-weight: bold; color: black;">Directors</label>
+            <div class="directors-column-headers">
+              <div class="header-item header-number">#</div>
+              <div class="header-item header-name">Director Name*</div>
+              <div class="header-item header-address">Mailing Address*</div>
+              <!-- <div class="header-item header-telephone">Telephone</div> -->
+              <!-- <div class="header-item header-email">Email</div> -->
+              <div class="header-item header-action">Action</div>
+            </div>
+          </div>
+          
+          <div class="directors-list">
+            <div
+              *ngFor="let director of getDirectorsArray(i).controls; let directorIdx = index"
+              class="director-row"
+              [formGroup]="$any(director)"
+            >
+              <div class="director-item director-number">{{ directorIdx + 1 }}</div>
+
+              <div class="director-item director-name">
+                <mat-form-field appearance="outline" class="director-field">
+                  <input matInput formControlName="directorName" placeholder="Enter Name" />
+                  <mat-error *ngIf="director.get('directorName')?.hasError('required')">
+                    Director name is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="director-item director-address">
+                <mat-form-field appearance="outline" class="director-field">
+                  <textarea matInput formControlName="directorMailingAddress" rows="1" placeholder="Enter Mailing Address"></textarea>
+                  <mat-error *ngIf="director.get('directorMailingAddress')?.hasError('required')">
+                    Mailing address is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <!-- To be used later potentially or I was confused by the ticket -->
+              <!-- <div class="director-item director-telephone">
+                <mat-form-field appearance="outline" class="director-field">
+                  <input matInput formControlName="directorTelephone" placeholder="Enter Telephone" />
+                </mat-form-field>
+              </div>
+
+              <div class="director-item director-email">
+                <mat-form-field appearance="outline" class="director-field">
+                  <input matInput formControlName="directorEmail" placeholder="Enter Email" />
+                  <mat-error *ngIf="director.get('directorEmail')?.hasError('email')">
+                    Please enter a valid email address
+                  </mat-error>
+                </mat-form-field>
+              </div> -->
+
+              <div class="director-item director-action">
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="removeDirector(i, directorIdx)"
+                  class="delete-director-button"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="getDirectorsArray(i).length === 0" class="no-directors-message">
+              No directors added
+            </div>
+          </div>
+
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="addDirector(i)"
+            class="add-director-button"
+          >
+            + ADD ANOTHER DIRECTOR
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Add Another Party Button -->
+  <button
+    mat-stroked-button
+    color="primary"
+    (click)="addParty()"
+    class="add-party-button"
+    [disabled]="isPropertyCrown"
+  >
+    + ADD ANOTHER PARTY
+  </button>
+
+  <!-- No parties message for Crown ownership -->
+  <div *ngIf="isPropertyCrown && form.length === 0" class="no-parties-message">
+    <mat-icon>info_outline</mat-icon>
+    <span>No responsible parties information required for Crown ownership properties.</span>
+  </div>
+</div>

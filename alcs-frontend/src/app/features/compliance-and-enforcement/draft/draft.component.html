@@ -24,6 +24,14 @@
       <app-compliance-and-enforcement-property #propertyComponent [parentForm]="form" [property]="property" />
     </section>
 
+    <section class="form-section">
+      <app-compliance-and-enforcement-responsible-parties 
+        #responsiblePartiesComponent
+        [fileUuid]="file?.uuid"
+        [isPropertyCrown]="isPropertyCrown"
+      />
+    </section>
+
     <div class="button-container">
       <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft</button>
     </div>

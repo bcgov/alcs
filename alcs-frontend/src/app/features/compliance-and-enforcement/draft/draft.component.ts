@@ -18,6 +18,7 @@ import { ComplianceAndEnforcementPropertyService } from '../../../services/compl
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { DocumentUploadDialogOptions } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 import { Section } from '../../../services/compliance-and-enforcement/documents/document.service';
+import { ResponsiblePartiesComponent } from '../responsible-parties/responsible-parties.component';
 
 @Component({
   selector: 'app-compliance-and-enforcement-draft',
@@ -47,12 +48,14 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   initialSubmissionType?: InitialSubmissionType;
   submitter?: ComplianceAndEnforcementSubmitterDto;
   property?: ComplianceAndEnforcementPropertyDto;
+  isPropertyCrown = false;
 
   form = new FormGroup({ overview: new FormGroup({}), submitter: new FormGroup({}), property: new FormGroup({}) });
 
   @ViewChild(OverviewComponent) overviewComponent?: OverviewComponent;
   @ViewChild(SubmitterComponent) submitterComponent?: SubmitterComponent;
   @ViewChild(PropertyComponent) propertyComponent?: PropertyComponent;
+  @ViewChild(ResponsiblePartiesComponent) responsiblePartiesComponent?: ResponsiblePartiesComponent;
 
   constructor(
     private readonly complianceAndEnforcementService: ComplianceAndEnforcementService,
@@ -164,6 +167,23 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => {
         this.toastService.showSuccessToast('C&E property draft saved');
       });
+
+    // Watch for property ownership changes to update Crown status
+    this.propertyComponent.$changes
+      .pipe(
+        takeUntil(this.$destroy),
+      )
+      .subscribe((propertyUpdate) => {
+        if (propertyUpdate.ownershipTypeCode) {
+          const wasCrown = this.isPropertyCrown;
+          this.isPropertyCrown = propertyUpdate.ownershipTypeCode === 'CRWN';
+          
+          // If Crown status changed, reload responsible parties component
+          if (wasCrown !== this.isPropertyCrown && this.responsiblePartiesComponent) {
+            this.responsiblePartiesComponent.loadResponsibleParties();
+          }
+        }
+      });
   }
 
   async loadFile(fileNumber: string) {
@@ -179,6 +199,8 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.propertyComponent && this.property) {
             this.propertyComponent.property = this.property;
           }
+          // Check if property is Crown ownership
+          this.isPropertyCrown = this.property?.ownershipTypeCode === 'CRWN';
         } catch (error: any) {
           // Property might not exist yet (404 is expected)
           if (error.status !== 404) {
@@ -186,6 +208,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
             this.toastService.showErrorToast('Failed to load property data');
           }
           this.property = undefined;
+          this.isPropertyCrown = false;
         }
       }
     } catch (error) {
