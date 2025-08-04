@@ -3,6 +3,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ServiceConflictException,
   ServiceNotFoundException,
@@ -56,10 +57,14 @@ export class ComplianceAndEnforcementResponsiblePartyService {
   async create(dto: CreateComplianceAndEnforcementResponsiblePartyDto): Promise<ComplianceAndEnforcementResponsiblePartyDto> {
     const entity = this.mapper.map(dto, CreateComplianceAndEnforcementResponsiblePartyDto, ComplianceAndEnforcementResponsibleParty);
     
+    // Generate UUID for the main entity
+    entity.uuid = uuidv4();
+    
     // Handle directors separately if they exist
     if (dto.directors && dto.directors.length > 0) {
       entity.directors = dto.directors.map(directorDto => {
         const director = new ComplianceAndEnforcementResponsiblePartyDirector();
+        director.uuid = uuidv4(); // Generate UUID for director
         director.directorName = directorDto.directorName;
         director.directorMailingAddress = directorDto.directorMailingAddress;
         director.directorTelephone = directorDto.directorTelephone;
@@ -101,6 +106,7 @@ export class ComplianceAndEnforcementResponsiblePartyService {
       if (updateDto.directors && updateDto.directors.length > 0) {
         entity.directors = updateDto.directors.map(directorDto => {
           const director = new ComplianceAndEnforcementResponsiblePartyDirector();
+          director.uuid = uuidv4(); // Generate UUID for new director
           director.directorName = directorDto.directorName || '';
           director.directorMailingAddress = directorDto.directorMailingAddress || '';
           director.directorTelephone = directorDto.directorTelephone;

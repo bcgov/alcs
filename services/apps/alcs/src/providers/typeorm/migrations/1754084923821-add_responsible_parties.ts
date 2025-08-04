@@ -10,7 +10,7 @@ export class AddResponsibleParties1754084923821 implements MigrationInterface {
         
         // Create responsible party director table
         await queryRunner.query(`CREATE TABLE "alcs"."compliance_and_enforcement_responsible_party_director" (
-            "uuid" uuid NOT NULL DEFAULT gen_random_uuid(), 
+            "uuid" uuid NOT NULL, 
             "director_name" text NOT NULL, 
             "director_mailing_address" text NOT NULL, 
             "director_telephone" text, 
@@ -22,7 +22,7 @@ export class AddResponsibleParties1754084923821 implements MigrationInterface {
         
         // Create responsible party table
         await queryRunner.query(`CREATE TABLE "alcs"."compliance_and_enforcement_responsible_party" (
-            "uuid" uuid NOT NULL DEFAULT gen_random_uuid(), 
+            "uuid" uuid NOT NULL, 
             "party_type" "alcs"."compliance_and_enforcement_responsible_party_party_type_enum" NOT NULL, 
             "foippa_category" "alcs"."compliance_and_enforcement_responsible_party_foippa_category_enum" NOT NULL DEFAULT 'Individual', 
             "is_previous" boolean NOT NULL DEFAULT false, 

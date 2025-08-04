@@ -1,5 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
 export enum ResponsiblePartyType {
@@ -25,7 +25,7 @@ export class ComplianceAndEnforcementResponsibleParty {
   }
 
   @AutoMap()
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('uuid')
   uuid: string;
 
   @AutoMap()

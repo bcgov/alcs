@@ -74,10 +74,13 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.overviewComponent || !this.submitterComponent || !this.propertyComponent) {
+    if (!this.overviewComponent || !this.submitterComponent || !this.propertyComponent || !this.responsiblePartiesComponent) {
       console.warn('Not all form sections component not initialized');
       return;
     }
+
+    // Set initial Crown status on responsible parties component
+    this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
 
     this.overviewComponent.$changes
       .pipe(
@@ -133,11 +136,24 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         debounceTime(1000),
         switchMap((property) => {
           // Only auto-save if there are meaningful changes (non-empty fields)
-          const hasActualData = Object.values(cleanPropertyUpdate(property)).some(
+          const cleanedProperty = cleanPropertyUpdate(property);
+          
+          // Check if this is a meaningful ownership type change
+          const currentOwnership = this.property?.ownershipTypeCode || 'SMPL';
+          const newOwnership = cleanedProperty.ownershipTypeCode;
+          const isOwnershipChange = newOwnership !== undefined && newOwnership !== currentOwnership;
+          
+          // For non-ownership changes, check if there are other meaningful changes
+          const propertyForCheck = { ...cleanedProperty };
+          if (propertyForCheck.ownershipTypeCode === 'SMPL') {
+            delete propertyForCheck.ownershipTypeCode;
+          }
+          
+          const hasOtherActualData = Object.values(propertyForCheck).some(
             (value) => value !== null && value !== undefined && value !== '' && value !== 0,
           );
 
-          if (!hasActualData) {
+          if (!isOwnershipChange && !hasOtherActualData) {
             return EMPTY; // Prevents saving on empty that was occurring when starting a new file
           }
 
@@ -173,14 +189,24 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         takeUntil(this.$destroy),
       )
-      .subscribe((propertyUpdate) => {
+      .subscribe(async (propertyUpdate) => {
         if (propertyUpdate.ownershipTypeCode) {
           const wasCrown = this.isPropertyCrown;
           this.isPropertyCrown = propertyUpdate.ownershipTypeCode === 'CRWN';
           
-          // If Crown status changed, reload responsible parties component
+          // If Crown status changed, update responsible parties component
           if (wasCrown !== this.isPropertyCrown && this.responsiblePartiesComponent) {
-            this.responsiblePartiesComponent.loadResponsibleParties();
+            this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
+            
+            if (this.isPropertyCrown) {
+              // For Crown properties, clear all existing parties since they are not allowed in CRWN ownership
+              await this.clearAllResponsibleParties();
+            } else {
+              // For non-Crown properties, reload parties from API and ensure form is rebuilt
+              await this.responsiblePartiesComponent.loadResponsibleParties();
+              // Refresh the form to ensure proper state (will add default party if none exist)
+              this.responsiblePartiesComponent.refreshFormForPropertyChange();
+            }
           }
         }
       });
@@ -196,11 +222,22 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.file.uuid) {
         try {
           this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid);
+          
           if (this.propertyComponent && this.property) {
             this.propertyComponent.property = this.property;
           }
           // Check if property is Crown ownership
           this.isPropertyCrown = this.property?.ownershipTypeCode === 'CRWN';
+          
+          // Set the Crown status on the responsible parties component and load parties
+          if (this.responsiblePartiesComponent) {
+            this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
+            // Manually trigger loading since the component's ngOnInit ran before file was loaded up 
+            if (this.file?.uuid) {
+              this.responsiblePartiesComponent.fileUuid = this.file.uuid;
+              await this.responsiblePartiesComponent.loadResponsibleParties();
+            }
+          }
         } catch (error: any) {
           // Property might not exist yet (404 is expected)
           if (error.status !== 404) {
@@ -215,6 +252,14 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('Error loading C&E file', error);
       this.toastService.showErrorToast('Failed to load C&E file');
     }
+  }
+
+  async clearAllResponsibleParties() {
+    if (!this.responsiblePartiesComponent) {
+      return;
+    }
+
+    await this.responsiblePartiesComponent.clearAllParties();
   }
 
   async onSaveDraftClicked() {

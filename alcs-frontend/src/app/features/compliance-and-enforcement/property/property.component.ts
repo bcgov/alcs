@@ -49,8 +49,8 @@ export function cleanPropertyUpdate(update: UpdateComplianceAndEnforcementProper
       value !== undefined &&
       // Allow null values for pid/pin so they can be cleared
       (value !== null || key === 'pid' || key === 'pin') &&
-      // Filter out default values
-      !(key === 'ownershipTypeCode' && value === 'SMPL')
+      // Always include ownershipTypeCode regardless of value (important for Crown property handling)
+      (key !== 'ownershipTypeCode' || value !== undefined)
     ) {
       cleaned[key] = value;
     }

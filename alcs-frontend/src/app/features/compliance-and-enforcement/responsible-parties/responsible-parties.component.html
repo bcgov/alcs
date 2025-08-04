@@ -146,7 +146,7 @@
       <div *ngIf="isOrganization(i)" class="organization-section">
         <div class="organization-main-fields">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Organization Name*</mat-label>
+            <mat-label>Organization Name</mat-label>
             <input matInput formControlName="organizationName" />
             <mat-error *ngIf="partyForm.get('organizationName')?.hasError('required')">
               Organization Name is required
@@ -158,7 +158,7 @@
             appearance="outline"
             class="owner-since-field"
           >
-            <mat-label>Owner Since*</mat-label>
+            <mat-label>Owner Since</mat-label>
             <input
               matInput
               (click)="organizationOwnerSincePicker.open()"
