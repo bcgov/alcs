@@ -141,18 +141,15 @@ describe('ResponsiblePartiesComponent', () => {
     expect(partyForm.get('individualName')?.value).toBe('John Doe');
   });
 
-  it('should add default party when no parties exist and not Crown property', () => {
+  it('should not auto-add a default party when no parties exist (non-Crown)', () => {
     component.isPropertyCrown = false;
     component.responsibleParties = [];
     component.buildFormArray();
 
-    expect(component.form.length).toBe(1);
-    const partyForm = component.form.at(0);
-    expect(partyForm.get('partyType')?.value).toBe(ResponsiblePartyType.PROPERTY_OWNER);
-    expect(partyForm.get('foippaCategory')?.value).toBe(FOIPPACategory.INDIVIDUAL);
+    expect(component.form.length).toBe(0);
   });
 
-  it('should not add default party for Crown property', () => {
+  it('should not auto-add a default party when no parties exist (Crown)', () => {
     component.isPropertyCrown = true;
     component.responsibleParties = [];
     component.buildFormArray();
