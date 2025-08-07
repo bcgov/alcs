@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, debounceTime, EMPTY, firstValueFrom, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, debounceTime, EMPTY, filter, firstValueFrom, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import {
   ComplianceAndEnforcementDto,
   InitialSubmissionType,
@@ -134,6 +134,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
         debounceTime(1000),
+        filter(() => this.propertyComponent?.form.dirty ?? false),
         switchMap((property) => {
           // Only auto-save if there are meaningful changes (non-empty fields)
           const cleanedProperty = cleanPropertyUpdate(property);
@@ -172,6 +173,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!this.property) {
             this.property = property;
           }
+          this.propertyComponent?.form.markAsPristine();
         }),
         catchError((error) => {
           console.error('Error saving C&E property draft', error);

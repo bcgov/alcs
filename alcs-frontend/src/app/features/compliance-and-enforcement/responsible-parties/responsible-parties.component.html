@@ -1,26 +1,8 @@
 <div class="responsible-parties-container">
   <div class="header">
     <h3>Allegedly Responsible Parties</h3>
-    <button
-      mat-flat-button
-      color="primary"
-      [matMenuTriggerFor]="addPartyMenu"
-      [disabled]="isPropertyCrown"
-    >
-      + ADD PARTY
-    </button>
-
-    <mat-menu #addPartyMenu="matMenu">
-      <button mat-menu-item *ngFor="let type of responsiblePartyTypes" (click)="addParty()">
-        {{ type.value }}
-      </button>
-    </mat-menu>
   </div>
 
-  <div *ngIf="isPropertyCrown" class="crown-notice">
-    <mat-icon>info</mat-icon>
-    <span>Responsible parties are not required for Crown ownership properties.</span>
-  </div>
 
   <div *ngIf="isLoading" class="loading-container">
     <mat-spinner diameter="40"></mat-spinner>
@@ -30,15 +12,11 @@
   <!-- Responsible Parties Forms -->
   <div *ngFor="let partyForm of form.controls; let i = index" class="party-card">
     <form [formGroup]="partyForm">
-
       <!-- Party Header -->
       <div class="party-header">
         <mat-form-field appearance="outline" class="party-type-field">
           <mat-label>Party Type</mat-label>
-          <mat-select
-            formControlName="partyType"
-            (selectionChange)="onPartyTypeChange(i, $event)"
-          >
+          <mat-select formControlName="partyType" (selectionChange)="onPartyTypeChange(i, $event)">
             <mat-option *ngFor="let type of responsiblePartyTypes" [value]="type.value">
               {{ type.value }}
             </mat-option>
@@ -46,20 +24,8 @@
         </mat-form-field>
 
         <div class="party-actions">
-          <mat-slide-toggle
-            formControlName="isPrevious"
-            class="previous-toggle"
-          >
-            Mark as Previous
-          </mat-slide-toggle>
-          <button
-            mat-button
-            color="warn"
-            (click)="deleteParty(i)"
-            class="delete-button"
-          >
-            DELETE
-          </button>
+          <mat-slide-toggle formControlName="isPrevious" class="previous-toggle"> Mark as Previous </mat-slide-toggle>
+          <button mat-button color="warn" (click)="deleteParty(i)" class="delete-button">DELETE</button>
         </div>
       </div>
 
@@ -86,16 +52,10 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Name</mat-label>
             <input matInput formControlName="individualName" />
-            <mat-error *ngIf="partyForm.get('individualName')?.hasError('required')">
-              Name is required
-            </mat-error>
+            <mat-error *ngIf="partyForm.get('individualName')?.hasError('required')"> Name is required </mat-error>
           </mat-form-field>
 
-          <mat-form-field
-            *ngIf="isPropertyOwner(i)"
-            appearance="outline"
-            class="owner-since-field"
-          >
+          <mat-form-field *ngIf="isPropertyOwner(i)" appearance="outline" class="owner-since-field">
             <mat-label>Owner Since</mat-label>
             <input
               matInput
@@ -153,11 +113,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field
-            *ngIf="isPropertyOwner(i)"
-            appearance="outline"
-            class="owner-since-field"
-          >
+          <mat-form-field *ngIf="isPropertyOwner(i)" appearance="outline" class="owner-since-field">
             <mat-label>Owner Since</mat-label>
             <input
               matInput
@@ -187,7 +143,7 @@
               Please enter a valid email address
             </mat-error>
           </mat-form-field>
-                </div>
+        </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Note</mat-label>
@@ -197,7 +153,7 @@
         <!-- Directors Section -->
         <div class="directors-section">
           <div class="directors-header">
-            <label class="directors-label" style="font-weight: bold; color: black;">Directors</label>
+            <label class="directors-label" style="font-weight: bold; color: black">Directors</label>
             <div class="directors-column-headers">
               <div class="header-item header-number">#</div>
               <div class="header-item header-name">Director Name*</div>
@@ -207,7 +163,7 @@
               <div class="header-item header-action">Action</div>
             </div>
           </div>
-          
+
           <div class="directors-list">
             <div
               *ngFor="let director of getDirectorsArray(i).controls; let directorIdx = index"
@@ -227,7 +183,12 @@
 
               <div class="director-item director-address">
                 <mat-form-field appearance="outline" class="director-field">
-                  <textarea matInput formControlName="directorMailingAddress" rows="1" placeholder="Enter Mailing Address"></textarea>
+                  <textarea
+                    matInput
+                    formControlName="directorMailingAddress"
+                    rows="1"
+                    placeholder="Enter Mailing Address"
+                  ></textarea>
                   <mat-error *ngIf="director.get('directorMailingAddress')?.hasError('required')">
                     Mailing address is required
                   </mat-error>
@@ -261,39 +222,35 @@
               </div>
             </div>
 
-            <div *ngIf="getDirectorsArray(i).length === 0" class="no-directors-message">
-              No directors added
-            </div>
+            <div *ngIf="getDirectorsArray(i).length === 0" class="no-directors-message">No directors added</div>
           </div>
 
-          <button
-            mat-stroked-button
-            color="primary"
-            (click)="addDirector(i)"
-            class="add-director-button"
-          >
+          <button mat-stroked-button color="primary" (click)="addDirector(i)" class="add-director-button">
             + ADD ANOTHER DIRECTOR
           </button>
         </div>
       </div>
-
     </form>
   </div>
 
-  <!-- Add Another Party Button -->
+  <!-- Add Party Button -->
   <button
-    mat-stroked-button
+    mat-button
     color="primary"
-    (click)="addParty()"
+    [matMenuTriggerFor]="addPartyMenu"
     class="add-party-button"
-    [disabled]="isPropertyCrown"
   >
-    + ADD ANOTHER PARTY
+    <span *ngIf="form.length === 0">+ ADD PARTY</span>
+    <span *ngIf="form.length > 0">+ ADD ANOTHER PARTY</span>
+    <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
   </button>
 
-  <!-- No parties message for Crown ownership -->
-  <div *ngIf="isPropertyCrown && form.length === 0" class="no-parties-message">
-    <mat-icon>info_outline</mat-icon>
-    <span>No responsible parties information required for Crown ownership properties.</span>
-  </div>
+
+
+  <!-- Dropdown Menu for Adding Parties -->
+  <mat-menu #addPartyMenu="matMenu">
+    <button mat-menu-item *ngFor="let type of responsiblePartyTypes" (click)="addPartyOfType(type.value)">
+      {{ type.value }}
+    </button>
+  </mat-menu>
 </div>

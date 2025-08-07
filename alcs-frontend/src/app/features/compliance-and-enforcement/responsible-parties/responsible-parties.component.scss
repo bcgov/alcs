@@ -190,17 +190,17 @@
           text-align: center;
           color: #666;
         }
-        
+
         &.header-name {
           flex: 2;
           color: #666;
         }
-        
+
         &.header-address {
           flex: 3;
           color: #666;
         }
-        
+
         &.header-action {
           width: 80px;
           text-align: center;
@@ -234,15 +234,15 @@
           font-weight: 600;
           min-height: 56px;
         }
-        
+
         &.director-name {
           flex: 2;
         }
-        
+
         &.director-address {
           flex: 3;
         }
-        
+
         &.director-action {
           width: 80px;
           display: flex;
@@ -278,7 +278,7 @@
 
   .delete-director-button {
     color: #f44336;
-    
+
     &:hover {
       background-color: rgba(244, 67, 54, 0.1);
     }
@@ -297,18 +297,38 @@
 
 .add-party-button {
   margin-top: 16px;
-  border: 1px solid $primary-color;
-  color: $primary-color;
-  background: transparent;
+  background-color: $primary-color;
+  color: white !important;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
 
   &:hover {
-    background-color: rgba($primary-color, 0.1);
+    background-color: darken($primary-color, 10%);
+    color: white !important;
   }
 
   &:disabled {
-    border-color: #ccc;
-    color: #ccc;
+    background-color: #ccc;
+    color: white !important;
     cursor: not-allowed;
+  }
+
+  .dropdown-arrow {
+    color: white;
+    cursor: pointer;
+    margin-left: 0px;
+    margin-right: 0px;
+    order: 2;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  span {
+    order: 1;
   }
 }
 
@@ -352,15 +372,15 @@ mat-form-field {
       font-size: 12px;
       padding: 8px 12px;
     }
-    
+
     .director-row {
       flex-direction: column;
       gap: 12px;
-      
+
       .director-item {
         width: 100% !important;
         flex: none !important;
-        
+
         &.director-number {
           min-height: auto;
           margin-bottom: 8px;

@@ -43,7 +43,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     private readonly responsiblePartiesService: ResponsiblePartiesService,
     private readonly confirmationDialogService: ConfirmationDialogService,
     private readonly toastService: ToastService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -71,21 +71,17 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
   buildFormArray() {
     this.form.clear();
-    
+
     this.responsibleParties.forEach((party) => {
       const partyForm = this.createPartyFormGroup(party);
       this.form.push(partyForm);
     });
 
-    // If no parties exist and property is not Crown, add one default party
-    if (this.responsibleParties.length === 0 && !this.isPropertyCrown) {
-      this.addParty();
-    }
   }
 
   createPartyFormGroup(party?: ResponsiblePartyDto): FormGroup {
     const directorsArray = new FormArray<FormGroup>([]);
-    
+
     if (party?.directors) {
       party.directors.forEach((director) => {
         directorsArray.push(this.createDirectorFormGroup(director));
@@ -94,18 +90,14 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
     const partyForm = new FormGroup({
       uuid: new FormControl<string>(party?.uuid || ''),
-      partyType: new FormControl<ResponsiblePartyType>(
-        party?.partyType || ResponsiblePartyType.PROPERTY_OWNER,
-        [Validators.required]
-      ),
-      foippaCategory: new FormControl<FOIPPACategory>(
-        party?.foippaCategory || FOIPPACategory.INDIVIDUAL,
-        [Validators.required]
-      ),
+      partyType: new FormControl<ResponsiblePartyType>(party?.partyType || ResponsiblePartyType.PROPERTY_OWNER, [
+        Validators.required,
+      ]),
+      foippaCategory: new FormControl<FOIPPACategory>(party?.foippaCategory || FOIPPACategory.INDIVIDUAL, [
+        Validators.required,
+      ]),
       isPrevious: new FormControl<boolean>(party?.isPrevious || false),
-      ownerSince: new FormControl<Moment | null>(
-        party?.ownerSince ? moment(party.ownerSince) : null
-      ),
+      ownerSince: new FormControl<Moment | null>(party?.ownerSince ? moment(party.ownerSince) : null),
 
       // Individual fields
       individualName: new FormControl<string>(party?.individualName || ''),
@@ -175,7 +167,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
         catchError((error) => {
           console.error('Error in form changes', error);
           return EMPTY;
-        })
+        }),
       )
       .subscribe(async (formValue) => {
         if (!this.fileUuid) {
@@ -234,7 +226,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
               })),
             };
             const newParty = await firstValueFrom(this.responsiblePartiesService.create(createDto));
-            
+
             // Update the form with the new UUID (without triggering valueChanges)
             partyForm.get('uuid')?.setValue(newParty.uuid, { emitEvent: false });
             this.responsibleParties.push(newParty);
@@ -282,6 +274,12 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     this.form.push(newPartyForm);
   }
 
+  addPartyOfType(partyType: ResponsiblePartyType) {
+    const newPartyForm = this.createPartyFormGroup();
+    newPartyForm.get('partyType')?.setValue(partyType);
+    this.form.push(newPartyForm);
+  }
+
   async deleteParty(index: number) {
     const partyForm = this.form.at(index);
     const partyUuid = partyForm.get('uuid')?.value;
@@ -290,7 +288,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       const confirmed = await firstValueFrom(
         this.confirmationDialogService.openDialog({
           body: 'Are you sure you want to delete this Responsible Party?',
-        })
+        }),
       );
 
       if (confirmed) {
@@ -309,7 +307,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       const confirmed = await firstValueFrom(
         this.confirmationDialogService.openDialog({
           body: 'Are you sure you want to delete this Responsible Party?',
-        })
+        }),
       );
 
       if (confirmed) {
@@ -331,7 +329,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     const confirmed = await firstValueFrom(
       this.confirmationDialogService.openDialog({
         body: 'Are you sure you want to delete this Director?',
-      })
+      }),
     );
 
     if (confirmed) {
@@ -351,7 +349,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     const partyForm = this.form.at(partyIndex);
     partyForm.get('foippaCategory')?.setValue(category);
     this.updateValidators(partyForm);
-    
+
     // If switching to Organization and no directors exist, add one by default
     if (category === FOIPPACategory.ORGANIZATION) {
       const directorsArray = partyForm.get('directors') as FormArray;
@@ -395,7 +393,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       // Clear the component's data and form
       this.responsibleParties = [];
       this.form.clear();
-      
+
       this.toastService.showSuccessToast('Responsible parties cleared for Crown property');
     } catch (error) {
       console.error('Error clearing responsible parties', error);
