@@ -200,15 +200,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
           if (wasCrown !== this.isPropertyCrown && this.responsiblePartiesComponent) {
             this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
             
-            if (this.isPropertyCrown) {
-              // For Crown properties, clear all existing parties since they are not allowed in CRWN ownership
-              await this.clearAllResponsibleParties();
-            } else {
-              // For non-Crown properties, reload parties from API and ensure form is rebuilt
-              await this.responsiblePartiesComponent.loadResponsibleParties();
-              // Refresh the form to ensure proper state (will add default party if none exist)
-              this.responsiblePartiesComponent.refreshFormForPropertyChange();
-            }
+            await this.responsiblePartiesComponent.loadResponsibleParties();
           }
         }
       });

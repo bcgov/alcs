@@ -39,6 +39,9 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
   isLoading = false;
 
+  // Prevent duplicate create calls for the same form during rapid value changes
+  private creatingForms = new WeakSet<FormGroup>();
+
   constructor(
     private readonly responsiblePartiesService: ResponsiblePartiesService,
     private readonly confirmationDialogService: ConfirmationDialogService,
@@ -202,7 +205,11 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
             await firstValueFrom(this.responsiblePartiesService.update(party.uuid, updateDto));
             this.toastService.showSuccessToast('Responsible party updated');
           } else {
-            // Create new party
+            // Create new party (guard against duplicate in-flight creates for this form)
+            if (this.creatingForms.has(partyForm)) {
+              return;
+            }
+            this.creatingForms.add(partyForm);
             const createDto: CreateResponsiblePartyDto = {
               fileUuid: this.fileUuid,
               partyType: formValue.partyType || ResponsiblePartyType.PROPERTY_OWNER,
@@ -231,10 +238,12 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
             partyForm.get('uuid')?.setValue(newParty.uuid, { emitEvent: false });
             this.responsibleParties.push(newParty);
             this.toastService.showSuccessToast('Responsible party created');
+            this.creatingForms.delete(partyForm);
           }
         } catch (error) {
           console.error('Error saving responsible party', error);
           this.toastService.showErrorToast('Failed to save responsible party');
+          this.creatingForms.delete(partyForm);
         }
       });
 
