@@ -328,17 +328,20 @@ describe('ResponsiblePartiesComponent', () => {
     expect(directorsArray.length).toBe(1);
   });
 
-  it('should handle party type change', () => {
+  it('should update validators when party type changes', () => {
     component.responsibleParties = [mockResponsibleParty];
     component.buildFormArray();
 
-    const event = { value: ResponsiblePartyType.OPERATOR } as any;
+    const partyForm = component.form.at(0);
+    // Property Owner requires ownerSince
+    partyForm.get('ownerSince')?.setValue(null);
+    component.updateValidators(partyForm);
+    expect(partyForm.get('ownerSince')?.hasError('required')).toBe(true);
 
-    component.onPartyTypeChange(0, event);
-
-    // The method doesn't actually set the value, it just updates validators
-    // So we just verify it doesn't throw an error
-    expect(component).toBeTruthy();
+    // Change to other type removes requirement
+    partyForm.get('partyType')?.setValue(ResponsiblePartyType.OPERATOR);
+    component.updateValidators(partyForm);
+    expect(partyForm.get('ownerSince')?.hasError('required')).toBe(false);
   });
 
   it('should handle FOIPPA category change', () => {
