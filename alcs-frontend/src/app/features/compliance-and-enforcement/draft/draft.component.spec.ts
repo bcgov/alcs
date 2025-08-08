@@ -19,17 +19,25 @@ import {
   UpdateComplianceAndEnforcementSubmitterDto,
 } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
+import { PropertyComponent } from '../property/property.component';
+import {
+  CreateComplianceAndEnforcementPropertyDto,
+  UpdateComplianceAndEnforcementPropertyDto,
+} from '../../../services/compliance-and-enforcement/property/property.dto';
+import { ComplianceAndEnforcementPropertyService } from '../../../services/compliance-and-enforcement/property/property.service';
 
 describe('DraftComponent', () => {
   let component: DraftComponent;
   let fixture: ComponentFixture<DraftComponent>;
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockComplianceAndEnforcementSubmitterService: DeepMocked<ComplianceAndEnforcementSubmitterService>;
+  let mockComplianceAndEnforcementPropertyService: DeepMocked<ComplianceAndEnforcementPropertyService>;
   let mockToastService: DeepMocked<ToastService>;
 
   beforeEach(async () => {
     mockComplianceAndEnforcementService = createMock();
     mockComplianceAndEnforcementSubmitterService = createMock();
+    mockComplianceAndEnforcementPropertyService = createMock();
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
@@ -43,6 +51,10 @@ describe('DraftComponent', () => {
         {
           provide: ComplianceAndEnforcementSubmitterService,
           useValue: mockComplianceAndEnforcementSubmitterService,
+        },
+        {
+          provide: ComplianceAndEnforcementPropertyService,
+          useValue: mockComplianceAndEnforcementPropertyService,
         },
         {
           provide: ToastService,

@@ -1,0 +1,127 @@
+@import '../../../../styles/colors.scss';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.government-region-fields {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.coordinate-fields {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  
+  .coordinate-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; // Allows flex items to shrink below their content width
+    
+    mat-form-field {
+      width: 100% !important;
+      max-width: none !important;
+      flex: 1;
+      
+      input[type="number"] {
+        width: 100% !important;
+      }
+    }
+    
+    .coordinate-help {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.area-fields {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.ownership-type-section {
+  margin-bottom: 16px;
+  
+  .ownership-type-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .ownership-toggle-group {
+    width: 100%;
+    
+    mat-button-toggle {
+      &.mat-button-toggle-checked {
+        background-color: $primary-color-light !important;
+        color: $dark-contrast-text !important;
+        
+        .mat-button-toggle-button {
+          background-color: $primary-color-light !important;
+          color: $dark-contrast-text !important;
+        }
+        
+
+      }
+    }
+  }
+}
+
+.pid-pin-section {
+  margin-bottom: 16px;
+  
+  .pid-pin-fields {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    
+    mat-form-field {
+      flex: 1;
+    }
+  }
+}
+
+mat-form-field {
+  margin-bottom: 16px;
+}
+
+h3 {
+  margin: 0;
+}
+
+:host::ng-deep {
+  .ownership-toggle-group {
+    .mat-button-toggle-checked {
+      .mat-pseudo-checkbox {
+        display: none !important;
+      }
+      
+      mat-pseudo-checkbox {
+        display: none !important;
+      }
+    }
+  }
+}

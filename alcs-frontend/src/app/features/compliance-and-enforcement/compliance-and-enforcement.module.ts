@@ -5,6 +5,9 @@ import { OverviewComponent } from './overview/overview.component';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DraftComponent } from './draft/draft.component';
 import { SubmitterComponent } from './submitter/submitter.component';
+import { PropertyComponent } from './property/property.component';
+import { ComplianceAndEnforcementDocumentsComponent } from './documents/documents.component';
+import { ResponsiblePartiesComponent } from './responsible-parties/responsible-parties.component';
 
 const routes: Routes = [
   {
@@ -14,7 +17,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [DraftComponent, OverviewComponent, SubmitterComponent],
+  declarations: [
+    DraftComponent,
+    OverviewComponent,
+    SubmitterComponent,
+    PropertyComponent,
+    ComplianceAndEnforcementDocumentsComponent,
+    ResponsiblePartiesComponent,
+  ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MatMomentDateModule],
 })
 export class ComplianceAndEnforcementModule {}

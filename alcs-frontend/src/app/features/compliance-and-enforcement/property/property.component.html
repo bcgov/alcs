@@ -1,0 +1,124 @@
+<form [formGroup]="form">
+  <div class="header full-width">
+    <h3>Property</h3>
+  </div>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Civic Address</mat-label>
+    <textarea matInput formControlName="civicAddress" rows="1"></textarea>
+  </mat-form-field>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Legal Description</mat-label>
+    <textarea matInput formControlName="legalDescription" rows="1"></textarea>
+  </mat-form-field>
+
+  <div class="government-region-fields">
+    <mat-form-field appearance="outline">
+      <mat-label>Local or First Nation Government*</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="localGovernmentControl"
+        [matAutocomplete]="auto"
+        placeholder="Type government name"
+        (blur)="onLocalGovernmentBlur()"
+      />
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocalGovernmentChange($event)">
+        <mat-option *ngFor="let lg of filteredLocalGovernments | async" [value]="lg.uuid">
+          {{ lg.name }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="localGovernmentControl.hasError('required') && localGovernmentControl.touched">
+        Local or First Nation Government is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Region</mat-label>
+      <mat-select formControlName="regionCode">
+        <mat-option *ngFor="let region of regions" [value]="region.code">
+          {{ region.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="coordinate-fields">
+    <div class="coordinate-field">
+      <mat-form-field appearance="outline">
+        <mat-label>Latitude</mat-label>
+        <input type="number" matInput formControlName="latitude" step="0.00001" placeholder="e.g. 49.55555" />
+        <mat-error *ngIf="form.get('latitude')?.hasError('required')">Latitude is required</mat-error>
+        <mat-error *ngIf="form.get('latitude')?.hasError('min')">Latitude must be at least 48</mat-error>
+        <mat-error *ngIf="form.get('latitude')?.hasError('max')">Latitude must be at most 61</mat-error>
+        <mat-error *ngIf="form.get('latitude')?.hasError('decimalPlaces')">
+          Latitude must have exactly 5 decimal places (e.g. 49.55555)
+        </mat-error>
+      </mat-form-field>
+      <div class="coordinate-help">Valid Range is 48 to 61. Example: 49.55555</div>
+    </div>
+
+    <div class="coordinate-field">
+      <mat-form-field appearance="outline">
+        <mat-label>Longitude</mat-label>
+        <input type="number" matInput formControlName="longitude" step="0.00001" placeholder="e.g. -130.55555" />
+        <mat-error *ngIf="form.get('longitude')?.hasError('required')">Longitude is required</mat-error>
+        <mat-error *ngIf="form.get('longitude')?.hasError('min')">Longitude must be at least -140</mat-error>
+        <mat-error *ngIf="form.get('longitude')?.hasError('max')">Longitude must be at most -113</mat-error>
+        <mat-error *ngIf="form.get('longitude')?.hasError('decimalPlaces')">
+          Longitude must have exactly 5 decimal places (e.g. -130.55555)
+        </mat-error>
+      </mat-form-field>
+      <div class="coordinate-help">Valid Range is -140 to -113. Example: -130.55555</div>
+    </div>
+  </div>
+
+  <div class="ownership-type-section">
+    <label class="ownership-type-label">Ownership Type</label>
+    <mat-button-toggle-group formControlName="ownershipTypeCode" class="ownership-toggle-group">
+      <mat-button-toggle value="SMPL">Fee Simple</mat-button-toggle>
+      <mat-button-toggle value="CRWN">Crown</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="pid-pin-section">
+    <div class="pid-pin-fields">
+      <mat-form-field appearance="outline">
+        <mat-label>Select to Choose PID or PIN</mat-label>
+        <mat-select formControlName="pidOrPin" (selectionChange)="onPidOrPinChange($event)">
+          <mat-option value="PID">PID</mat-option>
+          <mat-option value="PIN">PIN</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.get('pidOrPin')?.value === 'PID'" appearance="outline">
+        <mat-label>Enter PID</mat-label>
+        <input matInput formControlName="pid" mask="000-000-000" placeholder="XXX-XXX-XXX" />
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.get('pidOrPin')?.value === 'PIN'" appearance="outline">
+        <mat-label>Enter PIN</mat-label>
+        <input matInput formControlName="pin" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="area-fields">
+    <mat-form-field appearance="outline">
+      <mat-label>Area (ha)</mat-label>
+      <input type="number" matInput formControlName="areaHectares" step="0.01" min="0" placeholder="e.g. 10.50" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>% within ALR</mat-label>
+      <input type="number" matInput formControlName="alrPercentage" step="0.1" min="0" max="100" placeholder="e.g. 75.5" />
+      <span matTextSuffix>%</span>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>ALC History</mat-label>
+    <textarea matInput formControlName="alcHistory" rows="4" placeholder="Enter ALC history details..."></textarea>
+  </mat-form-field>
+</form>

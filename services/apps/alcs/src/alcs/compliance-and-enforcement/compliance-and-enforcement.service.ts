@@ -10,6 +10,7 @@ import {
   ServiceNotFoundException,
 } from '../../../../../libs/common/src/exceptions/base.exception';
 import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
+import { ComplianceAndEnforcementPropertyService } from './property/property.service';
 
 @Injectable()
 export class ComplianceAndEnforcementService {
@@ -18,6 +19,7 @@ export class ComplianceAndEnforcementService {
     private repository: Repository<ComplianceAndEnforcement>,
     @InjectMapper() private mapper: Mapper,
     private readonly submitterService: ComplianceAndEnforcementSubmitterService,
+    private readonly propertyService: ComplianceAndEnforcementPropertyService,
   ) {}
 
   async fetchAll(): Promise<ComplianceAndEnforcementDto[]> {
@@ -29,13 +31,14 @@ export class ComplianceAndEnforcementService {
     return this.mapper.mapArray(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async fetchByUuid(uuid: string, withSubmitters = false): Promise<ComplianceAndEnforcementDto> {
+  async fetchByUuid(uuid: string, withSubmitters = false, withProperties = false): Promise<ComplianceAndEnforcementDto> {
     const entity = await this.repository.findOne({
       where: {
         uuid,
       },
       relations: {
         submitters: withSubmitters,
+        properties: withProperties,
       },
     });
 
@@ -46,13 +49,14 @@ export class ComplianceAndEnforcementService {
     return this.mapper.map(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async fetchByFileNumber(fileNumber: string, withSubmitters = false): Promise<ComplianceAndEnforcementDto> {
+  async fetchByFileNumber(fileNumber: string, withSubmitters = false, withProperties = false): Promise<ComplianceAndEnforcementDto> {
     const entity = await this.repository.findOne({
       where: {
         fileNumber,
       },
       relations: {
         submitters: withSubmitters,
+        properties: withProperties,
       },
     });
 
@@ -66,6 +70,7 @@ export class ComplianceAndEnforcementService {
   async create(
     dto: UpdateComplianceAndEnforcementDto,
     createInitialSubmitter = false,
+    createInitialProperty = false,
   ): Promise<ComplianceAndEnforcementDto> {
     const entity = this.mapper.map(dto, UpdateComplianceAndEnforcementDto, ComplianceAndEnforcement);
 
@@ -73,6 +78,10 @@ export class ComplianceAndEnforcementService {
 
     if (createInitialSubmitter) {
       await this.submitterService.create({ fileUuid: entity.uuid });
+    }
+
+    if (createInitialProperty) {
+      await this.propertyService.create({ fileUuid: entity.uuid });
     }
 
     return this.mapper.map(savedEntity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);

@@ -1,0 +1,55 @@
+<div class="header">
+  <h3>{{ title }}</h3>
+  <button (click)="openUploadDialog()" mat-flat-button color="primary">+ Add Document</button>
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3 documents full-width">
+  <ng-container matColumnDef="source">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by source">Source</th>
+    <td mat-cell *matCellDef="let document">{{ document.source }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by type">Type</th>
+    <td mat-cell *matCellDef="let document" [matTooltip]="document.type.label">
+      {{ document.type.oatsCode }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fileName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Document Name</th>
+    <td mat-cell *matCellDef="let document">
+      <a
+        routerLink="/document/{{ document.documentUuid }}"
+        target="_blank"
+        [matTooltip]="document.fileName"
+        [matTooltipDisabled]="document.fileName.length <= fileNameTruncLen"
+      >
+        {{ document.fileName }}
+      </a>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="uploadedAt">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">Upload Date</th>
+    <td mat-cell *matCellDef="let document">{{ document.uploadedAt | date }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
+    <td mat-cell *matCellDef="let document">
+      <button class="action-button" mat-icon-button (click)="openEditDialog(document)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button class="action-button" mat-icon-button (click)="deleteFile(document)">
+        <mat-icon color="warn">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="text-center" colspan="6">No Complaint/Referral</td>
+  </tr>
+</table>
