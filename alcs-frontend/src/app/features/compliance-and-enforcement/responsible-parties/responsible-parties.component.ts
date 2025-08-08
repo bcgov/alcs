@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil, firstValueFrom, EMPTY, catchError } from 'rxjs';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
 import moment, { Moment } from 'moment';
 import {
   ResponsiblePartyDto,
@@ -349,10 +348,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPartyTypeChange(partyIndex: number, event: MatSelectChange) {
-    const partyForm = this.form.at(partyIndex);
-    this.updateValidators(partyForm);
-  }
+  // Party type is selected when adding a party; header is read-only
 
   onFoippaCategoryChange(partyIndex: number, category: FOIPPACategory) {
     const partyForm = this.form.at(partyIndex);

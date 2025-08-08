@@ -14,14 +14,7 @@
     <form [formGroup]="partyForm">
       <!-- Party Header -->
       <div class="party-header">
-        <mat-form-field appearance="outline" class="party-type-field">
-          <mat-label>Party Type</mat-label>
-          <mat-select formControlName="partyType" (selectionChange)="onPartyTypeChange(i, $event)">
-            <mat-option *ngFor="let type of responsiblePartyTypes" [value]="type.value">
-              {{ type.value }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <h4 class="party-type-title">{{ partyForm.get('partyType')?.value }}</h4>
 
         <div class="party-actions">
           <mat-slide-toggle formControlName="isPrevious" class="previous-toggle"> Mark as Previous </mat-slide-toggle>

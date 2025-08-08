@@ -63,6 +63,12 @@
   margin-bottom: 24px;
   gap: 16px;
 
+  .party-type-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
   .party-type-field {
     flex: 1;
     max-width: 300px;
