@@ -25,6 +25,10 @@ export class ComplianceAndEnforcementPropertyProfile extends AutomapperProfile {
           (dto) => dto.pin,
           mapFrom((entity) => entity.pin),
         ),
+        forMember(
+          (dto) => dto.certificateOfTitleUuid,
+          mapFrom((entity) => entity.certificateOfTitle?.uuid),
+        ),
       );
 
       createMap(
@@ -46,4 +50,4 @@ export class ComplianceAndEnforcementPropertyProfile extends AutomapperProfile {
       );
     };
   }
-} 
+}

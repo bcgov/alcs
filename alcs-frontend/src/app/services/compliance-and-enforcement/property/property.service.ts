@@ -2,10 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import {
-  ComplianceAndEnforcementPropertyDto,
-  UpdateComplianceAndEnforcementPropertyDto,
-} from './property.dto';
+import { ComplianceAndEnforcementPropertyDto, UpdateComplianceAndEnforcementPropertyDto } from './property.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +12,11 @@ export class ComplianceAndEnforcementPropertyService {
 
   constructor(private readonly http: HttpClient) {}
 
-  async fetchByFileUuid(fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto> {
-    return await firstValueFrom(
-      this.http.get<ComplianceAndEnforcementPropertyDto>(`${this.url}/${fileUuid}`),
-    );
+  async fetchParcels(fileNumber: string): Promise<ComplianceAndEnforcementPropertyDto[]> {
+    return await firstValueFrom(this.http.get<ComplianceAndEnforcementPropertyDto[]>(`${this.url}/${fileNumber}`));
   }
 
-  create(
-    createDto: UpdateComplianceAndEnforcementPropertyDto,
-  ): Observable<ComplianceAndEnforcementPropertyDto> {
+  create(createDto: UpdateComplianceAndEnforcementPropertyDto): Observable<ComplianceAndEnforcementPropertyDto> {
     return this.http.post<ComplianceAndEnforcementPropertyDto>(this.url, createDto);
   }
 

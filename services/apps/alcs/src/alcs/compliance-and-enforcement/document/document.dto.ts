@@ -1,5 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ComplianceAndEnforcementDto } from '../compliance-and-enforcement.dto';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DocumentTypeDto } from '../../../document/document.dto';
 import { DocumentDto } from '../../../document/document.dto';
@@ -40,15 +40,27 @@ export class ComplianceAndEnforcementDocumentDto {
 }
 
 export class UpdateComplianceAndEnforcementDocumentDto {
+  @IsOptional()
   @IsString()
   @AutoMap()
   typeCode?: string;
 
+  @IsOptional()
   @IsString()
   @AutoMap()
   fileName?: string;
 
-  @IsString()
+  @IsOptional()
   @AutoMap()
   source?: DOCUMENT_SOURCE;
+
+  @IsOptional()
+  @IsString()
+  @AutoMap()
+  parcelUuid?: string;
+
+  @IsOptional()
+  @IsString()
+  @AutoMap()
+  ownerUuid?: string;
 }

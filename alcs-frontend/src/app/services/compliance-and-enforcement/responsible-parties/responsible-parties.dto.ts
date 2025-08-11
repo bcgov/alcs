@@ -30,7 +30,7 @@ export interface ResponsiblePartyDto {
   individualTelephone?: string;
   individualEmail?: string;
   individualNote?: string;
-  
+
   // Organization fields
   organizationName?: string;
   organizationTelephone?: string;
@@ -68,7 +68,7 @@ export interface CreateResponsiblePartyDto {
   individualTelephone?: string;
   individualEmail?: string;
   individualNote?: string;
-  
+
   // Organization fields
   organizationName?: string;
   organizationTelephone?: string;
@@ -91,7 +91,7 @@ export interface UpdateResponsiblePartyDto {
   individualTelephone?: string;
   individualEmail?: string;
   individualNote?: string;
-  
+
   // Organization fields
   organizationName?: string;
   organizationTelephone?: string;

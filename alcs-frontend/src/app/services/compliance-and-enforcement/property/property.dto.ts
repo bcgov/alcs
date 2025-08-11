@@ -10,13 +10,14 @@ export interface ComplianceAndEnforcementPropertyDto {
   latitude: number;
   longitude: number;
   ownershipTypeCode: string;
-  pid?: string | null;
+  pid?: string;
   pin?: string | null;
   areaHectares: number;
   alrPercentage: number;
   alcHistory: string;
   localGovernment?: BaseCodeDto;
   ownershipType?: BaseCodeDto;
+  certificateOfTitleUuid?: string;
 }
 
 export interface UpdateComplianceAndEnforcementPropertyDto {
@@ -33,6 +34,7 @@ export interface UpdateComplianceAndEnforcementPropertyDto {
   alrPercentage?: number | null;
   alcHistory?: string | null;
   fileUuid?: string | null;
+  certificateOfTitleUuid?: string;
 }
 
 export interface CreateComplianceAndEnforcementPropertyDto {
@@ -49,4 +51,5 @@ export interface CreateComplianceAndEnforcementPropertyDto {
   alrPercentage: number;
   alcHistory: string;
   fileUuid: string;
+  certificateOfTitleUuid?: string;
 }

@@ -1,6 +1,7 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 
 export enum ResponsiblePartyType {
   PROPERTY_OWNER = 'Property Owner',
@@ -93,4 +94,12 @@ export class ComplianceAndEnforcementResponsibleParty {
   @AutoMap()
   @Column()
   fileUuid: string;
+
+  @AutoMap()
+  @JoinColumn()
+  @OneToOne(() => ComplianceAndEnforcementDocument, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  corporateSummary?: ComplianceAndEnforcementDocument;
 }

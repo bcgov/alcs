@@ -1,6 +1,17 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, debounceTime, EMPTY, filter, firstValueFrom, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  EMPTY,
+  filter,
+  firstValueFrom,
+  skip,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../constants';
 import {
   ComplianceAndEnforcementDto,
@@ -17,9 +28,10 @@ import { PropertyComponent, cleanPropertyUpdate } from '../property/property.com
 import { ComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
 import { ComplianceAndEnforcementPropertyService } from '../../../services/compliance-and-enforcement/property/property.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
-import { DocumentUploadDialogOptions } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
+import { DocumentUploadDialogData } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 import { Section } from '../../../services/compliance-and-enforcement/documents/document.service';
 import { ResponsiblePartiesComponent } from '../responsible-parties/responsible-parties.component';
+import { ResponsiblePartiesService } from '../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 
 @Component({
   selector: 'app-compliance-and-enforcement-draft',
@@ -29,7 +41,9 @@ import { ResponsiblePartiesComponent } from '../responsible-parties/responsible-
 export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   Section = Section;
 
-  submissionDocumentOptions: DocumentUploadDialogOptions = {
+  submissionDocumentOptions: DocumentUploadDialogData = {
+    // A necessary hack to make this work without rewriting lots of code
+    fileId: '',
     allowedVisibilityFlags: [],
     allowsFileEdit: true,
     allowedDocumentSources: [
@@ -40,6 +54,29 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       DOCUMENT_SOURCE.ALC,
     ],
     allowedDocumentTypes: [DOCUMENT_TYPE.COMPLAINT, DOCUMENT_TYPE.REFERRAL],
+  };
+
+  ownershipDocumentOptions: DocumentUploadDialogData = {
+    // A necessary hack to make this work without rewriting lots of code
+    fileId: '',
+    parcelService: this.propertyService,
+    submissionService: this.responsiblePartyService,
+    allowedVisibilityFlags: [],
+    allowsFileEdit: true,
+    allowedDocumentSources: [
+      DOCUMENT_SOURCE.PUBLIC,
+      DOCUMENT_SOURCE.LFNG,
+      DOCUMENT_SOURCE.BC_GOVERNMENT,
+      DOCUMENT_SOURCE.OTHER_AGENCY,
+      DOCUMENT_SOURCE.ALC,
+    ],
+    defaultDocumentSource: DOCUMENT_SOURCE.ALC,
+    allowedDocumentTypes: [
+      DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      DOCUMENT_TYPE.CORPORATE_SUMMARY,
+      DOCUMENT_TYPE.BC_ASSESSMENT_REPORT,
+      DOCUMENT_TYPE.SURVEY_PLAN,
+    ],
   };
 
   $destroy = new Subject<void>();
@@ -64,6 +101,8 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly complianceAndEnforcementPropertyService: ComplianceAndEnforcementPropertyService,
     private readonly route: ActivatedRoute,
     private readonly toastService: ToastService,
+    private readonly propertyService: ComplianceAndEnforcementPropertyService,
+    private readonly responsiblePartyService: ResponsiblePartiesService,
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +114,12 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.overviewComponent || !this.submitterComponent || !this.propertyComponent || !this.responsiblePartiesComponent) {
+    if (
+      !this.overviewComponent ||
+      !this.submitterComponent ||
+      !this.propertyComponent ||
+      !this.responsiblePartiesComponent
+    ) {
       console.warn('Not all form sections component not initialized');
       return;
     }
@@ -139,18 +183,18 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         switchMap((property) => {
           // Only auto-save if there are meaningful changes (non-empty fields)
           const cleanedProperty = cleanPropertyUpdate(property);
-          
+
           // Check if this is a meaningful ownership type change
           const currentOwnership = this.property?.ownershipTypeCode || 'SMPL';
           const newOwnership = cleanedProperty.ownershipTypeCode;
           const isOwnershipChange = newOwnership !== undefined && newOwnership !== currentOwnership;
-          
+
           // For non-ownership changes, check if there are other meaningful changes
           const propertyForCheck = { ...cleanedProperty };
           if (propertyForCheck.ownershipTypeCode === 'SMPL') {
             delete propertyForCheck.ownershipTypeCode;
           }
-          
+
           const hasOtherActualData = Object.values(propertyForCheck).some(
             (value) => value !== null && value !== undefined && value !== '' && value !== 0,
           );
@@ -188,23 +232,19 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     // Watch for property ownership changes to update Crown status
-    this.propertyComponent.$changes
-      .pipe(
-        takeUntil(this.$destroy),
-      )
-      .subscribe(async (propertyUpdate) => {
-        if (propertyUpdate.ownershipTypeCode) {
-          const wasCrown = this.isPropertyCrown;
-          this.isPropertyCrown = propertyUpdate.ownershipTypeCode === 'CRWN';
-          
-          // If Crown status changed, update responsible parties component
-          if (wasCrown !== this.isPropertyCrown && this.responsiblePartiesComponent) {
-            this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
-            
-            await this.responsiblePartiesComponent.loadResponsibleParties();
-          }
+    this.propertyComponent.$changes.pipe(takeUntil(this.$destroy)).subscribe(async (propertyUpdate) => {
+      if (propertyUpdate.ownershipTypeCode) {
+        const wasCrown = this.isPropertyCrown;
+        this.isPropertyCrown = propertyUpdate.ownershipTypeCode === 'CRWN';
+
+        // If Crown status changed, update responsible parties component
+        if (wasCrown !== this.isPropertyCrown && this.responsiblePartiesComponent) {
+          this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
+
+          await this.responsiblePartiesComponent.loadResponsibleParties();
         }
-      });
+      }
+    });
   }
 
   async loadFile(fileNumber: string) {
@@ -216,18 +256,20 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       // Load property data
       if (this.file.uuid) {
         try {
-          this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid);
-          
+          const properties = await this.complianceAndEnforcementPropertyService.fetchParcels(this.file.uuid);
+          // There should only ever be one while in draft
+          this.property = properties[0];
+
           if (this.propertyComponent && this.property) {
             this.propertyComponent.property = this.property;
           }
           // Check if property is Crown ownership
           this.isPropertyCrown = this.property?.ownershipTypeCode === 'CRWN';
-          
+
           // Set the Crown status on the responsible parties component and load parties
           if (this.responsiblePartiesComponent) {
             this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
-            // Manually trigger loading since the component's ngOnInit ran before file was loaded up 
+            // Manually trigger loading since the component's ngOnInit ran before file was loaded up
             if (this.file?.uuid) {
               this.responsiblePartiesComponent.fileUuid = this.file.uuid;
               await this.responsiblePartiesComponent.loadResponsibleParties();

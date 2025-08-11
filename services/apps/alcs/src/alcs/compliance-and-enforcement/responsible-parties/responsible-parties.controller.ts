@@ -1,14 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { ComplianceAndEnforcementResponsiblePartyService } from './responsible-parties.service';
-import { 
-  ComplianceAndEnforcementResponsiblePartyDto, 
+import {
+  ComplianceAndEnforcementResponsiblePartyDto,
   CreateComplianceAndEnforcementResponsiblePartyDto,
-  UpdateComplianceAndEnforcementResponsiblePartyDto 
+  UpdateComplianceAndEnforcementResponsiblePartyDto,
 } from './responsible-parties.dto';
 import { DeleteResult } from 'typeorm';
 
@@ -18,16 +18,17 @@ import { DeleteResult } from 'typeorm';
 export class ComplianceAndEnforcementResponsiblePartyController {
   constructor(private service: ComplianceAndEnforcementResponsiblePartyService) {}
 
-  @Get('/file/:fileUuid')
+  @Get('/file/:id')
   @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
-  async fetchByFileUuid(@Param('fileUuid') fileUuid: string): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
-    return await this.service.fetchByFileUuid(fileUuid);
-  }
-
-  @Get('/:uuid')
-  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
-  async fetchByUuid(@Param('uuid') uuid: string): Promise<ComplianceAndEnforcementResponsiblePartyDto> {
-    return await this.service.fetchByUuid(uuid);
+  async fetchByFileId(
+    @Param('id') id: string,
+    @Query('idType') idType: string,
+  ): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
+    if (idType === 'fileNumber') {
+      return await this.service.fetchByFileNumber(id);
+    } else {
+      return await this.service.fetchByFileUuid(id);
+    }
   }
 
   @Post('')

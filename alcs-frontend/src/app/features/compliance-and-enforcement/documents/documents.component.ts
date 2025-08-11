@@ -5,10 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../shared/constants';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
-import {
-  DocumentUploadDialogData,
-  DocumentUploadDialogOptions,
-} from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
+import { DocumentUploadDialogData } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 import { DocumentUploadDialogComponent } from '../../../shared/document-upload-dialog/document-upload-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -31,7 +28,7 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDes
 
   @Input() title?: string;
   @Input() fileNumber?: string;
-  @Input() options?: DocumentUploadDialogOptions;
+  @Input() options?: DocumentUploadDialogData;
   @Input() section?: Section;
 
   displayedColumns: string[] = ['source', 'type', 'fileName', 'uploadedAt', 'actions'];

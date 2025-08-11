@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { CSP_NONCE, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
@@ -12,6 +12,7 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 
 export enum Section {
   SUBMISSION = 'Submission',
+  OWNERSHIP = 'Ownership',
 }
 
 @Injectable({
@@ -95,6 +96,12 @@ export class ComplianceAndEnforcementDocumentService {
     }
     if (dto.section) {
       formData.append('section', dto.section);
+    }
+    if (dto.parcelUuid) {
+      formData.append('parcelUuid', dto.parcelUuid);
+    }
+    if (dto.ownerUuid) {
+      formData.append('ownerUuid', dto.ownerUuid);
     }
 
     return formData;
