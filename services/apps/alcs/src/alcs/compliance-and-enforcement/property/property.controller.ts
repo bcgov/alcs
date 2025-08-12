@@ -16,8 +16,8 @@ export class ComplianceAndEnforcementPropertyController {
 
   @Get('/:fileUuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async fetchByFileUuid(@Param('fileUuid') fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto> {
-    return await this.service.fetchByFileUuid(fileUuid);
+  async fetchParcels(@Param('fileNumber') fileNumber: string): Promise<ComplianceAndEnforcementPropertyDto[]> {
+    return await this.service.fetchParcels(fileNumber);
   }
 
   @Post('')
@@ -42,4 +42,4 @@ export class ComplianceAndEnforcementPropertyController {
   async delete(@Param('uuid') uuid: string): Promise<DeleteResult> {
     return await this.service.delete(uuid);
   }
-} 
+}

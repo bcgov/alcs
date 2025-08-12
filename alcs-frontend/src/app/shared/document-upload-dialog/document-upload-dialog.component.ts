@@ -84,7 +84,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     this.internalVisibilityLabel = this.buildInternalVisibilityLabel();
 
     this.documentSources = this.data.allowedDocumentSources ?? DEFAULT_DOCUMENT_SOURCES;
-    if (this.documentSources.length === 1) {
+    if (this.data.defaultDocumentSource && this.documentSources.includes(this.data.defaultDocumentSource)) {
+      this.source.setValue(this.data.defaultDocumentSource);
+    } else if (this.documentSources.length === 1) {
       this.source.setValue(this.documentSources[0]);
     }
 
@@ -197,15 +199,14 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.visibleToPublic.getRawValue() && this.data.allowedVisibilityFlags?.includes('P')) {
       visibilityFlags.push('P');
     }
-
     const dto: UpdateDocumentDto = {
       fileName: this.name.value! + this.extension,
       source: this.source.value as DOCUMENT_SOURCE,
       typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
-      parcelUuid: this.parcelId.value ?? undefined,
       ownerUuid: this.ownerId.value ?? undefined,
       section: this.data.section ?? undefined,
+      parcelUuid: this.parcelId.value ?? undefined,
     };
 
     if (file) {
@@ -291,6 +292,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     }
 
     const submission = await this.data.submissionService.fetchSubmission(this.data.fileId);
+
     this.selectableOwners = submission.owners
       .filter((owner) => owner.type.code === 'ORGZ')
       .map((owner) => ({

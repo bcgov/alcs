@@ -43,6 +43,9 @@ export class ComplianceAndEnforcementPropertyDto {
 
   @AutoMap()
   alcHistory: string;
+
+  @AutoMap()
+  certificateOfTitleUuid: string | null;
 }
 
 export class UpdateComplianceAndEnforcementPropertyDto {
@@ -97,4 +100,8 @@ export class UpdateComplianceAndEnforcementPropertyDto {
   @IsOptional()
   @AutoMap()
   fileUuid?: string;
-} 
+
+  @IsOptional()
+  @AutoMap()
+  certificateOfTitleUuid?: string;
+}

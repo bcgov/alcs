@@ -25,10 +25,17 @@
     </section>
 
     <section class="form-section">
-      <app-compliance-and-enforcement-responsible-parties 
+      <app-compliance-and-enforcement-responsible-parties
         #responsiblePartiesComponent
         [fileUuid]="file?.uuid"
         [isPropertyCrown]="isPropertyCrown"
+      />
+      <app-compliance-and-enforcement-documents
+        #ownershipDocumentsComponent
+        [title]="'Property Ownership Documents'"
+        [fileNumber]="fileNumber"
+        [options]="ownershipDocumentOptions"
+        [section]="Section.OWNERSHIP"
       />
     </section>
 

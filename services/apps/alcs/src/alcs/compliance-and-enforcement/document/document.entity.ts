@@ -6,6 +6,7 @@ import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
 export enum Section {
   SUBMISSION = 'Submission',
+  OWNERSHIP = 'Ownership',
 }
 
 @Entity({

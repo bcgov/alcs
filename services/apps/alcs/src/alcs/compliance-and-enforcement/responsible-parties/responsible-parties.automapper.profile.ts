@@ -2,17 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
 import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
-import { 
-  ComplianceAndEnforcementResponsibleParty, 
-  ComplianceAndEnforcementResponsiblePartyDirector 
-} from './entities';
-import { 
-  ComplianceAndEnforcementResponsiblePartyDto, 
+import { ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDirector } from './entities';
+import {
+  ComplianceAndEnforcementResponsiblePartyDto,
   ComplianceAndEnforcementResponsiblePartyDirectorDto,
   CreateComplianceAndEnforcementResponsiblePartyDto,
   UpdateComplianceAndEnforcementResponsiblePartyDto,
   CreateComplianceAndEnforcementResponsiblePartyDirectorDto,
-  UpdateComplianceAndEnforcementResponsiblePartyDirectorDto
+  UpdateComplianceAndEnforcementResponsiblePartyDirectorDto,
 } from './responsible-parties.dto';
 
 @Injectable()
@@ -51,6 +48,10 @@ export class ComplianceAndEnforcementResponsiblePartyProfile extends AutomapperP
               : entity.directors,
           ),
         ),
+        forMember(
+          (dto) => dto.corporateSummaryUuid,
+          mapFrom((entity) => entity.corporateSummary?.uuid),
+        ),
       );
 
       // Create DTO to Entity mappings
@@ -65,9 +66,7 @@ export class ComplianceAndEnforcementResponsiblePartyProfile extends AutomapperP
         forMember(
           (entity) => entity.ownerSince,
           mapFrom((dto) =>
-            dto.ownerSince !== undefined && dto.ownerSince !== null
-              ? new Date(dto.ownerSince)
-              : dto.ownerSince,
+            dto.ownerSince !== undefined && dto.ownerSince !== null ? new Date(dto.ownerSince) : dto.ownerSince,
           ),
         ),
         forMember(
@@ -84,9 +83,7 @@ export class ComplianceAndEnforcementResponsiblePartyProfile extends AutomapperP
         forMember(
           (entity) => entity.ownerSince,
           mapFrom((dto) =>
-            dto.ownerSince !== undefined && dto.ownerSince !== null
-              ? new Date(dto.ownerSince)
-              : dto.ownerSince,
+            dto.ownerSince !== undefined && dto.ownerSince !== null ? new Date(dto.ownerSince) : dto.ownerSince,
           ),
         ),
         forMember(

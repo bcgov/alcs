@@ -1,6 +1,8 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
+import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 
 @Entity({
   comment: 'Compliance and enforcement property',
@@ -70,4 +72,12 @@ export class ComplianceAndEnforcementProperty {
   @AutoMap()
   @Column()
   fileUuid: string;
+
+  @AutoMap()
+  @JoinColumn()
+  @OneToOne(() => ComplianceAndEnforcementDocument, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  certificateOfTitle?: ComplianceAndEnforcementDocument;
 }

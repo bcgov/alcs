@@ -23,6 +23,7 @@ import { CreateDocumentDto, DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DocumentTypeDto } 
 import { User } from '../../../user/user.entity';
 import { v4 } from 'uuid';
 import { Section } from './document.entity';
+import { MultipartFile } from '@fastify/multipart';
 
 @Controller('compliance-and-enforcement/document')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -46,6 +47,8 @@ export class ComplianceAndEnforcementDocumentController {
       throw new BadRequestException('Request is not multipart');
     }
 
+    const user = req.user.entity as User;
+    const fileData = req.body.file as MultipartFile;
     const dto: CreateDocumentDto = {
       typeCode: req.body.documentType.value,
       mimeType: req.body.file.mimeType,
@@ -56,7 +59,11 @@ export class ComplianceAndEnforcementDocumentController {
       section: req.body.section.value as Section,
     };
 
-    return await this.service.create(fileNumber, req.user.entity as User, req.body.file, dto);
+    // Use C&E-specific terminology
+    const propertyUuid = req.body.parcelUuid?.value;
+    const responsiblePartyUuid = req.body.ownerUuid?.value;
+
+    return await this.service.create(fileNumber, user, fileData, dto, propertyUuid, responsiblePartyUuid);
   }
 
   @Patch('/:uuid')

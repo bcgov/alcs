@@ -19,9 +19,12 @@ export interface UpdateComplianceAndEnforcementDocumentDto {
 
   source?: DOCUMENT_SOURCE;
   fileName?: string;
-  section?: Section;
+
+  parcelUuid?: string;
+  ownerUuid?: string;
 }
 
 export interface CreateComplianceAndEnforcementDocumentDto extends UpdateComplianceAndEnforcementDocumentDto {
+  section?: Section;
   file: File;
 }

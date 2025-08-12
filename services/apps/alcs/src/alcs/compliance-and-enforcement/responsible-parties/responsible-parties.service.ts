@@ -9,11 +9,12 @@ import {
   ServiceNotFoundException,
 } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDirector } from './entities';
-import { 
-  ComplianceAndEnforcementResponsiblePartyDto, 
+import {
+  ComplianceAndEnforcementResponsiblePartyDto,
   CreateComplianceAndEnforcementResponsiblePartyDto,
-  UpdateComplianceAndEnforcementResponsiblePartyDto 
+  UpdateComplianceAndEnforcementResponsiblePartyDto,
 } from './responsible-parties.dto';
+import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementResponsiblePartyService {
@@ -22,6 +23,8 @@ export class ComplianceAndEnforcementResponsiblePartyService {
     private repository: Repository<ComplianceAndEnforcementResponsibleParty>,
     @InjectRepository(ComplianceAndEnforcementResponsiblePartyDirector)
     private directorRepository: Repository<ComplianceAndEnforcementResponsiblePartyDirector>,
+    @InjectRepository(ComplianceAndEnforcementDocument)
+    private documentRepository: Repository<ComplianceAndEnforcementDocument>,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -36,7 +39,31 @@ export class ComplianceAndEnforcementResponsiblePartyService {
       },
     });
 
-    return this.mapper.mapArray(entities, ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDto);
+    return this.mapper.mapArray(
+      entities,
+      ComplianceAndEnforcementResponsibleParty,
+      ComplianceAndEnforcementResponsiblePartyDto,
+    );
+  }
+
+  async fetchByFileNumber(fileNumber: string): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
+    const entities = await this.repository.find({
+      where: {
+        file: {
+          fileNumber,
+        },
+      },
+      relations: ['directors', 'file', 'corporateSummary'],
+      order: {
+        partyType: 'ASC',
+      },
+    });
+
+    return this.mapper.mapArray(
+      entities,
+      ComplianceAndEnforcementResponsibleParty,
+      ComplianceAndEnforcementResponsiblePartyDto,
+    );
   }
 
   async fetchByUuid(uuid: string): Promise<ComplianceAndEnforcementResponsiblePartyDto> {
@@ -51,18 +78,28 @@ export class ComplianceAndEnforcementResponsiblePartyService {
       throw new ServiceNotFoundException('Responsible party not found');
     }
 
-    return this.mapper.map(entity, ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDto);
+    return this.mapper.map(
+      entity,
+      ComplianceAndEnforcementResponsibleParty,
+      ComplianceAndEnforcementResponsiblePartyDto,
+    );
   }
 
-  async create(dto: CreateComplianceAndEnforcementResponsiblePartyDto): Promise<ComplianceAndEnforcementResponsiblePartyDto> {
-    const entity = this.mapper.map(dto, CreateComplianceAndEnforcementResponsiblePartyDto, ComplianceAndEnforcementResponsibleParty);
-    
+  async create(
+    dto: CreateComplianceAndEnforcementResponsiblePartyDto,
+  ): Promise<ComplianceAndEnforcementResponsiblePartyDto> {
+    const entity = this.mapper.map(
+      dto,
+      CreateComplianceAndEnforcementResponsiblePartyDto,
+      ComplianceAndEnforcementResponsibleParty,
+    );
+
     // Generate UUID for the main entity
     entity.uuid = uuidv4();
-    
+
     // Handle directors separately if they exist
     if (dto.directors && dto.directors.length > 0) {
-      entity.directors = dto.directors.map(directorDto => {
+      entity.directors = dto.directors.map((directorDto) => {
         const director = new ComplianceAndEnforcementResponsiblePartyDirector();
         director.uuid = uuidv4(); // Generate UUID for director
         director.directorName = directorDto.directorName;
@@ -76,7 +113,11 @@ export class ComplianceAndEnforcementResponsiblePartyService {
 
     const savedEntity = await this.repository.save(entity);
 
-    return this.mapper.map(savedEntity, ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDto);
+    return this.mapper.map(
+      savedEntity,
+      ComplianceAndEnforcementResponsibleParty,
+      ComplianceAndEnforcementResponsiblePartyDto,
+    );
   }
 
   async update(
@@ -93,7 +134,12 @@ export class ComplianceAndEnforcementResponsiblePartyService {
     }
 
     // Update basic fields
-    this.mapper.mutate(updateDto, entity, UpdateComplianceAndEnforcementResponsiblePartyDto, ComplianceAndEnforcementResponsibleParty);
+    this.mapper.mutate(
+      updateDto,
+      entity,
+      UpdateComplianceAndEnforcementResponsiblePartyDto,
+      ComplianceAndEnforcementResponsibleParty,
+    );
 
     // Handle directors update
     if (updateDto.directors !== undefined) {
@@ -104,7 +150,7 @@ export class ComplianceAndEnforcementResponsiblePartyService {
 
       // Add new directors
       if (updateDto.directors && updateDto.directors.length > 0) {
-        entity.directors = updateDto.directors.map(directorDto => {
+        entity.directors = updateDto.directors.map((directorDto) => {
           const director = new ComplianceAndEnforcementResponsiblePartyDirector();
           director.uuid = uuidv4(); // Generate UUID for new director
           director.directorName = directorDto.directorName || '';
@@ -119,9 +165,23 @@ export class ComplianceAndEnforcementResponsiblePartyService {
       }
     }
 
+    if (updateDto.corporateSummaryUuid) {
+      const corporateSummary = await this.documentRepository.findOne({
+        where: {
+          uuid: updateDto.corporateSummaryUuid,
+        },
+      });
+
+      entity.corporateSummary = corporateSummary ?? undefined;
+    }
+
     const savedEntity = await this.repository.save(entity);
 
-    return this.mapper.map(savedEntity, ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDto);
+    return this.mapper.map(
+      savedEntity,
+      ComplianceAndEnforcementResponsibleParty,
+      ComplianceAndEnforcementResponsiblePartyDto,
+    );
   }
 
   async delete(uuid: string): Promise<DeleteResult> {

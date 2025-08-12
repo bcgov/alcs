@@ -11,15 +11,19 @@ import {
 } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { DocumentService } from '../../../document/document.service';
 import { User } from '../../../user/user.entity';
-import { DocumentCode } from '../../../document/document-code.entity';
+import { DOCUMENT_TYPE, DocumentCode } from '../../../document/document-code.entity';
 import { CreateDocumentDto } from '../../../document/document.dto';
 import { MultipartFile } from '@fastify/multipart';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementPropertyService } from '../property/property.service';
+import { ComplianceAndEnforcementResponsiblePartyService } from '../responsible-parties/responsible-parties.service';
 
 @Injectable()
 export class ComplianceAndEnforcementDocumentService {
   constructor(
     private documentService: DocumentService,
+    private propertyService: ComplianceAndEnforcementPropertyService,
+    private responsiblePartyService: ComplianceAndEnforcementResponsiblePartyService,
     @InjectRepository(ComplianceAndEnforcementDocument)
     private repository: Repository<ComplianceAndEnforcementDocument>,
     @InjectRepository(ComplianceAndEnforcement)
@@ -52,11 +56,22 @@ export class ComplianceAndEnforcementDocumentService {
     return this.mapper.mapArray(entities, ComplianceAndEnforcementDocument, ComplianceAndEnforcementDocumentDto);
   }
 
+  async getByUuid(uuid: string): Promise<ComplianceAndEnforcementDocumentDto> {
+    const entity = await this.repository.findOne({
+      where: { uuid },
+      relations: ['type', 'document'],
+    });
+
+    return this.mapper.map(entity, ComplianceAndEnforcementDocument, ComplianceAndEnforcementDocumentDto);
+  }
+
   async create(
     fileNumber: string,
     user: User,
     uploadData: MultipartFile,
     createDto: CreateDocumentDto,
+    propertyUuid?: string,
+    responsiblePartyUuid?: string,
   ): Promise<ComplianceAndEnforcementDocumentDto> {
     const document = await this.documentService.create(
       `compliance-and-enforcement/${fileNumber}`,
@@ -89,7 +104,27 @@ export class ComplianceAndEnforcementDocumentService {
 
     const savedEntity = await this.repository.save(entity);
 
+    if (propertyUuid && createDto.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+      await this.updateProperty(propertyUuid, entity.uuid);
+    }
+
+    if (responsiblePartyUuid && createDto.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+      await this.updateResponsibleParty(responsiblePartyUuid, entity.uuid);
+    }
+
     return this.mapper.map(savedEntity, ComplianceAndEnforcementDocument, ComplianceAndEnforcementDocumentDto);
+  }
+
+  private async updateProperty(propertyUuid: string, certificateOfTitleUuid: string) {
+    this.propertyService.update(propertyUuid, {
+      certificateOfTitleUuid,
+    });
+  }
+
+  private async updateResponsibleParty(propertyUuid: string, corporateSummaryUuid: string) {
+    this.responsiblePartyService.update(propertyUuid, {
+      corporateSummaryUuid,
+    });
   }
 
   async update(
@@ -118,6 +153,14 @@ export class ComplianceAndEnforcementDocumentService {
     }
 
     const savedEntity = await this.repository.save(entity);
+
+    if (updateDto.parcelUuid && updateDto.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+      await this.updateProperty(updateDto.parcelUuid, entity.uuid);
+    }
+
+    if (updateDto.ownerUuid && updateDto.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+      await this.updateResponsibleParty(updateDto.ownerUuid, entity.uuid);
+    }
 
     return this.mapper.map(savedEntity, ComplianceAndEnforcementDocument, ComplianceAndEnforcementDocumentDto);
   }

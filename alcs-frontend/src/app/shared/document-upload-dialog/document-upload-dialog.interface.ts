@@ -19,6 +19,7 @@ export interface DocumentUploadDialogOptions {
   allowsFileEdit?: boolean;
   documentTypeOverrides?: Partial<Record<DOCUMENT_TYPE, DocumentTypeConfig>>;
   allowedDocumentSources?: DOCUMENT_SOURCE[];
+  defaultDocumentSource?: DOCUMENT_SOURCE;
   allowedDocumentTypes?: DOCUMENT_TYPE[];
   section?: Section;
 }

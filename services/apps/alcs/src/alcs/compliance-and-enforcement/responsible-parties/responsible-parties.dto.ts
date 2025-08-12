@@ -71,6 +71,9 @@ export class ComplianceAndEnforcementResponsiblePartyDto {
 
   @AutoMap()
   fileUuid: string;
+
+  @AutoMap()
+  corporateSummaryUuid?: string | null;
 }
 
 export class CreateComplianceAndEnforcementResponsiblePartyDirectorDto {
@@ -169,6 +172,9 @@ export class CreateComplianceAndEnforcementResponsiblePartyDto {
   @IsOptional()
   @IsNumber()
   ownerSince?: number | null;
+
+  @IsString()
+  corporateSummaryUuid: string | null;
 }
 
 export class UpdateComplianceAndEnforcementResponsiblePartyDto {
@@ -232,4 +238,8 @@ export class UpdateComplianceAndEnforcementResponsiblePartyDto {
   @IsOptional()
   @IsNumber()
   ownerSince?: number | null;
+
+  @IsOptional()
+  @IsString()
+  corporateSummaryUuid?: string | null;
 }
