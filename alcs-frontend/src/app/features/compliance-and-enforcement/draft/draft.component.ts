@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, debounceTime, EMPTY, filter, firstValueFrom, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../constants';
 import {
   ComplianceAndEnforcementDto,
   InitialSubmissionType,
@@ -90,7 +91,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
             this.initialSubmissionType = overview.initialSubmissionType;
           }
         }),
-        debounceTime(1000),
+        debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
         switchMap((overview) =>
           this.file?.uuid ? this.complianceAndEnforcementService.update(this.file.uuid, overview) : EMPTY,
         ),
@@ -108,7 +109,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     this.submitterComponent.$changes
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
-        debounceTime(1000),
+        debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
         switchMap((submitter) =>
           this.submitter?.uuid
             ? this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitter)
@@ -133,7 +134,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     this.propertyComponent.$changes
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
-        debounceTime(1000),
+        debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
         filter(() => this.propertyComponent?.form.dirty ?? false),
         switchMap((property) => {
           // Only auto-save if there are meaningful changes (non-empty fields)
