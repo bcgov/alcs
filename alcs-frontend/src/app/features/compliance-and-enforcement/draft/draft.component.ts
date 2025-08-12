@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, debounceTime, EMPTY, firstValueFrom, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, debounceTime, EMPTY, filter, firstValueFrom, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../constants';
 import {
   ComplianceAndEnforcementDto,
@@ -135,6 +135,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
         debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
+        filter(() => this.propertyComponent?.form.dirty ?? false),
         switchMap((property) => {
           // Only auto-save if there are meaningful changes (non-empty fields)
           const cleanedProperty = cleanPropertyUpdate(property);
@@ -173,6 +174,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!this.property) {
             this.property = property;
           }
+          this.propertyComponent?.form.markAsPristine();
         }),
         catchError((error) => {
           console.error('Error saving C&E property draft', error);
@@ -199,15 +201,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
           if (wasCrown !== this.isPropertyCrown && this.responsiblePartiesComponent) {
             this.responsiblePartiesComponent.isPropertyCrown = this.isPropertyCrown;
             
-            if (this.isPropertyCrown) {
-              // For Crown properties, clear all existing parties since they are not allowed in CRWN ownership
-              await this.clearAllResponsibleParties();
-            } else {
-              // For non-Crown properties, reload parties from API and ensure form is rebuilt
-              await this.responsiblePartiesComponent.loadResponsibleParties();
-              // Refresh the form to ensure proper state (will add default party if none exist)
-              this.responsiblePartiesComponent.refreshFormForPropertyChange();
-            }
+            await this.responsiblePartiesComponent.loadResponsibleParties();
           }
         }
       });

@@ -18,7 +18,6 @@ const PARCEL_OWNERSHIP_TYPE = {
   CROWN: 'CRWN',
 };
 
-
 // Custom validator for exactly 5 decimal places as per SO request
 function decimalPlacesValidator(decimals: number) {
   return (control: any) => {
@@ -42,7 +41,9 @@ function decimalPlacesValidator(decimals: number) {
 }
 
 // Clean up the property update object to remove null, undefined, and empty strings, needed to save draft effectively
-export function cleanPropertyUpdate(update: UpdateComplianceAndEnforcementPropertyDto): UpdateComplianceAndEnforcementPropertyDto {
+export function cleanPropertyUpdate(
+  update: UpdateComplianceAndEnforcementPropertyDto,
+): UpdateComplianceAndEnforcementPropertyDto {
   const cleaned: any = {};
   for (const [key, value] of Object.entries(update)) {
     if (
@@ -56,7 +57,11 @@ export function cleanPropertyUpdate(update: UpdateComplianceAndEnforcementProper
     }
   }
   // Always omit localGovernmentUuid if blank, null, or undefined
-  if (cleaned.localGovernmentUuid === '' || cleaned.localGovernmentUuid === null || cleaned.localGovernmentUuid === undefined) {
+  if (
+    cleaned.localGovernmentUuid === '' ||
+    cleaned.localGovernmentUuid === null ||
+    cleaned.localGovernmentUuid === undefined
+  ) {
     delete cleaned.localGovernmentUuid;
   }
   return cleaned;
@@ -96,13 +101,13 @@ export class PropertyComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.min(48),
       Validators.max(61),
-      decimalPlacesValidator(5)
+      decimalPlacesValidator(5),
     ]),
     longitude: new FormControl<number | null>(null, [
       Validators.required,
       Validators.min(-140),
       Validators.max(-113),
-      decimalPlacesValidator(5)
+      decimalPlacesValidator(5),
     ]),
     ownershipTypeCode: new FormControl<string>(PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE, [Validators.required]),
     pidOrPin: new FormControl<string>('PID'),
@@ -157,7 +162,6 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
       this.form.enable();
       this.isPatching = false;
-
     }
 
     // Prevent resubscription
@@ -167,28 +171,34 @@ export class PropertyComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this.$changes.next(cleanPropertyUpdate({
-          civicAddress: form.civicAddress ?? '',
-          legalDescription: form.legalDescription ?? '',
-          localGovernmentUuid: form.localGovernmentUuid && form.localGovernmentUuid.trim() !== '' ? form.localGovernmentUuid : undefined,
-          regionCode: form.regionCode ?? '',
-          latitude: toNumberOrUndefined(form.latitude),
-          longitude: toNumberOrUndefined(form.longitude),
-          ownershipTypeCode: form.ownershipTypeCode ?? PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE,
-          pid: form.pidOrPin === 'PID' ? (form.pid || null) : null,
-          pin: form.pidOrPin === 'PIN' ? (form.pin || null) : null,
-          areaHectares: toNumberOrUndefined(form.areaHectares),
-          alrPercentage: toNumberOrUndefined(form.alrPercentage),
-          alcHistory: form.alcHistory ?? '',
-        }));
+        this.$changes.next(
+          cleanPropertyUpdate({
+            civicAddress: form.civicAddress ?? '',
+            legalDescription: form.legalDescription ?? '',
+            localGovernmentUuid:
+              form.localGovernmentUuid && form.localGovernmentUuid.trim() !== '' ? form.localGovernmentUuid : undefined,
+            regionCode: form.regionCode ?? '',
+            latitude: toNumberOrUndefined(form.latitude),
+            longitude: toNumberOrUndefined(form.longitude),
+            ownershipTypeCode: form.ownershipTypeCode ?? PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE,
+            pid: form.pidOrPin === 'PID' ? form.pid || null : null,
+            pin: form.pidOrPin === 'PIN' ? form.pin || null : null,
+            areaHectares: toNumberOrUndefined(form.areaHectares),
+            alrPercentage: toNumberOrUndefined(form.alrPercentage),
+            alcHistory: form.alcHistory ?? '',
+          }),
+        );
       });
 
       // Watch for ownership type changes to update PID/PIN requirements
-      this.form.get('ownershipTypeCode')?.valueChanges.pipe(takeUntil(this.$destroy)).subscribe((ownershipType) => {
-        if (!this.isPatching && ownershipType) {
-          this.updatePidPinRequirements(ownershipType);
-        }
-      });
+      this.form
+        .get('ownershipTypeCode')
+        ?.valueChanges.pipe(takeUntil(this.$destroy))
+        .subscribe((ownershipType) => {
+          if (!this.isPatching && ownershipType) {
+            this.updatePidPinRequirements(ownershipType);
+          }
+        });
 
       this.isSubscribed = true;
     }
@@ -196,12 +206,12 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
   constructor(
     private localGovernmentService: ApplicationLocalGovernmentService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
   ) {
     // Initialize autocomplete filtering
     this.filteredLocalGovernments = this.localGovernmentControl.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterLocalGovernments(value || ''))
+      map((value) => this.filterLocalGovernments(value || '')),
     );
   }
 
@@ -214,9 +224,9 @@ export class PropertyComponent implements OnInit, OnDestroy {
     });
 
     // If no property is set initially, set initialized to true after a delay to allow for any initial setup
-      if (!this.isInitialized) {
-        this.isInitialized = true;
-      }
+    if (!this.isInitialized) {
+      this.isInitialized = true;
+    }
   }
 
   async loadLocalGovernments() {
