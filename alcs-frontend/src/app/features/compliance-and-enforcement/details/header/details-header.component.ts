@@ -31,8 +31,6 @@ export class DetailsHeaderComponent implements OnDestroy {
     return this._file;
   }
 
-  constructor() {}
-
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
