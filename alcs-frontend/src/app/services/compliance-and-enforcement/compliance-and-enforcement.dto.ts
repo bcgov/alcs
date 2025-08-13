@@ -1,3 +1,4 @@
+import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
 import {
   ComplianceAndEnforcementSubmitterDto,
   UpdateComplianceAndEnforcementSubmitterDto,
@@ -28,6 +29,7 @@ export interface ComplianceAndEnforcementDto {
   allegedActivity: AllegedActivity[];
   intakeNotes: string;
   submitters: ComplianceAndEnforcementSubmitterDto[];
+  property: ComplianceAndEnforcementPropertyDto;
 }
 
 export interface UpdateComplianceAndEnforcementDto {

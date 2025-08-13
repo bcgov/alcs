@@ -1,8 +1,8 @@
 import { AutoMap } from 'automapper-classes';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
-import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
 import { ComplianceAndEnforcementDocument } from '../document/document.entity';
+import { LocalGovernment } from '../../local-government/local-government.entity';
 
 @Entity({
   comment: 'Compliance and enforcement property',
@@ -27,8 +27,12 @@ export class ComplianceAndEnforcementProperty {
   legalDescription: string;
 
   @AutoMap()
-  @Column({ type: 'text', default: '' })
+  @Column({ type: 'uuid', nullable: true })
   localGovernmentUuid: string;
+
+  @AutoMap()
+  @ManyToOne(() => LocalGovernment, { nullable: true })
+  localGovernment: LocalGovernment;
 
   @AutoMap()
   @Column({ type: 'text', default: '' })

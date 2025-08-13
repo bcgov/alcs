@@ -1,5 +1,6 @@
 import { AutoMap } from 'automapper-classes';
 import { IsString, IsOptional, IsNumber, IsUUID } from 'class-validator';
+import { LocalGovernmentDto } from '../../local-government/local-government.dto';
 
 export class ComplianceAndEnforcementPropertyDto {
   @AutoMap()
@@ -16,6 +17,9 @@ export class ComplianceAndEnforcementPropertyDto {
 
   @AutoMap()
   localGovernmentUuid: string;
+
+  @AutoMap()
+  localGovernment: LocalGovernmentDto;
 
   @AutoMap()
   regionCode: string;
