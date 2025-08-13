@@ -84,14 +84,18 @@ describe('DraftComponent', () => {
   it('loads file on init', async () => {
     await component.loadFile('12345');
 
-    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345', true);
+    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345', {
+      withSubmitters: true,
+    });
   });
 
   it('shows error if loadFile fails', async () => {
     mockComplianceAndEnforcementService.fetchByFileNumber.mockRejectedValueOnce(new Error('fail'));
     await component.loadFile('12345');
 
-    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345', true);
+    expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('12345', {
+      withSubmitters: true,
+    });
     expect(mockToastService.showErrorToast).toHaveBeenCalledWith('Failed to load C&E file');
   });
 
