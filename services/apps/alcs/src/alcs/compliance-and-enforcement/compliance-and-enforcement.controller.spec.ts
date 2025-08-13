@@ -89,7 +89,7 @@ describe('ComplianceAndEnforcementController', () => {
       };
       mockComplianceAndEnforcementService.fetchByFileNumber.mockResolvedValue(result);
       expect(await controller.fetchByFileNumber('1', true)).toEqual(result);
-      expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('1', true);
+      expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('1', true, false);
     });
   });
 
@@ -139,7 +139,7 @@ describe('ComplianceAndEnforcementController', () => {
       };
       mockComplianceAndEnforcementService.update.mockResolvedValue(resultDto);
       expect(await controller.update('1', updateDto)).toEqual(resultDto);
-      expect(mockComplianceAndEnforcementService.update).toHaveBeenCalledWith('1', updateDto);
+      expect(mockComplianceAndEnforcementService.update).toHaveBeenCalledWith('1', updateDto, { idType: 'uuid' });
     });
   });
 
