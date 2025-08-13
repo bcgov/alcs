@@ -29,7 +29,7 @@ export interface ComplianceAndEnforcementDto {
   allegedActivity: AllegedActivity[];
   intakeNotes: string;
   submitters: ComplianceAndEnforcementSubmitterDto[];
-  property: ComplianceAndEnforcementPropertyDto;
+  property?: ComplianceAndEnforcementPropertyDto;
 }
 
 export interface UpdateComplianceAndEnforcementDto {
