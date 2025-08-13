@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   catchError,
   debounceTime,
@@ -103,6 +103,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly propertyService: ComplianceAndEnforcementPropertyService,
     private readonly responsiblePartyService: ResponsiblePartiesService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -331,9 +332,27 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.toastService.showSuccessToast('C&E file draft saved');
+      await this.router.navigate(['/home']);
     } catch (error) {
       console.error('Error saving C&E file draft', error);
       this.toastService.showErrorToast('Failed to save C&E file draft');
+    }
+  }
+
+  async onCancelDiscardClicked() {
+    if (!this.file?.uuid) {
+      await this.router.navigate(['/home']);
+      return;
+    }
+
+    try {
+      await this.complianceAndEnforcementService.delete(this.file.uuid);
+      this.toastService.showSuccessToast('Draft discarded');
+    } catch (error) {
+      console.error('Error discarding C&E draft', error);
+      this.toastService.showErrorToast('Failed to discard draft');
+    } finally {
+      await this.router.navigate(['/home']);
     }
   }
 

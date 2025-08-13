@@ -39,8 +39,14 @@
       />
     </section>
 
-    <div class="button-container">
-      <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft</button>
+    <div class="button-row">
+      <div class="left-actions">
+        <button type="button" mat-stroked-button color="warn" (click)="onCancelDiscardClicked()">Cancel & Discard</button>
+      </div>
+      <div class="right-actions">
+        <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft & Exit</button>
+        <button type="button" mat-flat-button color="primary">Finish & Create File</button>
+      </div>
     </div>
   </form>
 </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from './compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
@@ -11,6 +11,7 @@ import {
 } from '../../../../../libs/common/src/exceptions/base.exception';
 import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
 import { ComplianceAndEnforcementPropertyService } from './property/property.service';
+import { ComplianceAndEnforcementDocument } from './document/document.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementService {
@@ -103,11 +104,53 @@ export class ComplianceAndEnforcementService {
   }
 
   async delete(uuid: string): Promise<DeleteResult> {
-    const entity = await this.repository.findOneBy({ uuid });
-    if (entity === null) {
-      throw new ServiceNotFoundException('A C&E file with this UUID does not exist. Unable to delete.');
-    }
+    return await this.repository.manager.transaction(async (manager) => {
+      const file = await manager.findOne(ComplianceAndEnforcement, {
+        where: { uuid },
+      });
 
-    return await this.repository.delete(uuid);
+      if (!file) {
+        throw new ServiceNotFoundException('A C&E file with this UUID does not exist. Unable to delete.');
+      }
+
+      // Delete C&E document link records for this file
+      const ceDocuments = await manager.find(ComplianceAndEnforcementDocument, {
+        where: { file: { uuid: file.uuid } },
+        relations: ['document', 'type'],
+      });
+      if (ceDocuments.length > 0) {
+        await manager.delete(ComplianceAndEnforcementDocument, { uuid: In(ceDocuments.map((d) => d.uuid)) });
+      }
+
+      // Delete Responsible Party Directors, then Parties
+      const parties = await manager.find(
+        (await import('./responsible-parties/responsible-party.entity')).ComplianceAndEnforcementResponsibleParty,
+        { where: { fileUuid: file.uuid }, relations: ['directors'] },
+      );
+      const directorUuids = parties.flatMap((p: any) => (p.directors ? p.directors.map((d: any) => d.uuid) : []));
+      if (directorUuids.length > 0) {
+        const Director = (await import('./responsible-parties/responsible-party-director.entity'))
+          .ComplianceAndEnforcementResponsiblePartyDirector;
+        await manager.delete(Director, { uuid: In(directorUuids) });
+      }
+      if (parties.length > 0) {
+        const Party = (await import('./responsible-parties/responsible-party.entity')).ComplianceAndEnforcementResponsibleParty;
+        await manager.delete(Party, { fileUuid: file.uuid });
+      }
+
+      // Delete Properties
+      const Property = (await import('./property/property.entity')).ComplianceAndEnforcementProperty;
+      await manager.delete(Property, { fileUuid: file.uuid });
+
+      // Delete Submitters (filter by file relation)
+      const Submitter = (await import('./submitter/submitter.entity')).ComplianceAndEnforcementSubmitter;
+      const submitters = await manager.find(Submitter, { where: { file: { uuid: file.uuid } } });
+      if (submitters.length > 0) {
+        await manager.delete(Submitter, { uuid: In(submitters.map((s: any) => s.uuid)) });
+      }
+
+      // Finally delete the C&E File at the end of all the other deletions
+      return await manager.delete(ComplianceAndEnforcement, { uuid: file.uuid });
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, In, Repository } from 'typeorm';
+import { DeleteResult, In, Repository, FindOptionsWhere } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ComplianceAndEnforcementDocument, Section } from './document.entity';
 import { ComplianceAndEnforcementDocumentDto, UpdateComplianceAndEnforcementDocumentDto } from './document.dto';
@@ -34,13 +34,18 @@ export class ComplianceAndEnforcementDocumentService {
   ) {}
 
   async list(fileNumber?: string, section?: Section): Promise<ComplianceAndEnforcementDocumentDto[]> {
+    const criteria: FindOptionsWhere<ComplianceAndEnforcementDocument> = {};
+
+    if (fileNumber !== undefined) {
+      criteria.file = { fileNumber } as any;
+    }
+
+    if (section !== undefined) {
+      criteria.section = section;
+    }
+
     const entities = await this.repository.find({
-      where: {
-        file: {
-          fileNumber: fileNumber,
-        },
-        section,
-      },
+      where: criteria,
       relations: ['type', 'document'],
       order: {
         document: {
