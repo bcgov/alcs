@@ -1,14 +1,7 @@
 import { ComplianceAndEnforcementComponent } from './compliance-and-enforcement.component';
 import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import {
-  AllegedActivity,
-  ComplianceAndEnforcementDto,
-  InitialSubmissionType,
-} from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { MatMenuModule } from '@angular/material/menu';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('ComplianceAndEnforcementComponent', () => {
