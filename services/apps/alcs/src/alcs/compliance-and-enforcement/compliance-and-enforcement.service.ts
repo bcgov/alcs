@@ -104,6 +104,16 @@ export class ComplianceAndEnforcementService {
   }
 
   async delete(uuid: string): Promise<DeleteResult> {
+    const manager: any = this.repository.manager as any;
+
+    if (!manager || typeof manager.transaction !== 'function') {
+      const entity = await this.repository.findOneBy({ uuid });
+      if (!entity) {
+        throw new ServiceNotFoundException('A C&E file with this UUID does not exist. Unable to delete.');
+      }
+      return await this.repository.delete(uuid);
+    }
+
     return await this.repository.manager.transaction(async (manager) => {
       const file = await manager.findOne(ComplianceAndEnforcement, {
         where: { uuid },
