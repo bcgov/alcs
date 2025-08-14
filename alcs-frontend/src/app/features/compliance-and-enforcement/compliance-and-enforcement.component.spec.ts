@@ -44,8 +44,8 @@ describe('ComplianceAndEnforcementComponent', () => {
   });
 
   it('should complete destroy subject on ngOnDestroy', () => {
-    const destroyNext = jest.spyOn(component.destroy, 'next');
-    const destroyComplete = jest.spyOn(component.destroy, 'complete');
+    const destroyNext = jest.spyOn(component.$destroy, 'next');
+    const destroyComplete = jest.spyOn(component.$destroy, 'complete');
     component.ngOnDestroy();
     expect(destroyNext).toHaveBeenCalled();
     expect(destroyComplete).toHaveBeenCalled();

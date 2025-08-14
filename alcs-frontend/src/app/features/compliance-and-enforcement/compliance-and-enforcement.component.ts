@@ -11,7 +11,7 @@ import { ComplianceAndEnforcementService } from '../../services/compliance-and-e
   styleUrls: ['./compliance-and-enforcement.component.scss'],
 })
 export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
-  destroy = new Subject<void>();
+  $destroy = new Subject<void>();
 
   detailsRoutes = detailsRoutes;
 
@@ -24,11 +24,11 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.service.$file.pipe(takeUntil(this.destroy)).subscribe((file) => {
+    this.service.$file.pipe(takeUntil(this.$destroy)).subscribe((file) => {
       this.file = file ?? undefined;
     });
 
-    this.route.params.pipe(takeUntil(this.destroy)).subscribe(async (params) => {
+    this.route.params.pipe(takeUntil(this.$destroy)).subscribe(async (params) => {
       const { fileNumber } = params;
 
       if (fileNumber) {
@@ -39,8 +39,8 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy.next();
-    this.destroy.complete();
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   async loadFile(fileNumber: string) {
