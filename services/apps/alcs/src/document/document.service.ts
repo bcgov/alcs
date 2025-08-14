@@ -73,7 +73,7 @@ export class DocumentService {
       fileName,
       source,
       system,
-      tags: this.formatTagsForDb(tags ?? DEFAULT_DOC_TAGS),
+      tags,
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);
@@ -110,7 +110,7 @@ export class DocumentService {
       fileName,
       source,
       system,
-      tags: this.formatTagsForDb(tags ?? DEFAULT_DOC_TAGS),
+      tags,
     });
 
     this.logger.debug(`File Uploaded to ${fileKey}`);

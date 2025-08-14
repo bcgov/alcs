@@ -1,0 +1,23 @@
+<div class="layout">
+  <div class="file">
+    <app-compliance-and-enforcement-details-header [file]="file" />
+    <div class="content">
+      <div class="nav">
+        <div *ngFor="let route of detailsRoutes" class="nav-link" data-testid="details-nav-link">
+          <div
+            [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            [routerLink]="route.path ? route.path : './'"
+            class="nav-item nav-text"
+            routerLinkActive="active"
+          >
+            <mat-icon>{{ route.icon }}</mat-icon>
+            {{ route.menuTitle }}
+          </div>
+        </div>
+      </div>
+      <div cdkScrollable class="child-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

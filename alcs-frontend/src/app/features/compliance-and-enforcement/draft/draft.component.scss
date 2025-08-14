@@ -14,7 +14,10 @@ section.form-section {
   margin: 32px 0;
 }
 
-.button-container {
+.button-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
+.left-actions { display: flex; }
+.right-actions { display: flex; gap: 12px; }

@@ -10,10 +10,43 @@
         [submitter]="submitter"
         [initialSubmissionType]="initialSubmissionType"
       />
+
+      <app-compliance-and-enforcement-documents
+        #submissionDocumentsComponent
+        [title]="'Complaint/Referral Submission'"
+        [fileNumber]="fileNumber"
+        [options]="submissionDocumentOptions"
+        [section]="Section.SUBMISSION"
+      />
     </section>
 
-    <div class="button-container">
-      <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft</button>
+    <section class="form-section">
+      <app-compliance-and-enforcement-property #propertyComponent [parentForm]="form" [property]="property" />
+    </section>
+
+    <section class="form-section">
+      <app-compliance-and-enforcement-responsible-parties
+        #responsiblePartiesComponent
+        [fileUuid]="file?.uuid"
+        [isPropertyCrown]="isPropertyCrown"
+      />
+      <app-compliance-and-enforcement-documents
+        #ownershipDocumentsComponent
+        [title]="'Property Ownership Documents'"
+        [fileNumber]="fileNumber"
+        [options]="ownershipDocumentOptions"
+        [section]="Section.OWNERSHIP"
+      />
+    </section>
+
+    <div class="button-row">
+      <div class="left-actions">
+        <button type="button" mat-stroked-button color="warn" (click)="onCancelDiscardClicked()">Cancel & Discard</button>
+      </div>
+      <div class="right-actions">
+        <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft & Exit</button>
+        <button type="button" mat-flat-button color="primary">Finish & Create File</button>
+      </div>
     </div>
   </form>
 </div>

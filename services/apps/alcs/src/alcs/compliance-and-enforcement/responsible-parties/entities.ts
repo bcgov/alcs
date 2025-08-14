@@ -1,0 +1,2 @@
+export { ComplianceAndEnforcementResponsibleParty, ResponsiblePartyType, FOIPPACategory } from './responsible-party.entity';
+export { ComplianceAndEnforcementResponsiblePartyDirector } from './responsible-party-director.entity';

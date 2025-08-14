@@ -3,6 +3,8 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
 import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
+import { ComplianceAndEnforcementProperty } from './property/property.entity';
+import { ComplianceAndEnforcementResponsibleParty } from './responsible-parties/responsible-party.entity';
 
 export enum InitialSubmissionType {
   COMPLAINT = 'Complaint',
@@ -67,4 +69,12 @@ export class ComplianceAndEnforcement extends Base {
   @AutoMap()
   @OneToMany(() => ComplianceAndEnforcementSubmitter, (submitter) => submitter.file, { cascade: true })
   submitters: ComplianceAndEnforcementSubmitter[];
+
+  @AutoMap()
+  @OneToMany(() => ComplianceAndEnforcementProperty, (property) => property.file, { cascade: true })
+  properties: ComplianceAndEnforcementProperty[];
+
+  @AutoMap()
+  @OneToMany(() => ComplianceAndEnforcementResponsibleParty, (responsibleParty) => responsibleParty.file, { cascade: true })
+  responsibleParties: ComplianceAndEnforcementResponsibleParty[];
 }
