@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { detailsRoutes } from './compliance-and-enforcement.module';
 import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-compliance-and-enforcement',
@@ -19,8 +20,9 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   file?: ComplianceAndEnforcementDto;
 
   constructor(
-    private route: ActivatedRoute,
-    private service: ComplianceAndEnforcementService,
+    private readonly route: ActivatedRoute,
+    private readonly service: ComplianceAndEnforcementService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,11 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   }
 
   async loadFile(fileNumber: string) {
-    await this.service.loadFile(fileNumber, { withProperty: true });
+    try {
+      await this.service.loadFile(fileNumber, { withProperty: true });
+    } catch (error) {
+      console.error('Error loading file:', error);
+      this.toastService.showErrorToast('Failed to load file');
+    }
   }
 }
