@@ -25,8 +25,9 @@ export class ComplianceAndEnforcementController {
   async fetchByFileNumber(
     @Param('fileNumber') fileNumber: string,
     @Query('withSubmitters', ParseBoolPipe) withSubmitters: boolean = false,
+    @Query('withProperty', ParseBoolPipe) withProperty: boolean = false,
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.fetchByFileNumber(fileNumber, withSubmitters);
+    return await this.service.fetchByFileNumber(fileNumber, withSubmitters, withProperty);
   }
 
   @Post('')
@@ -39,13 +40,14 @@ export class ComplianceAndEnforcementController {
     return await this.service.create(createDto, createInitialSubmitter, createInitialProperty);
   }
 
-  @Patch('/:uuid')
+  @Patch('/:id')
   @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
   async update(
-    @Param('uuid') uuid: string,
+    @Param('id') id: string,
     @Body() updateDto: UpdateComplianceAndEnforcementDto,
+    @Query('idType') idType: string = 'uuid',
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.update(uuid, updateDto);
+    return await this.service.update(id, updateDto, { idType });
   }
 
   @Delete('/:uuid')

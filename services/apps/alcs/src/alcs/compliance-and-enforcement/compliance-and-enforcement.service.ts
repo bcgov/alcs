@@ -31,7 +31,11 @@ export class ComplianceAndEnforcementService {
     return this.mapper.mapArray(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async fetchByUuid(uuid: string, withSubmitters = false, withProperties = false): Promise<ComplianceAndEnforcementDto> {
+  async fetchByUuid(
+    uuid: string,
+    withSubmitters = false,
+    withProperties = false,
+  ): Promise<ComplianceAndEnforcementDto> {
     const entity = await this.repository.findOne({
       where: {
         uuid,
@@ -49,14 +53,20 @@ export class ComplianceAndEnforcementService {
     return this.mapper.map(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async fetchByFileNumber(fileNumber: string, withSubmitters = false, withProperties = false): Promise<ComplianceAndEnforcementDto> {
+  async fetchByFileNumber(
+    fileNumber: string,
+    withSubmitters = false,
+    withProperty = false,
+  ): Promise<ComplianceAndEnforcementDto> {
     const entity = await this.repository.findOne({
       where: {
         fileNumber,
       },
       relations: {
         submitters: withSubmitters,
-        properties: withProperties,
+        properties: withProperty && {
+          localGovernment: true,
+        },
       },
     });
 
@@ -87,8 +97,12 @@ export class ComplianceAndEnforcementService {
     return this.mapper.map(savedEntity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async update(uuid: string, updateDto: UpdateComplianceAndEnforcementDto): Promise<ComplianceAndEnforcementDto> {
-    const entity = await this.repository.findOneBy({ uuid });
+  async update(
+    id: string,
+    updateDto: UpdateComplianceAndEnforcementDto,
+    options: { idType: string } = { idType: 'uuid' },
+  ): Promise<ComplianceAndEnforcementDto> {
+    const entity = await this.repository.findOneBy({ [options.idType]: id });
     if (entity === null) {
       throw new ServiceConflictException('A C&E file with this UUID does not exist. Unable to update.');
     }

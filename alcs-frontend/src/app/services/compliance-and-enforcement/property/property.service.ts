@@ -16,6 +16,10 @@ export class ComplianceAndEnforcementPropertyService {
     return await firstValueFrom(this.http.get<ComplianceAndEnforcementPropertyDto[]>(`${this.url}/${fileNumber}`));
   }
 
+  async fetchByFileUuid(fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto> {
+    return await firstValueFrom(this.http.get<ComplianceAndEnforcementPropertyDto>(`${this.url}/${fileUuid}`));
+  }
+
   create(createDto: UpdateComplianceAndEnforcementPropertyDto): Observable<ComplianceAndEnforcementPropertyDto> {
     return this.http.post<ComplianceAndEnforcementPropertyDto>(this.url, createDto);
   }

@@ -249,16 +249,14 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async loadFile(fileNumber: string) {
     try {
-      this.file = await this.complianceAndEnforcementService.fetchByFileNumber(fileNumber, true);
+      this.file = await this.complianceAndEnforcementService.fetchByFileNumber(fileNumber, { withSubmitters: true });
       this.submitter = this.file.submitters[0];
       this.initialSubmissionType = this.file.initialSubmissionType ?? undefined;
 
       // Load property data
       if (this.file.uuid) {
         try {
-          const properties = await this.complianceAndEnforcementPropertyService.fetchParcels(this.file.uuid);
-          // There should only ever be one while in draft
-          this.property = properties[0];
+          this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid);
 
           if (this.propertyComponent && this.property) {
             this.propertyComponent.property = this.property;

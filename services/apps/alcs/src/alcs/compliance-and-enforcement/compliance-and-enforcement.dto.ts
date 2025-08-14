@@ -6,6 +6,7 @@ import {
   UpdateComplianceAndEnforcementSubmitterDto,
 } from './submitter/submitter.dto';
 import { Type } from 'class-transformer';
+import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
 
 export class ComplianceAndEnforcementDto {
   @AutoMap()
@@ -37,6 +38,9 @@ export class ComplianceAndEnforcementDto {
 
   @AutoMap()
   submitters?: ComplianceAndEnforcementSubmitterDto[];
+
+  @AutoMap()
+  property?: ComplianceAndEnforcementPropertyDto;
 }
 
 export class UpdateComplianceAndEnforcementDto {

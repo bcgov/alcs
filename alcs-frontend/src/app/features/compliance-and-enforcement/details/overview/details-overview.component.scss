@@ -1,0 +1,47 @@
+@use '../../../../../styles/colors';
+
+h5 {
+  margin: 16px 0 !important;
+}
+
+section {
+  margin: 32px 0;
+}
+
+:host::ng-deep {
+  .toggle .mdc-label {
+    font-size: 16px;
+  }
+}
+
+.button-container {
+  button:not(:last-child) {
+    margin-right: 2px !important;
+  }
+
+  .save {
+    color: colors.$primary-color;
+  }
+}
+
+.edit-button {
+  height: 24px;
+  width: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.edit-icon {
+  font-size: inherit;
+  line-height: 22px;
+}
+
+.toggle-container {
+  width: 50%;
+}
+
+.status-display {
+  display: flex;
+  align-items: center;
+}

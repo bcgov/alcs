@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
+import { LocalGovernmentDto } from '../../admin-local-government/admin-local-government.dto';
 
 export interface ComplianceAndEnforcementPropertyDto {
   uuid: string;
@@ -15,7 +16,7 @@ export interface ComplianceAndEnforcementPropertyDto {
   areaHectares: number;
   alrPercentage: number;
   alcHistory: string;
-  localGovernment?: BaseCodeDto;
+  localGovernment?: LocalGovernmentDto;
   ownershipType?: BaseCodeDto;
   certificateOfTitleUuid?: string;
 }
