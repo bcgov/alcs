@@ -173,8 +173,9 @@ export class CreateComplianceAndEnforcementResponsiblePartyDto {
   @IsNumber()
   ownerSince?: number | null;
 
+  @IsOptional()
   @IsString()
-  corporateSummaryUuid: string | null;
+  corporateSummaryUuid?: string | null;
 }
 
 export class UpdateComplianceAndEnforcementResponsiblePartyDto {
