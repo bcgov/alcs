@@ -33,6 +33,21 @@ import { Section } from '../../../services/compliance-and-enforcement/documents/
 import { ResponsiblePartiesComponent } from '../responsible-parties/responsible-parties.component';
 import { ResponsiblePartiesService } from '../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 
+export const submissionDocumentOptions: DocumentUploadDialogData = {
+  // A necessary hack to make this work without rewriting lots of code
+  fileId: '',
+  allowedVisibilityFlags: [],
+  allowsFileEdit: true,
+  allowedDocumentSources: [
+    DOCUMENT_SOURCE.PUBLIC,
+    DOCUMENT_SOURCE.LFNG,
+    DOCUMENT_SOURCE.BC_GOVERNMENT,
+    DOCUMENT_SOURCE.OTHER_AGENCY,
+    DOCUMENT_SOURCE.ALC,
+  ],
+  allowedDocumentTypes: [DOCUMENT_TYPE.COMPLAINT, DOCUMENT_TYPE.REFERRAL],
+};
+
 @Component({
   selector: 'app-compliance-and-enforcement-draft',
   templateUrl: './draft.component.html',
@@ -41,20 +56,7 @@ import { ResponsiblePartiesService } from '../../../services/compliance-and-enfo
 export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   Section = Section;
 
-  submissionDocumentOptions: DocumentUploadDialogData = {
-    // A necessary hack to make this work without rewriting lots of code
-    fileId: '',
-    allowedVisibilityFlags: [],
-    allowsFileEdit: true,
-    allowedDocumentSources: [
-      DOCUMENT_SOURCE.PUBLIC,
-      DOCUMENT_SOURCE.LFNG,
-      DOCUMENT_SOURCE.BC_GOVERNMENT,
-      DOCUMENT_SOURCE.OTHER_AGENCY,
-      DOCUMENT_SOURCE.ALC,
-    ],
-    allowedDocumentTypes: [DOCUMENT_TYPE.COMPLAINT, DOCUMENT_TYPE.REFERRAL],
-  };
+  submissionDocumentOptions = submissionDocumentOptions;
 
   ownershipDocumentOptions: DocumentUploadDialogData = {
     // A necessary hack to make this work without rewriting lots of code

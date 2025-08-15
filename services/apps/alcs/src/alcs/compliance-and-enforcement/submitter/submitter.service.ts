@@ -62,6 +62,7 @@ export class ComplianceAndEnforcementSubmitterService {
 
   async create(dto: UpdateComplianceAndEnforcementSubmitterDto): Promise<ComplianceAndEnforcementSubmitterDto> {
     const entity = this.mapper.map(dto, UpdateComplianceAndEnforcementSubmitterDto, ComplianceAndEnforcementSubmitter);
+    entity.dateAdded = new Date();
     const savedEntity = await this.repository.save(entity);
 
     return this.mapper.map(savedEntity, ComplianceAndEnforcementSubmitter, ComplianceAndEnforcementSubmitterDto);

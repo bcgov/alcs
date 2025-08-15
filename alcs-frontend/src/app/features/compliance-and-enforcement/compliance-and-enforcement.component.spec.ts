@@ -40,7 +40,7 @@ describe('ComplianceAndEnforcementComponent', () => {
 
   it('should call service.loadFile with correct arguments in loadFile()', async () => {
     await component.loadFile('456');
-    expect(mockService.loadFile).toHaveBeenCalledWith('456', { withProperty: true });
+    expect(mockService.loadFile).toHaveBeenCalledWith('456', undefined);
   });
 
   it('should complete destroy subject on ngOnDestroy', () => {

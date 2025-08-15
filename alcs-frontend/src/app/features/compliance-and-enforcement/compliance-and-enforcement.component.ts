@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { detailsRoutes } from './compliance-and-enforcement.module';
 import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import {
+  ComplianceAndEnforcementService,
+  FetchOptions,
+} from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
@@ -21,6 +24,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly service: ComplianceAndEnforcementService,
     private readonly toastService: ToastService,
   ) {}
@@ -30,12 +34,18 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
       this.file = file ?? undefined;
     });
 
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd && this.fileNumber) {
+        this.loadFile(this.fileNumber, { withSubmitters: true });
+      }
+    });
+
     this.route.params.pipe(takeUntil(this.$destroy)).subscribe(async (params) => {
       const { fileNumber } = params;
 
       if (fileNumber) {
         this.fileNumber = fileNumber;
-        this.loadFile(fileNumber);
+        this.loadFile(fileNumber, { withSubmitters: true });
       }
     });
   }
@@ -45,9 +55,9 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async loadFile(fileNumber: string) {
+  async loadFile(fileNumber: string, options?: FetchOptions) {
     try {
-      await this.service.loadFile(fileNumber, { withProperty: true });
+      await this.service.loadFile(fileNumber, options);
     } catch (error) {
       console.error('Error loading file:', error);
       this.toastService.showErrorToast('Failed to load file');
