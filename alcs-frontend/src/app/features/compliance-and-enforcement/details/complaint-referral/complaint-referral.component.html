@@ -1,0 +1,38 @@
+<ng-container *ngIf="editing === null">
+  <section class="file-section">
+    <app-compliance-and-enforcement-complaint-referral-overview [file]="file" />
+
+    <div class="edit-section-button-container">
+      <a mat-flat-button role="button" color="accent" [routerLink]="'overview/edit'" class="edit-section-button"
+        >Edit Section</a
+      >
+    </div>
+  </section>
+
+  <section class="file-section">
+    <app-compliance-and-enforcement-complaint-referral-submitters [file]="file" />
+  </section>
+
+  <section class="file-section">
+    <app-compliance-and-enforcement-documents
+      #submissionDocumentsComponent
+      [title]="'Complaint/Referral Submission'"
+      [fileNumber]="fileNumber"
+      [options]="submissionDocumentOptions"
+      [section]="Section.SUBMISSION"
+    />
+  </section>
+</ng-container>
+
+<ng-container *ngIf="editing === 'overview'">
+  <form [formGroup]="form">
+    <section class="form-section">
+      <app-compliance-and-enforcement-overview #overviewComponent [parentForm]="form" [file]="file" />
+    </section>
+
+    <div class="button-container">
+      <a mat-flat-button [routerLink]="'../..'">Cancel</a>
+      <button mat-flat-button color="primary" (click)="save()">Save</button>
+    </div>
+  </form>
+</ng-container>

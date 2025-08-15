@@ -1,0 +1,47 @@
+<h3>Complaint / Referral Overview</h3>
+
+<ng-template #noData>
+  <div class="no-data">No Data</div>
+</ng-template>
+
+<div class="inset">
+  <div class="field">
+    <div class="field-heading">Date Submitted</div>
+
+    <ng-container *ngIf="dateSubmitted !== undefined; else noData">
+      {{ dateSubmitted }}
+    </ng-container>
+  </div>
+
+  <div class="field">
+    <div class="field-heading">Initial Submission Type</div>
+
+    <ng-container *ngIf="initialSubmissionType; else noData">
+      {{ initialSubmissionType }}
+    </ng-container>
+  </div>
+
+  <div class="field full-width">
+    <div class="field-heading">Alleged Contravention Narrative</div>
+
+    <ng-container *ngIf="allegedContraventionNarrative; else noData">
+      {{ allegedContraventionNarrative }}
+    </ng-container>
+  </div>
+
+  <div class="field full-width">
+    <div class="field-heading">Alleged Activity</div>
+
+    <ng-container *ngIf="allegedActivity; else noData">
+      {{ allegedActivity }}
+    </ng-container>
+  </div>
+
+  <div class="field full-width">
+    <div class="field-heading">Intake Notes</div>
+
+    <ng-container *ngIf="intakeNotes; else noData">
+      {{ intakeNotes }}
+    </ng-container>
+  </div>
+</div>

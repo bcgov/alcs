@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ComplianceAndEnforcementDocumentDto } from '../../../services/compliance-and-enforcement/documents/document.dto';
 import { MatSort } from '@angular/material/sort';
@@ -20,7 +20,7 @@ import { ToastService } from '../../../services/toast/toast.service';
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss'],
 })
-export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDestroy {
+export class ComplianceAndEnforcementDocumentsComponent implements OnDestroy {
   $destroy = new Subject<void>();
 
   isPatching = false;
@@ -47,8 +47,10 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnInit, OnDes
     private toastService: ToastService,
   ) {}
 
-  ngOnInit() {
-    this.loadDocuments();
+  ngOnChanges(): void {
+    if (this.fileNumber && this.section) {
+      this.loadDocuments();
+    }
   }
 
   openEditDialog(document: ComplianceAndEnforcementDocumentDto) {
