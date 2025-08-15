@@ -20,7 +20,7 @@ import {
 import { ComplianceAndEnforcementService } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { OverviewComponent } from '../overview/overview.component';
 import { ToastService } from '../../../services/toast/toast.service';
-import { FormGroup } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { SubmitterComponent } from '../submitter/submitter.component';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
@@ -257,7 +257,9 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       // Load property data
       if (this.file.uuid) {
         try {
-          this.property = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid);
+          const property = await this.complianceAndEnforcementPropertyService.fetchParcels(this.file.uuid);
+          
+          this.property = property[0];
 
           if (this.propertyComponent && this.property) {
             this.propertyComponent.property = this.property;
@@ -351,6 +353,108 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toastService.showErrorToast('Failed to discard draft');
     } finally {
       await this.router.navigate(['/home']);
+    }
+  }
+
+  async onFinishCreateFileClicked() {
+    // Ensure child components and file exist
+    if (!this.overviewComponent || !this.submitterComponent || !this.propertyComponent || !this.file?.uuid || !this.responsiblePartiesComponent) {
+      this.toastService.showErrorToast('Something went wrong, please refresh the page and try again');
+      return;
+    }
+
+    // Trigger validation across all child forms
+    const controlsToValidate: FormGroup[] = [
+      this.overviewComponent.form,
+      this.submitterComponent.form,
+      this.propertyComponent.form,
+    ];
+
+    controlsToValidate.forEach((fg) => {
+      fg.markAllAsTouched();
+      fg.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+    });
+
+    // Ensure property local government display control syncs validation (may have to go back to the local gov validation)
+    try {
+      this.propertyComponent.onLocalGovernmentBlur();
+    } catch {}
+    this.propertyComponent.localGovernmentControl.markAsTouched();
+    this.propertyComponent.localGovernmentControl.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+
+    // Trigger validation for Responsible Parties form array and nested director forms
+    if (this.responsiblePartiesComponent?.form) {
+      this.responsiblePartiesComponent.form.controls.forEach((group) => {
+        group.markAllAsTouched();
+        group.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+        const directors = group.get('directors') as FormArray | null;
+        directors?.controls.forEach((dg) => {
+          dg.markAllAsTouched();
+          dg.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+        });
+      });
+    }
+
+    // Validate that at least one responsible party is added
+    const hasValidResponsibleParties = this.responsiblePartiesComponent?.validateRequiredParties() ?? false;
+
+    // If any form is invalid, show error toast and scroll to first error
+    const hasInvalid =
+      controlsToValidate.some((fg) => fg.invalid) ||
+      this.propertyComponent.localGovernmentControl.invalid ||
+      (this.responsiblePartiesComponent?.form.controls.some((g) => g.invalid) ?? false) ||
+      !hasValidResponsibleParties;
+    if (hasInvalid) {
+      this.toastService.showErrorToast('Please correct all errors before submitting the form');
+      // Attempt to scroll to first element with .ng-invalid within the form ( will check with SO if this is necessary)
+      
+        const el = document.getElementsByClassName('ng-invalid');
+        if (el && el.length > 0) {
+          const target = Array.from(el).find((n) => n.nodeName !== 'FORM') as HTMLElement | undefined;
+          target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      
+      return;
+    }
+
+    // Persist latest values before finalizing (same as save but without navigate)
+    const overviewUpdate = this.overviewComponent.$changes.getValue();
+    const submitterUpdate = this.submitterComponent.$changes.getValue();
+    const propertyUpdate = this.propertyComponent.$changes.getValue();
+
+    try {
+      await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, overviewUpdate));
+
+      if (this.submitter?.uuid) {
+        await firstValueFrom(this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitterUpdate));
+      } else {
+        this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create({
+          ...submitterUpdate,
+          fileUuid: this.file.uuid,
+        }));
+      }
+
+      if (this.property?.uuid) {
+        await firstValueFrom(this.complianceAndEnforcementPropertyService.update(this.property.uuid, propertyUpdate));
+      } else {
+        this.property = await firstValueFrom(
+          this.complianceAndEnforcementPropertyService.create({
+            fileUuid: this.file.uuid,
+            ...cleanPropertyUpdate(propertyUpdate),
+          }),
+        );
+      }
+
+      // Mark file as submitted
+      await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, { 
+        dateSubmitted: Date.now() 
+      }));
+
+      this.toastService.showSuccessToast('C&E file created');
+      await this.router.navigate(['/home']);
+    } catch (error) {
+      console.error('Error finalizing C&E file', error);
+      this.toastService.showErrorToast('Failed to create C&E file. Please try again.');
     }
   }
 

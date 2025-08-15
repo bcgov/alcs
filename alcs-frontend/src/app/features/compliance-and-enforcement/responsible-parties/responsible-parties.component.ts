@@ -37,6 +37,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   form = new FormArray<FormGroup>([]);
 
   isLoading = false;
+  showRequiredError = false;
 
   // Prevent duplicate create calls for the same form during rapid value changes
   private creatingForms = new WeakSet<FormGroup>();
@@ -409,6 +410,22 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   refreshFormForPropertyChange() {
     // This method is called when property ownership changes to ensure proper form state
     this.buildFormArray();
+  }
+
+  validateRequiredParties(): boolean {
+    // Only require parties for fee simple (non-Crown) properties
+    if (this.isPropertyCrown) {
+      this.showRequiredError = false;
+      return true;
+    }
+    
+    const hasParties = this.form.length > 0;
+    this.showRequiredError = !hasParties;
+    return hasParties;
+  }
+
+  markAsRequiredError() {
+    this.showRequiredError = true;
   }
 
   ngOnDestroy(): void {
