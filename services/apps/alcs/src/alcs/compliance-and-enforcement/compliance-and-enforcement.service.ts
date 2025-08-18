@@ -8,10 +8,12 @@ import { Mapper } from 'automapper-core';
 import {
   ServiceConflictException,
   ServiceNotFoundException,
+  ServiceValidationException,
 } from '../../../../../libs/common/src/exceptions/base.exception';
 import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
 import { ComplianceAndEnforcementPropertyService } from './property/property.service';
 import { ComplianceAndEnforcementDocument } from './document/document.entity';
+import { ComplianceAndEnforcementValidatorService, ValidatedComplianceAndEnforcement } from './compliance-and-enforcement-validator.service';
 
 @Injectable()
 export class ComplianceAndEnforcementService {
@@ -21,6 +23,7 @@ export class ComplianceAndEnforcementService {
     @InjectMapper() private mapper: Mapper,
     private readonly submitterService: ComplianceAndEnforcementSubmitterService,
     private readonly propertyService: ComplianceAndEnforcementPropertyService,
+    private readonly validatorService: ComplianceAndEnforcementValidatorService,
   ) {}
 
   async fetchAll(): Promise<ComplianceAndEnforcementDto[]> {
@@ -176,5 +179,52 @@ export class ComplianceAndEnforcementService {
       // Finally delete the C&E File at the end of all the other deletions
       return await manager.delete(ComplianceAndEnforcement, { uuid: file.uuid });
     });
+  }
+
+  async submit(uuid: string): Promise<ComplianceAndEnforcementDto> {
+    // Get the C&E file with all related data
+    const entity = await this.repository.findOne({
+      where: { uuid },
+      relations: ['submitters', 'properties', 'responsibleParties'],
+    });
+
+    if (!entity) {
+      throw new ServiceNotFoundException('A C&E file with this UUID does not exist. Unable to submit.');
+    }
+
+    // Get submitters, properties, and responsible parties
+    const submitters = await this.submitterService.fetchByFileNumber(entity.fileNumber);
+    const properties = await this.propertyService.fetchParcels(entity.fileNumber);
+    
+    // Get responsible parties with directors
+    const responsibleParties = await this.repository.manager.find(
+      (await import('./responsible-parties/responsible-party.entity')).ComplianceAndEnforcementResponsibleParty,
+      { 
+        where: { fileUuid: uuid }, 
+        relations: ['directors'] 
+      }
+    );
+
+    // Validate the submission
+    const validationResult = await this.validatorService.validateSubmission(
+      entity,
+      submitters,
+      properties,
+      responsibleParties,
+    );
+
+    if (validationResult.errors.length > 0) {
+      // Create a detailed error message
+      const errorMessages = validationResult.errors.map(error => error.message).join('; ');
+      throw new ServiceValidationException(`Validation failed: ${errorMessages}`);
+    }
+
+    // If validation passes, mark as submitted
+    const validatedSubmission = validationResult.validatedSubmission as ValidatedComplianceAndEnforcement;
+    validatedSubmission.dateSubmitted = new Date();
+
+    const savedEntity = await this.repository.save(validatedSubmission);
+
+    return this.mapper.map(savedEntity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 }

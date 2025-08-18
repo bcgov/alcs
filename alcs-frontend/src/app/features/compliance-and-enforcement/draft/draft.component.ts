@@ -449,12 +449,71 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, { 
         dateSubmitted: Date.now() 
       }));
+            // Now submit the form - this will run backend validation
+      await this.complianceAndEnforcementService.submit(this.file.uuid);
 
       this.toastService.showSuccessToast('C&E file created');
       await this.router.navigate(['/home']);
-    } catch (error) {
-      console.error('Error finalizing C&E file', error);
-      this.toastService.showErrorToast('Failed to create C&E file. Please try again.');
+    } catch (error: any) {
+      // Check if it's a validation error from the backend
+      if (error.status === 400 && error.error?.message?.includes('Validation failed')) {
+        this.toastService.showErrorToast('Please correct all errors before submitting the form');
+        
+        // Trigger client-side validation to show field errors
+        this.triggerClientSideValidation();
+        
+        // Scroll to first error
+        setTimeout(() => {
+          const el = document.getElementsByClassName('ng-invalid');
+          if (el && el.length > 0) {
+            const target = Array.from(el).find((n) => n.nodeName !== 'FORM') as HTMLElement | undefined;
+            target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+      } else {
+        this.toastService.showErrorToast('Failed to create C&E file. Please try again.');
+      }
+    }
+  }
+
+  private triggerClientSideValidation() {
+    // Trigger validation across all child forms to show field errors
+    const controlsToValidate: FormGroup[] = [
+      this.overviewComponent?.form,
+      this.submitterComponent?.form,
+      this.propertyComponent?.form,
+    ].filter(Boolean) as FormGroup[];
+
+    controlsToValidate.forEach((fg) => {
+      fg.markAllAsTouched();
+      fg.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+    });
+
+    // Ensure property local government display control syncs validation
+    if (this.propertyComponent) {
+      try {
+        this.propertyComponent.onLocalGovernmentBlur();
+      } catch (error) {
+        // Local government blur validation failed, continue
+      }
+      this.propertyComponent.localGovernmentControl.markAsTouched();
+      this.propertyComponent.localGovernmentControl.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+    }
+
+    // Trigger validation for Responsible Parties form array and nested director forms
+    if (this.responsiblePartiesComponent?.form) {
+      this.responsiblePartiesComponent.form.controls.forEach((group) => {
+        group.markAllAsTouched();
+        group.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+        
+        const directors = group.get('directors') as FormArray | null;
+        if (directors) {
+          directors.controls.forEach((dg) => {
+            dg.markAllAsTouched();
+            dg.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+          });
+        }
+      });
     }
   }
 
