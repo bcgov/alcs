@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Subject, takeUntil, firstValueFrom, EMPTY, catchError } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil, firstValueFrom, EMPTY, catchError, debounceTime } from 'rxjs';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import moment, { Moment } from 'moment';
@@ -15,6 +15,7 @@ import { ResponsiblePartiesService } from '../../../services/compliance-and-enfo
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { strictEmailValidator } from '../../../shared/validators/email-validator';
+import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../constants';
 
 @Component({
   selector: 'app-compliance-and-enforcement-responsible-parties',
@@ -37,6 +38,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   form = new FormArray<FormGroup>([]);
 
   isLoading = false;
+  showRequiredError = false;
 
   // Prevent duplicate create calls for the same form during rapid value changes
   private creatingForms = new WeakSet<FormGroup>();
@@ -165,6 +167,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   subscribeToFormChanges(partyForm: FormGroup, existingParty?: ResponsiblePartyDto) {
     partyForm.valueChanges
       .pipe(
+        debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
         takeUntil(this.$destroy),
         catchError((error) => {
           console.error('Error in form changes', error);
@@ -409,6 +412,22 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   refreshFormForPropertyChange() {
     // This method is called when property ownership changes to ensure proper form state
     this.buildFormArray();
+  }
+
+  validateRequiredParties(): boolean {
+    // Only require parties for fee simple (non-Crown) properties
+    if (this.isPropertyCrown) {
+      this.showRequiredError = false;
+      return true;
+    }
+    
+    const hasParties = this.form.length > 0;
+    this.showRequiredError = !hasParties;
+    return hasParties;
+  }
+
+  markAsRequiredError() {
+    this.showRequiredError = true;
   }
 
   ngOnDestroy(): void {

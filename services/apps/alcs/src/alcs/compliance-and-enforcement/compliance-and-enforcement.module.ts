@@ -22,6 +22,7 @@ import { ComplianceAndEnforcementResponsiblePartyProfile } from './responsible-p
 import { ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDirector } from './responsible-parties/entities';
 import { DocumentCode } from '../../document/document-code.entity';
 import { DocumentModule } from '../../document/document.module';
+import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { DocumentModule } from '../../document/document.module';
     ComplianceAndEnforcementPropertyService,
     ComplianceAndEnforcementDocumentService,
     ComplianceAndEnforcementResponsiblePartyService,
+    ComplianceAndEnforcementValidatorService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
@@ -61,6 +63,7 @@ import { DocumentModule } from '../../document/document.module';
     ComplianceAndEnforcementPropertyService,
     ComplianceAndEnforcementDocumentService,
     ComplianceAndEnforcementResponsiblePartyService,
+    ComplianceAndEnforcementValidatorService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,

@@ -78,4 +78,8 @@ export class ComplianceAndEnforcementService {
   async delete(uuid: string): Promise<UpdateComplianceAndEnforcementDto> {
     return await firstValueFrom(this.http.delete<UpdateComplianceAndEnforcementDto>(`${this.url}/${uuid}`));
   }
+
+  async submit(uuid: string): Promise<ComplianceAndEnforcementDto> {
+    return await firstValueFrom(this.http.post<ComplianceAndEnforcementDto>(`${this.url}/${uuid}/submit`, {}));
+  }
 }

@@ -301,8 +301,28 @@
   }
 }
 
-.add-party-button {
+.add-party-section {
   margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .validation-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: $error-color;
+    font-size: 0.875rem;
+
+    .error-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.add-party-button {
   display: flex;
   align-items: center;
   justify-content: center;

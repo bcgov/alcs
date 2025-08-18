@@ -50,6 +50,12 @@ export class ComplianceAndEnforcementController {
     return await this.service.update(id, updateDto, { idType });
   }
 
+  @Post('/:id/submit')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async submit(@Param('id') id: string): Promise<ComplianceAndEnforcementDto> {
+    return await this.service.submit(id);
+  }
+
   @Delete('/:uuid')
   @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
   async delete(@Param('uuid') uuid: string): Promise<DeleteResult> {

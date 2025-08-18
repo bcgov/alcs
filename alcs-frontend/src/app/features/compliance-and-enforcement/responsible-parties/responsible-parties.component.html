@@ -226,17 +226,24 @@
     </form>
   </div>
 
-  <!-- Add Party Button -->
-  <button
-    mat-flat-button
-    color="primary"
-    [matMenuTriggerFor]="addPartyMenu"
-    class="add-party-button"
-  >
-    <span *ngIf="form.length === 0">+ ADD PARTY</span>
-    <span *ngIf="form.length > 0">+ ADD ANOTHER PARTY</span>
-    <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
-  </button>
+  <!-- Add Party Button with Error Message -->
+  <div class="add-party-section">
+    <button
+      mat-flat-button
+      color="primary"
+      [matMenuTriggerFor]="addPartyMenu"
+      class="add-party-button"
+    >
+      <span *ngIf="form.length === 0">+ ADD PARTY</span>
+      <span *ngIf="form.length > 0">+ ADD ANOTHER PARTY</span>
+      <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
+    </button>
+    
+    <div *ngIf="showRequiredError && !isPropertyCrown" class="validation-error">
+      <mat-icon class="error-icon">warning</mat-icon>
+      <span>This field is required</span>
+    </div>
+  </div>
 
 
 
