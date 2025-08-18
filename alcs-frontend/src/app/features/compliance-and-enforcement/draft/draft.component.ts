@@ -447,7 +447,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Mark file as submitted
       await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, { 
-        dateSubmitted: Date.now() 
+        dateOpened: Date.now() 
       }));
             // Now submit the form - this will run backend validation
       await this.complianceAndEnforcementService.submit(this.file.uuid);

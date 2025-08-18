@@ -221,7 +221,7 @@ export class ComplianceAndEnforcementService {
 
     // If validation passes, mark as submitted
     const validatedSubmission = validationResult.validatedSubmission as ValidatedComplianceAndEnforcement;
-    validatedSubmission.dateSubmitted = new Date();
+    validatedSubmission.dateOpened = new Date();
 
     const savedEntity = await this.repository.save(validatedSubmission);
 
