@@ -257,9 +257,9 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       // Load property data
       if (this.file.uuid) {
         try {
-          const property = await this.complianceAndEnforcementPropertyService.fetchParcels(this.file.uuid);
+          const properties = await this.complianceAndEnforcementPropertyService.fetchParcels(this.file.uuid);
           
-          this.property = property[0];
+          this.property = properties[0];
 
           if (this.propertyComponent && this.property) {
             this.propertyComponent.property = this.property;
