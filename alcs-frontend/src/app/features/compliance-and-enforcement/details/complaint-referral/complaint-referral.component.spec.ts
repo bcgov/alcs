@@ -4,9 +4,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComplaintReferralComponent } from './complaint-referral.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../../../services/toast/toast.service';
-import { of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import { firstValueFrom } from 'rxjs';
 
 describe('ComplaintReferralComponent', () => {
   let component: ComplaintReferralComponent;
