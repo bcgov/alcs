@@ -184,9 +184,8 @@
     .directors-column-headers {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 2px 16px;
-      // border-radius: 4px;
+      gap: 24px; // Match the gap used in director-row
+      padding: 2px 0;
       font-weight: normal;
       color: #666;
 
@@ -200,17 +199,23 @@
         &.header-name {
           flex: 2;
           color: #666;
+          padding-left: 0; // Remove padding to align with content
         }
 
         &.header-address {
           flex: 3;
           color: #666;
+          padding-left: 0; // Remove padding to align with content
         }
 
         &.header-action {
           width: 80px;
           text-align: center;
           color: #666;
+          
+          &.hidden {
+            visibility: hidden;
+          }
         }
       }
     }
@@ -220,24 +225,15 @@
     .director-row {
       display: flex;
       align-items: flex-start;
-      gap: 16px;
-      padding: 16px;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
+      gap: 24px;
       background-color: #fff;
-      margin-bottom: 12px;
 
-      &:hover {
-        background-color: #f9f9f9;
-      }
-
-      .director-item {
+         .director-item {
         &.director-number {
           width: 50px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: 600;
           min-height: 56px;
         }
 
@@ -261,7 +257,7 @@
         width: 100%;
 
         .mat-mdc-form-field-infix {
-          min-height: 40px;
+          min-height: 0px;
         }
 
         input,
@@ -293,6 +289,7 @@
   .add-director-button {
     border: 1px solid $primary-color;
     color: $primary-color;
+    margin-top: 16px;
     background: transparent;
 
     &:hover {

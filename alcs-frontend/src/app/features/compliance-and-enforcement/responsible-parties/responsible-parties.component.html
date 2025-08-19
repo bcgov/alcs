@@ -122,21 +122,21 @@
             </mat-error>
           </mat-form-field>
         </div>
-
-        <div class="organization-contact-fields">
-          <mat-form-field appearance="outline">
-            <mat-label>Telephone</mat-label>
-            <input matInput formControlName="organizationTelephone" />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="organizationEmail" />
-            <mat-error *ngIf="partyForm.get('organizationEmail')?.hasError('email')">
-              Please enter a valid email address
-            </mat-error>
-          </mat-form-field>
-        </div>
+        <!---->
+        <!-- <div class="organization-contact-fields"> -->
+        <!--   <mat-form-field appearance="outline"> -->
+        <!--     <mat-label>Telephone</mat-label> -->
+        <!--     <input matInput formControlName="organizationTelephone" /> -->
+        <!--   </mat-form-field> -->
+        <!---->
+        <!--   <mat-form-field appearance="outline"> -->
+        <!--     <mat-label>Email</mat-label> -->
+        <!--     <input matInput formControlName="organizationEmail" /> -->
+        <!--     <mat-error *ngIf="partyForm.get('organizationEmail')?.hasError('email')"> -->
+        <!--       Please enter a valid email address -->
+        <!--     </mat-error> -->
+        <!--   </mat-form-field> -->
+        <!-- </div> -->
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Note</mat-label>
@@ -151,9 +151,7 @@
               <div class="header-item header-number">#</div>
               <div class="header-item header-name">Director Name*</div>
               <div class="header-item header-address">Mailing Address*</div>
-              <!-- <div class="header-item header-telephone">Telephone</div> -->
-              <!-- <div class="header-item header-email">Email</div> -->
-              <div class="header-item header-action">Action</div>
+              <div class="header-item header-action" [class.hidden]="getDirectorsArray(i).length <= 1">Action</div>
             </div>
           </div>
 
@@ -205,6 +203,7 @@
 
               <div class="director-item director-action">
                 <button
+                  *ngIf="getDirectorsArray(i).length > 1 && directorIdx > 0"
                   mat-icon-button
                   color="warn"
                   (click)="removeDirector(i, directorIdx)"
@@ -238,7 +237,7 @@
       <span *ngIf="form.length > 0">+ ADD ANOTHER PARTY</span>
       <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
     </button>
-    
+
     <div *ngIf="showRequiredError && !isPropertyCrown" class="validation-error">
       <mat-icon class="error-icon">warning</mat-icon>
       <span>This field is required</span>

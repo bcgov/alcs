@@ -337,6 +337,14 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   }
 
   async removeDirector(partyIndex: number, directorIndex: number) {
+
+    const partyForm = this.form.at(partyIndex);
+    const directorsArray = partyForm.get('directors') as FormArray;
+
+    // Prevent deletion of the last director when there's only one
+    if (directorsArray.length <= 1) {
+      return; // Simply return without showing any message
+    }
     const confirmed = await firstValueFrom(
       this.confirmationDialogService.openDialog({
         body: 'Are you sure you want to delete this Director?',
@@ -420,7 +428,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       this.showRequiredError = false;
       return true;
     }
-    
+
     const hasParties = this.form.length > 0;
     this.showRequiredError = !hasParties;
     return hasParties;
