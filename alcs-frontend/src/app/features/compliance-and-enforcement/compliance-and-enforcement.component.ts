@@ -34,7 +34,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
       this.file = file ?? undefined;
     });
 
-    this.router.events.subscribe((event) => {
+    this.router.events.pipe(takeUntil(this.$destroy)).subscribe((event) => {
       if (event instanceof NavigationEnd && this.fileNumber) {
         this.loadFile(this.fileNumber, { withSubmitters: true });
       }
