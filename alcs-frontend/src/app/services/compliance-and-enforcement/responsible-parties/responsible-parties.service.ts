@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
@@ -7,6 +7,7 @@ import {
   CreateResponsiblePartyDto,
   UpdateResponsiblePartyDto,
   FOIPPACategory,
+  ResponsiblePartyType,
 } from './responsible-parties.dto';
 import { OwnerDto, SubmissionOwnersDto } from '../../../shared/document-upload-dialog/document-upload-dialog.dto';
 
@@ -23,7 +24,7 @@ export class ResponsiblePartiesService {
   }
 
   async fetchSubmission(fileNumber: string): Promise<SubmissionOwnersDto> {
-    const responsibleParties = await this.fetchByFileNumber(fileNumber);
+    const responsibleParties = await this.fetchByFileNumber(fileNumber, ResponsiblePartyType.PROPERTY_OWNER);
     const responsiblePartiesOwners: OwnerDto[] = responsibleParties.map((party) => ({
       ...party,
       displayName: '',
@@ -39,10 +40,16 @@ export class ResponsiblePartiesService {
     };
   }
 
-  async fetchByFileNumber(fileNumber: string): Promise<ResponsiblePartyDto[]> {
-    return await firstValueFrom(
-      this.http.get<ResponsiblePartyDto[]>(`${this.url}/file/${fileNumber}?idType=fileNumber`),
-    );
+  async fetchByFileNumber(fileNumber: string, partyType?: ResponsiblePartyType): Promise<ResponsiblePartyDto[]> {
+    let params = new HttpParams();
+
+    params = params.set('idType', 'fileNumber');
+
+    if (partyType) {
+      params = params.set('partyType', partyType);
+    }
+
+    return await firstValueFrom(this.http.get<ResponsiblePartyDto[]>(`${this.url}/file/${fileNumber}`, { params }));
   }
 
   create(createDto: CreateResponsiblePartyDto): Observable<ResponsiblePartyDto> {

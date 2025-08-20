@@ -1,6 +1,6 @@
 <div class="layout">
   <div class="file">
-    <app-compliance-and-enforcement-details-header [file]="file" />
+    <app-compliance-and-enforcement-details-header [file]="file" [propertyOwnerName]="propertyOwnerName" />
     <div class="content">
       <div class="nav">
         <div *ngFor="let route of detailsRoutes" class="nav-link" data-testid="details-nav-link">

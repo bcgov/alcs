@@ -11,6 +11,7 @@ import {
   UpdateComplianceAndEnforcementResponsiblePartyDto,
 } from './responsible-parties.dto';
 import { DeleteResult } from 'typeorm';
+import { ResponsiblePartyType } from './responsible-party.entity';
 
 @Controller('compliance-and-enforcement/responsible-parties')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -23,11 +24,12 @@ export class ComplianceAndEnforcementResponsiblePartyController {
   async fetchByFileId(
     @Param('id') id: string,
     @Query('idType') idType: string,
+    @Query('partyType') partyType?: ResponsiblePartyType,
   ): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
     if (idType === 'fileNumber') {
-      return await this.service.fetchByFileNumber(id);
+      return await this.service.fetchByFileNumber(id, partyType);
     } else {
-      return await this.service.fetchByFileUuid(id);
+      return await this.service.fetchByFileUuid(id, partyType);
     }
   }
 
