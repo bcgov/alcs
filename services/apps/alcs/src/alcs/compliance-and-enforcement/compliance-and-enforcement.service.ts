@@ -145,12 +145,10 @@ export class ComplianceAndEnforcementService {
     }
 
     if (status === Status.OPEN) {
+      updateDto.dateClosed = null;
+
       if (!entity.dateOpened) {
         updateDto.dateOpened = new Date().getTime();
-      }
-
-      if (entity.dateClosed) {
-        updateDto.dateClosed = null;
       }
     }
 
