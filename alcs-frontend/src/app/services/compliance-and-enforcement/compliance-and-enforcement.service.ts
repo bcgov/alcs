@@ -10,7 +10,7 @@ export enum Status {
   CLOSED = 'Closed',
 }
 
-interface FetchOptions {
+export interface FetchOptions {
   withSubmitters?: boolean;
   withProperty?: boolean;
 }
