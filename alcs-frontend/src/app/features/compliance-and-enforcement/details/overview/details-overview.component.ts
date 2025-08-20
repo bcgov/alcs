@@ -45,7 +45,7 @@ export class DetailsOverviewComponent implements OnInit, OnDestroy {
       return;
     }
 
-    await this.service.setStatus(this.fileNumber, this.status.value);
+    await this.service.setStatus(this.fileNumber, this.status.value, { idType: 'fileNumber' });
     this.service.loadFile(this.fileNumber, { withProperty: true });
 
     this.endEdit();
