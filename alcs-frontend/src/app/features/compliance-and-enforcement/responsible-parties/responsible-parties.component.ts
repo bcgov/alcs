@@ -270,6 +270,9 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       // Clear directors array for organizations
       const directorsArray = partyForm.get('directors') as FormArray;
       directorsArray.clear();
+      
+      // Mark the directors field as dirty to ensure it gets saved
+      directorsArray.markAsDirty();
     } else if (newCategory === FOIPPACategory.ORGANIZATION) {
       // Switching to Organization - clear individual fields
       partyForm.get('individualName')?.setValue('', { emitEvent: false });
@@ -304,6 +307,19 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
       if (confirmed) {
         try {
+          // Clear the directors array first to avoid foreign key constraint issues
+          const directorsArray = partyForm.get('directors') as FormArray;
+          if (directorsArray.length > 0) {
+            directorsArray.clear();
+            
+            // Update the party with empty directors array before deleting
+            const currentParty = this.responsibleParties.find(p => p.uuid === partyUuid);
+            if (currentParty) {
+              await firstValueFrom(this.responsiblePartiesService.update(partyUuid, {
+                directors: []
+              }));
+            }
+          }
           await this.responsiblePartiesService.delete(partyUuid);
           this.form.removeAt(index);
           this.responsibleParties = this.responsibleParties.filter(p => p.uuid !== partyUuid);
