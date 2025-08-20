@@ -69,6 +69,7 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
       this.router.navigate(['../..'], { relativeTo: this.route });
     } catch (error) {
       console.error('Error updating file:', error);
+      this.toastService.showErrorToast('Error loading file');
     }
   }
 
