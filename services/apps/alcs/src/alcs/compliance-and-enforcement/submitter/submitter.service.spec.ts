@@ -53,6 +53,10 @@ describe('ComplianceAndEnforcementSubmitterService', () => {
     service = module.get<ComplianceAndEnforcementSubmitterService>(ComplianceAndEnforcementSubmitterService);
   });
 
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date(0));
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
@@ -95,5 +99,9 @@ describe('ComplianceAndEnforcementSubmitterService', () => {
       expect(await service.update('1', updateDto)).toEqual(resultDto);
       expect(mockComplianceAndEnforcementSubmitterRepository.save).toHaveBeenCalledWith(updateEntity);
     });
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
   });
 });
