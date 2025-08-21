@@ -63,6 +63,13 @@ describe('ResponsiblePartiesComponent', () => {
         directorTelephone: '604-555-0789',
         directorEmail: 'jane.smith@testcorp.com',
       },
+      {
+        uuid: 'director-uuid-2',
+        directorName: 'John Doe',
+        directorMailingAddress: '789 Pine St, Vancouver, BC',
+        directorTelephone: '604-555-1234',
+        directorEmail: 'john.doe@testcorp.com',
+      },
     ],
   };
 
@@ -246,7 +253,13 @@ describe('ResponsiblePartiesComponent', () => {
   });
 
   it('should return directors array for party', () => {
-    component.responsibleParties = [mockResponsibleParty, mockOrganizationParty];
+    // Create a party with only one director for this specific test
+    const singleDirectorParty = {
+      ...mockOrganizationParty,
+      directors: mockOrganizationParty.directors ? [mockOrganizationParty.directors[0]] : []
+    };
+    
+    component.responsibleParties = [mockResponsibleParty, singleDirectorParty];
     component.buildFormArray();
 
     const directorsArray = component.getDirectorsArray(1);
