@@ -188,75 +188,108 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
           return;
         }
 
-        const updateDto: UpdateResponsiblePartyDto = {
-          partyType: formValue.partyType,
-          foippaCategory: formValue.foippaCategory,
-          isPrevious: formValue.isPrevious,
-          ownerSince: formValue.ownerSince?.toDate().getTime() || null,
-          individualName: formValue.individualName,
-          individualMailingAddress: formValue.individualMailingAddress,
-          individualTelephone: formValue.individualTelephone,
-          individualEmail: formValue.individualEmail,
-          individualNote: formValue.individualNote,
-          organizationName: formValue.organizationName,
-          organizationTelephone: formValue.organizationTelephone,
-          organizationEmail: formValue.organizationEmail,
-          organizationNote: formValue.organizationNote,
-          directors: formValue.directors,
-        };
-
-        try {
-          if (existingParty?.uuid) {
-            await firstValueFrom(this.responsiblePartiesService.update(existingParty.uuid, updateDto));
-            this.toastService.showSuccessToast('Responsible party updated');
-          } else if (formValue.uuid && this.responsibleParties.find(p => p.uuid === formValue.uuid)) {
-            // Find the party by UUID and update (only if found in local array)
-            const party = this.responsibleParties.find(p => p.uuid === formValue.uuid)!;
-            await firstValueFrom(this.responsiblePartiesService.update(party.uuid, updateDto));
-            this.toastService.showSuccessToast('Responsible party updated');
-          } else {
-            // Create new party (guard against duplicate in-flight creates for this form)
-            if (this.creatingForms.has(partyForm)) {
-              return;
-            }
-            this.creatingForms.add(partyForm);
-            const createDto: CreateResponsiblePartyDto = {
-              fileUuid: this.fileUuid,
-              partyType: formValue.partyType || ResponsiblePartyType.PROPERTY_OWNER,
-              foippaCategory: formValue.foippaCategory || FOIPPACategory.INDIVIDUAL,
-              isPrevious: updateDto.isPrevious || false,
-              ownerSince: updateDto.ownerSince,
-              individualName: updateDto.individualName,
-              individualMailingAddress: updateDto.individualMailingAddress,
-              individualTelephone: updateDto.individualTelephone,
-              individualEmail: updateDto.individualEmail,
-              individualNote: updateDto.individualNote,
-              organizationName: updateDto.organizationName,
-              organizationTelephone: updateDto.organizationTelephone,
-              organizationEmail: updateDto.organizationEmail,
-              organizationNote: updateDto.organizationNote,
-              directors: updateDto.directors?.map(director => ({
-                directorName: director.directorName || '',
-                directorMailingAddress: director.directorMailingAddress || '',
-                directorTelephone: director.directorTelephone,
-                directorEmail: director.directorEmail,
-              })),
-            };
-            const newParty = await firstValueFrom(this.responsiblePartiesService.create(createDto));
-
-            // Update the form with the new UUID (without triggering valueChanges)
-            partyForm.get('uuid')?.setValue(newParty.uuid, { emitEvent: false });
-            this.responsibleParties.push(newParty);
-            this.toastService.showSuccessToast('Responsible party created');
-            this.creatingForms.delete(partyForm);
-          }
-        } catch (error) {
-          console.error('Error saving responsible party', error);
-          this.toastService.showErrorToast('Failed to save responsible party');
-          this.creatingForms.delete(partyForm);
-        }
+        await this.handleFormValueChange(formValue, partyForm, existingParty);
       });
 
+    this.subscribeToFieldChanges(partyForm);
+  }
+
+  private async handleFormValueChange(formValue: any, partyForm: FormGroup, existingParty?: ResponsiblePartyDto) {
+    const updateDto = this.buildUpdateDto(formValue);
+
+    try {
+      if (existingParty?.uuid) {
+        await this.updateExistingParty(existingParty.uuid, updateDto);
+      } else if (this.shouldUpdateExistingParty(formValue)) {
+        await this.updateExistingParty(formValue.uuid, updateDto);
+      } else {
+        await this.createNewParty(formValue, updateDto, partyForm);
+      }
+    } catch (error) {
+      console.error('Error saving responsible party', error);
+      this.toastService.showErrorToast('Failed to save responsible party');
+      this.creatingForms.delete(partyForm);
+    }
+  }
+
+  private buildUpdateDto(formValue: any): UpdateResponsiblePartyDto {
+    return {
+      partyType: formValue.partyType,
+      foippaCategory: formValue.foippaCategory,
+      isPrevious: formValue.isPrevious,
+      ownerSince: formValue.ownerSince?.toDate().getTime() || null,
+      individualName: formValue.individualName,
+      individualMailingAddress: formValue.individualMailingAddress,
+      individualTelephone: formValue.individualTelephone,
+      individualEmail: formValue.individualEmail,
+      individualNote: formValue.individualNote,
+      organizationName: formValue.organizationName,
+      organizationTelephone: formValue.organizationTelephone,
+      organizationEmail: formValue.organizationEmail,
+      organizationNote: formValue.organizationNote,
+      directors: formValue.directors,
+    };
+  }
+
+  private shouldUpdateExistingParty(formValue: any): boolean {
+    return formValue.uuid && this.responsibleParties.find(p => p.uuid === formValue.uuid);
+  }
+
+  private async updateExistingParty(uuid: string, updateDto: UpdateResponsiblePartyDto) {
+    await firstValueFrom(this.responsiblePartiesService.update(uuid, updateDto));
+    this.toastService.showSuccessToast('Responsible party updated');
+  }
+
+  private async createNewParty(formValue: any, updateDto: UpdateResponsiblePartyDto, partyForm: FormGroup) {
+    // Guard against duplicate in-flight creates for this form
+    if (this.creatingForms.has(partyForm)) {
+      return;
+    }
+
+    this.creatingForms.add(partyForm);
+    const createDto = this.buildCreateDto(formValue, updateDto);
+    
+    try {
+      const newParty = await firstValueFrom(this.responsiblePartiesService.create(createDto));
+      this.handleNewPartyCreated(newParty, partyForm);
+    } finally {
+      this.creatingForms.delete(partyForm);
+    }
+  }
+
+  private buildCreateDto(formValue: any, updateDto: UpdateResponsiblePartyDto): CreateResponsiblePartyDto {
+    return {
+      fileUuid: this.fileUuid!,
+      partyType: formValue.partyType || ResponsiblePartyType.PROPERTY_OWNER,
+      foippaCategory: formValue.foippaCategory || FOIPPACategory.INDIVIDUAL,
+      isPrevious: updateDto.isPrevious || false,
+      ownerSince: updateDto.ownerSince,
+      individualName: updateDto.individualName,
+      individualMailingAddress: updateDto.individualMailingAddress,
+      individualTelephone: updateDto.individualTelephone,
+      individualEmail: updateDto.individualEmail,
+      individualNote: updateDto.individualNote,
+      organizationName: updateDto.organizationName,
+      organizationTelephone: updateDto.organizationTelephone,
+      organizationEmail: updateDto.organizationEmail,
+      organizationNote: updateDto.organizationNote,
+      directors: updateDto.directors?.map(director => ({
+        directorName: director.directorName || '',
+        directorMailingAddress: director.directorMailingAddress || '',
+        directorTelephone: director.directorTelephone,
+        directorEmail: director.directorEmail,
+      })),
+    };
+  }
+
+  private handleNewPartyCreated(newParty: ResponsiblePartyDto, partyForm: FormGroup) {
+    // Update the form with the new UUID (without triggering valueChanges)
+    partyForm.get('uuid')?.setValue(newParty.uuid, { emitEvent: false });
+    this.responsibleParties.push(newParty);
+    this.toastService.showSuccessToast('Responsible party created');
+  }
+
+  private subscribeToFieldChanges(partyForm: FormGroup) {
     // Subscribe to party type and FOIPPA category changes to update validators
     partyForm.get('partyType')?.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
       this.updateValidators(partyForm);
@@ -335,6 +368,10 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
           
           this.form.removeAt(index);
           this.responsibleParties = this.responsibleParties.filter(p => p.uuid !== partyUuid);
+          
+          // Reset deletion flag to allow normal auto-save functionality
+          this.isDeleting = false;
+          
           this.toastService.showSuccessToast('Responsible party deleted');
         } catch (error) {
           console.error('Error deleting responsible party', error);
@@ -440,6 +477,9 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       // Clear the component's data and form
       this.responsibleParties = [];
       this.form.clear();
+
+      // Reset deletion flag to allow normal auto-save functionality
+      this.isDeleting = false;
 
       this.toastService.showSuccessToast('Responsible parties cleared for Crown property');
     } catch (error) {
