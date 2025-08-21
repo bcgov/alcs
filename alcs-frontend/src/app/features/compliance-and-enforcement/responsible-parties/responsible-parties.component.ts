@@ -42,6 +42,9 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
   // Prevent duplicate create calls for the same form during rapid value changes
   private creatingForms = new WeakSet<FormGroup>();
+  
+  // Flag to prevent auto-save during deletion operations
+  private isDeleting = false;
 
   constructor(
     private readonly responsiblePartiesService: ResponsiblePartiesService,
@@ -175,6 +178,11 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe(async (formValue) => {
+        // Skip auto-save if we're in the middle of a deletion operation
+        if (this.isDeleting) {
+          return;
+        }
+        
         if (!this.fileUuid) {
           console.warn('No fileUuid available for responsible party save');
           return;
@@ -321,6 +329,10 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
             }
           }
           await this.responsiblePartiesService.delete(partyUuid);
+          
+          // Set deletion flag to prevent auto-save during form removal
+          this.isDeleting = true;
+          
           this.form.removeAt(index);
           this.responsibleParties = this.responsibleParties.filter(p => p.uuid !== partyUuid);
           this.toastService.showSuccessToast('Responsible party deleted');
@@ -415,6 +427,9 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     if (!this.fileUuid) return;
 
     try {
+      // Set deletion flag to prevent auto-save during bulk deletion
+      this.isDeleting = true;
+      
       // Delete all existing parties from the API
       for (const party of this.responsibleParties) {
         if (party.uuid) {
@@ -430,6 +445,8 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error clearing responsible parties', error);
       this.toastService.showErrorToast('Failed to clear responsible parties');
+      // Reset deletion flag on error as well
+      this.isDeleting = false;
     }
   }
 
