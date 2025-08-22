@@ -49,7 +49,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
       if (fileNumber) {
         this.fileNumber = fileNumber;
-        this.loadFile(fileNumber, { withSubmitters: true });
+        this.loadFile(fileNumber, { withSubmitters: true, withProperty: true });
       }
     });
   }
@@ -68,7 +68,8 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
           fileNumber,
           ResponsiblePartyType.PROPERTY_OWNER,
         );
-        this.propertyOwnerName = parties[0].organizationName || parties[0].individualName;
+
+        this.propertyOwnerName = parties?.[0].organizationName || parties?.[0].individualName;
       }
     } catch (error) {
       console.error('Error loading file:', error);
