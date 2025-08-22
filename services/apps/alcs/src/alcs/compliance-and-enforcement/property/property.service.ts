@@ -96,4 +96,19 @@ export class ComplianceAndEnforcementPropertyService {
   async delete(uuid: string): Promise<DeleteResult> {
     return await this.repository.delete({ uuid });
   }
+
+  async fetchParcelsByFileUuid(fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto[]> {
+    const entity = await this.repository.find({
+      where: {
+        fileUuid,
+      },
+      relations: ['certificateOfTitle'],
+    });
+
+    if (entity === null || entity.length === 0) {
+      throw new ServiceNotFoundException('A property for this C&E file does not exist.');
+    }
+
+    return this.mapper.mapArray(entity, ComplianceAndEnforcementProperty, ComplianceAndEnforcementPropertyDto);
+  }
 }
