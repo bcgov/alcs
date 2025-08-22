@@ -5,7 +5,9 @@
       <div class="first-row">
         <div class="title">
           <h5 class="detail-heading">
-            <div class="file-number">{{ file?.fileNumber }}</div>
+            <div class="file-number">
+              {{ file?.fileNumber }} - {{ file?.property?.civicAddress }} - {{ propertyOwnerName }}
+            </div>
           </h5>
         </div>
       </div>

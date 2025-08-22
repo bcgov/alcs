@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
-import moment from 'moment';
 
 export enum Status {
   OPEN = 'Open',
@@ -67,16 +66,18 @@ export class ComplianceAndEnforcementService {
     return this.http.patch<ComplianceAndEnforcementDto>(`${this.url}/${id}?idType=${options.idType}`, updateDto);
   }
 
-  async setStatus(fileNumber: string, status: Status) {
-    const dto: UpdateComplianceAndEnforcementDto = {
-      dateClosed: status === Status.CLOSED ? moment.now() : null,
-    };
-
-    await firstValueFrom(this.update(fileNumber, dto, { idType: 'fileNumber' }));
+  async setStatus(
+    id: string,
+    status: Status,
+    options: { idType: string } = { idType: 'uuid' },
+  ): Promise<ComplianceAndEnforcementDto> {
+    return await firstValueFrom(
+      this.http.patch<ComplianceAndEnforcementDto>(`${this.url}/${id}/status?idType=${options.idType}`, status),
+    );
   }
 
   async delete(uuid: string): Promise<UpdateComplianceAndEnforcementDto> {
-    return await firstValueFrom(this.http.delete<UpdateComplianceAndEnforcementDto>(`${this.url}/${uuid}`));
+    return await firstValueFrom(this.http.delete<ComplianceAndEnforcementDto>(`${this.url}/${uuid}`));
   }
 
   async submit(uuid: string): Promise<ComplianceAndEnforcementDto> {

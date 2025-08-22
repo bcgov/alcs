@@ -8,6 +8,8 @@ import {
   FetchOptions,
 } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { ResponsiblePartiesService } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
+import { ResponsiblePartyType } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
 
 @Component({
   selector: 'app-compliance-and-enforcement',
@@ -21,11 +23,13 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
   fileNumber?: string;
   file?: ComplianceAndEnforcementDto;
+  propertyOwnerName?: string;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly service: ComplianceAndEnforcementService,
+    private readonly responsiblePartyService: ResponsiblePartiesService,
     private readonly toastService: ToastService,
   ) {}
 
@@ -45,7 +49,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
       if (fileNumber) {
         this.fileNumber = fileNumber;
-        this.loadFile(fileNumber, { withSubmitters: true });
+        this.loadFile(fileNumber, { withSubmitters: true, withProperty: true });
       }
     });
   }
@@ -58,6 +62,15 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   async loadFile(fileNumber: string, options?: FetchOptions) {
     try {
       await this.service.loadFile(fileNumber, options);
+
+      if (this.file) {
+        const parties = await this.responsiblePartyService.fetchByFileNumber(
+          fileNumber,
+          ResponsiblePartyType.PROPERTY_OWNER,
+        );
+
+        this.propertyOwnerName = parties?.[0].organizationName || parties?.[0].individualName;
+      }
     } catch (error) {
       console.error('Error loading file:', error);
       this.toastService.showErrorToast('Failed to load file');

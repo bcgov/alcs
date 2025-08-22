@@ -3,16 +3,19 @@ import { ComplianceAndEnforcementService } from '../../services/compliance-and-e
 import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
 
 describe('ComplianceAndEnforcementComponent', () => {
   let component: ComplianceAndEnforcementComponent;
   let fixture: ComponentFixture<ComplianceAndEnforcementComponent>;
   let mockService: DeepMocked<ComplianceAndEnforcementService>;
   let mockRoute: DeepMocked<ActivatedRoute>;
+  let mockHttpClient: DeepMocked<HttpClient>;
 
   beforeEach(async () => {
     mockService = createMock<ComplianceAndEnforcementService>();
     mockRoute = createMock<ActivatedRoute>();
+    mockHttpClient = createMock();
 
     await TestBed.configureTestingModule({
       imports: [],
@@ -25,6 +28,10 @@ describe('ComplianceAndEnforcementComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: mockRoute,
+        },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
         },
       ],
     });

@@ -31,6 +31,8 @@ export class DetailsHeaderComponent implements OnDestroy {
     return this._file;
   }
 
+  @Input() propertyOwnerName?: string;
+
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();

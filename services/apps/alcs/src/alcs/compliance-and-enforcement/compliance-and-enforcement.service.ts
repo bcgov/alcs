@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DeleteResult, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from './compliance-and-enforcement.entity';
+import { ComplianceAndEnforcement } from './compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
@@ -13,7 +13,15 @@ import {
 import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
 import { ComplianceAndEnforcementPropertyService } from './property/property.service';
 import { ComplianceAndEnforcementDocument } from './document/document.entity';
-import { ComplianceAndEnforcementValidatorService, ValidatedComplianceAndEnforcement } from './compliance-and-enforcement-validator.service';
+import {
+  ComplianceAndEnforcementValidatorService,
+  ValidatedComplianceAndEnforcement,
+} from './compliance-and-enforcement-validator.service';
+
+export enum Status {
+  OPEN = 'Open',
+  CLOSED = 'Closed',
+}
 
 @Injectable()
 export class ComplianceAndEnforcementService {
@@ -120,6 +128,33 @@ export class ComplianceAndEnforcementService {
     return this.mapper.map(savedEntity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
+  async setStatus(
+    id: string,
+    status: Status,
+    options: { idType: string } = { idType: 'uuid' },
+  ): Promise<ComplianceAndEnforcementDto> {
+    const entity = await this.repository.findOneBy({ [options.idType]: id });
+    if (entity === null) {
+      throw new ServiceConflictException('A C&E file with this UUID does not exist. Unable to update.');
+    }
+
+    const updateDto: UpdateComplianceAndEnforcementDto = {};
+
+    if (status === Status.CLOSED) {
+      updateDto.dateClosed = new Date().getTime();
+    }
+
+    if (status === Status.OPEN) {
+      updateDto.dateClosed = null;
+
+      if (!entity.dateOpened) {
+        updateDto.dateOpened = new Date().getTime();
+      }
+    }
+
+    return this.update(id, updateDto, options);
+  }
+
   async delete(uuid: string): Promise<DeleteResult> {
     const manager: any = this.repository.manager as any;
 
@@ -161,7 +196,8 @@ export class ComplianceAndEnforcementService {
         await manager.delete(Director, { uuid: In(directorUuids) });
       }
       if (parties.length > 0) {
-        const Party = (await import('./responsible-parties/responsible-party.entity')).ComplianceAndEnforcementResponsibleParty;
+        const Party = (await import('./responsible-parties/responsible-party.entity'))
+          .ComplianceAndEnforcementResponsibleParty;
         await manager.delete(Party, { fileUuid: file.uuid });
       }
 
@@ -195,14 +231,14 @@ export class ComplianceAndEnforcementService {
     // Get submitters, properties, and responsible parties
     const submitters = await this.submitterService.fetchByFileNumber(entity.fileNumber);
     const properties = await this.propertyService.fetchParcels(entity.fileNumber);
-    
+
     // Get responsible parties with directors
     const responsibleParties = await this.repository.manager.find(
       (await import('./responsible-parties/responsible-party.entity')).ComplianceAndEnforcementResponsibleParty,
-      { 
-        where: { fileUuid: uuid }, 
-        relations: ['directors'] 
-      }
+      {
+        where: { fileUuid: uuid },
+        relations: ['directors'],
+      },
     );
 
     // Validate the submission
@@ -215,7 +251,7 @@ export class ComplianceAndEnforcementService {
 
     if (validationResult.errors.length > 0) {
       // Create a detailed error message
-      const errorMessages = validationResult.errors.map(error => error.message).join('; ');
+      const errorMessages = validationResult.errors.map((error) => error.message).join('; ');
       throw new ServiceValidationException(`Validation failed: ${errorMessages}`);
     }
 

@@ -8,7 +8,11 @@ import {
   ServiceConflictException,
   ServiceNotFoundException,
 } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDirector } from './entities';
+import {
+  ComplianceAndEnforcementResponsibleParty,
+  ComplianceAndEnforcementResponsiblePartyDirector,
+  ResponsiblePartyType,
+} from './entities';
 import {
   ComplianceAndEnforcementResponsiblePartyDto,
   CreateComplianceAndEnforcementResponsiblePartyDto,
@@ -28,9 +32,13 @@ export class ComplianceAndEnforcementResponsiblePartyService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  async fetchByFileUuid(fileUuid: string): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
+  async fetchByFileUuid(
+    fileUuid: string,
+    partyType?: ResponsiblePartyType,
+  ): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
     const entities = await this.repository.find({
       where: {
+        partyType,
         fileUuid,
       },
       relations: ['directors'],
@@ -46,9 +54,13 @@ export class ComplianceAndEnforcementResponsiblePartyService {
     );
   }
 
-  async fetchByFileNumber(fileNumber: string): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
+  async fetchByFileNumber(
+    fileNumber: string,
+    partyType?: ResponsiblePartyType,
+  ): Promise<ComplianceAndEnforcementResponsiblePartyDto[]> {
     const entities = await this.repository.find({
       where: {
+        partyType,
         file: {
           fileNumber,
         },
