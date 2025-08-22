@@ -296,7 +296,6 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     });
 
     partyForm.get('foippaCategory')?.valueChanges.pipe(takeUntil(this.$destroy)).subscribe((newCategory) => {
-      this.updateValidators(partyForm);
       this.clearFieldsOnCategoryChange(partyForm, newCategory);
     });
   }
@@ -308,6 +307,8 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       partyForm.get('organizationTelephone')?.setValue('', { emitEvent: false });
       partyForm.get('organizationEmail')?.setValue('', { emitEvent: false });
       partyForm.get('organizationNote')?.setValue('', { emitEvent: false });
+      partyForm.get('ownerSince')?.setValue(null, { emitEvent: false });
+
       // Clear directors array for organizations
       const directorsArray = partyForm.get('directors') as FormArray;
       directorsArray.clear();
@@ -321,7 +322,13 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
       partyForm.get('individualTelephone')?.setValue('', { emitEvent: false });
       partyForm.get('individualEmail')?.setValue('', { emitEvent: false });
       partyForm.get('individualNote')?.setValue('', { emitEvent: false });
+      partyForm.get('ownerSince')?.setValue(null, { emitEvent: false });
     }
+    
+    // After clearing fields, update validators with a small delay this seems to prevent race conditions with the form value changes
+    setTimeout(() => {
+      this.updateValidators(partyForm);
+    });
   }
 
   addParty() {
@@ -348,23 +355,9 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
       if (confirmed) {
         try {
-          // Clear the directors array first to avoid foreign key constraint issues
-          const directorsArray = partyForm.get('directors') as FormArray;
-          if (directorsArray.length > 0) {
-            directorsArray.clear();
-            
-            // Update the party with empty directors array before deleting
-            const currentParty = this.responsibleParties.find(p => p.uuid === partyUuid);
-            if (currentParty) {
-              await firstValueFrom(this.responsiblePartiesService.update(partyUuid, {
-                directors: []
-              }));
-            }
-          }
-          await this.responsiblePartiesService.delete(partyUuid);
-          
-          // Set deletion flag to prevent auto-save during form removal
+          // Set deletion flag to prevent auto-save during deletion
           this.isDeleting = true;
+          await this.responsiblePartiesService.delete(partyUuid);
           
           this.form.removeAt(index);
           this.responsibleParties = this.responsibleParties.filter(p => p.uuid !== partyUuid);
@@ -376,6 +369,8 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
         } catch (error) {
           console.error('Error deleting responsible party', error);
           this.toastService.showErrorToast('Failed to delete responsible party');
+          // Reset deletion flag on error as well
+          this.isDeleting = false;
         }
       }
     } else {

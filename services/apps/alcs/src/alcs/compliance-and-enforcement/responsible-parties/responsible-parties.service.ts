@@ -142,7 +142,7 @@ export class ComplianceAndEnforcementResponsiblePartyService {
     });
 
     if (!entity) {
-      throw new ServiceConflictException('Responsible party not found. Unable to update.');
+      throw new ServiceNotFoundException('Responsible party not found. Unable to update.');
     }
 
     // Update basic fields
@@ -204,6 +204,11 @@ export class ComplianceAndEnforcementResponsiblePartyService {
 
     if (!entity) {
       throw new ServiceNotFoundException('Responsible party not found. Unable to delete.');
+    }
+
+    // Delete directors first to avoid foreign key constraint violations
+    if (entity.directors && entity.directors.length > 0) {
+      await this.directorRepository.remove(entity.directors);
     }
 
     return await this.repository.delete(uuid);

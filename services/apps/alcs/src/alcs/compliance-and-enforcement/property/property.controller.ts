@@ -16,8 +16,8 @@ export class ComplianceAndEnforcementPropertyController {
 
   @Get('/:fileUuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async fetchParcels(@Param('fileNumber') fileNumber: string): Promise<ComplianceAndEnforcementPropertyDto[]> {
-    return await this.service.fetchParcels(fileNumber);
+  async fetchParcelsByFileUuid(@Param('fileUuid') fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto[]> {
+    return await this.service.fetchParcelsByFileUuid(fileUuid);
   }
 
   @Post('')
