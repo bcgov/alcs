@@ -40,7 +40,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe((event) => {
       if (event instanceof NavigationEnd && this.fileNumber) {
-        this.loadFile(this.fileNumber, { withSubmitters: true });
+        this.loadFile(this.fileNumber, { withSubmitters: true, withProperty: true });
       }
     });
 
@@ -64,12 +64,13 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
       await this.service.loadFile(fileNumber, options);
 
       if (this.file) {
-        const parties = await this.responsiblePartyService.fetchByFileNumber(
+        const owners = await this.responsiblePartyService.fetchByFileNumber(
           fileNumber,
           ResponsiblePartyType.PROPERTY_OWNER,
         );
 
-        this.propertyOwnerName = parties?.[0].organizationName || parties?.[0].individualName;
+        this.propertyOwnerName =
+          (owners?.[0].organizationName || owners?.[0].individualName) + (owners.length > 1 ? ' et al.' : '');
       }
     } catch (error) {
       console.error('Error loading file:', error);
