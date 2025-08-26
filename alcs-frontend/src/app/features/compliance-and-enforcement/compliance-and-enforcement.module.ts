@@ -46,7 +46,7 @@ const routes: Routes = [
   {
     path: ':fileNumber',
     component: ComplianceAndEnforcementComponent,
-    children: detailsRoutes.concat([]),
+    children: detailsRoutes,
   },
   {
     path: ':fileNumber/draft',
