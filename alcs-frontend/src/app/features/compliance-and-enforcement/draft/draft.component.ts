@@ -72,7 +72,6 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       DOCUMENT_SOURCE.OTHER_AGENCY,
       DOCUMENT_SOURCE.ALC,
     ],
-    defaultDocumentSource: DOCUMENT_SOURCE.ALC,
     allowedDocumentTypes: [
       DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
       DOCUMENT_TYPE.CORPORATE_SUMMARY,
