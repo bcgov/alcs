@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
@@ -14,10 +14,17 @@ import { DeleteResult } from 'typeorm';
 export class ComplianceAndEnforcementPropertyController {
   constructor(private service: ComplianceAndEnforcementPropertyService) {}
 
-  @Get('/:fileUuid')
+  @Get('/:id')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async fetchParcelsByFileUuid(@Param('fileUuid') fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto[]> {
-    return await this.service.fetchParcelsByFileUuid(fileUuid);
+  async fetchParcelsByid(
+    @Param('id') id: string,
+    @Query('idType') idType: string,
+  ): Promise<ComplianceAndEnforcementPropertyDto[]> {
+    if (idType === 'fileNumber') {
+      return await this.service.fetchParcels(id);
+    }
+
+    return await this.service.fetchParcelsByFileUuid(id);
   }
 
   @Post('')
