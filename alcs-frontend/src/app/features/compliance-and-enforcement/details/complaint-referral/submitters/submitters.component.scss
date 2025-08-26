@@ -7,7 +7,7 @@
 .inset {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
 
   background-color: colors.$grey-light;
   padding: 24px;
@@ -18,13 +18,15 @@
     justify-content: space-between;
     align-items: center;
     grid-column: span 2;
-    margin-bottom: 24px;
+
+    // &:has(+ *) {
+    //   margin-bottom: 24px;
+    // }
   }
 }
 
 .field {
   width: 100%;
-  margin-bottom: 16px;
 
   &.full-width {
     grid-column: span 2;
