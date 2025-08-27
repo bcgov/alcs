@@ -20,4 +20,34 @@ form {
     align-items: center;
     justify-content: space-between;
   }
+  
+  .form-field-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    grid-column: 1 / -1;
+    
+    .affiliation-field,
+    .additional-info-field {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.validation-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: colors.$error-color;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  margin-bottom: 16px;
+
+  .error-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: colors.$error-color;
+  }
 }

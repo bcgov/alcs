@@ -140,13 +140,17 @@
     align-items: flex-start;
     margin-bottom: 16px;
 
-    .full-width {
-      flex: 1;
-    }
-
+    .individual-name-field,
+    .organization-name-field,
     .owner-since-field {
       flex: 1;
+      display: flex;
+      flex-direction: column;
       margin-bottom: 0;
+    }
+
+    .full-width {
+      flex: 1;
     }
   }
 
@@ -159,6 +163,14 @@
     mat-form-field {
       flex: 1;
     }
+  }
+
+  .individual-address-field,
+  .organization-note-field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 16px;
   }
 
   .full-width {
@@ -237,6 +249,12 @@
           min-height: 56px;
         }
 
+        &.director-name,
+        &.director-address {
+          display: flex;
+          flex-direction: column;
+        }
+
         &.director-name {
           flex: 2;
         }
@@ -310,12 +328,32 @@
     gap: 8px;
     color: $error-color;
     font-size: 0.875rem;
+    margin-top: 4px;
+    margin-bottom: 16px;
 
     .error-icon {
       font-size: 18px;
       width: 18px;
       height: 18px;
+      color: $error-color;
     }
+  }
+}
+
+.validation-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $error-color;
+  font-size: 0.875rem;
+  margin-top: 2px;
+  margin-bottom: 8px;
+
+  .error-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $error-color;
   }
 }
 

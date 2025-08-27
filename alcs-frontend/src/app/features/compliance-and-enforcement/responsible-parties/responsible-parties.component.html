@@ -42,71 +42,89 @@
       <!-- Individual Fields -->
       <div *ngIf="isIndividual(i)" class="individual-section">
         <div class="individual-main-fields">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="individualName" />
-            <mat-error *ngIf="partyForm.get('individualName')?.hasError('required')"> Name is required </mat-error>
-          </mat-form-field>
+          <div class="individual-name-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="individualName" />
+            </mat-form-field>
+            <div *ngIf="partyForm.get('individualName')?.hasError('required') && partyForm.get('individualName')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
 
-          <mat-form-field *ngIf="isPropertyOwner(i)" appearance="outline" class="owner-since-field">
-            <mat-label>Owner Since</mat-label>
-            <input
-              matInput
-              (click)="individualOwnerSincePicker.open()"
-              [matDatepicker]="individualOwnerSincePicker"
-              formControlName="ownerSince"
-              readonly
-            />
-            <mat-datepicker-toggle matSuffix [for]="individualOwnerSincePicker"></mat-datepicker-toggle>
-            <mat-datepicker #individualOwnerSincePicker type="date"></mat-datepicker>
-            <mat-error *ngIf="partyForm.get('ownerSince')?.hasError('required')">
-              Owner Since date is required for Property Owners
-            </mat-error>
-          </mat-form-field>
+          <div *ngIf="isPropertyOwner(i)" class="owner-since-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Since</mat-label>
+              <input
+                matInput
+                (click)="individualOwnerSincePicker.open()"
+                [matDatepicker]="individualOwnerSincePicker"
+                formControlName="ownerSince"
+                readonly
+              />
+              <mat-datepicker-toggle matSuffix [for]="individualOwnerSincePicker"></mat-datepicker-toggle>
+              <mat-datepicker #individualOwnerSincePicker type="date"></mat-datepicker>
+            </mat-form-field>
+            <div *ngIf="partyForm.get('ownerSince')?.hasError('required') && partyForm.get('ownerSince')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
         </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Mailing Address</mat-label>
-          <textarea matInput formControlName="individualMailingAddress" rows="2"></textarea>
-          <mat-error *ngIf="partyForm.get('individualMailingAddress')?.hasError('required')">
-            Mailing Address is required
-          </mat-error>
-        </mat-form-field>
+        <div class="individual-address-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mailing Address</mat-label>
+            <textarea matInput formControlName="individualMailingAddress" rows="2"></textarea>
+          </mat-form-field>
+          <div *ngIf="partyForm.get('individualMailingAddress')?.hasError('required') && partyForm.get('individualMailingAddress')?.touched" class="validation-error">
+            <mat-icon class="error-icon">warning</mat-icon>
+            <span>This field is required</span>
+          </div>
+        </div>
       </div>
 
       <!-- Organization Fields -->
       <div *ngIf="isOrganization(i)" class="organization-section">
         <div class="organization-main-fields">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Organization Name</mat-label>
-            <input matInput formControlName="organizationName" />
-            <mat-error *ngIf="partyForm.get('organizationName')?.hasError('required')">
-              Organization Name is required
-            </mat-error>
-          </mat-form-field>
+          <div class="organization-name-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Organization Name</mat-label>
+              <input matInput formControlName="organizationName" />
+            </mat-form-field>
+            <div *ngIf="partyForm.get('organizationName')?.hasError('required') && partyForm.get('organizationName')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
 
-          <mat-form-field *ngIf="isPropertyOwner(i)" appearance="outline" class="owner-since-field">
-            <mat-label>Owner Since</mat-label>
-            <input
-              matInput
-              (click)="organizationOwnerSincePicker.open()"
-              [matDatepicker]="organizationOwnerSincePicker"
-              formControlName="ownerSince"
-              readonly
-            />
-            <mat-datepicker-toggle matSuffix [for]="organizationOwnerSincePicker"></mat-datepicker-toggle>
-            <mat-datepicker #organizationOwnerSincePicker type="date"></mat-datepicker>
-            <mat-error *ngIf="partyForm.get('ownerSince')?.hasError('required')">
-              Owner Since date is required for Property Owners
-            </mat-error>
-          </mat-form-field>
+          <div *ngIf="isPropertyOwner(i)" class="owner-since-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Since</mat-label>
+              <input
+                matInput
+                (click)="organizationOwnerSincePicker.open()"
+                [matDatepicker]="organizationOwnerSincePicker"
+                formControlName="ownerSince"
+                readonly
+              />
+              <mat-datepicker-toggle matSuffix [for]="organizationOwnerSincePicker"></mat-datepicker-toggle>
+              <mat-datepicker #organizationOwnerSincePicker type="date"></mat-datepicker>
+            </mat-form-field>
+            <div *ngIf="partyForm.get('ownerSince')?.hasError('required') && partyForm.get('ownerSince')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
         </div>
 
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Note</mat-label>
-          <textarea matInput formControlName="organizationNote" rows="1"></textarea>
-        </mat-form-field>
+        <div class="organization-note-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Note</mat-label>
+            <textarea matInput formControlName="organizationNote" rows="1"></textarea>
+          </mat-form-field>
+        </div>
 
         <!-- Directors Section -->
         <div class="directors-section">
@@ -131,10 +149,11 @@
               <div class="director-item director-name">
                 <mat-form-field appearance="outline" class="director-field">
                   <input matInput formControlName="directorName" placeholder="Enter Name" />
-                  <mat-error *ngIf="director.get('directorName')?.hasError('required')">
-                    Director name is required
-                  </mat-error>
                 </mat-form-field>
+                <div *ngIf="director.get('directorName')?.hasError('required') && director.get('directorName')?.touched" class="validation-error">
+                  <mat-icon class="error-icon">warning</mat-icon>
+                  <span>This field is required</span>
+                </div>
               </div>
 
               <div class="director-item director-address">
@@ -145,10 +164,11 @@
                     rows="1"
                     placeholder="Enter Mailing Address"
                   ></textarea>
-                  <mat-error *ngIf="director.get('directorMailingAddress')?.hasError('required')">
-                    Mailing address is required
-                  </mat-error>
                 </mat-form-field>
+                <div *ngIf="director.get('directorMailingAddress')?.hasError('required') && director.get('directorMailingAddress')?.touched" class="validation-error">
+                  <mat-icon class="error-icon">warning</mat-icon>
+                  <span>This field is required</span>
+                </div>
               </div>
 
 
