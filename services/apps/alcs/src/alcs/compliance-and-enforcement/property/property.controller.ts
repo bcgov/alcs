@@ -18,7 +18,7 @@ export class ComplianceAndEnforcementPropertyController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async fetchParcelsByid(
     @Param('id') id: string,
-    @Query('idType') idType: string,
+    @Query('idType') idType?: string,
   ): Promise<ComplianceAndEnforcementPropertyDto[]> {
     if (idType === 'fileNumber') {
       return await this.service.fetchParcels(id);
