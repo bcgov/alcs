@@ -235,6 +235,10 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Watch for property ownership changes to update Crown status
     this.propertyComponent.$changes.pipe(takeUntil(this.$destroy)).subscribe(async (propertyUpdate) => {
+      if (this.ownershipDocumentOptions.fixedParcel) {
+        this.ownershipDocumentOptions.fixedParcel.pid = propertyUpdate.pid ?? undefined;
+      }
+
       if (propertyUpdate.ownershipTypeCode) {
         const wasCrown = this.isPropertyCrown;
         this.isPropertyCrown = propertyUpdate.ownershipTypeCode === 'CRWN';
@@ -260,6 +264,8 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         try {
           const properties = await this.complianceAndEnforcementPropertyService.fetchByFileUuid(this.file.uuid);
           this.property = properties[0];
+
+          this.ownershipDocumentOptions.fixedParcel = this.property;
 
           if (this.propertyComponent && this.property) {
             this.propertyComponent.property = this.property;
