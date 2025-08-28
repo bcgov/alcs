@@ -13,7 +13,9 @@ export class ComplianceAndEnforcementPropertyService {
   constructor(private readonly http: HttpClient) {}
 
   async fetchParcels(fileNumber: string): Promise<ComplianceAndEnforcementPropertyDto[]> {
-    return await firstValueFrom(this.http.get<ComplianceAndEnforcementPropertyDto[]>(`${this.url}/${fileNumber}`));
+    return await firstValueFrom(
+      this.http.get<ComplianceAndEnforcementPropertyDto[]>(`${this.url}/${fileNumber}?idType=fileNumber`),
+    );
   }
 
   async fetchByFileUuid(fileUuid: string): Promise<ComplianceAndEnforcementPropertyDto[]> {

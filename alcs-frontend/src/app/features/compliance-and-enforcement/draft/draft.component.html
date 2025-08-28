@@ -17,6 +17,7 @@
       <app-compliance-and-enforcement-documents
         #submissionDocumentsComponent
         [title]="'Complaint/Referral Submission'"
+        [noDocumentsText]="'No Complaint/Referral'"
         [fileNumber]="fileNumber"
         [options]="submissionDocumentOptions"
         [section]="Section.SUBMISSION"
@@ -36,6 +37,7 @@
       <app-compliance-and-enforcement-documents
         #ownershipDocumentsComponent
         [title]="'Property Ownership Documents'"
+        [noDocumentsText]="'No owner information'"
         [fileNumber]="fileNumber"
         [options]="ownershipDocumentOptions"
         [section]="Section.OWNERSHIP"
@@ -44,11 +46,17 @@
 
     <div class="button-row">
       <div class="left-actions">
-        <button type="button" mat-stroked-button color="warn" (click)="onCancelDiscardClicked()">Cancel & Discard</button>
+        <button type="button" mat-stroked-button color="warn" (click)="onCancelDiscardClicked()">
+          Cancel & Discard
+        </button>
       </div>
       <div class="right-actions">
-        <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">Save Draft & Exit</button>
-        <button type="button" mat-flat-button color="primary" (click)="onFinishCreateFileClicked()">Finish & Create File</button>
+        <button type="button" mat-stroked-button color="primary" (click)="onSaveDraftClicked()">
+          Save Draft & Exit
+        </button>
+        <button type="button" mat-flat-button color="primary" (click)="onFinishCreateFileClicked()">
+          Finish & Create File
+        </button>
       </div>
     </div>
   </form>

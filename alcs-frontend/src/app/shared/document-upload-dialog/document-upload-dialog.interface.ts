@@ -32,6 +32,7 @@ export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {
   documentService?: DocumentService;
   parcelService?: ParcelFetchingService;
   submissionService?: SubmissionFetchingService;
+  fixedParcel?: SelectableParcelDto;
 }
 
 export interface DecisionService {

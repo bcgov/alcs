@@ -27,6 +27,7 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnDestroy {
   isSubscribed = false;
 
   @Input() title?: string;
+  @Input() noDocumentsText?: string;
   @Input() fileNumber?: string;
   @Input() options?: DocumentUploadDialogData;
   @Input() section?: Section;
