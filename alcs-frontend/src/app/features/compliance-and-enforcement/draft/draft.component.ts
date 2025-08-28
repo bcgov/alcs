@@ -32,6 +32,7 @@ import { DocumentUploadDialogData } from '../../../shared/document-upload-dialog
 import { Section } from '../../../services/compliance-and-enforcement/documents/document.service';
 import { ResponsiblePartiesComponent } from '../responsible-parties/responsible-parties.component';
 import { ResponsiblePartiesService } from '../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 export const submissionDocumentOptions: DocumentUploadDialogData = {
   // A necessary hack to make this work without rewriting lots of code
@@ -106,6 +107,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly propertyService: ComplianceAndEnforcementPropertyService,
     private readonly responsiblePartyService: ResponsiblePartiesService,
     private readonly router: Router,
+    private readonly confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -341,20 +343,31 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onCancelDiscardClicked() {
-    if (!this.file?.uuid) {
-      await this.router.navigate(['/home']);
-      return;
-    }
+    const dialogRef = this.confirmationDialogService.openDialog({
+      title: 'Discard Draft',
+      body: 'Are you sure you want to discard this draft? All data will be permanently deleted.',
+      yesButtonText: 'Discard',
+      cancelButtonText: 'Cancel',
+    });
 
-    try {
-      await this.complianceAndEnforcementService.delete(this.file.uuid);
-      this.toastService.showSuccessToast('Draft discarded');
-    } catch (error) {
-      console.error('Error discarding C&E draft', error);
-      this.toastService.showErrorToast('Failed to discard draft');
-    } finally {
-      await this.router.navigate(['/home']);
-    }
+    dialogRef.subscribe(async (confirmed: boolean) => {
+      if (!confirmed) return;
+
+      if (!this.file?.uuid) {
+        await this.router.navigate(['/home']);
+        return;
+      }
+
+      try {
+        await this.complianceAndEnforcementService.delete(this.file.uuid);
+        this.toastService.showSuccessToast('Draft discarded');
+      } catch (error) {
+        console.error('Error discarding C&E draft', error);
+        this.toastService.showErrorToast('Failed to discard draft');
+      } finally {
+        await this.router.navigate(['/home']);
+      }
+    });
   }
 
   async onFinishCreateFileClicked() {
@@ -454,7 +467,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       await this.complianceAndEnforcementService.submit(this.file.uuid);
 
       this.toastService.showSuccessToast('C&E file created');
-      await this.router.navigate(['/home']);
+      await this.router.navigate(['/compliance-and-enforcement', this.file.fileNumber]);
     } catch (error: any) {
       // Check if it's a validation error from the backend
       if (error.status === 400 && error.error?.message?.includes('Validation failed')) {

@@ -357,6 +357,18 @@
   }
 }
 
+mat-form-field.mat-form-field-invalid {
+  input,
+  textarea {
+    color: $error-color !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: $error-color !important;
+  }
+}
+
 .add-party-button {
   display: flex;
   align-items: center;
