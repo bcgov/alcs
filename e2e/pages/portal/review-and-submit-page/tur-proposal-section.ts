@@ -31,13 +31,13 @@ export class TURProposalSection {
     await expect(this.alternativeLandText).toHaveText(proposal.alternativeLand);
     await expect(this.totalAreaText).toHaveText(`${proposal.totalArea} ha`);
     await expect(this.allOwnersNotifiedText).toHaveText(proposal.isConfirmed ? 'Yes' : 'No');
-    
-    // Fix: Check each child element for proof of serving notice
+
+    // Check each child element for proof of serving notice
     for (const text of await this.proofOfServingNoticeText.locator("> *").all()) {
       await expect(text).toHaveText(this.fileName(proposal.proofOfServingNoticePath));
     }
-    
-    // Fix: Check each child element for proposal map
+
+    // Check each child element for proposal map
     for (const text of await this.proposalMapText.locator("> *").all()) {
       await expect(text).toHaveText(this.fileName(proposal.proposalMapPath));
     }
