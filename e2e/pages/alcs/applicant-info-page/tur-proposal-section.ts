@@ -29,9 +29,14 @@ export class TURProposalSection {
     await expect(this.alternativeLandText).toHaveText(proposal.alternativeLand);
     await expect(this.totalAreaText).toHaveText(`${proposal.totalArea} ha`);
     
-    // ALCS has single links (not mobile/desktop), so use direct toHaveText
-    await expect(this.proofOfServingNoticeText).toHaveText(this.fileName(proposal.proofOfServingNoticePath));
-    await expect(this.proposalMapText).toHaveText(this.fileName(proposal.proposalMapPath));
+    // ALCS has multiple files with *ngFor, so check each child element
+    for (const text of await this.proofOfServingNoticeText.locator("> *").all()) {
+      await expect(text).toHaveText(this.fileName(proposal.proofOfServingNoticePath));
+    }
+    
+    for (const text of await this.proposalMapText.locator("> *").all()) {
+      await expect(text).toHaveText(this.fileName(proposal.proposalMapPath));
+    }
   }
 
   fileName(path: string): string {
