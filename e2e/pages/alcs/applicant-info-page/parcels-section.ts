@@ -32,7 +32,11 @@ export class ParcelsSection {
     }
     await expect(this.isFarmText(parcelNumber)).toHaveText(parcel.isFarm ? 'Yes' : 'No');
     await expect(this.civicAddressText(parcelNumber)).toHaveText(parcel.civicAddress);
-    await expect(this.certificateOfTitleText(parcelNumber)).toHaveText(this.fileName(parcel.certificateOfTitlePath));
+    
+    // Fix: Check each child element for certificate of title (mobile/desktop links)
+    for (const text of await this.certificateOfTitleText(parcelNumber).locator("> *").all()) {
+      await expect(text).toHaveText(this.fileName(parcel.certificateOfTitlePath));
+    }
   }
 
   async expectParcelOwners(parcelNumber: number, owners: ParcelOwnerDetails[]) {

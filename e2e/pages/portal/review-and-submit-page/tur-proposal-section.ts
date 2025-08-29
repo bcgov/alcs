@@ -31,8 +31,16 @@ export class TURProposalSection {
     await expect(this.alternativeLandText).toHaveText(proposal.alternativeLand);
     await expect(this.totalAreaText).toHaveText(`${proposal.totalArea} ha`);
     await expect(this.allOwnersNotifiedText).toHaveText(proposal.isConfirmed ? 'Yes' : 'No');
-    await expect(this.proofOfServingNoticeText).toHaveText(this.fileName(proposal.proofOfServingNoticePath));
-    await expect(this.proposalMapText).toHaveText(this.fileName(proposal.proposalMapPath));
+    
+    // Fix: Check each child element for proof of serving notice
+    for (const text of await this.proofOfServingNoticeText.locator("> *").all()) {
+      await expect(text).toHaveText(this.fileName(proposal.proofOfServingNoticePath));
+    }
+    
+    // Fix: Check each child element for proposal map
+    for (const text of await this.proposalMapText.locator("> *").all()) {
+      await expect(text).toHaveText(this.fileName(proposal.proposalMapPath));
+    }
   }
 
   fileName(path: string): string {

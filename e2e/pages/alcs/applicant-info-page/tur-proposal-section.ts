@@ -8,7 +8,6 @@ export class TURProposalSection {
   readonly stepsToReduceImpactText: Locator;
   readonly alternativeLandText: Locator;
   readonly totalAreaText: Locator;
-  readonly allOwnersNotifiedText: Locator;
   readonly proofOfServingNoticeText: Locator;
   readonly proposalMapText: Locator;
 
@@ -29,6 +28,8 @@ export class TURProposalSection {
     await expect(this.stepsToReduceImpactText).toHaveText(proposal.stepsToReduceImpact);
     await expect(this.alternativeLandText).toHaveText(proposal.alternativeLand);
     await expect(this.totalAreaText).toHaveText(`${proposal.totalArea} ha`);
+    
+    // ALCS has single links (not mobile/desktop), so use direct toHaveText
     await expect(this.proofOfServingNoticeText).toHaveText(this.fileName(proposal.proofOfServingNoticePath));
     await expect(this.proposalMapText).toHaveText(this.fileName(proposal.proposalMapPath));
   }
