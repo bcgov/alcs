@@ -340,6 +340,9 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     const newPartyForm = this.createPartyFormGroup();
     newPartyForm.get('partyType')?.setValue(partyType);
     this.form.push(newPartyForm);
+    
+    // Clear the validation error since we now have at least one party
+    this.showRequiredError = false;
   }
 
   async deleteParty(index: number) {

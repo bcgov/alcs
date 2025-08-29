@@ -15,6 +15,16 @@
   display: flex;
   gap: 16px;
   width: 100%;
+  align-self: flex-start;
+  margin-bottom: 16px;
+  
+  .government-field,
+  .region-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+  }
   
   mat-form-field {
     flex: 1;
@@ -30,7 +40,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-width: 0; // Allows flex items to shrink below their content width
+    min-width: 0;
+    align-self: flex-start;
     
     mat-form-field {
       width: 100% !important;
@@ -55,6 +66,14 @@
   display: flex;
   gap: 16px;
   width: 100%;
+  align-items: flex-start;
+  
+  .area-field,
+  .alr-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
   
   mat-form-field {
     flex: 1;
@@ -97,9 +116,29 @@
     display: flex;
     gap: 16px;
     width: 100%;
+    align-items: flex-start;
+    
+    .pid-pin-selector {
+      flex: 1;
+      
+      mat-form-field {
+        width: 100%;
+      }
+    }
+    
+    .input-field-container {
+      flex: 1;
+      
+      .pid-field,
+      .pin-field {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+    }
     
     mat-form-field {
-      flex: 1;
+      width: 100%;
     }
   }
 }
@@ -110,6 +149,23 @@ mat-form-field {
 
 h3 {
   margin: 0;
+}
+
+.validation-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $error-color;
+  font-size: 0.875rem;
+  margin-top: 0px;
+  margin-bottom: 16px;
+
+  .error-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $error-color;
+  }
 }
 
 :host::ng-deep {

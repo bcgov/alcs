@@ -1,30 +1,46 @@
 <form [formGroup]="form">
-  <mat-form-field appearance="outline" class="date-picker">
-    <mat-label>Date Submitted</mat-label>
-    <input
-      matInput
-      (click)="datePicker.open()"
-      [matDatepicker]="datePicker"
-      name="date-submitted"
-      formControlName="dateSubmitted"
-    />
-    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-    <mat-datepicker #datePicker type="date"></mat-datepicker>
-  </mat-form-field>
+  <div class="date-field">
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Date Submitted</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        name="date-submitted"
+        formControlName="dateSubmitted"
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+    <div *ngIf="form.get('dateSubmitted')?.hasError('required') && form.get('dateSubmitted')?.touched" class="validation-error">
+      <mat-icon class="error-icon">warning</mat-icon>
+      <span>This field is required</span>
+    </div>
+  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Initial Submission Type</mat-label>
-    <mat-select multiple="false" formControlName="initialSubmissionType">
-      <mat-option *ngFor="let type of initialSubmissionTypes" [value]="type.value">
-        {{ type.value }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="submission-type-field">
+    <mat-form-field appearance="outline">
+      <mat-label>Initial Submission Type</mat-label>
+      <mat-select multiple="false" formControlName="initialSubmissionType">
+        <mat-option *ngFor="let type of initialSubmissionTypes" [value]="type.value">
+          {{ type.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="form.get('initialSubmissionType')?.hasError('required') && form.get('initialSubmissionType')?.touched" class="validation-error">
+      <mat-icon class="error-icon">warning</mat-icon>
+      <span>This field is required</span>
+    </div>
+  </div>
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Alleged Contravention Narrative</mat-label>
     <textarea matInput formControlName="allegedContraventionNarrative" rows="3"></textarea>
   </mat-form-field>
+  <div *ngIf="form.get('allegedContraventionNarrative')?.hasError('required') && form.get('allegedContraventionNarrative')?.touched" class="validation-error">
+    <mat-icon class="error-icon">warning</mat-icon>
+    <span>This field is required</span>
+  </div>
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Alleged Activity</mat-label>
@@ -34,6 +50,10 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <div *ngIf="form.get('allegedActivity')?.hasError('required') && form.get('allegedActivity')?.touched" class="validation-error">
+    <mat-icon class="error-icon">warning</mat-icon>
+    <span>This field is required</span>
+  </div>
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Intake Notes</mat-label>
