@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<database name="postgres" schema="alcs" type="PostgreSQL - 17.5 (Debian 17.5-1.pgdg120+1)">
+<database name="postgres" schema="alcs" type="PostgreSQL - 17.6 (Debian 17.6-1.pgdg13+1)">
    <sequences>
       <sequence increment="1" name="alcs_file_number_seq" startValue="100000"/>
       <sequence increment="1" name="health_check_id_seq" startValue="1"/>
@@ -1571,6 +1571,9 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="file_uuid" foreignKey="FK_742e4bd7ac2910362a1e9e57db7" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_document"/>
+            <child column="file_uuid" foreignKey="FK_be07d486f062e1891af100d44d1" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_property"/>
+            <child column="file_uuid" foreignKey="FK_24081ae9bcc217352d8e0f43839" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
             <child column="file_uuid" foreignKey="FK_206d3b2431e2a677f9b067aad2d" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_submitter"/>
          </column>
          <column autoUpdated="true" defaultValue="nextval('alcs.alcs_file_number_seq'::regclass)" digits="0" id="6" name="file_number" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
@@ -1587,6 +1590,110 @@
          </index>
          <index name="UQ_1ec3378cb5c34a48af1426840e7" unique="true">
             <column ascending="true" name="file_number"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_document" remarks="Links complaint/referral documents with the complaint/referral they're saved to and logs other attributes" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="certificate_of_title_uuid" foreignKey="FK_7112fe1c28a2a72ff74aa16689a" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_property"/>
+            <child column="corporate_summary_uuid" foreignKey="FK_ecb31f35b1538524bf294e02a33" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="type_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_da7a7aac5231d436c65d48f206c" implied="false" onDeleteCascade="false" schema="alcs" table="document_code"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="file_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_742e4bd7ac2910362a1e9e57db7" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="document_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_8f67dae9787b42bef9122927167" implied="false" onDeleteCascade="false" schema="alcs" table="document"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="section" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_document_section_enum&quot;" typeCode="12"/>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_74f7873502cb0bce8ceeb8cd23a" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="REL_8f67dae9787b42bef912292716" unique="true">
+            <column ascending="true" name="document_uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_property" remarks="Compliance and enforcement property" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="1" name="civic_address" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="2" name="legal_description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="3" name="region_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="0" digits="7" id="4" name="latitude" nullable="false" remarks="" size="10" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="0" digits="7" id="5" name="longitude" nullable="false" remarks="" size="10" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="'SMPL'::text" digits="0" id="6" name="ownership_type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="pid" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="pin" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="0" digits="2" id="9" name="area_hectares" nullable="false" remarks="" size="10" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="0" digits="2" id="10" name="alr_percentage" nullable="false" remarks="" size="5" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="''::text" digits="0" id="11" name="alc_history" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="file_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_be07d486f062e1891af100d44d1" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="certificate_of_title_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_7112fe1c28a2a72ff74aa16689a" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_document"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="local_government_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_fd32a50355c3d4ddefbe28df276" implied="false" onDeleteCascade="false" schema="alcs" table="local_government"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_5a6e7c94e8f0f2b5c7d2a3e4c8b" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="UQ_7112fe1c28a2a72ff74aa16689a" unique="true">
+            <column ascending="true" name="certificate_of_title_uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_responsible_party" remarks="Compliance and enforcement responsible party" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <child column="responsible_party_uuid" foreignKey="FK_375fa69d3f2af493039c5b3d08e" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party_director"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="party_type" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_responsible_party_party_type_enum&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="'Individual'::alcs.compliance_and_enforcement_responsible_party_foippa_category_en" digits="0" id="2" name="foippa_category" nullable="false" remarks="" size="2147483647" type="&quot;alcs&quot;.&quot;compliance_and_enforcement_responsible_party_foippa_category_en&quot;" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="3" name="is_previous" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="individual_name" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="individual_mailing_address" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="individual_telephone" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="individual_email" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="individual_note" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="organization_name" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="organization_telephone" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="organization_email" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="organization_note" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="13" name="owner_since" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="file_uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_24081ae9bcc217352d8e0f43839" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="corporate_summary_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_ecb31f35b1538524bf294e02a33" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_document"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_compliance_and_enforcement_responsible_party" unique="true">
+            <column ascending="true" name="uuid"/>
+         </index>
+         <index name="UQ_ecb31f35b1538524bf294e02a33" unique="true">
+            <column ascending="true" name="corporate_summary_uuid"/>
+         </index>
+      </table>
+      <table name="compliance_and_enforcement_responsible_party_director" remarks="Compliance and enforcement responsible party director" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="director_name" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="configuration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="director_mailing_address" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="director_telephone" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="director_email" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="responsible_party_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
+            <parent column="uuid" foreignKey="FK_375fa69d3f2af493039c5b3d08e" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
+         </column>
+         <primaryKey column="uuid" sequenceNumberInPK="1"/>
+         <index name="PK_compliance_and_enforcement_responsible_party_director" unique="true">
+            <column ascending="true" name="uuid"/>
          </index>
       </table>
       <table name="compliance_and_enforcement_submitter" remarks="Compliance and enforcement submitter" schema="alcs" type="TABLE">
@@ -1618,6 +1725,9 @@
             <child column="ocp_bylaw_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_submission_review"/>
             <child column="zoning_bylaw_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_submission_review"/>
             <child column="local_government_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="application_submission_search_view"/>
+            <child column="individual_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
+            <child column="organization_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party"/>
+            <child column="director_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_responsible_party_director"/>
             <child column="name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_submitter"/>
             <child column="first_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="covenant_transferee"/>
             <child column="last_name" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" schema="alcs" table="covenant_transferee"/>
@@ -1703,6 +1813,7 @@
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="document_uuid" foreignKey="FK_a504041180de5a04276594acf22" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_document"/>
             <child column="document_uuid" foreignKey="FK_12ae8ee45c8e1f1b074c169a3e5" implied="false" onDeleteCascade="false" schema="alcs" table="application_document"/>
+            <child column="document_uuid" foreignKey="FK_8f67dae9787b42bef9122927167" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_document"/>
             <child column="document_uuid" foreignKey="FK_fbb716772d7eff5b5fb454bb267" implied="false" onDeleteCascade="false" schema="alcs" table="inquiry_document"/>
             <child column="document_uuid" foreignKey="FK_5cd9c5f049e6350d1335a31e6b9" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_decision_document"/>
             <child column="document_uuid" foreignKey="FK_be3bff8cd4ff2275f9a5a8e880b" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_document"/>
@@ -1735,7 +1846,7 @@
             <column ascending="true" name="oats_document_id"/>
          </index>
       </table>
-      <table name="document_code" numRows="63" remarks="Code table for possible document types" schema="alcs" type="TABLE">
+      <table name="document_code" numRows="64" remarks="Code table for possible document types" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1744,6 +1855,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <child column="type_code" foreignKey="FK_9c02077523dffbebc9727ecf823" implied="false" onDeleteCascade="false" schema="alcs" table="application_document"/>
+            <child column="type_code" foreignKey="FK_da7a7aac5231d436c65d48f206c" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_document"/>
             <child column="type_code" foreignKey="FK_57359f6ad774ef7a18ebed83d13" implied="false" onDeleteCascade="false" schema="alcs" table="inquiry_document"/>
             <child column="type_code" foreignKey="FK_1bb9a71eab11ae830030ca24233" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent_document"/>
             <child column="type_code" foreignKey="FK_dc6a7789a73ec2e0eac2b2307d3" implied="false" onDeleteCascade="false" schema="alcs" table="notification_document"/>
@@ -2015,6 +2127,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="5" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <child column="local_government_uuid" foreignKey="FK_58853fcb8957e8b2c131cc12da1" implied="false" onDeleteCascade="false" schema="alcs" table="application"/>
+            <child column="local_government_uuid" foreignKey="FK_fd32a50355c3d4ddefbe28df276" implied="false" onDeleteCascade="false" schema="alcs" table="compliance_and_enforcement_property"/>
             <child column="local_government_uuid" foreignKey="FK_3b17d9cc412828dd0f1b4164818" implied="false" onDeleteCascade="false" schema="alcs" table="inquiry"/>
             <child column="local_government_uuid" foreignKey="FK_7e78db4d1c5afb16374253b42d4" implied="false" onDeleteCascade="false" schema="alcs" table="notice_of_intent"/>
             <child column="local_government_uuid" foreignKey="FK_8a9fed11ce76672d806ac8b4b6f" implied="false" onDeleteCascade="false" schema="alcs" table="notification"/>
@@ -2057,7 +2170,7 @@
             <column ascending="true" name="uuid"/>
          </index>
       </table>
-      <table name="migrations" numRows="477" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
+      <table name="migrations" numRows="486" remarks="Database migration history recorded by typeorm" schema="alcs" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('alcs.migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12">
