@@ -1,0 +1,226 @@
+<div class="responsible-parties-container">
+  <div class="header">
+    <h3>Allegedly Responsible Parties</h3>
+  </div>
+
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Loading responsible parties...</span>
+  </div>
+
+  <!-- Responsible Parties Forms -->
+  <div *ngFor="let partyForm of form.controls; let i = index" class="party-card">
+    <form [formGroup]="partyForm">
+      <!-- Party Header -->
+      <div class="party-header">
+        <h4 class="party-type-title">{{ partyForm.get('partyType')?.value }}</h4>
+
+        <div class="party-actions">
+          <mat-slide-toggle formControlName="isPrevious" class="previous-toggle"> Mark as Previous </mat-slide-toggle>
+          <button mat-button color="warn" (click)="deleteParty(i)" class="delete-button">DELETE</button>
+        </div>
+      </div>
+
+      <!-- FOIPPA Category Toggle -->
+      <div class="foippa-category-section">
+        <label class="foippa-category-label">FOIPPA Category*</label>
+        <mat-button-toggle-group
+          class="foippa-toggle-group"
+          [value]="partyForm.get('foippaCategory')?.value"
+          (change)="onFoippaCategoryChange(i, $event.value)"
+        >
+          <mat-button-toggle [value]="FOIPPACategory.INDIVIDUAL">
+            {{ FOIPPACategory.INDIVIDUAL }}
+          </mat-button-toggle>
+          <mat-button-toggle [value]="FOIPPACategory.ORGANIZATION">
+            {{ FOIPPACategory.ORGANIZATION }}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Individual Fields -->
+      <div *ngIf="isIndividual(i)" class="individual-section">
+        <div class="individual-main-fields">
+          <div class="individual-name-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="individualName" />
+            </mat-form-field>
+            <div *ngIf="partyForm.get('individualName')?.hasError('required') && partyForm.get('individualName')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
+
+          <div *ngIf="isPropertyOwner(i)" class="owner-since-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Since</mat-label>
+              <input
+                matInput
+                (click)="individualOwnerSincePicker.open()"
+                [matDatepicker]="individualOwnerSincePicker"
+                formControlName="ownerSince"
+                readonly
+              />
+              <mat-datepicker-toggle matSuffix [for]="individualOwnerSincePicker"></mat-datepicker-toggle>
+              <mat-datepicker #individualOwnerSincePicker type="date"></mat-datepicker>
+            </mat-form-field>
+            <div *ngIf="partyForm.get('ownerSince')?.hasError('required') && partyForm.get('ownerSince')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="individual-address-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mailing Address</mat-label>
+            <textarea matInput formControlName="individualMailingAddress" rows="2"></textarea>
+          </mat-form-field>
+          <div *ngIf="partyForm.get('individualMailingAddress')?.hasError('required') && partyForm.get('individualMailingAddress')?.touched" class="validation-error">
+            <mat-icon class="error-icon">warning</mat-icon>
+            <span>This field is required</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Organization Fields -->
+      <div *ngIf="isOrganization(i)" class="organization-section">
+        <div class="organization-main-fields">
+          <div class="organization-name-field">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Organization Name</mat-label>
+              <input matInput formControlName="organizationName" />
+            </mat-form-field>
+            <div *ngIf="partyForm.get('organizationName')?.hasError('required') && partyForm.get('organizationName')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
+
+          <div *ngIf="isPropertyOwner(i)" class="owner-since-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Owner Since</mat-label>
+              <input
+                matInput
+                (click)="organizationOwnerSincePicker.open()"
+                [matDatepicker]="organizationOwnerSincePicker"
+                formControlName="ownerSince"
+                readonly
+              />
+              <mat-datepicker-toggle matSuffix [for]="organizationOwnerSincePicker"></mat-datepicker-toggle>
+              <mat-datepicker #organizationOwnerSincePicker type="date"></mat-datepicker>
+            </mat-form-field>
+            <div *ngIf="partyForm.get('ownerSince')?.hasError('required') && partyForm.get('ownerSince')?.touched" class="validation-error">
+              <mat-icon class="error-icon">warning</mat-icon>
+              <span>This field is required</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="organization-note-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Note</mat-label>
+            <textarea matInput formControlName="organizationNote" rows="1"></textarea>
+          </mat-form-field>
+        </div>
+
+        <!-- Directors Section -->
+        <div class="directors-section">
+          <div class="directors-header">
+            <label class="directors-label" style="font-weight: bold; color: black">Directors</label>
+            <div class="directors-column-headers">
+              <div class="header-item header-number">#</div>
+              <div class="header-item header-name">Director Name*</div>
+              <div class="header-item header-address">Mailing Address*</div>
+              <div class="header-item header-action" [class.hidden]="getDirectorsArray(i).length === 1">Action</div>
+            </div>
+          </div>
+
+          <div class="directors-list">
+            <div
+              *ngFor="let director of getDirectorsArray(i).controls; let directorIdx = index"
+              class="director-row"
+              [formGroup]="$any(director)"
+            >
+              <div class="director-item director-number">{{ directorIdx + 1 }}</div>
+
+              <div class="director-item director-name">
+                <mat-form-field appearance="outline" class="director-field">
+                  <input matInput formControlName="directorName" placeholder="Enter Name" />
+                </mat-form-field>
+                <div *ngIf="director.get('directorName')?.hasError('required') && director.get('directorName')?.touched" class="validation-error">
+                  <mat-icon class="error-icon">warning</mat-icon>
+                  <span>This field is required</span>
+                </div>
+              </div>
+
+              <div class="director-item director-address">
+                <mat-form-field appearance="outline" class="director-field">
+                  <textarea
+                    matInput
+                    formControlName="directorMailingAddress"
+                    rows="1"
+                    placeholder="Enter Mailing Address"
+                  ></textarea>
+                </mat-form-field>
+                <div *ngIf="director.get('directorMailingAddress')?.hasError('required') && director.get('directorMailingAddress')?.touched" class="validation-error">
+                  <mat-icon class="error-icon">warning</mat-icon>
+                  <span>This field is required</span>
+                </div>
+              </div>
+
+
+              <div class="director-item director-action">
+                <button
+                  *ngIf="getDirectorsArray(i).length > 1"
+                  mat-icon-button
+                  color="warn"
+                  (click)="removeDirector(i, directorIdx)"
+                  class="delete-director-button"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="getDirectorsArray(i).length === 0" class="no-directors-message">No directors added</div>
+          </div>
+
+          <button mat-stroked-button color="primary" (click)="addDirector(i)" class="add-director-button">
+            + ADD ANOTHER DIRECTOR
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Add Party Button with Error Message -->
+  <div class="add-party-section">
+    <button
+      mat-flat-button
+      color="primary"
+      [matMenuTriggerFor]="addPartyMenu"
+      class="add-party-button"
+    >
+      <span *ngIf="form.length === 0">+ ADD PARTY</span>
+      <span *ngIf="form.length > 0">+ ADD ANOTHER PARTY</span>
+      <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
+    </button>
+
+    <div *ngIf="showRequiredError && !isPropertyCrown" class="validation-error">
+      <mat-icon class="error-icon">warning</mat-icon>
+      <span>This field is required</span>
+    </div>
+  </div>
+
+
+
+  <!-- Dropdown Menu for Adding Parties -->
+  <mat-menu #addPartyMenu="matMenu">
+    <button mat-menu-item *ngFor="let type of responsiblePartyTypes" (click)="addPartyOfType(type.value)">
+      {{ type.value }}
+    </button>
+  </mat-menu>
+</div>

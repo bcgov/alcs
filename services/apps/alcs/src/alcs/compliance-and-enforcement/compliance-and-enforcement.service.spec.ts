@@ -13,6 +13,8 @@ import { ComplianceAndEnforcementProfile } from './compliance-and-enforcement.au
 import { ServiceNotFoundException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
 import { ComplianceAndEnforcementSubmitterProfile } from './submitter/submitter.automapper.profile';
+import { ComplianceAndEnforcementPropertyService } from './property/property.service';
+import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
 
 const mockComplianceAndEnforcement = new ComplianceAndEnforcement({
   uuid: '1',
@@ -31,10 +33,14 @@ describe('ComplianceAndEnforcementService', () => {
   let service: ComplianceAndEnforcementService;
   let mockComplianceAndEnforcementRepository: DeepMocked<Repository<ComplianceAndEnforcement>>;
   let mockComplianceAndEnforcementSubmitterService: DeepMocked<ComplianceAndEnforcementSubmitterService>;
+  let mockComplianceAndEnforcementPropertyService: DeepMocked<ComplianceAndEnforcementPropertyService>;
+  let mockComplianceAndEnforcementValidatorService: DeepMocked<ComplianceAndEnforcementValidatorService>;
 
   beforeEach(async () => {
     mockComplianceAndEnforcementRepository = createMock<Repository<ComplianceAndEnforcement>>();
     mockComplianceAndEnforcementSubmitterService = createMock<ComplianceAndEnforcementSubmitterService>();
+    mockComplianceAndEnforcementPropertyService = createMock<ComplianceAndEnforcementPropertyService>();
+    mockComplianceAndEnforcementValidatorService = createMock<ComplianceAndEnforcementValidatorService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -48,6 +54,14 @@ describe('ComplianceAndEnforcementService', () => {
         {
           provide: ComplianceAndEnforcementSubmitterService,
           useValue: mockComplianceAndEnforcementSubmitterService,
+        },
+        {
+          provide: ComplianceAndEnforcementPropertyService,
+          useValue: mockComplianceAndEnforcementPropertyService,
+        },
+        {
+          provide: ComplianceAndEnforcementValidatorService,
+          useValue: mockComplianceAndEnforcementValidatorService,
         },
         {
           provide: getRepositoryToken(ComplianceAndEnforcement),

@@ -1,0 +1,36 @@
+<div class="header">
+  <div class="left-column">
+    <div>
+      <span class="subtext heading">C&E File</span>
+      <div class="first-row">
+        <div class="title">
+          <h5 class="detail-heading">
+            <div class="file-number">
+              {{ file?.fileNumber }} - {{ file?.property?.civicAddress }} - {{ propertyOwnerName }}
+            </div>
+          </h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-column">
+    <div>
+      <div>Unassigned</div>
+      <div class="status-wrapper">
+        <div
+          *ngIf="status"
+          class="submission-status-pill"
+          [ngClass]="{
+            open: status === Status.OPEN,
+            closed: status === Status.CLOSED,
+          }"
+        >
+          <ng-container *ngIf="status">{{ status }}</ng-container>
+        </div>
+      </div>
+      <div>
+        <div class="body-text">{{ file?.property?.localGovernment?.name }}</div>
+      </div>
+    </div>
+  </div>
+</div>

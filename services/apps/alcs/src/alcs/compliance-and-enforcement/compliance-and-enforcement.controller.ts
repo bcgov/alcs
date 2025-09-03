@@ -4,7 +4,7 @@ import * as config from 'config';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { AUTH_ROLE, ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
-import { ComplianceAndEnforcementService } from './compliance-and-enforcement.service';
+import { ComplianceAndEnforcementService, Status } from './compliance-and-enforcement.service';
 import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
 import { DeleteResult } from 'typeorm';
 
@@ -25,8 +25,9 @@ export class ComplianceAndEnforcementController {
   async fetchByFileNumber(
     @Param('fileNumber') fileNumber: string,
     @Query('withSubmitters', ParseBoolPipe) withSubmitters: boolean = false,
+    @Query('withProperty', ParseBoolPipe) withProperty: boolean = false,
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.fetchByFileNumber(fileNumber, withSubmitters);
+    return await this.service.fetchByFileNumber(fileNumber, withSubmitters, withProperty);
   }
 
   @Post('')
@@ -34,17 +35,35 @@ export class ComplianceAndEnforcementController {
   async create(
     @Body() createDto: UpdateComplianceAndEnforcementDto,
     @Query('createInitialSubmitter') createInitialSubmitter: boolean = false,
+    @Query('createInitialProperty') createInitialProperty: boolean = false,
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.create(createDto, createInitialSubmitter);
+    return await this.service.create(createDto, createInitialSubmitter, createInitialProperty);
   }
 
-  @Patch('/:uuid')
+  @Patch('/:id')
   @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
   async update(
-    @Param('uuid') uuid: string,
+    @Param('id') id: string,
     @Body() updateDto: UpdateComplianceAndEnforcementDto,
+    @Query('idType') idType: string = 'uuid',
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.update(uuid, updateDto);
+    return await this.service.update(id, updateDto, { idType });
+  }
+
+  @Patch('/:id/status')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async setStatus(
+    @Param('id') id: string,
+    @Body() status: Status,
+    @Query('idType') idType: string = 'uuid',
+  ): Promise<ComplianceAndEnforcementDto> {
+    return await this.service.setStatus(id, status, { idType });
+  }
+
+  @Post('/:id/submit')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async submit(@Param('id') id: string): Promise<ComplianceAndEnforcementDto> {
+    return await this.service.submit(id);
   }
 
   @Delete('/:uuid')

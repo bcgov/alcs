@@ -1,0 +1,80 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { detailsRoutes } from './compliance-and-enforcement.module';
+import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import {
+  ComplianceAndEnforcementService,
+  FetchOptions,
+} from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { ResponsiblePartiesService } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
+import { ResponsiblePartyType } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
+
+@Component({
+  selector: 'app-compliance-and-enforcement',
+  templateUrl: './compliance-and-enforcement.component.html',
+  styleUrls: ['./compliance-and-enforcement.component.scss'],
+})
+export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
+
+  detailsRoutes = detailsRoutes;
+
+  fileNumber?: string;
+  file?: ComplianceAndEnforcementDto;
+  propertyOwnerName?: string;
+
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly service: ComplianceAndEnforcementService,
+    private readonly responsiblePartyService: ResponsiblePartiesService,
+    private readonly toastService: ToastService,
+  ) {}
+
+  ngOnInit(): void {
+    this.service.$file.pipe(takeUntil(this.$destroy)).subscribe((file) => {
+      this.file = file ?? undefined;
+    });
+
+    this.router.events.pipe(takeUntil(this.$destroy)).subscribe((event) => {
+      if (event instanceof NavigationEnd && this.fileNumber) {
+        this.loadFile(this.fileNumber, { withSubmitters: true, withProperty: true });
+      }
+    });
+
+    this.route.params.pipe(takeUntil(this.$destroy)).subscribe(async (params) => {
+      const { fileNumber } = params;
+
+      if (fileNumber) {
+        this.fileNumber = fileNumber;
+        this.loadFile(fileNumber, { withSubmitters: true, withProperty: true });
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
+
+  async loadFile(fileNumber: string, options?: FetchOptions) {
+    try {
+      await this.service.loadFile(fileNumber, options);
+
+      if (this.file) {
+        const owners = await this.responsiblePartyService.fetchByFileNumber(
+          fileNumber,
+          ResponsiblePartyType.PROPERTY_OWNER,
+        );
+
+        this.propertyOwnerName =
+          (owners?.[0].organizationName || owners?.[0].individualName) + (owners.length > 1 ? ' et al.' : '');
+      }
+    } catch (error) {
+      console.error('Error loading file:', error);
+      this.toastService.showErrorToast('Failed to load file');
+    }
+  }
+}

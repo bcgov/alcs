@@ -88,7 +88,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="selectableParcels && type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
+    <div *ngIf="type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE && !data.fixedParcel && selectableParcels">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Parcel</mat-label>
         <mat-select [formControl]="parcelId">
@@ -110,7 +110,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="data.allowedVisibilityFlags" class="double">
+    <div *ngIf="data.allowedVisibilityFlags && data.allowedVisibilityFlags.length > 0" class="double">
       <mat-label>Visible To:</mat-label>
       <div
         *ngIf="

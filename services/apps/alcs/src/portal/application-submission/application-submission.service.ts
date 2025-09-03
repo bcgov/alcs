@@ -425,6 +425,41 @@ export class ApplicationSubmissionService {
     return existingApplication;
   }
 
+  async getForNonGovernmentBusinessByFileId(fileNumber: string, user: User) {
+    if (!user.bceidBusinessGuid) {
+      throw new Error('Must have business BCeID GUID to access this submission');
+    }
+
+    const existingApplication = await this.applicationSubmissionRepository.findOne({
+      where: [
+        //Owns
+        {
+          fileNumber,
+          createdBy: {
+            bceidBusinessGuid: user.bceidBusinessGuid,
+          },
+          isDraft: false,
+        },
+      ],
+      order: {
+        auditUpdatedAt: 'DESC',
+        owners: {
+          firstName: 'ASC',
+          parcels: {
+            purchasedDate: 'ASC',
+          },
+        },
+      },
+      relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
+    });
+
+    if (!existingApplication) {
+      throw new ServiceNotFoundException(`Failed to load application with File ID ${fileNumber}`);
+    }
+
+    return existingApplication;
+  }
+
   async getByFileNumber(fileNumber: string, user: User) {
     return await this.applicationSubmissionRepository.findOne({
       where: {
@@ -482,6 +517,8 @@ export class ApplicationSubmissionService {
       const localGovernment = await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
       if (localGovernment) {
         return await this.getForGovernmentByFileId(fileId, localGovernment);
+      } else {
+        return await this.getForNonGovernmentBusinessByFileId(fileId, user);
       }
     }
 

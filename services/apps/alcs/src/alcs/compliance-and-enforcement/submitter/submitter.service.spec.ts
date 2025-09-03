@@ -6,12 +6,11 @@ import { classes } from 'automapper-classes';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import * as config from 'config';
-import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ComplianceAndEnforcementSubmitterService } from './submitter.service';
 import { ComplianceAndEnforcementSubmitter } from './submitter.entity';
 import { ComplianceAndEnforcementSubmitterProfile } from './submitter.automapper.profile';
 import { ComplianceAndEnforcementSubmitterDto, UpdateComplianceAndEnforcementSubmitterDto } from './submitter.dto';
-import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from '../compliance-and-enforcement.entity';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
 const mockComplianceAndEnforcementSubmitter = new ComplianceAndEnforcementSubmitter({
   uuid: '1',
@@ -54,6 +53,10 @@ describe('ComplianceAndEnforcementSubmitterService', () => {
     service = module.get<ComplianceAndEnforcementSubmitterService>(ComplianceAndEnforcementSubmitterService);
   });
 
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date(0));
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
@@ -64,6 +67,7 @@ describe('ComplianceAndEnforcementSubmitterService', () => {
         fileUuid: '1',
       };
       const createEntity = new ComplianceAndEnforcementSubmitter({
+        dateAdded: new Date(),
         file: new ComplianceAndEnforcement({
           uuid: '1',
         }),
@@ -95,5 +99,9 @@ describe('ComplianceAndEnforcementSubmitterService', () => {
       expect(await service.update('1', updateDto)).toEqual(resultDto);
       expect(mockComplianceAndEnforcementSubmitterRepository.save).toHaveBeenCalledWith(updateEntity);
     });
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
   });
 });

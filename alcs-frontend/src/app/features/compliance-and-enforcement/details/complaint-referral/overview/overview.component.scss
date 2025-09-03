@@ -1,0 +1,28 @@
+@use '../../../../../../styles/colors.scss' as colors;
+
+.no-data {
+  color: colors.$grey;
+}
+
+.inset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  background-color: colors.$grey-light;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.field {
+  width: 100%;
+
+  &.full-width {
+    grid-column: span 2;
+  }
+}
+
+.field-heading {
+  font-weight: bold;
+  margin-bottom: 5px;
+}

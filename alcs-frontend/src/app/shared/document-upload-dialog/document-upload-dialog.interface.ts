@@ -1,3 +1,4 @@
+import { Section } from '../../services/compliance-and-enforcement/documents/document.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
 import { VisibilityGroup } from './document-upload-dialog.component';
 import {
@@ -18,6 +19,9 @@ export interface DocumentUploadDialogOptions {
   allowsFileEdit?: boolean;
   documentTypeOverrides?: Partial<Record<DOCUMENT_TYPE, DocumentTypeConfig>>;
   allowedDocumentSources?: DOCUMENT_SOURCE[];
+  defaultDocumentSource?: DOCUMENT_SOURCE;
+  allowedDocumentTypes?: DOCUMENT_TYPE[];
+  section?: Section;
 }
 
 export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {
@@ -28,6 +32,7 @@ export interface DocumentUploadDialogData extends DocumentUploadDialogOptions {
   documentService?: DocumentService;
   parcelService?: ParcelFetchingService;
   submissionService?: SubmissionFetchingService;
+  fixedParcel?: SelectableParcelDto;
 }
 
 export interface DecisionService {
@@ -41,7 +46,7 @@ export interface DocumentService {
   update(uuid: string, updateDto: UpdateDocumentDto): Promise<Object>;
   upload(fileNumber: string, createDto: CreateDocumentDto): Promise<Object | undefined>;
   download(uuid: string, fileName: string, isInline: boolean): Promise<void>;
-  fetchTypes(): Promise<DocumentTypeDto[]>;
+  fetchTypes(allowedCodes?: DOCUMENT_TYPE[]): Promise<DocumentTypeDto[]>;
   delete(uuid: string): Promise<Object>;
 }
 

@@ -1,3 +1,5 @@
+@import '../../../../styles/colors.scss';
+
 .container {
   margin-bottom: 32px;
   height: calc(100% - 32px);
@@ -14,7 +16,18 @@ section.form-section {
   margin: 32px 0;
 }
 
-.button-container {
+.button-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+.left-actions { display: flex; }
+.right-actions { display: flex; gap: 12px; }
+
+
+::ng-deep .cdk-overlay-container .mat-mdc-dialog-container {
+  .button-container button[mat-flat-button]:last-child {
+    background-color: $error-color !important;
+    color: white !important;
+  }
 }
