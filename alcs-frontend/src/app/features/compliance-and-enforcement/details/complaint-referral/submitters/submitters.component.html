@@ -1,55 +1,55 @@
-<h3>Submitters</h3>
-
 <ng-template #noData>
   <div class="no-data">No Data</div>
 </ng-template>
 
-<div class="inset" *ngFor="let submitter of submitters">
-  <ng-container *ngIf="!submitter.isAnonymous; else anonymous">
-    <div class="header">
-      <h4>{{ submitter.name }}</h4>
+<div class="submitters-container">
+  <div class="inset" *ngFor="let submitter of submitters">
+    <ng-container *ngIf="!submitter.isAnonymous; else anonymous">
+      <div class="header">
+        <h4>{{ submitter.name }}</h4>
 
-      <div class="date-added">Added: {{ formatDate(submitter.dateAdded) }}</div>
-    </div>
+        <div class="date-added">Added: {{ formatDate(submitter.dateAdded) }}</div>
+      </div>
 
-    <div class="field">
-      <div class="field-heading">Email</div>
+      <div class="field">
+        <div class="field-heading">Email</div>
 
-      <ng-container *ngIf="submitter.email; else noData">
-        {{ submitter.email }}
-      </ng-container>
-    </div>
+        <ng-container *ngIf="submitter.email; else noData">
+          {{ submitter.email }}
+        </ng-container>
+      </div>
 
-    <div class="field">
-      <div class="field-heading">Telephone</div>
+      <div class="field">
+        <div class="field-heading">Telephone</div>
 
-      <ng-container *ngIf="submitter.telephoneNumber; else noData">
-        {{ submitter.telephoneNumber | mask: '(000) 000-0000' }}
-      </ng-container>
-    </div>
+        <ng-container *ngIf="submitter.telephoneNumber; else noData">
+          {{ submitter.telephoneNumber | mask: '(000) 000-0000' }}
+        </ng-container>
+      </div>
 
-    <div class="field">
-      <div class="field-heading">Affiliation</div>
+      <div class="field">
+        <div class="field-heading">Affiliation</div>
 
-      <ng-container *ngIf="submitter.affiliation; else noData">
-        {{ submitter.affiliation }}
-      </ng-container>
-    </div>
+        <ng-container *ngIf="submitter.affiliation; else noData">
+          {{ submitter.affiliation }}
+        </ng-container>
+      </div>
 
-    <div class="field">
-      <div class="field-heading">Additional Contact Information</div>
+      <div class="field">
+        <div class="field-heading">Additional Contact Information</div>
 
-      <ng-container *ngIf="submitter.additionalContactInformation; else noData">
-        {{ submitter.additionalContactInformation }}
-      </ng-container>
-    </div>
-  </ng-container>
+        <ng-container *ngIf="submitter.additionalContactInformation; else noData">
+          {{ submitter.additionalContactInformation }}
+        </ng-container>
+      </div>
+    </ng-container>
 
-  <ng-template #anonymous>
-    <div class="header">
-      <h4>Anonymous</h4>
+    <ng-template #anonymous>
+      <div class="header">
+        <h4>Anonymous</h4>
 
-      <div class="date-added">Added: {{ formatDate(submitter.dateAdded) }}</div>
-    </div>
-  </ng-template>
+        <div class="date-added">Added: {{ formatDate(submitter.dateAdded) }}</div>
+      </div>
+    </ng-template>
+  </div>
 </div>

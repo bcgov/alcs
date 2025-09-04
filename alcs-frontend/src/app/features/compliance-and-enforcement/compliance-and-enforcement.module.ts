@@ -15,6 +15,7 @@ import { DetailsHeaderComponent } from './details/header/details-header.componen
 import { ComplaintReferralComponent } from './details/complaint-referral/complaint-referral.component';
 import { ComplaintReferralOverviewComponent } from './details/complaint-referral/overview/overview.component';
 import { ComplaintReferralSubmittersComponent } from './details/complaint-referral/submitters/submitters.component';
+import { AddSubmitterDialogComponent } from './details/complaint-referral/submitters/add-submitter-dialog/add-submitter-dialog.component';
 
 export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = [
   {
@@ -37,6 +38,11 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
         path: 'overview/edit',
         component: ComplaintReferralComponent,
         data: { editing: 'overview' },
+      },
+      {
+        path: 'submitters/edit',
+        component: ComplaintReferralComponent,
+        data: { editing: 'submitters' },
       },
     ],
   },
@@ -68,6 +74,7 @@ const routes: Routes = [
     ComplaintReferralComponent,
     ComplaintReferralOverviewComponent,
     ComplaintReferralSubmittersComponent,
+    AddSubmitterDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MatMomentDateModule, CommonModule, SharedModule],
 })

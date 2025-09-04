@@ -9,9 +9,9 @@
       </div>
       <app-compliance-and-enforcement-submitter
         #submitterComponent
-        [parentForm]="form"
         [submitter]="submitter"
         [initialSubmissionType]="initialSubmissionType"
+        (formReady)="registerFormGroup($event)"
       />
 
       <app-compliance-and-enforcement-documents

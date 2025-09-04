@@ -56,6 +56,13 @@ export class ComplianceAndEnforcementService {
         submitters: withSubmitters,
         properties: withProperties,
       },
+      order: {
+        submitters: withSubmitters
+          ? {
+              dateAdded: 'DESC',
+            }
+          : undefined,
+      },
     });
 
     if (entity === null) {
