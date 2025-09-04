@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
   AllegedActivity,
@@ -37,13 +37,7 @@ export class OverviewComponent implements OnDestroy {
     intakeNotes: new FormControl<string>({ value: '', disabled: true }),
   });
 
-  @Input() set parentForm(parentForm: FormGroup) {
-    if (!parentForm || parentForm.contains('overview')) {
-      return;
-    }
-
-    parentForm.addControl('overview', this.form);
-  }
+  @Output() formReady = new EventEmitter<{ name: string; formGroup: FormGroup }>();
 
   $changes: BehaviorSubject<UpdateComplianceAndEnforcementDto> = new BehaviorSubject<UpdateComplianceAndEnforcementDto>(
     {},
@@ -80,6 +74,8 @@ export class OverviewComponent implements OnDestroy {
           intakeNotes: form.intakeNotes ?? '',
         });
       });
+
+      this.formReady.emit({ name: 'overview', formGroup: this.form });
 
       this.isSubscribed = true;
     }
