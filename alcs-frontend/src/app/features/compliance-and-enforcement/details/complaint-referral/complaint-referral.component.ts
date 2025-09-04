@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
@@ -11,6 +11,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { submissionDocumentOptions } from '../../draft/draft.component';
 import { OverviewComponent } from '../../overview/overview.component';
 import { ToastService } from '../../../../services/toast/toast.service';
+import { SubmitterComponent } from '../../submitter/submitter.component';
+import { UpdateComplianceAndEnforcementSubmitterDto } from '../../../../services/compliance-and-enforcement/submitter/submitter.dto';
+import { ComplianceAndEnforcementSubmitterService } from '../../../../services/compliance-and-enforcement/submitter/submitter.service';
+import { AddSubmitterDialogComponent } from './submitters/add-submitter-dialog/add-submitter-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-complaint-referral',
@@ -23,11 +29,12 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
   Section = Section;
 
   @ViewChild(OverviewComponent) overviewComponent?: OverviewComponent;
+  @ViewChildren(SubmitterComponent) submitterComponents?: QueryList<SubmitterComponent>;
 
   fileNumber?: string;
   file?: ComplianceAndEnforcementDto;
 
-  form = new FormGroup({ overview: new FormGroup({}), submitter: new FormGroup({}), property: new FormGroup({}) });
+  form = new FormGroup({});
 
   editing: string | null = null;
 
@@ -37,7 +44,10 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly service: ComplianceAndEnforcementService,
+    private readonly submitterService: ComplianceAndEnforcementSubmitterService,
     private readonly toastService: ToastService,
+    private readonly confirmationService: ConfirmationDialogService,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +64,7 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
     });
   }
 
-  async save() {
+  async saveOverview() {
     const updateDto: UpdateComplianceAndEnforcementDto = this.overviewComponent?.$changes.getValue() ?? {};
 
     if (!this.fileNumber) {
@@ -65,15 +75,88 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
 
     try {
       await firstValueFrom(this.service.update(this.fileNumber, updateDto, { idType: 'fileNumber' }));
-      this.toastService.showSuccessToast('File updated successfully');
+      this.toastService.showSuccessToast('Overview updated successfully');
       this.router.navigate(['../..'], { relativeTo: this.route });
     } catch (error) {
-      console.error('Error updating file:', error);
-      this.toastService.showErrorToast('Error loading file');
+      console.error('Error updating overview:', error);
+      this.toastService.showErrorToast('Error updating overview');
     }
   }
 
-  async ngOnDestroy() {
+  async saveSubmitters() {
+    if (!this.submitterComponents) {
+      return;
+    }
+
+    const submitters: { uuid: string; dto: UpdateComplianceAndEnforcementSubmitterDto }[] = this.submitterComponents
+      .toArray()
+      .flatMap((submitterComponent) => {
+        const [uuid, dto] = submitterComponent.$changes.getValue();
+
+        return uuid ? [{ uuid, dto }] : [];
+      });
+
+    try {
+      await firstValueFrom(this.submitterService.bulkUpdate(submitters));
+      this.toastService.showSuccessToast('Submitters updated successfully');
+      this.router.navigate(['../..'], { relativeTo: this.route });
+    } catch (error) {
+      console.error('Error updating submitters:', error);
+      this.toastService.showErrorToast('Error updating submitters');
+    }
+  }
+
+  async openNewSubmitterDialog() {
+    this.dialog
+      .open(AddSubmitterDialogComponent, {
+        minWidth: '600px',
+        maxWidth: '800px',
+        width: '70%',
+        data: {
+          fileUuid: this.file?.uuid,
+          initialSubmissionType: this.file?.initialSubmissionType,
+          service: this.submitterService,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (saveSuccessful) => {
+        if (saveSuccessful) {
+          if (this.fileNumber) {
+            await this.service.loadFile(this.fileNumber, { withSubmitters: true });
+          }
+        }
+      });
+  }
+
+  async deleteSubmitter(uuid: string) {
+    this.confirmationService
+      .openDialog({
+        body: 'Are you sure you want to delete this submitter?',
+      })
+      .subscribe(async (isConfirmed) => {
+        if (isConfirmed) {
+          try {
+            await this.submitterService.delete(uuid);
+            this.toastService.showSuccessToast('Submitter deleted');
+
+            if (this.fileNumber) {
+              this.service.loadFile(this.fileNumber, { withSubmitters: true });
+            }
+          } catch (error) {
+            console.error(error);
+            this.toastService.showErrorToast('Failed to delete submitter');
+          }
+        }
+      });
+  }
+
+  registerFormGroup(name: string, formGroup: FormGroup) {
+    setTimeout(() => {
+      this.form.addControl(name, formGroup);
+    });
+  }
+
+  ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
   }

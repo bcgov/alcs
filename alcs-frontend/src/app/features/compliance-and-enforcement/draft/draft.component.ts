@@ -90,7 +90,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   property?: ComplianceAndEnforcementPropertyDto;
   isPropertyCrown = false;
 
-  form = new FormGroup({ overview: new FormGroup({}), submitter: new FormGroup({}), property: new FormGroup({}) });
+  form = new FormGroup({});
 
   @ViewChild(OverviewComponent) overviewComponent?: OverviewComponent;
   @ViewChild(SubmitterComponent) submitterComponent?: SubmitterComponent;
@@ -158,15 +158,13 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
         debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
-        switchMap((submitter) =>
-          this.submitter?.uuid
-            ? this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitter)
+        switchMap(([uuid, submitter]) =>
+          uuid
+            ? this.complianceAndEnforcementSubmitterService.update(uuid, submitter)
             : this.complianceAndEnforcementSubmitterService.create({ ...submitter, fileUuid: this.file?.uuid }),
         ),
         tap((submitter) => {
-          if (!this.submitter) {
-            this.submitter = submitter;
-          }
+          this.submitter ??= submitter;
         }),
         catchError((error) => {
           console.error('Error saving C&E submitter draft', error);
@@ -314,16 +312,14 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const overviewUpdate = this.overviewComponent.$changes.getValue();
-    const submitterUpdate = this.submitterComponent.$changes.getValue();
+    const [submitterUuid, submitterUpdate] = this.submitterComponent.$changes.getValue();
     const propertyUpdate = this.propertyComponent.$changes.getValue();
 
     try {
       await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, overviewUpdate));
 
-      if (this.submitter?.uuid) {
-        await firstValueFrom(
-          this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitterUpdate),
-        );
+      if (submitterUuid) {
+        await firstValueFrom(this.complianceAndEnforcementSubmitterService.update(submitterUuid, submitterUpdate));
       } else {
         this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create(submitterUpdate));
       }
@@ -438,7 +434,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Persist latest values before finalizing (same as save but without navigate)
     const overviewUpdate = this.overviewComponent.$changes.getValue();
-    const submitterUpdate = this.submitterComponent.$changes.getValue();
+    const [_, submitterUpdate] = this.submitterComponent.$changes.getValue();
     const propertyUpdate = this.propertyComponent.$changes.getValue();
 
     try {
@@ -534,6 +530,10 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
+  }
+
+  registerFormGroup({ name, formGroup }: { name: string; formGroup: FormGroup }) {
+    this.form.addControl(name, formGroup);
   }
 
   ngOnDestroy(): void {

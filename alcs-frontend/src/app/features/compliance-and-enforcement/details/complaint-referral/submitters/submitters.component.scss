@@ -4,6 +4,12 @@
   color: colors.$grey;
 }
 
+.submitters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .inset {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -11,7 +17,6 @@
 
   background-color: colors.$grey-light;
   padding: 24px;
-  margin-top: 24px;
 
   .header {
     display: flex;
@@ -19,9 +24,9 @@
     align-items: center;
     grid-column: span 2;
 
-    // &:has(+ *) {
-    //   margin-bottom: 24px;
-    // }
+    &:has(+ *) {
+      margin-bottom: 24px;
+    }
   }
 }
 

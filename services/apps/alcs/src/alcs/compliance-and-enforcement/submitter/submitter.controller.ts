@@ -1,18 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { AUTH_ROLE, ROLES_ALLOWED_APPLICATIONS } from '../../../common/authorization/roles';
+import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { ComplianceAndEnforcementSubmitterService } from './submitter.service';
-import { ComplianceAndEnforcementSubmitterDto, UpdateComplianceAndEnforcementSubmitterDto } from './submitter.dto';
+import {
+  BulkUpdateComplianceAndEnforcementSubmitterDto,
+  ComplianceAndEnforcementSubmitterDto,
+  UpdateComplianceAndEnforcementSubmitterDto,
+} from './submitter.dto';
 import { DeleteResult } from 'typeorm';
 
 @Controller('compliance-and-enforcement/submitter')
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class ComplianceAndEnforcementSubmitterController {
-  constructor(private service: ComplianceAndEnforcementSubmitterService) {}
+  constructor(private readonly service: ComplianceAndEnforcementSubmitterService) {}
 
   @Post('')
   @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
@@ -29,6 +33,14 @@ export class ComplianceAndEnforcementSubmitterController {
     @Body() updateDto: UpdateComplianceAndEnforcementSubmitterDto,
   ): Promise<ComplianceAndEnforcementSubmitterDto> {
     return await this.service.update(uuid, updateDto);
+  }
+
+  @Patch('/bulk')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async bulkUpdate(
+    @Body() bulkDto: BulkUpdateComplianceAndEnforcementSubmitterDto,
+  ): Promise<ComplianceAndEnforcementSubmitterDto[]> {
+    return await this.service.bulkUpdate(bulkDto.submitters);
   }
 
   @Delete('/:uuid')

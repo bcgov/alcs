@@ -1,10 +1,21 @@
 <form [formGroup]="form">
   <div class="header full-width">
-    <h3>Submitter</h3>
+    <h3>{{ title }}</h3>
 
-    <mat-slide-toggle formControlName="isAnonymous" (change)="setAnonymity($event.checked)">
+    <mat-slide-toggle class="anonymous-toggle" formControlName="isAnonymous" (change)="setAnonymity($event.checked)">
       &nbsp;Mark as Anonymous
     </mat-slide-toggle>
+
+    <button
+      *ngIf="showDeleteButton"
+      class="delete-button"
+      mat-stroked-button
+      color="warn"
+      type="button"
+      (click)="deleteButtonClicked.emit()"
+    >
+      Delete
+    </button>
   </div>
 
   <mat-form-field class="full-width" appearance="outline">
