@@ -118,7 +118,7 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
           service: this.submitterService,
         },
       })
-      .beforeClosed()
+      .afterClosed()
       .subscribe(async (saveSuccessful) => {
         if (saveSuccessful) {
           if (this.fileNumber) {
