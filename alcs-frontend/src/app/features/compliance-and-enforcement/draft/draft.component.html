@@ -16,7 +16,7 @@
         title="Submitter"
         [submitter]="submitter"
         [initialSubmissionType]="initialSubmissionType"
-        (formReady)="registerFormGroup($event)"
+        (formReady)="registerFormGroup($event.name, $event.formGroup)"
       />
 
       <app-compliance-and-enforcement-documents
