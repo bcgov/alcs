@@ -37,7 +37,7 @@ export class OverviewComponent implements OnDestroy {
     intakeNotes: new FormControl<string>({ value: '', disabled: true }),
   });
 
-  @Output() formReady = new EventEmitter<{ name: string; formGroup: FormGroup }>();
+  @Output() formReady = new EventEmitter<FormGroup>();
 
   $changes: BehaviorSubject<UpdateComplianceAndEnforcementDto> = new BehaviorSubject<UpdateComplianceAndEnforcementDto>(
     {},
@@ -75,7 +75,7 @@ export class OverviewComponent implements OnDestroy {
         });
       });
 
-      this.formReady.emit({ name: 'overview', formGroup: this.form });
+      this.formReady.emit(this.form);
 
       this.isSubscribed = true;
     }

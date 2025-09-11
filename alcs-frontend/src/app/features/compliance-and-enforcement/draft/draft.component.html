@@ -8,7 +8,7 @@
         <app-compliance-and-enforcement-overview
           #overviewComponent
           [file]="file"
-          (formReady)="registerFormGroup('overview', $event.formGroup)"
+          (formReady)="registerFormGroup('overview', $event)"
         />
       </div>
       <app-compliance-and-enforcement-submitter
@@ -16,7 +16,7 @@
         title="Submitter"
         [submitter]="submitter"
         [initialSubmissionType]="initialSubmissionType"
-        (formReady)="registerFormGroup($event.name, $event.formGroup)"
+        (formReady)="registerFormGroup('submitter', $event)"
       />
 
       <app-compliance-and-enforcement-documents

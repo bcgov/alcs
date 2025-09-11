@@ -35,7 +35,7 @@ export class SubmitterComponent implements OnDestroy {
     additionalContactInformation: new FormControl<string>(''),
   });
 
-  @Output() formReady = new EventEmitter<{ name: string; formGroup: FormGroup }>();
+  @Output() formReady = new EventEmitter<FormGroup>();
 
   $changes: BehaviorSubject<[string | undefined, UpdateComplianceAndEnforcementSubmitterDto]> = new BehaviorSubject<
     [string | undefined, UpdateComplianceAndEnforcementSubmitterDto]
@@ -82,7 +82,7 @@ export class SubmitterComponent implements OnDestroy {
         ]);
       });
 
-      this.formReady.emit({ name: 'submitter', formGroup: this.form });
+      this.formReady.emit(this.form);
 
       this.isSubscribed = true;
     }

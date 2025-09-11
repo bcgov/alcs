@@ -546,7 +546,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   registerFormGroup(name: string, formGroup: FormGroup) {
     setTimeout(() => {
-      this.form.addControl(name, formGroup);
+      this.form.setControl(name, formGroup);
     });
   }
 
