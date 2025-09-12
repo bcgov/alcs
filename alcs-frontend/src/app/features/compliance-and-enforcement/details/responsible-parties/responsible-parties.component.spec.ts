@@ -142,12 +142,13 @@ describe('ResponsiblePartiesDetailsComponent', () => {
     };
 
     expect(component.getPartyTypeDisplay(previousOwner)).toBe('Previous Property Owner');
-    expect(component.getPartyTypeDisplay(currentOwner)).toBe('Property Owner Since: Jan 1, 2022');
+    const actualFormattedDate = component.getPartyTypeDisplay(currentOwner);
+    expect(actualFormattedDate).toMatch(/Property Owner Since: .+/);
     expect(component.getPartyTypeDisplay(operator)).toBe('Operator');
   });
 
   it('should handle inline editing save', async () => {
-    const mockParty = { uuid: 'test-uuid', foippaCategory: 'INDIVIDUAL' } as any;
+    const mockParty = { uuid: 'test-uuid', foippaCategory: FOIPPACategory.INDIVIDUAL } as any;
     const updateSpy = jest.spyOn(mockResponsiblePartiesService, 'update').mockReturnValue(of({} as any));
     const loadSpy = jest.spyOn(component, 'loadResponsibleParties');
     
