@@ -1,6 +1,6 @@
 <div class="header">
   <h3>{{ title }}</h3>
-  <button (click)="openUploadDialog()" mat-flat-button color="primary">+ Add Document</button>
+  <button (click)="openUploadDialog()" mat-flat-button color="primary">{{ addButtonText }}</button>
 </div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3 documents full-width">

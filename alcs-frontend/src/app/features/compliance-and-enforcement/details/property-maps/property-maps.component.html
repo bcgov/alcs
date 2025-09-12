@@ -1,0 +1,127 @@
+<ng-container *ngIf="editing === null">
+  <section class="file-section">
+    <h3>Property</h3>
+
+    <div class="property-overview">
+      <div class="inset">
+        <div class="field">
+          <div class="field-heading">Civic Address</div>
+          <ng-container *ngIf="file?.property?.civicAddress; else noData">
+            {{ file?.property?.civicAddress }}
+          </ng-container>
+        </div>
+
+        <div class="field">
+          <div class="field-heading">Legal Description</div>
+          <ng-container *ngIf="file?.property?.legalDescription; else noData">
+            {{ file?.property?.legalDescription }}
+          </ng-container>
+        </div>
+
+        <div class="field">
+          <div class="field-heading">Local or First Nation Government</div>
+          <ng-container *ngIf="getLocalGovernmentName(file?.property?.localGovernmentUuid); else noData">
+            {{ getLocalGovernmentName(file?.property?.localGovernmentUuid) }}
+          </ng-container>
+        </div>
+
+        <div class="field">
+          <div class="field-heading">Region</div>
+          <ng-container *ngIf="file?.property?.regionCode; else noData">
+            {{ file?.property?.regionCode }}
+          </ng-container>
+        </div>
+
+        <div class="field">
+          <div class="field-heading">Latitude</div>
+          <ng-container *ngIf="file?.property?.latitude !== undefined && file?.property?.latitude !== null; else noData">
+            {{ file?.property?.latitude | number:'1.5-5' }}
+          </ng-container>
+        </div>
+
+        <div class="field">
+          <div class="field-heading">Longitude</div>
+          <ng-container *ngIf="file?.property?.longitude !== undefined && file?.property?.longitude !== null; else noData">
+            {{ file?.property?.longitude | number:'1.5-5' }}
+          </ng-container>
+        </div>
+
+        <div class="field">
+          <div class="field-heading">Ownership Type</div>
+          <ng-container *ngIf="file?.property?.ownershipTypeCode; else noData">
+            {{ file?.property?.ownershipTypeCode === 'SMPL' ? 'Fee Simple' : 'Crown' }}
+          </ng-container>
+        </div>
+
+        <div class="field" *ngIf="file?.property?.pid">
+          <div class="field-heading">PID</div>
+          {{ file?.property?.pid }}
+        </div>
+
+        <div class="field" *ngIf="file?.property?.pin">
+          <div class="field-heading">PIN</div>
+          {{ file?.property?.pin }}
+        </div>
+
+        <div class="field">
+          <div class="field-heading">Area (ha)</div>
+          <ng-container *ngIf="file?.property?.areaHectares !== undefined && file?.property?.areaHectares !== null; else noData">
+            {{ file?.property?.areaHectares }}
+          </ng-container>
+        </div>
+
+        <div class="field">
+          <div class="field-heading">% within ALR</div>
+          <ng-container *ngIf="file?.property?.alrPercentage !== undefined && file?.property?.alrPercentage !== null; else noData">
+            {{ file?.property?.alrPercentage }}%
+          </ng-container>
+        </div>
+
+        <div class="field full-width">
+          <div class="field-heading">ALC History</div>
+          <ng-container *ngIf="file?.property?.alcHistory; else noData">
+            {{ file?.property?.alcHistory }}
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="edit-section-button-container">
+      <a mat-flat-button color="accent" [routerLink]="'edit'" class="edit-section-button">Edit Section</a>
+    </div>
+  </section>
+
+  <section class="file-section">
+    <app-compliance-and-enforcement-documents
+      #mapsDocumentsComponent
+      [title]="'Maps'"
+      [noDocumentsText]="'No maps'"
+      [fileNumber]="fileNumber"
+      [options]="mapsDocumentOptions"
+      [section]="Section.MAPS"
+      [addButtonText]="'+ Add Maps'"
+    />
+  </section>
+</ng-container>
+
+<ng-container *ngIf="editing === 'property'">
+  <form [formGroup]="form">
+    <section class="form-section">
+      <h3>Property & Maps > Edit Property</h3>
+      <app-compliance-and-enforcement-property
+        #propertyComponent
+        [property]="file?.property"
+        [parentForm]="form"
+      />
+    </section>
+
+    <div class="button-container">
+      <a mat-stroked-button color="warn" [routerLink]="'..'">Cancel</a>
+      <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="saveProperty()">Save</button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #noData>
+  <div class="no-data">No Data</div>
+</ng-template>
