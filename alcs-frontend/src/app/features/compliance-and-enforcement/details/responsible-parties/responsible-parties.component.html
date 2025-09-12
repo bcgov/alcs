@@ -15,7 +15,8 @@
           <div class="field-heading">Notes</div>
           <app-inline-text
             [value]="crownNotes"
-            placeholder="Add notes..."
+            addText="Add Notes"
+            placeholder="Add Notes"
             (save)="saveInlineEdit(crownParty, 'notes', $event)"
           ></app-inline-text>
         </div>
@@ -47,7 +48,8 @@
           <app-inline-text
             [value]="getPartyEmail(party)"
             [isEmail]="true"
-            placeholder="Add email..."
+            addText="Add Email"
+            placeholder="Add Email"
             (save)="saveInlineEdit(party, 'email', $event)"
           ></app-inline-text>
         </div>
@@ -58,7 +60,8 @@
           <app-inline-text
             [value]="getPartyPhone(party)"
             [mask]="'(000) 000-0000'"
-            placeholder="Add telephone..."
+            addText="Add Telephone"
+            placeholder="Add Telephone"
             (save)="saveInlineEdit(party, 'phone', $event)"
           ></app-inline-text>
         </div>
@@ -83,7 +86,8 @@
           <div class="field-heading">Notes</div>
           <app-inline-text
             [value]="getPartyNotes(party)"
-            placeholder="Add notes..."
+            addText="Add Notes"
+            placeholder="Add Notes"
             (save)="saveInlineEdit(party, 'notes', $event)"
           ></app-inline-text>
         </div>
