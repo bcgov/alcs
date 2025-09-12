@@ -60,11 +60,12 @@ describe('ComplaintReferralComponent', () => {
   });
 
   it('should set editing from route data on ngOnInit', () => {
-    const dataSubject = new Subject<any>();
-    mockActivatedRoute.data = dataSubject as any;
+    const editing = 'overview';
+    mockActivatedRoute.snapshot.data = { editing };
+
     component.ngOnInit();
-    dataSubject.next({ editing: 'overview' });
-    expect(component.editing).toBe('overview');
+
+    expect(component.editing).toBe(editing);
   });
 
   it('should set file, fileNumber, and submissionDocumentOptions.fileId from service.$file', () => {

@@ -12,7 +12,10 @@ import { submissionDocumentOptions } from '../../draft/draft.component';
 import { OverviewComponent } from '../../overview/overview.component';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { SubmitterComponent } from '../../submitter/submitter.component';
-import { UpdateComplianceAndEnforcementSubmitterDto } from '../../../../services/compliance-and-enforcement/submitter/submitter.dto';
+import {
+  ComplianceAndEnforcementSubmitterDto,
+  UpdateComplianceAndEnforcementSubmitterDto,
+} from '../../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../../services/compliance-and-enforcement/submitter/submitter.service';
 import { AddSubmitterDialogComponent } from './submitters/add-submitter-dialog/add-submitter-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -51,9 +54,7 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.route.data.pipe(takeUntil(this.$destroy)).subscribe(async (data) => {
-      this.editing = data['editing'];
-    });
+    this.editing = this.route.snapshot.data['editing'];
 
     this.service.$file.pipe(takeUntil(this.$destroy)).subscribe((file) => {
       if (file) {
@@ -152,8 +153,12 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
 
   registerFormGroup(name: string, formGroup: FormGroup) {
     setTimeout(() => {
-      this.form.addControl(name, formGroup);
+      this.form.setControl(name, formGroup);
     });
+  }
+
+  trackByUuid(_: number, item: ComplianceAndEnforcementSubmitterDto) {
+    return item.uuid;
   }
 
   ngOnDestroy() {

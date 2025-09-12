@@ -50,7 +50,9 @@ export class AddSubmitterDialogComponent {
     this.isSaving = false;
   }
 
-  registerFormGroup({ name, formGroup }: { name: string; formGroup: FormGroup }) {
-    this.form.addControl(name, formGroup);
+  registerFormGroup(name: string, formGroup: FormGroup) {
+    setTimeout(() => {
+      this.form.setControl(name, formGroup);
+    });
   }
 }

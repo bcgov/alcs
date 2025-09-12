@@ -5,19 +5,24 @@
     <section class="form-section">
       <div>
         <h3>Overview</h3>
-        <app-compliance-and-enforcement-overview #overviewComponent [parentForm]="form" [file]="file" />
+        <app-compliance-and-enforcement-overview
+          #overviewComponent
+          [file]="file"
+          (formReady)="registerFormGroup('overview', $event)"
+        />
       </div>
       <app-compliance-and-enforcement-submitter
         #submitterComponent
+        title="Submitter"
         [submitter]="submitter"
         [initialSubmissionType]="initialSubmissionType"
-        (formReady)="registerFormGroup($event)"
+        (formReady)="registerFormGroup('submitter', $event)"
       />
 
       <app-compliance-and-enforcement-documents
         #submissionDocumentsComponent
-        [title]="'Complaint/Referral Submission'"
-        [noDocumentsText]="'No Complaint/Referral'"
+        title="Complaint/Referral Submission"
+        noDocumentsText="No Complaint/Referral"
         [fileNumber]="fileNumber"
         [options]="submissionDocumentOptions"
         [section]="Section.SUBMISSION"
@@ -36,8 +41,8 @@
       />
       <app-compliance-and-enforcement-documents
         #ownershipDocumentsComponent
-        [title]="'Property Ownership Documents'"
-        [noDocumentsText]="'No owner information'"
+        title="Property Ownership Documents"
+        noDocumentsText="No owner information"
         [fileNumber]="fileNumber"
         [options]="ownershipDocumentOptions"
         [section]="Section.OWNERSHIP"

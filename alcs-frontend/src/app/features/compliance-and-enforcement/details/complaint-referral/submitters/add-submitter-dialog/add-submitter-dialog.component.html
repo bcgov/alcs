@@ -1,10 +1,10 @@
 <form [formGroup]="form">
   <app-compliance-and-enforcement-submitter
     #submitterComponent
-    [title]="'Add Submitter'"
+    title="Add Submitter"
     [submitter]="undefined"
     [initialSubmissionType]="data?.initialSubmissionType"
-    (formReady)="registerFormGroup($event)"
+    (formReady)="registerFormGroup('submitter', $event)"
   />
 
   <div class="button-container">

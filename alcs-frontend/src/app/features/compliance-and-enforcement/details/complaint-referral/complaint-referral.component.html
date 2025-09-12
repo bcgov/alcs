@@ -25,8 +25,8 @@
   <section class="file-section">
     <app-compliance-and-enforcement-documents
       #submissionDocumentsComponent
-      [title]="'Complaint/Referral Submission'"
-      [noDocumentsText]="'No Complaint/Referral'"
+      title="Complaint/Referral Submission"
+      noDocumentsText="No Complaint/Referral"
       [fileNumber]="fileNumber"
       [options]="submissionDocumentOptions"
       [section]="Section.SUBMISSION"
@@ -38,12 +38,16 @@
   <form [formGroup]="form">
     <section class="form-section">
       <h3>Complaint / Referral > Edit Overview</h3>
-      <app-compliance-and-enforcement-overview #overviewComponent [parentForm]="form" [file]="file" />
+      <app-compliance-and-enforcement-overview
+        #overviewComponent
+        [file]="file"
+        (formReady)="registerFormGroup('overview', $event)"
+      />
     </section>
 
     <div class="button-container">
       <a mat-stroked-button color="warn" [routerLink]="'../..'">Cancel</a>
-      <button mat-flat-button color="primary" (click)="saveOverview()">Save</button>
+      <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="saveOverview()">Save</button>
     </div>
   </form>
 </ng-container>
@@ -53,7 +57,7 @@
     <section class="form-section">
       <h3>Complaint / Referral > Edit Submitters</h3>
 
-      <div class="submitter-container" *ngFor="let submitter of file?.submitters; let i = index">
+      <div class="submitter-container" *ngFor="let submitter of file?.submitters; let i = index; trackBy: trackByUuid">
         <app-compliance-and-enforcement-submitter
           #submitterComponents
           [title]="'#' + (i + 1)"
@@ -61,7 +65,7 @@
           [submitter]="submitter"
           [initialSubmissionType]="file?.initialSubmissionType ?? undefined"
           (deleteButtonClicked)="deleteSubmitter(submitter.uuid)"
-          (formReady)="registerFormGroup('submitter-' + i, $event.formGroup)"
+          (formReady)="registerFormGroup('submitter-' + submitter.uuid, $event)"
         />
       </div>
     </section>
