@@ -146,16 +146,15 @@ describe('ResponsiblePartiesDetailsComponent', () => {
     expect(component.getPartyTypeDisplay(operator)).toBe('Operator');
   });
 
-  it('should handle inline editing states correctly', () => {
-    const partyUuid = 'test-uuid';
+  it('should handle inline editing save', async () => {
+    const mockParty = { uuid: 'test-uuid', foippaCategory: 'INDIVIDUAL' } as any;
+    const updateSpy = jest.spyOn(mockResponsiblePartiesService, 'update').mockReturnValue(of({} as any));
+    const loadSpy = jest.spyOn(component, 'loadResponsibleParties');
     
-    expect(component.isEditing(partyUuid, 'email')).toBe(false);
+    await component.saveInlineEdit(mockParty, 'email', 'test@example.com');
     
-    component.startEditing(partyUuid, 'email');
-    expect(component.isEditing(partyUuid, 'email')).toBe(true);
-    
-    component.cancelInlineEdit(partyUuid, 'email');
-    expect(component.isEditing(partyUuid, 'email')).toBe(false);
+    expect(updateSpy).toHaveBeenCalledWith('test-uuid', { individualEmail: 'test@example.com' });
+    expect(loadSpy).toHaveBeenCalled();
   });
 
   it('should complete $destroy on ngOnDestroy', () => {
