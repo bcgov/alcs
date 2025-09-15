@@ -13,6 +13,7 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 export enum Section {
   SUBMISSION = 'Submission',
   OWNERSHIP = 'Ownership',
+  MAPS = 'Maps',
 }
 
 @Injectable({

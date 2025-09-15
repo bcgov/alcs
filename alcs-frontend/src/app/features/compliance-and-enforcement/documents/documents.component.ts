@@ -31,6 +31,7 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnDestroy {
   @Input() fileNumber?: string;
   @Input() options?: DocumentUploadDialogData;
   @Input() section?: Section;
+  @Input() addButtonText?: string = '+ Add Document';
 
   displayedColumns: string[] = ['source', 'type', 'fileName', 'uploadedAt', 'actions'];
 
@@ -144,6 +145,11 @@ export class ComplianceAndEnforcementDocumentsComponent implements OnDestroy {
         }
       };
       this.dataSource.sort = this.sort;
+      
+      // Set default sort to uploadedAt DESC
+      if (this.sort) {
+        this.sort.sort({ id: 'uploadedAt', start: 'desc', disableClear: false });
+      }
     }
   }
 

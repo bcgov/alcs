@@ -16,6 +16,8 @@ import { ComplaintReferralComponent } from './details/complaint-referral/complai
 import { ComplaintReferralOverviewComponent } from './details/complaint-referral/overview/overview.component';
 import { ComplaintReferralSubmittersComponent } from './details/complaint-referral/submitters/submitters.component';
 import { AddSubmitterDialogComponent } from './details/complaint-referral/submitters/add-submitter-dialog/add-submitter-dialog.component';
+import { PropertyMapsComponent } from './details/property-maps/property-maps.component';
+import { ResponsiblePartiesDetailsComponent } from './details/responsible-parties/responsible-parties.component';
 
 export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = [
   {
@@ -43,6 +45,40 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
         path: 'submitters/edit',
         component: ComplaintReferralComponent,
         data: { editing: 'submitters' },
+      },
+    ],
+  },
+  {
+    path: 'property-maps',
+    icon: 'location_on',
+    menuTitle: 'Property & Maps',
+    children: [
+      {
+        path: '',
+        component: PropertyMapsComponent,
+        data: { editing: null },
+      },
+      {
+        path: 'edit',
+        component: PropertyMapsComponent,
+        data: { editing: 'property' },
+      },
+    ],
+  },
+  {
+    path: 'responsible-parties',
+    icon: 'people',
+    menuTitle: 'Responsible Parties',
+    children: [
+      {
+        path: '',
+        component: ResponsiblePartiesDetailsComponent,
+        data: { editing: null },
+      },
+      {
+        path: 'edit',
+        component: ResponsiblePartiesDetailsComponent,
+        data: { editing: 'parties' },
       },
     ],
   },
@@ -75,6 +111,8 @@ const routes: Routes = [
     ComplaintReferralOverviewComponent,
     ComplaintReferralSubmittersComponent,
     AddSubmitterDialogComponent,
+    PropertyMapsComponent,
+    ResponsiblePartiesDetailsComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MatMomentDateModule, CommonModule, SharedModule],
 })

@@ -1,6 +1,6 @@
 <div class="inline-number-wrapper" [ngClass]="{ 'fixed-height': isFixedHeight }">
   <span class="left" *ngIf="!isEditing">
-    <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
+    <a (click)="startEdit()" class="add" *ngIf="!value"> {{ addText }} </a>
     <span *ngIf="value && !mask">
       {{ value }}
     </span>
