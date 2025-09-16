@@ -4,7 +4,7 @@ This script is an ETL utility that imports data from the OATS system into the AL
 
 ## Requirements
 
-Python 3.6 or higher
+Python 3.13 or higher
 
 ### Mac OS
 
