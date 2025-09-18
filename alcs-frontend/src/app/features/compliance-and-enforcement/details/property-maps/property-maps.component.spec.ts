@@ -1,14 +1,15 @@
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ComplianceAndEnforcementPropertyService } from '../../../../services/compliance-and-enforcement/property/property.service';
-import { ApplicationLocalGovernmentService } from '../../../../services/application/application-local-government/application-local-government.service';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PropertyMapsComponent } from './property-maps.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '../../../../services/toast/toast.service';
-import { firstValueFrom, of, Subject } from 'rxjs';
-import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { BehaviorSubject, firstValueFrom, of, Subject } from 'rxjs';
+import { ApplicationRegionDto } from '../../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentService } from '../../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../../services/application/application.service';
+import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ComplianceAndEnforcementPropertyDto } from '../../../../services/compliance-and-enforcement/property/property.dto';
+import { ComplianceAndEnforcementPropertyService } from '../../../../services/compliance-and-enforcement/property/property.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { PropertyMapsComponent } from './property-maps.component';
 
 describe('PropertyMapsComponent', () => {
   let component: PropertyMapsComponent;
@@ -19,6 +20,7 @@ describe('PropertyMapsComponent', () => {
   let mockPropertyService: DeepMocked<ComplianceAndEnforcementPropertyService>;
   let mockToastService: DeepMocked<ToastService>;
   let mockLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockActivatedRoute = createMock<ActivatedRoute>();
@@ -27,6 +29,8 @@ describe('PropertyMapsComponent', () => {
     mockPropertyService = createMock<ComplianceAndEnforcementPropertyService>();
     mockToastService = createMock<ToastService>();
     mockLocalGovernmentService = createMock<ApplicationLocalGovernmentService>();
+    mockApplicationService = createMock<ApplicationService>();
+    mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
     TestBed.configureTestingModule({
       imports: [],
@@ -55,6 +59,10 @@ describe('PropertyMapsComponent', () => {
         {
           provide: ApplicationLocalGovernmentService,
           useValue: mockLocalGovernmentService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
       ],
     });
