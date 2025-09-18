@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { firstValueFrom, Subject, takeUntil } from 'rxjs';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import { Section } from '../../../../services/compliance-and-enforcement/documents/document.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PropertyComponent } from '../../property/property.component';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { ApplicationRegionDto } from '../../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../../services/application/application.service';
+import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { Section } from '../../../../services/compliance-and-enforcement/documents/document.service';
+import { ComplianceAndEnforcementPropertyService } from '../../../../services/compliance-and-enforcement/property/property.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { DocumentUploadDialogData } from '../../../../shared/document-upload-dialog/document-upload-dialog.interface';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
-import { ComplianceAndEnforcementPropertyService } from '../../../../services/compliance-and-enforcement/property/property.service';
-import { ApplicationLocalGovernmentService } from '../../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationLocalGovernmentDto } from '../../../../services/application/application-local-government/application-local-government.dto';
+import { PropertyComponent } from '../../property/property.component';
 
 export const mapsDocumentOptions: DocumentUploadDialogData = {
   // A necessary hack to make this work without rewriting lots of code
@@ -25,7 +27,13 @@ export const mapsDocumentOptions: DocumentUploadDialogData = {
     DOCUMENT_SOURCE.OTHER_AGENCY,
     DOCUMENT_SOURCE.ALC,
   ],
-  allowedDocumentTypes: [DOCUMENT_TYPE.PROPOSAL_MAP, DOCUMENT_TYPE.OTHER],
+  allowedDocumentTypes: [
+    DOCUMENT_TYPE.ALC_CONTEXT_MAP,
+    DOCUMENT_TYPE.AIRPHOTO_MAP,
+    DOCUMENT_TYPE.AMENDMENT_MAP,
+    DOCUMENT_TYPE.CAPABILITY_MAP,
+    DOCUMENT_TYPE.TENURE_MAP,
+  ],
 };
 
 @Component({
@@ -43,6 +51,7 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
   fileNumber?: string;
   file?: ComplianceAndEnforcementDto;
   localGovernments: ApplicationLocalGovernmentDto[] = [];
+  regions: ApplicationRegionDto[] = [];
 
   form = new FormGroup({});
 
@@ -57,6 +66,7 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     private readonly propertyService: ComplianceAndEnforcementPropertyService,
     private readonly toastService: ToastService,
     private readonly localGovernmentService: ApplicationLocalGovernmentService,
+    private readonly applicationService: ApplicationService,
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +83,7 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     });
 
     this.loadLocalGovernments();
+    this.loadRegions();
   }
 
   async loadLocalGovernments() {
@@ -89,6 +100,32 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     }
     const lg = this.localGovernments.find(g => g.uuid === localGovernmentUuid);
     return lg?.name || '';
+  }
+
+  loadRegions() {
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
+      this.regions = regions;
+    });
+  }
+
+  getRegionName(regionCode?: string): string {
+    if (!regionCode || !this.regions.length) {
+      return '';
+    }
+    const region = this.regions.find(r => r.code === regionCode);
+    return region?.label || '';
+  }
+
+  formatPid(pid?: string): string {
+    if (!pid) {
+      return '';
+    }
+    // Remove any non-digits and format as XXX-XXX-XXX
+    const digitsOnly = pid.replace(/\D/g, '');
+    if (digitsOnly.length === 9) {
+      return `${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3, 6)}-${digitsOnly.substring(6, 9)}`;
+    }
+    return pid; // Return original if not 9 digits
   }
 
 

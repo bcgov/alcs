@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-  <div class="header full-width">
+  <div class="header full-width" *ngIf="!hideHeader">
     <h3>Property</h3>
   </div>
 
@@ -140,6 +140,10 @@
           <div *ngIf="form.get('pid')?.hasError('required') && form.get('pid')?.touched" class="validation-error">
             <mat-icon class="error-icon">warning</mat-icon>
             <span>This field is required</span>
+          </div>
+          <div *ngIf="form.get('pid')?.hasError('pidLength') && form.get('pid')?.touched" class="validation-error">
+            <mat-icon class="error-icon">warning</mat-icon>
+            <span>PID must be exactly 9 digits</span>
           </div>
         </div>
 
