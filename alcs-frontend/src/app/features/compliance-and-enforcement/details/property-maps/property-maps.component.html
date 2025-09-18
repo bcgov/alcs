@@ -55,7 +55,7 @@
 
         <div class="field" *ngIf="file?.property?.pid">
           <div class="field-heading">PID</div>
-          {{ formatPid(file?.property?.pid) }}
+          {{ (file?.property?.pid || '') | mask: '000-000-000' }}
         </div>
 
         <div class="field" *ngIf="file?.property?.pin">

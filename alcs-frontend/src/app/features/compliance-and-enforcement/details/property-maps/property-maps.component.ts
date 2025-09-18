@@ -102,10 +102,12 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     return lg?.name || '';
   }
 
-  loadRegions() {
-    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
-      this.regions = regions;
-    });
+  async loadRegions() {
+    try {
+      this.regions = await firstValueFrom(this.applicationService.$applicationRegions);
+    } catch (error) {
+      console.error('Error loading regions:', error);
+    }
   }
 
   getRegionName(regionCode?: string): string {
@@ -116,17 +118,6 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     return region?.label || '';
   }
 
-  formatPid(pid?: string): string {
-    if (!pid) {
-      return '';
-    }
-    // Remove any non-digits and format as XXX-XXX-XXX
-    const digitsOnly = pid.replace(/\D/g, '');
-    if (digitsOnly.length === 9) {
-      return `${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3, 6)}-${digitsOnly.substring(6, 9)}`;
-    }
-    return pid; // Return original if not 9 digits
-  }
 
 
   async saveProperty() {
