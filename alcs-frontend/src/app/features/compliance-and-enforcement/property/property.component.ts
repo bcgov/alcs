@@ -1,16 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject, takeUntil, Observable, map, startWith } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange } from '@angular/material/select';
+import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
+import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../services/application/application.service';
 import {
   ComplianceAndEnforcementPropertyDto,
   UpdateComplianceAndEnforcementPropertyDto,
 } from '../../../services/compliance-and-enforcement/property/property.dto';
-import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationService } from '../../../services/application/application.service';
-import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
 
 // Define ownership types locally for now
 const PARCEL_OWNERSHIP_TYPE = {
@@ -38,6 +38,22 @@ function decimalPlacesValidator(decimals: number) {
 
     return null;
   };
+}
+
+// Custom validator for PID to ensure exactly 9 digits
+function pidValidator(control: any) {
+  if (!control.value || control.value === '') {
+    return null; // Allow empty values, required validator handles this
+  }
+
+  // Remove any non-digit characters for validation
+  const digitsOnly = control.value.replace(/\D/g, '');
+  
+  if (digitsOnly.length !== 9) {
+    return { pidLength: { requiredLength: 9, actualLength: digitsOnly.length } };
+  }
+
+  return null;
 }
 
 // Clean up the property update object to remove null, undefined, and empty strings, needed to save draft effectively
@@ -111,12 +127,14 @@ export class PropertyComponent implements OnInit, OnDestroy {
     ]),
     ownershipTypeCode: new FormControl<string>(PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE, [Validators.required]),
     pidOrPin: new FormControl<string>('PID'),
-    pid: new FormControl<string>(''),
+    pid: new FormControl<string>('', [pidValidator]),
     pin: new FormControl<string>(''),
     areaHectares: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
     alrPercentage: new FormControl<number | null>(null, [Validators.required, Validators.min(0), Validators.max(100)]),
     alcHistory: new FormControl<string>('', [Validators.required]),
   });
+
+  @Input() hideHeader = false;
 
   @Input() set parentForm(parentForm: FormGroup) {
     if (!parentForm || parentForm.contains('property')) {
@@ -129,40 +147,12 @@ export class PropertyComponent implements OnInit, OnDestroy {
   $changes: BehaviorSubject<UpdateComplianceAndEnforcementPropertyDto> =
     new BehaviorSubject<UpdateComplianceAndEnforcementPropertyDto>({});
 
+  private _property?: ComplianceAndEnforcementPropertyDto;
+
   @Input()
   set property(property: ComplianceAndEnforcementPropertyDto | undefined) {
-    if (property) {
-      this.isPatching = true;
-      this.form.disable();
-
-      // Default to PID if neither has been set as a value
-      const pidOrPin = property.pin && !property.pid ? 'PIN' : 'PID';
-
-      // Find the local government to display its name
-      const lg = this.localGovernments.find(g => g.uuid === property.localGovernmentUuid);
-      this.localGovernmentControl.setValue(lg?.name || '');
-
-      this.form.patchValue({
-        civicAddress: property.civicAddress,
-        legalDescription: property.legalDescription,
-        localGovernmentUuid: property.localGovernmentUuid,
-        regionCode: property.regionCode,
-        latitude: this.parseNumberOrNull(property.latitude),
-        longitude: this.parseNumberOrNull(property.longitude),
-        ownershipTypeCode: property.ownershipTypeCode,
-        pidOrPin: pidOrPin,
-        pid: property.pid || '',
-        pin: property.pin || '',
-        areaHectares: this.parseNumberOrNull(property.areaHectares),
-        alrPercentage: this.parseNumberOrNull(property.alrPercentage),
-        alcHistory: property.alcHistory,
-      });
-
-      this.setPidOrPin(pidOrPin);
-
-      this.form.enable();
-      this.isPatching = false;
-    }
+    this._property = property;
+    this.updateFormWithProperty();
 
     // Prevent resubscription
     if (!this.isSubscribed) {
@@ -235,9 +225,50 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
       // Trigger the filter to update now that we have data
       this.localGovernmentControl.updateValueAndValidity();
+      
+      // Update form with property data now that local governments are loaded
+      this.updateFormWithProperty();
     } catch (error) {
       console.error('Error loading local governments:', error);
     }
+  }
+
+  private updateFormWithProperty() {
+    if (!this._property) {
+      return;
+    }
+
+    const property = this._property;
+    this.isPatching = true;
+    this.form.disable();
+
+    // Default to PID if neither has been set as a value
+    const pidOrPin = property.pin && !property.pid ? 'PIN' : 'PID';
+
+    // Find the local government to display its name
+    const lg = this.localGovernments.find(g => g.uuid === property.localGovernmentUuid);
+    this.localGovernmentControl.setValue(lg?.name || '');
+
+    this.form.patchValue({
+      civicAddress: property.civicAddress,
+      legalDescription: property.legalDescription,
+      localGovernmentUuid: property.localGovernmentUuid,
+      regionCode: property.regionCode,
+      latitude: this.parseNumberOrNull(property.latitude),
+      longitude: this.parseNumberOrNull(property.longitude),
+      ownershipTypeCode: property.ownershipTypeCode,
+      pidOrPin: pidOrPin,
+      pid: property.pid || '',
+      pin: property.pin || '',
+      areaHectares: this.parseNumberOrNull(property.areaHectares),
+      alrPercentage: this.parseNumberOrNull(property.alrPercentage),
+      alcHistory: property.alcHistory,
+    });
+
+    this.setPidOrPin(pidOrPin);
+
+    this.form.enable();
+    this.isPatching = false;
   }
 
   private filterLocalGovernments(value: string): ApplicationLocalGovernmentDto[] {
@@ -342,7 +373,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
     } else {
       // For other ownership types, set requirements based on selection
       if (pidOrPinValue === 'PID') {
-        pidControl?.setValidators([Validators.required]);
+        pidControl?.setValidators([Validators.required, pidValidator]);
         pinControl?.setValidators([]);
       } else {
         pinControl?.setValidators([Validators.required]);
@@ -366,7 +397,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
     } else {
       // For other ownership types, set requirements based on selection
       if (type === 'PID') {
-        this.form.controls['pid'].setValidators([Validators.required]);
+        this.form.controls['pid'].setValidators([Validators.required, pidValidator]);
         this.form.controls['pin'].setValidators([]);
         this.form.controls['pin'].setValue('');
       } else {

@@ -27,8 +27,8 @@
 
         <div class="field">
           <div class="field-heading">Region</div>
-          <ng-container *ngIf="file?.property?.regionCode; else noData">
-            {{ file?.property?.regionCode }}
+          <ng-container *ngIf="getRegionName(file?.property?.regionCode); else noData">
+            {{ getRegionName(file?.property?.regionCode) }}
           </ng-container>
         </div>
 
@@ -55,7 +55,7 @@
 
         <div class="field" *ngIf="file?.property?.pid">
           <div class="field-heading">PID</div>
-          {{ file?.property?.pid }}
+          {{ (file?.property?.pid || '') | mask: '000-000-000' }}
         </div>
 
         <div class="field" *ngIf="file?.property?.pin">
@@ -105,13 +105,14 @@
 </ng-container>
 
 <ng-container *ngIf="editing === 'property'">
-  <form [formGroup]="form">
+  <form [formGroup]="form">  
     <section class="form-section">
       <h3>Property & Maps > Edit Property</h3>
       <app-compliance-and-enforcement-property
         #propertyComponent
         [property]="file?.property"
         [parentForm]="form"
+        [hideHeader]="true"
       />
     </section>
 
