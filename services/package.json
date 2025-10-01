@@ -75,7 +75,7 @@
     "typeorm": "^0.3.27",
     "typeorm-naming-strategies": "^4.1.0",
     "uuid": "^9.0.1",
-    "winston": "^3.18.0"
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "@golevelup/nestjs-testing": "^0.1.2",
@@ -85,7 +85,7 @@
     "@types/config": "^3.3.4",
     "@types/express": "^4.17.23",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.19.18",
+    "@types/node": "^20.19.19",
     "@types/node-jose": "^1.1.13",
     "@types/object-hash": "^3.0.6",
     "@types/source-map-support": "^0.5.10",
@@ -105,7 +105,7 @@
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "unionfs": "^4.6.0"
   },
   "jest": {
