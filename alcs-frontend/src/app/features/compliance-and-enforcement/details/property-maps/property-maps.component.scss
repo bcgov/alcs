@@ -8,13 +8,21 @@ section {
   margin: 32px 0;
 }
 
-.submitter-container {
+section.file-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   padding: 24px;
-  border: 1px solid colors.$grey;
-  border-radius: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  margin: 32px 0;
+
+  h3 {
+    margin-bottom: 16px; 
+  }
 }
 
-section.file-section {
+section.form-section {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -22,12 +30,11 @@ section.file-section {
   border-radius: 4px;
   box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
   margin: 32px 0;
-}
 
-.form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  h3 {
+    margin-bottom: 16px !important;
+    margin-top: 0;
+  }
 }
 
 .button-container {
@@ -39,6 +46,7 @@ section.file-section {
 .edit-section-button-container {
   display: flex;
   justify-content: center;
+  margin-top: 16px;
 }
 
 .edit-section-button {
@@ -53,8 +61,29 @@ a[mat-stroked-button] {
   text-transform: uppercase;
 }
 
-.submitters-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.no-data {
+  color: colors.$grey;
+}
+
+.inset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  background-color: colors.$grey-light;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.field {
+  width: 100%;
+
+  &.full-width {
+    grid-column: span 2;
+  }
+}
+
+.field-heading {
+  font-weight: bold;
+  margin-bottom: 5px;
 }

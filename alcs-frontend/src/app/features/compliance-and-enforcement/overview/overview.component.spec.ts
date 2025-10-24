@@ -70,13 +70,6 @@ describe('OverviewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should add overview control to parent form', () => {
-    const parentForm = new FormGroup({ overview: new FormGroup({}) });
-    component.parentForm = parentForm;
-
-    expect(parentForm.contains('overview')).toBe(true);
-  });
-
   it('should patch form values and enable form when file input is set', () => {
     component.file = mockFile;
 

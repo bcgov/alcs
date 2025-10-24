@@ -39,6 +39,13 @@ export enum DOCUMENT_TYPE {
   // C&E
   COMPLAINT = 'CMPL',
   BC_ASSESSMENT_REPORT = 'BCAR',
+  
+  // Maps
+  ALC_CONTEXT_MAP = 'LMAP',
+  AIRPHOTO_MAP = 'PMAP',
+  AMENDMENT_MAP = 'AMAP',
+  CAPABILITY_MAP = 'CMAP',
+  TENURE_MAP = 'TMAP',
 }
 
 export enum DOCUMENT_SOURCE {

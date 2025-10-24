@@ -20,6 +20,7 @@ export class InlineTextComponent implements AfterContentChecked, OnInit {
   @Input() updateOnSave: boolean = true;
   @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
+  @Input() addText: string = 'Add text';
   @Input() required = false;
   @Input() isEmail = false;
   @Input() isFixedHeight = false;
