@@ -17,6 +17,7 @@ import {
   ComplianceAndEnforcementValidatorService,
   ValidatedComplianceAndEnforcement,
 } from './compliance-and-enforcement-validator.service';
+import { UserService } from '../../user/user.service';
 
 export enum Status {
   OPEN = 'Open',
@@ -32,6 +33,7 @@ export class ComplianceAndEnforcementService {
     private readonly submitterService: ComplianceAndEnforcementSubmitterService,
     private readonly propertyService: ComplianceAndEnforcementPropertyService,
     private readonly validatorService: ComplianceAndEnforcementValidatorService,
+    private readonly userService: UserService,
   ) {}
 
   async fetchAll(): Promise<ComplianceAndEnforcementDto[]> {
@@ -76,6 +78,7 @@ export class ComplianceAndEnforcementService {
     fileNumber: string,
     withSubmitters = false,
     withProperty = false,
+    withAssignee = false,
   ): Promise<ComplianceAndEnforcementDto> {
     const entity = await this.repository.findOne({
       where: {
@@ -86,6 +89,7 @@ export class ComplianceAndEnforcementService {
         properties: withProperty && {
           localGovernment: true,
         },
+        assignee: withAssignee,
       },
     });
 
@@ -129,6 +133,18 @@ export class ComplianceAndEnforcementService {
     const updateEntity = this.mapper.map(updateDto, UpdateComplianceAndEnforcementDto, ComplianceAndEnforcement);
     updateEntity.uuid = entity.uuid;
     updateEntity.fileNumber = entity.fileNumber;
+
+    if (updateDto.assigneeUuid !== undefined) {
+      if (updateDto.assigneeUuid === null) {
+        updateEntity.assignee = null;
+      } else {
+        const assigneeEntity = await this.userService.getByUuid(updateDto.assigneeUuid);
+        if (assigneeEntity === null) {
+          throw new ServiceConflictException('A user with this UUID does not exist. Unable to assign.');
+        }
+        updateEntity.assignee = assigneeEntity;
+      }
+    }
 
     const savedEntity = await this.repository.save(updateEntity);
 

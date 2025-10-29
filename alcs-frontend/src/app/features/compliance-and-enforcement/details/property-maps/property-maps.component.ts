@@ -1,5 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import {
+  ComplianceAndEnforcementService,
+  DEFAULT_C_AND_E_FETCH_OPTIONS,
+} from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../../../services/application/application-code.dto';
@@ -7,7 +11,6 @@ import { ApplicationLocalGovernmentDto } from '../../../../services/application/
 import { ApplicationLocalGovernmentService } from '../../../../services/application/application-local-government/application-local-government.service';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { Section } from '../../../../services/compliance-and-enforcement/documents/document.service';
 import { ComplianceAndEnforcementPropertyService } from '../../../../services/compliance-and-enforcement/property/property.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -98,7 +101,7 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     if (!localGovernmentUuid || !this.localGovernments.length) {
       return '';
     }
-    const lg = this.localGovernments.find(g => g.uuid === localGovernmentUuid);
+    const lg = this.localGovernments.find((g) => g.uuid === localGovernmentUuid);
     return lg?.name || '';
   }
 
@@ -114,11 +117,9 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     if (!regionCode || !this.regions.length) {
       return '';
     }
-    const region = this.regions.find(r => r.code === regionCode);
+    const region = this.regions.find((r) => r.code === regionCode);
     return region?.label || '';
   }
-
-
 
   async saveProperty() {
     const propertyUpdate = this.propertyComponent?.$changes.getValue() ?? {};
@@ -132,12 +133,12 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
     try {
       await firstValueFrom(this.propertyService.update(this.file.property.uuid, propertyUpdate));
       this.toastService.showSuccessToast('Property updated successfully');
-      
+
       // Reload the file to get updated property data
       if (this.fileNumber) {
-        await this.service.loadFile(this.fileNumber, { withProperty: true });
+        await this.service.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
       }
-      
+
       this.router.navigate(['..'], { relativeTo: this.route });
     } catch (error) {
       console.error('Error updating property:', error);

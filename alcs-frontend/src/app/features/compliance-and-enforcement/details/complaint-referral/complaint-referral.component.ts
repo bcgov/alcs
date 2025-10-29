@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import {
+  ComplianceAndEnforcementService,
+  DEFAULT_C_AND_E_FETCH_OPTIONS,
+} from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import {
   ComplianceAndEnforcementDto,
   UpdateComplianceAndEnforcementDto,
@@ -123,7 +126,7 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
       .subscribe(async (saveSuccessful) => {
         if (saveSuccessful) {
           if (this.fileNumber) {
-            await this.service.loadFile(this.fileNumber, { withSubmitters: true });
+            await this.service.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
           }
         }
       });
@@ -141,7 +144,7 @@ export class ComplaintReferralComponent implements OnInit, OnDestroy {
             this.toastService.showSuccessToast('Submitter deleted');
 
             if (this.fileNumber) {
-              this.service.loadFile(this.fileNumber, { withSubmitters: true });
+              this.service.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
             }
           } catch (error) {
             console.error(error);
