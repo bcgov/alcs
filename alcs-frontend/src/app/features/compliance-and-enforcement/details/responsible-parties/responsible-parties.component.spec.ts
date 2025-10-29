@@ -1,16 +1,18 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ResponsiblePartiesDetailsComponent } from './responsible-parties.component';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ResponsiblePartiesService } from '../../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '../../../../services/toast/toast.service';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, Subject } from 'rxjs';
-import { 
-  ResponsiblePartyDto, 
-  ResponsiblePartyType, 
-  FOIPPACategory 
+import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { ComplianceAndEnforcementPropertyService } from '../../../../services/compliance-and-enforcement/property/property.service';
+import {
+  FOIPPACategory,
+  ResponsiblePartyDto,
+  ResponsiblePartyType
 } from '../../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
+import { ResponsiblePartiesService } from '../../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { ResponsiblePartiesDetailsComponent } from './responsible-parties.component';
 
 describe('ResponsiblePartiesDetailsComponent', () => {
   let component: ResponsiblePartiesDetailsComponent;
@@ -20,6 +22,7 @@ describe('ResponsiblePartiesDetailsComponent', () => {
   let mockService: DeepMocked<ComplianceAndEnforcementService>;
   let mockResponsiblePartiesService: DeepMocked<ResponsiblePartiesService>;
   let mockToastService: DeepMocked<ToastService>;
+  let mockPropertyService: DeepMocked<ComplianceAndEnforcementPropertyService>;
 
   beforeEach(async () => {
     mockActivatedRoute = createMock<ActivatedRoute>();
@@ -27,9 +30,11 @@ describe('ResponsiblePartiesDetailsComponent', () => {
     mockService = createMock<ComplianceAndEnforcementService>();
     mockResponsiblePartiesService = createMock<ResponsiblePartiesService>();
     mockToastService = createMock<ToastService>();
+    mockPropertyService = createMock<ComplianceAndEnforcementPropertyService>();
 
     TestBed.configureTestingModule({
       declarations: [ResponsiblePartiesDetailsComponent],
+      imports: [HttpClientTestingModule],
       providers: [
         {
           provide: ActivatedRoute,
@@ -50,6 +55,10 @@ describe('ResponsiblePartiesDetailsComponent', () => {
         {
           provide: ToastService,
           useValue: mockToastService,
+        },
+        {
+          provide: ComplianceAndEnforcementPropertyService,
+          useValue: mockPropertyService,
         },
       ],
     });

@@ -171,6 +171,11 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
       return `Previous ${party.partyType}`;
     }
     
+    if (party.ownerSince && party.partyType === ResponsiblePartyType.PROPERTY_OWNER) {
+      const formattedDate = this.formatOwnerSince(party.ownerSince);
+      return `${party.partyType} Since: ${formattedDate}`;
+    }
+    
     return party.partyType;
   }
 
