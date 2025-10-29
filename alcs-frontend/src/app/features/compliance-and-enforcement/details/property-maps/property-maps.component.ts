@@ -138,7 +138,7 @@ export class PropertyMapsComponent implements OnInit, OnDestroy {
         await this.service.loadFile(this.fileNumber, { withProperty: true });
       }
       
-      this.router.navigate(['../..'], { relativeTo: this.route });
+      this.router.navigate(['..'], { relativeTo: this.route });
     } catch (error) {
       console.error('Error updating property:', error);
       this.toastService.showErrorToast('Error updating property');

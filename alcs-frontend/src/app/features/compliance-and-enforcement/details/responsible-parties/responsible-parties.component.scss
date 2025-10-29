@@ -1,5 +1,15 @@
 @use '../../../../../styles/colors';
 
+.header-section {
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+}
+
 h5 {
   margin: 16px 0 !important;
 }
@@ -84,22 +94,27 @@ a[mat-stroked-button] {
 }
 
 .party-type-badge {
-  background-color: colors.$primary-color-light;
-  color: colors.$primary-color;
-  padding: 4px 12px;
-  border-radius: 16px;
   font-size: 14px;
   font-weight: 500;
 
   &.previous {
-    background-color: colors.$grey;
-    color: colors.$dark-contrast-text;
+    color: colors.$grey-dark;
+  }
+
+  .owner-since-label {
+    font-weight: bold;
   }
 }
 
 .party-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
 }
 
@@ -176,28 +191,35 @@ a[mat-stroked-button] {
 }
 
 .directors-section {
-  grid-column: span 2;
   margin-top: 8px;
 }
 
-.director-item {
-  background-color: white;
-  padding: 12px;
-  border-radius: 4px;
-  margin-bottom: 8px;
+.director-container {
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   
-  .director-name {
-    font-weight: 600;
-    margin-bottom: 4px;
+  .director-name-row {
+    margin-bottom: 8px;
+    
+    strong {
+      font-weight: 600;
+      font-size: 16px;
+    }
   }
   
-  .director-details {
-    font-size: 14px;
-    color: colors.$grey-dark;
-    
-    div {
-      margin-bottom: 2px;
-    }
+  .contact-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  
+  .director-separator {
+    border: none;
+    border-top: 1px solid colors.$grey-dark;
+    margin: 24px 0 8px 0;
+    width: 100%;
   }
 }
 

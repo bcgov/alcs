@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { detailsRoutes } from './compliance-and-enforcement.module';
 import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import {
   ComplianceAndEnforcementService,
   FetchOptions,
 } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ToastService } from '../../services/toast/toast.service';
-import { ResponsiblePartiesService } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 import { ResponsiblePartyType } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
+import { ResponsiblePartiesService } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { detailsRoutes } from './compliance-and-enforcement.module';
 
 @Component({
   selector: 'app-compliance-and-enforcement',
@@ -69,8 +69,9 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
           ResponsiblePartyType.PROPERTY_OWNER,
         );
 
-        this.propertyOwnerName =
-          (owners?.[0].organizationName || owners?.[0].individualName) + (owners.length > 1 ? ' et al.' : '');
+        this.propertyOwnerName = owners && owners.length > 0 
+          ? (owners[0].organizationName || owners[0].individualName) + (owners.length > 1 ? ' et al.' : '')
+          : '';
       }
     } catch (error) {
       console.error('Error loading file:', error);

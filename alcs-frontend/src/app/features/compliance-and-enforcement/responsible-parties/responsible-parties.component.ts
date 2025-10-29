@@ -1,19 +1,18 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Subject, takeUntil, firstValueFrom, EMPTY, catchError, debounceTime } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import moment, { Moment } from 'moment';
+import { EMPTY, Subject, catchError, debounceTime, firstValueFrom, takeUntil } from 'rxjs';
 import {
+  CreateResponsiblePartyDto,
+  FOIPPACategory,
   ResponsiblePartyDto,
   ResponsiblePartyType,
-  FOIPPACategory,
-  CreateResponsiblePartyDto,
-  UpdateResponsiblePartyDto,
-  CreateResponsiblePartyDirectorDto,
+  UpdateResponsiblePartyDto
 } from '../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
 import { ResponsiblePartiesService } from '../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { strictEmailValidator } from '../../../shared/validators/email-validator';
 import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../constants';
 
@@ -507,6 +506,24 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
 
   markAsRequiredError() {
     this.showRequiredError = true;
+  }
+
+  async saveAllForms(): Promise<void> {
+    // Force immediate save of all form changes, bypassing debounce
+    const savePromises: Promise<void>[] = [];
+    
+    for (let i = 0; i < this.form.length; i++) {
+      const partyForm = this.form.at(i);
+      const formValue = partyForm.value;
+      const existingParty = this.responsibleParties[i];
+      
+      if (partyForm.valid && partyForm.dirty) {
+        savePromises.push(this.handleFormValueChange(formValue, partyForm, existingParty));
+      }
+    }
+    
+    // Wait for all saves to complete
+    await Promise.all(savePromises);
   }
 
   ngOnDestroy(): void {
