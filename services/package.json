@@ -108,6 +108,9 @@
     "typescript": "^5.9.3",
     "unionfs": "^4.6.0"
   },
+  "overrides": {
+    "axios": "^1.11.1"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
