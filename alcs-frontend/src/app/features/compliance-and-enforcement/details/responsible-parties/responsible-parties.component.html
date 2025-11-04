@@ -1,7 +1,13 @@
+<!-- Header Section when editing -->
+<div *ngIf="editing === 'parties'" class="header-section">
+  <h2>Owner & Contacts > Edit {{ getHeaderPartyType() }}</h2>
+</div>
+
 <ng-container *ngIf="editing === null">
   <!-- Responsible Parties View -->
   <section class="file-section">
-    <h3>Allegedly Responsible Parties</h3>
+    <h3 *ngIf="responsibleParties.length === 1">{{ responsibleParties[0].partyType }}</h3>
+    <h3 *ngIf="responsibleParties.length > 1">Responsible Parties</h3>
 
     <!-- Crown Party (if property is Crown) -->
     <div *ngIf="isPropertyCrown" class="party-card">
@@ -31,58 +37,105 @@
       <div class="party-header">
         <h4>{{ getPartyDisplayName(party) }}</h4>
         <div class="party-type-badge" [class.previous]="party.isPrevious">
-          {{ getPartyTypeDisplay(party) }}
+          <span *ngIf="party.partyType === ResponsiblePartyType.PROPERTY_OWNER && party.ownerSince && !party.isPrevious" class="owner-since-label">Owner Since: </span>
+          <span *ngIf="party.partyType === ResponsiblePartyType.PROPERTY_OWNER && party.ownerSince && !party.isPrevious">{{ formatOwnerSince(party.ownerSince) }}</span>
+          <span *ngIf="!(party.partyType === ResponsiblePartyType.PROPERTY_OWNER && party.ownerSince && !party.isPrevious)">{{ getPartyTypeDisplay(party) }}</span>
         </div>
       </div>
 
       <div class="party-details">
-        <!-- Address (if individual) -->
-        <div *ngIf="party.foippaCategory === FOIPPACategory.INDIVIDUAL && getPartyAddress(party)" class="field">
-          <div class="field-heading">Mailing Address</div>
-          <div>{{ getPartyAddress(party) }}</div>
-        </div>
+        <!-- Contact Information Row (3-column layout) - Only for individuals -->
+        <div *ngIf="party.foippaCategory === FOIPPACategory.INDIVIDUAL" class="contact-row">
+          <!-- Address (if individual) -->
+          <div *ngIf="getPartyAddress(party)" class="field">
+            <div class="field-heading">Mailing Address</div>
+            <div>{{ getPartyAddress(party) }}</div>
+          </div>
+          
+          <!-- Empty div for spacing if no address -->
+          <div *ngIf="!getPartyAddress(party)" class="field">
+          </div>
 
-        <!-- Email -->
-        <div class="field">
-          <div class="field-heading">Email</div>
-          <app-inline-text
-            [value]="getPartyEmail(party)"
-            [isEmail]="true"
-            addText="Add Email"
-            placeholder="Add Email"
-            (save)="saveInlineEdit(party, 'email', $event)"
-          ></app-inline-text>
-        </div>
+          <!-- Email -->
+          <div class="field">
+            <div class="field-heading">Email</div>
+            <app-inline-text
+              [value]="getPartyEmail(party)"
+              [isEmail]="true"
+              addText="Add Email"
+              placeholder="Add Email"
+              (save)="saveInlineEdit(party, 'email', $event)"
+            ></app-inline-text>
+          </div>
 
-        <!-- Telephone -->
-        <div class="field">
-          <div class="field-heading">Telephone</div>
-          <app-inline-text
-            [value]="getPartyPhone(party)"
-            [mask]="'(000) 000-0000'"
-            addText="Add Telephone"
-            placeholder="Add Telephone"
-            (save)="saveInlineEdit(party, 'phone', $event)"
-          ></app-inline-text>
-        </div>
-
-        <!-- Directors (if organization) -->
-        <div *ngIf="party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length" class="directors-section">
-          <div class="field-heading">Directors</div>
-          <div *ngFor="let director of party.directors" class="director-item">
-            <div class="director-name">{{ director.directorName }}</div>
-            <div class="director-details">
-              <div *ngIf="director.directorMailingAddress">{{ director.directorMailingAddress }}</div>
-              <div *ngIf="director.directorEmail">
-                <a [href]="'mailto:' + director.directorEmail">{{ director.directorEmail }}</a>
-              </div>
-              <div *ngIf="director.directorTelephone">{{ director.directorTelephone | mask: "(000) 000-0000" }}</div>
-            </div>
+          <!-- Telephone -->
+          <div class="field">
+            <div class="field-heading">Telephone</div>
+            <app-inline-text
+              [value]="getPartyPhone(party)"
+              [mask]="'(000) 000-0000'"
+              addText="Add Telephone"
+              placeholder="Add Telephone"
+              (save)="saveInlineEdit(party, 'phone', $event)"
+            ></app-inline-text>
           </div>
         </div>
 
-        <!-- Notes -->
-        <div class="field">
+        <!-- Notes (for organizations, show under org name) -->
+        <div *ngIf="party.foippaCategory === FOIPPACategory.ORGANIZATION" class="field">
+          <div class="field-heading">Note</div>
+          <app-inline-text
+            [value]="getPartyNotes(party)"
+            addText="Add Notes"
+            placeholder="Add Notes"
+            (save)="saveInlineEdit(party, 'notes', $event)"
+          ></app-inline-text>
+        </div>
+        <!-- Directors (if organization) -->
+        <div *ngIf="party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length" class="directors-section">
+          <div *ngFor="let director of party.directors; let i = index" class="director-container">
+            <!-- Director Name Row -->
+            <div class="director-name-row">
+              <strong>Director: {{ director.directorName }}</strong>
+            </div>
+            
+            <!-- Director Contact Row (3-column layout) -->
+            <div class="contact-row">
+              <div class="field">
+                <div class="field-heading">Mailing Address</div>
+                <div *ngIf="director.directorMailingAddress; else noAddress">{{ director.directorMailingAddress }}</div>
+                <ng-template #noAddress>-</ng-template>
+              </div>
+              
+              <div class="field">
+                <div class="field-heading">Email</div>
+                <app-inline-text
+                  [value]="director.directorEmail || ''"
+                  [isEmail]="true"
+                  addText="Add Email"
+                  placeholder="Add Email"
+                  (save)="saveDirectorInlineEdit(party, director, 'email', $event)"
+                ></app-inline-text>
+              </div>
+              
+              <div class="field">
+                <div class="field-heading">Telephone</div>
+                <app-inline-text
+                  [value]="director.directorTelephone || ''"
+                  [mask]="'(000) 000-0000'"
+                  addText="Add Telephone"
+                  placeholder="Add Telephone"
+                  (save)="saveDirectorInlineEdit(party, director, 'phone', $event)"
+                ></app-inline-text>
+              </div>
+            </div>
+            
+            <hr *ngIf="i < (party.directors?.length || 0) - 1" class="director-separator">
+          </div>
+        </div>
+
+        <!-- Notes (for individuals only, since organizations have it above) -->
+        <div *ngIf="party.foippaCategory === FOIPPACategory.INDIVIDUAL" class="field">
           <div class="field-heading">Notes</div>
           <app-inline-text
             [value]="getPartyNotes(party)"
@@ -116,7 +169,6 @@
 <ng-container *ngIf="editing === 'parties'">
   <form [formGroup]="form">
     <section class="form-section">
-      <h3>Responsible Parties > Edit Allegedly Responsible Parties</h3>
       <app-compliance-and-enforcement-responsible-parties
         #responsiblePartiesComponent
         [fileUuid]="file?.uuid"

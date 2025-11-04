@@ -1,22 +1,23 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { firstValueFrom, Subject, takeUntil } from 'rxjs';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
-import { Section } from '../../../../services/compliance-and-enforcement/documents/document.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '../../../../services/toast/toast.service';
-import { DocumentUploadDialogData } from '../../../../shared/document-upload-dialog/document-upload-dialog.interface';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
+import moment from 'moment';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { Section } from '../../../../services/compliance-and-enforcement/documents/document.service';
+import { ComplianceAndEnforcementPropertyService } from '../../../../services/compliance-and-enforcement/property/property.service';
 import {
+  FOIPPACategory,
   ResponsiblePartyDto,
   ResponsiblePartyType,
-  FOIPPACategory,
   UpdateResponsiblePartyDto,
 } from '../../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
 import { ResponsiblePartiesService } from '../../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
+import { ToastService } from '../../../../services/toast/toast.service';
+import { DocumentUploadDialogData } from '../../../../shared/document-upload-dialog/document-upload-dialog.interface';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 import { ResponsiblePartiesComponent } from '../../responsible-parties/responsible-parties.component';
-import moment from 'moment';
 
 export const ownershipDocumentOptions: DocumentUploadDialogData = {
   fileId: '',
@@ -33,7 +34,7 @@ export const ownershipDocumentOptions: DocumentUploadDialogData = {
     DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
     DOCUMENT_TYPE.CORPORATE_SUMMARY,
     DOCUMENT_TYPE.BC_ASSESSMENT_REPORT,
-    DOCUMENT_TYPE.OTHER,
+    DOCUMENT_TYPE.SURVEY_PLAN,
   ],
 };
 
@@ -72,6 +73,7 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
     private readonly service: ComplianceAndEnforcementService,
     private readonly responsiblePartiesService: ResponsiblePartiesService,
     private readonly toastService: ToastService,
+    private readonly propertyService: ComplianceAndEnforcementPropertyService,
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +86,17 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
         this.file = file;
         this.fileNumber = file.fileNumber;
         this.ownershipDocumentOptions.fileId = file.fileNumber;
+        this.ownershipDocumentOptions.parcelService = {
+          fetchParcels: async (fileNumber: string) => {
+            const properties = await this.propertyService.fetchParcels(fileNumber);
+            return properties.map(property => ({
+              uuid: property.uuid,
+              pid: property.pid || undefined,
+              certificateOfTitleUuid: property.certificateOfTitleUuid
+            }));
+          }
+        };
+        this.ownershipDocumentOptions.submissionService = this.responsiblePartiesService;
         this.isPropertyCrown = file.property?.ownershipTypeCode === 'CRWN';
         this.loadResponsibleParties();
       }
@@ -158,11 +171,35 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
       return `Previous ${party.partyType}`;
     }
     
-    if (party.partyType === ResponsiblePartyType.PROPERTY_OWNER && party.ownerSince) {
-      return `Property Owner Since: ${this.formatOwnerSince(party.ownerSince)}`;
+    if (party.ownerSince && party.partyType === ResponsiblePartyType.PROPERTY_OWNER) {
+      const formattedDate = this.formatOwnerSince(party.ownerSince);
+      return `${party.partyType} Since: ${formattedDate}`;
     }
     
     return party.partyType;
+  }
+
+  getHeaderPartyType(): string {
+    // If there are responsible parties, get the most common party type
+    if (this.responsibleParties.length === 0) {
+      return 'Responsible Party';
+    }
+
+    // If there's only one party, use its type
+    if (this.responsibleParties.length === 1) {
+      return this.responsibleParties[0].partyType;
+    }
+
+    // If multiple parties, check if they're all the same type
+    const firstPartyType = this.responsibleParties[0].partyType;
+    const allSameType = this.responsibleParties.every(party => party.partyType === firstPartyType);
+    
+    if (allSameType) {
+      return firstPartyType;
+    }
+
+    // Mixed types, use generic term
+    return 'Responsible Parties';
   }
 
   async saveInlineEdit(party: ResponsiblePartyDto, field: 'email' | 'phone' | 'notes', newValue: string | null) {
@@ -197,10 +234,44 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  async saveDirectorInlineEdit(party: ResponsiblePartyDto, director: any, field: 'email' | 'phone', newValue: string | null) {
+    // Convert null to undefined for DTO compatibility
+    const value = newValue === null ? undefined : newValue;
+    const updateDto: UpdateResponsiblePartyDto = {
+      directors: party.directors?.map(d => {
+        if (d.uuid === director.uuid) {
+          return {
+            ...d,
+            ...(field === 'email' ? { directorEmail: value } : { directorTelephone: value })
+          };
+        }
+        return d;
+      })
+    };
+
+    try {
+      await firstValueFrom(this.responsiblePartiesService.update(party.uuid, updateDto));
+      this.toastService.showSuccessToast(`Director ${field} updated successfully`);
+      this.loadResponsibleParties();
+    } catch (error) {
+      console.error(`Error updating director ${field}:`, error);
+      this.toastService.showErrorToast(`Error updating director ${field}`);
+    }
+  }
+
   async saveResponsibleParties() {
-    // This would handle bulk updates from the edit form
-    this.toastService.showSuccessToast('Responsible parties updated successfully');
-    this.router.navigate(['../..'], { relativeTo: this.route });
+    // Force immediate save of all form changes in the responsible parties component ( this bypasses the debounce and saves immediately )
+    if (this.responsiblePartiesComponent) {
+      await this.responsiblePartiesComponent.saveAllForms();
+    }
+    
+    // Navigate immediately
+    this.router.navigate(['..'], { relativeTo: this.route });
+    
+    // Show success toast after navigation
+    setTimeout(() => {
+      this.toastService.showSuccessToast('Responsible parties updated successfully');
+    }, 100); // Short delay to ensure navigation completes
   }
 
   ngOnDestroy(): void {
