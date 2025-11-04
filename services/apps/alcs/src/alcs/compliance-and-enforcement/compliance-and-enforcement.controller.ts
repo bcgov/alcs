@@ -26,8 +26,11 @@ export class ComplianceAndEnforcementController {
     @Param('fileNumber') fileNumber: string,
     @Query('withSubmitters', ParseBoolPipe) withSubmitters: boolean = false,
     @Query('withProperty', ParseBoolPipe) withProperty: boolean = false,
+    @Query('withAssignee', ParseBoolPipe) withAssignee: boolean = false,
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.fetchByFileNumber(fileNumber, withSubmitters, withProperty);
+    const thing = await this.service.fetchByFileNumber(fileNumber, withSubmitters, withProperty, withAssignee);
+
+    return thing;
   }
 
   @Post('')

@@ -18,6 +18,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { PropertyComponent } from './property/property.component';
 import { ResponsiblePartiesComponent } from './responsible-parties/responsible-parties.component';
 import { SubmitterComponent } from './submitter/submitter.component';
+import { ComplianceAndEnforcementAssignDialogComponent } from './details/header/assign-dialog/assign-dialog.component';
 
 export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = [
   {
@@ -113,6 +114,7 @@ const routes: Routes = [
     AddSubmitterDialogComponent,
     PropertyMapsComponent,
     ResponsiblePartiesDetailsComponent,
+    ComplianceAndEnforcementAssignDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MatMomentDateModule, CommonModule, SharedModule],
 })

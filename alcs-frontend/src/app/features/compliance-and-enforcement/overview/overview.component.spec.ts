@@ -29,6 +29,7 @@ describe('OverviewComponent', () => {
     allegedActivity: [AllegedActivity.OTHER],
     intakeNotes: 'Some notes',
     submitters: [],
+    assignee: null,
   };
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
@@ -153,6 +154,7 @@ describe('OverviewComponent', () => {
       allegedActivity: [],
       intakeNotes: '',
       submitters: [],
+      assignee: null,
     };
 
     expect(component.form.value.dateSubmitted).toBeNull();

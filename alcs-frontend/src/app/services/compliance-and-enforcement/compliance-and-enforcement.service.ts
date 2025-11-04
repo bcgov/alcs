@@ -12,7 +12,14 @@ export enum Status {
 export interface FetchOptions {
   withSubmitters?: boolean;
   withProperty?: boolean;
+  withAssignee?: boolean;
 }
+
+export const DEFAULT_C_AND_E_FETCH_OPTIONS: FetchOptions = {
+  withSubmitters: true,
+  withProperty: true,
+  withAssignee: true,
+};
 
 export const statusFromFile = ({ dateOpened, dateClosed }: ComplianceAndEnforcementDto): Status | null =>
   dateOpened && !dateClosed ? Status.OPEN : dateClosed ? Status.CLOSED : null;
@@ -42,6 +49,7 @@ export class ComplianceAndEnforcementService {
     let params = new HttpParams();
     params = params.set('withSubmitters', !!options?.withSubmitters?.toString());
     params = params.set('withProperty', !!options?.withProperty?.toString());
+    params = params.set('withAssignee', !!options?.withAssignee?.toString());
 
     return await firstValueFrom(this.http.get<ComplianceAndEnforcementDto>(`${this.url}/${fileNumber}`, { params }));
   }

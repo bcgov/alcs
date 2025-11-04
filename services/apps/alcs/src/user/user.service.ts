@@ -11,6 +11,7 @@ import { LocalGovernment } from '../alcs/local-government/local-government.entit
 import { EmailService } from '../providers/email/email.service';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
+import { AUTH_ROLE, ROLES_ALLOWED_APPLICATIONS } from '../common/authorization/roles';
 
 export type UserGuids = {
   bceidGuid?: string;
@@ -36,6 +37,17 @@ export class UserService {
         identityProvider: 'idir',
       },
     });
+  }
+
+  async getComplianceAndEnforcementOfficers(): Promise<User[]> {
+    const officers = await this.userRepository
+      .createQueryBuilder('user')
+      .where(':value = ANY(user.client_roles)', { value: AUTH_ROLE.C_AND_E })
+      .orderBy('user.given_name', 'ASC')
+      .addOrderBy('user.family_name', 'ASC')
+      .getMany();
+
+    return officers;
   }
 
   async create(dto: CreateUserDto) {

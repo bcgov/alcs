@@ -15,6 +15,7 @@ import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.
 import { ComplianceAndEnforcementSubmitterProfile } from './submitter/submitter.automapper.profile';
 import { ComplianceAndEnforcementPropertyService } from './property/property.service';
 import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
+import { UserService } from '../../user/user.service';
 
 const mockComplianceAndEnforcement = new ComplianceAndEnforcement({
   uuid: '1',
@@ -33,14 +34,18 @@ describe('ComplianceAndEnforcementService', () => {
   let service: ComplianceAndEnforcementService;
   let mockComplianceAndEnforcementRepository: DeepMocked<Repository<ComplianceAndEnforcement>>;
   let mockComplianceAndEnforcementSubmitterService: DeepMocked<ComplianceAndEnforcementSubmitterService>;
+  let mockComplianceAndEnforcementSubmitterProfile: DeepMocked<ComplianceAndEnforcementSubmitterProfile>;
   let mockComplianceAndEnforcementPropertyService: DeepMocked<ComplianceAndEnforcementPropertyService>;
   let mockComplianceAndEnforcementValidatorService: DeepMocked<ComplianceAndEnforcementValidatorService>;
+  let mockUserService: DeepMocked<UserService>;
 
   beforeEach(async () => {
     mockComplianceAndEnforcementRepository = createMock<Repository<ComplianceAndEnforcement>>();
     mockComplianceAndEnforcementSubmitterService = createMock<ComplianceAndEnforcementSubmitterService>();
+    mockComplianceAndEnforcementSubmitterProfile = createMock<ComplianceAndEnforcementSubmitterProfile>();
     mockComplianceAndEnforcementPropertyService = createMock<ComplianceAndEnforcementPropertyService>();
     mockComplianceAndEnforcementValidatorService = createMock<ComplianceAndEnforcementValidatorService>();
+    mockUserService = createMock<UserService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -68,6 +73,10 @@ describe('ComplianceAndEnforcementService', () => {
           useValue: mockComplianceAndEnforcementRepository,
         },
         {
+          provide: UserService,
+          useValue: mockUserService,
+        },
+        {
           provide: CONFIG_TOKEN,
           useValue: config,
         },
@@ -88,6 +97,7 @@ describe('ComplianceAndEnforcementService', () => {
       dateOpened: 0,
       dateClosed: 0,
       submitters: [],
+      assignee: undefined,
     };
     it('should return all records', async () => {
       mockComplianceAndEnforcementRepository.find.mockResolvedValue([mockComplianceAndEnforcement]);
@@ -103,6 +113,7 @@ describe('ComplianceAndEnforcementService', () => {
         dateOpened: 0,
         dateClosed: 0,
         submitters: [],
+        assignee: undefined,
       };
       mockComplianceAndEnforcementRepository.findOne.mockResolvedValue(mockComplianceAndEnforcement);
       expect(await service.fetchByFileNumber('1')).toEqual(resultDto);
@@ -119,6 +130,7 @@ describe('ComplianceAndEnforcementService', () => {
         dateOpened: 0,
         dateClosed: 0,
         submitters: [],
+        assignee: undefined,
       };
       mockComplianceAndEnforcementRepository.save.mockResolvedValue(mockComplianceAndEnforcement);
       expect(await service.create(createDto)).toEqual(resultDto);
@@ -139,6 +151,7 @@ describe('ComplianceAndEnforcementService', () => {
         dateOpened: 0,
         dateClosed: 0,
         submitters: [],
+        assignee: undefined,
       };
       mockComplianceAndEnforcementRepository.save.mockResolvedValue(mockComplianceAndEnforcement);
       mockComplianceAndEnforcementRepository.findOneBy.mockResolvedValue(mockComplianceAndEnforcement);

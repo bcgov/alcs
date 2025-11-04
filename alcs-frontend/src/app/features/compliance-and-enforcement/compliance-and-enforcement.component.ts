@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import {
   ComplianceAndEnforcementService,
+  DEFAULT_C_AND_E_FETCH_OPTIONS,
   FetchOptions,
 } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ResponsiblePartyType } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
@@ -40,7 +41,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe((event) => {
       if (event instanceof NavigationEnd && this.fileNumber) {
-        this.loadFile(this.fileNumber, { withSubmitters: true, withProperty: true });
+        this.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
       }
     });
 
@@ -49,7 +50,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
       if (fileNumber) {
         this.fileNumber = fileNumber;
-        this.loadFile(fileNumber, { withSubmitters: true, withProperty: true });
+        this.loadFile(fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
       }
     });
   }
