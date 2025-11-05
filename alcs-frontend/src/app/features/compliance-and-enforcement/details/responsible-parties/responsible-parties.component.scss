@@ -90,12 +90,13 @@ a[mat-stroked-button] {
   h4 {
     margin: 0;
     font-weight: 600;
+    font-size: 24px;
   }
 }
 
 .party-type-badge {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: bold;
 
   &.previous {
     color: colors.$grey-dark;
@@ -205,7 +206,7 @@ a[mat-stroked-button] {
     
     strong {
       font-weight: 600;
-      font-size: 16px;
+      font-size: 20px;
     }
   }
   
@@ -221,6 +222,13 @@ a[mat-stroked-button] {
     margin: 24px 0 8px 0;
     width: 100%;
   }
+}
+
+.notes-directors-separator {
+  border: none;
+  border-top: 1px solid colors.$grey-dark;
+  margin: 24px 0 8px 0;
+  width: 100%;
 }
 
 a {

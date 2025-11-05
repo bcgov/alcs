@@ -52,7 +52,7 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
   {
     path: 'responsible-parties',
     icon: 'people',
-    menuTitle: 'Owner and Contacts',
+    menuTitle: 'Responsible Parties',
     children: [
       {
         path: '',
