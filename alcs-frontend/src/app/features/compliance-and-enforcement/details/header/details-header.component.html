@@ -16,7 +16,8 @@
   <div class="right-column">
     <div>
       <div class="assignee-wrapper">
-        {{ file?.assignee?.prettyName || 'Unassigned' }}
+        <span *ngIf="file?.assignee?.prettyName">Assigned to</span>
+        <strong>{{ file?.assignee?.prettyName || 'Unassigned' }}</strong>
         <button type="button" (click)="openAssignDialog()" mat-icon-button class="edit-assignee-button">
           <mat-icon>edit</mat-icon>
         </button>
