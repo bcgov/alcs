@@ -2,14 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import {
-  ResponsiblePartyDto,
-  CreateResponsiblePartyDto,
-  UpdateResponsiblePartyDto,
-  FOIPPACategory,
-  ResponsiblePartyType,
-} from './responsible-parties.dto';
 import { OwnerDto, SubmissionOwnersDto } from '../../../shared/document-upload-dialog/document-upload-dialog.dto';
+import {
+  CreateResponsiblePartyDto,
+  FOIPPACategory,
+  ResponsiblePartyDto,
+  ResponsiblePartyType,
+  UpdateResponsiblePartyDto,
+} from './responsible-parties.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -24,16 +24,20 @@ export class ResponsiblePartiesService {
   }
 
   async fetchSubmission(fileNumber: string): Promise<SubmissionOwnersDto> {
-    const responsibleParties = await this.fetchByFileNumber(fileNumber, ResponsiblePartyType.PROPERTY_OWNER);
-    const responsiblePartiesOwners: OwnerDto[] = responsibleParties.map((party) => ({
-      ...party,
-      displayName: '',
-      type: {
-        label: '',
-        code: party.foippaCategory === FOIPPACategory.ORGANIZATION ? 'ORGZ' : '',
-        description: '',
-      },
-    }));
+    const responsibleParties = await this.fetchByFileNumber(fileNumber);
+    const responsiblePartiesOwners: OwnerDto[] = responsibleParties
+      .filter((party) => party.foippaCategory === FOIPPACategory.ORGANIZATION)
+      .map((party) => ({
+        uuid: party.uuid,
+        displayName: party.organizationName || '',
+        organizationName: party.organizationName,
+        corporateSummaryUuid: undefined,
+        type: {
+          label: '',
+          code: party.foippaCategory === FOIPPACategory.ORGANIZATION ? 'ORGZ' : '',
+          description: '',
+        },
+      }));
 
     return {
       owners: responsiblePartiesOwners,
