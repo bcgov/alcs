@@ -6,8 +6,7 @@
 <ng-container *ngIf="editing === null">
   <!-- Responsible Parties View -->
   <section class="file-section">
-    <h3 *ngIf="responsibleParties.length === 1">{{ responsibleParties[0].partyType }}</h3>
-    <h3 *ngIf="responsibleParties.length > 1">Responsible Parties</h3>
+    <h3>Allegedly Responsible Parties</h3>
 
     <!-- Crown Party (if property is Crown) -->
     <div *ngIf="isPropertyCrown" class="party-card">
@@ -92,6 +91,7 @@
           ></app-inline-text>
         </div>
         <!-- Directors (if organization) -->
+        <hr *ngIf="party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length" class="notes-directors-separator">
         <div *ngIf="party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length" class="directors-section">
           <div *ngFor="let director of party.directors; let i = index" class="director-container">
             <!-- Director Name Row -->

@@ -23,6 +23,7 @@ export const ownershipDocumentOptions: DocumentUploadDialogData = {
   fileId: '',
   allowedVisibilityFlags: [],
   allowsFileEdit: true,
+  fixedParcel: { uuid: '' } as any,
   allowedDocumentSources: [
     DOCUMENT_SOURCE.PUBLIC,
     DOCUMENT_SOURCE.LFNG,
