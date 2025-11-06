@@ -261,12 +261,18 @@ export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
   }
 
   async saveResponsibleParties() {
-    // Force immediate save of all form changes in the responsible parties component ( this bypasses the debounce and saves immediately )
+    // Force immediate save of all form changes in the responsible parties component
     if (this.responsiblePartiesComponent) {
-      await this.responsiblePartiesComponent.saveAllForms();
+      const success = await this.responsiblePartiesComponent.saveAllForms();
+      
+      if (!success) {
+        // Validation failed - don't navigate, show error
+        this.toastService.showErrorToast('Please fill in all required fields before saving');
+        return;
+      }
     }
     
-    // Navigate immediately
+    // Navigate only if validation passed
     this.router.navigate(['..'], { relativeTo: this.route });
     
     // Show success toast after navigation

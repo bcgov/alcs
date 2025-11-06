@@ -508,7 +508,20 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     this.showRequiredError = true;
   }
 
-  async saveAllForms(): Promise<void> {
+  async saveAllForms(): Promise<boolean> {
+    // Mark all forms as touched to show validation errors
+    for (let i = 0; i < this.form.length; i++) {
+      const partyForm = this.form.at(i);
+      partyForm.markAllAsTouched();
+    }
+
+    // Check if all forms are valid
+    const allFormsValid = this.form.controls.every(form => form.valid);
+    
+    if (!allFormsValid) {
+      return false; // Validation failed
+    }
+
     // Force immediate save of all form changes, bypassing debounce
     const savePromises: Promise<void>[] = [];
     
@@ -524,6 +537,7 @@ export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
     
     // Wait for all saves to complete
     await Promise.all(savePromises);
+    return true; // Success
   }
 
   ngOnDestroy(): void {

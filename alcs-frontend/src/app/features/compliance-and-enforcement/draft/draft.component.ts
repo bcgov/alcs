@@ -321,7 +321,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       if (submitterUuid) {
         await firstValueFrom(this.complianceAndEnforcementSubmitterService.update(submitterUuid, submitterUpdate));
       } else {
-        this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create(submitterUpdate));
+        this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create({ ...submitterUpdate, fileUuid: this.file.uuid }));
       }
 
       if (this.property?.uuid) {
