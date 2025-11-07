@@ -21,7 +21,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private toastService: ToastService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
   ) {
     this.authService.$currentUser.subscribe((userToken) => {
       if (userToken && !this.userProfile) {
@@ -39,6 +39,10 @@ export class UserService {
     this.clearAssignableUsers();
     this.assignableUsers = await firstValueFrom(this.http.get<AssigneeDto[]>(`${this.baseUrl}/assignable`));
     this.$assignableUsers.next(this.assignableUsers);
+  }
+
+  public async getComplianceAndEnforcementOfficers() {
+    return await firstValueFrom(this.http.get<UserDto[]>(`${this.baseUrl}/compliance-and-enforcement-officers`));
   }
 
   public async updateUserProfile(uuid: string, updateDto: UpdateUserDto) {

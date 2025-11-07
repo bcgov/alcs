@@ -261,6 +261,15 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   async prepareCertificateOfTitleUpload(uuid?: string) {
     this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+    
+    // If fixedParcel is provided, use it and don't require validation
+    if (this.data.fixedParcel) {
+      this.parcelId.setValue(this.data.fixedParcel.uuid);
+      this.parcelId.clearValidators();
+      this.parcelId.updateValueAndValidity();
+      return;
+    }
+    
     this.parcelId.setValidators([Validators.required]);
     this.parcelId.updateValueAndValidity();
 

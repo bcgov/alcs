@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { firstValueFrom, of, Subject } from 'rxjs';
 import { ComplianceAndEnforcementDto } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { HttpClient } from '@angular/common/http';
 
 describe('ComplaintReferralComponent', () => {
   let component: ComplaintReferralComponent;
@@ -14,12 +15,14 @@ describe('ComplaintReferralComponent', () => {
   let mockRouter: DeepMocked<Router>;
   let mockService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
+  let mockHttpClient: DeepMocked<HttpClient>;
 
   beforeEach(async () => {
     mockActivatedRoute = createMock<ActivatedRoute>();
     mockRouter = createMock<Router>();
     mockService = createMock<ComplianceAndEnforcementService>();
     mockToastService = createMock<ToastService>();
+    mockHttpClient = createMock<HttpClient>();
 
     TestBed.configureTestingModule({
       imports: [],
@@ -41,6 +44,10 @@ describe('ComplaintReferralComponent', () => {
           provide: ToastService,
           useValue: mockToastService,
         },
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
       ],
     });
 
@@ -53,11 +60,12 @@ describe('ComplaintReferralComponent', () => {
   });
 
   it('should set editing from route data on ngOnInit', () => {
-    const dataSubject = new Subject<any>();
-    mockActivatedRoute.data = dataSubject as any;
+    const editing = 'overview';
+    mockActivatedRoute.snapshot.data = { editing };
+
     component.ngOnInit();
-    dataSubject.next({ editing: 'overview' });
-    expect(component.editing).toBe('overview');
+
+    expect(component.editing).toBe(editing);
   });
 
   it('should set file, fileNumber, and submissionDocumentOptions.fileId from service.$file', () => {
@@ -77,7 +85,7 @@ describe('ComplaintReferralComponent', () => {
     component.fileNumber = undefined;
     const toastSpy = jest.spyOn(mockToastService, 'showErrorToast');
 
-    await component.save();
+    await component.saveOverview();
 
     expect(toastSpy).toHaveBeenCalledWith('Error loading file');
     expect(mockService.update).not.toHaveBeenCalled();
@@ -92,10 +100,10 @@ describe('ComplaintReferralComponent', () => {
     const toastSpy = jest.spyOn(mockToastService, 'showSuccessToast');
     const navSpy = jest.spyOn(mockRouter, 'navigate');
 
-    await component.save();
+    await component.saveOverview();
 
     expect(mockService.update).toHaveBeenCalledWith('456', { foo: 'bar' }, { idType: 'fileNumber' });
-    expect(toastSpy).toHaveBeenCalledWith('File updated successfully');
+    expect(toastSpy).toHaveBeenCalledWith('Overview updated successfully');
     expect(navSpy).toHaveBeenCalled();
   });
 
@@ -110,7 +118,7 @@ describe('ComplaintReferralComponent', () => {
     } as any);
     jest.spyOn({ firstValueFrom }, 'firstValueFrom').mockImplementation(() => Promise.reject(new Error('fail')));
 
-    await expect(component.save()).resolves.not.toThrow();
+    await expect(component.saveOverview()).resolves.not.toThrow();
   });
 
   it('should complete $destroy on ngOnDestroy', () => {

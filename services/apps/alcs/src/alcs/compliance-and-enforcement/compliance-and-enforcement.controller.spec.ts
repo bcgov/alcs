@@ -89,7 +89,7 @@ describe('ComplianceAndEnforcementController', () => {
       };
       mockComplianceAndEnforcementService.fetchByFileNumber.mockResolvedValue(result);
       expect(await controller.fetchByFileNumber('1', true)).toEqual(result);
-      expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('1', true, false);
+      expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('1', true, false, false);
     });
   });
 

@@ -90,7 +90,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   property?: ComplianceAndEnforcementPropertyDto;
   isPropertyCrown = false;
 
-  form = new FormGroup({ overview: new FormGroup({}), submitter: new FormGroup({}), property: new FormGroup({}) });
+  form = new FormGroup({});
 
   @ViewChild(OverviewComponent) overviewComponent?: OverviewComponent;
   @ViewChild(SubmitterComponent) submitterComponent?: SubmitterComponent;
@@ -158,15 +158,13 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         skip(1), // Skip the initial emission to prevent save on load
         debounceTime(C_E_AUTOSAVE_DEBOUNCE_MS),
-        switchMap((submitter) =>
-          this.submitter?.uuid
-            ? this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitter)
+        switchMap(([uuid, submitter]) =>
+          uuid
+            ? this.complianceAndEnforcementSubmitterService.update(uuid, submitter)
             : this.complianceAndEnforcementSubmitterService.create({ ...submitter, fileUuid: this.file?.uuid }),
         ),
         tap((submitter) => {
-          if (!this.submitter) {
-            this.submitter = submitter;
-          }
+          this.submitter ??= submitter;
         }),
         catchError((error) => {
           console.error('Error saving C&E submitter draft', error);
@@ -314,18 +312,16 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const overviewUpdate = this.overviewComponent.$changes.getValue();
-    const submitterUpdate = this.submitterComponent.$changes.getValue();
+    const [submitterUuid, submitterUpdate] = this.submitterComponent.$changes.getValue();
     const propertyUpdate = this.propertyComponent.$changes.getValue();
 
     try {
       await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, overviewUpdate));
 
-      if (this.submitter?.uuid) {
-        await firstValueFrom(
-          this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitterUpdate),
-        );
+      if (submitterUuid) {
+        await firstValueFrom(this.complianceAndEnforcementSubmitterService.update(submitterUuid, submitterUpdate));
       } else {
-        this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create(submitterUpdate));
+        this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create({ ...submitterUpdate, fileUuid: this.file.uuid }));
       }
 
       if (this.property?.uuid) {
@@ -377,7 +373,13 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async onFinishCreateFileClicked() {
     // Ensure child components and file exist
-    if (!this.overviewComponent || !this.submitterComponent || !this.propertyComponent || !this.file?.uuid || !this.responsiblePartiesComponent) {
+    if (
+      !this.overviewComponent ||
+      !this.submitterComponent ||
+      !this.propertyComponent ||
+      !this.file?.uuid ||
+      !this.responsiblePartiesComponent
+    ) {
       this.toastService.showErrorToast('Something went wrong, please refresh the page and try again');
       return;
     }
@@ -426,31 +428,35 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
     if (hasInvalid) {
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
       // Attempt to scroll to first element with .ng-invalid within the form ( will check with SO if this is necessary)
-      
-        const el = document.getElementsByClassName('ng-invalid');
-        if (el && el.length > 0) {
-          const target = Array.from(el).find((n) => n.nodeName !== 'FORM') as HTMLElement | undefined;
-          target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      
+
+      const el = document.getElementsByClassName('ng-invalid');
+      if (el && el.length > 0) {
+        const target = Array.from(el).find((n) => n.nodeName !== 'FORM') as HTMLElement | undefined;
+        target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
       return;
     }
 
     // Persist latest values before finalizing (same as save but without navigate)
     const overviewUpdate = this.overviewComponent.$changes.getValue();
-    const submitterUpdate = this.submitterComponent.$changes.getValue();
+    const [_, submitterUpdate] = this.submitterComponent.$changes.getValue();
     const propertyUpdate = this.propertyComponent.$changes.getValue();
 
     try {
       await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, overviewUpdate));
 
       if (this.submitter?.uuid) {
-        await firstValueFrom(this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitterUpdate));
+        await firstValueFrom(
+          this.complianceAndEnforcementSubmitterService.update(this.submitter.uuid, submitterUpdate),
+        );
       } else {
-        this.submitter = await firstValueFrom(this.complianceAndEnforcementSubmitterService.create({
-          ...submitterUpdate,
-          fileUuid: this.file.uuid,
-        }));
+        this.submitter = await firstValueFrom(
+          this.complianceAndEnforcementSubmitterService.create({
+            ...submitterUpdate,
+            fileUuid: this.file.uuid,
+          }),
+        );
       }
 
       if (this.property?.uuid) {
@@ -465,10 +471,12 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       // Mark file as submitted
-      await firstValueFrom(this.complianceAndEnforcementService.update(this.file.uuid, { 
-        dateOpened: Date.now() 
-      }));
-            // Now submit the form - this will run backend validation
+      await firstValueFrom(
+        this.complianceAndEnforcementService.update(this.file.uuid, {
+          dateOpened: Date.now(),
+        }),
+      );
+      // Now submit the form - this will run backend validation
       await this.complianceAndEnforcementService.submit(this.file.uuid);
 
       this.toastService.showSuccessToast('C&E file created');
@@ -477,10 +485,10 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       // Check if it's a validation error from the backend
       if (error.status === 400 && error.error?.message?.includes('Validation failed')) {
         this.toastService.showErrorToast('Please correct all errors before submitting the form');
-        
+
         // Trigger client-side validation to show field errors
         this.triggerClientSideValidation();
-        
+
         // Scroll to first error
         setTimeout(() => {
           const el = document.getElementsByClassName('ng-invalid');
@@ -524,7 +532,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       this.responsiblePartiesComponent.form.controls.forEach((group) => {
         group.markAllAsTouched();
         group.updateValueAndValidity({ onlySelf: false, emitEvent: false });
-        
+
         const directors = group.get('directors') as FormArray | null;
         if (directors) {
           directors.controls.forEach((dg) => {
@@ -534,6 +542,12 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
+  }
+
+  registerFormGroup(name: string, formGroup: FormGroup) {
+    setTimeout(() => {
+      this.form.setControl(name, formGroup);
+    });
   }
 
   ngOnDestroy(): void {

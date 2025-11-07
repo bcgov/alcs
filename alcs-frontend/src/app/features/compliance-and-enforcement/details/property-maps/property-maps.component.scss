@@ -1,0 +1,89 @@
+@use '../../../../../styles/colors';
+
+h5 {
+  margin: 16px 0 !important;
+}
+
+section {
+  margin: 32px 0;
+}
+
+section.file-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  margin: 32px 0;
+
+  h3 {
+    margin-bottom: 16px; 
+  }
+}
+
+section.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  margin: 32px 0;
+
+  h3 {
+    margin-bottom: 16px !important;
+    margin-top: 0;
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.edit-section-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.edit-section-button {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+a[mat-stroked-button] {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+.no-data {
+  color: colors.$grey;
+}
+
+.inset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  background-color: colors.$grey-light;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.field {
+  width: 100%;
+
+  &.full-width {
+    grid-column: span 2;
+  }
+}
+
+.field-heading {
+  font-weight: bold;
+  margin-bottom: 5px;
+}

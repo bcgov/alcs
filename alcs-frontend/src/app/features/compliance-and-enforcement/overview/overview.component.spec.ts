@@ -29,6 +29,7 @@ describe('OverviewComponent', () => {
     allegedActivity: [AllegedActivity.OTHER],
     intakeNotes: 'Some notes',
     submitters: [],
+    assignee: null,
   };
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
@@ -68,13 +69,6 @@ describe('OverviewComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should add overview control to parent form', () => {
-    const parentForm = new FormGroup({ overview: new FormGroup({}) });
-    component.parentForm = parentForm;
-
-    expect(parentForm.contains('overview')).toBe(true);
   });
 
   it('should patch form values and enable form when file input is set', () => {
@@ -160,6 +154,7 @@ describe('OverviewComponent', () => {
       allegedActivity: [],
       intakeNotes: '',
       submitters: [],
+      assignee: null,
     };
 
     expect(component.form.value.dateSubmitted).toBeNull();

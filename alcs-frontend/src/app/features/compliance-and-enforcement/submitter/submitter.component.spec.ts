@@ -64,13 +64,6 @@ describe('SubmitterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should add overview control to parent form', () => {
-    const parentForm = new FormGroup({ overview: new FormGroup({}) });
-    component.parentForm = parentForm;
-
-    expect(parentForm.contains('overview')).toBe(true);
-  });
-
   it('should patch form values when file input is set', () => {
     component.submitter = mockSubmitter;
 
@@ -93,7 +86,7 @@ describe('SubmitterComponent', () => {
   it('should emit changes when form values change', (done) => {
     component.submitter = mockSubmitter;
 
-    component.$changes.subscribe((val) => {
+    component.$changes.subscribe(([_, val]) => {
       if (val.additionalContactInformation === 'Updated notes') {
         expect(val.additionalContactInformation).toBe('Updated notes');
         done();
@@ -132,7 +125,7 @@ describe('SubmitterComponent', () => {
   it('should emit changes with correct types when form changes', (done) => {
     component.submitter = mockSubmitter;
 
-    component.$changes.subscribe((val) => {
+    component.$changes.subscribe(([_, val]) => {
       expect(typeof val.name).toBe('string');
       done();
     });

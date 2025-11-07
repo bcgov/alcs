@@ -11,6 +11,8 @@ import {
 } from './submitter/submitter.dto';
 import { ComplianceAndEnforcementProperty } from './property/property.entity';
 import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
+import { User } from '../../user/user.entity';
+import { UserDto } from '../../user/user.dto';
 
 @Injectable()
 export class ComplianceAndEnforcementProfile extends AutomapperProfile {
@@ -71,6 +73,12 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
                 )
               : entity.properties,
           ),
+        ),
+        forMember(
+          (dto) => dto.assignee,
+          mapFrom((entity) => {
+            return entity.assignee ? this.mapper.map(entity.assignee, User, UserDto) : entity.assignee;
+          }),
         ),
       );
 

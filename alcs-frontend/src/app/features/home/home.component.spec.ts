@@ -10,6 +10,7 @@ import { HomeComponent } from './home.component';
 import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { Router } from '@angular/router';
+import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -100,6 +101,7 @@ describe('HomeComponent', () => {
         allegedActivity: [],
         intakeNotes: '',
         submitters: [],
+        assignee: null,
       });
 
       await component.createComplianceAndEnforcementFile();
@@ -108,7 +110,7 @@ describe('HomeComponent', () => {
     });
 
     it('shows error toast if service create fails', async () => {
-      const responseDto = {
+      const responseDto: ComplianceAndEnforcementDto = {
         uuid: '12345',
         fileNumber: '12345',
         dateSubmitted: null,
@@ -119,6 +121,7 @@ describe('HomeComponent', () => {
         allegedActivity: [],
         intakeNotes: '',
         submitters: [],
+        assignee: null,
       };
 
       mockComplianceAndEnforcementService.create.mockResolvedValue(responseDto);

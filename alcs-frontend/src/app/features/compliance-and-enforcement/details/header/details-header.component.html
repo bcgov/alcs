@@ -15,7 +15,13 @@
   </div>
   <div class="right-column">
     <div>
-      <div>Unassigned</div>
+      <div class="assignee-wrapper">
+        <span *ngIf="file?.assignee?.prettyName">Assigned to</span>
+        <strong>{{ file?.assignee?.prettyName || 'Unassigned' }}</strong>
+        <button type="button" (click)="openAssignDialog()" mat-icon-button class="edit-assignee-button">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
       <div class="status-wrapper">
         <div
           *ngIf="status"

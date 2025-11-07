@@ -51,6 +51,13 @@ export class UserController {
     return this.userMapper.mapArrayAsync(users, User, AssigneeDto);
   }
 
+  @Get('/compliance-and-enforcement-officers')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getComplianceAndEnforcementOfficers() {
+    const users = await this.userService.getComplianceAndEnforcementOfficers();
+    return this.userMapper.mapArrayAsync(users, User, AssigneeDto);
+  }
+
   @Delete()
   @UserRoles(AUTH_ROLE.ADMIN)
   async deleteUser(@Body() uuid: string) {
