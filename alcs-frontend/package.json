@@ -30,7 +30,7 @@
     "@bcgov/bc-sans": "^2.1.0",
     "@ng-matero/extensions": "^17.3.8",
     "@ng-select/ng-option-highlight": "^12.0.6",
-    "@types/validator": "^13.15.6",
+    "@types/validator": "^13.15.8",
     "angular-mentions": "^1.5.0",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
