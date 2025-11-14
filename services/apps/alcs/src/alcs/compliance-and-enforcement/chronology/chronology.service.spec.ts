@@ -9,14 +9,20 @@ import * as config from 'config';
 import { ComplianceAndEnforcementChronologyService } from './chronology.service';
 import { ComplianceAndEnforcementChronologyProfile } from './chronology.automapper.profile';
 import { ComplianceAndEnforcementChronologyEntry } from './chronology.entity';
+import { ComplianceAndEnforcementService } from '../compliance-and-enforcement.service';
+import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 
 describe('ComplianceAndEnforcementChronologyService', () => {
   let service: ComplianceAndEnforcementChronologyService;
   let mockComplianceAndEnforcementChronologyRepository: DeepMocked<Repository<ComplianceAndEnforcementChronologyEntry>>;
+  let mockComplianceAndEnforcementRepository: DeepMocked<Repository<ComplianceAndEnforcement>>;
+  let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
 
   beforeEach(async () => {
     mockComplianceAndEnforcementChronologyRepository =
       createMock<Repository<ComplianceAndEnforcementChronologyEntry>>();
+    mockComplianceAndEnforcementRepository = createMock<Repository<ComplianceAndEnforcement>>();
+    mockComplianceAndEnforcementService = createMock<ComplianceAndEnforcementService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -30,6 +36,14 @@ describe('ComplianceAndEnforcementChronologyService', () => {
         {
           provide: getRepositoryToken(ComplianceAndEnforcementChronologyEntry),
           useValue: mockComplianceAndEnforcementChronologyRepository,
+        },
+        {
+          provide: getRepositoryToken(ComplianceAndEnforcement),
+          useValue: mockComplianceAndEnforcementRepository,
+        },
+        {
+          provide: ComplianceAndEnforcementService,
+          useValue: mockComplianceAndEnforcementService,
         },
         {
           provide: CONFIG_TOKEN,
