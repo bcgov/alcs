@@ -6,6 +6,7 @@ import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity'
 import { ComplianceAndEnforcementProperty } from './property/property.entity';
 import { ComplianceAndEnforcementResponsibleParty } from './responsible-parties/responsible-party.entity';
 import { User } from '../../user/user.entity';
+import { ComplianceAndEnforcementChronologyEntry } from './chronology/chronology.entity';
 
 export enum InitialSubmissionType {
   COMPLAINT = 'Complaint',
@@ -80,6 +81,12 @@ export class ComplianceAndEnforcement extends Base {
     cascade: true,
   })
   responsibleParties: ComplianceAndEnforcementResponsibleParty[];
+
+  @AutoMap()
+  @OneToMany(() => ComplianceAndEnforcementChronologyEntry, (chronologyEntry) => chronologyEntry.file, {
+    cascade: true,
+  })
+  chronologyEntries: ComplianceAndEnforcementChronologyEntry[];
 
   @AutoMap()
   @ManyToOne(() => User, { nullable: true })

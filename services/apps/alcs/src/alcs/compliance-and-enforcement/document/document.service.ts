@@ -17,6 +17,7 @@ import { MultipartFile } from '@fastify/multipart';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementPropertyService } from '../property/property.service';
 import { ComplianceAndEnforcementResponsiblePartyService } from '../responsible-parties/responsible-parties.service';
+import { ComplianceAndEnforcementChronologyEntry } from '../chronology/chronology.entity';
 
 @Injectable()
 export class ComplianceAndEnforcementDocumentService {
@@ -28,12 +29,18 @@ export class ComplianceAndEnforcementDocumentService {
     private repository: Repository<ComplianceAndEnforcementDocument>,
     @InjectRepository(ComplianceAndEnforcement)
     private complianceAndEnforcementRepository: Repository<ComplianceAndEnforcement>,
+    @InjectRepository(ComplianceAndEnforcementChronologyEntry)
+    private chronologyEntryRepository: Repository<ComplianceAndEnforcementChronologyEntry>,
     @InjectRepository(DocumentCode)
     private documentCodeRepository: Repository<DocumentCode>,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  async list(fileNumber?: string, section?: Section): Promise<ComplianceAndEnforcementDocumentDto[]> {
+  async list(
+    fileNumber?: string,
+    section?: Section,
+    chronologyEntryUuid?: string,
+  ): Promise<ComplianceAndEnforcementDocumentDto[]> {
     const criteria: FindOptionsWhere<ComplianceAndEnforcementDocument> = {};
 
     if (fileNumber !== undefined) {
@@ -42,6 +49,10 @@ export class ComplianceAndEnforcementDocumentService {
 
     if (section !== undefined) {
       criteria.section = section;
+    }
+
+    if (chronologyEntryUuid !== undefined) {
+      criteria.chronologyEntry = { uuid: chronologyEntryUuid } as any;
     }
 
     const entities = await this.repository.find({
@@ -94,6 +105,12 @@ export class ComplianceAndEnforcementDocumentService {
       throw new ServiceNotFoundException('Compliance and Enforcement file not found.');
     }
 
+    const chronologyEntry = await this.chronologyEntryRepository.findOneBy({ uuid: createDto.chronologyEntry });
+
+    if (!chronologyEntry) {
+      throw new ServiceNotFoundException('Chronology entry not found.');
+    }
+
     const type = await this.documentCodeRepository.findOneBy({ code: createDto.typeCode });
 
     if (!type) {
@@ -105,6 +122,7 @@ export class ComplianceAndEnforcementDocumentService {
       document,
       type,
       section: createDto.section,
+      chronologyEntry,
     });
 
     const savedEntity = await this.repository.save(entity);

@@ -85,4 +85,5 @@ export class CreateDocumentDto {
   system: DOCUMENT_SYSTEM;
   tags?: string[];
   section?: Section;
+  chronologyEntry?: string;
 }

@@ -19,6 +19,9 @@ import { PropertyComponent } from './property/property.component';
 import { ResponsiblePartiesComponent } from './responsible-parties/responsible-parties.component';
 import { SubmitterComponent } from './submitter/submitter.component';
 import { ComplianceAndEnforcementAssignDialogComponent } from './details/header/assign-dialog/assign-dialog.component';
+import { ComplianceAndEnforcementChronologyComponent } from './details/chronology/chronology.component';
+import { ComplianceAndEnforcementChronologyEntryComponent } from './details/chronology/entry/entry.component';
+import { ComplianceAndEnforcementChronologyEntryDocumentsComponent } from './details/chronology/entry/documents/documents.component';
 
 export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = [
   {
@@ -83,6 +86,13 @@ export const detailsRoutes: (Route & { icon?: string; menuTitle?: string })[] = 
       },
     ],
   },
+  {
+    path: 'chronology',
+    icon: 'view_timeline',
+    menuTitle: 'Chronology',
+    component: ComplianceAndEnforcementChronologyComponent,
+    data: { editing: null },
+  },
 ];
 
 const routes: Routes = [
@@ -115,6 +125,9 @@ const routes: Routes = [
     PropertyMapsComponent,
     ResponsiblePartiesDetailsComponent,
     ComplianceAndEnforcementAssignDialogComponent,
+    ComplianceAndEnforcementChronologyComponent,
+    ComplianceAndEnforcementChronologyEntryComponent,
+    ComplianceAndEnforcementChronologyEntryDocumentsComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), MatMomentDateModule, CommonModule, SharedModule],
 })

@@ -1,0 +1,18 @@
+@use '../../../../../styles/colors';
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.entries {
+  border: 1px solid colors.$grey;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.no-entries {
+  text-align: center;
+}

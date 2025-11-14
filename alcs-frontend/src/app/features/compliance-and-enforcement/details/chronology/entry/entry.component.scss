@@ -1,0 +1,90 @@
+@use '../../../../../../styles/colors.scss' as colors;
+
+form {
+  display: contents;
+}
+
+.entry {
+  display: flex;
+
+  background-color: colors.$grey-light;
+  border-top: 1px solid colors.$grey;
+
+  &.is-draft {
+    background-color: transparent;
+  }
+}
+
+:host:first-child .entry {
+  border-top: none;
+}
+
+.date,
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+}
+
+.date {
+  color: colors.$grey-dark;
+  width: 210px;
+  flex-shrink: 0;
+  border-right: 1px solid colors.$grey;
+}
+
+.main {
+  flex-grow: 1;
+  gap: 24px;
+  position: relative;
+}
+
+.edit-button {
+  color: white;
+  line-height: 1;
+
+  background-color: colors.$accent-color;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 0 0 0 10px;
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  &:disabled {
+    background-color: colors.$grey;
+  }
+}
+
+.c-and-e-action-list {
+  .no-data {
+    color: colors.$grey;
+  }
+}
+
+.add-component-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.add-action-button {
+  flex-direction: row-reverse;
+
+  mat-icon {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+}
+
+.add-correspondence-button {
+  color: colors.$secondary-color-dark;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}

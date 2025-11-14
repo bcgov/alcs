@@ -19,10 +19,17 @@ import { ComplianceAndEnforcementDocument } from './document/document.entity';
 import { ComplianceAndEnforcementResponsiblePartyController } from './responsible-parties/responsible-parties.controller';
 import { ComplianceAndEnforcementResponsiblePartyService } from './responsible-parties/responsible-parties.service';
 import { ComplianceAndEnforcementResponsiblePartyProfile } from './responsible-parties/responsible-parties.automapper.profile';
-import { ComplianceAndEnforcementResponsibleParty, ComplianceAndEnforcementResponsiblePartyDirector } from './responsible-parties/entities';
+import {
+  ComplianceAndEnforcementResponsibleParty,
+  ComplianceAndEnforcementResponsiblePartyDirector,
+} from './responsible-parties/entities';
 import { DocumentCode } from '../../document/document-code.entity';
 import { DocumentModule } from '../../document/document.module';
 import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
+import { ComplianceAndEnforcementChronologyController } from './chronology/chronology.controller';
+import { ComplianceAndEnforcementChronologyService } from './chronology/chronology.service';
+import { ComplianceAndEnforcementChronologyProfile } from './chronology/chronology.automapper.profile';
+import { ComplianceAndEnforcementChronologyEntry } from './chronology/chronology.entity';
 
 @Module({
   imports: [
@@ -33,6 +40,7 @@ import { ComplianceAndEnforcementValidatorService } from './compliance-and-enfor
       ComplianceAndEnforcementDocument,
       ComplianceAndEnforcementResponsibleParty,
       ComplianceAndEnforcementResponsiblePartyDirector,
+      ComplianceAndEnforcementChronologyEntry,
       DocumentCode,
     ]),
     DocumentModule,
@@ -43,6 +51,7 @@ import { ComplianceAndEnforcementValidatorService } from './compliance-and-enfor
     ComplianceAndEnforcementPropertyController,
     ComplianceAndEnforcementDocumentController,
     ComplianceAndEnforcementResponsiblePartyController,
+    ComplianceAndEnforcementChronologyController,
   ],
   providers: [
     ComplianceAndEnforcementService,
@@ -50,12 +59,14 @@ import { ComplianceAndEnforcementValidatorService } from './compliance-and-enfor
     ComplianceAndEnforcementPropertyService,
     ComplianceAndEnforcementDocumentService,
     ComplianceAndEnforcementResponsiblePartyService,
+    ComplianceAndEnforcementChronologyService,
     ComplianceAndEnforcementValidatorService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
     ComplianceAndEnforcementDocumentProfile,
     ComplianceAndEnforcementResponsiblePartyProfile,
+    ComplianceAndEnforcementChronologyProfile,
   ],
   exports: [
     ComplianceAndEnforcementService,
@@ -63,12 +74,14 @@ import { ComplianceAndEnforcementValidatorService } from './compliance-and-enfor
     ComplianceAndEnforcementPropertyService,
     ComplianceAndEnforcementDocumentService,
     ComplianceAndEnforcementResponsiblePartyService,
+    ComplianceAndEnforcementChronologyService,
     ComplianceAndEnforcementValidatorService,
     ComplianceAndEnforcementProfile,
     ComplianceAndEnforcementSubmitterProfile,
     ComplianceAndEnforcementPropertyProfile,
     ComplianceAndEnforcementDocumentProfile,
     ComplianceAndEnforcementResponsiblePartyProfile,
+    ComplianceAndEnforcementChronologyProfile,
   ],
 })
 export class ComplianceAndEnforcementModule {}

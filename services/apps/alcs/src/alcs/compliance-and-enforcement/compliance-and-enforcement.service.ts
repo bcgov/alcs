@@ -286,4 +286,17 @@ export class ComplianceAndEnforcementService {
 
     return this.mapper.map(savedEntity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
+
+  async uuidByFileNumber(fileNumber: string): Promise<string> {
+    const entity = await this.repository.findOne({
+      where: { fileNumber },
+      select: ['uuid'],
+    });
+
+    if (entity === null) {
+      throw new ServiceNotFoundException('A C&E file with this file number does not exist.');
+    }
+
+    return entity.uuid;
+  }
 }
