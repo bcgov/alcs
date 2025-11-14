@@ -8,9 +8,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  pull-requests: read
-  security-events: write
   contents: read
+  security-events: write
 
 jobs:
   Analysis:
@@ -22,24 +21,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Analyze with SonarCloud
-        uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args:
+          args: >
             -Dsonar.projectKey=bcgov_alcs
             -Dsonar.organization=bcgov-sonarcloud
-
-      - name: Convert to SARIF
-        if: always()
-        run: |
-          curl -u "${{ secrets.SONAR_TOKEN }}:" \
-            "https://sonarcloud.io/api/issues/search?componentKeys=bcgov_alcs&resolved=false&ps=500" | \
-          jq '{version:"2.1.0","$schema":"https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",runs:[{tool:{driver:{name:"SonarCloud"}},results:[]}]}' \
-          > sonarcloud-results.sarif
-
-      - name: Upload to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: sonarcloud-results.sarif
