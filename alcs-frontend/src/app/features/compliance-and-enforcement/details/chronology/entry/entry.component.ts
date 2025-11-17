@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import moment from 'moment';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import {
   ComplianceAndEnforcementChronologyEntryDto,
   UpdateComplianceAndEnforcementChronologyEntryDto,
@@ -29,6 +29,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
   get entry(): ComplianceAndEnforcementChronologyEntryDto | null {
     return this._entry;
   }
+  @Input() datesInUse?: number[];
   @Input() editDisabled = false;
 
   @Output() edit: EventEmitter<string> = new EventEmitter<string>();
@@ -48,7 +49,10 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
   isPatching = false;
   isSubscribed = false;
 
-  date: FormControl<moment.Moment | null> = new FormControl<moment.Moment | null>(null, [Validators.required]);
+  date: FormControl<moment.Moment | null> = new FormControl<moment.Moment | null>(null, [
+    Validators.required,
+    this.dateInUseValidator.bind(this),
+  ]);
   description: FormControl<string | null> = new FormControl<string | null>(null, [Validators.required]);
   form: FormGroup = new FormGroup({
     date: this.date,
@@ -70,8 +74,8 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
       this.$changes.next([
         this.entry?.uuid,
         {
-          date: form.date ? form.date.toDate().getTime() : undefined,
-          description: form.description ?? undefined,
+          date: form.date ? form.date.toDate().getTime() : null,
+          description: form.description ?? '',
         },
       ]);
     });
@@ -80,8 +84,13 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
   }
 
   fillForm(entry: ComplianceAndEnforcementChronologyEntryDto): void {
-    this.date.setValue(entry.date !== undefined && entry.date !== null ? moment(entry.date) : null);
-    this.description.setValue(entry.description);
+    this.form.patchValue(
+      {
+        date: entry.date !== undefined && entry.date !== null ? moment(entry.date) : null,
+        description: entry.description,
+      },
+      { emitEvent: false },
+    );
   }
 
   dtoFromForm(): UpdateComplianceAndEnforcementChronologyEntryDto {
@@ -100,6 +109,14 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     }
 
     return dto;
+  }
+
+  dateInUseValidator(control: AbstractControl): ValidationErrors | null {
+    if (!this.datesInUse) {
+      return null;
+    }
+
+    return !control.value || !this.datesInUse?.includes(control.value.toDate().getTime()) ? null : { dateInUse: true };
   }
 
   ngOnDestroy(): void {

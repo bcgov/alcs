@@ -14,6 +14,11 @@
           <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
           <mat-datepicker #datePicker type="date"></mat-datepicker>
         </mat-form-field>
+
+        <div *ngIf="date.errors">
+          <app-error-message *ngIf="date.errors['required']" message="This field is required"></app-error-message>
+          <app-error-message *ngIf="date.errors['dateInUse']" message="Date is already in use"></app-error-message>
+        </div>
       </ng-container>
 
       <ng-template #dateViewTemplate>
@@ -33,10 +38,19 @@
       </button>
 
       <ng-container *ngIf="entry?.isDraft; else descriptionViewTemplate">
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
-        </mat-form-field>
+        <div class="description-wrapper">
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+
+          <div *ngIf="description.touched && description.errors">
+            <app-error-message
+              *ngIf="description.errors['required']"
+              message="This field is required"
+            ></app-error-message>
+          </div>
+        </div>
       </ng-container>
 
       <ng-template #descriptionViewTemplate>

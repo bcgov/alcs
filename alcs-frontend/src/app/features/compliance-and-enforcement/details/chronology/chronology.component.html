@@ -12,6 +12,7 @@
   <app-compliance-and-enforcement-chronology-entry
     *ngFor="let entry of entries"
     [entry]="entry"
+    [datesInUse]="datesInUse(entry.uuid)"
     [editDisabled]="hasDraftEntries()"
     (edit)="setDraft($event)"
     (complete)="completeDraftEntry($event)"

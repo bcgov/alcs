@@ -59,6 +59,11 @@ form {
   }
 }
 
+.description-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .c-and-e-action-list {
   .no-data {
     color: colors.$grey;

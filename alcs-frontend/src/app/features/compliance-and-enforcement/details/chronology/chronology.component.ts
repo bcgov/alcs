@@ -304,6 +304,11 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     throw new Error('File number not found in route');
   }
 
+  datesInUse(excludedUuid: string): number[] {
+    return this.entries
+      .filter((entry) => entry.date !== null && entry.uuid !== excludedUuid)
+      .map((entry) => entry.date as number);
+  }
   ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();
