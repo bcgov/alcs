@@ -36,8 +36,9 @@ export class ComplianceAndEnforcementDocumentController {
   async list(
     @Query('fileNumber') fileNumber?: string,
     @Query('section') section?: Section,
+    @Query('chronologyEntryUuid') chronologyEntryUuid?: string,
   ): Promise<ComplianceAndEnforcementDocumentDto[]> {
-    return await this.service.list(fileNumber, section);
+    return await this.service.list(fileNumber, section, chronologyEntryUuid);
   }
 
   @Post('/:fileNumber')
@@ -57,6 +58,7 @@ export class ComplianceAndEnforcementDocumentController {
       source: req.body.source.value as DOCUMENT_SOURCE,
       system: DOCUMENT_SYSTEM.ALCS,
       section: req.body.section.value as Section,
+      chronologyEntry: req.body.chronologyEntryUuid.value as string,
     };
 
     // Use C&E-specific terminology

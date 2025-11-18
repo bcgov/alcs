@@ -11,6 +11,7 @@ export interface UpdateDocumentDto {
   visibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
   file?: File;
   section?: Section;
+  chronologyEntryUuid?: string;
 }
 
 export interface CreateDocumentDto extends UpdateDocumentDto {

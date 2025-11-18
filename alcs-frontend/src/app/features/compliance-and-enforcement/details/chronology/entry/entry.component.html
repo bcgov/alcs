@@ -1,0 +1,112 @@
+<div class="entry" [class.is-draft]="entry?.isDraft">
+  <form [formGroup]="form">
+    <div class="date">
+      <ng-container *ngIf="entry?.isDraft; else dateViewTemplate">
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input
+            matInput
+            (click)="datePicker.open()"
+            [matDatepicker]="datePicker"
+            name="date-submitted"
+            formControlName="date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker type="date"></mat-datepicker>
+        </mat-form-field>
+
+        <div *ngIf="date.errors">
+          <app-error-message *ngIf="date.errors['required']" message="This field is required"></app-error-message>
+          <app-error-message *ngIf="date.errors['dateInUse']" message="Date is already in use"></app-error-message>
+        </div>
+      </ng-container>
+
+      <ng-template #dateViewTemplate>
+        <div>{{ entry?.date | date: 'yyyy-MMM-dd' }}</div>
+      </ng-template>
+    </div>
+
+    <div class="main">
+      <button
+        *ngIf="!entry?.isDraft"
+        type="button"
+        class="edit-button"
+        [disabled]="!entry?.uuid || editDisabled"
+        (click)="edit.emit(entry?.uuid!)"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <ng-container *ngIf="entry?.isDraft; else descriptionViewTemplate">
+        <div class="description-wrapper">
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+
+          <div *ngIf="description.touched && description.errors">
+            <app-error-message
+              *ngIf="description.errors['required']"
+              message="This field is required"
+            ></app-error-message>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #descriptionViewTemplate>
+        <div>{{ entry?.description }}</div>
+      </ng-template>
+
+      <div *ngIf="entry?.isDraft" class="c-and-e-action-list">
+        <strong>C&E Action:</strong> <span class="no-data"> No Data</span>
+      </div>
+
+      <div *ngIf="entry?.isDraft" class="add-component-actions">
+        <button mat-stroked-button color="primary" type="button" [disabled]="!entry?.uuid" class="add-action-button">
+          + ALC C&E Action
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="!entry?.uuid"
+          (click)="addCorrespondence.emit(entry?.uuid!)"
+          class="add-correspondence-button"
+        >
+          + Correspondence
+        </button>
+      </div>
+
+      <!-- Documents -->
+      <ng-content></ng-content>
+
+      <div *ngIf="entry?.isDraft" class="actions">
+        <button
+          mat-stroked-button
+          color="warn"
+          type="button"
+          [disabled]="!entry?.uuid"
+          (click)="delete.emit(entry?.uuid!)"
+        >
+          Delete
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="!entry?.uuid || !form.valid"
+          (click)="
+            complete.emit({
+              uuid: entry?.uuid!,
+              updateDto: dtoFromForm(),
+            })
+          "
+        >
+          Complete
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

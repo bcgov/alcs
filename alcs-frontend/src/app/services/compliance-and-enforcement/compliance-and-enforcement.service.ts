@@ -91,4 +91,10 @@ export class ComplianceAndEnforcementService {
   async submit(uuid: string): Promise<ComplianceAndEnforcementDto> {
     return await firstValueFrom(this.http.post<ComplianceAndEnforcementDto>(`${this.url}/${uuid}/submit`, {}));
   }
+
+  async uuidByFileNumber(fileNumber: string): Promise<string> {
+    const { uuid } = await firstValueFrom(this.http.get<{ uuid: string }>(`${this.url}/${fileNumber}/uuid`));
+
+    return uuid;
+  }
 }

@@ -1,0 +1,34 @@
+<div class="actions">
+  <button *ngIf="entries.length > 0" mat-stroked-button color="primary" type="button" [disabled]="hasDraftEntries()">
+    Close Chronology
+  </button>
+
+  <button mat-flat-button color="primary" type="button" (click)="createDraftEntry()" [disabled]="hasDraftEntries()">
+    + Chronology Entry
+  </button>
+</div>
+
+<div *ngIf="entries.length > 0; else noEntries" class="entries">
+  <app-compliance-and-enforcement-chronology-entry
+    *ngFor="let entry of entries"
+    [entry]="entry"
+    [datesInUse]="datesInUse(entry.uuid)"
+    [editDisabled]="hasDraftEntries()"
+    (edit)="setDraft($event)"
+    (complete)="completeDraftEntry($event)"
+    (delete)="confirmEntryDelete($event)"
+    (addCorrespondence)="openAddCorrespondenceDialog($event)"
+  >
+    <app-compliance-and-enforcement-chronology-entry-documents
+      *ngIf="entry.isDraft || entry?.documents?.length"
+      [isDraft]="entry.isDraft"
+      [documents]="entry.documents"
+      (edit)="openEditDocumentDialog($event)"
+      (delete)="confirmDocumentDelete($event)"
+    />
+  </app-compliance-and-enforcement-chronology-entry>
+</div>
+
+<ng-template #noEntries>
+  <div class="no-entries">No chronology entries</div>
+</ng-template>

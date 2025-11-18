@@ -74,4 +74,12 @@ export class ComplianceAndEnforcementController {
   async delete(@Param('uuid') uuid: string): Promise<DeleteResult> {
     return await this.service.delete(uuid);
   }
+
+  @Get('/:fileNumber/uuid')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async uuidByFileNumber(@Param('fileNumber') fileNumber: string): Promise<{ uuid: string }> {
+    const uuid = await this.service.uuidByFileNumber(fileNumber);
+
+    return { uuid };
+  }
 }

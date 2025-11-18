@@ -29,7 +29,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
 
-  title = 'Create';
+  title = 'Add';
   isDirty = false;
   isSaving = false;
   allowsFileEdit = true;
@@ -206,6 +206,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags,
       ownerUuid: this.ownerId.value ?? undefined,
       section: this.data.section ?? undefined,
+      chronologyEntryUuid: this.data.chronologyEntryUuid ?? undefined,
       parcelUuid: this.parcelId.value ?? undefined,
     };
 
@@ -425,7 +426,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
       this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
 
-      if (this.documentTypes.length === 1) {
+      if (this.data.defaultDocumentType) {
+        this.type.setValue(this.data.defaultDocumentType);
+      } else if (this.documentTypes.length === 1) {
         this.type.setValue(this.documentTypes[0].code);
       }
     } else if (this.data.decisionService) {

@@ -26,5 +26,6 @@ export interface UpdateComplianceAndEnforcementDocumentDto {
 
 export interface CreateComplianceAndEnforcementDocumentDto extends UpdateComplianceAndEnforcementDocumentDto {
   section?: Section;
+  chronologyEntryUuid?: string | null;
   file: File;
 }

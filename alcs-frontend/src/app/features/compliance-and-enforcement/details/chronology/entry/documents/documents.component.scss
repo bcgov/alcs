@@ -1,0 +1,27 @@
+@use '../../../../../../../styles/colors.scss' as colors;
+
+table {
+  background: colors.$grey-light;
+}
+
+.document-table {
+  margin-top: 12px;
+  box-shadow: none;
+}
+
+.no-documents {
+  text-align: center;
+  padding: 16px;
+}
+
+.documents-wrapper {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.document-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
