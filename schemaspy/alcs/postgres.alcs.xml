@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<database name="postgres" schema="alcs" type="PostgreSQL - 17.6 (Debian 17.6-1.pgdg13+1)">
+<database name="postgres" schema="alcs" type="PostgreSQL - 18.1 (Debian 18.1-1.pgdg13+2)">
    <sequences>
       <sequence increment="1" name="alcs_file_number_seq" startValue="100000"/>
       <sequence increment="1" name="health_check_id_seq" startValue="1"/>
@@ -80,6 +80,7 @@
          <index name="UQ_39c4f5ceb0f5a7a4c819d46a0d5" unique="true">
             <column ascending="true" name="file_number"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="application_type_code_not_null1"/>
       </table>
       <table name="application_boundary_amendment" remarks="Used by ALC GIS Staff to track Inclusion / Exclusion decisions and their ALR boundary impact over time" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -419,6 +420,8 @@
             <column ascending="true" name="application_decision_condition_uuid"/>
             <column ascending="true" name="application_decision_component_uuid"/>
          </index>
+         <checkConstraint constraint="application_decision_component_uuid IS NOT NULL" name="application_decision_condi_application_decision_compo_not_null1"/>
+         <checkConstraint constraint="application_decision_condition_uuid IS NOT NULL" name="application_decision_condi_application_decision_condi_not_null1"/>
       </table>
       <table name="application_decision_condition_date" remarks="Due/end dates for conditions" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -664,6 +667,7 @@
          <index name="REL_c6031d3312bd42fd3f325eba26" unique="true">
             <column ascending="true" name="meeting_pause_uuid"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="application_meeting_type_code_not_null1"/>
       </table>
       <table name="application_meeting_type" remarks="Code table for possible action types that un/pause applications" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -791,6 +795,7 @@
          <index name="PK_9b2fecd11351ea787e05900672d" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="application_owner_type_code_not_null1"/>
       </table>
       <table name="application_parcel" remarks="Parcels associated with application submissions" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -908,6 +913,7 @@
          <index name="REL_6d10e08b482effb968defe5535" unique="true">
             <column ascending="true" name="card_uuid"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="application_reconsideration_type_code_not_null1"/>
       </table>
       <table name="application_reconsideration_outcome_type" remarks="Code table for possible application reconsideration review outcomes" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1413,6 +1419,8 @@
          <index name="IDX_38a14bc9166d9fac12861d07cd" unique="false">
             <column ascending="true" name="board_uuid"/>
          </index>
+         <checkConstraint constraint="status_code IS NOT NULL" name="card_status_code_not_null1"/>
+         <checkConstraint constraint="type_code IS NOT NULL" name="card_type_code_not_null1"/>
       </table>
       <table name="card_history" remarks="History of card status i.e. the column history of the card's journey on boards" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2017,6 +2025,7 @@
          <index name="UQ_419b155603f3444977c64c6dd72" unique="true">
             <column ascending="true" name="file_number"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="inquiry_type_code_not_null1"/>
       </table>
       <table name="inquiry_document" remarks="Stores inquiry documents" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
@@ -2276,6 +2285,7 @@
          <index name="UQ_66754bb64e9b1625c98b9cc0f67" unique="true">
             <column ascending="true" name="file_number"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="notice_of_intent_type_code_not_null1"/>
       </table>
       <table name="notice_of_intent_decision" remarks="Decisions saved to NOIs, linked to the modification request" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2341,6 +2351,7 @@
          <index name="UQ_aa4bdcb54aeaecc7e357e2c80fc" unique="true">
             <column ascending="true" name="modifies_uuid"/>
          </index>
+         <checkConstraint constraint="outcome_code IS NOT NULL" name="notice_of_intent_decision_outcome_code_not_null1"/>
       </table>
       <table name="notice_of_intent_decision_component" remarks="Decision Components for Notice of Intents" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2381,6 +2392,7 @@
             <column ascending="true" name="notice_of_intent_decision_component_type_code"/>
             <column ascending="true" name="notice_of_intent_decision_uuid"/>
          </index>
+         <checkConstraint constraint="notice_of_intent_decision_uuid IS NOT NULL" name="notice_of_intent_decision__notice_of_intent_decision__not_null1"/>
       </table>
       <table name="notice_of_intent_decision_component_type" remarks="Decision Component Types Code Table for Notice of Intents" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2473,6 +2485,8 @@
          <index name="IDX_a8090f60d15374a96a0d15bb13" unique="false">
             <column ascending="true" name="notice_of_intent_decision_component_uuid"/>
          </index>
+         <checkConstraint constraint="notice_of_intent_decision_condition_uuid IS NOT NULL" name="notice_of_intent_decision__notice_of_intent_decision__not_null2"/>
+         <checkConstraint constraint="notice_of_intent_decision_component_uuid IS NOT NULL" name="notice_of_intent_decision__notice_of_intent_decision__not_null3"/>
       </table>
       <table name="notice_of_intent_decision_condition_date" remarks="Due/end dates for conditions" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -2642,6 +2656,7 @@
          <index name="PK_99f337616a8abb59657ebe870a2" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="notice_of_intent_meeting_type_code_not_null1"/>
       </table>
       <table name="notice_of_intent_meeting_type" remarks="Code table for possible action types that un/pause NOIs" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -3117,6 +3132,8 @@
          <index name="UQ_2b146911206953684d622397340" unique="true">
             <column ascending="true" name="file_number"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="notification_type_code_not_null1"/>
+         <checkConstraint constraint="uuid IS NOT NULL" name="notification_uuid_not_null1"/>
       </table>
       <table name="notification_document" remarks="Documents for Notifications" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="" size="2147483647" type="uuid" typeCode="1111"/>
@@ -3469,6 +3486,7 @@
          <index name="UQ_a62913da5fae4a128c8e8f264fc" unique="true">
             <column ascending="true" name="file_number"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="planning_review_type_code_not_null1"/>
       </table>
       <table name="planning_review_decision" remarks="Links Planning Review decision document with the decision it's saved to" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -3591,6 +3609,7 @@
          <index name="PK_7c2ce6697f1c82b92d303d95ecd" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
+         <checkConstraint constraint="type_code IS NOT NULL" name="planning_review_meeting_type_code_not_null1"/>
       </table>
       <table name="planning_review_meeting_type" remarks="Meetings Types for Planning Review Meetings" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
