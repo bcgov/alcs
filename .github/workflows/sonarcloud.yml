@@ -112,6 +112,6 @@ jobs:
     if: (! github.event.pull_request.draft)
     runs-on: ubuntu-24.04
     steps:
-      - if: contains(needs.*.result, 'failure')||contains(needs.*.result, 'canceled')
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'canceled')
         run: echo "At least one job has failed." && exit 1
       - run: echo "Success!"
