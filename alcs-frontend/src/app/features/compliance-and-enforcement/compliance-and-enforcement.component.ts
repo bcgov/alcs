@@ -69,10 +69,22 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
           fileNumber,
           ResponsiblePartyType.PROPERTY_OWNER,
         );
+        
+        const isCrown = this.file?.property?.ownershipTypeCode === 'CRWN';
 
-        this.propertyOwnerName = owners && owners.length > 0 
-          ? (owners[0].organizationName || owners[0].individualName) + (owners.length > 1 ? ' et al.' : '')
-          : '';
+        if (isCrown) {
+
+          if (owners && owners.length > 0) {
+            this.propertyOwnerName = 'Crown et al.';
+          } else {
+            this.propertyOwnerName = 'Crown';
+          }
+        } else {
+          this.propertyOwnerName =
+            owners && owners.length > 0
+              ? (owners[0].organizationName || owners[0].individualName) + (owners.length > 1 ? ' et al.' : '')
+              : '';
+        }
       }
     } catch (error) {
       console.error('Error loading file:', error);
