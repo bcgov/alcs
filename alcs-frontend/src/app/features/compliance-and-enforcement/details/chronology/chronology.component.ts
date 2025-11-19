@@ -41,7 +41,6 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     allowsFileEdit: true,
     allowedDocumentSources: Object.values(DOCUMENT_SOURCE),
     allowedDocumentTypes: Object.values(DOCUMENT_TYPE),
-    defaultDocumentSource: DOCUMENT_SOURCE.PUBLIC,
     defaultDocumentType: DOCUMENT_TYPE.CORRESPONDENCE_FROM_PUBLIC,
   };
 

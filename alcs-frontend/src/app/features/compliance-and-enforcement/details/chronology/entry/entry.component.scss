@@ -64,6 +64,10 @@ form {
   flex-direction: column;
 }
 
+.description-view {
+  white-space: pre-line;
+}
+
 .c-and-e-action-list {
   .no-data {
     color: colors.$grey;

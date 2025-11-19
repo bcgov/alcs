@@ -49,6 +49,8 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
   isPatching = false;
   isSubscribed = false;
 
+  showErrors = false;
+
   date: FormControl<moment.Moment | null> = new FormControl<moment.Moment | null>(null, [
     Validators.required,
     this.dateInUseValidator.bind(this),
@@ -117,6 +119,21 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     }
 
     return !control.value || !this.datesInUse?.includes(control.value.toDate().getTime()) ? null : { dateInUse: true };
+  }
+
+  onCompleteButtonClick(): void {
+    if (this.form.invalid) {
+      this.date.markAsTouched();
+      this.description.markAsTouched();
+      this.showErrors = true;
+      return;
+    }
+    this.showErrors = false;
+
+    this.complete.emit({
+      uuid: this.entry?.uuid!,
+      updateDto: this.dtoFromForm(),
+    });
   }
 
   ngOnDestroy(): void {
