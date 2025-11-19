@@ -15,7 +15,7 @@
           <mat-datepicker #datePicker type="date"></mat-datepicker>
         </mat-form-field>
 
-        <div *ngIf="date.errors">
+        <div *ngIf="showErrors && date.errors">
           <app-error-message *ngIf="date.errors['required']" message="This field is required"></app-error-message>
           <app-error-message *ngIf="date.errors['dateInUse']" message="Date is already in use"></app-error-message>
         </div>
@@ -44,7 +44,7 @@
             <textarea matInput formControlName="description" rows="3"></textarea>
           </mat-form-field>
 
-          <div *ngIf="description.touched && description.errors">
+          <div *ngIf="showErrors && description.errors">
             <app-error-message
               *ngIf="description.errors['required']"
               message="This field is required"
@@ -54,7 +54,7 @@
       </ng-container>
 
       <ng-template #descriptionViewTemplate>
-        <div>{{ entry?.description }}</div>
+        <div class="description-view">{{ entry?.description }}</div>
       </ng-template>
 
       <div *ngIf="entry?.isDraft" class="c-and-e-action-list">
@@ -96,13 +96,8 @@
           mat-flat-button
           color="primary"
           type="button"
-          [disabled]="!entry?.uuid || !form.valid"
-          (click)="
-            complete.emit({
-              uuid: entry?.uuid!,
-              updateDto: dtoFromForm(),
-            })
-          "
+          [disabled]="!entry?.uuid"
+          (click)="onCompleteButtonClick()"
         >
           Complete
         </button>
