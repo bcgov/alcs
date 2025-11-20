@@ -20,7 +20,7 @@ jobs:
     name: Backend Tests
     if: (! github.event.pull_request.draft)
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres
@@ -48,7 +48,7 @@ jobs:
             -Dsonar.organization=bcgov-sonarcloud
             -Dsonar.projectKey=bcgov-alcs-services
             -Dsonar.sources=apps,libs
-            -Dsonar.tests.inclusions=**/*spec.ts
+            -Dsonar.test.inclusions=**/*spec.ts
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
           sonar_token: ${{ env.SONAR_TOKEN }}
           triggers: ('services/')
@@ -57,7 +57,7 @@ jobs:
     name: ALCS Frontend Tests
     if: (! github.event.pull_request.draft)
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: bcgov/action-test-and-analyse@51b50be3bb2522e480ed8eab72735612deff7f15 # v1.4.0
         env:
@@ -73,7 +73,7 @@ jobs:
             -Dsonar.organization=bcgov-sonarcloud
             -Dsonar.projectKey=bcgov-alcs-frontend
             -Dsonar.sources=src
-            -Dsonar.tests.inclusions=**/*spec.ts
+            -Dsonar.test.inclusions=**/*spec.ts
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
           sonar_token: ${{ env.SONAR_TOKEN }}
           triggers: ('alcs-frontend/')
@@ -82,7 +82,7 @@ jobs:
     name: Portal Frontend Tests
     if: (! github.event.pull_request.draft)
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: bcgov/action-test-and-analyse@51b50be3bb2522e480ed8eab72735612deff7f15 # v1.4.0
         env:
@@ -98,7 +98,7 @@ jobs:
             -Dsonar.organization=bcgov-sonarcloud
             -Dsonar.projectKey=bcgov-alcs-portal-frontend
             -Dsonar.sources=src
-            -Dsonar.tests.inclusions=**/*spec.ts
+            -Dsonar.test.inclusions=**/*spec.ts
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
           sonar_token: ${{ env.SONAR_TOKEN }}
           triggers: ('portal-frontend/')
