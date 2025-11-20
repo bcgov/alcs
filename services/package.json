@@ -137,14 +137,7 @@
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
-    "coverageReporters": [
-      [
-        "lcov",
-        {
-          "projectRoot": "../"
-        }
-      ]
-    ],
+    "coverageReporters": ["lcov"],
     "roots": [
       "<rootDir>/apps/",
       "<rootDir>/libs/"
