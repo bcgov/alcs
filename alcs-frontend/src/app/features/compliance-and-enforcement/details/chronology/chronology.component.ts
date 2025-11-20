@@ -40,7 +40,6 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     allowedVisibilityFlags: [],
     allowsFileEdit: true,
     defaultDocumentSource: DOCUMENT_SOURCE.PUBLIC,
-    defaultDocumentType: DOCUMENT_TYPE.CORRESPONDENCE,
   };
 
   fileNumber?: string;
