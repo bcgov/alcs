@@ -35,7 +35,7 @@ export class ComplianceAndEnforcementValidatorService {
     await this.validateProperties(properties, errors);
 
     // Validate responsible parties
-    await this.validateResponsibleParties(responsibleParties, errors);
+    await this.validateResponsibleParties(responsibleParties, properties, errors);
 
     return {
       errors,
@@ -160,12 +160,20 @@ export class ComplianceAndEnforcementValidatorService {
 
   private async validateResponsibleParties(
     responsibleParties: ComplianceAndEnforcementResponsibleParty[],
+    properties: ComplianceAndEnforcementPropertyDto[],
     errors: Error[],
   ) {
-    if (!responsibleParties || responsibleParties.length === 0) {
+    
+    const isCrownProperty = properties.some(property => property.ownershipTypeCode === 'CRWN');
+
+    if (!isCrownProperty && (!responsibleParties || responsibleParties.length === 0)) {
       errors.push(
         new ServiceValidationException('At least one responsible party is required'),
       );
+      return;
+    }
+    
+    if (!responsibleParties || responsibleParties.length === 0) {
       return;
     }
 
