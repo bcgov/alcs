@@ -36,6 +36,7 @@ export const ownershipDocumentOptions: DocumentUploadDialogData = {
     DOCUMENT_TYPE.CORPORATE_SUMMARY,
     DOCUMENT_TYPE.BC_ASSESSMENT_REPORT,
     DOCUMENT_TYPE.SURVEY_PLAN,
+    DOCUMENT_TYPE.BC_ASSESSMENT_REPORT,
   ],
 };
 

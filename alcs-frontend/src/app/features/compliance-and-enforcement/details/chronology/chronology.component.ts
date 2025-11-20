@@ -39,9 +39,7 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
   documentOptions: DocumentUploadDialogOptions = {
     allowedVisibilityFlags: [],
     allowsFileEdit: true,
-    allowedDocumentSources: Object.values(DOCUMENT_SOURCE),
-    allowedDocumentTypes: Object.values(DOCUMENT_TYPE),
-    defaultDocumentType: DOCUMENT_TYPE.CORRESPONDENCE_FROM_PUBLIC,
+    defaultDocumentSource: DOCUMENT_SOURCE.PUBLIC,
   };
 
   fileNumber?: string;

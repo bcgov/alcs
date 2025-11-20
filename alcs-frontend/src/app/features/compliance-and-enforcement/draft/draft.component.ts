@@ -78,6 +78,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       DOCUMENT_TYPE.CORPORATE_SUMMARY,
       DOCUMENT_TYPE.BC_ASSESSMENT_REPORT,
       DOCUMENT_TYPE.SURVEY_PLAN,
+      DOCUMENT_TYPE.BC_ASSESSMENT_REPORT,
     ],
   };
 

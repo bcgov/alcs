@@ -36,6 +36,7 @@ export const mapsDocumentOptions: DocumentUploadDialogData = {
     DOCUMENT_TYPE.AMENDMENT_MAP,
     DOCUMENT_TYPE.CAPABILITY_MAP,
     DOCUMENT_TYPE.TENURE_MAP,
+    DOCUMENT_TYPE.GOOGLE_EARTH_FILE,
   ],
 };
 
