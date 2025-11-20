@@ -47,9 +47,9 @@ jobs:
             -Dsonar.exclusions=**/coverage/**,**/node_modules/**,**/*spec.ts
             -Dsonar.organization=bcgov-sonarcloud
             -Dsonar.projectKey=bcgov-alcs-services
-            -Dsonar.sources=services/apps,services/libs
+            -Dsonar.sources=apps,libs
             -Dsonar.test.inclusions=**/*spec.ts
-            -Dsonar.javascript.lcov.reportPaths=services/coverage/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
           sonar_token: ${{ env.SONAR_TOKEN }}
           triggers: ('services/')
 
@@ -72,9 +72,9 @@ jobs:
             -Dsonar.exclusions=**/coverage/**,**/node_modules/**,**/*spec.ts
             -Dsonar.organization=bcgov-sonarcloud
             -Dsonar.projectKey=bcgov-alcs-frontend
-            -Dsonar.sources=alcs-frontend/src
+            -Dsonar.sources=src
             -Dsonar.test.inclusions=**/*spec.ts
-            -Dsonar.javascript.lcov.reportPaths=alcs-frontend/coverage/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
           sonar_token: ${{ env.SONAR_TOKEN }}
           triggers: ('alcs-frontend/')
 
@@ -97,9 +97,9 @@ jobs:
             -Dsonar.exclusions=**/coverage/**,**/node_modules/**,**/*spec.ts
             -Dsonar.organization=bcgov-sonarcloud
             -Dsonar.projectKey=bcgov-alcs-portal-frontend
-            -Dsonar.sources=portal-frontend/src
+            -Dsonar.sources=src
             -Dsonar.test.inclusions=**/*spec.ts
-            -Dsonar.javascript.lcov.reportPaths=portal-frontend/coverage/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
           sonar_token: ${{ env.SONAR_TOKEN }}
           triggers: ('portal-frontend/')
 
