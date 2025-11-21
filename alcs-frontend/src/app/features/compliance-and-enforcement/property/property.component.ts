@@ -495,12 +495,20 @@ export class PropertyComponent implements OnInit, OnDestroy {
   onLatitudeBlur() {
     const latControl = this.form.get('latitude');
     if (latControl?.value != null && latControl.value !== '') {
-      const numValue = Number(latControl.value);
+      const stringValue = latControl.value.toString().trim();
+      const numValue = Number(stringValue);
       if (!Number.isNaN(numValue)) {
-        this.isPatching = true;
-        // Format as string with exactly 5 decimals
-        latControl.setValue(numValue.toFixed(5), { emitEvent: false });
-        this.isPatching = false;
+        const decimalPart = stringValue.split('.')[1];
+        const decimalPlaces = decimalPart?.length ?? 0;
+        
+        // Only format if it's an integer or has fewer than 5 decimals
+        // Don't format if it already has 5+ decimals - let validation show the error
+        if (decimalPlaces === 0 || decimalPlaces < 5) {
+          this.isPatching = true;
+          // Format as string with exactly 5 decimals
+          latControl.setValue(numValue.toFixed(5), { emitEvent: false });
+          this.isPatching = false;
+        }
       }
     }
   }
@@ -508,12 +516,20 @@ export class PropertyComponent implements OnInit, OnDestroy {
   onLongitudeBlur() {
     const longControl = this.form.get('longitude');
     if (longControl?.value != null && longControl.value !== '') {
-      const numValue = Number(longControl.value);
+      const stringValue = longControl.value.toString().trim();
+      const numValue = Number(stringValue);
       if (!Number.isNaN(numValue)) {
-        this.isPatching = true;
-        // Format as string with exactly 5 decimals
-        longControl.setValue(numValue.toFixed(5), { emitEvent: false });
-        this.isPatching = false;
+        const decimalPart = stringValue.split('.')[1];
+        const decimalPlaces = decimalPart?.length ?? 0;
+        
+        // Only format if it's an integer or has fewer than 5 decimals
+        // Don't format if it already has 5+ decimals - let validation show the error
+        if (decimalPlaces === 0 || decimalPlaces < 5) {
+          this.isPatching = true;
+          // Format as string with exactly 5 decimals
+          longControl.setValue(numValue.toFixed(5), { emitEvent: false });
+          this.isPatching = false;
+        }
       }
     }
   }
