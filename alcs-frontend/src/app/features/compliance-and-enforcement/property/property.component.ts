@@ -32,7 +32,7 @@ function decimalPlacesValidator(decimals: number) {
 
     // Check if it's a valid number first
     const numValue = Number(stringValue);
-    if (isNaN(numValue)) {
+    if (Number.isNaN(numValue)) {
       return null; // Let other validators handle invalid numbers
     }
 
@@ -60,7 +60,7 @@ function numericRangeValidator(min: number, max: number) {
     }
 
     const numValue = Number(control.value);
-    if (isNaN(numValue)) {
+    if (Number.isNaN(numValue)) {
       return null;
     }
 
@@ -122,7 +122,7 @@ export function cleanPropertyUpdate(
 
 function toNumberOrUndefined(val: any) {
   const num = Number(val);
-  return isNaN(num) ? undefined : num;
+  return Number.isNaN(num) ? undefined : num;
 }
 
 // Format number to exactly 5 decimal places
@@ -134,12 +134,12 @@ function formatToFiveDecimals(value: number | null | undefined): number | null |
   }
 
   const num = Number(value);
-  if (isNaN(num)) {
+  if (Number.isNaN(num)) {
     return value;
   }
 
   // Format to exactly 5 decimal places
-  return parseFloat(num.toFixed(5));
+  return Number.parseFloat(num.toFixed(5));
 }
 
 @Component({
@@ -344,7 +344,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
     const numValue = Number(value);
 
     // If it's not a valid number, return null
-    if (isNaN(numValue)) {
+    if (Number.isNaN(numValue)) {
       return null;
     }
 
@@ -367,7 +367,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
     const numValue = Number(value);
 
     // If it's not a valid number, return null
-    if (isNaN(numValue)) {
+    if (Number.isNaN(numValue)) {
       return null;
     }
 
@@ -494,9 +494,9 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
   onLatitudeBlur() {
     const latControl = this.form.get('latitude');
-    if (latControl && latControl.value !== null && latControl.value !== undefined && latControl.value !== '') {
+    if (latControl?.value != null && latControl.value !== '') {
       const numValue = Number(latControl.value);
-      if (!isNaN(numValue)) {
+      if (!Number.isNaN(numValue)) {
         this.isPatching = true;
         // Format as string with exactly 5 decimals
         latControl.setValue(numValue.toFixed(5), { emitEvent: false });
@@ -507,9 +507,9 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
   onLongitudeBlur() {
     const longControl = this.form.get('longitude');
-    if (longControl && longControl.value !== null && longControl.value !== undefined && longControl.value !== '') {
+    if (longControl?.value != null && longControl.value !== '') {
       const numValue = Number(longControl.value);
-      if (!isNaN(numValue)) {
+      if (!Number.isNaN(numValue)) {
         this.isPatching = true;
         // Format as string with exactly 5 decimals
         longControl.setValue(numValue.toFixed(5), { emitEvent: false });
