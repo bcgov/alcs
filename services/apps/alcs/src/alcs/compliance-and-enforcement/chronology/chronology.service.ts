@@ -13,6 +13,8 @@ import {
   ServiceNotFoundException,
 } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import { User } from '../../../user/user.entity';
+import { UserService } from '../../../user/user.service';
 
 @Injectable()
 export class ComplianceAndEnforcementChronologyService {
@@ -23,6 +25,7 @@ export class ComplianceAndEnforcementChronologyService {
     private readonly mapper: Mapper,
     @InjectRepository(ComplianceAndEnforcement)
     private complianceAndEnforcementRepository: Repository<ComplianceAndEnforcement>,
+    private readonly userService: UserService,
   ) {}
 
   async entriesByFileId(
@@ -37,6 +40,7 @@ export class ComplianceAndEnforcementChronologyService {
       },
       relations: {
         file: true,
+        author: true,
         documents: {
           document: true,
           type: true,
@@ -63,17 +67,31 @@ export class ComplianceAndEnforcementChronologyService {
       ComplianceAndEnforcementChronologyEntry,
     );
 
-    const file = await this.complianceAndEnforcementRepository.findOne({
-      where: {
-        uuid: dto.fileUuid,
-      },
-    });
-    if (file === null) {
-      throw new ServiceNotFoundException(
-        'A C&E file with this identifier does not exist. Unable to create chronology entry.',
-      );
+    if (dto.authorUuid !== undefined) {
+      const author = await this.userService.getByUuid(dto.authorUuid);
+
+      if (author === null) {
+        throw new ServiceNotFoundException('A user with this UUID does not exist. Unable to create chronology entry.');
+      }
+
+      entity.author = author;
     }
-    entity.file = file;
+
+    if (dto.fileUuid !== undefined) {
+      const file = await this.complianceAndEnforcementRepository.findOne({
+        where: {
+          uuid: dto.fileUuid,
+        },
+      });
+
+      if (file === null) {
+        throw new ServiceNotFoundException(
+          'A C&E file with this identifier does not exist. Unable to create chronology entry.',
+        );
+      }
+
+      entity.file = file;
+    }
 
     const savedEntity = await this.repository.save(entity);
 

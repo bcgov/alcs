@@ -12,7 +12,7 @@ import {
   ComplianceAndEnforcementChronologyEntryDto,
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from '../../../../services/compliance-and-enforcement/chronology/chronology.dto';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
+import { DOCUMENT_SOURCE } from '../../../../shared/document/document.dto';
 import { ComplianceAndEnforcementDocumentDto } from '../../../../services/compliance-and-enforcement/documents/document.dto';
 import { ComplianceAndEnforcementChronologyService } from '../../../../services/compliance-and-enforcement/chronology/chronology.service';
 import {
@@ -23,7 +23,16 @@ import { DocumentUploadDialogComponent } from '../../../../shared/document-uploa
 import { DocumentDto } from '../../../../shared/document-upload-dialog/document-upload-dialog.dto';
 import { ComplianceAndEnforcementChronologyEntryComponent } from './entry/entry.component';
 import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../../constants';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import {
+  ComplianceAndEnforcementService,
+  DEFAULT_C_AND_E_FETCH_OPTIONS,
+} from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { UserService } from '../../../../services/user/user.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import {
+  ComplianceAndEnforcementDto,
+  UpdateComplianceAndEnforcementDto,
+} from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 
 @Component({
   selector: 'app-compliance-and-enforcement-chronology',
@@ -46,6 +55,9 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
   fileUuid?: string;
 
   entries: ComplianceAndEnforcementChronologyEntryDto[] = [];
+  authors: UserDto[] = [];
+
+  currentUserUuid?: string;
 
   $destroy = new Subject<void>();
 
@@ -55,12 +67,24 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     private readonly complianceAndEnforcementService: ComplianceAndEnforcementService,
     private readonly documentService: ComplianceAndEnforcementDocumentService,
     private readonly confirmationDialogService: ConfirmationDialogService,
+    private readonly userService: UserService,
     private readonly toastService: ToastService,
     public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
+    this.userService.$userProfile.subscribe((currentUse) => {
+      this.currentUserUuid = currentUse?.uuid;
+    });
+
     this.fileNumber = this.findFileNumberInRouteTree(this.route);
+
+    if (!this.fileNumber) {
+      console.log("There was a problem loading the C&E file. Can't find file number.");
+      this.toastService.showErrorToast('There was a problem loading the C&E file');
+      return;
+    }
+
     this.loadChronology(this.fileNumber);
   }
 
@@ -109,6 +133,7 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     const createDto: UpdateComplianceAndEnforcementChronologyEntryDto = {
       isDraft: true,
       fileUuid: this.fileUuid,
+      authorUuid: this.currentUserUuid,
     };
 
     try {
@@ -282,7 +307,8 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
       this.fileUuid = await this.complianceAndEnforcementService.uuidByFileNumber(fileNumber);
     }
 
-    this.entries = await firstValueFrom(this.service.entriesByFileId(this.fileUuid, { idType: 'uuid' }));
+    this.authors = await this.userService.getComplianceAndEnforcementOfficers();
+    this.entries = await firstValueFrom(this.service.entriesByFileId(fileNumber, { idType: 'fileNumber' }));
   }
 
   findFileNumberInRouteTree(startingRoute: ActivatedRoute): string {

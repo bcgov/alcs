@@ -37,6 +37,21 @@
         <mat-icon>edit</mat-icon>
       </button>
 
+      <ng-container *ngIf="entry?.isDraft; else authorViewTemplate">
+        <mat-form-field appearance="outline">
+          <mat-label>Author</mat-label>
+          <mat-select panelClass="author-list-panel" [formControl]="authorDropdown">
+            <mat-option *ngFor="let author of authors" [value]="author.uuid">
+              {{ author.prettyName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+
+      <ng-template #authorViewTemplate>
+        <strong>{{ entry?.author?.prettyName }}</strong>
+      </ng-template>
+
       <ng-container *ngIf="entry?.isDraft; else descriptionViewTemplate">
         <div class="description-wrapper">
           <mat-form-field appearance="outline">

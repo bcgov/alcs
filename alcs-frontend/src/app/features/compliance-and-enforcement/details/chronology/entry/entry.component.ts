@@ -6,6 +6,7 @@ import {
   ComplianceAndEnforcementChronologyEntryDto,
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from '../../../../../services/compliance-and-enforcement/chronology/chronology.dto';
+import { UserDto } from '../../../../../services/user/user.dto';
 
 @Component({
   selector: 'app-compliance-and-enforcement-chronology-entry',
@@ -29,6 +30,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
   get entry(): ComplianceAndEnforcementChronologyEntryDto | null {
     return this._entry;
   }
+  @Input() authors?: UserDto[];
   @Input() datesInUse?: number[];
   @Input() editDisabled = false;
 
@@ -55,9 +57,11 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     Validators.required,
     this.dateInUseValidator.bind(this),
   ]);
+  authorDropdown = new FormControl<string | null>(null, [Validators.required]);
   description: FormControl<string | null> = new FormControl<string | null>(null, [Validators.required]);
   form: FormGroup = new FormGroup({
     date: this.date,
+    authorUuid: this.authorDropdown,
     description: this.description,
   });
 
@@ -89,6 +93,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
     this.form.patchValue(
       {
         date: entry.date !== undefined && entry.date !== null ? moment(entry.date) : null,
+        authorUuid: entry.author.uuid,
         description: entry.description,
       },
       { emitEvent: false },
@@ -104,6 +109,10 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
 
     if (this.date.value) {
       dto.date = this.date.value.toDate().getTime();
+    }
+
+    if (this.authorDropdown.value) {
+      dto.authorUuid = this.authorDropdown.value;
     }
 
     if (this.description.value) {
