@@ -1,20 +1,54 @@
 <div class="actions">
-  <button *ngIf="entries.length > 0" mat-stroked-button color="primary" type="button" [disabled]="hasDraftEntries()">
-    Close Chronology
-  </button>
+  <ng-container *ngIf="!file?.chronologyClosedAt; else reopenButtonTemplate">
+    <button
+      *ngIf="entries.length > 0"
+      mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="confirmCloseChronology()"
+      [disabled]="hasDraftEntries()"
+    >
+      Close Chronology
+    </button>
+  </ng-container>
 
-  <button mat-flat-button color="primary" type="button" (click)="createDraftEntry()" [disabled]="hasDraftEntries()">
+  <ng-template #reopenButtonTemplate>
+    <button
+      mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="confirmReopenChronology()"
+      [disabled]="hasDraftEntries()"
+    >
+      Re-open Chronology
+    </button>
+  </ng-template>
+
+  <button
+    *ngIf="!file?.chronologyClosedAt"
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="createDraftEntry()"
+    [disabled]="hasDraftEntries()"
+  >
     + Chronology Entry
   </button>
 </div>
 
 <div *ngIf="entries.length > 0; else noEntries" class="entries">
+  <div *ngIf="file?.chronologyClosedAt" class="final-entry">
+    <div class="final-entry-date">{{ file?.chronologyClosedAt | date: 'yyyy-MMM-dd' }}</div>
+    <div class="final-entry-main">
+      <strong>Chronology Closed by {{ file?.chronologyClosedBy?.prettyName }}</strong>
+    </div>
+  </div>
   <app-compliance-and-enforcement-chronology-entry
     *ngFor="let entry of entries"
     [entry]="entry"
     [authors]="authors"
     [datesInUse]="datesInUse(entry.uuid)"
-    [editDisabled]="hasDraftEntries()"
+    [editDisabled]="hasDraftEntries() || !!file?.chronologyClosedAt"
     (edit)="setDraft($event)"
     (complete)="completeDraftEntry($event)"
     (delete)="confirmEntryDelete($event)"

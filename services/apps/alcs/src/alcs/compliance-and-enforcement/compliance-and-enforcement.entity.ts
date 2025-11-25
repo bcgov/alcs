@@ -89,6 +89,14 @@ export class ComplianceAndEnforcement extends Base {
   chronologyEntries: ComplianceAndEnforcementChronologyEntry[];
 
   @AutoMap()
+  @Column({ type: 'timestamptz', nullable: true })
+  chronologyClosedAt: Date | null;
+
+  @AutoMap()
+  @ManyToOne(() => User, { nullable: true })
+  chronologyClosedBy: User | null;
+
+  @AutoMap()
   @ManyToOne(() => User, { nullable: true })
   assignee: User | null;
 }
