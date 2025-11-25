@@ -12,7 +12,7 @@ import {
   ComplianceAndEnforcementChronologyEntryDto,
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from '../../../../services/compliance-and-enforcement/chronology/chronology.dto';
-import { DOCUMENT_SOURCE } from '../../../../shared/document/document.dto';
+import { DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 import { ComplianceAndEnforcementDocumentDto } from '../../../../services/compliance-and-enforcement/documents/document.dto';
 import { ComplianceAndEnforcementChronologyService } from '../../../../services/compliance-and-enforcement/chronology/chronology.service';
 import {
