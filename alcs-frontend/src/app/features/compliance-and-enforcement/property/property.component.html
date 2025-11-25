@@ -65,13 +65,13 @@
     <div class="coordinate-field">
       <mat-form-field appearance="outline">
         <mat-label>Latitude</mat-label>
-        <input type="number" matInput formControlName="latitude" step="0.00001" placeholder="e.g. 49.55555" />
+        <input type="text" matInput formControlName="latitude" placeholder="e.g. 49.55555" (blur)="onLatitudeBlur()" />
       </mat-form-field>
       <div *ngIf="form.get('latitude')?.hasError('required') && form.get('latitude')?.touched" class="validation-error">
         <mat-icon class="error-icon">warning</mat-icon>
         <span>This field is required</span>
       </div>
-      <div class="coordinate-help">Valid Range is 48 to 61. Example: 49.55555</div>
+      <div class="coordinate-help">Valid Range is 48 to 61. Must have exactly 5 decimal places (e.g. 49.55555). Integers like 49 will be formatted to 49.00000.</div>
       <div *ngIf="form.get('latitude')?.hasError('min') && form.get('latitude')?.touched" class="validation-error">
         <mat-icon class="error-icon">warning</mat-icon>
         <span>Latitude must be at least 48</span>
@@ -89,13 +89,13 @@
     <div class="coordinate-field">
       <mat-form-field appearance="outline">
         <mat-label>Longitude</mat-label>
-        <input type="number" matInput formControlName="longitude" step="0.00001" placeholder="e.g. -130.55555" />
+        <input type="text" matInput formControlName="longitude" placeholder="e.g. -130.55555" (blur)="onLongitudeBlur()" />
       </mat-form-field>
       <div *ngIf="form.get('longitude')?.hasError('required') && form.get('longitude')?.touched" class="validation-error">
         <mat-icon class="error-icon">warning</mat-icon>
         <span>This field is required</span>
       </div>
-      <div class="coordinate-help">Valid Range is -140 to -113. Example: -130.55555</div>
+      <div class="coordinate-help">Valid Range is -140 to -113. Must have exactly 5 decimal places (e.g. -130.55555). Integers like -130 will be formatted to -130.00000.</div>
       <div *ngIf="form.get('longitude')?.hasError('min') && form.get('longitude')?.touched" class="validation-error">
         <mat-icon class="error-icon">warning</mat-icon>
         <span>Longitude must be at least -140</span>
