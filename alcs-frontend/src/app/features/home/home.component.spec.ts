@@ -90,6 +90,19 @@ describe('HomeComponent', () => {
     });
 
     it('shows error toast if service create fails', async () => {
+      const mockUser: UserDto = {
+        uuid: '1234',
+        initials: 'JD',
+        name: 'John Doe',
+        identityProvider: 'IDIR',
+        clientRoles: [],
+        idirUserName: 'jd',
+        bceidUserName: 'jd',
+        prettyName: 'John Doe',
+        settings: {
+          favoriteBoards: [],
+        },
+      };
       mockComplianceAndEnforcementService.create.mockResolvedValue({
         uuid: '12345',
         fileNumber: '12345',
@@ -101,6 +114,8 @@ describe('HomeComponent', () => {
         allegedActivity: [],
         intakeNotes: '',
         submitters: [],
+        chronologyClosedAt: 0,
+        chronologyClosedBy: mockUser,
         assignee: null,
       });
 
@@ -110,6 +125,19 @@ describe('HomeComponent', () => {
     });
 
     it('shows error toast if service create fails', async () => {
+      const mockUser: UserDto = {
+        uuid: '1234',
+        initials: 'JD',
+        name: 'John Doe',
+        identityProvider: 'IDIR',
+        clientRoles: [],
+        idirUserName: 'jd',
+        bceidUserName: 'jd',
+        prettyName: 'John Doe',
+        settings: {
+          favoriteBoards: [],
+        },
+      };
       const responseDto: ComplianceAndEnforcementDto = {
         uuid: '12345',
         fileNumber: '12345',
@@ -121,6 +149,8 @@ describe('HomeComponent', () => {
         allegedActivity: [],
         intakeNotes: '',
         submitters: [],
+        chronologyClosedAt: 0,
+        chronologyClosedBy: mockUser,
         assignee: null,
       };
 

@@ -14,8 +14,22 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ComplianceAndEnforcementService } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { UserDto } from '../../../services/user/user.dto';
 
 describe('OverviewComponent', () => {
+  const mockUser: UserDto = {
+    uuid: '1234',
+    initials: 'JD',
+    name: 'John Doe',
+    identityProvider: 'IDIR',
+    clientRoles: [],
+    idirUserName: 'jd',
+    bceidUserName: 'jd',
+    prettyName: 'John Doe',
+    settings: {
+      favoriteBoards: [],
+    },
+  };
   let component: OverviewComponent;
   let fixture: ComponentFixture<OverviewComponent>;
   let mockFile: ComplianceAndEnforcementDto = {
@@ -29,6 +43,8 @@ describe('OverviewComponent', () => {
     allegedActivity: [AllegedActivity.OTHER],
     intakeNotes: 'Some notes',
     submitters: [],
+    chronologyClosedAt: 0,
+    chronologyClosedBy: mockUser,
     assignee: null,
   };
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
@@ -143,6 +159,19 @@ describe('OverviewComponent', () => {
   });
 
   it('should patch null dateSubmitted if file.dateSubmitted is missing', () => {
+    const mockUser: UserDto = {
+      uuid: '1234',
+      initials: 'JD',
+      name: 'John Doe',
+      identityProvider: 'IDIR',
+      clientRoles: [],
+      idirUserName: 'jd',
+      bceidUserName: 'jd',
+      prettyName: 'John Doe',
+      settings: {
+        favoriteBoards: [],
+      },
+    };
     component.file = {
       uuid: '12345',
       fileNumber: '12345',
@@ -154,6 +183,8 @@ describe('OverviewComponent', () => {
       allegedActivity: [],
       intakeNotes: '',
       submitters: [],
+      chronologyClosedAt: 0,
+      chronologyClosedBy: mockUser,
       assignee: null,
     };
 
