@@ -81,6 +81,7 @@ export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit,
         this.entry?.uuid,
         {
           date: form.date ? form.date.toDate().getTime() : null,
+          authorUuid: form.authorUuid,
           description: form.description ?? '',
         },
       ]);
