@@ -154,7 +154,7 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     }
 
     if (!this.fileNumber) {
-      console.warn('No file number not found. Chronology not loaded.');
+      console.warn('File number not found. Chronology not loaded.');
       return;
     }
 
