@@ -349,7 +349,8 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       title: 'Discard Draft',
       body: 'Are you sure you want to discard this draft? All data will be permanently deleted.',
       yesButtonText: 'Discard',
-      cancelButtonText: 'Cancel',confirmButtonColor: 'warn',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: 'warn',
     });
 
     dialogRef.subscribe(async (confirmed: boolean) => {
