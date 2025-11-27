@@ -6,6 +6,7 @@ export interface DialogData {
   title?: string;
   yesButtonText?: string;
   cancelButtonText?: string;
+  confirmButtonColor?: 'primary' | 'accent' | 'warn';
 }
 
 @Component({
