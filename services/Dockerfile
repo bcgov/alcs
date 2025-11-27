@@ -9,7 +9,7 @@ WORKDIR /opt/app-root/
 
 COPY --chown=node:node package*.json ./
 
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 COPY --chown=node:node . .
 
@@ -32,7 +32,7 @@ COPY --chown=node:node . .
 
 RUN npm run build ${NEST_APP}
 
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --ignore-scripts --only=production && npm cache clean --force
 
 USER node
 
