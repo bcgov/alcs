@@ -31,6 +31,8 @@ export interface ComplianceAndEnforcementDto {
   intakeNotes: string;
   submitters: ComplianceAndEnforcementSubmitterDto[];
   property?: ComplianceAndEnforcementPropertyDto;
+  chronologyClosedAt: number | null;
+  chronologyClosedBy: UserDto | null;
   assignee: UserDto | null;
 }
 
@@ -43,5 +45,7 @@ export interface UpdateComplianceAndEnforcementDto {
   allegedActivity?: AllegedActivity[];
   intakeNotes?: string;
   submitters?: UpdateComplianceAndEnforcementSubmitterDto[];
+  chronologyClosedAt?: number | null;
+  chronologyClosedByUuid?: string | null;
   assigneeUuid?: string | null;
 }

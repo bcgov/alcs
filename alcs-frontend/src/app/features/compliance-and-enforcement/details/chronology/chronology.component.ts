@@ -12,7 +12,7 @@ import {
   ComplianceAndEnforcementChronologyEntryDto,
   UpdateComplianceAndEnforcementChronologyEntryDto,
 } from '../../../../services/compliance-and-enforcement/chronology/chronology.dto';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
+import { DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 import { ComplianceAndEnforcementDocumentDto } from '../../../../services/compliance-and-enforcement/documents/document.dto';
 import { ComplianceAndEnforcementChronologyService } from '../../../../services/compliance-and-enforcement/chronology/chronology.service';
 import {
@@ -23,7 +23,17 @@ import { DocumentUploadDialogComponent } from '../../../../shared/document-uploa
 import { DocumentDto } from '../../../../shared/document-upload-dialog/document-upload-dialog.dto';
 import { ComplianceAndEnforcementChronologyEntryComponent } from './entry/entry.component';
 import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../../constants';
-import { ComplianceAndEnforcementService } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import {
+  ComplianceAndEnforcementService,
+  DEFAULT_C_AND_E_FETCH_OPTIONS,
+} from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
+import { UserService } from '../../../../services/user/user.service';
+import { UserDto } from '../../../../services/user/user.dto';
+import {
+  ComplianceAndEnforcementDto,
+  UpdateComplianceAndEnforcementDto,
+} from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { ConfirmationDialogStyle } from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-compliance-and-enforcement-chronology',
@@ -43,9 +53,12 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
   };
 
   fileNumber?: string;
-  fileUuid?: string;
 
+  file?: ComplianceAndEnforcementDto;
   entries: ComplianceAndEnforcementChronologyEntryDto[] = [];
+  authors: UserDto[] = [];
+
+  currentUserUuid?: string;
 
   $destroy = new Subject<void>();
 
@@ -55,12 +68,32 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     private readonly complianceAndEnforcementService: ComplianceAndEnforcementService,
     private readonly documentService: ComplianceAndEnforcementDocumentService,
     private readonly confirmationDialogService: ConfirmationDialogService,
+    private readonly userService: UserService,
     private readonly toastService: ToastService,
     public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
+    this.complianceAndEnforcementService.$file.subscribe((file) => {
+      if (!file) {
+        return;
+      }
+
+      this.file = file;
+    });
+
+    this.userService.$userProfile.subscribe((currentUse) => {
+      this.currentUserUuid = currentUse?.uuid;
+    });
+
     this.fileNumber = this.findFileNumberInRouteTree(this.route);
+
+    if (!this.fileNumber) {
+      console.log("There was a problem loading the C&E file. Can't find file number.");
+      this.toastService.showErrorToast('There was a problem loading the C&E file');
+      return;
+    }
+
     this.loadChronology(this.fileNumber);
   }
 
@@ -100,7 +133,7 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
   }
 
   async createDraftEntry(): Promise<void> {
-    if (!this.fileUuid) {
+    if (!this.file?.uuid) {
       console.error('File UUID is required to create a draft entry.');
       this.toastService.showErrorToast('Failed to create draft entry');
       return;
@@ -108,7 +141,8 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
 
     const createDto: UpdateComplianceAndEnforcementChronologyEntryDto = {
       isDraft: true,
-      fileUuid: this.fileUuid,
+      authorUuid: this.currentUserUuid,
+      fileUuid: this.file?.uuid,
     };
 
     try {
@@ -120,7 +154,7 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
     }
 
     if (!this.fileNumber) {
-      console.warn('No file number not found. Chronology not loaded.');
+      console.warn('File number not found. Chronology not loaded.');
       return;
     }
 
@@ -278,11 +312,8 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
   }
 
   async loadChronology(fileNumber: string) {
-    if (!this.fileUuid) {
-      this.fileUuid = await this.complianceAndEnforcementService.uuidByFileNumber(fileNumber);
-    }
-
-    this.entries = await firstValueFrom(this.service.entriesByFileId(this.fileUuid, { idType: 'uuid' }));
+    this.authors = await this.userService.getComplianceAndEnforcementOfficers();
+    this.entries = await firstValueFrom(this.service.entriesByFileId(fileNumber, { idType: 'fileNumber' }));
   }
 
   findFileNumberInRouteTree(startingRoute: ActivatedRoute): string {
@@ -306,6 +337,86 @@ export class ComplianceAndEnforcementChronologyComponent implements OnInit, Afte
       .filter((entry) => entry.date !== null && entry.uuid !== excludedUuid)
       .map((entry) => entry.date as number);
   }
+
+  async confirmCloseChronology() {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Remember to first add a final chronology entry that explains why the file is being closed.`,
+        style: ConfirmationDialogStyle.WARN,
+      })
+      .subscribe(async (accepted) => {
+        if (!accepted) {
+          return;
+        }
+
+        this.closeChronology();
+      });
+  }
+
+  async closeChronology() {
+    if (!this.fileNumber) {
+      console.error("There was a problem closing the chronology. The C&E file number can't be found");
+      this.toastService.showErrorToast('There was a problem closing the chronology');
+      return;
+    }
+
+    const updateDto: UpdateComplianceAndEnforcementDto = {
+      chronologyClosedAt: Date.now(),
+      chronologyClosedByUuid: this.currentUserUuid,
+    };
+
+    try {
+      await firstValueFrom(
+        this.complianceAndEnforcementService.update(this.fileNumber, updateDto, { idType: 'fileNumber' }),
+      );
+      this.toastService.showSuccessToast('Chronology closed successfully');
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Unable to close chronology');
+    }
+
+    this.complianceAndEnforcementService.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
+  }
+
+  async confirmReopenChronology() {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to re-open the chronology?`,
+      })
+      .subscribe(async (accepted) => {
+        if (!accepted) {
+          return;
+        }
+
+        this.reopenChronology();
+      });
+  }
+
+  async reopenChronology() {
+    if (!this.fileNumber) {
+      console.error("There was a problem re-opening the chronology. The C&E file number can't be found");
+      this.toastService.showErrorToast('There was a problem re-opening the chronology');
+      return;
+    }
+
+    const updateDto: UpdateComplianceAndEnforcementDto = {
+      chronologyClosedAt: null,
+      chronologyClosedByUuid: null,
+    };
+
+    try {
+      await firstValueFrom(
+        this.complianceAndEnforcementService.update(this.fileNumber, updateDto, { idType: 'fileNumber' }),
+      );
+      this.toastService.showSuccessToast('Chronology re-opened successfully');
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Unable to re-open chronology');
+    }
+
+    this.complianceAndEnforcementService.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
+  }
+
   ngOnDestroy() {
     this.$destroy.next();
     this.$destroy.complete();

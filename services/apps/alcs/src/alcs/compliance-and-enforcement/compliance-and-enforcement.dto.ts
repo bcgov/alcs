@@ -44,6 +44,12 @@ export class ComplianceAndEnforcementDto {
   property?: ComplianceAndEnforcementPropertyDto;
 
   @AutoMap()
+  chronologyClosedAt: number | null;
+
+  @AutoMap()
+  chronologyClosedBy?: UserDto;
+
+  @AutoMap()
   assignee?: UserDto;
 }
 
@@ -81,6 +87,14 @@ export class UpdateComplianceAndEnforcementDto {
   @ValidateNested({ each: true })
   @Type(() => UpdateComplianceAndEnforcementSubmitterDto)
   submitters?: UpdateComplianceAndEnforcementSubmitterDto[];
+
+  @IsOptional()
+  @IsNumber()
+  chronologyClosedAt?: number | null;
+
+  @IsOptional()
+  @IsString()
+  chronologyClosedByUuid?: string | null;
 
   @IsOptional()
   @IsString()

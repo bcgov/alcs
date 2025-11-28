@@ -2,7 +2,13 @@
   <span class="subheading2">{{ data.title }}</span>
 </div>
 <div mat-dialog-content>
-  <p [innerHTML]="data.body"></p>
+  <ng-container *ngIf="data.style === ConfirmationDialogStyle.WARN">
+    <div class="warn">
+      <mat-icon class="warn-icon">info</mat-icon>
+      <p><strong>Warning</strong>: <span [innerHTML]="data.body"></span></p>
+    </div>
+  </ng-container>
+  <p *ngIf="!data.style" [innerHTML]="data.body"></p>
 </div>
 <div class="button-container" mat-dialog-actions align="end">
   <button mat-stroked-button color="primary" [mat-dialog-close]="false">{{ data.cancelButtonText ?? 'Cancel' }}</button>

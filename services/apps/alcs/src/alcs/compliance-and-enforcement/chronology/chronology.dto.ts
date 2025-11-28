@@ -1,7 +1,7 @@
 import { AutoMap } from 'automapper-classes';
 import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
-import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
+import { UserDto } from '../../../user/user.dto';
 
 export class ComplianceAndEnforcementChronologyEntryDto {
   @AutoMap()
@@ -12,6 +12,9 @@ export class ComplianceAndEnforcementChronologyEntryDto {
 
   @AutoMap()
   date: number | null;
+
+  @AutoMap()
+  author: UserDto;
 
   @AutoMap()
   description: string;
@@ -31,6 +34,10 @@ export class UpdateComplianceAndEnforcementChronologyEntryDto {
   @IsOptional()
   @IsNumber()
   date?: number | null;
+
+  @IsOptional()
+  @IsString()
+  authorUuid?: string;
 
   @IsOptional()
   @IsString()

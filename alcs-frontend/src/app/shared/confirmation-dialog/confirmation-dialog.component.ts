@@ -28,8 +28,9 @@ export interface DialogData {
 export class ConfirmationDialogComponent {
   ConfirmationDialogStyle = ConfirmationDialogStyle;
   
+
   constructor(
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {}
 }

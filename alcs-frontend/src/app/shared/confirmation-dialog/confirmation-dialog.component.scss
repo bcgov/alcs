@@ -1,3 +1,18 @@
+@use '../../../styles/colors';
+
 .mat-dialog-actions {
   justify-content: flex-end;
+}
+
+.warn {
+  display: flex;
+  gap: 10px;
+
+  background-color: rgba(colors.$field-warning-bg-color, 0.5);
+  max-width: 500px;
+  padding: 20px;
+
+  .warn-icon {
+    flex-shrink: 0;
+  }
 }
