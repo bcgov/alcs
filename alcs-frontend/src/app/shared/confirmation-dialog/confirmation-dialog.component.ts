@@ -7,12 +7,17 @@ export enum ConfirmationDialogColor {
   WARN = 'warn',
 }
 
+export enum ConfirmationDialogStyle {
+  WARN = 'warn',
+}
+
 export interface DialogData {
   body: string;
   title?: string;
   yesButtonText?: string;
   cancelButtonText?: string;
   confirmButtonColor?: ConfirmationDialogColor;
+  style?: ConfirmationDialogStyle;
 }
 
 @Component({
@@ -21,6 +26,8 @@ export interface DialogData {
   styleUrls: ['./confirmation-dialog.component.scss'],
 })
 export class ConfirmationDialogComponent {
+  ConfirmationDialogStyle = ConfirmationDialogStyle;
+  
   constructor(
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
