@@ -37,7 +37,9 @@ export class AddChronologyEntryAuthor1763683662058 implements MigrationInterface
       FROM
         inserted_users`,
     );
-    await queryRunner.query(`ALTER TABLE "alcs"."compliance_and_enforcement_chronology_entry" ADD "author_uuid" uuid`);
+    await queryRunner.query(
+      `ALTER TABLE "alcs"."compliance_and_enforcement_chronology_entry" ALTER COLUMN "author_uuid" SET NOT NULL`,
+    );
     await queryRunner.query(
       `ALTER TABLE "alcs"."compliance_and_enforcement_chronology_entry" DROP COLUMN "nris_inspection_id"`,
     );
