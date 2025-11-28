@@ -26,7 +26,8 @@ export class AddChronologyEntryAuthor1763683662058 implements MigrationInterface
           'Testington',
           'McSample'
         )
-        returning
+        ON CONFLICT DO NOTHING
+        RETURNING
           uuid
       )
       UPDATE
