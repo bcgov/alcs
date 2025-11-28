@@ -98,7 +98,9 @@ describe('ComplianceAndEnforcementService', () => {
       dateClosed: 0,
       submitters: [],
       assignee: undefined,
-      chronologyClosedAt: 0,
+      chronologyClosedAt: undefined as any,
+      chronologyClosedBy: undefined,
+      property: undefined,
     };
     it('should return all records', async () => {
       mockComplianceAndEnforcementRepository.find.mockResolvedValue([mockComplianceAndEnforcement]);
@@ -115,7 +117,9 @@ describe('ComplianceAndEnforcementService', () => {
         dateClosed: 0,
         submitters: [],
         assignee: undefined,
-        chronologyClosedAt: 0,
+        chronologyClosedAt: undefined as any,
+        chronologyClosedBy: undefined,
+        property: undefined,
       };
       mockComplianceAndEnforcementRepository.findOne.mockResolvedValue(mockComplianceAndEnforcement);
       expect(await service.fetchById('1', 'fileNumber')).toEqual(resultDto);
@@ -133,7 +137,9 @@ describe('ComplianceAndEnforcementService', () => {
         dateClosed: 0,
         submitters: [],
         assignee: undefined,
-        chronologyClosedAt: 0,
+        chronologyClosedAt: undefined as any,
+        chronologyClosedBy: undefined,
+        property: undefined,
       };
       mockComplianceAndEnforcementRepository.save.mockResolvedValue(mockComplianceAndEnforcement);
       expect(await service.create(createDto)).toEqual(resultDto);
@@ -155,7 +161,9 @@ describe('ComplianceAndEnforcementService', () => {
         dateClosed: 0,
         submitters: [],
         assignee: undefined,
-        chronologyClosedAt: 0,
+        chronologyClosedAt: undefined as any,
+        chronologyClosedBy: undefined,
+        property: undefined,
       };
       mockComplianceAndEnforcementRepository.save.mockResolvedValue(mockComplianceAndEnforcement);
       mockComplianceAndEnforcementRepository.findOneBy.mockResolvedValue(mockComplianceAndEnforcement);
