@@ -45,18 +45,24 @@ export class ComplianceAndEnforcementService {
     return this.mapper.mapArray(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
   }
 
-  async fetchByUuid(
-    uuid: string,
+  async fetchById(
+    id: string,
+    idType: string,
     withSubmitters = false,
     withProperties = false,
+    withAssignee = false,
   ): Promise<ComplianceAndEnforcementDto> {
     const entity = await this.repository.findOne({
       where: {
-        uuid,
+        [idType]: id,
       },
       relations: {
         submitters: withSubmitters,
-        properties: withProperties,
+        properties: withProperties && {
+          localGovernment: true,
+        },
+        chronologyClosedBy: true,
+        assignee: withAssignee,
       },
       order: {
         submitters: withSubmitters
@@ -64,32 +70,6 @@ export class ComplianceAndEnforcementService {
               dateAdded: 'DESC',
             }
           : undefined,
-      },
-    });
-
-    if (entity === null) {
-      throw new ServiceNotFoundException('A C&E file with this file number does not exist.');
-    }
-
-    return this.mapper.map(entity, ComplianceAndEnforcement, ComplianceAndEnforcementDto);
-  }
-
-  async fetchByFileNumber(
-    fileNumber: string,
-    withSubmitters = false,
-    withProperty = false,
-    withAssignee = false,
-  ): Promise<ComplianceAndEnforcementDto> {
-    const entity = await this.repository.findOne({
-      where: {
-        fileNumber,
-      },
-      relations: {
-        submitters: withSubmitters,
-        properties: withProperty && {
-          localGovernment: true,
-        },
-        assignee: withAssignee,
       },
     });
 
@@ -133,6 +113,18 @@ export class ComplianceAndEnforcementService {
     const updateEntity = this.mapper.map(updateDto, UpdateComplianceAndEnforcementDto, ComplianceAndEnforcement);
     updateEntity.uuid = entity.uuid;
     updateEntity.fileNumber = entity.fileNumber;
+
+    if (updateDto.chronologyClosedByUuid !== undefined) {
+      if (updateDto.chronologyClosedByUuid === null) {
+        updateEntity.chronologyClosedBy = null;
+      } else {
+        const chronologyClosedByEntity = await this.userService.getByUuid(updateDto.chronologyClosedByUuid);
+        if (chronologyClosedByEntity === null) {
+          throw new ServiceConflictException('A user with this UUID does not exist. Unable to assign.');
+        }
+        updateEntity.chronologyClosedBy = chronologyClosedByEntity;
+      }
+    }
 
     if (updateDto.assigneeUuid !== undefined) {
       if (updateDto.assigneeUuid === null) {

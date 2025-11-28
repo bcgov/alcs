@@ -28,9 +28,7 @@ export class ComplianceAndEnforcementController {
     @Query('withProperty', ParseBoolPipe) withProperty: boolean = false,
     @Query('withAssignee', ParseBoolPipe) withAssignee: boolean = false,
   ): Promise<ComplianceAndEnforcementDto> {
-    const thing = await this.service.fetchByFileNumber(fileNumber, withSubmitters, withProperty, withAssignee);
-
-    return thing;
+    return await this.service.fetchById(fileNumber, 'fileNumber', withSubmitters, withProperty, withAssignee);
   }
 
   @Post('')

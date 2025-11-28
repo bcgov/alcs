@@ -9,6 +9,8 @@ import { ComplianceAndEnforcementChronologyEntry } from './chronology.entity';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
 import { ComplianceAndEnforcementDocument } from '../document/document.entity';
 import { ComplianceAndEnforcementDocumentDto } from '../document/document.dto';
+import { User } from '../../../user/user.entity';
+import { UserDto } from '../../../user/user.dto';
 
 @Injectable()
 export class ComplianceAndEnforcementChronologyProfile extends AutomapperProfile {
@@ -25,6 +27,10 @@ export class ComplianceAndEnforcementChronologyProfile extends AutomapperProfile
         forMember(
           (dto) => dto.date,
           mapFrom((entity) => entity.date?.getTime()),
+        ),
+        forMember(
+          (dto) => dto.author,
+          mapFrom((entity) => (entity.author ? this.mapper.map(entity.author, User, UserDto) : entity.author)),
         ),
         forMember(
           (dto) => dto.fileUuid,
@@ -46,6 +52,10 @@ export class ComplianceAndEnforcementChronologyProfile extends AutomapperProfile
         forMember(
           (entity) => entity.date,
           mapFrom((dto) => (dto.date !== undefined && dto.date !== null ? new Date(dto.date) : dto.date)),
+        ),
+        forMember(
+          (entity) => entity.author,
+          mapFrom((dto) => new User({ uuid: dto.authorUuid })),
         ),
         forMember(
           (entity) => entity.file,

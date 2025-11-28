@@ -61,6 +61,10 @@ form {
   }
 }
 
+.author-list-panel {
+  overflow: visible !important;
+}
+
 .description-wrapper {
   display: flex;
   flex-direction: column;

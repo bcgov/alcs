@@ -75,6 +75,18 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
           ),
         ),
         forMember(
+          (dto) => dto.chronologyClosedAt,
+          mapFrom((entity) => entity.chronologyClosedAt?.getTime()),
+        ),
+        forMember(
+          (dto) => dto.chronologyClosedBy,
+          mapFrom((entity) => {
+            return entity.chronologyClosedBy
+              ? this.mapper.map(entity.chronologyClosedBy, User, UserDto)
+              : entity.chronologyClosedBy;
+          }),
+        ),
+        forMember(
           (dto) => dto.assignee,
           mapFrom((entity) => {
             return entity.assignee ? this.mapper.map(entity.assignee, User, UserDto) : entity.assignee;
@@ -132,6 +144,14 @@ export class ComplianceAndEnforcementProfile extends AutomapperProfile {
                   ComplianceAndEnforcementSubmitter,
                 )
               : undefined,
+          ),
+        ),
+        forMember(
+          (entity) => entity.chronologyClosedAt,
+          mapFrom((dto) =>
+            dto.chronologyClosedAt !== undefined && dto.chronologyClosedAt !== null
+              ? new Date(dto.chronologyClosedAt)
+              : dto.chronologyClosedAt,
           ),
         ),
       );
