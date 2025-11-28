@@ -1,12 +1,18 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+export enum ConfirmationDialogColor {
+  PRIMARY = 'primary',
+  ACCENT = 'accent',
+  WARN = 'warn',
+}
+
 export interface DialogData {
   body: string;
   title?: string;
   yesButtonText?: string;
   cancelButtonText?: string;
-  confirmButtonColor?: 'primary' | 'accent' | 'warn';
+  confirmButtonColor?: ConfirmationDialogColor;
 }
 
 @Component({

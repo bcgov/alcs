@@ -57,8 +57,8 @@ export class ComplianceAndEnforcementDocumentController {
       fileKey: `compliance-and-enforcement/${fileNumber}/${v4()}`,
       source: req.body.source.value as DOCUMENT_SOURCE,
       system: DOCUMENT_SYSTEM.ALCS,
-      section: req.body.section.value as Section,
-      chronologyEntry: req.body.chronologyEntryUuid.value as string,
+      section: req.body.section?.value as Section,
+      chronologyEntry: req.body.chronologyEntryUuid?.value as string,
     };
 
     // Use C&E-specific terminology
