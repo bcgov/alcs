@@ -43,7 +43,7 @@ export class NotificationDocumentsComponent implements OnInit {
   constructor(
     private notificationDocumentService: NotificationDocumentService,
     private notificationDetailService: NotificationDetailService,
-    private notificationParcelService: NotificationParcelService,
+    public notificationParcelService: NotificationParcelService,
     private confirmationDialogService: ConfirmationDialogService,
     private toastService: ToastService,
     public dialog: MatDialog
