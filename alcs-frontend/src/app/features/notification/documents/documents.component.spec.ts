@@ -5,6 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDetailService } from '../../../services/notification/notification-detail.service';
 import { NotificationDocumentService } from '../../../services/notification/notification-document/notification-document.service';
+import { NotificationParcelService } from '../../../services/notification/notification-parcel/notification-parcel.service';
 import { NotificationDto } from '../../../services/notification/notification.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -15,12 +16,14 @@ describe('NotificationDocumentsComponent', () => {
   let fixture: ComponentFixture<NotificationDocumentsComponent>;
   let mockNotificationDocumentService: DeepMocked<NotificationDocumentService>;
   let mockNotificationDetailService: DeepMocked<NotificationDetailService>;
+  let mockNotificationParcelService: DeepMocked<NotificationParcelService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockToastService: DeepMocked<ToastService>;
 
   beforeEach(async () => {
     mockNotificationDocumentService = createMock();
     mockNotificationDetailService = createMock();
+    mockNotificationParcelService = createMock();
     mockDialog = createMock();
     mockToastService = createMock();
     mockNotificationDetailService.$notification = new BehaviorSubject<NotificationDto | undefined>(undefined);
@@ -35,6 +38,10 @@ describe('NotificationDocumentsComponent', () => {
         {
           provide: NotificationDetailService,
           useValue: mockNotificationDetailService,
+        },
+        {
+          provide: NotificationParcelService,
+          useValue: mockNotificationParcelService,
         },
         {
           provide: MatDialog,
