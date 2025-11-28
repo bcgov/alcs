@@ -4,9 +4,39 @@ export class AddChronologyEntryAuthor1763683662058 implements MigrationInterface
   name = 'AddChronologyEntryAuthor1763683662058';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`ALTER TABLE "alcs"."compliance_and_enforcement_chronology_entry" ADD "author_uuid" uuid`);
     await queryRunner.query(
-      `ALTER TABLE "alcs"."compliance_and_enforcement_chronology_entry" ADD "author_uuid" uuid NOT NULL`,
+      `WITH inserted_users AS (
+        INSERT INTO
+          "alcs"."user" (
+            uuid,
+            audit_created_by,
+            display_name,
+            identity_provider,
+            preferred_username,
+            given_name,
+            family_name
+          )
+        VALUES (
+          '78cd5c8a-6935-4eea-be5c-46c08885bbba', -- Pre-generated, to avoid duplicating on every migration
+          'migration_seed',
+          'Testington McSample',
+          'idir',
+          'Testington McSample',
+          'Testington',
+          'McSample'
+        )
+        returning
+          uuid
+      )
+      UPDATE
+        "alcs"."compliance_and_enforcement_chronology_entry"
+      SET
+        "author_uuid" = inserted_users.uuid
+      FROM
+        inserted_users`,
     );
+    await queryRunner.query(`ALTER TABLE "alcs"."compliance_and_enforcement_chronology_entry" ADD "author_uuid" uuid`);
     await queryRunner.query(
       `ALTER TABLE "alcs"."compliance_and_enforcement_chronology_entry" DROP COLUMN "nris_inspection_id"`,
     );
