@@ -12,5 +12,5 @@
 </div>
 <div class="button-container" mat-dialog-actions align="end">
   <button mat-stroked-button color="primary" [mat-dialog-close]="false">{{ data.cancelButtonText ?? 'Cancel' }}</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="true">{{ data.yesButtonText ?? 'Yes' }}</button>
+  <button mat-flat-button [color]="data.confirmButtonColor ?? 'primary'" [mat-dialog-close]="true">{{ data.yesButtonText ?? 'Yes' }}</button>
 </div>

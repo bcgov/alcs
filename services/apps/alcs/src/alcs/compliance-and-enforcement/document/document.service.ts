@@ -105,10 +105,13 @@ export class ComplianceAndEnforcementDocumentService {
       throw new ServiceNotFoundException('Compliance and Enforcement file not found.');
     }
 
-    const chronologyEntry = await this.chronologyEntryRepository.findOneBy({ uuid: createDto.chronologyEntry });
+    let chronologyEntry: ComplianceAndEnforcementChronologyEntry | null = null;
+    if (createDto.chronologyEntry) {
+      chronologyEntry = await this.chronologyEntryRepository.findOneBy({ uuid: createDto.chronologyEntry });
 
-    if (!chronologyEntry) {
-      throw new ServiceNotFoundException('Chronology entry not found.');
+      if (!chronologyEntry) {
+        throw new ServiceNotFoundException('Chronology entry not found.');
+      }
     }
 
     const type = await this.documentCodeRepository.findOneBy({ code: createDto.typeCode });
@@ -122,7 +125,7 @@ export class ComplianceAndEnforcementDocumentService {
       document,
       type,
       section: createDto.section,
-      chronologyEntry,
+      chronologyEntry, // Pass null if not found
     });
 
     const savedEntity = await this.repository.save(entity);
