@@ -27,7 +27,6 @@
     "@angular/platform-browser-dynamic": "18.2.14",
     "@angular/router": "18.2.14",
     "@bcgov/bc-sans": "^2.1.0",
-    "@ng-select/ng-option-highlight": "^12.0.6",
     "@types/validator": "^13.15.10",
     "angular-mentions": "^1.5.0",
     "jwt-decode": "^4.0.0",
