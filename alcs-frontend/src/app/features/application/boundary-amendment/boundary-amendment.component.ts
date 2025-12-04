@@ -11,9 +11,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { EditBoundaryAmendmentDialogComponent } from './edit-boundary-amendment-dialog/edit-boundary-amendment-dialog.component';
 
 @Component({
-  selector: 'app-boundary-amendment',
-  templateUrl: './boundary-amendment.component.html',
-  styleUrls: ['./boundary-amendment.component.scss'],
+    selector: 'app-boundary-amendment',
+    templateUrl: './boundary-amendment.component.html',
+    styleUrls: ['./boundary-amendment.component.scss'],
+    standalone: false
 })
 export class BoundaryAmendmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

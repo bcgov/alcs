@@ -16,9 +16,10 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 
 @Component({
-  selector: 'app-modification-detail-dialog',
-  templateUrl: './noi-modification-dialog.component.html',
-  styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    selector: 'app-modification-detail-dialog',
+    templateUrl: './noi-modification-dialog.component.html',
+    styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    standalone: false
 })
 export class NoiModificationDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

@@ -8,9 +8,10 @@ import { CommissionerService } from '../../../services/commissioner/commissioner
 import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-commissioner-planning-review',
-  templateUrl: './commissioner-planning-review.component.html',
-  styleUrls: ['./commissioner-planning-review.component.scss'],
+    selector: 'app-commissioner-planning-review',
+    templateUrl: './commissioner-planning-review.component.html',
+    styleUrls: ['./commissioner-planning-review.component.scss'],
+    standalone: false
 })
 export class CommissionerPlanningReviewComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

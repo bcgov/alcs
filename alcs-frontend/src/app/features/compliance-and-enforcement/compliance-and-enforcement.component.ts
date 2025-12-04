@@ -13,9 +13,10 @@ import { ToastService } from '../../services/toast/toast.service';
 import { detailsRoutes } from './compliance-and-enforcement.module';
 
 @Component({
-  selector: 'app-compliance-and-enforcement',
-  templateUrl: './compliance-and-enforcement.component.html',
-  styleUrls: ['./compliance-and-enforcement.component.scss'],
+    selector: 'app-compliance-and-enforcement',
+    templateUrl: './compliance-and-enforcement.component.html',
+    styleUrls: ['./compliance-and-enforcement.component.scss'],
+    standalone: false
 })
 export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

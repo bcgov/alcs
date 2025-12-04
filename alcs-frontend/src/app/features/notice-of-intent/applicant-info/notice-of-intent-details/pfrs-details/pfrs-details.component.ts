@@ -6,9 +6,10 @@ import { NoticeOfIntentSubmissionDetailedDto } from '../../../../../services/not
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-pfrs-details',
-  templateUrl: './pfrs-details.component.html',
-  styleUrls: ['./pfrs-details.component.scss'],
+    selector: 'app-pfrs-details',
+    templateUrl: './pfrs-details.component.html',
+    styleUrls: ['./pfrs-details.component.scss'],
+    standalone: false
 })
 export class PfrsDetailsComponent {
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;

@@ -143,9 +143,10 @@ function formatToFiveDecimals(value: number | null | undefined): number | null |
 }
 
 @Component({
-  selector: 'app-compliance-and-enforcement-property',
-  templateUrl: './property.component.html',
-  styleUrls: ['./property.component.scss'],
+    selector: 'app-compliance-and-enforcement-property',
+    templateUrl: './property.component.html',
+    styleUrls: ['./property.component.scss'],
+    standalone: false
 })
 export class PropertyComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

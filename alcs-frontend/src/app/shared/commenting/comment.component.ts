@@ -4,9 +4,10 @@ import { environment } from '../../../environments/environment';
 import { CommentDto, UpdateCommentDto } from '../../services/comment/comment.dto';
 
 @Component({
-  selector: 'app-comment',
-  templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.scss'],
+    selector: 'app-comment',
+    templateUrl: './comment.component.html',
+    styleUrls: ['./comment.component.scss'],
+    standalone: false
 })
 export class CommentComponent implements OnInit {
   @Input() comment!: CommentDto;

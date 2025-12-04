@@ -34,9 +34,10 @@ import { ApplicationDecisionConditionCardDto } from '../../services/application/
 import { NoticeOfIntentDecisionConditionCardDto } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
-  selector: 'app-details-header[application]',
-  templateUrl: './details-header.component.html',
-  styleUrls: ['./details-header.component.scss'],
+    selector: 'app-details-header[application]',
+    templateUrl: './details-header.component.html',
+    styleUrls: ['./details-header.component.scss'],
+    standalone: false
 })
 export class DetailsHeaderComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

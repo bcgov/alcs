@@ -2,9 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-cancel-application-dialog',
-  templateUrl: './cancel-application-dialog.component.html',
-  styleUrls: ['./cancel-application-dialog.component.scss'],
+    selector: 'app-cancel-application-dialog',
+    templateUrl: './cancel-application-dialog.component.html',
+    styleUrls: ['./cancel-application-dialog.component.scss'],
+    standalone: false
 })
 export class CancelApplicationDialogComponent {
   sendEmail: boolean = true;

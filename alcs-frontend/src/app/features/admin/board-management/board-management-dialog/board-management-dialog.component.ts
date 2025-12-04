@@ -24,9 +24,10 @@ const DISABLED_CREATE_CARD_TYPES = [
 ];
 
 @Component({
-  selector: 'app-decision-condition-types-dialog',
-  templateUrl: './board-management-dialog.component.html',
-  styleUrls: ['./board-management-dialog.component.scss'],
+    selector: 'app-decision-condition-types-dialog',
+    templateUrl: './board-management-dialog.component.html',
+    styleUrls: ['./board-management-dialog.component.scss'],
+    standalone: false
 })
 export class BoardManagementDialogComponent implements OnInit {
   title = new FormControl<string | null>(null, [Validators.required]);

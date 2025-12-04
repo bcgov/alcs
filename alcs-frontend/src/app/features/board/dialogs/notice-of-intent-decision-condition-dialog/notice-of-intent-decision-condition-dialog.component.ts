@@ -31,12 +31,13 @@ import {
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 
 @Component({
-  selector: 'app-notice-of-intent-decision-condition-dialog',
-  templateUrl: './notice-of-intent-decision-condition-dialog.component.html',
-  styleUrls: [
-    '../card-dialog/card-dialog.component.scss',
-    './notice-of-intent-decision-condition-dialog.component.scss',
-  ],
+    selector: 'app-notice-of-intent-decision-condition-dialog',
+    templateUrl: './notice-of-intent-decision-condition-dialog.component.html',
+    styleUrls: [
+        '../card-dialog/card-dialog.component.scss',
+        './notice-of-intent-decision-condition-dialog.component.scss',
+    ],
+    standalone: false
 })
 export class NoticeOfIntentDecisionConditionDialogComponent extends CardDialogComponent implements OnInit {
   cardTitle = '';

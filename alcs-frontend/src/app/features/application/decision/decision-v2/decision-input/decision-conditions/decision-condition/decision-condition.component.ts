@@ -18,9 +18,10 @@ import moment, { Moment } from 'moment';
 import { startWith } from 'rxjs';
 
 @Component({
-  selector: 'app-app-decision-condition',
-  templateUrl: './decision-condition.component.html',
-  styleUrls: ['./decision-condition.component.scss'],
+    selector: 'app-app-decision-condition',
+    templateUrl: './decision-condition.component.html',
+    styleUrls: ['./decision-condition.component.scss'],
+    standalone: false
 })
 export class DecisionConditionComponent implements OnInit, OnChanges {
   @Input() data!: TempApplicationDecisionConditionDto;

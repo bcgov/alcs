@@ -11,9 +11,10 @@ import { ApplicationDecisionConditionService } from '../../../services/applicati
 import { NoticeOfIntentDecisionConditionService } from '../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 
 @Component({
-  selector: 'app-decision-condition-types',
-  templateUrl: './decision-condition-types.component.html',
-  styleUrls: ['./decision-condition-types.component.scss'],
+    selector: 'app-decision-condition-types',
+    templateUrl: './decision-condition-types.component.html',
+    styleUrls: ['./decision-condition-types.component.scss'],
+    standalone: false
 })
 export class DecisionConditionTypesComponent implements OnInit {
   @Input() public service:

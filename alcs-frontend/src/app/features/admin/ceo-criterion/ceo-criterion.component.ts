@@ -7,9 +7,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { CeoCriterionDialogComponent } from './ceo-criterion-dialog/ceo-criterion-dialog.component';
 
 @Component({
-  selector: 'app-ceo-criterion',
-  templateUrl: './ceo-criterion.component.html',
-  styleUrls: ['./ceo-criterion.component.scss'],
+    selector: 'app-ceo-criterion',
+    templateUrl: './ceo-criterion.component.html',
+    styleUrls: ['./ceo-criterion.component.scss'],
+    standalone: false
 })
 export class CeoCriterionComponent implements OnInit {
   destroy = new Subject<void>();

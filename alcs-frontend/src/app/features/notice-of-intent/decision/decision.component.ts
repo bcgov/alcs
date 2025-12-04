@@ -5,9 +5,10 @@ import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-
 import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
-  selector: 'app-noi-decision',
-  templateUrl: './decision.component.html',
-  styleUrls: ['./decision.component.scss'],
+    selector: 'app-noi-decision',
+    templateUrl: './decision.component.html',
+    styleUrls: ['./decision.component.scss'],
+    standalone: false
 })
 export class DecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

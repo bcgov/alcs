@@ -14,9 +14,10 @@ interface DialogResult {
 }
 
 @Component({
-  selector: 'app-assign-dialog',
-  templateUrl: './assign-dialog.component.html',
-  styleUrls: ['./assign-dialog.component.scss'],
+    selector: 'app-assign-dialog',
+    templateUrl: './assign-dialog.component.html',
+    styleUrls: ['./assign-dialog.component.scss'],
+    standalone: false
 })
 export class ComplianceAndEnforcementAssignDialogComponent {
   isSaving = false;

@@ -50,9 +50,10 @@ export const submissionDocumentOptions: DocumentUploadDialogData = {
 };
 
 @Component({
-  selector: 'app-compliance-and-enforcement-draft',
-  templateUrl: './draft.component.html',
-  styleUrls: ['./draft.component.scss'],
+    selector: 'app-compliance-and-enforcement-draft',
+    templateUrl: './draft.component.html',
+    styleUrls: ['./draft.component.scss'],
+    standalone: false
 })
 export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
   Section = Section;

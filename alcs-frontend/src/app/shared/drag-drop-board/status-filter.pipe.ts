@@ -2,8 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { CardData } from '../card/card.component';
 
 @Pipe({
-  name: 'statusfilter',
-  pure: false,
+    name: 'statusfilter',
+    pure: false,
+    standalone: false
 })
 export class StatusFilterPipe implements PipeTransform {
   transform(items: CardData[], status: string): any {

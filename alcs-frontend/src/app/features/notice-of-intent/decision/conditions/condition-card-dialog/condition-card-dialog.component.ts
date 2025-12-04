@@ -13,9 +13,10 @@ import {
 import { NoticeOfIntentDecisionConditionCardService } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 
 @Component({
-  selector: 'app-noi-condition-card-dialog',
-  templateUrl: './condition-card-dialog.component.html',
-  styleUrl: './condition-card-dialog.component.scss',
+    selector: 'app-noi-condition-card-dialog',
+    templateUrl: './condition-card-dialog.component.html',
+    styleUrl: './condition-card-dialog.component.scss',
+    standalone: false
 })
 export class ConditionCardDialogComponent {
   displayColumns: string[] = ['select', 'index', 'type', 'description'];

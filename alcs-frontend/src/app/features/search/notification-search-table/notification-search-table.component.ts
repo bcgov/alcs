@@ -22,9 +22,10 @@ interface SearchResult {
 }
 
 @Component({
-  selector: 'app-notification-search-table',
-  templateUrl: './notification-search-table.component.html',
-  styleUrls: ['./notification-search-table.component.scss'],
+    selector: 'app-notification-search-table',
+    templateUrl: './notification-search-table.component.html',
+    styleUrls: ['./notification-search-table.component.scss'],
+    standalone: false
 })
 export class NotificationSearchTableComponent {
   _notifications: NotificationSearchResultDto[] = [];

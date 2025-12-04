@@ -16,9 +16,10 @@ import {
 import { PlanningReviewService } from '../../../../../services/planning-review/planning-review.service';
 
 @Component({
-  selector: 'app-create',
-  templateUrl: './create-planning-review-dialog.component.html',
-  styleUrls: ['./create-planning-review-dialog.component.scss'],
+    selector: 'app-create',
+    templateUrl: './create-planning-review-dialog.component.html',
+    styleUrls: ['./create-planning-review-dialog.component.scss'],
+    standalone: false
 })
 export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

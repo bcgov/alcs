@@ -21,9 +21,10 @@ export enum VisibilityGroup {
 }
 
 @Component({
-  selector: 'app-document-upload-dialog',
-  templateUrl: './document-upload-dialog.component.html',
-  styleUrls: ['./document-upload-dialog.component.scss'],
+    selector: 'app-document-upload-dialog',
+    templateUrl: './document-upload-dialog.component.html',
+    styleUrls: ['./document-upload-dialog.component.scss'],
+    standalone: false
 })
 export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

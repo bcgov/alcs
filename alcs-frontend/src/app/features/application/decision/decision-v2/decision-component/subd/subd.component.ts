@@ -6,9 +6,10 @@ import {
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
-  selector: 'app-subd[component]',
-  templateUrl: './subd.component.html',
-  styleUrls: ['./subd.component.scss'],
+    selector: 'app-subd[component]',
+    templateUrl: './subd.component.html',
+    styleUrls: ['./subd.component.scss'],
+    standalone: false
 })
 export class SubdComponent implements OnInit {
   constructor(private componentLotService: ApplicationDecisionComponentLotService) {}

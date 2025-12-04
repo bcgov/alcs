@@ -18,9 +18,10 @@ export const STRUCTURE_TYPE_LABEL_MAP: Record<STRUCTURE_TYPES, string> = {
 };
 
 @Component({
-  selector: 'app-additional-information',
-  templateUrl: './additional-information.component.html',
-  styleUrls: ['./additional-information.component.scss'],
+    selector: 'app-additional-information',
+    templateUrl: './additional-information.component.html',
+    styleUrls: ['./additional-information.component.scss'],
+    standalone: false
 })
 export class AdditionalInformationComponent {
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;

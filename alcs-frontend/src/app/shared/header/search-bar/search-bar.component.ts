@@ -16,12 +16,13 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { AuthenticationService, ROLES } from '../../../services/authentication/authentication.service';
 
 @Component({
-  selector: 'app-search-bar',
-  templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.scss'],
-  animations: [
-    trigger('inAnimation', [transition(':enter', [style({ height: 0, opacity: 0 }), animate('100ms ease-out')])]),
-  ],
+    selector: 'app-search-bar',
+    templateUrl: './search-bar.component.html',
+    styleUrls: ['./search-bar.component.scss'],
+    animations: [
+        trigger('inAnimation', [transition(':enter', [style({ height: 0, opacity: 0 }), animate('100ms ease-out')])]),
+    ],
+    standalone: false
 })
 export class SearchBarComponent implements AfterViewInit, OnInit {
   searchText = '';

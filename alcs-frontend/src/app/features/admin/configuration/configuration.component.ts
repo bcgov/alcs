@@ -10,9 +10,10 @@ import { MaintenanceBannerConfirmationDialogComponent } from './maintenance-bann
 import { MaintenanceService } from '../../../services/maintenance/maintenance.service';
 
 @Component({
-  selector: 'app-configuration',
-  templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.scss'],
+    selector: 'app-configuration',
+    templateUrl: './configuration.component.html',
+    styleUrls: ['./configuration.component.scss'],
+    standalone: false
 })
 export class ConfigurationComponent implements OnInit {
   maintenanceBanner = false;

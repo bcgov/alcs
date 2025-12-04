@@ -9,9 +9,10 @@ import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { BoardManagementDialogComponent } from './board-management-dialog/board-management-dialog.component';
 
 @Component({
-  selector: 'app-board-management',
-  templateUrl: './board-management.component.html',
-  styleUrls: ['./board-management.component.scss'],
+    selector: 'app-board-management',
+    templateUrl: './board-management.component.html',
+    styleUrls: ['./board-management.component.scss'],
+    standalone: false
 })
 export class BoardManagementComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

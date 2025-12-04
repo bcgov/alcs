@@ -20,9 +20,10 @@ import { SubdInputComponent } from './subd-input/subd-input.component';
 const MIN_SOIL_FIELDS = 0.00001;
 
 @Component({
-  selector: 'app-decision-component',
-  templateUrl: './decision-component.component.html',
-  styleUrls: ['./decision-component.component.scss'],
+    selector: 'app-decision-component',
+    templateUrl: './decision-component.component.html',
+    styleUrls: ['./decision-component.component.scss'],
+    standalone: false
 })
 export class DecisionComponentComponent implements OnInit {
   @Input() data!: ApplicationDecisionComponentDto;

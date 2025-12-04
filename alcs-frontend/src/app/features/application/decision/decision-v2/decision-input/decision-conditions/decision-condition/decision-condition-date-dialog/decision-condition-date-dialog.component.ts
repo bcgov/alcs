@@ -12,9 +12,10 @@ export interface DueDate {
 }
 
 @Component({
-  selector: 'app-decision-condition-date-dialog',
-  templateUrl: './decision-condition-date-dialog.component.html',
-  styleUrls: ['./decision-condition-date-dialog.component.scss'],
+    selector: 'app-decision-condition-date-dialog',
+    templateUrl: './decision-condition-date-dialog.component.html',
+    styleUrls: ['./decision-condition-date-dialog.component.scss'],
+    standalone: false
 })
 export class DecisionConditionDateDialogComponent {
   displayedColumns = ['index', 'date', 'actions'];
