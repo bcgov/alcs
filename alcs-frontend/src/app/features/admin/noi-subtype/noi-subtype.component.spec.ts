@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { NoiSubtypeService } from '../../../services/noi-subtype/noi-subtype.ser
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { NoiSubtypeComponent } from './noi-subtype.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('NoiSubtypeComponent', () => {
   let component: NoiSubtypeComponent;
@@ -21,24 +22,26 @@ describe('NoiSubtypeComponent', () => {
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [NoiSubtypeComponent],
-      providers: [
+    declarations: [NoiSubtypeComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: NoiSubtypeService,
-          useValue: mockNoiSubtypeService,
+            provide: NoiSubtypeService,
+            useValue: mockNoiSubtypeService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(NoiSubtypeComponent);
     component = fixture.componentInstance;

@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { convertToParamMap, ActivatedRoute } from '@angular/router';
@@ -25,6 +25,7 @@ import {
   UpdateComplianceAndEnforcementPropertyDto,
 } from '../../../services/compliance-and-enforcement/property/property.dto';
 import { ComplianceAndEnforcementPropertyService } from '../../../services/compliance-and-enforcement/property/property.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DraftComponent', () => {
   let component: DraftComponent;
@@ -41,36 +42,38 @@ describe('DraftComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [DraftComponent, StartOfDayPipe],
-      providers: [
+    declarations: [DraftComponent, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ComplianceAndEnforcementService,
-          useValue: mockComplianceAndEnforcementService,
+            provide: ComplianceAndEnforcementService,
+            useValue: mockComplianceAndEnforcementService,
         },
         {
-          provide: ComplianceAndEnforcementSubmitterService,
-          useValue: mockComplianceAndEnforcementSubmitterService,
+            provide: ComplianceAndEnforcementSubmitterService,
+            useValue: mockComplianceAndEnforcementSubmitterService,
         },
         {
-          provide: ComplianceAndEnforcementPropertyService,
-          useValue: mockComplianceAndEnforcementPropertyService,
+            provide: ComplianceAndEnforcementPropertyService,
+            useValue: mockComplianceAndEnforcementPropertyService,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ fileNumber: '12345' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ fileNumber: '12345' }),
+                },
             },
-          },
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DraftComponent);
     component = fixture.componentInstance;

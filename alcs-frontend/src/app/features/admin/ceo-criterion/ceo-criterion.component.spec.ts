@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { CeoCriterionService } from '../../../services/ceo-criterion/ceo-criteri
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { CeoCriterionComponent } from './ceo-criterion.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CeoCriterionComponent', () => {
   let component: CeoCriterionComponent;
@@ -21,24 +22,26 @@ describe('CeoCriterionComponent', () => {
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [CeoCriterionComponent],
-      providers: [
+    declarations: [CeoCriterionComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: CeoCriterionService,
-          useValue: mockCeoCriterionService,
+            provide: CeoCriterionService,
+            useValue: mockCeoCriterionService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CeoCriterionComponent);
     component = fixture.componentInstance;

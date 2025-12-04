@@ -3,7 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DecisionConditionComponent } from './decision-condition.component';
 import { DateType } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DecisionConditionComponent', () => {
   let component: DecisionConditionComponent;
@@ -11,10 +12,11 @@ describe('DecisionConditionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DecisionConditionComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+    declarations: [DecisionConditionComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DecisionConditionComponent);
     component = fixture.componentInstance;

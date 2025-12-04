@@ -1,11 +1,11 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { IncomingFileService } from './incoming-file.service';
 import { IncomingFileBoardMapDto } from './incoming-file.dto';
 import { CardType } from '../../shared/card/card.component';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ToastService } from '../toast/toast.service';
 import { of } from 'rxjs';
 
@@ -19,12 +19,14 @@ describe('ApplicationIncomingFileService', () => {
     toastService = createMock();
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      providers: [
+    imports: [MatSnackBarModule],
+    providers: [
         { provide: HttpClient, useValue: httpClient },
         { provide: ToastService, useValue: toastService },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(IncomingFileService);
   });
 

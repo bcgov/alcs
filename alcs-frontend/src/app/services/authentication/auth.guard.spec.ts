@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -6,6 +6,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 
 import { AuthGuard } from './auth.guard';
 import { AuthenticationService } from './authentication.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;
@@ -20,18 +21,20 @@ describe('AuthGuard', () => {
     mockRouter.navigateByUrl.mockResolvedValue(true);
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [
+    imports: [RouterTestingModule],
+    providers: [
         {
-          provide: AuthenticationService,
-          useValue: mockAuthService,
+            provide: AuthenticationService,
+            useValue: mockAuthService,
         },
         {
-          provide: Router,
-          useValue: mockRouter,
+            provide: Router,
+            useValue: mockRouter,
         },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     guard = TestBed.inject(AuthGuard);
   });
 

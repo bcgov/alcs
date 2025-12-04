@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { PostDecisionComponent } from './post-decision.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PostDecisionComponent', () => {
   let component: PostDecisionComponent;
@@ -23,28 +24,30 @@ describe('PostDecisionComponent', () => {
     mockNoiDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-      imports: [MatSnackBarModule, HttpClientTestingModule],
-      declarations: [PostDecisionComponent],
-      providers: [
+    declarations: [PostDecisionComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: NoticeOfIntentDetailService,
-          useValue: mockNoiDetailService,
+            provide: NoticeOfIntentDetailService,
+            useValue: mockNoiDetailService,
         },
         {
-          provide: MAT_DIALOG_DATA,
-          useValue: {},
+            provide: MAT_DIALOG_DATA,
+            useValue: {},
         },
         {
-          provide: MatDialog,
-          useValue: {},
+            provide: MatDialog,
+            useValue: {},
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: {},
+            provide: ConfirmationDialogService,
+            useValue: {},
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(PostDecisionComponent);
     component = fixture.componentInstance;

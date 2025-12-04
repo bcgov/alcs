@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { InfoRequestsComponent } from './info-requests.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('InfoRequestsComponent', () => {
   let component: InfoRequestsComponent;
@@ -27,32 +28,34 @@ describe('InfoRequestsComponent', () => {
     mockNoticeOfIntentDetailService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [InfoRequestsComponent],
-      providers: [
+    declarations: [InfoRequestsComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: NoticeOfIntentMeetingService,
-          useValue: mockNoticeOfIntentMeetingService,
+            provide: NoticeOfIntentMeetingService,
+            useValue: mockNoticeOfIntentMeetingService,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
         {
-          provide: NoticeOfIntentDetailService,
-          useValue: mockNoticeOfIntentDetailService,
+            provide: NoticeOfIntentDetailService,
+            useValue: mockNoticeOfIntentDetailService,
         },
         {
-          provide: MatDialogRef,
-          useValue: {},
+            provide: MatDialogRef,
+            useValue: {},
         },
         {
-          provide: MatDialog,
-          useValue: {},
+            provide: MatDialog,
+            useValue: {},
         },
-      ],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     mockNoticeOfIntentDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
     mockNoticeOfIntentMeetingService.$meetings = new BehaviorSubject<NoticeOfIntentMeetingDto[]>([]);

@@ -1,22 +1,25 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { UnauthorizedInterceptor } from './unauthorized.interceptor';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('UnauthorizedInterceptor', () => {
   let service: UnauthorizedInterceptor;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
+    imports: [],
+    providers: [
         UnauthorizedInterceptor,
         {
-          provide: Router,
-          useValue: {},
+            provide: Router,
+            useValue: {},
         },
-      ],
-      imports: [HttpClientTestingModule],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(UnauthorizedInterceptor);
   });
 

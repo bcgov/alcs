@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { AssigneeDto } from '../../../../services/user/user.dto';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../../shared/shared.module';
 import { NotificationDialogComponent } from './notification-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('NotificationDialogComponent', () => {
   let component: NotificationDialogComponent;
@@ -90,22 +91,24 @@ describe('NotificationDialogComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      declarations: [NotificationDialogComponent],
-      imports: [HttpClientTestingModule, SharedModule, BrowserAnimationsModule, RouterTestingModule],
-      providers: [
+    declarations: [NotificationDialogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [SharedModule, BrowserAnimationsModule, RouterTestingModule],
+    providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
         {
-          provide: MatDialogRef,
-          useValue: mockDialogRef,
+            provide: MatDialogRef,
+            useValue: mockDialogRef,
         },
         {
-          provide: BoardService,
-          useValue: mockBoardService,
+            provide: BoardService,
+            useValue: mockBoardService,
         },
         { provide: ConfirmationDialogService, useValue: {} },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(NotificationDialogComponent);
     component = fixture.componentInstance;

@@ -8,7 +8,8 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { PaginatedTagResponse, TagService } from '../../../../services/tag/tag.service';
 import { TagDialogComponent } from './tag-dialog.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('TagDialogComponent', () => {
   let component: TagDialogComponent;
@@ -20,22 +21,24 @@ describe('TagDialogComponent', () => {
     mockTagService.$tags = new BehaviorSubject<PaginatedTagResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule],
-      declarations: [TagDialogComponent],
-      providers: [
+    declarations: [TagDialogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [ReactiveFormsModule, FormsModule],
+    providers: [
         { provide: MAT_DIALOG_DATA, useValue: undefined },
         { provide: MatDialogRef, useValue: {} },
         {
-          provide: AdminLocalGovernmentService,
-          useValue: {},
+            provide: AdminLocalGovernmentService,
+            useValue: {},
         },
         {
-          provide: TagService,
-          useValue: mockTagService,
+            provide: TagService,
+            useValue: mockTagService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(TagDialogComponent);
     component = fixture.componentInstance;
