@@ -327,8 +327,8 @@ mat-button-toggle-group {
 .mat-primary {
   &.mat-mdc-button-base {
     --mat-fab-foreground-color: #fff;
-    --mdc-filled-button-label-text-color: #fff;
-    --mdc-protected-button-label-text-color: #fff;
+    --mat-button-filled-label-text-color: #fff;
+    --mat-button-protected-label-text-color: #fff;
   }
 
   &.mat-mdc-fab,
