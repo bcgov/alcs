@@ -1,32 +1,45 @@
 <div class="inline-number-wrapper">
-  <span class="left" *ngIf="!isEditing">
-    <a (click)="startEdit()" class="add" *ngIf="!value"> Select an option </a>
-    <a (click)="startEdit()" class="add" *ngIf="multiple && coerceArray(value)?.length === 0"> Select option(s) </a>
-    <span *ngIf="!multiple">
-      {{ displayValue }}
+  @if (!isEditing) {
+    <span class="left">
+      @if (!value) {
+        <a (click)="startEdit()" class="add"> Select an option </a>
+      }
+      @if (multiple && coerceArray(value)?.length === 0) {
+        <a (click)="startEdit()" class="add"> Select option(s) </a>
+      }
+      @if (!multiple) {
+        <span>
+          {{ displayValue }}
+        </span>
+      }
+      @if (multiple) {
+        <span>
+          {{ coerceArray(value)?.join(', ') }}
+        </span>
+      }
+      @if (value) {
+        <button class="edit-button" mat-icon-button (click)="startEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      }
     </span>
-    <span *ngIf="multiple">
-      {{ coerceArray(value)?.join(', ') }}
-    </span>
-    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing
     }"
-  >
+    >
     <mat-form-field appearance="outline">
       <mat-select [multiple]="multiple" placeholder="Select a value" [(ngModel)]="pendingValue">
-        <mat-option
-          *ngFor="let option of options"
-          [value]="option.value"
-          [disabled]="option.disabled !== null && option.disabled !== undefined ? option.disabled : false"
-        >
-          {{ option.label }}
-        </mat-option>
+        @for (option of options; track option) {
+          <mat-option
+            [value]="option.value"
+            [disabled]="option.disabled !== null && option.disabled !== undefined ? option.disabled : false"
+            >
+            {{ option.label }}
+          </mat-option>
+        }
       </mat-select>
     </mat-form-field>
     <div class="button-container">

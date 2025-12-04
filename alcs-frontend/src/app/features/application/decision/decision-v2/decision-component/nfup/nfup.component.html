@@ -2,10 +2,14 @@
 <div>
   <div class="subheading2">Non-Farm Use Type</div>
   {{ component.nfuType }}
-  <app-no-data *ngIf="component.nfuType === null || component.nfuType === undefined"></app-no-data>
+  @if (component.nfuType === null || component.nfuType === undefined) {
+    <app-no-data></app-no-data>
+  }
 </div>
 <div>
   <div class="subheading2">Non-Farm Use Sub-Type</div>
   {{ component.nfuSubType }}
-  <app-no-data *ngIf="component.nfuSubType === null || component.nfuSubType === undefined"></app-no-data>
+  @if (component.nfuSubType === null || component.nfuSubType === undefined) {
+    <app-no-data></app-no-data>
+  }
 </div>

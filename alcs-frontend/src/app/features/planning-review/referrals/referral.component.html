@@ -3,73 +3,76 @@
   <button mat-flat-button color="primary" (click)="onCreate()">+ Add Referral</button>
 </div>
 <section>
-  <div class="referral mat-elevation-z3" *ngFor="let referral of planingReferrals; let i = index">
-    <div class="split">
-      <h5>Referral #{{ planingReferrals.length - i }}</h5>
-      <button
-        *ngIf="i !== planingReferrals.length - 1"
-        mat-stroked-button
-        color="warn"
-        (click)="onDelete(referral.uuid)"
-      >
-        Delete
-      </button>
-    </div>
-    <div class="two-columns">
-      <div>
-        <div>
-          <div class="subheading2">Referral Submission Date</div>
-          <div>
-            <app-inline-datepicker
-              [value]="referral.submissionDate"
-              [required]="true"
-              (save)="updateReferralField(referral.uuid, 'submissionDate', $event)"
-            />
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Due Date</div>
-          <div>
-            <app-inline-datepicker
-              [value]="referral.dueDate"
-              (save)="updateReferralField(referral.uuid, 'dueDate', $event)"
-            />
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Referral Description</div>
-          <div>
-            <app-inline-textarea
-              [value]="referral.referralDescription"
-              [required]="true"
-              (save)="updateReferralField(referral.uuid, 'referralDescription', $event)"
-            />
-          </div>
-        </div>
+  @for (referral of planingReferrals; track referral; let i = $index) {
+    <div class="referral mat-elevation-z3">
+      <div class="split">
+        <h5>Referral #{{ planingReferrals.length - i }}</h5>
+        @if (i !== planingReferrals.length - 1) {
+          <button
+            mat-stroked-button
+            color="warn"
+            (click)="onDelete(referral.uuid)"
+            >
+            Delete
+          </button>
+        }
       </div>
-      <div>
+      <div class="two-columns">
         <div>
           <div>
-            <div class="subheading2">ALC Staff Response Date</div>
+            <div class="subheading2">Referral Submission Date</div>
             <div>
               <app-inline-datepicker
-                [value]="referral.responseDate"
-                (save)="updateReferralField(referral.uuid, 'responseDate', $event)"
-              />
+                [value]="referral.submissionDate"
+                [required]="true"
+                (save)="updateReferralField(referral.uuid, 'submissionDate', $event)"
+                />
             </div>
           </div>
           <div>
-            <div class="subheading2">Response Description</div>
+            <div class="subheading2">Due Date</div>
+            <div>
+              <app-inline-datepicker
+                [value]="referral.dueDate"
+                (save)="updateReferralField(referral.uuid, 'dueDate', $event)"
+                />
+            </div>
+          </div>
+          <div>
+            <div class="subheading2">Referral Description</div>
             <div>
               <app-inline-textarea
-                [value]="referral.responseDescription"
+                [value]="referral.referralDescription"
                 [required]="true"
-                (save)="updateReferralField(referral.uuid, 'responseDescription', $event)"
-              />
+                (save)="updateReferralField(referral.uuid, 'referralDescription', $event)"
+                />
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <div class="subheading2">ALC Staff Response Date</div>
+              <div>
+                <app-inline-datepicker
+                  [value]="referral.responseDate"
+                  (save)="updateReferralField(referral.uuid, 'responseDate', $event)"
+                  />
+              </div>
+            </div>
+            <div>
+              <div class="subheading2">Response Description</div>
+              <div>
+                <app-inline-textarea
+                  [value]="referral.responseDescription"
+                  [required]="true"
+                  (save)="updateReferralField(referral.uuid, 'responseDescription', $event)"
+                  />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </section>

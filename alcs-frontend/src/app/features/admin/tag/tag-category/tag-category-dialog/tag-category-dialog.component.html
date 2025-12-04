@@ -10,9 +10,11 @@
         <input required matInput id="name" [(ngModel)]="name" name="name" (ngModelChange)="onChange()" [formControl]="nameControl" />
       </mat-form-field>
       <div class="warning-section">
-        <div class="warning" *ngIf="showNameWarning">
-          <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Category already exists. Choose a different category name.
-        </div>
+        @if (showNameWarning) {
+          <div class="warning">
+            <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Category already exists. Choose a different category name.
+          </div>
+        }
       </div>
     </div>
 
@@ -28,7 +30,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid"
-      >
+        >
         Save
       </button>
     </div>

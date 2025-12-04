@@ -12,14 +12,16 @@
         [(ngModel)]="selectedDate"
         name="date"
         required
-      />
+        />
       <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
       <mat-datepicker #datePicker type="date"></mat-datepicker>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Type</mat-label>
       <mat-select [required]="true" name="type" [(ngModel)]="selectedType">
-        <mat-option *ngFor="let type of types" [value]="type.code">{{ type.label }}</mat-option>
+        @for (type of types; track type) {
+          <mat-option [value]="type.code">{{ type.label }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </mat-dialog-content>

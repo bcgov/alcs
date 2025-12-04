@@ -1,27 +1,21 @@
-<ng-container *ngIf="editing === null">
+@if (editing === null) {
   <section class="file-section">
     <h3>Complaint / Referral Overview</h3>
-
     <app-compliance-and-enforcement-complaint-referral-overview [file]="file" />
-
     <div class="edit-section-button-container">
       <a mat-flat-button color="accent" [routerLink]="'overview/edit'" class="edit-section-button">Edit Section</a>
     </div>
   </section>
-
   <section class="file-section">
     <div class="submitters-header">
       <h3>Submitters</h3>
       <button mat-flat-button color="primary" type="button" (click)="openNewSubmitterDialog()">+ Submitter</button>
     </div>
-
     <app-compliance-and-enforcement-complaint-referral-submitters [file]="file" />
-
     <div class="edit-section-button-container">
       <a mat-flat-button color="accent" [routerLink]="'submitters/edit'" class="edit-section-button">Edit Section</a>
     </div>
   </section>
-
   <section class="file-section">
     <app-compliance-and-enforcement-documents
       #submissionDocumentsComponent
@@ -30,11 +24,11 @@
       [fileNumber]="fileNumber"
       [options]="submissionDocumentOptions"
       [section]="Section.SUBMISSION"
-    />
+      />
   </section>
-</ng-container>
+}
 
-<ng-container *ngIf="editing === 'overview'">
+@if (editing === 'overview') {
   <form [formGroup]="form">
     <section class="form-section">
       <h3>Complaint / Referral > Edit Overview</h3>
@@ -42,41 +36,39 @@
         #overviewComponent
         [file]="file"
         (formReady)="registerFormGroup('overview', $event)"
-      />
+        />
     </section>
-
     <div class="button-container">
       <a mat-stroked-button color="warn" [routerLink]="'../..'">Cancel</a>
       <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="saveOverview()">Save</button>
     </div>
   </form>
-</ng-container>
+}
 
-<ng-container *ngIf="editing === 'submitters'">
+@if (editing === 'submitters') {
   <form [formGroup]="form">
     <section class="form-section">
       <h3>Complaint / Referral > Edit Submitters</h3>
-
-      <div class="submitter-container" *ngFor="let submitter of file?.submitters; let i = index; trackBy: trackByUuid">
-        <app-compliance-and-enforcement-submitter
-          #submitterComponents
-          [title]="'#' + (i + 1)"
-          [showDeleteButton]="true"
-          [submitter]="submitter"
-          [initialSubmissionType]="file?.initialSubmissionType ?? undefined"
-          (deleteButtonClicked)="deleteSubmitter(submitter.uuid)"
-          (formReady)="registerFormGroup('submitter-' + submitter.uuid, $event)"
-        />
-      </div>
+      @for (submitter of file?.submitters; track trackByUuid(i, submitter); let i = $index) {
+        <div class="submitter-container">
+          <app-compliance-and-enforcement-submitter
+            #submitterComponents
+            [title]="'#' + (i + 1)"
+            [showDeleteButton]="true"
+            [submitter]="submitter"
+            [initialSubmissionType]="file?.initialSubmissionType ?? undefined"
+            (deleteButtonClicked)="deleteSubmitter(submitter.uuid)"
+            (formReady)="registerFormGroup('submitter-' + submitter.uuid, $event)"
+            />
+        </div>
+      }
     </section>
-
     <button mat-flat-button color="accent" type="button" (click)="openNewSubmitterDialog()">
       + Add another submitter
     </button>
-
     <div class="button-container">
       <a mat-stroked-button color="warn" [routerLink]="'../..'">Cancel</a>
       <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="saveSubmitters()">Save</button>
     </div>
   </form>
-</ng-container>
+}

@@ -18,7 +18,7 @@
         color="accent"
         [mat-dialog-close]="isDirty"
         [routerLink]="['notification', notification.fileNumber]"
-      >
+        >
         View Detail
       </button>
     </div>
@@ -28,54 +28,63 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <app-application-submission-status-type-pill
-        *ngIf="status"
-        [type]="status"
-      ></app-application-submission-status-type-pill>
+      @if (status) {
+        <app-application-submission-status-type-pill
+          [type]="status"
+        ></app-application-submission-status-type-pill>
+      }
     </div>
     <div class="right">
-      <ng-container *ngIf="allowedBoards.length > 1">
+      @if (allowedBoards.length > 1) {
         <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
           <mat-icon>move_down</mat-icon>
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
-          <button (click)="onBoardSelected(board)" *ngFor="let board of allowedBoards" mat-menu-item>
-            <div class="board-menu-item">
-              <span class="favourite-board-icon-container"
-                ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+          @for (board of allowedBoards; track board) {
+            <button (click)="onBoardSelected(board)" mat-menu-item>
+              <div class="board-menu-item">
+                <span class="favourite-board-icon-container"
+                  >@if (board.isFavourite) {
+                  <mat-icon class="favourite-board-icon">star</mat-icon>
+                }
               </span>
               <span>{{ board.title }}</span>
-              <span *ngIf="card && card!.boardCode === board.code"
-                ><mat-icon class="selected-board-icon">check</mat-icon></span
-              >
-            </div>
-          </button>
+              @if (card && card!.boardCode === board.code) {
+                <span
+                  ><mat-icon class="selected-board-icon">check</mat-icon></span
+                  >
+                }
+              </div>
+            </button>
+          }
         </mat-menu>
-      </ng-container>
-      <button
-        *ngIf="canArchive"
-        matTooltip="Archive Card"
-        class="toggle-priority"
-        (click)="onArchiveCard()"
-        mat-icon-button
-      >
-        <mat-icon>archive</mat-icon>
-      </button>
-      <button
-        *ngIf="card"
-        [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
-        class="toggle-priority"
-        (click)="onTogglePriority()"
-        mat-icon-button
-      >
-        <div
-          class="priority"
+      }
+      @if (canArchive) {
+        <button
+          matTooltip="Archive Card"
+          class="toggle-priority"
+          (click)="onArchiveCard()"
+          mat-icon-button
+          >
+          <mat-icon>archive</mat-icon>
+        </button>
+      }
+      @if (card) {
+        <button
+          [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
+          class="toggle-priority"
+          (click)="onTogglePriority()"
+          mat-icon-button
+          >
+          <div
+            class="priority"
           [ngClass]="{
             'filled-priority': card.highPriority,
             'empty-priority': !card.highPriority
           }"
-        ></div>
-      </button>
+          ></div>
+        </button>
+      }
     </div>
   </div>
 </div>
@@ -91,7 +100,7 @@
       [clearable]="false"
       [(ngModel)]="selectedApplicationStatus"
       (change)="onStatusSelected($event)"
-    >
+      >
       <ng-template ng-option-tmp let-item="item">
         <span [innerHTML]="item.label"> </span>
       </ng-template>
@@ -109,7 +118,7 @@
       [(ngModel)]="selectedAssigneeName"
       [searchFn]="filterAssigneeList"
       (change)="onAssigneeSelected($event)"
-    >
+      >
       <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
         <div class="assignee-card-body">
           <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.prettyName }}</p>
@@ -119,14 +128,17 @@
     </ng-select>
   </div>
   <div class="subtasks-wrapper">
-    <app-subtasks *ngIf="card" [cardUuid]="card.uuid"></app-subtasks>
+    @if (card) {
+      <app-subtasks [cardUuid]="card.uuid"></app-subtasks>
+    }
   </div>
   <div class="card-comments-wrapper">
-    <app-comments
-      *ngIf="card"
-      [cardUuid]="card.uuid"
-      [fileNumber]="notification.fileNumber"
-      [notificationTitle]="cardTitle"
-    ></app-comments>
+    @if (card) {
+      <app-comments
+        [cardUuid]="card.uuid"
+        [fileNumber]="notification.fileNumber"
+        [notificationTitle]="cardTitle"
+      ></app-comments>
+    }
   </div>
 </mat-dialog-content>

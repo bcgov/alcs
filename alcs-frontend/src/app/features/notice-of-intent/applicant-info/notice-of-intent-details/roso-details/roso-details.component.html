@@ -1,60 +1,69 @@
-<div *ngIf="_noiSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    Has the ALC previously received an application or Notice of Intent for this proposal?
-  </div>
-  <div class="grid-double">
-    <span *ngIf="_noiSubmission.soilIsFollowUp !== null">
-      {{ _noiSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
-    </span>
-  </div>
-
-  <div *ngIf="_noiSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
-  <div *ngIf="_noiSubmission.soilIsFollowUp" class="grid-double">
-    {{ _noiSubmission.soilFollowUpIDs }}
-  </div>
-
-  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
-  <div class="grid-double">
-    {{ _noiSubmission.purpose }}
-  </div>
-
-  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
-  <div class="grid-double">
-    {{ _noiSubmission.soilTypeRemoved }}
-  </div>
-
-  <div class="subheading2 grid-1">Removal of Soil Project Duration</div>
-  <div class="grid-double">
-    {{ _noiSubmission.soilProjectDuration }}
-  </div>
-
-  <div class="subheading1 full-width"></div>
-  <div class="full-width soil-table">
-    <div class="grid-1"></div>
-    <div class="grid-2">
-      <strong>Soil to be Removed</strong>
+@if (_noiSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">
+      Has the ALC previously received an application or Notice of Intent for this proposal?
     </div>
-    <div class="grid-1"><strong>Volume</strong></div>
-    <div class="grid-2">
-      {{ _noiSubmission.soilToRemoveVolume }}
-      <span *ngIf="_noiSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
+    <div class="grid-double">
+      @if (_noiSubmission.soilIsFollowUp !== null) {
+        <span>
+          {{ _noiSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
+        </span>
+      }
     </div>
-    <div class="grid-1"><strong>Area</strong></div>
-    <div class="grid-2">
-      {{ _noiSubmission.soilToRemoveArea }} <span *ngIf="_noiSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
+    @if (_noiSubmission.soilIsFollowUp) {
+      <div class="subheading2 grid-1">Application or NOI ID</div>
+    }
+    @if (_noiSubmission.soilIsFollowUp) {
+      <div class="grid-double">
+        {{ _noiSubmission.soilFollowUpIDs }}
+      </div>
+    }
+    <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+    <div class="grid-double">
+      {{ _noiSubmission.purpose }}
+    </div>
+    <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
+    <div class="grid-double">
+      {{ _noiSubmission.soilTypeRemoved }}
+    </div>
+    <div class="subheading2 grid-1">Removal of Soil Project Duration</div>
+    <div class="grid-double">
+      {{ _noiSubmission.soilProjectDuration }}
+    </div>
+    <div class="subheading1 full-width"></div>
+    <div class="full-width soil-table">
+      <div class="grid-1"></div>
+      <div class="grid-2">
+        <strong>Soil to be Removed</strong>
+      </div>
+      <div class="grid-1"><strong>Volume</strong></div>
+      <div class="grid-2">
+        {{ _noiSubmission.soilToRemoveVolume }}
+        @if (_noiSubmission.soilToRemoveVolume !== null) {
+          <span>m<sup>3</sup></span>
+        }
+      </div>
+      <div class="grid-1"><strong>Area</strong></div>
+      <div class="grid-2">
+        {{ _noiSubmission.soilToRemoveArea }} @if (_noiSubmission.soilToRemoveArea !== null) {
+        <span>m<sup>2</sup></span>
+      }
     </div>
     <div class="grid-1"><strong>Maximum Depth</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilToRemoveMaximumDepth }}
-      <span *ngIf="_noiSubmission.soilToRemoveMaximumDepth !== null">m</span>
+      @if (_noiSubmission.soilToRemoveMaximumDepth !== null) {
+        <span>m</span>
+      }
     </div>
     <div class="grid-1"><strong>Average Depth</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilToRemoveAverageDepth }}
-      <span *ngIf="_noiSubmission.soilToRemoveAverageDepth !== null">m</span>
+      @if (_noiSubmission.soilToRemoveAverageDepth !== null) {
+        <span>m</span>
+      }
     </div>
   </div>
-
   <div class="subheading1 full-width"></div>
   <div class="full-width soil-table">
     <div class="grid-1"></div>
@@ -64,70 +73,85 @@
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilAlreadyRemovedVolume }}
-      <span *ngIf="_noiSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
+      @if (_noiSubmission.soilAlreadyRemovedVolume !== null) {
+        <span>m<sup>3</sup></span>
+      }
     </div>
     <div class="grid-1"><strong>Area</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="_noiSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
+      @if (_noiSubmission.soilAlreadyRemovedArea !== null) {
+        <span>m<sup>2</sup></span>
+      }
     </div>
     <div class="grid-1"><strong>Maximum Depth</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilAlreadyRemovedMaximumDepth }}
-      <span *ngIf="_noiSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
+      @if (_noiSubmission.soilAlreadyRemovedMaximumDepth !== null) {
+        <span>m</span>
+      }
     </div>
     <div class="grid-1"><strong>Average Depth</strong></div>
     <div class="grid-2">
       {{ _noiSubmission.soilAlreadyRemovedAverageDepth }}
-      <span *ngIf="_noiSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
+      @if (_noiSubmission.soilAlreadyRemovedAverageDepth !== null) {
+        <span>m</span>
+      }
     </div>
   </div>
-
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double multiple-documents">
-    <a *ngFor="let map of proposalMap" routerLink="/document/{{ map.uuid }}" target="_blank">
-      {{ map.fileName }}
-    </a>
+    @for (map of proposalMap; track map) {
+      <a routerLink="/document/{{ map.uuid }}" target="_blank">
+        {{ map.fileName }}
+      </a>
+    }
   </div>
-
   <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
   <div class="grid-double">
-    <span *ngIf="_noiSubmission.soilIsExtractionOrMining !== null">
-      {{ _noiSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
-    </span>
+    @if (_noiSubmission.soilIsExtractionOrMining !== null) {
+      <span>
+        {{ _noiSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
+      </span>
+    }
   </div>
-
-  <ng-container *ngIf="_noiSubmission?.soilIsExtractionOrMining">
+  @if (_noiSubmission?.soilIsExtractionOrMining) {
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of crossSections" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
+      @for (file of crossSections; track file) {
+        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
+          {{ file.fileName }}
+        </a>
+      }
     </div>
-
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double multiple-documents">
-      <a *ngFor="let file of reclamationPlans" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
+      @for (file of reclamationPlans; track file) {
+        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
+          {{ file.fileName }}
+        </a>
+      }
     </div>
-
     <div class="subheading2 grid-1">
       Have you submitted a Notice of Work to the Ministry of Mining and Critical Minerals (MCM)?
     </div>
     <div class="grid-double">
-      <span *ngIf="_noiSubmission.soilHasSubmittedNotice !== null">
-        {{ _noiSubmission.soilHasSubmittedNotice ? 'Yes' : 'No' }}
-      </span>
+      @if (_noiSubmission.soilHasSubmittedNotice !== null) {
+        <span>
+          {{ _noiSubmission.soilHasSubmittedNotice ? 'Yes' : 'No' }}
+        </span>
+      }
     </div>
-
-    <ng-container *ngIf="_noiSubmission.soilHasSubmittedNotice">
+    @if (_noiSubmission.soilHasSubmittedNotice) {
       <div class="subheading2 grid-1">Notice of Work</div>
       <div class="grid-double multiple-documents">
-        <a *ngFor="let file of noticeOfWorks" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-          {{ file.fileName }}
-        </a>
+        @for (file of noticeOfWorks; track file) {
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
+            {{ file.fileName }}
+          </a>
+        }
       </div>
-    </ng-container>
-  </ng-container>
+    }
+  }
 </div>
+}

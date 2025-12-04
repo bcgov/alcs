@@ -10,117 +10,137 @@
   <button mat-flat-button color="primary" (click)="onCreateReconsideration()">+ Reconsideration</button>
 </h5>
 
-<section class="no-decisions" *ngIf="!reconsiderations.length">
-  <div>No Reconsiderations</div>
-</section>
+@if (!reconsiderations.length) {
+  <section class="no-decisions">
+    <div>No Reconsiderations</div>
+  </section>
+}
 
 <section>
-  <div class="post-decision" *ngFor="let reconsideration of reconsiderations; let i = index">
-    <div class="decision-menu">
-      <div class="recon">
-        <button (click)="onEditReconsideration(reconsideration)" matTooltip="Edit Request" mat-icon-button>
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-      <div
-        [ngClass]="{ 'recon-modi-disabled': !reconsideration.canBeDeleted, recon: reconsideration.canBeDeleted }"
+  @for (reconsideration of reconsiderations; track reconsideration; let i = $index) {
+    <div class="post-decision">
+      <div class="decision-menu">
+        <div class="recon">
+          <button (click)="onEditReconsideration(reconsideration)" matTooltip="Edit Request" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <div
+          [ngClass]="{ 'recon-modi-disabled': !reconsideration.canBeDeleted, recon: reconsideration.canBeDeleted }"
         [matTooltip]="
           reconsideration.canBeDeleted ? 'Delete Request' : 'Contact administrator if you need to delete this request'
         "
-      >
-        <button
-          [ngClass]="{ 'button-disabled': !reconsideration.canBeDeleted }"
-          (click)="deleteReconsideration(reconsideration.uuid, reconsiderations.length - i)"
-          mat-icon-button
-          [disabled]="!reconsideration.canBeDeleted"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
+          >
+          <button
+            [ngClass]="{ 'button-disabled': !reconsideration.canBeDeleted }"
+            (click)="deleteReconsideration(reconsideration.uuid, reconsiderations.length - i)"
+            mat-icon-button
+            [disabled]="!reconsideration.canBeDeleted"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="subheading1">Reconsideration Request #{{ reconsiderations.length - i }}</div>
+      <div class="decision-content">
+        <div>
+          <div class="subheading2">Request Submission Date</div>
+          {{ reconsideration.submittedDate | momentFormat }}
+        </div>
+        <div>
+          <div class="subheading2">Reconsideration Type</div>
+          {{ reconsideration.type.label }}
+        </div>
+        <div>
+          <div class="subheading2">Resolutions to be Reconsidered</div>
+          <ng-container> {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }} </ng-container>
+        </div>
+        @if (reconsideration.type.code !== '33.1') {
+          <div>
+            <div class="subheading2">New Evidence</div>
+            {{ reconsideration.isNewEvidence | booleanToString }}
+          </div>
+        }
+        @if (reconsideration.type.code !== '33.1') {
+          <div>
+            <div class="subheading2">Incorrect or False Info</div>
+            {{ reconsideration.isIncorrectFalseInfo | booleanToString }}
+          </div>
+        }
+        @if (reconsideration.type.code !== '33.1') {
+          <div>
+            <div class="subheading2">New Proposal</div>
+            {{ reconsideration.isNewProposal | booleanToString }}
+          </div>
+        }
+        <div class="full-grid-line">
+          <div class="subheading2">Request Description</div>
+          {{ reconsideration.description }}
+        </div>
+        @if (reconsideration.type.code === '33') {
+          <div>
+            <div class="subheading2">Review Outcome</div>
+            @if (!reconsideration.reviewOutcome || reconsideration.reviewOutcome?.code === 'PEN') {
+              <span>
+                <app-inline-review-outcome
+                  (save)="onSaveReconsiderationReviewOutcome(reconsideration.uuid, $event)"
+                ></app-inline-review-outcome>
+              </span>
+            }
+            @if (reconsideration.reviewOutcome && reconsideration.reviewOutcome?.code !== 'PEN') {
+              <span>{{
+                reconsideration.reviewOutcome.label
+              }}</span>
+            }
+          </div>
+        }
+        @if (reconsideration.type.code === '33' && reconsideration.reviewOutcome?.code === 'REF') {
+          <div>
+            <div class="subheading2 left">
+              Outcome Notification Date
+              <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
+                info
+              </mat-icon>
+            </div>
+            @if (reconsideration.reviewDate) {
+              <span>{{ reconsideration.reviewDate | momentFormat }}</span>
+            }
+            @if (!reconsideration.reviewDate) {
+              <span>
+                <app-inline-datepicker
+                  (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
+                ></app-inline-datepicker>
+              </span>
+            }
+          </div>
+        }
+        @if (!!reconsideration.resultingDecision) {
+          <div>
+            <div class="subheading2">Resulting Resolution</div>
+            #{{ reconsideration.resultingDecision.resolutionNumber }}/{{ reconsideration.resultingDecision.resolutionYear }}
+          </div>
+        }
+        @if (reconsideration.reviewOutcome?.code === 'PRC' || reconsideration.type.code === '33.1') {
+          <div>
+            <div class="subheading2">
+              Does the reconsideration confirm, reverse, or vary
+              {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }}?
+            </div>
+            @if (!reconsideration.decisionOutcome) {
+              <span>
+                <app-inline-decision-outcome
+                  (save)="onSaveReconsiderationDecisionOutcome(reconsideration.uuid, $event)"
+                ></app-inline-decision-outcome>
+              </span>
+            }
+            @if (reconsideration.decisionOutcome) {
+              <span>{{ reconsideration.decisionOutcome.label }}</span>
+            }
+          </div>
+        }
       </div>
     </div>
-
-    <div class="subheading1">Reconsideration Request #{{ reconsiderations.length - i }}</div>
-    <div class="decision-content">
-      <div>
-        <div class="subheading2">Request Submission Date</div>
-        {{ reconsideration.submittedDate | momentFormat }}
-      </div>
-      <div>
-        <div class="subheading2">Reconsideration Type</div>
-        {{ reconsideration.type.label }}
-      </div>
-
-      <div>
-        <div class="subheading2">Resolutions to be Reconsidered</div>
-        <ng-container> {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }} </ng-container>
-      </div>
-
-      <div *ngIf="reconsideration.type.code !== '33.1'">
-        <div class="subheading2">New Evidence</div>
-        {{ reconsideration.isNewEvidence | booleanToString }}
-      </div>
-
-      <div *ngIf="reconsideration.type.code !== '33.1'">
-        <div class="subheading2">Incorrect or False Info</div>
-        {{ reconsideration.isIncorrectFalseInfo | booleanToString }}
-      </div>
-
-      <div *ngIf="reconsideration.type.code !== '33.1'">
-        <div class="subheading2">New Proposal</div>
-        {{ reconsideration.isNewProposal | booleanToString }}
-      </div>
-
-      <div class="full-grid-line">
-        <div class="subheading2">Request Description</div>
-        {{ reconsideration.description }}
-      </div>
-
-      <div *ngIf="reconsideration.type.code === '33'">
-        <div class="subheading2">Review Outcome</div>
-        <span *ngIf="!reconsideration.reviewOutcome || reconsideration.reviewOutcome?.code === 'PEN'">
-          <app-inline-review-outcome
-            (save)="onSaveReconsiderationReviewOutcome(reconsideration.uuid, $event)"
-          ></app-inline-review-outcome>
-        </span>
-        <span *ngIf="reconsideration.reviewOutcome && reconsideration.reviewOutcome?.code !== 'PEN'">{{
-          reconsideration.reviewOutcome.label
-        }}</span>
-      </div>
-
-      <div *ngIf="reconsideration.type.code === '33' && reconsideration.reviewOutcome?.code === 'REF'">
-        <div class="subheading2 left">
-          Outcome Notification Date
-          <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
-            info
-          </mat-icon>
-        </div>
-        <span *ngIf="reconsideration.reviewDate">{{ reconsideration.reviewDate | momentFormat }}</span>
-        <span *ngIf="!reconsideration.reviewDate">
-          <app-inline-datepicker
-            (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
-          ></app-inline-datepicker>
-        </span>
-      </div>
-
-      <div *ngIf="!!reconsideration.resultingDecision">
-        <div class="subheading2">Resulting Resolution</div>
-        #{{ reconsideration.resultingDecision.resolutionNumber }}/{{ reconsideration.resultingDecision.resolutionYear }}
-      </div>
-
-      <div *ngIf="reconsideration.reviewOutcome?.code === 'PRC' || reconsideration.type.code === '33.1'">
-        <div class="subheading2">
-          Does the reconsideration confirm, reverse, or vary
-          {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }}?
-        </div>
-        <span *ngIf="!reconsideration.decisionOutcome">
-          <app-inline-decision-outcome
-            (save)="onSaveReconsiderationDecisionOutcome(reconsideration.uuid, $event)"
-          ></app-inline-decision-outcome>
-        </span>
-        <span *ngIf="reconsideration.decisionOutcome">{{ reconsideration.decisionOutcome.label }}</span>
-      </div>
-    </div>
-  </div>
+  }
 </section>
 
 <h5 id="modifications" class="post-decision-header">
@@ -128,67 +148,77 @@
   <button mat-flat-button color="primary" (click)="onCreateModification()">+ Modification</button>
 </h5>
 
-<section class="no-decisions" *ngIf="!modifications.length">
-  <div>No Requests</div>
-</section>
+@if (!modifications.length) {
+  <section class="no-decisions">
+    <div>No Requests</div>
+  </section>
+}
 
 <section>
-  <div class="post-decision" *ngFor="let modification of modifications; let i = index">
-    <div class="decision-menu">
-      <div class="modification">
-        <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-      <div
-        [ngClass]="{ 'recon-modi-disabled': !modification.canBeDeleted, modification: modification.canBeDeleted }"
+  @for (modification of modifications; track modification; let i = $index) {
+    <div class="post-decision">
+      <div class="decision-menu">
+        <div class="modification">
+          <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <div
+          [ngClass]="{ 'recon-modi-disabled': !modification.canBeDeleted, modification: modification.canBeDeleted }"
         [matTooltip]="
           modification.canBeDeleted ? 'Delete Request' : 'Contact administrator if you need to delete this request'
         "
-      >
-        <button
-          [ngClass]="{ 'button-disabled': !modification.canBeDeleted }"
-          (click)="deleteModification(modification.uuid, modifications.length - i)"
-          matTooltip="Delete Request"
-          mat-icon-button
-          [disabled]="!modification.canBeDeleted"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
+          >
+          <button
+            [ngClass]="{ 'button-disabled': !modification.canBeDeleted }"
+            (click)="deleteModification(modification.uuid, modifications.length - i)"
+            matTooltip="Delete Request"
+            mat-icon-button
+            [disabled]="!modification.canBeDeleted"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="subheading1">Modification Request #{{ modifications.length - i }}</div>
+      <div class="decision-content">
+        <div>
+          <div class="subheading2">Request Submission Date</div>
+          {{ modification.submittedDate | momentFormat }}
+        </div>
+        <div>
+          <div class="subheading2">Condition to be Modified</div>
+          {{ modification.isTimeExtension ? 'Time Extension' : 'Other' }}
+        </div>
+        <div>
+          <div class="subheading2">Resolutions to be Modified</div>
+          <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
+        </div>
+        <div class="full-grid-line">
+          <div class="subheading2">Request Description</div>
+          <ng-container> {{ modification.description }} </ng-container>
+        </div>
+        <div>
+          <div class="subheading2">Review Outcome</div>
+          @if (modification.reviewOutcome.code === 'PEN') {
+            <span>
+              <app-inline-review-outcome
+                [isModification]="true"
+                (save)="onSaveModificationOutcome(modification.uuid, $event)"
+              ></app-inline-review-outcome>
+            </span>
+          }
+          @if (modification.reviewOutcome.code !== 'PEN') {
+            <span>{{ modification.reviewOutcome.label }}</span>
+          }
+        </div>
+        @if (modification.resultingDecision) {
+          <div>
+            <div class="subheading2">Resulting Resolution</div>
+            #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
+          </div>
+        }
       </div>
     </div>
-    <div class="subheading1">Modification Request #{{ modifications.length - i }}</div>
-    <div class="decision-content">
-      <div>
-        <div class="subheading2">Request Submission Date</div>
-        {{ modification.submittedDate | momentFormat }}
-      </div>
-      <div>
-        <div class="subheading2">Condition to be Modified</div>
-        {{ modification.isTimeExtension ? 'Time Extension' : 'Other' }}
-      </div>
-      <div>
-        <div class="subheading2">Resolutions to be Modified</div>
-        <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
-      </div>
-      <div class="full-grid-line">
-        <div class="subheading2">Request Description</div>
-        <ng-container> {{ modification.description }} </ng-container>
-      </div>
-      <div>
-        <div class="subheading2">Review Outcome</div>
-        <span *ngIf="modification.reviewOutcome.code === 'PEN'">
-          <app-inline-review-outcome
-            [isModification]="true"
-            (save)="onSaveModificationOutcome(modification.uuid, $event)"
-          ></app-inline-review-outcome>
-        </span>
-        <span *ngIf="modification.reviewOutcome.code !== 'PEN'">{{ modification.reviewOutcome.label }}</span>
-      </div>
-      <div *ngIf="modification.resultingDecision">
-        <div class="subheading2">Resulting Resolution</div>
-        #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
-      </div>
-    </div>
-  </div>
+  }
 </section>

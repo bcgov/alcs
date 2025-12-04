@@ -1,14 +1,18 @@
-<div *ngIf="data.title" mat-dialog-title>
-  <span class="subheading2">{{ data.title }}</span>
-</div>
+@if (data.title) {
+  <div mat-dialog-title>
+    <span class="subheading2">{{ data.title }}</span>
+  </div>
+}
 <div mat-dialog-content>
-  <ng-container *ngIf="data.style === ConfirmationDialogStyle.WARN">
+  @if (data.style === ConfirmationDialogStyle.WARN) {
     <div class="warn">
       <mat-icon class="warn-icon">info</mat-icon>
       <p><strong>Warning</strong>: <span [innerHTML]="data.body"></span></p>
     </div>
-  </ng-container>
-  <p *ngIf="!data.style" [innerHTML]="data.body"></p>
+  }
+  @if (!data.style) {
+    <p [innerHTML]="data.body"></p>
+  }
 </div>
 <div class="button-container" mat-dialog-actions align="end">
   <button mat-stroked-button color="primary" [mat-dialog-close]="false">{{ data.cancelButtonText ?? 'Cancel' }}</button>

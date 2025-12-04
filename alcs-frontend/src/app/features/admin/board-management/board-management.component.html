@@ -16,9 +16,11 @@
     <ng-container matColumnDef="cardTypes">
       <th mat-header-cell *matHeaderCellDef>Permitted Card Types</th>
       <td mat-cell *matCellDef="let row">
-        <span *ngFor="let cardType of row.allowedCardTypes">
-          {{ cardTypeMap[cardType] }},
-        </span>
+        @for (cardType of row.allowedCardTypes; track cardType) {
+          <span>
+            {{ cardTypeMap[cardType] }},
+          </span>
+        }
       </td>
     </ng-container>
 

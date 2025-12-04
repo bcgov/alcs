@@ -2,71 +2,89 @@
   <div class="header">
     <h3>View Conditions</h3>
     <div class="header-buttons">
-      <button *ngIf="decision" type="button" mat-flat-button color="primary" (click)="openConditionCardDialog()">
-        + Condition Card
-      </button>
+      @if (decision) {
+        <button type="button" mat-flat-button color="primary" (click)="openConditionCardDialog()">
+          + Condition Card
+        </button>
+      }
+      @if (decision) {
+        <button
+          type="button"
+          mat-stroked-button
+          color="primary"
+          [routerLink]="['../../']"
+          [queryParams]="{ uuid: decision.uuid }"
+          >
+          back to decision #{{ decision.index }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="quick-filters">
+    <div class="quick-filters-label">Quick Filters:</div>
+    <mat-chip-listbox multiple (change)="onConditionFilterChange($event)" class="quick-filters-list" >
+      @for (label of conditionLabelsByStatus | keyvalue; track label) {
+        <mat-chip-option [value]="label.key" class="quick-filters-button">
+          {{ label.value }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+
+  @if (decision) {
+    <section class="body">
+      <div class="decision-container">
+        @if (decision.modifiedBy?.length || decision.reconsideredBy?.length) {
+          <div class="post-decisions">
+            <div>
+              <strong>Modified&nbsp;By:&nbsp;</strong>
+              {{ decision.modifiedByResolutions?.join(', ') }}
+              @if (!decision.modifiedBy?.length) {
+                <span>N/A</span>
+              }
+            </div>
+            <div>
+              <strong>Reconsidered&nbsp;By:&nbsp;</strong>
+              {{ decision.reconsideredByResolutions?.join(', ') }}
+              @if (!decision.reconsideredBy?.length) {
+                <span>N/A</span>
+              }
+            </div>
+          </div>
+        }
+        @if (decision.conditions.length < 1) {
+          <div class="no-conditions">
+            <app-no-data text="No conditions added. Return to decision draft to add conditions."></app-no-data>
+          </div>
+        }
+        @for (condition of filterConditions(decision.conditions); track condition; let j = $index) {
+          <div>
+            <app-condition
+              [ngClass]="{ 'condition-container': true, 'even-condition': j % 2 }"
+              [condition]="condition"
+              [isDraftDecision]="decision.isDraft"
+              [fileNumber]="fileNumber"
+              [index]="condition.order"
+              [displayIndex]="displayIndexes"
+              (statusChange)="onStatusChange(condition, $event)"
+            ></app-condition>
+          </div>
+        }
+      </div>
+    </section>
+  }
+  <div class="footer">
+    @if (decision) {
       <button
-        *ngIf="decision"
         type="button"
         mat-stroked-button
         color="primary"
         [routerLink]="['../../']"
         [queryParams]="{ uuid: decision.uuid }"
-      >
+        >
         back to decision #{{ decision.index }}
       </button>
-    </div>
-  </div>
-  
-  <div class="quick-filters">
-    <div class="quick-filters-label">Quick Filters:</div>
-    <mat-chip-listbox multiple (change)="onConditionFilterChange($event)" class="quick-filters-list" >
-      <mat-chip-option *ngFor="let label of conditionLabelsByStatus | keyvalue" [value]="label.key" class="quick-filters-button">
-        {{ label.value }}
-      </mat-chip-option>
-    </mat-chip-listbox>
-  </div>
-
-  <section class="body" *ngIf="decision">
-    <div class="decision-container">
-      <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions">
-        <div>
-          <strong>Modified&nbsp;By:&nbsp;</strong>
-          {{ decision.modifiedByResolutions?.join(', ') }}
-          <span *ngIf="!decision.modifiedBy?.length">N/A</span>
-        </div>
-        <div>
-          <strong>Reconsidered&nbsp;By:&nbsp;</strong>
-          {{ decision.reconsideredByResolutions?.join(', ') }}
-          <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
-        </div>
-      </div>
-      <div class="no-conditions" *ngIf="decision.conditions.length < 1">
-        <app-no-data text="No conditions added. Return to decision draft to add conditions."></app-no-data>
-      </div>
-      <div *ngFor="let condition of filterConditions(decision.conditions); let j = index">
-        <app-condition
-          [ngClass]="{ 'condition-container': true, 'even-condition': j % 2 }"
-          [condition]="condition"
-          [isDraftDecision]="decision.isDraft"
-          [fileNumber]="fileNumber"
-          [index]="condition.order"
-          [displayIndex]="displayIndexes"
-          (statusChange)="onStatusChange(condition, $event)"
-        ></app-condition>
-      </div>
-    </div>
-  </section>
-  <div class="footer">
-    <button
-      *ngIf="decision"
-      type="button"
-      mat-stroked-button
-      color="primary"
-      [routerLink]="['../../']"
-      [queryParams]="{ uuid: decision.uuid }"
-    >
-      back to decision #{{ decision.index }}
-    </button>
+    }
   </div>
 </section>

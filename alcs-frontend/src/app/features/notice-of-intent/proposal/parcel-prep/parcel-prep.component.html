@@ -1,65 +1,68 @@
-<div *ngIf="!parcels" class="center">
-  <mat-spinner></mat-spinner>
-</div>
-<table *ngIf="parcels" [dataSource]="parcels" mat-table>
-  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-
-  <ng-container matColumnDef="number">
-    <th *matHeaderCellDef mat-header-cell>#</th>
-    <td *matCellDef="let row; let i = index" mat-cell>{{ i + 1 }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="pid">
-    <th *matHeaderCellDef mat-header-cell>PID</th>
-    <td *matCellDef="let row" mat-cell>
-      {{ row.pid | mask: '000-000-000' }}
-      <app-no-data *ngIf="!row.pid"></app-no-data>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="pin">
-    <th *matHeaderCellDef mat-header-cell>PIN</th>
-    <td *matCellDef="let row" mat-cell>
-      {{ row.pin }}
-      <app-no-data *ngIf="!row.pin"></app-no-data>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="civicAddress">
-    <th *matHeaderCellDef mat-header-cell>Civic Address</th>
-    <td *matCellDef="let row" mat-cell style="max-width: 300px">
-      <span [matTooltip]="row.civicAddress" class="civic-address">{{ row.civicAddress }}</span>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="area">
-    <th *matHeaderCellDef mat-header-cell>Area (ha)</th>
-    <td *matCellDef="let row" mat-cell>{{ row.mapAreaHectares }}</td>
-  </ng-container>
-  <ng-container matColumnDef="alrArea">
-    <th *matHeaderCellDef mat-header-cell>ALR Area (ha)</th>
-    <td *matCellDef="let row" mat-cell>
-      <app-inline-number (save)="saveParcel(row.uuid, $event)" [decimals]="5" [value]="row.alrArea"></app-inline-number>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="owners">
-    <th *matHeaderCellDef mat-header-cell>Owner(s)</th>
-    <td *matCellDef="let row" mat-cell>
-      <span [matTooltipDisabled]="!row.hasManyOwners" [matTooltip]="row.fullOwners">{{ row.owners }}</span>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <th *matHeaderCellDef mat-header-cell>Actions</th>
-    <td *matCellDef="let row" mat-cell>
-      <button
-        (click)="navigateToParcelDetails(row.uuid)"
-        class="link-button"
-        mat-icon-button
-        matTooltip="View Parcel Details"
-      >
-        <mat-icon>open_in_new</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-</table>
+@if (!parcels) {
+  <div class="center">
+    <mat-spinner></mat-spinner>
+  </div>
+}
+@if (parcels) {
+  <table [dataSource]="parcels" mat-table>
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+    <ng-container matColumnDef="number">
+      <th *matHeaderCellDef mat-header-cell>#</th>
+      <td *matCellDef="let row; let i = index" mat-cell>{{ i + 1 }}</td>
+    </ng-container>
+    <ng-container matColumnDef="pid">
+      <th *matHeaderCellDef mat-header-cell>PID</th>
+      <td *matCellDef="let row" mat-cell>
+        {{ row.pid | mask: '000-000-000' }}
+        @if (!row.pid) {
+          <app-no-data></app-no-data>
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="pin">
+      <th *matHeaderCellDef mat-header-cell>PIN</th>
+      <td *matCellDef="let row" mat-cell>
+        {{ row.pin }}
+        @if (!row.pin) {
+          <app-no-data></app-no-data>
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="civicAddress">
+      <th *matHeaderCellDef mat-header-cell>Civic Address</th>
+      <td *matCellDef="let row" mat-cell style="max-width: 300px">
+        <span [matTooltip]="row.civicAddress" class="civic-address">{{ row.civicAddress }}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="area">
+      <th *matHeaderCellDef mat-header-cell>Area (ha)</th>
+      <td *matCellDef="let row" mat-cell>{{ row.mapAreaHectares }}</td>
+    </ng-container>
+    <ng-container matColumnDef="alrArea">
+      <th *matHeaderCellDef mat-header-cell>ALR Area (ha)</th>
+      <td *matCellDef="let row" mat-cell>
+        <app-inline-number (save)="saveParcel(row.uuid, $event)" [decimals]="5" [value]="row.alrArea"></app-inline-number>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="owners">
+      <th *matHeaderCellDef mat-header-cell>Owner(s)</th>
+      <td *matCellDef="let row" mat-cell>
+        <span [matTooltipDisabled]="!row.hasManyOwners" [matTooltip]="row.fullOwners">{{ row.owners }}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th *matHeaderCellDef mat-header-cell>Actions</th>
+      <td *matCellDef="let row" mat-cell>
+        <button
+          (click)="navigateToParcelDetails(row.uuid)"
+          class="link-button"
+          mat-icon-button
+          matTooltip="View Parcel Details"
+          >
+          <mat-icon>open_in_new</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  </table>
+}

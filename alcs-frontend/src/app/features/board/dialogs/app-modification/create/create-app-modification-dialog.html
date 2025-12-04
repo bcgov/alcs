@@ -19,7 +19,7 @@
             createForm.get('fileNumber')!.invalid &&
             (createForm.get('fileNumber')!.dirty || createForm.get('fileNumber')!.touched)
           "
-        />
+          />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Applicant Name</mat-label>
@@ -36,7 +36,7 @@
             createForm.get('applicant')!.invalid &&
             (createForm.get('applicant')!.dirty || createForm.get('applicant')!.touched)
           "
-        />
+          />
       </mat-form-field>
       <div>
         <ng-select
@@ -49,7 +49,7 @@
           bindValue="code"
           [clearable]="false"
           formControlName="applicationType"
-        >
+          >
           <ng-template ng-option-tmp let-item="item">
             <div class="application-type">
               <div
@@ -88,7 +88,7 @@
             createForm.get('localGovernment')!.invalid &&
             (createForm.get('localGovernment')!.dirty || createForm.get('localGovernment')!.touched)
           "
-        />
+          />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Region</mat-label>
@@ -103,12 +103,14 @@
             createForm.get('region')!.invalid &&
             (createForm.get('region')!.dirty || createForm.get('region')!.touched)
           "
-        />
+          />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Resolutions to be Modified</mat-label>
         <mat-select [formControl]="modifiesDecisions" multiple>
-          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
+          @for (decision of decisions; track decision) {
+            <mat-option [value]="decision.uuid">{{decision.resolution}}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <div>
@@ -127,7 +129,7 @@
             [matDatepicker]="datePicker"
             formControlName="submittedDate"
             required
-          />
+            />
           <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
           <mat-datepicker #datePicker type="date"></mat-datepicker>
         </mat-form-field>
@@ -148,21 +150,24 @@
             createForm.get('description')!.invalid &&
             (createForm.get('description')!.dirty || createForm.get('description')!.touched)
           "
-          />
-          <mat-error
-            class="text-danger"
-            *ngIf="createForm.get('description')!.touched && createForm.get('description')!.hasError('description')"
-          >
-            This field is required.
-          </mat-error>
+            />
+          @if (createForm.get('description')!.touched && createForm.get('description')!.hasError('description')) {
+            <mat-error
+              class="text-danger"
+              >
+              This field is required.
+            </mat-error>
+          }
         </mat-form-field>
       </div>
     </div>
     <div class="warning-section">
-      <div class="warning" *ngIf="isDecisionDateEmpty">
-        <mat-icon>warning</mat-icon>
-        File does not have a decision
-      </div>
+      @if (isDecisionDateEmpty) {
+        <div class="warning">
+          <mat-icon>warning</mat-icon>
+          File does not have a decision
+        </div>
+      }
     </div>
   </mat-dialog-content>
 

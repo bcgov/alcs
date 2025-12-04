@@ -1,4 +1,6 @@
-<app-maintenance-banner *ngIf="showMaintenanceBanner">{{ maintenanceBannerMessage }}</app-maintenance-banner>
+@if (showMaintenanceBanner) {
+  <app-maintenance-banner>{{ maintenanceBannerMessage }}</app-maintenance-banner>
+}
 <header class="header">
   <div class="flex-grid">
     <mat-toolbar>
@@ -8,68 +10,84 @@
         </a>
       </div>
       <div class="col right">
-        <div *ngIf="hasRoles">
-          <a [routerLink]="homeUrl">
-            <button class="menu-item subheading1">Home</button>
-          </a>
-        </div>
-        <div *ngIf="hasRoles && !isCommissioner && !isSoilOfficer">
-          <a routerLink="/schedule">
-            <button class="menu-item subheading1">Schedule</button>
-          </a>
-        </div>
+        @if (hasRoles) {
+          <div>
+            <a [routerLink]="homeUrl">
+              <button class="menu-item subheading1">Home</button>
+            </a>
+          </div>
+        }
+        @if (hasRoles && !isCommissioner && !isSoilOfficer) {
+          <div>
+            <a routerLink="/schedule">
+              <button class="menu-item subheading1">Schedule</button>
+            </a>
+          </div>
+        }
       </div>
       <div class="col">
-        <button
-          *ngIf="hasRoles && !isCommissioner"
-          class="menu-item subheading1"
-          [class.open]="menuTrigger.menuOpen"
-          #menuTrigger="matMenuTrigger"
-          [matMenuTriggerFor]="navigationMenu"
-        >
-          Boards <span class="board-menu-arrow">▾</span>
-        </button>
+        @if (hasRoles && !isCommissioner) {
+          <button
+            class="menu-item subheading1"
+            [class.open]="menuTrigger.menuOpen"
+            #menuTrigger="matMenuTrigger"
+            [matMenuTriggerFor]="navigationMenu"
+            >
+            Boards <span class="board-menu-arrow">▾</span>
+          </button>
+        }
         <mat-menu #navigationMenu="matMenu">
-          <div class="board-item menu-item" *ngFor="let board of sortedBoards" (click)="onSelectBoard(board.code)">
-            <app-favorite-button
-              [boardCode]="board.code"
-              [isFavorite]="board.isFavourite"
-              [currentUserProfile]="userProfile"
-              [disableTooltip]="true"
-            ></app-favorite-button>
-            <button mat-menu-item>
-              {{ board.title }}
+          @for (board of sortedBoards; track board) {
+            <div class="board-item menu-item" (click)="onSelectBoard(board.code)">
+              <app-favorite-button
+                [boardCode]="board.code"
+                [isFavorite]="board.isFavourite"
+                [currentUserProfile]="userProfile"
+                [disableTooltip]="true"
+              ></app-favorite-button>
+              <button mat-menu-item>
+                {{ board.title }}
+              </button>
+            </div>
+          }
+        </mat-menu>
+      </div>
+      @if (userProfile) {
+        <div class="col right">
+          @if (allowedSearch) {
+            <app-search-bar></app-search-bar>
+          }
+          @if (hasRoles) {
+            <app-notifications class="notification"></app-notifications>
+          }
+          @if (hasRoles) {
+            <button
+              [class.open]="menuTrigger.menuOpen"
+              class="avatar-menu-button"
+              #menuTrigger="matMenuTrigger"
+              [matMenuTriggerFor]="avatarMenu"
+              >
+              <app-avatar-circle [initials]="userProfile.initials" [large]="true"></app-avatar-circle>
+              <span class="avatar-menu-arrow">▾</span>
             </button>
-          </div>
-        </mat-menu>
-      </div>
-      <div *ngIf="userProfile" class="col right">
-        <app-search-bar *ngIf="allowedSearch"></app-search-bar>
-        <app-notifications class="notification" *ngIf="hasRoles"></app-notifications>
-        <button
-          [class.open]="menuTrigger.menuOpen"
-          *ngIf="hasRoles"
-          class="avatar-menu-button"
-          #menuTrigger="matMenuTrigger"
-          [matMenuTriggerFor]="avatarMenu"
-        >
-          <app-avatar-circle [initials]="userProfile.initials" [large]="true"></app-avatar-circle>
-          <span class="avatar-menu-arrow">▾</span>
-        </button>
-        <mat-menu #avatarMenu="matMenu" class="avatar-menu" xPosition="before">
-          <div class="name-text">
-            Signed in as <br />
-            <strong>{{ userProfile.idirUserName }}{{ userProfile.bceidUserName }}</strong>
-          </div>
-          <hr />
-          <div *ngIf="isAdmin" class="avatar-menu-items">
-            <button mat-menu-item (click)="onAdmin()">Admin</button>
-          </div>
-          <div class="avatar-menu-items">
-            <button mat-menu-item (click)="onLogout()">Log Out</button>
-          </div>
-        </mat-menu>
-      </div>
+          }
+          <mat-menu #avatarMenu="matMenu" class="avatar-menu" xPosition="before">
+            <div class="name-text">
+              Signed in as <br />
+              <strong>{{ userProfile.idirUserName }}{{ userProfile.bceidUserName }}</strong>
+            </div>
+            <hr />
+            @if (isAdmin) {
+              <div class="avatar-menu-items">
+                <button mat-menu-item (click)="onAdmin()">Admin</button>
+              </div>
+            }
+            <div class="avatar-menu-items">
+              <button mat-menu-item (click)="onLogout()">Log Out</button>
+            </div>
+          </mat-menu>
+        </div>
+      }
     </mat-toolbar>
   </div>
 </header>
