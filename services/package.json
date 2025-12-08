@@ -28,8 +28,8 @@
     "alcs:migration:run": "npm run alcs:typeorm migration:run"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.943.0",
-    "@aws-sdk/s3-request-presigner": "^3.943.0",
+    "@aws-sdk/client-s3": "^3.946.0",
+    "@aws-sdk/s3-request-presigner": "^3.946.0",
     "@fastify/cors": "^9.0.1",
     "@fastify/helmet": "^11.1.1",
     "@fastify/multipart": "^8.3.1",
@@ -75,7 +75,7 @@
     "typeorm": "^0.3.28",
     "typeorm-naming-strategies": "^4.1.0",
     "uuid": "^9.0.1",
-    "winston": "^3.18.3"
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "@golevelup/nestjs-testing": "^0.1.2",
