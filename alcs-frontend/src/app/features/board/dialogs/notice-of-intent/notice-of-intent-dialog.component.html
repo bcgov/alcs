@@ -116,7 +116,7 @@
     <ng-select
       class="card-assignee"
       appearance="outline"
-      [items]="$users | async"
+      [items]="($users | async) || []"
       placeholder="Assigned Soil Officer"
       bindLabel="prettyName"
       bindValue="prettyName"

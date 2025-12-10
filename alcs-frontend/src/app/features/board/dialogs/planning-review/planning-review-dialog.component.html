@@ -120,7 +120,7 @@
     <ng-select
       class="card-assignee"
       appearance="outline"
-      [items]="$users | async"
+      [items]="($users | async) || []"
       placeholder="Assigned Planner"
       bindLabel="prettyName"
       bindValue="prettyName"

@@ -117,7 +117,7 @@
     <ng-select
       (change)="onAssigneeSelected($event)"
       [(ngModel)]="selectedAssigneeName"
-      [items]="$users | async"
+      [items]="($users | async) || []"
       [searchFn]="filterAssigneeList"
       appearance="outline"
       bindLabel="prettyName"
