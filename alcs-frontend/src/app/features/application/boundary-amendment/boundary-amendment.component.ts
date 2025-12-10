@@ -1,4 +1,3 @@
-import { isArray } from '@angular/compiler-cli/src/ngtsc/annotations/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import moment from 'moment/moment';
@@ -11,10 +10,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { EditBoundaryAmendmentDialogComponent } from './edit-boundary-amendment-dialog/edit-boundary-amendment-dialog.component';
 
 @Component({
-    selector: 'app-boundary-amendment',
-    templateUrl: './boundary-amendment.component.html',
-    styleUrls: ['./boundary-amendment.component.scss'],
-    standalone: false
+  selector: 'app-boundary-amendment',
+  templateUrl: './boundary-amendment.component.html',
+  styleUrls: ['./boundary-amendment.component.scss'],
+  standalone: false,
 })
 export class BoundaryAmendmentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
