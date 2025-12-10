@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import {} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
