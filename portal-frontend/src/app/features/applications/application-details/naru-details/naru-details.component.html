@@ -5,53 +5,39 @@
     </div>
     <div class="grid-double">
       @if (_applicationSubmission.naruWillBeOverFiveHundredM2 !== null) {
-        <span>{{
-          _applicationSubmission.naruWillBeOverFiveHundredM2 ? 'Yes' : 'No'
-        }}</span>
+        <span>{{ _applicationSubmission.naruWillBeOverFiveHundredM2 ? 'Yes' : 'No' }}</span>
       }
       @if (_applicationSubmission.naruWillBeOverFiveHundredM2 === null) {
-        <app-no-data
-          [showRequired]="showErrors"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors"></app-no-data>
       }
     </div>
-    <div class="subheading2 grid-1">Is your proposal to retain an existing residence while building a new residence?</div>
+    <div class="subheading2 grid-1">
+      Is your proposal to retain an existing residence while building a new residence?
+    </div>
     <div class="grid-double">
       @if (_applicationSubmission.naruWillRetainResidence !== null) {
-        <span>{{
-          _applicationSubmission.naruWillRetainResidence ? 'Yes' : 'No'
-        }}</span>
+        <span>{{ _applicationSubmission.naruWillRetainResidence ? 'Yes' : 'No' }}</span>
       }
       @if (_applicationSubmission.naruWillRetainResidence === null) {
-        <app-no-data
-          [showRequired]="showErrors"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors"></app-no-data>
       }
     </div>
     <div class="subheading2 grid-1">Is your proposal for an additional residence?</div>
     <div class="grid-double">
       @if (_applicationSubmission.naruWillHaveAdditionalResidence !== null) {
-        <span>{{
-          _applicationSubmission.naruWillHaveAdditionalResidence ? 'Yes' : 'No'
-        }}</span>
+        <span>{{ _applicationSubmission.naruWillHaveAdditionalResidence ? 'Yes' : 'No' }}</span>
       }
       @if (_applicationSubmission.naruWillHaveAdditionalResidence === null) {
-        <app-no-data
-          [showRequired]="showErrors"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors"></app-no-data>
       }
     </div>
     <div class="subheading2 grid-1">Is your proposal for temporary foreign worker housing?</div>
     <div class="grid-double">
       @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing !== null) {
-        <span>{{
-          _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing ? 'Yes' : 'No'
-        }}</span>
+        <span>{{ _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing ? 'Yes' : 'No' }}</span>
       }
       @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === null) {
-        <app-no-data
-          [showRequired]="showErrors"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors"></app-no-data>
       }
     </div>
     <div class="subheading2 grid-1">
@@ -59,9 +45,7 @@
     </div>
     <div class="grid-double">
       @if (_applicationSubmission.naruWillImportFill !== null) {
-        <span>{{
-          _applicationSubmission.naruWillImportFill ? 'Yes' : 'No'
-        }}</span>
+        <span>{{ _applicationSubmission.naruWillImportFill ? 'Yes' : 'No' }}</span>
       }
       @if (_applicationSubmission.naruWillImportFill === null) {
         <app-no-data [showRequired]="showErrors"></app-no-data>
@@ -78,11 +62,13 @@
       _applicationSubmission.naruWillBeOverFiveHundredM2 ||
       _applicationSubmission.naruWillHaveAdditionalResidence ||
       _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing
-      ) {
+    ) {
       <div class="subheading2 grid-1">
-        Is your proposal necessary for farm use? If so, please explain@if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing) {
-        what the temporary foreign workers will be doing on the farm
-        }.
+        Is your proposal necessary for farm use? If so, please explain
+        @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing) {
+          what the temporary foreign workers will be doing on the farm
+        }
+        .
       </div>
       <div class="grid-double">
         {{ _applicationSubmission.naruResidenceNecessity }}
@@ -141,7 +127,8 @@
       }
     </div>
     <div class="subheading2 grid-1">
-      Where on the parcel will the proposal be situated and is there an agricultural rationale for the proposed location?
+      Where on the parcel will the proposal be situated and is there an agricultural rationale for the proposed
+      location?
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
@@ -165,12 +152,16 @@
           <div class="subheading2">Existing Residence</div>
           <div class="subheading2">Total Floor Area</div>
           <div class="subheading2">Description</div>
-          @if (_applicationSubmission.naruExistingResidences?.length === 0) {
+          @if (_applicationSubmission.naruExistingResidences.length === 0) {
             <div>
               <app-no-data></app-no-data>
             </div>
           }
-          @for (existingResidence of _applicationSubmission.naruExistingResidences; track existingResidence; let i = $index) {
+          @for (
+            existingResidence of _applicationSubmission.naruExistingResidences;
+            track existingResidence;
+            let i = $index
+          ) {
             <div>#{{ i + 1 }}</div>
             <div>
               @if (existingResidence.floorArea === 0) {
@@ -185,23 +176,28 @@
       }
       @if (isMobile) {
         <div class="subheading2 grid-1">Total Floor Area of Existing Residence(s) - If Applicable</div>
-        @if (_applicationSubmission.naruExistingResidences?.length === 0) {
+        @if (_applicationSubmission.naruExistingResidences.length === 0) {
           <div>
             <app-no-data></app-no-data>
           </div>
         }
-        @for (existingResidence of _applicationSubmission.naruExistingResidences; track existingResidence; let last = $last; let i = $index) {
+        @for (
+          existingResidence of _applicationSubmission.naruExistingResidences;
+          track existingResidence;
+          let last = $last;
+          let i = $index
+        ) {
           <app-naru-residence-mobile-card
-        [residence]="{
-          id: i + 1,
-          floorArea: existingResidence.floorArea,
-          description: existingResidence.description,
-          isExpanded: false,
-        }"
+            [residence]="{
+              id: i + 1,
+              floorArea: existingResidence.floorArea,
+              description: existingResidence.description,
+              isExpanded: false,
+            }"
             [isLast]="last"
             [isReviewStep]="true"
             [showErrors]="showErrors"
-            >
+          >
           </app-naru-residence-mobile-card>
         }
       }
@@ -216,7 +212,11 @@
             <app-no-data [showRequired]="showErrors"></app-no-data>
           </div>
         }
-        @for (proposedResidence of _applicationSubmission.naruProposedResidences; track proposedResidence; let i = $index) {
+        @for (
+          proposedResidence of _applicationSubmission.naruProposedResidences;
+          track proposedResidence;
+          let i = $index
+        ) {
           <div>#{{ i + 1 }}</div>
           <div>
             {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
@@ -238,18 +238,23 @@
           <app-no-data [showRequired]="showErrors"></app-no-data>
         </div>
       }
-      @for (proposedResidence of _applicationSubmission.naruProposedResidences; track proposedResidence; let last = $last; let i = $index) {
+      @for (
+        proposedResidence of _applicationSubmission.naruProposedResidences;
+        track proposedResidence;
+        let last = $last;
+        let i = $index
+      ) {
         <app-naru-residence-mobile-card
-      [residence]="{
-        id: i + 1,
-        floorArea: proposedResidence.floorArea,
-        description: proposedResidence.description,
-        isExpanded: false,
-      }"
+          [residence]="{
+            id: i + 1,
+            floorArea: proposedResidence.floorArea,
+            description: proposedResidence.description,
+            isExpanded: false,
+          }"
           [isLast]="last"
           [isReviewStep]="true"
           [showErrors]="showErrors"
-          >
+        >
         </app-naru-residence-mobile-card>
       }
     }
@@ -309,9 +314,7 @@
             <span>m</span>
           }
           @if (_applicationSubmission.naruToPlaceMaximumDepth === null) {
-            <app-no-data
-              [showRequired]="showErrors"
-            ></app-no-data>
+            <app-no-data [showRequired]="showErrors"></app-no-data>
           }
         </div>
         <div class="subheading2">Average Depth</div>
@@ -321,9 +324,7 @@
             <span>m</span>
           }
           @if (_applicationSubmission.naruToPlaceAverageDepth === null) {
-            <app-no-data
-              [showRequired]="showErrors"
-            ></app-no-data>
+            <app-no-data [showRequired]="showErrors"></app-no-data>
           }
         </div>
       </div>

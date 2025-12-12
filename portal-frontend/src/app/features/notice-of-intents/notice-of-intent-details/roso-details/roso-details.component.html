@@ -121,9 +121,7 @@
           <span>m</span>
         }
         @if (_noiSubmission.soilAlreadyRemovedMaximumDepth === null) {
-          <app-no-data
-            [showRequired]="showErrors"
-          ></app-no-data>
+          <app-no-data [showRequired]="showErrors"></app-no-data>
         }
       </div>
       <div class="subheading2">Average Depth</div>
@@ -133,9 +131,7 @@
           <span>m</span>
         }
         @if (_noiSubmission.soilAlreadyRemovedAverageDepth === null) {
-          <app-no-data
-            [showRequired]="showErrors"
-          ></app-no-data>
+          <app-no-data [showRequired]="showErrors"></app-no-data>
         }
       </div>
     </div>
@@ -160,7 +156,7 @@
         <app-no-data [showRequired]="showErrors"></app-no-data>
       }
     </div>
-    @if (_noiSubmission?.soilIsExtractionOrMining) {
+    @if (_noiSubmission.soilIsExtractionOrMining) {
       <div class="subheading2 grid-1">Cross Sections</div>
       <div class="grid-double multiple-documents">
         @for (file of crossSections; track file) {

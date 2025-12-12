@@ -39,20 +39,13 @@
       }
       @if (isMobile) {
         <h4 class="transferee-mobile-title">All Transferees</h4>
-        @for (transferee of notificationSubmission?.transferees; track transferee; let last = $last) {
-          <app-transferee-mobile-card
-            [transferee]="transferee"
-            [isLast]="last"
-            [isReviewStep]="true"
-            >
+        @for (transferee of notificationSubmission.transferees; track transferee; let last = $last) {
+          <app-transferee-mobile-card [transferee]="transferee" [isLast]="last" [isReviewStep]="true">
           </app-transferee-mobile-card>
         }
       }
       @if (notificationSubmission.transferees.length === 0) {
-        <app-no-data
-          [showRequired]="showErrors"
-          class="full-width"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors" class="full-width"></app-no-data>
       }
       @if (showEdit) {
         <div class="edit-button">
@@ -96,9 +89,7 @@
           <app-no-data [showRequired]="showErrors"></app-no-data>
         }
         @if (!(notificationSubmission.contactPhone || '' | phoneValid)) {
-          <app-validation-error
-            >Invalid Format
-          </app-validation-error>
+          <app-validation-error>Invalid Format </app-validation-error>
         }
       </div>
       <div class="subheading2 grid-1">Email</div>
@@ -111,9 +102,7 @@
           ></app-no-data>
         }
         @if (!(notificationSubmission.contactEmail || '' | emailValid)) {
-          <app-validation-error
-            >Invalid Format
-          </app-validation-error>
+          <app-validation-error>Invalid Format </app-validation-error>
         }
       </div>
       @if (showEdit) {
@@ -136,10 +125,11 @@
         }
         @if (showErrors && localGovernment && !localGovernment.hasGuid) {
           <app-warning-banner class="full-row error">
-            This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
-            fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
-            &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
-            >236-468-3342</a
+            This local/First Nation government is not set up with the ALC Portal to receive submissions. You can
+            continue to fill out the form but you will be unable to submit. Please contact the ALC directly as soon as
+            possible: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a
+              href="tel:236-468-3342"
+              >236-468-3342</a
             >
           </app-warning-banner>
         }
@@ -208,7 +198,7 @@
               [file]="file"
               [isLast]="last"
               (fileClicked)="downloadFile(file.documentUuid)"
-              >
+            >
             </app-optional-attachments-mobile-card>
           }
           @if (otherFiles.length === 0) {

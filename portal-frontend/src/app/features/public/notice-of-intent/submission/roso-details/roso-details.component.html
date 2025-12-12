@@ -156,7 +156,7 @@
         <app-no-data></app-no-data>
       }
     </div>
-    @if (noiSubmission?.soilIsExtractionOrMining) {
+    @if (noiSubmission.soilIsExtractionOrMining) {
       <div class="subheading2 grid-1">Cross Sections</div>
       <div class="grid-double multiple-documents">
         @for (file of crossSections; track file) {

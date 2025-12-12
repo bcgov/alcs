@@ -5,22 +5,12 @@
       <h4>Parcel {{ parcelInd + 1 }}</h4>
       <div>
         @if (showEdit && parcels.length > 1) {
-          <button
-            class="mobile-hidden"
-            mat-flat-button
-            color="accent"
-            (click)="onEditParcelClick(parcel.uuid)"
-            >
+          <button class="mobile-hidden" mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
             Edit Parcel {{ parcelInd + 1 }}
           </button>
         }
         @if (showEdit && parcels.length > 1) {
-          <button
-            class="tablet-hidden"
-            mat-icon-button
-            color="accent"
-            (click)="onEditParcelClick(parcel.uuid)"
-            >
+          <button class="tablet-hidden" mat-icon-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
             <mat-icon>edit</mat-icon>
           </button>
         }
@@ -56,7 +46,7 @@
       </div>
       <div class="grid-double">
         @if (parcel.pid) {
-          <span>{{ parcel.pid | mask : '000-000-000' }}</span>
+          <span>{{ parcel.pid | mask: '000-000-000' }}</span>
         }
         @if (!parcel.pid) {
           <app-no-data
@@ -64,12 +54,10 @@
           ></app-no-data>
         }
         @if (showErrors && parcel.pid && parcel.pid.length < 9) {
-          <app-validation-error>
-            Invalid Format
-          </app-validation-error>
+          <app-validation-error> Invalid Format </app-validation-error>
         }
       </div>
-      @if (parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN) {
+      @if (parcel.ownershipType.code === PARCEL_OWNERSHIP_TYPES.CROWN) {
         <div class="subheading2 grid-1">PIN (optional)</div>
         <div class="grid-double">
           {{ parcel.pin }}

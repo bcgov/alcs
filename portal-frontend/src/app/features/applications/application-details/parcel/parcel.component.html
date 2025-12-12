@@ -5,22 +5,12 @@
       <h4>Parcel #{{ parcelInd + 1 }}</h4>
       <div>
         @if (showEdit && parcels.length > 1) {
-          <button
-            class="mobile-hidden"
-            mat-flat-button
-            color="accent"
-            (click)="onEditParcelClick(parcel.uuid)"
-            >
+          <button class="mobile-hidden" mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
             Edit Parcel {{ parcelInd + 1 }}
           </button>
         }
         @if (showEdit && parcels.length > 1) {
-          <button
-            class="tablet-hidden"
-            mat-icon-button
-            color="accent"
-            (click)="onEditParcelClick(parcel.uuid)"
-            >
+          <button class="tablet-hidden" mat-icon-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
             <mat-icon>edit</mat-icon>
           </button>
         }
@@ -38,9 +28,7 @@
       <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-legal-description'">
         {{ parcel.legalDescription }}
         @if (parcel.validation?.isLegalDescriptionRequired || false) {
-          <app-no-data
-            [showRequired]="showErrors"
-          ></app-no-data>
+          <app-no-data [showRequired]="showErrors"></app-no-data>
         }
       </div>
       <div class="subheading2 grid-1">Approx. Map Area</div>
@@ -50,9 +38,7 @@
           <span>ha</span>
         }
         @if (parcel.validation?.isMapAreaHectaresRequired || false) {
-          <app-no-data
-            [showRequired]="showErrors"
-          ></app-no-data>
+          <app-no-data [showRequired]="showErrors"></app-no-data>
         }
       </div>
       <div class="subheading2 grid-1">
@@ -63,36 +49,27 @@
           <span>{{ parcel.pid | mask: '000-000-000' }}</span>
         }
         @if (!parcel.pid) {
-          <app-no-data
-            [showRequired]="showErrors && !!parcel.validation?.isPidRequired"
-          ></app-no-data>
+          <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPidRequired"></app-no-data>
         }
         @if (showErrors && parcel.pid && parcel.pid.length < 9) {
-          <app-validation-error>
-            Invalid Format
-          </app-validation-error>
+          <app-validation-error> Invalid Format </app-validation-error>
         }
       </div>
-      @if (parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN) {
+      @if (parcel.ownershipType.code === PARCEL_OWNERSHIP_TYPES.CROWN) {
         <div class="subheading2 grid-1">PIN (optional)</div>
         <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-pin'">
           {{ parcel.pin }}
           @if (!parcel.pin) {
-            <app-no-data
-              [showRequired]="showErrors && !!parcel.validation?.isPinRequired"
-            ></app-no-data>
+            <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPinRequired"></app-no-data>
           }
         </div>
       }
-      @if (parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE) {
+      @if (parcel.ownershipType.code === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE) {
         <div class="subheading2 grid-1">Purchase Date</div>
         <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-purchase-date'">
           {{ parcel.purchasedDate | date }}
           @if (!parcel.purchasedDate) {
-            <app-no-data
-              [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"
-              >
-            </app-no-data>
+            <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"> </app-no-data>
           }
         </div>
       }
@@ -116,10 +93,7 @@
         <div class="subheading2 grid-1">Certificate Of Title</div>
       }
       @if (showCertificateOfTitle) {
-        <div
-          class="grid-double"
-          [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-certificate-of-title'"
-          >
+        <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-certificate-of-title'">
           @if (parcel.certificateOfTitle) {
             <div>
               @if (isMobile) {
@@ -135,9 +109,7 @@
             </div>
           }
           @if (!parcel.validation?.isCertificateUploaded) {
-            <app-no-data
-              [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired"
-            ></app-no-data>
+            <app-no-data [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired"></app-no-data>
           }
         </div>
       }
@@ -194,7 +166,8 @@
               [owner]="parcel.owners[0]"
               [isLast]="true"
               [isReviewStep]="true"
-              [isCrown]="true">
+              [isCrown]="true"
+            >
             </app-parcel-owner-mobile-card>
           }
         }
@@ -217,80 +190,77 @@
               <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-organization'">
                 @if (owner.organizationName) {
                   <span></span>
-                  }{{ owner.organizationName }}
-                  @if (!owner.organizationName) {
+                }
+                {{ owner.organizationName }}
+                @if (!owner.organizationName) {
+                  <div class="no-data-text">Not Applicable</div>
+                }
+              </div>
+              <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-phone-number'">
+                {{ owner.phoneNumber ?? '' | mask: '(000) 000-0000' }}
+              </div>
+              <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-email'">
+                {{ owner.email }}
+              </div>
+              <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-corporate-summary'">
+                @if (owner.corporateSummary) {
+                  @if (isMobile) {
+                    <a (click)="downloadFile(owner.corporateSummary.documentUuid)">{{
+                      owner.corporateSummary.fileName
+                    }}</a>
+                  }
+                  @if (!isMobile) {
+                    <a routerLink="/document/{{ owner.corporateSummary.documentUuid }}" target="_blank">{{
+                      owner.corporateSummary.fileName
+                    }}</a>
+                  }
+                }
+                @if (!owner.corporateSummary) {
+                  <div class="no-data">
                     <div class="no-data-text">Not Applicable</div>
-                  }
-                </div>
-                <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-phone-number'">
-                  {{ owner.phoneNumber ?? '' | mask: '(000) 000-0000' }}
-                </div>
-                <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-email'">
-                  {{ owner.email }}
-                </div>
-                <div [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-owner-corporate-summary'">
-                  @if (owner.corporateSummary) {
-                    @if (isMobile) {
-                      <a (click)="downloadFile(owner.corporateSummary.documentUuid)">{{
-                        owner.corporateSummary.fileName
-                      }}</a>
-                    }
-                    @if (!isMobile) {
-                      <a routerLink="/document/{{ owner.corporateSummary.documentUuid }}" target="_blank">{{
-                        owner.corporateSummary.fileName
-                      }}</a>
-                    }
-                  }
-                  @if (!owner.corporateSummary) {
-                    <div class="no-data">
-                      <div class="no-data-text">Not Applicable</div>
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-          }
-          @if (isMobile) {
-            <div class="subheading2">Land Owner(s)</div>
-            @for (owner of parcel.owners; track owner; let last = $last) {
-              <app-parcel-owner-mobile-card
-                [owner]="owner"
-                [isLast]="last"
-                [isReviewStep]="true"
-                >
-              </app-parcel-owner-mobile-card>
-            }
-          }
-          <div class="full-width">
-            @if (parcel.owners.length === 0) {
-              <app-no-data [showRequired]="showErrors"></app-no-data>
+                  </div>
+                }
+              </div>
             }
           </div>
         }
-        @if (parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN) {
-          <div class="subheading2 grid-1">
-            I confirm that I have provided the ministry or department responsible for this Crown land parcel to the best of
-            my ability in order to avoid processing delays
-          </div>
-        }
-        @if (parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN) {
-          <div class="subheading2 grid-1">
-            I confirm that the owner information provided above matches the current Certificate of Title
-          </div>
-        }
-        <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-is-confirmed-by-applicant'">
-          @if (parcel.isConfirmedByApplicant) {
-            <span>Yes</span>
+        @if (isMobile) {
+          <div class="subheading2">Land Owner(s)</div>
+          @for (owner of parcel.owners; track owner; let last = $last) {
+            <app-parcel-owner-mobile-card [owner]="owner" [isLast]="last" [isReviewStep]="true">
+            </app-parcel-owner-mobile-card>
           }
-          @if (!parcel.isConfirmedByApplicant) {
+        }
+        <div class="full-width">
+          @if (parcel.owners.length === 0) {
             <app-no-data [showRequired]="showErrors"></app-no-data>
           }
         </div>
       }
-    }
-    @if (showEdit) {
-      <div class="edit-button">
-        <button mat-flat-button (click)="onEditParcelsClick($event)" color="accent">Edit Section</button>
+      @if (parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN) {
+        <div class="subheading2 grid-1">
+          I confirm that I have provided the ministry or department responsible for this Crown land parcel to the best
+          of my ability in order to avoid processing delays
+        </div>
+      }
+      @if (parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN) {
+        <div class="subheading2 grid-1">
+          I confirm that the owner information provided above matches the current Certificate of Title
+        </div>
+      }
+      <div class="grid-double" [attr.data-testid]="'parcel-' + (parcelInd + 1) + '-is-confirmed-by-applicant'">
+        @if (parcel.isConfirmedByApplicant) {
+          <span>Yes</span>
+        }
+        @if (!parcel.isConfirmedByApplicant) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
       </div>
     }
-  </div>
+  }
+  @if (showEdit) {
+    <div class="edit-button">
+      <button mat-flat-button (click)="onEditParcelsClick($event)" color="accent">Edit Section</button>
+    </div>
+  }
+</div>

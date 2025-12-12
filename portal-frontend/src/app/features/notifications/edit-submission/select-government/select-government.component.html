@@ -16,7 +16,7 @@
           matInput
           placeholder="Type government"
           type="text"
-          />
+        />
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onChange($event)">
           @for (option of filteredLocalGovernments | async; track option) {
             <mat-option [value]="option.name">
@@ -29,12 +29,10 @@
         localGovernment.errors &&
         localGovernment.errors['required'] &&
         (localGovernment.dirty || localGovernment.touched)
-        ) {
-        <div
-          class="field-error"
-          >
+      ) {
+        <div class="field-error">
           <mat-icon>warning</mat-icon>
-          @if (localGovernment.errors?.['required']) {
+          @if (localGovernment.errors['required']) {
             <div>This field is required</div>
           }
         </div>
@@ -44,10 +42,10 @@
 </form>
 @if (showWarning) {
   <app-warning-banner class="full-row">
-    This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to fill
-    out the form but you will be unable to submit. Please contact the ALC directly as soon as possible: &nbsp;<a
-    href="mailto:ALC.Portal@gov.bc.ca"
-    >ALC.Portal&#64;gov.bc.ca</a
+    This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
+    fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible: &nbsp;<a
+      href="mailto:ALC.Portal@gov.bc.ca"
+      >ALC.Portal&#64;gov.bc.ca</a
     >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
   </app-warning-banner>
 }
