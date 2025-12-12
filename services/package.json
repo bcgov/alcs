@@ -34,7 +34,7 @@
     "@fastify/helmet": "^11.1.1",
     "@fastify/multipart": "^8.3.1",
     "@fastify/static": "^7.0.3",
-    "@grpc/grpc-js": "^1.14.2",
+    "@grpc/grpc-js": "^1.14.3",
     "@grpc/proto-loader": "^0.8.0",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/bullmq": "^10.2.3",
