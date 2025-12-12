@@ -1,60 +1,84 @@
-<div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
-  <div class="grid-double" data-testid="tur-purpose">
-    {{ _applicationSubmission.purpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">
-    Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in
-    proximity to the proposal.
-  </div>
-  <div class="grid-double" data-testid="tur-agricultural-activities">
-    {{ _applicationSubmission.turAgriculturalActivities }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turAgriculturalActivities"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">
-    What steps will you take to reduce potential negative impacts on surrounding agricultural lands?
-  </div>
-  <div class="grid-double" data-testid="tur-reduce-negative-impacts">
-    {{ _applicationSubmission.turReduceNegativeImpacts }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turReduceNegativeImpacts"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">Could this proposal be accommodated on lands outside of the ALR?</div>
-  <div class="grid-double" data-testid="tur-outside-lands">
-    {{ _applicationSubmission.turOutsideLands }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turOutsideLands"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">Total area of corridor</div>
-  <div class="grid-double" data-testid="tur-total-corridor-area">
-    <span *ngIf="_applicationSubmission.turTotalCorridorArea !== null"
-      >{{ _applicationSubmission.turTotalCorridorArea }} ha</span
-    >
-    <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.turTotalCorridorArea === null"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">
-    I confirm that all affected property owners with land in the ALR have been notified.
-  </div>
-  <div class="grid-double" data-testid="tur-all-owners-notified">
-    <span *ngIf="_applicationSubmission.turAllOwnersNotified">Yes</span>
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turAllOwnersNotified"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">Proof of Serving Notice</div>
-  <div class="grid-double" data-testid="tur-proof-of-serving-notice">
-    <ng-container *ngFor="let file of servingNotice">
-      <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-      <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-    </ng-container>
-    <app-no-data [showRequired]="showErrors" *ngIf="servingNotice.length === 0"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
-  <div class="grid-double" data-testid="tur-proposal-map">
-    <ng-container *ngFor="let file of proposalMap">
-      <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-      <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-    </ng-container>
-    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
-  </div>
-  <div *ngIf="showEdit" class="edit-button">
-    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
-  </div>
-</div>
+@if (_applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+    <div class="grid-double" data-testid="tur-purpose">
+      {{ _applicationSubmission.purpose }}
+      @if (!_applicationSubmission.purpose) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">
+      Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in
+      proximity to the proposal.
+    </div>
+    <div class="grid-double" data-testid="tur-agricultural-activities">
+      {{ _applicationSubmission.turAgriculturalActivities }}
+      @if (!_applicationSubmission.turAgriculturalActivities) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">
+      What steps will you take to reduce potential negative impacts on surrounding agricultural lands?
+    </div>
+    <div class="grid-double" data-testid="tur-reduce-negative-impacts">
+      {{ _applicationSubmission.turReduceNegativeImpacts }}
+      @if (!_applicationSubmission.turReduceNegativeImpacts) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">Could this proposal be accommodated on lands outside of the ALR?</div>
+    <div class="grid-double" data-testid="tur-outside-lands">
+      {{ _applicationSubmission.turOutsideLands }}
+      @if (!_applicationSubmission.turOutsideLands) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">Total area of corridor</div>
+    <div class="grid-double" data-testid="tur-total-corridor-area">
+      @if (_applicationSubmission.turTotalCorridorArea !== null) {
+        <span
+          >{{ _applicationSubmission.turTotalCorridorArea }} ha</span
+          >
+        }
+        @if (_applicationSubmission.turTotalCorridorArea === null) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">
+        I confirm that all affected property owners with land in the ALR have been notified.
+      </div>
+      <div class="grid-double" data-testid="tur-all-owners-notified">
+        @if (_applicationSubmission.turAllOwnersNotified) {
+          <span>Yes</span>
+        }
+        @if (!_applicationSubmission.turAllOwnersNotified) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Proof of Serving Notice</div>
+      <div class="grid-double" data-testid="tur-proof-of-serving-notice">
+        @for (file of servingNotice; track file) {
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        }
+        @if (servingNotice.length === 0) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+      <div class="grid-double" data-testid="tur-proposal-map">
+        @for (file of proposalMap; track file) {
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        }
+        @if (proposalMap.length === 0) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      @if (showEdit) {
+        <div class="edit-button">
+          <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+        </div>
+      }
+    </div>
+  }

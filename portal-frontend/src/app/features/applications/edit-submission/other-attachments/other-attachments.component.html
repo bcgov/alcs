@@ -17,66 +17,76 @@
     </div>
   </div>
   <div class="scrollable">
-    <table *ngIf="!isMobile" mat-table [dataSource]="otherFiles">
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Type</th>
-        <td mat-cell *matCellDef="let element">
-          {{element.type?.label}}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let element">
-          {{element.description}}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="fileName">
-        <th mat-header-cell *matHeaderCellDef>File Name</th>
-        <td mat-cell *matCellDef="let element">
-          <a *ngIf="isMobile" (click)="downloadFile(element.documentUuid)">{{ element.fileName }}</a>
-          <a *ngIf="!isMobile" routerLink="/document/{{ element.documentUuid }}" target="_blank">{{
-            element.fileName
-          }}</a>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="actions-column">Action</th>
-        <td mat-cell class="action-buttons-wrapper" *matCellDef="let element">
-          <button (click)="onAddEditAttachment(element)" mat-stroked-button color="primary">Edit</button>
-          <button (click)="onDeleteFile(element)" mat-stroked-button color="accent">Remove</button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-      <tr class="mat-row" *matNoDataRow>
-        <td class="no-data-text" colspan="6">
-          No attachments added. 
-          Use 'Add Attachment' button to the right to add your first attachment
-        </td>
-      </tr>
-    </table>
-    <div *ngIf="isMobile">
-      <app-other-attachment-mobile-card
-        *ngFor="let otherFile of otherFiles; let last = last" 
-        [file]="otherFile"
-        [isLast]="last"
-        (removeClicked)="onDeleteFile(otherFile)"
-        (editClicked)="onAddEditAttachment(otherFile)"
-        (fileClicked)="downloadFile(otherFile.documentUuid)"
-      >
-      </app-other-attachment-mobile-card>
-      <div *ngIf="otherFiles.length === 0" class="no-data-text">No attachments added.</div>
-    </div>
+    @if (!isMobile) {
+      <table mat-table [dataSource]="otherFiles">
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">
+            {{element.type?.label}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let element">
+            {{element.description}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fileName">
+          <th mat-header-cell *matHeaderCellDef>File Name</th>
+          <td mat-cell *matCellDef="let element">
+            @if (isMobile) {
+              <a (click)="downloadFile(element.documentUuid)">{{ element.fileName }}</a>
+            }
+            @if (!isMobile) {
+              <a routerLink="/document/{{ element.documentUuid }}" target="_blank">{{
+                element.fileName
+              }}</a>
+            }
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-column">Action</th>
+          <td mat-cell class="action-buttons-wrapper" *matCellDef="let element">
+            <button (click)="onAddEditAttachment(element)" mat-stroked-button color="primary">Edit</button>
+            <button (click)="onDeleteFile(element)" mat-stroked-button color="accent">Remove</button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="no-data-text" colspan="6">
+            No attachments added.
+            Use 'Add Attachment' button to the right to add your first attachment
+          </td>
+        </tr>
+      </table>
+    }
+    @if (isMobile) {
+      <div>
+        @for (otherFile of otherFiles; track otherFile; let last = $last) {
+          <app-other-attachment-mobile-card
+            [file]="otherFile"
+            [isLast]="last"
+            (removeClicked)="onDeleteFile(otherFile)"
+            (editClicked)="onAddEditAttachment(otherFile)"
+            (fileClicked)="downloadFile(otherFile.documentUuid)"
+            >
+          </app-other-attachment-mobile-card>
+        }
+        @if (otherFiles.length === 0) {
+          <div class="no-data-text">No attachments added.</div>
+        }
+      </div>
+    }
   </div>
 </section>
 <div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  @if (!draftMode) {
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  }
+  @if (draftMode) {
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  }
   <div>
     <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
       Previous<span class="mobile-hidden"> Step</span>

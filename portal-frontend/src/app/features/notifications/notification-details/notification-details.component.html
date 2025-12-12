@@ -1,4 +1,6 @@
-<h2 *ngIf="showEdit" class="page-title">Review & Submit</h2>
+@if (showEdit) {
+  <h2 class="page-title">Review & Submit</h2>
+}
 <section>
   <app-parcel
     [$notificationSubmission]="$notificationSubmission"
@@ -8,159 +10,217 @@
 </section>
 <section>
   <h3>2. Identify Transferee(s)</h3>
-  <div *ngIf="notificationSubmission" class="review-table">
-    <div class="full-width transferee-table" *ngIf="!isMobile">
-      <div class="subheading2">Type</div>
-      <div class="subheading2">Full Name</div>
-      <div class="subheading2">Organization Name</div>
-      <div class="subheading2">Phone</div>
-      <div class="subheading2">Email</div>
-      <ng-container *ngFor="let transferee of notificationSubmission.transferees">
-        <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
-        <div>{{ transferee.displayName }}</div>
-        <div>
-          {{ transferee.organizationName }}
-          <div *ngIf="!transferee.organizationName" class="no-data-text">Not Applicable</div>
+  @if (notificationSubmission) {
+    <div class="review-table">
+      @if (!isMobile) {
+        <div class="full-width transferee-table">
+          <div class="subheading2">Type</div>
+          <div class="subheading2">Full Name</div>
+          <div class="subheading2">Organization Name</div>
+          <div class="subheading2">Phone</div>
+          <div class="subheading2">Email</div>
+          @for (transferee of notificationSubmission.transferees; track transferee) {
+            <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
+            <div>{{ transferee.displayName }}</div>
+            <div>
+              {{ transferee.organizationName }}
+              @if (!transferee.organizationName) {
+                <div class="no-data-text">Not Applicable</div>
+              }
+            </div>
+            <div>
+              @if (transferee.phoneNumber) {
+                <span>{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
+              }
+            </div>
+            <div>{{ transferee.email }}</div>
+          }
         </div>
-        <div>
-          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
+      }
+      @if (isMobile) {
+        <h4 class="transferee-mobile-title">All Transferees</h4>
+        @for (transferee of notificationSubmission?.transferees; track transferee; let last = $last) {
+          <app-transferee-mobile-card
+            [transferee]="transferee"
+            [isLast]="last"
+            [isReviewStep]="true"
+            >
+          </app-transferee-mobile-card>
+        }
+      }
+      @if (notificationSubmission.transferees.length === 0) {
+        <app-no-data
+          [showRequired]="showErrors"
+          class="full-width"
+        ></app-no-data>
+      }
+      @if (showEdit) {
+        <div class="edit-button">
+          <button (click)="onNavigateToStep(1)" color="accent" mat-flat-button>Edit Section</button>
         </div>
-        <div>{{ transferee.email }}</div>
-      </ng-container>
+      }
     </div>
-    <ng-container *ngIf="isMobile">
-      <h4 class="transferee-mobile-title">All Transferees</h4>
-      <app-transferee-mobile-card
-        *ngFor="let transferee of notificationSubmission?.transferees; let last = last"
-        [transferee]="transferee"
-        [isLast]="last"
-        [isReviewStep]="true"
-      >
-      </app-transferee-mobile-card>
-    </ng-container>
-    <app-no-data
-      *ngIf="notificationSubmission.transferees.length === 0"
-      [showRequired]="showErrors"
-      class="full-width"
-    ></app-no-data>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(1)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
+  }
 </section>
 <section>
   <h3>3. Primary Contact</h3>
-  <div *ngIf="notificationSubmission" class="review-table">
-    <div class="subheading2 grid-1">First Name</div>
-    <div class="grid-double">
-      {{ notificationSubmission.contactFirstName }}
-      <app-no-data *ngIf="!notificationSubmission.contactFirstName" [showRequired]="showErrors"></app-no-data>
+  @if (notificationSubmission) {
+    <div class="review-table">
+      <div class="subheading2 grid-1">First Name</div>
+      <div class="grid-double">
+        {{ notificationSubmission.contactFirstName }}
+        @if (!notificationSubmission.contactFirstName) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Last Name</div>
+      <div class="grid-double">
+        {{ notificationSubmission.contactLastName }}
+        @if (!notificationSubmission.contactLastName) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">
+        <span>Organization (optional)</span>
+      </div>
+      <div class="grid-double">
+        {{ notificationSubmission.contactOrganization }}
+        @if (!notificationSubmission.contactOrganization) {
+          <app-no-data [showRequired]="false"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Phone</div>
+      <div class="grid-double">
+        {{ notificationSubmission.contactPhone ?? '' | mask: '(000) 000-0000' }}
+        @if (!notificationSubmission.contactPhone) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+        @if (!(notificationSubmission.contactPhone || '' | phoneValid)) {
+          <app-validation-error
+            >Invalid Format
+          </app-validation-error>
+        }
+      </div>
+      <div class="subheading2 grid-1">Email</div>
+      <div class="grid-double">
+        {{ notificationSubmission.contactEmail }}
+        @if (!notificationSubmission.contactEmail) {
+          <app-no-data
+            [showRequired]="showErrors"
+            errorText="Required Field - Emails must match to be saved"
+          ></app-no-data>
+        }
+        @if (!(notificationSubmission.contactEmail || '' | emailValid)) {
+          <app-validation-error
+            >Invalid Format
+          </app-validation-error>
+        }
+      </div>
+      @if (showEdit) {
+        <div class="edit-button">
+          <button (click)="onNavigateToStep(2)" color="accent" mat-flat-button>Edit Section</button>
+        </div>
+      }
     </div>
-    <div class="subheading2 grid-1">Last Name</div>
-    <div class="grid-double">
-      {{ notificationSubmission.contactLastName }}
-      <app-no-data *ngIf="!notificationSubmission.contactLastName" [showRequired]="showErrors"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
-      <span>Organization (optional)</span>
-    </div>
-    <div class="grid-double">
-      {{ notificationSubmission.contactOrganization }}
-      <app-no-data *ngIf="!notificationSubmission.contactOrganization" [showRequired]="false"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Phone</div>
-    <div class="grid-double">
-      {{ notificationSubmission.contactPhone ?? '' | mask: '(000) 000-0000' }}
-      <app-no-data *ngIf="!notificationSubmission.contactPhone" [showRequired]="showErrors"></app-no-data>
-      <app-validation-error *ngIf="!(notificationSubmission.contactPhone || '' | phoneValid)"
-        >Invalid Format
-      </app-validation-error>
-    </div>
-    <div class="subheading2 grid-1">Email</div>
-    <div class="grid-double">
-      {{ notificationSubmission.contactEmail }}
-      <app-no-data
-        *ngIf="!notificationSubmission.contactEmail"
-        [showRequired]="showErrors"
-        errorText="Required Field - Emails must match to be saved"
-      ></app-no-data>
-      <app-validation-error *ngIf="!(notificationSubmission.contactEmail || '' | emailValid)"
-        >Invalid Format
-      </app-validation-error>
-    </div>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(2)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
+  }
 </section>
 <section>
   <h3>4. Government</h3>
-  <div *ngIf="notificationSubmission" class="review-table">
-    <div class="subheading2 grid-1">Local or First Nation Government</div>
-    <div class="grid-double">
-      {{ localGovernment?.name }}
-      <app-no-data *ngIf="!localGovernment" [showRequired]="showErrors"></app-no-data>
-      <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
-        This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
-        fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
-        &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
-          >236-468-3342</a
-        >
-      </app-warning-banner>
+  @if (notificationSubmission) {
+    <div class="review-table">
+      <div class="subheading2 grid-1">Local or First Nation Government</div>
+      <div class="grid-double">
+        {{ localGovernment?.name }}
+        @if (!localGovernment) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+        @if (showErrors && localGovernment && !localGovernment.hasGuid) {
+          <app-warning-banner class="full-row error">
+            This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
+            fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
+            &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
+            >236-468-3342</a
+            >
+          </app-warning-banner>
+        }
+      </div>
+      @if (showEdit) {
+        <div class="edit-button">
+          <button (click)="onNavigateToStep(3)" color="accent" mat-flat-button>Edit Section</button>
+        </div>
+      }
     </div>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(3)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
+  }
 </section>
-<section *ngIf="notificationSubmission">
-  <h3>5. Purpose of SRW</h3>
-  <app-proposal-details
-    [notificationDocuments]="notificationDocuments"
-    [notificationSubmission]="notificationSubmission"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-proposal-details>
-</section>
+@if (notificationSubmission) {
+  <section>
+    <h3>5. Purpose of SRW</h3>
+    <app-proposal-details
+      [notificationDocuments]="notificationDocuments"
+      [notificationSubmission]="notificationSubmission"
+      [showEdit]="showEdit"
+      [showErrors]="showErrors"
+    ></app-proposal-details>
+  </section>
+}
 <section>
   <h3>6. Optional Attachments</h3>
-  <div *ngIf="notificationSubmission" [ngClass]="{ 'review-table': !isMobile, 'review-list': isMobile }">
-    <div *ngIf="!isMobile" class="other-attachments full-width">
-      <div class="grid-1 subheading2">File Name</div>
-      <div class="grid-2 subheading2">Type</div>
-      <div class="grid-3 subheading2">Description</div>
-
-      <ng-container *ngFor="let file of otherFiles">
-        <div class="grid-1">
-          <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-          <a *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+  @if (notificationSubmission) {
+    <div [ngClass]="{ 'review-table': !isMobile, 'review-list': isMobile }">
+      @if (!isMobile) {
+        <div class="other-attachments full-width">
+          <div class="grid-1 subheading2">File Name</div>
+          <div class="grid-2 subheading2">Type</div>
+          <div class="grid-3 subheading2">Description</div>
+          @for (file of otherFiles; track file) {
+            <div class="grid-1">
+              @if (isMobile) {
+                <a (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              }
+              @if (!isMobile) {
+                <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+              }
+            </div>
+            <div class="grid-2">
+              {{ file.type?.label }}
+              @if (!file.type) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+            <div class="grid-3">
+              {{ file.description }}
+              @if (!file.description) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          }
+          <div class="full-width">
+            @if (otherFiles.length === 0) {
+              <app-no-data [showRequired]="false"></app-no-data>
+            }
+          </div>
         </div>
-        <div class="grid-2">
-          {{ file.type?.label }}
-          <app-no-data *ngIf="!file.type" [showRequired]="showErrors"></app-no-data>
+      }
+      @if (isMobile) {
+        <div>
+          @for (file of otherFiles; track file; let last = $last) {
+            <app-optional-attachments-mobile-card
+              [file]="file"
+              [isLast]="last"
+              (fileClicked)="downloadFile(file.documentUuid)"
+              >
+            </app-optional-attachments-mobile-card>
+          }
+          @if (otherFiles.length === 0) {
+            <app-no-data [showRequired]="false"></app-no-data>
+          }
         </div>
-        <div class="grid-3">
-          {{ file.description }}
-          <app-no-data *ngIf="!file.description" [showRequired]="showErrors"></app-no-data>
+      }
+      @if (showEdit) {
+        <div class="edit-button">
+          <button (click)="onNavigateToStep(5)" color="accent" mat-flat-button>Edit Section</button>
         </div>
-      </ng-container>
-      <div class="full-width">
-        <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
-      </div>
+      }
     </div>
-    <div *ngIf="isMobile">
-      <app-optional-attachments-mobile-card
-        *ngFor="let file of otherFiles; let last = last"
-        [file]="file"
-        [isLast]="last"
-        (fileClicked)="downloadFile(file.documentUuid)"
-      >
-      </app-optional-attachments-mobile-card>
-      <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
-    </div>
-
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(5)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
+  }
 </section>

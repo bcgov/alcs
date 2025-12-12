@@ -8,116 +8,139 @@
         matInput
         formControlName="fileNumber"
         aria-label="search"
-      />
+        />
     </mat-form-field>
 
-    <div *ngIf="profile && profile.isBusiness">
-      <mat-checkbox [formControl]="createdByMe">Only show created by me</mat-checkbox>
-    </div>
+    @if (profile && profile.isBusiness) {
+      <div>
+        <mat-checkbox [formControl]="createdByMe">Only show created by me</mat-checkbox>
+      </div>
+    }
 
     <mat-expansion-panel #panel>
       <mat-expansion-panel-header class="search-toggle">
         <mat-panel-title>{{ panel.expanded ? 'Less' : 'More' }} Search Options</mat-panel-title>
       </mat-expansion-panel-header>
       <div class="search-form">
-        <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
-          <mat-label for="filterBy">Filter By</mat-label>
-          <mat-form-field appearance="outline">
-            <mat-select id="filterBy" [formControl]="filterBy">
-              <mat-option value="created">Created By {{ profile.government }}</mat-option>
-              <mat-option value="submitted">Submitted To {{ profile.government }}</mat-option>
-            </mat-select>
-            <button
-              class="clear-button"
-              *ngIf="filterBy.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="filterBy.reset()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-        </div>
-        <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
-          <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
-          <mat-form-field appearance="outline">
-            <input id="governmentFileNumber" matInput [formControl]="governmentFileNumber" />
-            <button
-              class="clear-button"
-              *ngIf="governmentFileNumber.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="governmentFileNumber.reset()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-        </div>
+        @if (profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)) {
+          <div>
+            <mat-label for="filterBy">Filter By</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select id="filterBy" [formControl]="filterBy">
+                <mat-option value="created">Created By {{ profile.government }}</mat-option>
+                <mat-option value="submitted">Submitted To {{ profile.government }}</mat-option>
+              </mat-select>
+              @if (filterBy.value) {
+                <button
+                  class="clear-button"
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  (click)="filterBy.reset()"
+                  >
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </mat-form-field>
+          </div>
+        }
+        @if (profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)) {
+          <div>
+            <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
+            <mat-form-field appearance="outline">
+              <input id="governmentFileNumber" matInput [formControl]="governmentFileNumber" />
+              @if (governmentFileNumber.value) {
+                <button
+                  class="clear-button"
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  (click)="governmentFileNumber.reset()"
+                  >
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </mat-form-field>
+          </div>
+        }
         <div>
           <label for="name">Name</label>
           <mat-form-field appearance="outline">
             <input id="name" matInput [formControl]="nameControl" minlength="3" />
-            <button
-              class="clear-button"
-              *ngIf="nameControl.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="nameControl.reset()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+            @if (nameControl.value) {
+              <button
+                class="clear-button"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="nameControl.reset()"
+                >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
           </mat-form-field>
-          <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>
-          </div>
+          @if (nameControl.invalid && (nameControl.dirty || nameControl.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (nameControl.errors?.['minlength']) {
+                <div>Enter 3 or more characters to search by name</div>
+              }
+            </div>
+          }
         </div>
         <div>
           <label for="pid">PID</label>
           <mat-form-field appearance="outline">
             <input id="pid" matInput [formControl]="pidControl" minlength="9" maxlength="12" mask="000-000-000" />
-            <button
-              class="clear-button"
-              *ngIf="pidControl.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="pidControl.reset()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+            @if (pidControl.value) {
+              <button
+                class="clear-button"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="pidControl.reset()"
+                >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
           </mat-form-field>
-          <div *ngIf="pidInvalid" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
-          </div>
+          @if (pidInvalid) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (pidControl.errors?.['mask']) {
+                <div>PID must be 9 digits including leading zeroes</div>
+              }
+            </div>
+          }
         </div>
         <div
           [ngClass]="{
             'full-width': profile && (profile.isLocalGovernment || profile.isFirstNationGovernment)
           }"
-        >
+          >
           <label for="civicAddress">Civic Address</label>
           <mat-form-field appearance="outline">
             <input id="civicAddress" matInput [formControl]="civicAddressControl" minlength="3" />
-            <button
-              class="clear-button"
-              *ngIf="civicAddressControl.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="civicAddressControl.reset()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+            @if (civicAddressControl.value) {
+              <button
+                class="clear-button"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="civicAddressControl.reset()"
+                >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
           </mat-form-field>
-          <div *ngIf="civicAddressInvalid" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="civicAddressControl.errors?.['minlength']">Enter 3 or more characters to search</div>
-          </div>
+          @if (civicAddressInvalid) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (civicAddressControl.errors?.['minlength']) {
+                <div>Enter 3 or more characters to search</div>
+              }
+            </div>
+          }
         </div>
         <div>
           <label for="type">Type</label>
@@ -125,44 +148,50 @@
             #fileTypeDropDown
             [setFileTypes]="previousFileTypes"
             (fileTypeChange)="onFileTypeChange($event)"
-          />
+            />
         </div>
         <div>
           <mat-label for="status">Status</mat-label>
           <mat-form-field appearance="outline">
             <mat-select [multiple]="true" id="status" [formControl]="portalStatusControl">
-              <mat-option *ngFor="let status of allStatuses" [value]="status.code">
-                {{ status.label }}
-              </mat-option>
+              @for (status of allStatuses; track status) {
+                <mat-option [value]="status.code">
+                  {{ status.label }}
+                </mat-option>
+              }
             </mat-select>
-            <button
-              class="clear-button"
-              *ngIf="portalStatusControl.value?.length"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="portalStatusControl.reset()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+            @if (portalStatusControl.value?.length) {
+              <button
+                class="clear-button"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="portalStatusControl.reset()"
+                >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
           </mat-form-field>
         </div>
-        <div *ngIf="profile && !profile.isFirstNationGovernment && !profile.isLocalGovernment">
-          <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
-          <mat-form-field appearance="outline">
-            <input id="governmentFileNumber" matInput [formControl]="governmentFileNumber" />
-            <button
-              class="clear-button"
-              *ngIf="governmentFileNumber.value"
-              matSuffix
-              mat-icon-button
-              aria-label="Clear"
-              (click)="governmentFileNumber.reset()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-        </div>
+        @if (profile && !profile.isFirstNationGovernment && !profile.isLocalGovernment) {
+          <div>
+            <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
+            <mat-form-field appearance="outline">
+              <input id="governmentFileNumber" matInput [formControl]="governmentFileNumber" />
+              @if (governmentFileNumber.value) {
+                <button
+                  class="clear-button"
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  (click)="governmentFileNumber.reset()"
+                  >
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </mat-form-field>
+          </div>
+        }
       </div>
     </mat-expansion-panel>
 
@@ -173,74 +202,81 @@
   </form>
 
   <div class="search-fields-wrapper search-result-wrapper">
-    <div *ngIf="isLoading" class="center">
-      <mat-spinner></mat-spinner>
-    </div>
-    <mat-tab-group
-      [selectedIndex]="tabIndex"
-      *ngIf="!isLoading"
-      mat-align-tabs="start"
-      mat-stretch-tabs
-      #searchResultTabs
-    >
-      <mat-tab label="applications">
-        <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
-        <app-inbox-list
-          *ngIf="isMobile"
-          [items]="applications"
-          [totalCount]="applicationTotal"
-          (loadMore)="onLoadMore('APP')"
-          type="Application"
+    @if (isLoading) {
+      <div class="center">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+    @if (!isLoading) {
+      <mat-tab-group
+        [selectedIndex]="tabIndex"
+        mat-align-tabs="start"
+        mat-stretch-tabs
+        #searchResultTabs
         >
-        </app-inbox-list>
-        <app-inbox-table
-          *ngIf="!isMobile"
-          [items]="applications"
-          [totalCount]="applicationTotal"
-          (tableChange)="onTableChange($event)"
-          [pageIndex]="pageIndex"
-          type="Application"
-        ></app-inbox-table>
-      </mat-tab>
-
-      <mat-tab label="notices-of-intent">
-        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
-        <app-inbox-list
-          *ngIf="isMobile"
-          [items]="noticeOfIntents"
-          [totalCount]="noticeOfIntentTotal"
-          (loadMore)="onLoadMore('NOI')"
-          type="Notice of Intent"
-        >
-        </app-inbox-list>
-        <app-inbox-table
-          *ngIf="!isMobile"
-          [items]="noticeOfIntents"
-          [totalCount]="noticeOfIntentTotal"
-          (tableChange)="onTableChange($event)"
-          type="Notice of Intent"
-        ></app-inbox-table>
-      </mat-tab>
-
-      <mat-tab label="notifications">
-        <ng-template mat-tab-label> Notification of SRW: {{ notificationTotal }}</ng-template>
-        <app-inbox-list
-          *ngIf="isMobile"
-          [items]="notifications"
-          [totalCount]="notificationTotal"
-          (loadMore)="onLoadMore('NOTI')"
-          type="Notification"
-        >
-        </app-inbox-list>
-        <app-inbox-table
-          *ngIf="!isMobile"
-          [items]="notifications"
-          type="Notification"
-          [totalCount]="notificationTotal"
-          (tableChange)="onTableChange($event)"
-        >
-        </app-inbox-table>
-      </mat-tab>
-    </mat-tab-group>
+        <mat-tab label="applications">
+          <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
+          @if (isMobile) {
+            <app-inbox-list
+              [items]="applications"
+              [totalCount]="applicationTotal"
+              (loadMore)="onLoadMore('APP')"
+              type="Application"
+              >
+            </app-inbox-list>
+          }
+          @if (!isMobile) {
+            <app-inbox-table
+              [items]="applications"
+              [totalCount]="applicationTotal"
+              (tableChange)="onTableChange($event)"
+              [pageIndex]="pageIndex"
+              type="Application"
+            ></app-inbox-table>
+          }
+        </mat-tab>
+        <mat-tab label="notices-of-intent">
+          <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
+          @if (isMobile) {
+            <app-inbox-list
+              [items]="noticeOfIntents"
+              [totalCount]="noticeOfIntentTotal"
+              (loadMore)="onLoadMore('NOI')"
+              type="Notice of Intent"
+              >
+            </app-inbox-list>
+          }
+          @if (!isMobile) {
+            <app-inbox-table
+              [items]="noticeOfIntents"
+              [totalCount]="noticeOfIntentTotal"
+              (tableChange)="onTableChange($event)"
+              type="Notice of Intent"
+            ></app-inbox-table>
+          }
+        </mat-tab>
+        <mat-tab label="notifications">
+          <ng-template mat-tab-label> Notification of SRW: {{ notificationTotal }}</ng-template>
+          @if (isMobile) {
+            <app-inbox-list
+              [items]="notifications"
+              [totalCount]="notificationTotal"
+              (loadMore)="onLoadMore('NOTI')"
+              type="Notification"
+              >
+            </app-inbox-list>
+          }
+          @if (!isMobile) {
+            <app-inbox-table
+              [items]="notifications"
+              type="Notification"
+              [totalCount]="notificationTotal"
+              (tableChange)="onTableChange($event)"
+              >
+            </app-inbox-table>
+          }
+        </mat-tab>
+      </mat-tab-group>
+    }
   </div>
 </section>

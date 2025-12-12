@@ -3,23 +3,25 @@
   [ngClass]="{
     'double-table': !!data2
   }"
->
+  >
   <form [formGroup]="form">
     <div
       class="soil-table"
       [ngClass]="{
         'double-table': !!data2
       }"
-    >
+      >
       <div></div>
       <div>
         <span class="subheading1">{{ tableHeader }}</span>
       </div>
-      <div *ngIf="!!data2">
-        <span class="subheading1">{{ tableHeader2 }}</span>
-      </div>
+      @if (!!data2) {
+        <div>
+          <span class="subheading1">{{ tableHeader2 }}</span>
+        </div>
+      }
 
-      <ng-container *ngIf="showVolumeField">
+      @if (showVolumeField) {
         <div class="label">
           <label for="{{ 'volume' + idSuffix }}">Volume</label>
         </div>
@@ -34,35 +36,45 @@
               matInput
               formControlName="volume"
               (focus)="onInputFocus($event)"
-            />
+              />
             <span matTextSuffix>m<sup>3</sup></span>
           </mat-form-field>
-          <div *ngIf="volume.invalid && (volume.dirty || volume.touched)" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="volume.errors?.['required']">This field is required</div>
-          </div>
+          @if (volume.invalid && (volume.dirty || volume.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (volume.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-        <div *ngIf="data2">
-          <mat-form-field appearance="outline">
-            <input
-              min="0.01"
-              id="volume2"
-              attr.aria-label="{{ 'volume' + idSuffix2 }}"
-              mask="separator.2"
-              thousandSeparator=","
-              separatorLimit="9999999999"
-              matInput
-              formControlName="volume2"
-              (focus)="onInputFocus($event)"
-            />
-            <span matTextSuffix>m<sup>3</sup></span>
-          </mat-form-field>
-          <div *ngIf="volume2.invalid && (volume2.dirty || volume2.touched)" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="volume2.errors?.['required']">This field is required</div>
+        @if (data2) {
+          <div>
+            <mat-form-field appearance="outline">
+              <input
+                min="0.01"
+                id="volume2"
+                attr.aria-label="{{ 'volume' + idSuffix2 }}"
+                mask="separator.2"
+                thousandSeparator=","
+                separatorLimit="9999999999"
+                matInput
+                formControlName="volume2"
+                (focus)="onInputFocus($event)"
+                />
+              <span matTextSuffix>m<sup>3</sup></span>
+            </mat-form-field>
+            @if (volume2.invalid && (volume2.dirty || volume2.touched)) {
+              <div class="field-error">
+                <mat-icon>warning</mat-icon>
+                @if (volume2.errors?.['required']) {
+                  <div>This field is required</div>
+                }
+              </div>
+            }
           </div>
-        </div>
-      </ng-container>
+        }
+      }
 
       <div class="label">
         <label for="{{ 'area' + idSuffix }}">Area</label>
@@ -78,34 +90,44 @@
             matInput
             formControlName="area"
             (focus)="onInputFocus($event)"
-          />
+            />
           <span matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
-        <div *ngIf="area.invalid && (area.dirty || area.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="area.errors?.['required']">This field is required</div>
-        </div>
+        @if (area.invalid && (area.dirty || area.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (area.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
-      <div *ngIf="!!data2">
-        <mat-form-field appearance="outline">
-          <input
-            min="0.01"
-            id="area2"
-            attr.aria-label="{{ 'area' + idSuffix2 }}"
-            mask="separator.5"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="area2"
-            (focus)="onInputFocus($event)"
-          />
-          <span matTextSuffix>m<sup>2</sup></span>
-        </mat-form-field>
-        <div *ngIf="area2.invalid && (area2.dirty || area2.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="area2.errors?.['required']">This field is required</div>
+      @if (!!data2) {
+        <div>
+          <mat-form-field appearance="outline">
+            <input
+              min="0.01"
+              id="area2"
+              attr.aria-label="{{ 'area' + idSuffix2 }}"
+              mask="separator.5"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              matInput
+              formControlName="area2"
+              (focus)="onInputFocus($event)"
+              />
+            <span matTextSuffix>m<sup>2</sup></span>
+          </mat-form-field>
+          @if (area2.invalid && (area2.dirty || area2.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (area2.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
 
       <div class="label">
         <label for="{{ 'maximumDepth' + idSuffix }}">Maximum Depth</label>
@@ -121,34 +143,44 @@
             matInput
             formControlName="maximumDepth"
             (focus)="onInputFocus($event)"
-          />
+            />
           <span matTextSuffix>m</span>
         </mat-form-field>
-        <div *ngIf="maximumDepth.invalid && (maximumDepth.dirty || maximumDepth.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="maximumDepth.errors?.['required']">This field is required</div>
-        </div>
+        @if (maximumDepth.invalid && (maximumDepth.dirty || maximumDepth.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (maximumDepth.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
-      <div *ngIf="!!data2">
-        <mat-form-field appearance="outline">
-          <input
-            min="0.01"
-            id="maximumDepth2"
-            attr.aria-label="{{ 'maximumDepth' + idSuffix2 }}"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="maximumDepth2"
-            (focus)="onInputFocus($event)"
-          />
-          <span matTextSuffix>m</span>
-        </mat-form-field>
-        <div *ngIf="maximumDepth2.invalid && (maximumDepth2.dirty || maximumDepth2.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="maximumDepth2.errors?.['required']">This field is required</div>
+      @if (!!data2) {
+        <div>
+          <mat-form-field appearance="outline">
+            <input
+              min="0.01"
+              id="maximumDepth2"
+              attr.aria-label="{{ 'maximumDepth' + idSuffix2 }}"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              matInput
+              formControlName="maximumDepth2"
+              (focus)="onInputFocus($event)"
+              />
+            <span matTextSuffix>m</span>
+          </mat-form-field>
+          @if (maximumDepth2.invalid && (maximumDepth2.dirty || maximumDepth2.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (maximumDepth2.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
 
       <div class="label">
         <label for="{{ 'averageDepth' + idSuffix }}">Average Depth</label>
@@ -164,34 +196,44 @@
             matInput
             formControlName="averageDepth"
             (focus)="onInputFocus($event)"
-          />
+            />
           <span matTextSuffix>m</span>
         </mat-form-field>
-        <div *ngIf="averageDepth.invalid && (averageDepth.dirty || averageDepth.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="averageDepth.errors?.['required']">This field is required</div>
-        </div>
+        @if (averageDepth.invalid && (averageDepth.dirty || averageDepth.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (averageDepth.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
-      <div *ngIf="!!data2">
-        <mat-form-field appearance="outline">
-          <input
-            min="0.01"
-            id="averageDepth2"
-            attr.aria-label="{{ 'averageDepth' + idSuffix2 }}"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="averageDepth2"
-            (focus)="onInputFocus($event)"
-          />
-          <span matTextSuffix>m</span>
-        </mat-form-field>
-        <div *ngIf="averageDepth2.invalid && (averageDepth2.dirty || averageDepth2.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="averageDepth2.errors?.['required']">This field is required</div>
+      @if (!!data2) {
+        <div>
+          <mat-form-field appearance="outline">
+            <input
+              min="0.01"
+              id="averageDepth2"
+              attr.aria-label="{{ 'averageDepth' + idSuffix2 }}"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              matInput
+              formControlName="averageDepth2"
+              (focus)="onInputFocus($event)"
+              />
+            <span matTextSuffix>m</span>
+          </mat-form-field>
+          @if (averageDepth2.invalid && (averageDepth2.dirty || averageDepth2.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (averageDepth2.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
     </div>
   </form>
 </div>

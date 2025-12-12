@@ -1,8 +1,10 @@
 <ng-template #header>
   <div class="header">
-    <h6 *ngIf="applicationSubmission">
-      Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}
-    </h6>
+    @if (applicationSubmission) {
+      <h6>
+        Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}
+      </h6>
+    }
   </div>
 </ng-template>
 
@@ -11,187 +13,213 @@
   #cdkStepper
   (selectionChange)="onStepChange()"
   (beforeSwitchStep)="switchStep($event)"
->
+  >
   <cdk-step label="Parcel Details">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.AppParcel">
-      <app-parcel-details
-        [$applicationSubmission]="$applicationSubmission"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (componentInitialized)="onParcelDetailsInitialized()"
-        (exit)="onExit()"
-      ></app-parcel-details>
-    </div>
+    @if (cdkStepper.selectedIndex === editAppSteps.AppParcel) {
+      <div>
+        <app-parcel-details
+          [$applicationSubmission]="$applicationSubmission"
+          [showErrors]="showValidationErrors"
+          [draftMode]="true"
+          (navigateToStep)="switchStep($event)"
+          (componentInitialized)="onParcelDetailsInitialized()"
+          (exit)="onExit()"
+        ></app-parcel-details>
+      </div>
+    }
   </cdk-step>
   <cdk-step label="Other Owned Parcels">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.OtherParcel">
-      <app-other-parcels
-        [showErrors]="showValidationErrors"
-        [$applicationSubmission]="$applicationSubmission"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-other-parcels>
-    </div>
+    @if (cdkStepper.selectedIndex === editAppSteps.OtherParcel) {
+      <div>
+        <app-other-parcels
+          [showErrors]="showValidationErrors"
+          [$applicationSubmission]="$applicationSubmission"
+          [draftMode]="true"
+          (navigateToStep)="switchStep($event)"
+          (exit)="onExit()"
+        ></app-other-parcels>
+      </div>
+    }
   </cdk-step>
   <cdk-step label="Primary Contact">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
-      <app-primary-contact
-        [showErrors]="showValidationErrors"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-primary-contact>
-    </div>
+    @if (cdkStepper.selectedIndex === editAppSteps.PrimaryContact) {
+      <div>
+        <app-primary-contact
+          [showErrors]="showValidationErrors"
+          [$applicationSubmission]="$applicationSubmission"
+          [$applicationDocuments]="$applicationDocuments"
+          [draftMode]="true"
+          (navigateToStep)="switchStep($event)"
+          (exit)="onExit()"
+        ></app-primary-contact>
+      </div>
+    }
   </cdk-step>
   <cdk-step label="Government">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Government">
-      <app-select-government
-        [showErrors]="showValidationErrors"
-        [$applicationSubmission]="$applicationSubmission"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-select-government>
-    </div>
+    @if (cdkStepper.selectedIndex === editAppSteps.Government) {
+      <div>
+        <app-select-government
+          [showErrors]="showValidationErrors"
+          [$applicationSubmission]="$applicationSubmission"
+          [draftMode]="true"
+          (navigateToStep)="switchStep($event)"
+          (exit)="onExit()"
+        ></app-select-government>
+      </div>
+    }
   </cdk-step>
   <cdk-step label="Land Use">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.LandUse">
-      <app-land-use
-        [$applicationSubmission]="$applicationSubmission"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-land-use>
-    </div>
+    @if (cdkStepper.selectedIndex === editAppSteps.LandUse) {
+      <div>
+        <app-land-use
+          [$applicationSubmission]="$applicationSubmission"
+          [showErrors]="showValidationErrors"
+          [draftMode]="true"
+          (navigateToStep)="switchStep($event)"
+          (exit)="onExit()"
+        ></app-land-use>
+      </div>
+    }
   </cdk-step>
   <cdk-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="applicationSubmission && cdkStepper.selectedIndex === editAppSteps.Proposal">
-      <app-nfu-proposal
-        *ngIf="applicationSubmission.typeCode === 'NFUP'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-nfu-proposal>
-      <app-tur-proposal
-        *ngIf="applicationSubmission.typeCode === 'TURP'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [draftMode]="true"
-        [showErrors]="showValidationErrors"
-        (navigateToStep)="switchStep($event)"
-      ></app-tur-proposal>
-      <app-subd-proposal
-        *ngIf="applicationSubmission.typeCode === 'SUBD'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [draftMode]="true"
-        [showErrors]="showValidationErrors"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-subd-proposal>
-      <app-roso-proposal
-        *ngIf="applicationSubmission.typeCode === 'ROSO'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-roso-proposal>
-      <app-pofo-proposal
-        *ngIf="applicationSubmission.typeCode === 'POFO'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-pofo-proposal>
-      <app-pfrs-proposal
-        *ngIf="applicationSubmission.typeCode === 'PFRS'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-pfrs-proposal>
-      <app-naru-proposal
-        *ngIf="applicationSubmission.typeCode === 'NARU'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-naru-proposal>
-      <app-excl-proposal
-        *ngIf="applicationSubmission.typeCode === 'EXCL'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-excl-proposal>
-      <app-incl-proposal
-        *ngIf="applicationSubmission.typeCode === 'INCL'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-incl-proposal>
-      <app-cove-proposal
-        *ngIf="applicationSubmission.typeCode === 'COVE'"
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [showErrors]="showValidationErrors"
-        [draftMode]="true"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-cove-proposal>
-    </div>
+    @if (applicationSubmission && cdkStepper.selectedIndex === editAppSteps.Proposal) {
+      <div>
+        @if (applicationSubmission.typeCode === 'NFUP') {
+          <app-nfu-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-nfu-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'TURP') {
+          <app-tur-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [draftMode]="true"
+            [showErrors]="showValidationErrors"
+            (navigateToStep)="switchStep($event)"
+          ></app-tur-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'SUBD') {
+          <app-subd-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [draftMode]="true"
+            [showErrors]="showValidationErrors"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-subd-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'ROSO') {
+          <app-roso-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-roso-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'POFO') {
+          <app-pofo-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-pofo-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'PFRS') {
+          <app-pfrs-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-pfrs-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'NARU') {
+          <app-naru-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-naru-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'EXCL') {
+          <app-excl-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-excl-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'INCL') {
+          <app-incl-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-incl-proposal>
+        }
+        @if (applicationSubmission.typeCode === 'COVE') {
+          <app-cove-proposal
+            [$applicationSubmission]="$applicationSubmission"
+            [$applicationDocuments]="$applicationDocuments"
+            [showErrors]="showValidationErrors"
+            [draftMode]="true"
+            (navigateToStep)="switchStep($event)"
+            (exit)="onExit()"
+          ></app-cove-proposal>
+        }
+      </div>
+    }
   </cdk-step>
   <cdk-step label="Upload Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.Attachments">
-      <app-other-attachments
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [draftMode]="true"
-        [showErrors]="showValidationErrors"
-        (navigateToStep)="switchStep($event)"
-        (exit)="onExit()"
-      ></app-other-attachments>
-    </div>
+    @if (cdkStepper.selectedIndex === editAppSteps.Attachments) {
+      <div>
+        <app-other-attachments
+          [$applicationSubmission]="$applicationSubmission"
+          [$applicationDocuments]="$applicationDocuments"
+          [draftMode]="true"
+          [showErrors]="showValidationErrors"
+          (navigateToStep)="switchStep($event)"
+          (exit)="onExit()"
+        ></app-other-attachments>
+      </div>
+    }
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit">
-      <app-review-and-submit
-        [$applicationSubmission]="$applicationSubmission"
-        [$applicationDocuments]="$applicationDocuments"
-        [originalSubmissionUuid]="originalSubmissionUuid"
-        [draftMode]="true"
-        (exit)="onExit()"
-        (submit)="onSubmit()"
-      ></app-review-and-submit>
-    </div>
+    @if (cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit) {
+      <div>
+        <app-review-and-submit
+          [$applicationSubmission]="$applicationSubmission"
+          [$applicationDocuments]="$applicationDocuments"
+          [originalSubmissionUuid]="originalSubmissionUuid"
+          [draftMode]="true"
+          (exit)="onExit()"
+          (submit)="onSubmit()"
+        ></app-review-and-submit>
+      </div>
+    }
   </cdk-step>
 </app-custom-stepper>

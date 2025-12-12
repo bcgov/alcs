@@ -1,43 +1,59 @@
-<div *ngIf="applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">How many hectares are proposed for non-farm use?</div>
-  <div class="grid-double">
-    {{ applicationSubmission.nfuHectares }} <span *ngIf="applicationSubmission.nfuHectares">ha</span>
-    <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuHectares === null"></app-no-data>
+@if (applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">How many hectares are proposed for non-farm use?</div>
+    <div class="grid-double">
+      {{ applicationSubmission.nfuHectares }} @if (applicationSubmission.nfuHectares) {
+      <span>ha</span>
+    }
+    @if (applicationSubmission.nfuHectares === null) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ applicationSubmission.purpose }}
-
-    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.purpose"></app-no-data>
+    @if (!applicationSubmission.purpose) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">Could this proposal be accommodated on lands outside of the ALR?</div>
   <div class="grid-double">
     {{ applicationSubmission.nfuOutsideLands }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuOutsideLands"></app-no-data>
+    @if (!applicationSubmission.nfuOutsideLands) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
   <div class="grid-double">
     {{ applicationSubmission.nfuAgricultureSupport }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuAgricultureSupport"></app-no-data>
+    @if (!applicationSubmission.nfuAgricultureSupport) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <ng-container *ngFor="let map of proposalMap">
+    @for (map of proposalMap; track map) {
       <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
       <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
-    </ng-container>
-    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+    }
+    @if (proposalMap.length === 0) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed non-farm use?
   </div>
   <div class="grid-double">
-    <span *ngIf="applicationSubmission.nfuWillImportFill !== null">{{
-      applicationSubmission.nfuWillImportFill ? 'Yes' : 'No'
-    }}</span>
-    <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuWillImportFill === null"></app-no-data>
+    @if (applicationSubmission.nfuWillImportFill !== null) {
+      <span>{{
+        applicationSubmission.nfuWillImportFill ? 'Yes' : 'No'
+      }}</span>
+    }
+    @if (applicationSubmission.nfuWillImportFill === null) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-  <ng-container *ngIf="applicationSubmission.nfuWillImportFill === true">
+  @if (applicationSubmission.nfuWillImportFill === true) {
     <div class="full-width">
       <hr />
     </div>
@@ -47,39 +63,51 @@
     <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
     <div class="grid-double">
       {{ applicationSubmission.nfuFillTypeDescription }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillTypeDescription"></app-no-data>
+      @if (!applicationSubmission.nfuFillTypeDescription) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
     </div>
-
     <div class="full-width soil-table">
       <div></div>
       <div class="subheading2">Fill to be Placed</div>
-
       <div class="subheading2">Area</div>
       <div>
         {{ applicationSubmission.nfuTotalFillArea }}
-        <span *ngIf="applicationSubmission.nfuTotalFillArea !== null">m<sup>2</sup></span>
-        <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuTotalFillArea === null"></app-no-data>
+        @if (applicationSubmission.nfuTotalFillArea !== null) {
+          <span>m<sup>2</sup></span>
+        }
+        @if (applicationSubmission.nfuTotalFillArea === null) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
       </div>
-
       <div class="subheading2">Maximum Depth</div>
       <div>
         {{ applicationSubmission.nfuMaxFillDepth }}
-        <span *ngIf="applicationSubmission.nfuMaxFillDepth !== null">m</span>
-        <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuMaxFillDepth === null"></app-no-data>
+        @if (applicationSubmission.nfuMaxFillDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.nfuMaxFillDepth === null) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
       </div>
-
       <div class="subheading2">Average Depth</div>
       <div>
         {{ applicationSubmission.nfuAverageFillDepth }}
-        <span *ngIf="applicationSubmission.nfuAverageFillDepth !== null">m</span>
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="applicationSubmission.nfuAverageFillDepth === null"
-        ></app-no-data>
+        @if (applicationSubmission.nfuAverageFillDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.nfuAverageFillDepth === null) {
+          <app-no-data
+            [showRequired]="showErrors"
+          ></app-no-data>
+        }
       </div>
     </div>
-  </ng-container>
-  <div *ngIf="showEdit" class="edit-button">
-    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
-  </div>
+  }
+  @if (showEdit) {
+    <div class="edit-button">
+      <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+    </div>
+  }
 </div>
+}

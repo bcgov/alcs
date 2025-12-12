@@ -1,43 +1,51 @@
-<div *ngIf="applicationSubmission" class="review-table">
-  <div class="subheading2 full-width">Provide the name and contact information for all transferees</div>
-  <div class="full-width transferee-table">
-    <div class="subheading2">Type</div>
-    <div class="subheading2">Full Name</div>
-    <div class="subheading2">Organization Name</div>
-    <ng-container *ngFor="let transferee of transferees">
-      <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
-      <div>{{ transferee.displayName }}</div>
-      <div>
-        {{ transferee.organizationName }}
-        <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
-      </div>
-    </ng-container>
+@if (applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 full-width">Provide the name and contact information for all transferees</div>
+    <div class="full-width transferee-table">
+      <div class="subheading2">Type</div>
+      <div class="subheading2">Full Name</div>
+      <div class="subheading2">Organization Name</div>
+      @for (transferee of transferees; track transferee) {
+        <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
+        <div>{{ transferee.displayName }}</div>
+        <div>
+          {{ transferee.organizationName }}
+          @if (!transferee.organizationName) {
+            <app-no-data [showRequired]="false"></app-no-data>
+          }
+        </div>
+      }
+    </div>
+    @if (transferees.length === 0) {
+      <app-no-data class="full-width"></app-no-data>
+    }
+    <div class="subheading2 grid-1">How many hectares will the covenant impact?</div>
+    <div class="grid-double">
+      {{ applicationSubmission.coveAreaImpacted }}@if (applicationSubmission.coveAreaImpacted) {
+      <span> ha</span>
+    }
   </div>
-  <app-no-data class="full-width" *ngIf="transferees.length === 0"></app-no-data>
-
-  <div class="subheading2 grid-1">How many hectares will the covenant impact?</div>
-  <div class="grid-double">
-    {{ applicationSubmission.coveAreaImpacted }}<span *ngIf="applicationSubmission.coveAreaImpacted"> ha</span>
-  </div>
-
   <div class="subheading2 grid-1">What is the purpose of this covenant?</div>
   <div class="grid-double">
     {{ applicationSubmission.purpose }}
   </div>
-
   <div class="subheading2 grid-1">Explain how the covenant impacts the use of agricultural land for farm purposes.</div>
   <div class="grid-double">
-    <span *ngIf="applicationSubmission.coveFarmImpact !== null">
-      {{ applicationSubmission.coveFarmImpact }}
-    </span>
+    @if (applicationSubmission.coveFarmImpact !== null) {
+      <span>
+        {{ applicationSubmission.coveFarmImpact }}
+      </span>
+    }
   </div>
-
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <ng-container *ngFor="let map of proposalMap">
+    @for (map of proposalMap; track map) {
       <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
       <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
-    </ng-container>
-    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+    }
+    @if (proposalMap.length === 0) {
+      <app-no-data></app-no-data>
+    }
   </div>
 </div>
+}

@@ -4,76 +4,95 @@
   </div>
 
   <div mat-dialog-content class="change-app-type-modal">
-    <div *ngIf="stepIdx === warningStep">
-      <div class="step-body">
-        <app-warning-banner>
-          <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want to
-          continue?
-        </app-warning-banner>
+    @if (stepIdx === warningStep) {
+      <div>
+        <div class="step-body">
+          <app-warning-banner>
+            <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want to
+            continue?
+          </app-warning-banner>
+        </div>
       </div>
-    </div>
+    }
 
     <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
       <div class="subheading2 step-description">Select an option to learn more about the application type.</div>
       <mat-radio-group class="app-type-radio-group" (change)="onAppTypeSelected($event)" color="primary" required>
-        <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
-          {{ appType.portalLabel }}
-        </mat-radio-button>
+        @for (appType of applicationTypes; track appType) {
+          <mat-radio-button [value]="appType.code" class="radio-option">
+            {{ appType.portalLabel }}
+          </mat-radio-button>
+        }
       </mat-radio-group>
 
-      <div *ngIf="stepIdx === applicationTypeStep">
-        <div id="warningBanner" class="warning-banner" *ngIf="selectedAppType">
-          <div>
-            <b class="app-type-label">{{ selectedAppType.portalLabel }}</b>
-          </div>
-          <div
-            id="appTypeDescription"
-            [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
-            [innerHtml]="selectedAppType.htmlDescription"
-          ></div>
-          <span
-            class="read-more-btn"
-            [ngClass]="{ 'display-none': !isReadMoreVisible }"
-            *ngIf="!!selectedAppType"
-            (click)="onReadMoreClicked()"
-            ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u>
-          </span>
+      @if (stepIdx === applicationTypeStep) {
+        <div>
+          @if (selectedAppType) {
+            <div id="warningBanner" class="warning-banner">
+              <div>
+                <b class="app-type-label">{{ selectedAppType.portalLabel }}</b>
+              </div>
+              <div
+                id="appTypeDescription"
+                [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+                [innerHtml]="selectedAppType.htmlDescription"
+              ></div>
+              @if (!!selectedAppType) {
+                <span
+                  class="read-more-btn"
+                  [ngClass]="{ 'display-none': !isReadMoreVisible }"
+                  (click)="onReadMoreClicked()"
+                  ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u>
+                </span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    @if (stepIdx === confirmationStep) {
+      <div>
+        <div class="step-header">
+          <h5>Are you sure you want to change your application type?</h5>
         </div>
       </div>
-    </div>
+    }
 
-    <div *ngIf="stepIdx === confirmationStep">
-      <div class="step-header">
-        <h5>Are you sure you want to change your application type?</h5>
-      </div>
-    </div>
-
-    <ng-container *ngIf="stepIdx === prescribedBodyStep">
+    @if (stepIdx === prescribedBodyStep) {
       <app-prescribed-body [value]="prescribedBody" (select)="onSelectPrescribedBody($event)"></app-prescribed-body>
-    </ng-container>
+    }
   </div>
 </div>
 
 <div mat-dialog-actions class="dialog-action-container" align="end">
-  <div *ngIf="stepIdx === warningStep" class="dialog-controls-wrapper">
-    <button mat-stroked-button color="primary" (click)="closeDialog()">cancel</button>
-    <button mat-flat-button color="primary" (click)="next()">next</button>
-  </div>
+  @if (stepIdx === warningStep) {
+    <div class="dialog-controls-wrapper">
+      <button mat-stroked-button color="primary" (click)="closeDialog()">cancel</button>
+      <button mat-flat-button color="primary" (click)="next()">next</button>
+    </div>
+  }
 
-  <div *ngIf="stepIdx === applicationTypeStep" class="dialog-controls-wrapper">
-    <button mat-stroked-button color="primary" (click)="back()">back</button>
-    <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">next</button>
-  </div>
+  @if (stepIdx === applicationTypeStep) {
+    <div class="dialog-controls-wrapper">
+      <button mat-stroked-button color="primary" (click)="back()">back</button>
+      <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">next</button>
+    </div>
+  }
 
-  <div *ngIf="stepIdx === confirmationStep" class="dialog-controls-wrapper">
-    <button mat-stroked-button color="primary" (click)="back()">back</button>
-    <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
-  </div>
+  @if (stepIdx === confirmationStep) {
+    <div class="dialog-controls-wrapper">
+      <button mat-stroked-button color="primary" (click)="back()">back</button>
+      <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
+    </div>
+  }
 
-  <div class="dialog-controls-wrapper" *ngIf="stepIdx === prescribedBodyStep">
-    <button mat-stroked-button color="primary" (click)="back()">Back</button>
-    <button mat-flat-button color="primary" (click)="next()" [disabled]="!selectedAppType || !prescribedBody">
-      next
-    </button>
-  </div>
+  @if (stepIdx === prescribedBodyStep) {
+    <div class="dialog-controls-wrapper">
+      <button mat-stroked-button color="primary" (click)="back()">Back</button>
+      <button mat-flat-button color="primary" (click)="next()" [disabled]="!selectedAppType || !prescribedBody">
+        next
+      </button>
+    </div>
+  }
 </div>
