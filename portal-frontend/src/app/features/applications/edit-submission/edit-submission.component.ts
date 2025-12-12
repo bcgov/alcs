@@ -47,9 +47,10 @@ export enum EditApplicationSteps {
 }
 
 @Component({
-  selector: 'app-edit-submission',
-  templateUrl: './edit-submission.component.html',
-  styleUrls: ['./edit-submission.component.scss'],
+    selector: 'app-edit-submission',
+    templateUrl: './edit-submission.component.html',
+    styleUrls: ['./edit-submission.component.scss'],
+    standalone: false
 })
 export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit {
   fileId = '';

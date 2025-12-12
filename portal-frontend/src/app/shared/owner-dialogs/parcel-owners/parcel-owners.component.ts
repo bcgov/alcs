@@ -18,9 +18,10 @@ import { MOBILE_BREAKPOINT } from '../../utils/breakpoints';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-parcel-owners[owners][fileId][submissionUuid][ownerService]',
-  templateUrl: './parcel-owners.component.html',
-  styleUrls: ['./parcel-owners.component.scss'],
+    selector: 'app-parcel-owners[owners][fileId][submissionUuid][ownerService]',
+    templateUrl: './parcel-owners.component.html',
+    styleUrls: ['./parcel-owners.component.scss'],
+    standalone: false
 })
 export class ParcelOwnersComponent implements OnInit{
   @Output() saveParcel = new EventEmitter<void>();

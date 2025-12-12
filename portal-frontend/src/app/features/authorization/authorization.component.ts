@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
-  selector: 'app-authorization',
-  template: `<>`,
+    selector: 'app-authorization',
+    template: `<>`,
+    standalone: false
 })
 export class AuthorizationComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private authService: AuthenticationService) {}

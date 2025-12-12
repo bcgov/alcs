@@ -5,9 +5,10 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'document-file-loader',
-  templateUrl: './document-file-loader.component.html',
-  styleUrl: './document-file-loader.component.scss',
+    selector: 'document-file-loader',
+    templateUrl: './document-file-loader.component.html',
+    styleUrl: './document-file-loader.component.scss',
+    standalone: false
 })
 export class DocumentFileLoader implements OnDestroy {
   $destroy = new Subject<void>();

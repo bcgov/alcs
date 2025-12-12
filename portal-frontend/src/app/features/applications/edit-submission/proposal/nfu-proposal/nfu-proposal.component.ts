@@ -17,9 +17,10 @@ import { ConfirmationDialogService } from '../../../../../shared/confirmation-di
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-nfu-proposal',
-  templateUrl: './nfu-proposal.component.html',
-  styleUrls: ['./nfu-proposal.component.scss'],
+    selector: 'app-nfu-proposal',
+    templateUrl: './nfu-proposal.component.html',
+    styleUrls: ['./nfu-proposal.component.scss'],
+    standalone: false
 })
 export class NfuProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;

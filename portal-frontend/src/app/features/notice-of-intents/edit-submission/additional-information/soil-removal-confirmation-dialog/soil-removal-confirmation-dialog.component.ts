@@ -3,9 +3,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { DeleteStructureConfirmationDialogComponent } from '../delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
 
 @Component({
-  selector: 'app-soil-removal-confirmation-dialog',
-  templateUrl: './soil-removal-confirmation-dialog.component.html',
-  styleUrls: ['./soil-removal-confirmation-dialog.component.scss'],
+    selector: 'app-soil-removal-confirmation-dialog',
+    templateUrl: './soil-removal-confirmation-dialog.component.html',
+    styleUrls: ['./soil-removal-confirmation-dialog.component.scss'],
+    standalone: false
 })
 export class SoilRemovalConfirmationDialogComponent {
   constructor(private dialogRef: MatDialogRef<DeleteStructureConfirmationDialogComponent>) {}

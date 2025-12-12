@@ -12,9 +12,10 @@ import {
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 
 @Component({
-  selector: 'app-view-noi-submission',
-  templateUrl: './view-notice-of-intent-submission.component.html',
-  styleUrls: ['./view-notice-of-intent-submission.component.scss'],
+    selector: 'app-view-noi-submission',
+    templateUrl: './view-notice-of-intent-submission.component.html',
+    styleUrls: ['./view-notice-of-intent-submission.component.scss'],
+    standalone: false
 })
 export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

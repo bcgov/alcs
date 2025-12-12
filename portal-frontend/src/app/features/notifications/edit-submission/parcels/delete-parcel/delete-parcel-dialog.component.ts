@@ -8,9 +8,10 @@ export enum NotificationParcelDeleteStepsEnum {
 }
 
 @Component({
-  selector: 'app-delete-parcel-dialog',
-  templateUrl: './delete-parcel-dialog.component.html',
-  styleUrls: ['./delete-parcel-dialog.component.scss'],
+    selector: 'app-delete-parcel-dialog',
+    templateUrl: './delete-parcel-dialog.component.html',
+    styleUrls: ['./delete-parcel-dialog.component.scss'],
+    standalone: false
 })
 export class DeleteParcelDialogComponent {
   parcelUuid!: string;

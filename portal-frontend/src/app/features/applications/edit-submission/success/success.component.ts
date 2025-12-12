@@ -7,9 +7,10 @@ import { CodeService } from '../../../../services/code/code.service';
 import { OverlaySpinnerService } from '../../../../shared/overlay-spinner/overlay-spinner.service';
 
 @Component({
-  selector: 'app-success',
-  templateUrl: './success.component.html',
-  styleUrls: ['./success.component.scss'],
+    selector: 'app-success',
+    templateUrl: './success.component.html',
+    styleUrls: ['./success.component.scss'],
+    standalone: false
 })
 export class SuccessComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

@@ -7,9 +7,10 @@ import { ApplicationSubmissionReviewService } from '../../../../services/applica
 import { ReviewApplicationSteps } from '../review-submission.component';
 
 @Component({
-  selector: 'app-review-ocp',
-  templateUrl: './review-ocp.component.html',
-  styleUrls: ['./review-ocp.component.scss'],
+    selector: 'app-review-ocp',
+    templateUrl: './review-ocp.component.html',
+    styleUrls: ['./review-ocp.component.scss'],
+    standalone: false
 })
 export class ReviewOcpComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

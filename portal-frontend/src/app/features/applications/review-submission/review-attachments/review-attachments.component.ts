@@ -11,9 +11,10 @@ import { openFileInline } from '../../../../shared/utils/file';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-review-attachments',
-  templateUrl: './review-attachments.component.html',
-  styleUrls: ['./review-attachments.component.scss'],
+    selector: 'app-review-attachments',
+    templateUrl: './review-attachments.component.html',
+    styleUrls: ['./review-attachments.component.scss'],
+    standalone: false
 })
 export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;

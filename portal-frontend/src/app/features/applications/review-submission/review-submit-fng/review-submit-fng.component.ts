@@ -19,9 +19,10 @@ import { downloadFile } from '../../../../shared/utils/file';
 import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
-  selector: 'app-review-submit-fng[stepper]',
-  templateUrl: './review-submit-fng.component.html',
-  styleUrls: ['./review-submit-fng.component.scss'],
+    selector: 'app-review-submit-fng[stepper]',
+    templateUrl: './review-submit-fng.component.html',
+    styleUrls: ['./review-submit-fng.component.scss'],
+    standalone: false
 })
 export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;

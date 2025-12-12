@@ -38,9 +38,10 @@ export enum ReviewApplicationFngSteps {
 }
 
 @Component({
-  selector: 'app-review-application',
-  templateUrl: './review-submission.component.html',
-  styleUrls: ['./review-submission.component.scss'],
+    selector: 'app-review-application',
+    templateUrl: './review-submission.component.html',
+    styleUrls: ['./review-submission.component.scss'],
+    standalone: false
 })
 export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

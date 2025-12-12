@@ -7,9 +7,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-nfu-details[applicationSubmission]',
-  templateUrl: './nfu-details.component.html',
-  styleUrls: ['./nfu-details.component.scss'],
+    selector: 'app-nfu-details[applicationSubmission]',
+    templateUrl: './nfu-details.component.html',
+    styleUrls: ['./nfu-details.component.scss'],
+    standalone: false
 })
 export class NfuDetailsComponent {
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;

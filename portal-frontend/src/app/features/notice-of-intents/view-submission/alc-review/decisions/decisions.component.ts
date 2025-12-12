@@ -6,9 +6,10 @@ import { downloadFile } from '../../../../../shared/utils/file';
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-decisions[fileNumber]',
-  templateUrl: './decisions.component.html',
-  styleUrls: ['./decisions.component.scss'],
+    selector: 'app-decisions[fileNumber]',
+    templateUrl: './decisions.component.html',
+    styleUrls: ['./decisions.component.scss'],
+    standalone: false
 })
 export class DecisionsComponent implements OnInit, OnChanges {
   @Input() fileNumber = '';

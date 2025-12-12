@@ -19,9 +19,10 @@ import { downloadFile } from '../../../shared/utils/file';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-application-details',
-  templateUrl: './application-details.component.html',
-  styleUrls: ['./application-details.component.scss'],
+    selector: 'app-application-details',
+    templateUrl: './application-details.component.html',
+    styleUrls: ['./application-details.component.scss'],
+    standalone: false
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

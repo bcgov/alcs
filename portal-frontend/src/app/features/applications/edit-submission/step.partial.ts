@@ -3,9 +3,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 
 @Component({
-  selector: 'app-step',
-  template: '<p></p>',
-  styleUrls: [],
+    selector: 'app-step',
+    template: '<p></p>',
+    styleUrls: [],
+    standalone: false
 })
 export class StepComponent implements OnDestroy {
   protected $destroy = new Subject<void>();

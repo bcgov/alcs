@@ -4,9 +4,10 @@ import { Subject } from 'rxjs';
 import { InboxResultDto } from '../inbox.component';
 
 @Component({
-  selector: 'app-inbox-list',
-  templateUrl: './inbox-list.component.html',
-  styleUrls: ['./inbox-list.component.scss'],
+    selector: 'app-inbox-list',
+    templateUrl: './inbox-list.component.html',
+    styleUrls: ['./inbox-list.component.scss'],
+    standalone: false
 })
 export class InboxListComponent implements OnDestroy {
   $destroy = new Subject<void>();

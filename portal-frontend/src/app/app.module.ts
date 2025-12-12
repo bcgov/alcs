@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -55,14 +55,12 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogConfig } from '@angular/material/d
         disableClose: true,
       } as MatDialogConfig,
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (service: TokenRefreshService) => () => {
+    provideAppInitializer(() => {
+        const initializerFn = ((service: TokenRefreshService) => () => {
         return service.init();
-      },
-      deps: [TokenRefreshService],
-      multi: true,
-    },
+      })(inject(TokenRefreshService));
+        return initializerFn();
+      }),
     provideNgxMask(),
   ],
   bootstrap: [AppComponent],

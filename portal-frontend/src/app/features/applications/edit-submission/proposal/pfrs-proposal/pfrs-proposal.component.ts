@@ -28,9 +28,10 @@ import { AddStructureDialogComponent } from '../../../../notice-of-intents/edit-
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-pfrs-proposal',
-  templateUrl: './pfrs-proposal.component.html',
-  styleUrls: ['./pfrs-proposal.component.scss'],
+    selector: 'app-pfrs-proposal',
+    templateUrl: './pfrs-proposal.component.html',
+    styleUrls: ['./pfrs-proposal.component.scss'],
+    standalone: false
 })
 export class PfrsProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;

@@ -25,9 +25,10 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-owner-dialog',
-  templateUrl: './owner-dialog.component.html',
-  styleUrls: ['./owner-dialog.component.scss'],
+    selector: 'app-owner-dialog',
+    templateUrl: './owner-dialog.component.html',
+    styleUrls: ['./owner-dialog.component.scss'],
+    standalone: false
 })
 export class OwnerDialogComponent {
   OWNER_TYPE = OWNER_TYPE;

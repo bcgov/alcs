@@ -5,9 +5,10 @@ import { PublicNoticeOfIntentSubmissionDto } from '../../../../../services/publi
 import { PublicParcelDto } from '../../../../../services/public/public.dto';
 
 @Component({
-  selector: 'app-parcel',
-  templateUrl: './parcel.component.html',
-  styleUrls: ['./parcel.component.scss'],
+    selector: 'app-parcel',
+    templateUrl: './parcel.component.html',
+    styleUrls: ['./parcel.component.scss'],
+    standalone: false
 })
 export class ParcelComponent {
   $destroy = new Subject<void>();

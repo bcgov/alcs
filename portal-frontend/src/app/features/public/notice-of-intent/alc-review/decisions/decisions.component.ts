@@ -5,9 +5,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-public-decisions',
-  templateUrl: './decisions.component.html',
-  styleUrls: ['./decisions.component.scss'],
+    selector: 'app-public-decisions',
+    templateUrl: './decisions.component.html',
+    styleUrls: ['./decisions.component.scss'],
+    standalone: false
 })
 export class PublicDecisionsComponent {
   @Input() decisions: NoticeOfIntentPortalDecisionDto[] = [];

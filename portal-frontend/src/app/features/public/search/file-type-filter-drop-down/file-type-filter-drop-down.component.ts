@@ -10,9 +10,10 @@ import {
 } from '../../../../services/search/file-type/file-type-data-source.service';
 
 @Component({
-  selector: 'app-file-type-filter-drop-down',
-  templateUrl: './file-type-filter-drop-down.component.html',
-  styleUrls: ['./file-type-filter-drop-down.component.scss'],
+    selector: 'app-file-type-filter-drop-down',
+    templateUrl: './file-type-filter-drop-down.component.html',
+    styleUrls: ['./file-type-filter-drop-down.component.scss'],
+    standalone: false
 })
 export class FileTypeFilterDropDownComponent implements AfterViewInit {
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */

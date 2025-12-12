@@ -14,9 +14,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-additional-information',
-  templateUrl: './additional-information.component.html',
-  styleUrls: ['./additional-information.component.scss'],
+    selector: 'app-additional-information',
+    templateUrl: './additional-information.component.html',
+    styleUrls: ['./additional-information.component.scss'],
+    standalone: false
 })
 export class AdditionalInformationComponent {
   @Input() showErrors = true;

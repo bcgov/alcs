@@ -7,9 +7,10 @@ import { DocumentService } from '../../services/document/document.service';
 import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-file-drag-drop',
-  templateUrl: './file-drag-drop.component.html',
-  styleUrls: ['./file-drag-drop.component.scss'],
+    selector: 'app-file-drag-drop',
+    templateUrl: './file-drag-drop.component.html',
+    styleUrls: ['./file-drag-drop.component.scss'],
+    standalone: false
 })
 export class FileDragDropComponent implements OnInit {
   @Output() uploadFiles: EventEmitter<FileHandle> = new EventEmitter();

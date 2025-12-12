@@ -5,9 +5,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { pairwise } from 'rxjs';
 
 @Component({
-  selector: 'add-structure-dialog',
-  templateUrl: './add-structure-dialog.component.html',
-  styleUrls: ['./add-structure-dialog.component.scss'],
+    selector: 'add-structure-dialog',
+    templateUrl: './add-structure-dialog.component.html',
+    styleUrls: ['./add-structure-dialog.component.scss'],
+    standalone: false
 })
 export class AddStructureDialogComponent {
   area = new FormControl<string | null>(null, [

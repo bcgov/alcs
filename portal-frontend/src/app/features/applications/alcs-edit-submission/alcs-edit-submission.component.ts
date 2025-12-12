@@ -33,9 +33,10 @@ import { ExclProposalComponent } from '../edit-submission/proposal/excl-proposal
 import { InclProposalComponent } from '../edit-submission/proposal/incl-proposal/incl-proposal.component';
 
 @Component({
-  selector: 'app-alcs-edit-submission',
-  templateUrl: './alcs-edit-submission.component.html',
-  styleUrls: ['./alcs-edit-submission.component.scss'],
+    selector: 'app-alcs-edit-submission',
+    templateUrl: './alcs-edit-submission.component.html',
+    styleUrls: ['./alcs-edit-submission.component.scss'],
+    standalone: false
 })
 export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit {
   fileId = '';

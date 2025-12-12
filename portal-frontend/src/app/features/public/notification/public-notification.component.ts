@@ -8,9 +8,10 @@ import { PublicDocumentDto, PublicParcelDto } from '../../../services/public/pub
 import { PublicService } from '../../../services/public/public.service';
 
 @Component({
-  selector: 'app-public-notification',
-  templateUrl: './public-notification.component.html',
-  styleUrls: ['./public-notification.component.scss'],
+    selector: 'app-public-notification',
+    templateUrl: './public-notification.component.html',
+    styleUrls: ['./public-notification.component.scss'],
+    standalone: false
 })
 export class PublicNotificationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
