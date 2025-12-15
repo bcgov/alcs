@@ -29,6 +29,7 @@
     "@angular/router": "20.3.15",
     "@bcgov/bc-sans": "^2.1.0",
     "@ng-matero/extensions": "^20.3.1",
+    "@ng-select/ng-option-highlight": "^20.6.3",
     "@ng-select/ng-select": "^20.7.0",
     "@types/validator": "^13.15.10",
     "angular-mentions": "^1.5.0",

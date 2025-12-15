@@ -19,9 +19,9 @@
   <div
     class="editing"
     [ngClass]="{
-      hidden: !isEditing
+      hidden: !isEditing,
     }"
-    >
+  >
     <form>
       <mat-form-field appearance="outline">
         <input
@@ -36,10 +36,10 @@
           (keydown.enter)="!valueControl.invalid ? confirmEdit() : preventKeydown($event)"
           (keydown.escape)="cancelEdit()"
           [formControl]="valueControl"
-          />
+        />
       </mat-form-field>
 
-      @if (valueControl.hasError) {
+      @if (valueControl.errors) {
         @for (error of valueControl?.errors | keyvalue; track error) {
           <mat-error class="resolution-number-error"
             ><mat-icon>warning</mat-icon>
@@ -61,10 +61,11 @@
         <button mat-button (click)="cancelEdit()">CANCEL</button>
         <button
           mat-button
-          [class.disabled] = "valueControl.invalid"
-          [class.save] = "!valueControl.invalid"
+          [class.disabled]="valueControl.invalid"
+          [class.save]="!valueControl.invalid"
           (click)="confirmEdit()"
-          [disabled]="valueControl.invalid">
+          [disabled]="valueControl.invalid"
+        >
           SAVE
         </button>
       </div>
