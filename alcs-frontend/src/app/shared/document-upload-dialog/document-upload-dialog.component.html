@@ -43,7 +43,7 @@
       @if (existingFile && data.existingDocument) {
         <div class="file">
           <div>
-            <a routerLink="/document/{{ data.existingDocument?.documentUuid }}" target="_blank">{{
+            <a routerLink="/document/{{ data.existingDocument.documentUuid }}" target="_blank">{{
               existingFile.name
             }}</a>
           </div>
@@ -137,16 +137,15 @@
           <div class="double">
             <mat-label>Visible To:</mat-label>
             @if (
-              data.allowedVisibilityFlags?.includes('A') ||
-              data.allowedVisibilityFlags?.includes('C') ||
-              data.allowedVisibilityFlags?.includes('G')
+          data.allowedVisibilityFlags.includes('A') ||
+          data.allowedVisibilityFlags.includes('C') ||
+          data.allowedVisibilityFlags.includes('G')
               ) {
-              <div
-                >
+          <div>
                 <mat-checkbox [formControl]="visibleToInternal">{{ internalVisibilityLabel }}</mat-checkbox>
               </div>
             }
-            @if (data.allowedVisibilityFlags?.includes('P')) {
+        @if (data.allowedVisibilityFlags.includes('P')) {
               <div>
                 <mat-checkbox [formControl]="visibleToPublic">Public</mat-checkbox>
               </div>

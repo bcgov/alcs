@@ -80,17 +80,15 @@
         @if (reconsideration.type.code === '33') {
           <div>
             <div class="subheading2">Review Outcome</div>
-            @if (!reconsideration.reviewOutcome || reconsideration.reviewOutcome?.code === 'PEN') {
+            @if (!reconsideration.reviewOutcome || reconsideration.reviewOutcome.code === 'PEN') {
               <span>
                 <app-inline-review-outcome
                   (save)="onSaveReconsiderationReviewOutcome(reconsideration.uuid, $event)"
                 ></app-inline-review-outcome>
               </span>
             }
-            @if (reconsideration.reviewOutcome && reconsideration.reviewOutcome?.code !== 'PEN') {
-              <span>{{
-                reconsideration.reviewOutcome.label
-              }}</span>
+            @if (reconsideration.reviewOutcome && reconsideration.reviewOutcome.code !== 'PEN') {
+              <span>{{ reconsideration.reviewOutcome.label }}</span>
             }
           </div>
         }

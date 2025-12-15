@@ -148,7 +148,7 @@
         <div class="grid-1 subheading2">Existing Residence</div>
         <div class="grid-2 subheading2">Total Floor Area</div>
         <div class="grid-3 subheading2">Description</div>
-        @if (_applicationSubmission.naruExistingResidences?.length === 0) {
+        @if (_applicationSubmission.naruExistingResidences.length === 0) {
           <app-no-data></app-no-data>
         }
         @for (existingResidence of _applicationSubmission.naruExistingResidences; track existingResidence; let i = $index) {

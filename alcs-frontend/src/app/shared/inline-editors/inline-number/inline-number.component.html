@@ -40,7 +40,7 @@
       </mat-form-field>
 
       @if (valueControl.errors) {
-        @for (error of valueControl?.errors | keyvalue; track error) {
+        @for (error of valueControl.errors | keyvalue; track error) {
           <mat-error class="resolution-number-error"
             ><mat-icon>warning</mat-icon>
             @if (error.key === 'nonZero') {

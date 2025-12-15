@@ -138,7 +138,7 @@
                 <app-no-data></app-no-data>
               }
             </div>
-            @if (decision.outcome?.code === 'RESC') {
+            @if (decision.outcome.code === 'RESC') {
               <div class="component-summary">
                 <div>
                   <span class="subheading2">Rescinded Date:&nbsp;</span>
@@ -152,7 +152,7 @@
                 </div>
               </div>
             }
-            @if (decision.outcome?.code === 'RESC') {
+            @if (decision.outcome.code === 'RESC') {
               <div class="component-summary">
                 <div>
                   <span class="subheading2">Rescinded Comment:&nbsp;</span>
