@@ -19,18 +19,19 @@ describe('ApplicantInfoComponent', () => {
   beforeEach(async () => {
     mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+    mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-    declarations: [ApplicantInfoComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [],
-    providers: [
+      declarations: [ApplicantInfoComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [],
+      providers: [
         { provide: ApplicationDetailService, useValue: mockAppDetailService },
         { provide: ToastService, useValue: mockToastService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ApplicantInfoComponent);
     component = fixture.componentInstance;

@@ -17,21 +17,21 @@ describe('ApplicantInfoComponent', () => {
   let mockToastService: DeepMocked<ToastService>;
 
   beforeEach(async () => {
-    mockAppDetailService = createMock()
+    mockAppDetailService = createMock();
     mockAppDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
-    
+    mockToastService = createMock();
+
     await TestBed.configureTestingModule({
-    declarations: [ApplicantInfoComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [],
-    providers: [
+      declarations: [ApplicantInfoComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [],
+      providers: [
         { provide: NoticeOfIntentDetailService, useValue: mockAppDetailService },
         { provide: ToastService, useValue: mockToastService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-})
-    .compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ApplicantInfoComponent);
     component = fixture.componentInstance;
