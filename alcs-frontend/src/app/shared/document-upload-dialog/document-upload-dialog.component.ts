@@ -2,7 +2,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
 import { ToastService } from '../../services/toast/toast.service';
 import { DEFAULT_DOCUMENT_SOURCES, DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../document/document.dto';
 import { FileHandle } from '../drag-drop-file/drag-drop-file.directive';
@@ -13,6 +12,7 @@ import {
   SelectableParcelDto,
   UpdateDocumentDto,
 } from './document-upload-dialog.dto';
+import { Subject } from 'rxjs';
 import { DocumentUploadDialogData } from './document-upload-dialog.interface';
 
 export enum VisibilityGroup {
