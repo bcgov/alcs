@@ -1,36 +1,39 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 import { NoticeOfIntentDocumentService } from './notice-of-intent-document.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 describe('NoticeOfIntentDocumentService', () => {
   let service: NoticeOfIntentDocumentService;
   let mockToastService: DeepMocked<ToastService>;
-  let mockHttpClient: DeepMocked<HttpClient>;
+  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     mockToastService = createMock();
-    mockHttpClient = createMock();
 
     TestBed.configureTestingModule({
-    imports: [],
-    providers: [
+      imports: [],
+      providers: [
         {
-            provide: ToastService,
-            useValue: mockToastService,
-        },
-        {
-            provide: HttpClient,
-            useValue: mockHttpClient,
+          provide: ToastService,
+          useValue: mockToastService,
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-});
+        {
+          provide: OverlayContainer,
+          useFactory: () => ({
+            getContainerElement: () => document.createElement('div'),
+          }),
+        },
+      ],
+    });
+
     service = TestBed.inject(NoticeOfIntentDocumentService);
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -38,110 +41,134 @@ describe('NoticeOfIntentDocumentService', () => {
   });
 
   it('should make a get request for open file', async () => {
-    mockHttpClient.get.mockReturnValue(of({}));
-
-    await service.openFile('fileId');
-
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.get.mock.calls[0][0]).toContain('notice-of-intent-document');
+    const promise = service.openFile('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /notice-of-intent-document\/1234\/open/.test(req.url);
+    });
+    req.flush({}, { status: 200, statusText: 'OK' });
+    await promise;
   });
 
   it('should show an error toast if opening a file fails', async () => {
-    mockHttpClient.get.mockReturnValue(throwError(() => ({})));
+    const errorResponse = { status: 500, statusText: 'Server Error' };
 
-    await service.openFile('fileId');
+    const promise = service.openFile('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /notice-of-intent-document\/1234\/open/.test(req.url);
+    });
+    req.flush({}, errorResponse);
+    await promise;
 
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should make a get request for download file', async () => {
-    mockHttpClient.get.mockReturnValue(of({}));
-
-    await service.downloadFile('fileId');
-
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.get.mock.calls[0][0]).toContain('notice-of-intent-document');
+    const promise = service.downloadFile('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /notice-of-intent-document\/1234\/download/.test(req.url);
+    });
+    req.flush({}, { status: 200, statusText: 'OK' });
+    await promise;
   });
 
   it('should show an error toast if downloading a file fails', async () => {
-    mockHttpClient.get.mockReturnValue(throwError(() => ({})));
+    const errorResponse = { status: 500, statusText: 'Server Error' };
 
-    await service.downloadFile('fileId');
+    const promise = service.downloadFile('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /notice-of-intent-document\/1234\/download/.test(req.url);
+    });
+    req.flush({}, errorResponse);
+    await promise;
 
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should make a delete request for delete file', async () => {
-    mockHttpClient.delete.mockReturnValue(of({}));
-
-    await service.deleteExternalFile('fileId');
-
-    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.delete.mock.calls[0][0]).toContain('notice-of-intent-document');
+    const promise = service.deleteExternalFile('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'DELETE' && /notice-of-intent-document\/1234/.test(req.url);
+    });
+    req.flush({}, { status: 200, statusText: 'OK' });
+    await promise;
   });
 
   it('should show an error toast if deleting a file fails', async () => {
-    mockHttpClient.delete.mockReturnValue(throwError(() => ({})));
+    const errorResponse = { status: 500, statusText: 'Server Error' };
 
-    await service.deleteExternalFile('fileId');
+    const promise = service.deleteExternalFile('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'DELETE' && /notice-of-intent-document\/1234/.test(req.url);
+    });
+    req.flush({}, errorResponse);
+    await promise;
 
-    expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should make a patch request for update file', async () => {
-    mockHttpClient.patch.mockReturnValue(of({}));
-
-    await service.update('fileId', []);
-
-    expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.patch.mock.calls[0][0]).toContain('notice-of-intent-document');
+    const promise = service.update('1234', []);
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'PATCH' && /notice-of-intent-document\/notice-of-intent\/1234/.test(req.url);
+    });
+    req.flush({}, { status: 200, statusText: 'OK' });
+    await promise;
   });
 
   it('should show an error toast if updating a file fails', async () => {
-    mockHttpClient.patch.mockReturnValue(throwError(() => ({})));
+    const errorResponse = { status: 500, statusText: 'Server Error' };
 
-    await service.update('fileId', []);
+    const promise = service.update('1234', []);
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'PATCH' && /notice-of-intent-document\/notice-of-intent\/1234/.test(req.url);
+    });
+    req.flush({}, errorResponse);
+    await promise;
 
-    expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should make a post request for deleting multiple files', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
-
-    await service.deleteExternalFiles(['fileId']);
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('notice-of-intent-document');
+    const promise = service.deleteExternalFiles(['1234', '5678']);
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'POST' && /notice-of-intent-document\/delete-files/.test(req.url);
+    });
+    req.flush({}, { status: 200, statusText: 'OK' });
+    await promise;
   });
 
   it('should show an error toast if deleting a file fails', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
+    const errorResponse = { status: 500, statusText: 'Server Error' };
 
-    await service.deleteExternalFiles(['fileId']);
+    const promise = service.deleteExternalFiles(['1234', '5678']);
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'POST' && /notice-of-intent-document\/delete-files/.test(req.url);
+    });
+    req.flush({}, errorResponse);
+    await promise;
 
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
   it('should make a get request for getByFileId', async () => {
-    mockHttpClient.get.mockReturnValue(of({}));
-
-    await service.getByFileId('fileId');
-
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.get.mock.calls[0][0]).toContain('notice-of-intent-document');
+    const promise = service.getByFileId('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /notice-of-intent-document\/notice-of-intent\/1234/.test(req.url);
+    });
+    req.flush({}, { status: 200, statusText: 'OK' });
+    await promise;
   });
 
   it('should show an error toast if getByFileId fails', async () => {
-    mockHttpClient.get.mockReturnValue(throwError(() => ({})));
+    const errorResponse = { status: 500, statusText: 'Server Error' };
 
-    await service.getByFileId('fileId');
+    const promise = service.getByFileId('1234');
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /notice-of-intent-document\/notice-of-intent\/1234/.test(req.url);
+    });
+    req.flush({}, errorResponse);
+    await promise;
 
-    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });
