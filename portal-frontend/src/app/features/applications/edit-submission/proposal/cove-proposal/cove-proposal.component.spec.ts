@@ -22,6 +22,7 @@ describe('CoveProposalComponent', () => {
   beforeEach(async () => {
     mockTransfereeService = createMock();
     mockAppSubService = createMock();
+    mockAppDocService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
