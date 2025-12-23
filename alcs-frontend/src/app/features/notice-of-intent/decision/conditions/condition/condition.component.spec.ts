@@ -38,8 +38,6 @@ describe('ConditionComponent', () => {
       }
     >();
     component.condition.conditionComponentsLabels = [];
-
-    fixture.detectChanges();
   });
 
   it('should create', () => {
