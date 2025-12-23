@@ -1,4 +1,4 @@
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { IncomingFileService } from './incoming-file.service';
@@ -11,23 +11,22 @@ import { of } from 'rxjs';
 
 describe('ApplicationIncomingFileService', () => {
   let service: IncomingFileService;
-  let httpClient: DeepMocked<HttpClient>;
+  let httpTestingController: HttpTestingController;
   let toastService: DeepMocked<ToastService>;
 
   beforeEach(() => {
-    httpClient = createMock();
     toastService = createMock();
 
     TestBed.configureTestingModule({
-    imports: [MatSnackBarModule],
-    providers: [
-        { provide: HttpClient, useValue: httpClient },
+      imports: [MatSnackBarModule],
+      providers: [
         { provide: ToastService, useValue: toastService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-});
+      ],
+    });
     service = TestBed.inject(IncomingFileService);
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   let unsortedFiles: IncomingFileBoardMapDto = {
@@ -105,18 +104,24 @@ describe('ApplicationIncomingFileService', () => {
   });
 
   it('should call get for fetchingTypes', async () => {
-    httpClient.get.mockReturnValue(of(unsortedFiles));
+    const promise = service.fetch();
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /incoming-files/.test(req.url);
+    });
+    req.flush(unsortedFiles, { status: 200, statusText: 'OK' });
+    const res = await promise;
 
-    const res = await service.fetch();
-    expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(Object.keys(res!).length).toEqual(1);
   });
 
   it('should sort the incoming data based on priority and active days', async () => {
-    httpClient.get.mockReturnValue(of(unsortedFiles));
+    const promise = service.fetchAndSort();
+    const req = httpTestingController.expectOne((req) => {
+      return req.method === 'GET' && /incoming-files/.test(req.url);
+    });
+    req.flush(unsortedFiles, { status: 200, statusText: 'OK' });
+    const res = await promise;
 
-    const res = await service.fetchAndSort();
-    expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toEqual(expectedSortedFiles);
   });
 });
