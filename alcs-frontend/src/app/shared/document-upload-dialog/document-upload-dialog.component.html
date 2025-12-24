@@ -88,7 +88,14 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="type.value !== DOCUMENT_TYPE.CERTIFICATE_OF_TITLE && type.value !== DOCUMENT_TYPE.SURVEY_PLAN && !data.fixedParcel && selectableParcels">
+    <div
+      *ngIf="
+        type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE &&
+        !data.fixedParcel &&
+        selectableParcels &&
+        selectableParcels.length > 0
+      "
+    >
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Associated Parcel</mat-label>
         <mat-select [formControl]="parcelId">

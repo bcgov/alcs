@@ -7,6 +7,7 @@ import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent/no
 import { NotificationDetailService } from '../../../services/notification/notification-detail.service';
 import { NotificationDocumentDto } from '../../../services/notification/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../services/notification/notification-document/notification-document.service';
+import { NotificationParcelService } from '../../../services/notification/notification-parcel/notification-parcel.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
@@ -42,6 +43,7 @@ export class NotificationDocumentsComponent implements OnInit {
   constructor(
     private notificationDocumentService: NotificationDocumentService,
     private notificationDetailService: NotificationDetailService,
+    public notificationParcelService: NotificationParcelService,
     private confirmationDialogService: ConfirmationDialogService,
     private toastService: ToastService,
     public dialog: MatDialog
@@ -62,6 +64,7 @@ export class NotificationDocumentsComponent implements OnInit {
       ...{
         fileId: this.fileId,
         documentService: this.notificationDocumentService,
+        parcelService: this.notificationParcelService,
       },
     };
 
@@ -110,6 +113,7 @@ export class NotificationDocumentsComponent implements OnInit {
         fileId: this.fileId,
         existingDocument: element,
         documentService: this.notificationDocumentService,
+        parcelService: this.notificationParcelService,
       },
     };
 

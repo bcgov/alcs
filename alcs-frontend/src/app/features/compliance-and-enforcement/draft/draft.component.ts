@@ -33,6 +33,7 @@ import { Section } from '../../../services/compliance-and-enforcement/documents/
 import { ResponsiblePartiesComponent } from '../responsible-parties/responsible-parties.component';
 import { ResponsiblePartiesService } from '../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ConfirmationDialogColor } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 export const submissionDocumentOptions: DocumentUploadDialogData = {
   // A necessary hack to make this work without rewriting lots of code
@@ -350,6 +351,7 @@ export class DraftComponent implements OnInit, AfterViewInit, OnDestroy {
       body: 'Are you sure you want to discard this draft? All data will be permanently deleted.',
       yesButtonText: 'Discard',
       cancelButtonText: 'Cancel',
+      confirmButtonColor: ConfirmationDialogColor.WARN,
     });
 
     dialogRef.subscribe(async (confirmed: boolean) => {

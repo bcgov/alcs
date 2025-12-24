@@ -1,6 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+export enum ConfirmationDialogColor {
+  PRIMARY = 'primary',
+  ACCENT = 'accent',
+  WARN = 'warn',
+}
+
 export enum ConfirmationDialogStyle {
   WARN = 'warn',
 }
@@ -10,6 +16,7 @@ export interface DialogData {
   title?: string;
   yesButtonText?: string;
   cancelButtonText?: string;
+  confirmButtonColor?: ConfirmationDialogColor;
   style?: ConfirmationDialogStyle;
 }
 
@@ -20,6 +27,7 @@ export interface DialogData {
 })
 export class ConfirmationDialogComponent {
   ConfirmationDialogStyle = ConfirmationDialogStyle;
+  
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
