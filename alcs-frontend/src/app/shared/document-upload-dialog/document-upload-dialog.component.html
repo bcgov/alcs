@@ -97,35 +97,45 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div
-      *ngIf="
-        type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE &&
-        !data.fixedParcel &&
-        selectableParcels &&
-        selectableParcels.length > 0
-      "
-    >
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Associated Parcel</mat-label>
-        <mat-select [formControl]="parcelId">
-          <mat-option *ngFor="let parcel of selectableParcels; let i = index" [value]="parcel.uuid">
-            #{{ i + 1 }} PID:
-            <span *ngIf="parcel.pid">{{ parcel.pid | mask: '000-000-000' }}</span>
-            <span *ngIf="!parcel.pid">No Data</span></mat-option
-          >
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div *ngIf="selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Associated Organization</mat-label>
-        <mat-select [formControl]="ownerId">
-          <mat-option *ngFor="let owner of selectableOwners" [value]="owner.uuid">
-            {{ owner.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    @if (
+      type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE &&
+      !data.fixedParcel &&
+      selectableParcels &&
+      selectableParcels.length > 0
+    ) {
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Associated Parcel</mat-label>
+          <mat-select [formControl]="parcelId">
+            @for (parcel of selectableParcels; track parcel; let i = $index) {
+              <mat-option [value]="parcel.uuid">
+                #{{ i + 1 }} PID:
+                @if (parcel.pid) {
+                  <span>{{ parcel.pid | mask: '000-000-000' }}</span>
+                }
+                @if (!parcel.pid) {
+                  <span>No Data</span>
+                }
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    }
+    @if (selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Associated Organization</mat-label>
+          <mat-select [formControl]="ownerId">
+            @for (owner of selectableOwners; track owner) {
+              <mat-option [value]="owner.uuid">
+                {{ owner.label }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    }
     @if (type.value !== DOCUMENT_TYPE.CERTIFICATE_OF_TITLE && type.value !== DOCUMENT_TYPE.SURVEY_PLAN && !data.fixedParcel && selectableParcels) {
       <div>
         <mat-form-field appearance="outline" class="full-width">
