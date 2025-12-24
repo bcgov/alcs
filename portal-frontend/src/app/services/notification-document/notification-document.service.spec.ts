@@ -1,8 +1,9 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
+import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import { NotificationDocumentService } from './notification-document.service';
 
@@ -10,10 +11,14 @@ describe('NotificationDocumentService', () => {
   let service: NotificationDocumentService;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
+  let mockDocumentService: DeepMocked<DocumentService>;
+  let mockOverlayService: DeepMocked<OverlaySpinnerService>;
 
   beforeEach(() => {
     mockToastService = createMock();
     mockHttpClient = createMock();
+    mockDocumentService = createMock();
+    mockOverlayService = createMock();
 
     TestBed.configureTestingModule({
     imports: [],
@@ -26,8 +31,14 @@ describe('NotificationDocumentService', () => {
             provide: HttpClient,
             useValue: mockHttpClient,
         },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
+        {
+            provide: DocumentService,
+            useValue: mockDocumentService,
+        },
+        {
+            provide: OverlaySpinnerService,
+            useValue: mockOverlayService,
+        },
     ]
 });
     service = TestBed.inject(NotificationDocumentService);

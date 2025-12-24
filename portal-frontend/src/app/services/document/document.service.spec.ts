@@ -1,5 +1,4 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
@@ -14,11 +13,13 @@ describe('DocumentService', () => {
   let service: DocumentService;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
+  let mockHttpBackend: DeepMocked<HttpBackend>;
   let mockOverlayService: DeepMocked<OverlaySpinnerService>;
 
   beforeEach(() => {
     mockToastService = createMock();
     mockHttpClient = createMock();
+    mockHttpBackend = createMock();
     mockOverlayService = createMock();
 
     TestBed.configureTestingModule({
@@ -33,11 +34,13 @@ describe('DocumentService', () => {
             useValue: mockHttpClient,
         },
         {
+            provide: HttpBackend,
+            useValue: mockHttpBackend,
+        },
+        {
             provide: OverlaySpinnerService,
             useValue: mockOverlayService,
         },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
     ]
 });
     service = TestBed.inject(DocumentService);

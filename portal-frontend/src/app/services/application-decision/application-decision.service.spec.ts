@@ -1,5 +1,4 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
@@ -26,8 +25,6 @@ describe('ApplicationDecisionService', () => {
             provide: HttpClient,
             useValue: mockHttpClient,
         },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
     ]
 });
     service = TestBed.inject(ApplicationDecisionService);

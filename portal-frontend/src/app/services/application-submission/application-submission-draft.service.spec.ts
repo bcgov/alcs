@@ -1,8 +1,8 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationSubmissionDraftService } from './application-submission-draft.service';
 
@@ -10,10 +10,12 @@ describe('ApplicationSubmissionDraftService', () => {
   let service: ApplicationSubmissionDraftService;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
+  let mockOverlayService: DeepMocked<OverlaySpinnerService>;
 
   beforeEach(() => {
     mockToastService = createMock();
     mockHttpClient = createMock();
+    mockOverlayService = createMock();
 
     TestBed.configureTestingModule({
     imports: [],
@@ -26,8 +28,10 @@ describe('ApplicationSubmissionDraftService', () => {
             provide: HttpClient,
             useValue: mockHttpClient,
         },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
+        {
+            provide: OverlaySpinnerService,
+            useValue: mockOverlayService,
+        },
     ]
 });
     service = TestBed.inject(ApplicationSubmissionDraftService);
