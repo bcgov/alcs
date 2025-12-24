@@ -8,9 +8,10 @@ export interface UnFlagDialogIO {
 }
 
 @Component({
-  selector: 'app-unflag-dialog',
-  templateUrl: './unflag-dialog.component.html',
-  styleUrls: ['./unflag-dialog.component.scss'],
+    selector: 'app-unflag-dialog',
+    templateUrl: './unflag-dialog.component.html',
+    styleUrls: ['./unflag-dialog.component.scss'],
+    standalone: false
 })
 export class UnFlagDialogComponent implements OnDestroy {
   $destroy = new Subject<void>();

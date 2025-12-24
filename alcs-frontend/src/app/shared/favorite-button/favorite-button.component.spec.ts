@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -8,6 +8,7 @@ import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 
 import { FavoriteButtonComponent } from './favorite-button.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('FavoriteButtonComponent', () => {
   let component: FavoriteButtonComponent;
@@ -19,16 +20,18 @@ describe('FavoriteButtonComponent', () => {
     mockUserService.$userProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-      providers: [
+    declarations: [FavoriteButtonComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: UserService,
-          useValue: mockUserService,
+            provide: UserService,
+            useValue: mockUserService,
         },
-      ],
-      declarations: [FavoriteButtonComponent],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(FavoriteButtonComponent);
     component = fixture.componentInstance;

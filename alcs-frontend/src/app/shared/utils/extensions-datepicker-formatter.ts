@@ -4,7 +4,7 @@ import moment from 'moment';
 
 export class ExtensionsDatepickerFormatter extends NativeDatetimeAdapter {
   constructor(matDateLocale: string, _delegate: DateAdapter<Date>) {
-    super(matDateLocale, _delegate);
+    super();
   }
 
   override format(date: Date, displayFormat: string): string {

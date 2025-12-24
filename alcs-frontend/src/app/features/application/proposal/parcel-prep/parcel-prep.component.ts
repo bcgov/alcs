@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
 
 @Component({
-  selector: 'app-parcel-prep[fileNumber]',
-  templateUrl: './parcel-prep.component.html',
-  styleUrls: ['./parcel-prep.component.scss'],
+    selector: 'app-parcel-prep[fileNumber]',
+    templateUrl: './parcel-prep.component.html',
+    styleUrls: ['./parcel-prep.component.scss'],
+    standalone: false
 })
 export class ParcelPrepComponent implements OnChanges {
   @Input() fileNumber = '';

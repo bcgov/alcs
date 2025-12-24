@@ -6,9 +6,10 @@ import { ApplicationSubmissionDto } from '../../../../../services/application/ap
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-subd-details[applicationSubmission]',
-  templateUrl: './subd-details.component.html',
-  styleUrls: ['./subd-details.component.scss'],
+    selector: 'app-subd-details[applicationSubmission]',
+    templateUrl: './subd-details.component.html',
+    styleUrls: ['./subd-details.component.scss'],
+    standalone: false
 })
 export class SubdDetailsComponent {
   _applicationSubmission: ApplicationSubmissionDto | undefined;

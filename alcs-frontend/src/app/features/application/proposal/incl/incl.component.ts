@@ -6,9 +6,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-proposal-incl',
-  templateUrl: './incl.component.html',
-  styleUrls: ['./incl.component.scss'],
+    selector: 'app-proposal-incl',
+    templateUrl: './incl.component.html',
+    styleUrls: ['./incl.component.scss'],
+    standalone: false
 })
 export class InclProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

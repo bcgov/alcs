@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-inline-boolean',
-  templateUrl: './inline-boolean.component.html',
-  styleUrls: ['./inline-boolean.component.scss'],
+    selector: 'app-inline-boolean',
+    templateUrl: './inline-boolean.component.html',
+    styleUrls: ['./inline-boolean.component.scss'],
+    standalone: false
 })
 export class InlineBooleanComponent implements OnInit, OnChanges {
   @Input() selectedValue: boolean | null = null;

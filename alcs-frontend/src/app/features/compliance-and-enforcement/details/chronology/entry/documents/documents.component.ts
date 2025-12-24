@@ -6,9 +6,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../../../shared/constants';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-chronology-entry-documents',
-  templateUrl: './documents.component.html',
-  styleUrls: ['./documents.component.scss'],
+    selector: 'app-compliance-and-enforcement-chronology-entry-documents',
+    templateUrl: './documents.component.html',
+    styleUrls: ['./documents.component.scss'],
+    standalone: false
 })
 export class ComplianceAndEnforcementChronologyEntryDocumentsComponent implements OnDestroy {
   readonly fileNameTruncLen = FILE_NAME_TRUNCATE_LENGTH;

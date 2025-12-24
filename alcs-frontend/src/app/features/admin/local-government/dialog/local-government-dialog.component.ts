@@ -11,9 +11,10 @@ import { FormControl } from '@angular/forms';
 import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
-  selector: 'app-admin-local-government-dialog',
-  templateUrl: './local-government-dialog.component.html',
-  styleUrls: ['./local-government-dialog.component.scss'],
+    selector: 'app-admin-local-government-dialog',
+    templateUrl: './local-government-dialog.component.html',
+    styleUrls: ['./local-government-dialog.component.scss'],
+    standalone: false
 })
 export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
   readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;

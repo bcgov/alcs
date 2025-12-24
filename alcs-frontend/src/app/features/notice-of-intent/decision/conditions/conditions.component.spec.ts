@@ -6,9 +6,10 @@ import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDecisionV2Service } from '../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { ConditionsComponent } from './conditions.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConditionsComponent', () => {
   let component: ConditionsComponent;
@@ -23,28 +24,30 @@ describe('ConditionsComponent', () => {
     mockNOIV2DecisionService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [ConditionsComponent],
-      providers: [
+    declarations: [ConditionsComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: NoticeOfIntentDetailService,
-          useValue: mockNOIDetailService,
+            provide: NoticeOfIntentDetailService,
+            useValue: mockNOIDetailService,
         },
         {
-          provide: NoticeOfIntentDecisionV2Service,
-          useValue: mockNOIV2DecisionService,
+            provide: NoticeOfIntentDecisionV2Service,
+            useValue: mockNOIV2DecisionService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ uuid: 'fake' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ uuid: 'fake' }),
+                },
             },
-          },
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ConditionsComponent);
     component = fixture.componentInstance;

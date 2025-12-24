@@ -2,25 +2,43 @@
 <div class="full-width">
   <div class="subheading2">Type of soil approved to be removed</div>
   <div class="pre-wrapped-text">{{ component.soilTypeRemoved }}</div>
-  <app-no-data *ngIf="component.soilTypeRemoved === null || component.soilTypeRemoved === undefined"></app-no-data>
+  @if (component.soilTypeRemoved === null || component.soilTypeRemoved === undefined) {
+    <app-no-data></app-no-data>
+  }
 </div>
 <div>
   <div class="subheading2">Volume</div>
-  {{ component.soilToRemoveVolume }}<span *ngIf="component.soilToRemoveVolume !== null"> m<sup>3</sup></span>
-  <app-no-data *ngIf="component.soilToRemoveVolume === null"></app-no-data>
+  {{ component.soilToRemoveVolume }}@if (component.soilToRemoveVolume !== null) {
+  <span> m<sup>3</sup></span>
+}
+@if (component.soilToRemoveVolume === null) {
+  <app-no-data></app-no-data>
+}
 </div>
 <div>
   <div class="subheading2">Area</div>
-  {{ component.soilToRemoveArea }}<span *ngIf="component.soilToRemoveArea !== null"> m<sup>2</sup></span>
-  <app-no-data *ngIf="component.soilToRemoveArea === null"></app-no-data>
+  {{ component.soilToRemoveArea }}@if (component.soilToRemoveArea !== null) {
+  <span> m<sup>2</sup></span>
+}
+@if (component.soilToRemoveArea === null) {
+  <app-no-data></app-no-data>
+}
 </div>
 <div>
   <div class="subheading2">Maximum Depth</div>
-  {{ component.soilToRemoveMaximumDepth }}<span *ngIf="component.soilToRemoveMaximumDepth !== null"> m</span>
-  <app-no-data *ngIf="component.soilToRemoveMaximumDepth === null"></app-no-data>
+  {{ component.soilToRemoveMaximumDepth }}@if (component.soilToRemoveMaximumDepth !== null) {
+  <span> m</span>
+}
+@if (component.soilToRemoveMaximumDepth === null) {
+  <app-no-data></app-no-data>
+}
 </div>
 <div>
   <div class="subheading2">Average Depth</div>
-  {{ component.soilToRemoveAverageDepth }}<span *ngIf="component.soilToRemoveAverageDepth !== null"> m</span>
-  <app-no-data *ngIf="component.soilToRemoveAverageDepth === null"></app-no-data>
+  {{ component.soilToRemoveAverageDepth }}@if (component.soilToRemoveAverageDepth !== null) {
+  <span> m</span>
+}
+@if (component.soilToRemoveAverageDepth === null) {
+  <app-no-data></app-no-data>
+}
 </div>

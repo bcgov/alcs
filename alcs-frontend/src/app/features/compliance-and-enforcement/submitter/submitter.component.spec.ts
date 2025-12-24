@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
@@ -10,6 +10,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
 import { SubmitterComponent } from './submitter.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SubmitterComponent', () => {
   let component: SubmitterComponent;
@@ -32,28 +33,30 @@ describe('SubmitterComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [OverviewComponent, StartOfDayPipe],
-      providers: [
+    declarations: [OverviewComponent, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ComplianceAndEnforcementSubmitterService,
-          useValue: mockComplianceAndEnforcementSubmitterService,
+            provide: ComplianceAndEnforcementSubmitterService,
+            useValue: mockComplianceAndEnforcementSubmitterService,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ fileNumber: '12345' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ fileNumber: '12345' }),
+                },
             },
-          },
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(SubmitterComponent);
     component = fixture.componentInstance;

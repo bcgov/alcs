@@ -6,9 +6,10 @@ import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto
 import { decisionChildRoutes } from './decision.module';
 
 @Component({
-  selector: 'app-app-decision',
-  templateUrl: './decision.component.html',
-  styleUrls: ['./decision.component.scss'],
+    selector: 'app-app-decision',
+    templateUrl: './decision.component.html',
+    styleUrls: ['./decision.component.scss'],
+    standalone: false
 })
 export class DecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

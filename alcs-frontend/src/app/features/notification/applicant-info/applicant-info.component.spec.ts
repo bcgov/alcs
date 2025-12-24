@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -8,6 +8,7 @@ import { NotificationDto } from '../../../services/notification/notification.dto
 import { ToastService } from '../../../services/toast/toast.service';
 
 import { ApplicantInfoComponent } from './applicant-info.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ApplicantInfoComponent', () => {
   let component: ApplicantInfoComponent;
@@ -18,15 +19,18 @@ describe('ApplicantInfoComponent', () => {
   beforeEach(async () => {
     mockAppDetailService = createMock();
     mockAppDetailService.$notification = new BehaviorSubject<NotificationDto | undefined>(undefined);
+    mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       declarations: [ApplicantInfoComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [],
       providers: [
         { provide: NotificationDetailService, useValue: mockAppDetailService },
         { provide: ToastService, useValue: mockToastService },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
       ],
-      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ApplicantInfoComponent);

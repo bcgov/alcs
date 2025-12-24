@@ -2,21 +2,23 @@
   <div class="application">
     <div class="content">
       <div class="nav">
-        <div *ngFor="let route of childRoutes" class="nav-link">
-          <div
-            [routerLink]="route.path ? route.path : './'"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="nav-item"
-          >
-            <mat-icon>{{ route.icon }}</mat-icon
-            >{{ route.menuTitle }}
-          </div>
+        @for (route of childRoutes; track route) {
+          <div class="nav-link">
+            <div
+              [routerLink]="route.path ? route.path : './'"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="nav-item"
+              >
+              <mat-icon>{{ route.icon }}</mat-icon
+                >{{ route.menuTitle }}
+              </div>
+            </div>
+          }
         </div>
-      </div>
-      <div class="child-content">
-        <router-outlet></router-outlet>
+        <div class="child-content">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
   </div>
-</div>

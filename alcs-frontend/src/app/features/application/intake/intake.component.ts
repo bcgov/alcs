@@ -9,9 +9,10 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './intake.component.html',
-  styleUrls: ['./intake.component.scss'],
+    selector: 'app-overview',
+    templateUrl: './intake.component.html',
+    styleUrls: ['./intake.component.scss'],
+    standalone: false
 })
 export class IntakeComponent implements OnInit {
   $destroy = new Subject<void>();

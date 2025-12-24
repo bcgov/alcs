@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import { PlanningReviewDetailedDto } from '../../../../services/planning-review/
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ScheduleComponent } from './schedule';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ScheduleComponent', () => {
   let component: ScheduleComponent;
@@ -23,28 +24,30 @@ describe('ScheduleComponent', () => {
     mockPRDetailService.$planningReview = new BehaviorSubject<PlanningReviewDetailedDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-      declarations: [ScheduleComponent],
-      providers: [
+    declarations: [ScheduleComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: ConfirmationDialogService,
-          useValue: {},
+            provide: ConfirmationDialogService,
+            useValue: {},
         },
         {
-          provide: PlanningReviewMeetingService,
-          useValue: {},
+            provide: PlanningReviewMeetingService,
+            useValue: {},
         },
         {
-          provide: PlanningReviewDetailService,
-          useValue: mockPRDetailService,
+            provide: PlanningReviewDetailService,
+            useValue: mockPRDetailService,
         },
         {
-          provide: MatDialog,
-          useValue: {},
+            provide: MatDialog,
+            useValue: {},
         },
-      ],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ScheduleComponent);
     component = fixture.componentInstance;

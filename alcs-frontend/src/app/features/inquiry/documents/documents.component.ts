@@ -14,9 +14,10 @@ import { DocumentUploadDialogComponent } from '../../../shared/document-upload-d
 import { DocumentUploadDialogData } from '../../../shared/document-upload-dialog/document-upload-dialog.interface';
 
 @Component({
-  selector: 'app-documents',
-  templateUrl: './documents.component.html',
-  styleUrls: ['./documents.component.scss'],
+    selector: 'app-documents',
+    templateUrl: './documents.component.html',
+    styleUrls: ['./documents.component.scss'],
+    standalone: false
 })
 export class DocumentsComponent implements OnInit {
   displayedColumns: string[] = ['source', 'type', 'fileName', 'uploadedAt', 'actions'];

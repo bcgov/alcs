@@ -1,24 +1,27 @@
 <div>
-  <div (click)="startEdit()" class="content" *ngIf="!isEditing">
-    <div class="text">
-      <span *ngIf="!value" class="placeholder">{{ placeholder }}</span>
-      <ng-container *ngIf="allowParagraphs; else noParagraph">
-        <div class="pre-wrap">{{ value }}</div>
-      </ng-container>
-      <ng-template #noParagraph>
-        {{ value }}
-      </ng-template>
+  @if (!isEditing) {
+    <div (click)="startEdit()" class="content">
+      <div class="text">
+        @if (!value) {
+          <span class="placeholder">{{ placeholder }}</span>
+        }
+        @if (allowParagraphs) {
+          <div class="pre-wrap">{{ value }}</div>
+        } @else {
+          {{ value }}
+        }
+      </div>
+      <div matTooltip="Click to edit" class="edit-button" (click)="startEdit()">
+        <mat-icon>edit</mat-icon>
+      </div>
     </div>
-    <div matTooltip="Click to edit" class="edit-button" (click)="startEdit()">
-      <mat-icon>edit</mat-icon>
-    </div>
-  </div>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing,
     }"
-  >
+    >
     <textarea
       matInput
       class="editable"

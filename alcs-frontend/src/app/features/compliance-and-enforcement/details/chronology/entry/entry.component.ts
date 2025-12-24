@@ -9,9 +9,10 @@ import {
 import { UserDto } from '../../../../../services/user/user.dto';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-chronology-entry',
-  templateUrl: './entry.component.html',
-  styleUrls: ['./entry.component.scss'],
+    selector: 'app-compliance-and-enforcement-chronology-entry',
+    templateUrl: './entry.component.html',
+    styleUrls: ['./entry.component.scss'],
+    standalone: false
 })
 export class ComplianceAndEnforcementChronologyEntryComponent implements OnInit, OnDestroy {
   private _entry: ComplianceAndEnforcementChronologyEntryDto | null = null;

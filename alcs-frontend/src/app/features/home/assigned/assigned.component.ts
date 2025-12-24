@@ -22,9 +22,10 @@ import { ApplicationPill } from '../../../shared/application-type-pill/applicati
 import { NoticeOfIntentDecisionConditionHomeDto } from '../../../services/notice-of-intent/decision-v2/notice-of-intent-decision.dto';
 
 @Component({
-  selector: 'app-assigned',
-  templateUrl: './assigned.component.html',
-  styleUrls: ['./assigned.component.scss'],
+    selector: 'app-assigned',
+    templateUrl: './assigned.component.html',
+    styleUrls: ['./assigned.component.scss'],
+    standalone: false
 })
 export class AssignedComponent implements OnInit {
   noticeOfIntents: AssignedToMeFile[] = [];

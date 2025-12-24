@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 
 @Component({
-  selector: 'app-parcel-prep',
-  templateUrl: './parcel-prep.component.html',
-  styleUrls: ['./parcel-prep.component.scss'],
+    selector: 'app-parcel-prep',
+    templateUrl: './parcel-prep.component.html',
+    styleUrls: ['./parcel-prep.component.scss'],
+    standalone: false
 })
 export class ParcelPrepComponent implements OnChanges {
   @Input() fileNumber = '';

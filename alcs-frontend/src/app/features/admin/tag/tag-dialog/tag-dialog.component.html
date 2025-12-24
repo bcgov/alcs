@@ -23,7 +23,7 @@
             bindValue="uuid"
             [clearable]="true"
             [(ngModel)]="categoryId"
-          >
+            >
             <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
               <div [ngOptionHighlight]="search">{{ item.name }}</div>
             </ng-template>
@@ -38,9 +38,11 @@
         </mat-button-toggle-group>
       </div>
       <div class="warning-section">
-        <div class="warning" *ngIf="showNameWarning">
-          <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Tag already exists. Choose a different Tag name.
-        </div>
+        @if (showNameWarning) {
+          <div class="warning">
+            <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Tag already exists. Choose a different Tag name.
+          </div>
+        }
       </div>
     </div>
 
@@ -56,7 +58,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid"
-      >
+        >
         Save
       </button>
     </div>

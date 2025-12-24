@@ -10,9 +10,10 @@ import { PlanningReviewService } from '../../../services/planning-review/plannin
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
+    selector: 'app-overview',
+    templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.scss'],
+    standalone: false
 })
 export class OverviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

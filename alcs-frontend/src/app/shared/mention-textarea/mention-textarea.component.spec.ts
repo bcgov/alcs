@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -8,6 +8,7 @@ import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 
 import { MentionTextareaComponent } from './mention-textarea.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('MentionTextareaComponent', () => {
   let component: MentionTextareaComponent;
@@ -19,16 +20,18 @@ describe('MentionTextareaComponent', () => {
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
-      providers: [
+    declarations: [MentionTextareaComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: UserService,
-          useValue: mockUserService,
+            provide: UserService,
+            useValue: mockUserService,
         },
-      ],
-      declarations: [MentionTextareaComponent],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(MentionTextareaComponent);
     component = fixture.componentInstance;

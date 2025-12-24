@@ -6,9 +6,10 @@ import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 import { CLOSED_PR_LABEL, OPEN_PR_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
 
 @Component({
-  selector: 'app-inquiry-header[inquiry]',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+    selector: 'app-inquiry-header[inquiry]',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: false
 })
 export class HeaderComponent implements OnChanges {
   destroy = new Subject<void>();

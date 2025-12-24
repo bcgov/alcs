@@ -8,33 +8,38 @@
         [matMenuTriggerFor]="decisionComponentMenu"
         mat-flat-button
         color="primary"
-      >
+        >
         Add Component ▾
       </button>
-      <app-error-message *ngIf="showError"></app-error-message>
+      @if (showError) {
+        <app-error-message></app-error-message>
+      }
     </div>
   </div>
 
   <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
-    <button
-      type="button"
-      *ngFor="let componentType of decisionComponentTypes"
-      mat-menu-item
-      (click)="onAddNewComponent(componentType.uiCode, componentType.code)"
-      [disabled]="componentType.isDisabled"
-    >
-      <div class="board-menu-item">
-        <span>{{ componentType.label }}</span>
-      </div>
-    </button>
+    @for (componentType of decisionComponentTypes; track componentType) {
+      <button
+        type="button"
+        mat-menu-item
+        (click)="onAddNewComponent(componentType.uiCode, componentType.code)"
+        [disabled]="componentType.isDisabled"
+        >
+        <div class="board-menu-item">
+          <span>{{ componentType.label }}</span>
+        </div>
+      </button>
+    }
   </mat-menu>
 
-  <div class="component" *ngFor="let component of components; let index = index; trackBy: trackByFn">
-    <app-decision-component
-      [(data)]="components[index]"
-      [codes]="codes"
-      (dataChange)="onChange()"
-      (remove)="onRemove(index)"
-    ></app-decision-component>
-  </div>
+  @for (component of components; track trackByFn(index, component); let index = $index) {
+    <div class="component">
+      <app-decision-component
+        [(data)]="components[index]"
+        [codes]="codes"
+        (dataChange)="onChange()"
+        (remove)="onRemove(index)"
+      ></app-decision-component>
+    </div>
+  }
 </section>

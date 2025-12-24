@@ -5,9 +5,10 @@ import { NoticeOfIntentDecisionConditionService } from '../../../services/notice
 import { ApplicationDecisionConditionService } from '../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 
 @Component({
-  selector: 'app-decision-condition-container',
-  templateUrl: './decision-condition-container.component.html',
-  styleUrls: ['./decision-condition-container.component.scss'],
+    selector: 'app-decision-condition-container',
+    templateUrl: './decision-condition-container.component.html',
+    styleUrls: ['./decision-condition-container.component.scss'],
+    standalone: false
 })
 export class DecisionConditionContainerComponent {
   applicationService: ApplicationDecisionConditionTypesService;

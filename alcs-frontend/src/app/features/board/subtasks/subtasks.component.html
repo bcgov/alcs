@@ -8,7 +8,7 @@
           matTooltip="Only one Audit subtask per card."
           [matTooltipDisabled]="!hasAuditSubtask"
           matTooltipPosition="left"
-        >
+          >
           <button mat-menu-item (click)="create('AUDT')" [disabled]="hasAuditSubtask">Audit</button>
         </span>
         <button mat-menu-item (click)="create('GIS')">GIS</button>
@@ -17,67 +17,84 @@
       </mat-menu>
     </div>
   </div>
-  <div class="no-subtasks" *ngIf="!subtasks.length">No Sub-Tasks</div>
-  <div class="subtasks" *ngIf="subtasks.length">
-    <ng-container *ngFor="let subtask of subtasks">
-      <div class="subtask">
-        <div class="left subheading2 status">
-          <div class="center in-progress" *ngIf="subtask.assignee && !subtask.completedAt">
-            <mat-icon>pending</mat-icon>In Progress
+  @if (!subtasks.length) {
+    <div class="no-subtasks">No Sub-Tasks</div>
+  }
+  @if (subtasks.length) {
+    <div class="subtasks">
+      @for (subtask of subtasks; track subtask) {
+        <div class="subtask">
+          <div class="left subheading2 status">
+            @if (subtask.assignee && !subtask.completedAt) {
+              <div class="center in-progress">
+                <mat-icon>pending</mat-icon>In Progress
+              </div>
+            }
+            @if (subtask.completedAt) {
+              <div class="center completed">
+                <mat-icon>check_circle_outline</mat-icon> Completed
+              </div>
+            }
+            @if (!subtask.assignee && !subtask.completedAt) {
+              <div class="center unassigned">
+                <mat-icon>no_accounts</mat-icon>Unassigned
+              </div>
+            }
           </div>
-          <div class="center completed" *ngIf="subtask.completedAt">
-            <mat-icon>check_circle_outline</mat-icon> Completed
+          <div class="center">
+            @if (subtask.assignee) {
+              <app-avatar-circle
+                [initials]="subtask.assignee.initials || ''"
+                [name]="subtask.assignee.prettyName"
+              ></app-avatar-circle>
+            }
+            @if (!subtask.assignee) {
+              <app-avatar-circle class="unassigned-circle" initials="-"></app-avatar-circle>
+            }
           </div>
-          <div class="center unassigned" *ngIf="!subtask.assignee && !subtask.completedAt">
-            <mat-icon>no_accounts</mat-icon>Unassigned
+          <div class="left">
+            <div
+              class="type badge"
+              [ngStyle]="{ backgroundColor: subtask.type.backgroundColor, color: subtask.type.textColor }"
+              >
+              {{ subtask.type.label }}
+            </div>
+          </div>
+          <div class="left">
+            <span class="subtext">Created: {{ subtask.createdAt | momentFormat }}</span>
+          </div>
+          <div class="left">
+            @if (subtask.completedAt) {
+              <span class="subtext">Completed: {{ subtask.completedAt | momentFormat }}</span>
+            }
+          </div>
+          <div class="center">
+            @if (!subtask.completedAt) {
+              <button
+                matTooltip="Complete Task"
+                mat-icon-button
+                (click)="completeTask(subtask.uuid)"
+                >
+                <mat-icon>check</mat-icon>
+              </button>
+            }
+            @if (subtask.completedAt) {
+              <button
+                matTooltip="Resume Task"
+                mat-icon-button
+                (click)="uncompleteSubtask(subtask.uuid)"
+                >
+                <mat-icon>play_circle_outline</mat-icon>
+              </button>
+            }
+          </div>
+          <div class="center">
+            <button matTooltip="Delete Task" mat-icon-button (click)="onDelete(subtask.uuid)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
-        <div class="center">
-          <app-avatar-circle
-            *ngIf="subtask.assignee"
-            [initials]="subtask.assignee.initials || ''"
-            [name]="subtask.assignee.prettyName"
-          ></app-avatar-circle>
-          <app-avatar-circle class="unassigned-circle" *ngIf="!subtask.assignee" initials="-"></app-avatar-circle>
-        </div>
-        <div class="left">
-          <div
-            class="type badge"
-            [ngStyle]="{ backgroundColor: subtask.type.backgroundColor, color: subtask.type.textColor }"
-          >
-            {{ subtask.type.label }}
-          </div>
-        </div>
-        <div class="left">
-          <span class="subtext">Created: {{ subtask.createdAt | momentFormat }}</span>
-        </div>
-        <div class="left">
-          <span class="subtext" *ngIf="subtask.completedAt">Completed: {{ subtask.completedAt | momentFormat }}</span>
-        </div>
-        <div class="center">
-          <button
-            matTooltip="Complete Task"
-            *ngIf="!subtask.completedAt"
-            mat-icon-button
-            (click)="completeTask(subtask.uuid)"
-          >
-            <mat-icon>check</mat-icon>
-          </button>
-          <button
-            matTooltip="Resume Task"
-            *ngIf="subtask.completedAt"
-            mat-icon-button
-            (click)="uncompleteSubtask(subtask.uuid)"
-          >
-            <mat-icon>play_circle_outline</mat-icon>
-          </button>
-        </div>
-        <div class="center">
-          <button matTooltip="Delete Task" mat-icon-button (click)="onDelete(subtask.uuid)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+      }
+    </div>
+  }
 </div>

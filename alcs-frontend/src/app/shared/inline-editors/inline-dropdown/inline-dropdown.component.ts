@@ -10,9 +10,10 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-inline-dropdown[options][value]',
-  templateUrl: './inline-dropdown.component.html',
-  styleUrls: ['./inline-dropdown.component.scss'],
+    selector: 'app-inline-dropdown[options][value]',
+    templateUrl: './inline-dropdown.component.html',
+    styleUrls: ['./inline-dropdown.component.scss'],
+    standalone: false
 })
 export class InlineDropdownComponent implements AfterContentChecked, OnChanges {
   @Input() value?: string | string[] | undefined;

@@ -18,7 +18,7 @@
         target="_blank"
         [matTooltip]="element.fileName"
         [matTooltipDisabled]="element.fileName.length <= fileNameTruncLen"
-      >
+        >
         {{ element.fileName }}
       </a>
     </td>
@@ -35,9 +35,11 @@
       <div class="subheading">* = Pending</div>
     </th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.visibilityFlags.includes('C')">
-        <span matTooltip="Commissioner">C<span *ngIf="!hasBeenSetForDiscussion">*</span></span>
-      </ng-container>
+      @if (element.visibilityFlags.includes('C')) {
+        <span matTooltip="Commissioner">C@if (!hasBeenSetForDiscussion) {
+          <span>*</span>
+        }</span>
+      }
     </td>
   </ng-container>
 
@@ -55,14 +57,15 @@
       <button class="action-button" mat-icon-button (click)="onEditFile(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button
-        class="action-button"
-        *ngIf="element.system === DOCUMENT_SYSTEM.ALCS || element.system === DOCUMENT_SYSTEM.OATS"
-        mat-icon-button
-        (click)="onDeleteFile(element)"
-      >
-        <mat-icon color="warn">delete</mat-icon>
-      </button>
+      @if (element.system === DOCUMENT_SYSTEM.ALCS || element.system === DOCUMENT_SYSTEM.OATS) {
+        <button
+          class="action-button"
+          mat-icon-button
+          (click)="onDeleteFile(element)"
+          >
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      }
     </td>
   </ng-container>
 

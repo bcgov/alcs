@@ -1,28 +1,38 @@
 <div class="assignee">
   <h4>Cards Assigned to Me: {{ totalFiles }}</h4>
 
-  <section *ngIf="noticeOfIntents.length">
-    <div class="subheading2">Notice of Intent</div>
-    <app-assigned-table [assignedFiles]="noticeOfIntents"></app-assigned-table>
-  </section>
+  @if (noticeOfIntents.length) {
+    <section>
+      <div class="subheading2">Notice of Intent</div>
+      <app-assigned-table [assignedFiles]="noticeOfIntents"></app-assigned-table>
+    </section>
+  }
 
-  <section *ngIf="applications.length">
-    <div class="subheading2">Applications</div>
-    <app-assigned-table [assignedFiles]="applications"></app-assigned-table>
-  </section>
+  @if (applications.length) {
+    <section>
+      <div class="subheading2">Applications</div>
+      <app-assigned-table [assignedFiles]="applications"></app-assigned-table>
+    </section>
+  }
 
-  <section *ngIf="planningReferrals.length">
-    <div class="subheading2">Planning Referrals</div>
-    <app-assigned-table [assignedFiles]="planningReferrals"></app-assigned-table>
-  </section>
+  @if (planningReferrals.length) {
+    <section>
+      <div class="subheading2">Planning Referrals</div>
+      <app-assigned-table [assignedFiles]="planningReferrals"></app-assigned-table>
+    </section>
+  }
 
-  <section *ngIf="inquiries.length">
-    <div class="subheading2">Inquiries</div>
-    <app-assigned-table [assignedFiles]="inquiries"></app-assigned-table>
-  </section>
+  @if (inquiries.length) {
+    <section>
+      <div class="subheading2">Inquiries</div>
+      <app-assigned-table [assignedFiles]="inquiries"></app-assigned-table>
+    </section>
+  }
 
-  <section *ngIf="notifications.length">
-    <div class="subheading2">Notifications</div>
-    <app-assigned-table [assignedFiles]="notifications"></app-assigned-table>
-  </section>
+  @if (notifications.length) {
+    <section>
+      <div class="subheading2">Notifications</div>
+      <app-assigned-table [assignedFiles]="notifications"></app-assigned-table>
+    </section>
+  }
 </div>

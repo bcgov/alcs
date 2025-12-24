@@ -6,9 +6,10 @@ import { NotificationDto, NotificationSubmissionDetailedDto } from '../../../ser
 import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-applicant-info',
-  templateUrl: './applicant-info.component.html',
-  styleUrls: ['./applicant-info.component.scss'],
+    selector: 'app-applicant-info',
+    templateUrl: './applicant-info.component.html',
+    styleUrls: ['./applicant-info.component.scss'],
+    standalone: false
 })
 export class ApplicantInfoComponent implements OnInit, OnDestroy {
   fileNumber: string = '';

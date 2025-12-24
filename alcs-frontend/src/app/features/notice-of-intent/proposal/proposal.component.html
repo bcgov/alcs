@@ -1,49 +1,56 @@
 <h3>Notice of Intent Prep</h3>
-<section *ngIf="noticeOfIntent && noticeOfIntent.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS">
-  <h5>Proposal Components - {{ noticeOfIntent.type.label }}</h5>
-  <div class="input-table">
-    <div>
-      <div class="subheading2">Proposal ALR Area Impacted (ha)</div>
-      <app-inline-number [value]="alrArea ?? null" (save)="onSaveAlrArea($event)" [decimals]="5"></app-inline-number>
+@if (noticeOfIntent && noticeOfIntent.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS) {
+  <section>
+    <h5>Proposal Components - {{ noticeOfIntent.type.label }}</h5>
+    <div class="input-table">
+      <div>
+        <div class="subheading2">Proposal ALR Area Impacted (ha)</div>
+        <app-inline-number [value]="alrArea ?? null" (save)="onSaveAlrArea($event)" [decimals]="5"></app-inline-number>
+      </div>
+      <div>
+        <div class="subheading2">Agricultural Capability</div>
+        <app-inline-dropdown
+          [options]="agCapOptions"
+          [value]="noticeOfIntent.agCap"
+          (save)="updateNoiValue('agCap', $event)"
+        ></app-inline-dropdown>
+      </div>
+      <div>
+        <div class="subheading2">Agricultural Capability Source</div>
+        <app-inline-dropdown
+          [options]="agCapSourceOptions"
+          [value]="noticeOfIntent.agCapSource"
+          (save)="updateNoiValue('agCapSource', $event)"
+        ></app-inline-dropdown>
+      </div>
+      <div>
+        <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
+        <app-inline-text [value]="noticeOfIntent.agCapMap" (save)="updateNoiValue('agCapMap', $event)"></app-inline-text>
+      </div>
+      <div>
+        <div class="subheading2">Agricultural Capability Consultant</div>
+        <app-inline-text
+          [value]="noticeOfIntent.agCapConsultant"
+          (save)="updateNoiValue('agCapConsultant', $event)"
+        ></app-inline-text>
+      </div>
     </div>
     <div>
-      <div class="subheading2">Agricultural Capability</div>
-      <app-inline-dropdown
-        [options]="agCapOptions"
-        [value]="noticeOfIntent.agCap"
-        (save)="updateNoiValue('agCap', $event)"
-      ></app-inline-dropdown>
+      @if (noticeOfIntent) {
+        <app-preparation [noticeOfIntent]="noticeOfIntent"></app-preparation>
+      }
     </div>
-    <div>
-      <div class="subheading2">Agricultural Capability Source</div>
-      <app-inline-dropdown
-        [options]="agCapSourceOptions"
-        [value]="noticeOfIntent.agCapSource"
-        (save)="updateNoiValue('agCapSource', $event)"
-      ></app-inline-dropdown>
-    </div>
-    <div>
-      <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
-      <app-inline-text [value]="noticeOfIntent.agCapMap" (save)="updateNoiValue('agCapMap', $event)"></app-inline-text>
-    </div>
-    <div>
-      <div class="subheading2">Agricultural Capability Consultant</div>
-      <app-inline-text
-        [value]="noticeOfIntent.agCapConsultant"
-        (save)="updateNoiValue('agCapConsultant', $event)"
-      ></app-inline-text>
-    </div>
-  </div>
-  <div>
-    <app-preparation *ngIf="noticeOfIntent" [noticeOfIntent]="noticeOfIntent"></app-preparation>
-  </div>
-  <app-proposal-soil
-    *ngIf="noticeOfIntent && ['POFO', 'ROSO', 'PFRS'].includes(noticeOfIntent.type.code)"
-  ></app-proposal-soil>
-</section>
+    @if (noticeOfIntent && ['POFO', 'ROSO', 'PFRS'].includes(noticeOfIntent.type.code)) {
+      <app-proposal-soil
+      ></app-proposal-soil>
+    }
+  </section>
+}
 <section>
   <h5>Parcels</h5>
-  <app-parcel-prep *ngIf="noticeOfIntent" [fileNumber]="noticeOfIntent.fileNumber"></app-parcel-prep>
+  @if (noticeOfIntent) {
+    <app-parcel-prep [fileNumber]="noticeOfIntent.fileNumber"></app-parcel-prep>
+  }
 </section>
 <section>
   <h5 class="staff-comments">Staff Comments and Observations</h5>

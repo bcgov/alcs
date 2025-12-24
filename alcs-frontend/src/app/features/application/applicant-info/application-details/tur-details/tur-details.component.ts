@@ -6,9 +6,10 @@ import { ApplicationSubmissionDto } from '../../../../../services/application/ap
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-tur-details[applicationSubmission]',
-  templateUrl: './tur-details.component.html',
-  styleUrls: ['./tur-details.component.scss'],
+    selector: 'app-tur-details[applicationSubmission]',
+    templateUrl: './tur-details.component.html',
+    styleUrls: ['./tur-details.component.scss'],
+    standalone: false
 })
 export class TurDetailsComponent {
   _application: ApplicationSubmissionDto | undefined;

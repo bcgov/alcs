@@ -17,9 +17,10 @@ import { InquiryService } from '../../../../../services/inquiry/inquiry.service'
 import { strictEmailValidator } from '../../../../../shared/validators/email-validator';
 
 @Component({
-  selector: 'app-create-inquiry',
-  templateUrl: './create-inquiry-dialog.component.html',
-  styleUrls: ['./create-inquiry-dialog.component.scss'],
+    selector: 'app-create-inquiry',
+    templateUrl: './create-inquiry-dialog.component.html',
+    styleUrls: ['./create-inquiry-dialog.component.scss'],
+    standalone: false
 })
 export class CreateInquiryDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

@@ -6,9 +6,10 @@ import { NotificationSubmissionDetailedDto } from '../../../../services/notifica
 import { DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-notification-details',
-  templateUrl: './notification-details.component.html',
-  styleUrls: ['./notification-details.component.scss'],
+    selector: 'app-notification-details',
+    templateUrl: './notification-details.component.html',
+    styleUrls: ['./notification-details.component.scss'],
+    standalone: false
 })
 export class NotificationDetailsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();

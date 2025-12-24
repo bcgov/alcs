@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-avatar-circle[initials]',
-  templateUrl: './avatar-circle.component.html',
-  styleUrls: ['./avatar-circle.component.scss'],
+    selector: 'app-avatar-circle[initials]',
+    templateUrl: './avatar-circle.component.html',
+    styleUrls: ['./avatar-circle.component.scss'],
+    standalone: false
 })
 export class AvatarCircleComponent {
   @Input() initials = '';

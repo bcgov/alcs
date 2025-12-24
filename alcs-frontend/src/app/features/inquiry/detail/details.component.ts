@@ -7,9 +7,10 @@ import { InquiryDto, UpdateInquiryDto } from '../../../services/inquiry/inquiry.
 import { InquiryService } from '../../../services/inquiry/inquiry.service';
 
 @Component({
-  selector: 'app-detail',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
+    selector: 'app-detail',
+    templateUrl: './details.component.html',
+    styleUrls: ['./details.component.scss'],
+    standalone: false
 })
 export class DetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

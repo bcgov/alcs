@@ -9,9 +9,10 @@ import {
 } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 
 @Component({
-  selector: 'app-details-overview',
-  templateUrl: './details-overview.component.html',
-  styleUrls: ['./details-overview.component.scss'],
+    selector: 'app-details-overview',
+    templateUrl: './details-overview.component.html',
+    styleUrls: ['./details-overview.component.scss'],
+    standalone: false
 })
 export class DetailsOverviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

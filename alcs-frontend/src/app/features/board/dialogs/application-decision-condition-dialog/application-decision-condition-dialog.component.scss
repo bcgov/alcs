@@ -34,11 +34,11 @@
   border-radius: 4px;
 
   ::ng-deep .mdc-checkbox {
-    --mdc-checkbox-selected-icon-color: #{colors.$primary-color};
-    --mdc-checkbox-selected-focus-icon-color: #{colors.$primary-color};
-    --mdc-checkbox-selected-focus-icon-color: #{colors.$primary-color};
-    --mdc-checkbox-selected-hover-icon-color: #{colors.$primary-color};
-    --mdc-checkbox-selected-pressed-icon-color: #{colors.$primary-color};
+    --mat-checkbox-selected-icon-color: #{colors.$primary-color};
+    --mat-checkbox-selected-focus-icon-color: #{colors.$primary-color};
+    --mat-checkbox-selected-focus-icon-color: #{colors.$primary-color};
+    --mat-checkbox-selected-hover-icon-color: #{colors.$primary-color};
+    --mat-checkbox-selected-pressed-icon-color: #{colors.$primary-color};
   }
 }
 
@@ -46,10 +46,10 @@
   border: 2px solid colors.$error-color !important;
 
   ::ng-deep .mdc-checkbox {
-    --mdc-checkbox-unselected-icon-color: #{colors.$error-color};
-    --mdc-checkbox-unselected-focus-icon-color: #{colors.$error-color};
-    --mdc-checkbox-unselected-hover-icon-color: #{colors.$error-color};
-    --mdc-checkbox-unselected-pressed-icon-color: #{colors.$error-color};
+    --mat-checkbox-unselected-icon-color: #{colors.$error-color};
+    --mat-checkbox-unselected-focus-icon-color: #{colors.$error-color};
+    --mat-checkbox-unselected-hover-icon-color: #{colors.$error-color};
+    --mat-checkbox-unselected-pressed-icon-color: #{colors.$error-color};
   }
 }
 

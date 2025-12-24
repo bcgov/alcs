@@ -6,9 +6,10 @@ import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../shared/dto/ag-ca
 import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
-  selector: 'app-proposal',
-  templateUrl: './proposal.component.html',
-  styleUrls: ['./proposal.component.scss'],
+    selector: 'app-proposal',
+    templateUrl: './proposal.component.html',
+    styleUrls: ['./proposal.component.scss'],
+    standalone: false
 })
 export class ProposalComponent implements OnInit {
   noticeOfIntent?: NoticeOfIntentDto;

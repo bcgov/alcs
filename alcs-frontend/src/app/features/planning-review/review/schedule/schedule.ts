@@ -8,9 +8,10 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { EditMeetingDialogComponent } from '../edit-meeting-dialog/edit-meeting-dialog.component';
 
 @Component({
-  selector: 'app-planning-review-schedule',
-  templateUrl: './schedule.html',
-  styleUrls: ['./schedule.scss'],
+    selector: 'app-planning-review-schedule',
+    templateUrl: './schedule.html',
+    styleUrls: ['./schedule.scss'],
+    standalone: false
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

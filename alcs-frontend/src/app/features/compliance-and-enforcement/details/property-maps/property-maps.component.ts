@@ -41,9 +41,10 @@ export const mapsDocumentOptions: DocumentUploadDialogData = {
 };
 
 @Component({
-  selector: 'app-property-maps',
-  templateUrl: './property-maps.component.html',
-  styleUrls: ['./property-maps.component.scss'],
+    selector: 'app-property-maps',
+    templateUrl: './property-maps.component.html',
+    styleUrls: ['./property-maps.component.scss'],
+    standalone: false
 })
 export class PropertyMapsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

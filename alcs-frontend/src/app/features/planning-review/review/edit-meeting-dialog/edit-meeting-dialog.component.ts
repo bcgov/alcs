@@ -13,9 +13,10 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
 @Component({
-  selector: 'app-planning-review-meeting-dialog',
-  templateUrl: './edit-meeting-dialog.component.html',
-  styleUrls: ['./edit-meeting-dialog.component.scss'],
+    selector: 'app-planning-review-meeting-dialog',
+    templateUrl: './edit-meeting-dialog.component.html',
+    styleUrls: ['./edit-meeting-dialog.component.scss'],
+    standalone: false
 })
 export class EditMeetingDialogComponent {
   isLoading = false;

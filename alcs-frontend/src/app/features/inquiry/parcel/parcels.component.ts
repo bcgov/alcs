@@ -7,9 +7,10 @@ import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-parcel',
-  templateUrl: './parcels.component.html',
-  styleUrls: ['./parcels.component.scss'],
+    selector: 'app-parcel',
+    templateUrl: './parcels.component.html',
+    styleUrls: ['./parcels.component.scss'],
+    standalone: false
 })
 export class ParcelsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

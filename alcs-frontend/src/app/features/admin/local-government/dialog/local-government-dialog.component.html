@@ -30,7 +30,7 @@
           bindValue="code"
           [clearable]="false"
           [(ngModel)]="model.preferredRegionCode"
-        >
+          >
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
             <div [ngOptionHighlight]="search">{{ item.label }}</div>
           </ng-template>
@@ -41,18 +41,19 @@
     <div>
       <mat-form-field style="width: 100%" appearance="outline">
         <mat-chip-grid #chipGrid aria-label="Enter emails">
-          <mat-chip-row
-            *ngFor="let email of model.emails"
-            (removed)="onRemoveEmail(email)"
-            [editable]="true"
-            (edited)="editEmail(email, $event)"
-            [aria-description]="'press enter to edit ' + email"
-          >
-            {{ email }}
-            <button matChipRemove [attr.aria-label]="'remove ' + email">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
+          @for (email of model.emails; track email) {
+            <mat-chip-row
+              (removed)="onRemoveEmail(email)"
+              [editable]="true"
+              (edited)="editEmail(email, $event)"
+              [aria-description]="'press enter to edit ' + email"
+              >
+              {{ email }}
+              <button matChipRemove [attr.aria-label]="'remove ' + email">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
         </mat-chip-grid>
         <input
           placeholder="Type and hit ‘space’ to add emails"
@@ -61,9 +62,11 @@
           [matChipInputAddOnBlur]="true"
           (matChipInputTokenEnd)="addEmail($event)"
           [formControl]="email"
-        />
+          />
       </mat-form-field>
-      <mat-error *ngIf="email.invalid"><mat-icon>warning</mat-icon>&nbsp;Please type a valid email address</mat-error>
+      @if (email.invalid) {
+        <mat-error><mat-icon>warning</mat-icon>&nbsp;Please type a valid email address</mat-error>
+      }
     </div>
 
     <div>
@@ -93,7 +96,7 @@
         color="primary"
         type="submit"
         [disabled]="!governmentForm.form.valid"
-      >
+        >
         Save
       </button>
     </div>

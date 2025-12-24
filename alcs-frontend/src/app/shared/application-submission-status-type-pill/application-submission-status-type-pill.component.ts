@@ -9,9 +9,10 @@ export type ApplicationSubmissionStatusPill = {
 };
 
 @Component({
-  selector: 'app-application-submission-status-type-pill',
-  templateUrl: './application-submission-status-type-pill.component.html',
-  styleUrls: ['./application-submission-status-type-pill.component.scss'],
+    selector: 'app-application-submission-status-type-pill',
+    templateUrl: './application-submission-status-type-pill.component.html',
+    styleUrls: ['./application-submission-status-type-pill.component.scss'],
+    standalone: false
 })
 export class ApplicationSubmissionStatusTypePillComponent {
   @Input() type!: ApplicationSubmissionStatusPill;

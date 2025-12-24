@@ -70,9 +70,10 @@ export const BOARD_TYPE_CODES = {
 };
 
 @Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss'],
+    selector: 'app-board',
+    templateUrl: './board.component.html',
+    styleUrls: ['./board.component.scss'],
+    standalone: false
 })
 export class BoardComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

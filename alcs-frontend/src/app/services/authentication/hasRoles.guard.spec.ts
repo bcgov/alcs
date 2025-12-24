@@ -1,10 +1,11 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { AuthenticationService, ICurrentUser, ROLES } from './authentication.service';
 import { HasRolesGuard } from './hasRoles.guard';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('HasRolesGuard', () => {
   let guard: HasRolesGuard;
@@ -27,18 +28,20 @@ describe('HasRolesGuard', () => {
     });
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [
+    imports: [RouterTestingModule],
+    providers: [
         {
-          provide: AuthenticationService,
-          useValue: mockAuthService,
+            provide: AuthenticationService,
+            useValue: mockAuthService,
         },
         {
-          provide: Router,
-          useValue: mockRouter,
+            provide: Router,
+            useValue: mockRouter,
         },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     guard = TestBed.inject(HasRolesGuard);
   });
 

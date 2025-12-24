@@ -8,9 +8,10 @@ import { STRUCTURE_TYPES } from '../../../../../services/notice-of-intent/notice
 import { STRUCTURE_TYPE_LABEL_MAP } from '../../../../notice-of-intent/applicant-info/notice-of-intent-details/additional-information/additional-information.component';
 
 @Component({
-  selector: 'app-pofo-details[applicationSubmission]',
-  templateUrl: './pofo-details.component.html',
-  styleUrls: ['./pofo-details.component.scss'],
+    selector: 'app-pofo-details[applicationSubmission]',
+    templateUrl: './pofo-details.component.html',
+    styleUrls: ['./pofo-details.component.scss'],
+    standalone: false
 })
 export class PofoDetailsComponent {
   isSoilStructureFarmUseReasonVisible = false;

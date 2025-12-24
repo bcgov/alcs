@@ -6,9 +6,10 @@ import { NgModel } from '@angular/forms';
 import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
-  selector: 'app-decision-condition-types-dialog',
-  templateUrl: './card-status-dialog.component.html',
-  styleUrls: ['./card-status-dialog.component.scss'],
+    selector: 'app-decision-condition-types-dialog',
+    templateUrl: './card-status-dialog.component.html',
+    styleUrls: ['./card-status-dialog.component.scss'],
+    standalone: false
 })
 export class CardStatusDialogComponent implements OnInit {
   description = '';

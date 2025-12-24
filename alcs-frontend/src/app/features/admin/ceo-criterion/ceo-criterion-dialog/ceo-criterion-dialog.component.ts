@@ -6,9 +6,10 @@ import { CeoCriterionDto } from '../../../../services/application/decision/appli
 import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
-  selector: 'app-ceo-criterion-dialog',
-  templateUrl: './ceo-criterion-dialog.component.html',
-  styleUrls: ['./ceo-criterion-dialog.component.scss'],
+    selector: 'app-ceo-criterion-dialog',
+    templateUrl: './ceo-criterion-dialog.component.html',
+    styleUrls: ['./ceo-criterion-dialog.component.scss'],
+    standalone: false
 })
 export class CeoCriterionDialogComponent {
   description = '';

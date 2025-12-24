@@ -16,12 +16,14 @@
           [(ngModel)]="code"
           #codeModel="ngModel"
           name="code"
-        />
+          />
       </mat-form-field>
     </div>
-    <div *ngIf="isCodeExisiting(codeModel) && !isEdit" class="full-width code-error-message">
-      <app-error-message message="Code already in use, pick a different code."></app-error-message>
-    </div>
+    @if (isCodeExisiting(codeModel) && !isEdit) {
+      <div class="full-width code-error-message">
+        <app-error-message message="Code already in use, pick a different code."></app-error-message>
+      </div>
+    }
     <div>
       <mat-form-field class="label" appearance="outline">
         <mat-label>Label</mat-label>
@@ -51,7 +53,7 @@
         color="primary"
         type="submit"
         [disabled]="!form.form.valid"
-      >
+        >
         Save
       </button>
     </div>

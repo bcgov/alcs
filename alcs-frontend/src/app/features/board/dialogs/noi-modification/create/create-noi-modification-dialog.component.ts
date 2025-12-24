@@ -11,9 +11,10 @@ import { NoticeOfIntentService } from '../../../../../services/notice-of-intent/
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-create-noi-modi-dialog',
-  templateUrl: './create-noi-modification-dialog.html',
-  styleUrls: ['./create-noi-modification-dialog.component.scss'],
+    selector: 'app-create-noi-modi-dialog',
+    templateUrl: './create-noi-modification-dialog.html',
+    styleUrls: ['./create-noi-modification-dialog.component.scss'],
+    standalone: false
 })
 export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

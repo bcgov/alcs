@@ -8,9 +8,10 @@ import { STRUCTURE_TYPES } from '../../../../../services/notice-of-intent/notice
 import { STRUCTURE_TYPE_LABEL_MAP } from '../../../../notice-of-intent/applicant-info/notice-of-intent-details/additional-information/additional-information.component';
 
 @Component({
-  selector: 'app-pfrs-details[applicationSubmission]',
-  templateUrl: './pfrs-details.component.html',
-  styleUrls: ['./pfrs-details.component.scss'],
+    selector: 'app-pfrs-details[applicationSubmission]',
+    templateUrl: './pfrs-details.component.html',
+    styleUrls: ['./pfrs-details.component.scss'],
+    standalone: false
 })
 export class PfrsDetailsComponent {
   isSoilStructureFarmUseReasonVisible = false;

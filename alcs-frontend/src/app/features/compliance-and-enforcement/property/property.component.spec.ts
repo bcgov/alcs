@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -15,6 +15,7 @@ import { ApplicationLocalGovernmentService } from '../../../services/application
 import { ApplicationService } from '../../../services/application/application.service';
 import { ComplianceAndEnforcementPropertyDto } from '../../../services/compliance-and-enforcement/property/property.dto';
 import { PropertyComponent } from './property.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PropertyComponent', () => {
   let component: PropertyComponent;
@@ -29,22 +30,21 @@ describe('PropertyComponent', () => {
     mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [PropertyComponent],
-      imports: [
-        ReactiveFormsModule,
+    declarations: [PropertyComponent],
+    imports: [ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
         MatButtonToggleModule,
         MatAutocompleteModule,
-        NoopAnimationsModule,
-        HttpClientTestingModule,
-      ],
-      providers: [
+        NoopAnimationsModule],
+    providers: [
         { provide: ApplicationLocalGovernmentService, useValue: mockLocalGovernmentService },
         { provide: ApplicationService, useValue: mockApplicationService },
-      ],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(PropertyComponent);
     component = fixture.componentInstance;

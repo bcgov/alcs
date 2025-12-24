@@ -7,9 +7,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { CardStatusDialogComponent } from './card-status-dialog/card-status-dialog.component';
 
 @Component({
-  selector: 'app-card-status',
-  templateUrl: './card-status.component.html',
-  styleUrls: ['./card-status.component.scss'],
+    selector: 'app-card-status',
+    templateUrl: './card-status.component.html',
+    styleUrls: ['./card-status.component.scss'],
+    standalone: false
 })
 export class CardStatusComponent implements OnInit {
   cardStatusDtos: CardStatusDto[] = [];

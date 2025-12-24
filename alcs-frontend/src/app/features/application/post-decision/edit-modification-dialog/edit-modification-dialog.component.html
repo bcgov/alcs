@@ -13,7 +13,7 @@
           formControlName="submittedDate"
           name="submittedDate"
           required
-        />
+          />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker type="date"></mat-datepicker>
       </mat-form-field>
@@ -29,7 +29,9 @@
       <mat-form-field class="full-grid-line" appearance="outline">
         <mat-label>Resolutions to be Modified</mat-label>
         <mat-select formControlName="modifiesDecisions" multiple>
-          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{ decision.resolution }}</mat-option>
+          @for (decision of decisions; track decision) {
+            <mat-option [value]="decision.uuid">{{ decision.resolution }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
 

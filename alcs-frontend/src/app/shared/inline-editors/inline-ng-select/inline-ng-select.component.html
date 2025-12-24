@@ -1,23 +1,35 @@
 <div class="inline-number-wrapper">
-  <span class="left" *ngIf="!isEditing">
-    <a (click)="startEdit()" class="add" *ngIf="!value"> Select an option </a>
-    <a (click)="startEdit()" class="add" *ngIf="multiple && coerceArray(value)?.length === 0"> Select option(s) </a>
-    <span *ngIf="!multiple">
-      {{ value }}
+  @if (!isEditing) {
+    <span class="left">
+      @if (!value) {
+        <a (click)="startEdit()" class="add"> Select an option </a>
+      }
+      @if (multiple && coerceArray(value)?.length === 0) {
+        <a (click)="startEdit()" class="add"> Select option(s) </a>
+      }
+      @if (!multiple) {
+        <span>
+          {{ value }}
+        </span>
+      }
+      @if (multiple) {
+        <span>
+          {{ coerceArray(value)?.join(', ') }}
+        </span>
+      }
+      @if (value) {
+        <button class="edit-button" mat-icon-button (click)="startEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      }
     </span>
-    <span *ngIf="multiple">
-      {{ coerceArray(value)?.join(', ') }}
-    </span>
-    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing
     }"
-  >
+    >
     <div appearance="outline">
       <ng-select
         appearance="outline"

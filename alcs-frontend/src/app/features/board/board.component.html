@@ -7,30 +7,36 @@
       </h2>
     </div>
     <div class="board-actions">
-      <div *ngIf="hasAssigneeFilter" class="assignee-filter">
-        <mat-label>Filter: </mat-label>
-        <mat-form-field appearance="outline">
-          <mat-select multiple="true" [(ngModel)]="selectedAssignees" placeholder="Assignee">
-            <mat-select-trigger>{{ generateAssigneeFilterTriggerText(selectedAssignees) }}</mat-select-trigger>
-            <mat-option *ngFor="let assignee of assignees" [value]="assignee">
-              {{ assignee.prettyName }}{{ this.currentUser?.uuid === assignee.uuid ? ' (Me)' : '' }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <ng-container *ngIf="creatableCards.length === 1">
+      @if (hasAssigneeFilter) {
+        <div class="assignee-filter">
+          <mat-label>Filter: </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select multiple="true" [(ngModel)]="selectedAssignees" placeholder="Assignee">
+              <mat-select-trigger>{{ generateAssigneeFilterTriggerText(selectedAssignees) }}</mat-select-trigger>
+              @for (assignee of assignees; track assignee) {
+                <mat-option [value]="assignee">
+                  {{ assignee.prettyName }}{{ this.currentUser?.uuid === assignee.uuid ? ' (Me)' : '' }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+      @if (creatableCards.length === 1) {
         <button mat-flat-button color="primary" (click)="onOpenCreateDialog(creatableCards[0].dialog)">
           + {{ creatableCards[0].label }}
         </button>
-      </ng-container>
-      <ng-container *ngIf="creatableCards.length > 1">
+      }
+      @if (creatableCards.length > 1) {
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
-          <button *ngFor="let creator of creatableCards" mat-menu-item (click)="onOpenCreateDialog(creator.dialog)">
-            {{ creator.label }}
-          </button>
+          @for (creator of creatableCards; track creator) {
+            <button mat-menu-item (click)="onOpenCreateDialog(creator.dialog)">
+              {{ creator.label }}
+            </button>
+          }
         </mat-menu>
-      </ng-container>
+      }
     </div>
   </div>
   <div class="board-content">

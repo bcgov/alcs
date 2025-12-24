@@ -1,134 +1,175 @@
 <div class="split header">
-  <h3>Applicant Info</h3>  
+  <h3>Applicant Info</h3>
 </div>
 <section>
-  <app-parcel *ngIf="files && submission" [notificationSubmission]="submission"></app-parcel>
+  @if (files && submission) {
+    <app-parcel [notificationSubmission]="submission"></app-parcel>
+  }
 </section>
 <section>
   <h4>Transferee(s)</h4>
-  <div *ngIf="submission" class="review-table">
-    <div class="transferee-table full-width">
-      <div class="subheading2">Type</div>
-      <div class="subheading2">Full Name</div>
-      <div class="subheading2">Organization Name</div>
-      <div class="subheading2">Phone</div>
-      <div class="subheading2">Email</div>
-      <ng-container *ngFor="let transferee of submission.transferees">
-        <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
-        <div>{{ transferee.displayName }}</div>
-        <div>
-          {{ transferee.organizationName }}
-          <div *ngIf="!transferee.organizationName" class="no-data-text">Not Applicable</div>
-        </div>
-        <div>
-          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
-        </div>
-        <div>{{ transferee.email }}</div>
-      </ng-container>
+  @if (submission) {
+    <div class="review-table">
+      <div class="transferee-table full-width">
+        <div class="subheading2">Type</div>
+        <div class="subheading2">Full Name</div>
+        <div class="subheading2">Organization Name</div>
+        <div class="subheading2">Phone</div>
+        <div class="subheading2">Email</div>
+        @for (transferee of submission.transferees; track transferee) {
+          <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
+          <div>{{ transferee.displayName }}</div>
+          <div>
+            {{ transferee.organizationName }}
+            @if (!transferee.organizationName) {
+              <div class="no-data-text">Not Applicable</div>
+            }
+          </div>
+          <div>
+            @if (transferee.phoneNumber) {
+              <span>{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
+            }
+          </div>
+          <div>{{ transferee.email }}</div>
+        }
+      </div>
     </div>
-  </div>
+  }
 </section>
 <section>
   <h4>Primary Contact Information</h4>
-  <div *ngIf="submission" class="review-table">
-    <div class="subheading2 grid-1">First Name</div>
-    <div class="grid-double">
-      {{ submission.contactFirstName }}
-      <app-no-data *ngIf="!submission.contactFirstName"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Last Name</div>
-    <div class="grid-double">
-      {{ submission.contactLastName }}
-      <app-no-data *ngIf="!submission.contactLastName"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Organization</div>
-    <div class="grid-double">
-      {{ submission.contactOrganization }}
-      <app-no-data *ngIf="!submission.contactOrganization"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Phone</div>
-    <div class="grid-double">
-      {{ submission.contactPhone }}
-      <app-no-data *ngIf="!submission.contactPhone"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Email</div>
-    <div class="grid-double">
-      {{ submission.contactEmail }}
-      <app-no-data *ngIf="!submission.contactEmail"></app-no-data>
-    </div>
-  </div>
-</section>
-<section *ngIf="showFullApp">
-  <h4>Purpose of SRW</h4>
-  <div *ngIf="submission" class="review-table">
-    <div class="subheading2 grid-1">Submitter’s File Number</div>
-    <div class="grid-double">
-      {{ submission.submittersFileNumber }}
-      <app-no-data *ngIf="!submission.submittersFileNumber"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">What is the purpose of the SRW?</div>
-    <div class="grid-double">
-      {{ submission.purpose }}
-      <app-no-data *ngIf="!submission.purpose"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Total area of the SRW</div>
-    <div class="grid-double">
-      {{ submission.totalArea }}
-      <span *ngIf="submission.totalArea"> ha</span>
-      <app-no-data *ngIf="!submission.totalArea"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Upload Terms of the SRW</div>
-    <div class="grid-double">
-      <div *ngFor="let document of srwTerms">
-        <a routerLink="/document/{{ document.documentUuid }}" target="_blank">
-          {{ document.fileName }}
-        </a>
+  @if (submission) {
+    <div class="review-table">
+      <div class="subheading2 grid-1">First Name</div>
+      <div class="grid-double">
+        {{ submission.contactFirstName }}
+        @if (!submission.contactFirstName) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Last Name</div>
+      <div class="grid-double">
+        {{ submission.contactLastName }}
+        @if (!submission.contactLastName) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Organization</div>
+      <div class="grid-double">
+        {{ submission.contactOrganization }}
+        @if (!submission.contactOrganization) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Phone</div>
+      <div class="grid-double">
+        {{ submission.contactPhone }}
+        @if (!submission.contactPhone) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Email</div>
+      <div class="grid-double">
+        {{ submission.contactEmail }}
+        @if (!submission.contactEmail) {
+          <app-no-data></app-no-data>
+        }
       </div>
     </div>
-    <div class="subheading2 grid-1">Is there a survey plan associated with the SRW?</div>
-    <div class="grid-double">
-      {{ submission.hasSurveyPlan ? 'Yes' : 'No' }}
-    </div>
-    <div *ngIf="submission.hasSurveyPlan" class="full-width survey-plan-table">
-      <div class="subheading2">File Name</div>
-      <div class="subheading2">Survey Plan Number</div>
-      <div class="subheading2">Control Number</div>
-      <ng-container *ngFor="let document of surveyPlans">
-        <div>
-          <a routerLink="/document/{{ document.documentUuid }}" target="_blank">
-            {{ document.fileName }}
-          </a>
-        </div>
-        <div>
-          {{ document.surveyPlanNumber }}
-        </div>
-        <div>
-          {{ document.controlNumber }}
-        </div>
-      </ng-container>
-    </div>
-  </div>
+  }
 </section>
-<section *ngIf="showFullApp">
-  <h4>Optional Documents</h4>
-  <div *ngIf="submission" class="review-table">
-    <div class="other-attachments full-width">
-      <div class="subheading2">File Name</div>
-      <div class="subheading2">Type</div>
-      <div class="subheading2">Description</div>
-
-      <ng-container *ngFor="let file of otherFiles">
-        <div>
-          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+@if (showFullApp) {
+  <section>
+    <h4>Purpose of SRW</h4>
+    @if (submission) {
+      <div class="review-table">
+        <div class="subheading2 grid-1">Submitter’s File Number</div>
+        <div class="grid-double">
+          {{ submission.submittersFileNumber }}
+          @if (!submission.submittersFileNumber) {
+            <app-no-data></app-no-data>
+          }
         </div>
-        <div>
-          {{ file.type?.label }}
+        <div class="subheading2 grid-1">What is the purpose of the SRW?</div>
+        <div class="grid-double">
+          {{ submission.purpose }}
+          @if (!submission.purpose) {
+            <app-no-data></app-no-data>
+          }
         </div>
-        <div>
-          {{ file.description }}
+        <div class="subheading2 grid-1">Total area of the SRW</div>
+        <div class="grid-double">
+          {{ submission.totalArea }}
+          @if (submission.totalArea) {
+            <span> ha</span>
+          }
+          @if (!submission.totalArea) {
+            <app-no-data></app-no-data>
+          }
         </div>
-      </ng-container>
-      <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
-    </div>
-  </div>
-</section>
+        <div class="subheading2 grid-1">Upload Terms of the SRW</div>
+        <div class="grid-double">
+          @for (document of srwTerms; track document) {
+            <div>
+              <a routerLink="/document/{{ document.documentUuid }}" target="_blank">
+                {{ document.fileName }}
+              </a>
+            </div>
+          }
+        </div>
+        <div class="subheading2 grid-1">Is there a survey plan associated with the SRW?</div>
+        <div class="grid-double">
+          {{ submission.hasSurveyPlan ? 'Yes' : 'No' }}
+        </div>
+        @if (submission.hasSurveyPlan) {
+          <div class="full-width survey-plan-table">
+            <div class="subheading2">File Name</div>
+            <div class="subheading2">Survey Plan Number</div>
+            <div class="subheading2">Control Number</div>
+            @for (document of surveyPlans; track document) {
+              <div>
+                <a routerLink="/document/{{ document.documentUuid }}" target="_blank">
+                  {{ document.fileName }}
+                </a>
+              </div>
+              <div>
+                {{ document.surveyPlanNumber }}
+              </div>
+              <div>
+                {{ document.controlNumber }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </section>
+}
+@if (showFullApp) {
+  <section>
+    <h4>Optional Documents</h4>
+    @if (submission) {
+      <div class="review-table">
+        <div class="other-attachments full-width">
+          <div class="subheading2">File Name</div>
+          <div class="subheading2">Type</div>
+          <div class="subheading2">Description</div>
+          @for (file of otherFiles; track file) {
+            <div>
+              <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+            </div>
+            <div>
+              {{ file.type?.label }}
+            </div>
+            <div>
+              {{ file.description }}
+            </div>
+          }
+          @if (otherFiles.length === 0) {
+            <div class="full-width">No optional attachments</div>
+          }
+        </div>
+      </div>
+    }
+  </section>
+}

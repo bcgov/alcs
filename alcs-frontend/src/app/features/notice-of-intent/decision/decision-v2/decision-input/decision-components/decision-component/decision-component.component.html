@@ -4,16 +4,22 @@
 </div>
 
 <form [formGroup]="form" class="decision-component-form">
-  <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.POFO" class="row-no-flex">
-    <app-noi-pofo-input [form]="form"></app-noi-pofo-input>
-  </div>
+  @if (data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.POFO) {
+    <div class="row-no-flex">
+      <app-noi-pofo-input [form]="form"></app-noi-pofo-input>
+    </div>
+  }
 
-  <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.ROSO" class="row-no-flex">
-    <app-noi-roso-input [form]="form"></app-noi-roso-input>
-  </div>
-  <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.PFRS" class="row-no-flex">
-    <app-noi-pfrs-input [form]="form"></app-noi-pfrs-input>
-  </div>
+  @if (data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.ROSO) {
+    <div class="row-no-flex">
+      <app-noi-roso-input [form]="form"></app-noi-roso-input>
+    </div>
+  }
+  @if (data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.PFRS) {
+    <div class="row-no-flex">
+      <app-noi-pfrs-input [form]="form"></app-noi-pfrs-input>
+    </div>
+  }
 
   <div class="grid-2">
     <div>

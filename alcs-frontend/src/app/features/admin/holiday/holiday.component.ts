@@ -8,9 +8,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { HolidayDialogComponent } from './holiday-dialog/holiday-dialog.component';
 
 @Component({
-  selector: 'app-holiday',
-  templateUrl: './holiday.component.html',
-  styleUrls: ['./holiday.component.scss'],
+    selector: 'app-holiday',
+    templateUrl: './holiday.component.html',
+    styleUrls: ['./holiday.component.scss'],
+    standalone: false
 })
 export class HolidayComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

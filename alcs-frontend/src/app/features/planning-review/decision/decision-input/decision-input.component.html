@@ -18,37 +18,42 @@
     </div>
 
     <div class="resolution-number-wrapper">
-      <div *ngIf="!resolutionNumberControl.getRawValue()" class="resolution-number-btn-wrapper">
-        <button
-          class="generate-number-btn"
-          [loading]="isLoading"
-          type="button"
-          mat-stroked-button
-          color="primary"
-          (click)="onGenerateResolutionNumber()"
+      @if (!resolutionNumberControl.getRawValue()) {
+        <div class="resolution-number-btn-wrapper">
+          <button
+            class="generate-number-btn"
+            [loading]="isLoading"
+            type="button"
+            mat-stroked-button
+            color="primary"
+            (click)="onGenerateResolutionNumber()"
           [ngClass]="{
             'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
           }"
-        >
-          Generate Number
-        </button>
-        <app-error-message
-          *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
-        ></app-error-message>
-      </div>
-      <div *ngIf="resolutionNumberControl.getRawValue()">
-        <div class="resolution-number">
-          <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
-          <button
-            matTooltip="Delete resolution number"
-            class="delete-icon"
-            mat-icon-button
-            (click)="onDeleteResolutionNumber()"
-          >
-            <mat-icon>delete</mat-icon>
+            >
+            Generate Number
           </button>
+          @if (!resolutionNumberControl.valid && resolutionNumberControl.touched) {
+            <app-error-message
+            ></app-error-message>
+          }
         </div>
-      </div>
+      }
+      @if (resolutionNumberControl.getRawValue()) {
+        <div>
+          <div class="resolution-number">
+            <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
+            <button
+              matTooltip="Delete resolution number"
+              class="delete-icon"
+              mat-icon-button
+              (click)="onDeleteResolutionNumber()"
+              >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      }
     </div>
 
     <mat-form-field appearance="outline" class="date-picker">
@@ -60,7 +65,7 @@
         formControlName="date"
         name="date"
         [min]="minDate | startOfDay"
-      />
+        />
       <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
       <mat-datepicker #datePicker type="date"></mat-datepicker>
     </mat-form-field>

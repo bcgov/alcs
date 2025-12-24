@@ -1,19 +1,25 @@
 <div class="inline-number-wrapper">
-  <span class="left" *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add" *ngIf="!selectedValue"> Select Outcome </a>
-    <span>
-      {{ formattedAnswer }}
+  @if (!isEditing) {
+    <span class="left">
+      @if (!selectedValue) {
+        <a (click)="toggleEdit()" class="add"> Select Outcome </a>
+      }
+      <span>
+        {{ formattedAnswer }}
+      </span>
+      @if (selectedValue) {
+        <button class="edit-button" mat-icon-button (click)="startEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      }
     </span>
-    <button *ngIf="selectedValue" class="edit-button" mat-icon-button (click)="startEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing
     }"
-  >
+    >
     <form [formGroup]="form">
       <mat-button-toggle-group id="chairReviewOutcome" formControlName="chairReviewOutcome" name="chairReviewOutcome">
         <mat-button-toggle value="REC">Reconsider</mat-button-toggle>

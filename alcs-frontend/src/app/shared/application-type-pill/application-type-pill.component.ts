@@ -9,9 +9,10 @@ export type ApplicationPill = {
 };
 
 @Component({
-  selector: 'app-application-type-pill[type]',
-  templateUrl: './application-type-pill.component.html',
-  styleUrls: ['./application-type-pill.component.scss'],
+    selector: 'app-application-type-pill[type]',
+    templateUrl: './application-type-pill.component.html',
+    styleUrls: ['./application-type-pill.component.scss'],
+    standalone: false
 })
 export class ApplicationTypePillComponent {
   @Input() type!: ApplicationPill;

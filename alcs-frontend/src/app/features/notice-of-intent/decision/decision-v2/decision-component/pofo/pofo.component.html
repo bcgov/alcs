@@ -2,25 +2,43 @@
 <div class="full-width">
   <div class="subheading2">Type, origin and quality of fill proposed to be placed</div>
   <div class="pre-wrapped-text">{{ component.soilFillTypeToPlace }}</div>
-  <app-no-data *ngIf="component.soilFillTypeToPlace === null"></app-no-data>
+  @if (component.soilFillTypeToPlace === null) {
+    <app-no-data></app-no-data>
+  }
 </div>
 <div>
   <div class="subheading2">Volume</div>
-  {{ component.soilToPlaceVolume }}<span *ngIf="component.soilToPlaceVolume !== null"> m<sup>3</sup></span>
-  <app-no-data *ngIf="component.soilToPlaceVolume === null"></app-no-data>
+  {{ component.soilToPlaceVolume }}@if (component.soilToPlaceVolume !== null) {
+  <span> m<sup>3</sup></span>
+}
+@if (component.soilToPlaceVolume === null) {
+  <app-no-data></app-no-data>
+}
 </div>
 <div>
   <div class="subheading2">Area</div>
-  {{ component.soilToPlaceArea }}<span *ngIf="component.soilToPlaceArea !== null"> m<sup>2</sup></span>
-  <app-no-data *ngIf="component.soilToPlaceArea === null"></app-no-data>
+  {{ component.soilToPlaceArea }}@if (component.soilToPlaceArea !== null) {
+  <span> m<sup>2</sup></span>
+}
+@if (component.soilToPlaceArea === null) {
+  <app-no-data></app-no-data>
+}
 </div>
 <div>
   <div class="subheading2">Maximum Depth</div>
-  {{ component.soilToPlaceMaximumDepth }}<span *ngIf="component.soilToPlaceMaximumDepth !== null"> m</span>
-  <app-no-data *ngIf="component.soilToPlaceMaximumDepth === null"></app-no-data>
+  {{ component.soilToPlaceMaximumDepth }}@if (component.soilToPlaceMaximumDepth !== null) {
+  <span> m</span>
+}
+@if (component.soilToPlaceMaximumDepth === null) {
+  <app-no-data></app-no-data>
+}
 </div>
 <div>
   <div class="subheading2">Average Depth</div>
-  {{ component.soilToPlaceAverageDepth }}<span *ngIf="component.soilToPlaceAverageDepth !== null"> m</span>
-  <app-no-data *ngIf="component.soilToPlaceAverageDepth === null"></app-no-data>
+  {{ component.soilToPlaceAverageDepth }}@if (component.soilToPlaceAverageDepth !== null) {
+  <span> m</span>
+}
+@if (component.soilToPlaceAverageDepth === null) {
+  <app-no-data></app-no-data>
+}
 </div>

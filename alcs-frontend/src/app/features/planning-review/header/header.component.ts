@@ -13,9 +13,10 @@ import { UpcomingMeetingBoardMapDto } from '../../../services/decision-meeting/d
 import { IncomingFileBoardMapDto } from '../../../services/incoming-file/incoming-file.dto';
 
 @Component({
-  selector: 'app-planning-review-header[planningReview]',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+    selector: 'app-planning-review-header[planningReview]',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: false
 })
 export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();

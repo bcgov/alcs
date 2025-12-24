@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
@@ -15,6 +15,7 @@ import { ComplianceAndEnforcementService } from '../../../services/compliance-an
 import { ToastService } from '../../../services/toast/toast.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { UserDto } from '../../../services/user/user.dto';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('OverviewComponent', () => {
   const mockUser: UserDto = {
@@ -55,28 +56,30 @@ describe('OverviewComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [OverviewComponent, StartOfDayPipe],
-      providers: [
+    declarations: [OverviewComponent, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ComplianceAndEnforcementService,
-          useValue: mockComplianceAndEnforcementService,
+            provide: ComplianceAndEnforcementService,
+            useValue: mockComplianceAndEnforcementService,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ fileNumber: '12345' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ fileNumber: '12345' }),
+                },
             },
-          },
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(OverviewComponent);
     component = fixture.componentInstance;

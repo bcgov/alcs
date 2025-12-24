@@ -9,7 +9,8 @@ jest.mock('../../../../services/compliance-and-enforcement/compliance-and-enforc
 
 import { statusFromFile } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DetailsHeaderComponent', () => {
   let fixture: ComponentFixture<DetailsHeaderComponent>;
@@ -17,10 +18,10 @@ describe('DetailsHeaderComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [DetailsHeaderComponent],
-      providers: [],
-    });
+    declarations: [DetailsHeaderComponent],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     fixture = TestBed.createComponent(DetailsHeaderComponent);
     component = fixture.componentInstance;

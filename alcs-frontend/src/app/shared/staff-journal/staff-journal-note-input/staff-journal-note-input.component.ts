@@ -5,9 +5,10 @@ import {
 } from '../../../services/application/application-staff-journal/staff-journal.dto';
 
 @Component({
-  selector: 'app-staff-journal-note-input',
-  templateUrl: './staff-journal-note-input.component.html',
-  styleUrls: ['./staff-journal-note-input.component.scss'],
+    selector: 'app-staff-journal-note-input',
+    templateUrl: './staff-journal-note-input.component.html',
+    styleUrls: ['./staff-journal-note-input.component.scss'],
+    standalone: false
 })
 export class StaffJournalNoteInputComponent implements OnInit {
   @Input() isNewNote = false;

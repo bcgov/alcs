@@ -3,9 +3,10 @@ import { AsyncValidatorFn, FormControl, Validators } from '@angular/forms';
 import { NonZeroValidator } from '../../validators/value-validator';
 
 @Component({
-  selector: 'app-inline-number[value]',
-  templateUrl: './inline-number.component.html',
-  styleUrls: ['./inline-number.component.scss'],
+    selector: 'app-inline-number[value]',
+    templateUrl: './inline-number.component.html',
+    styleUrls: ['./inline-number.component.scss'],
+    standalone: false
 })
 export class InlineNumberComponent implements AfterContentChecked {
   private _value: number | undefined = undefined;

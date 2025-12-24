@@ -12,9 +12,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { InfoRequestDialogComponent, REASON_TYPE } from './info-request-dialog/info-request-dialog.component';
 
 @Component({
-  selector: 'app-noi-info-requests',
-  templateUrl: './info-requests.component.html',
-  styleUrls: ['./info-requests.component.scss'],
+    selector: 'app-noi-info-requests',
+    templateUrl: './info-requests.component.html',
+    styleUrls: ['./info-requests.component.scss'],
+    standalone: false
 })
 export class InfoRequestsComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

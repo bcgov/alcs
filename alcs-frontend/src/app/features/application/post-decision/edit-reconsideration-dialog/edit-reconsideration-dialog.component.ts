@@ -14,9 +14,10 @@ import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { parseBooleanToString, parseStringToBoolean } from '../../../../shared/utils/boolean-helper';
 
 @Component({
-  selector: 'app-edit-reconsideration-dialog',
-  templateUrl: './edit-reconsideration-dialog.component.html',
-  styleUrls: ['./edit-reconsideration-dialog.component.scss'],
+    selector: 'app-edit-reconsideration-dialog',
+    templateUrl: './edit-reconsideration-dialog.component.html',
+    styleUrls: ['./edit-reconsideration-dialog.component.scss'],
+    standalone: false
 })
 export class EditReconsiderationDialogComponent implements OnInit {
   isLoading = false;

@@ -1,7 +1,10 @@
-<div *ngIf="applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">How many hectares are proposed for non-farm use?</div>
-  <div class="grid-double">
-    {{ applicationSubmission.nfuHectares }} <span *ngIf="applicationSubmission.nfuHectares">ha</span>
+@if (applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">How many hectares are proposed for non-farm use?</div>
+    <div class="grid-double">
+      {{ applicationSubmission.nfuHectares }} @if (applicationSubmission.nfuHectares) {
+      <span>ha</span>
+    }
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
@@ -17,21 +20,25 @@
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <div *ngFor="let file of proposalMap">
-      <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
-    </div>
+    @for (file of proposalMap; track file) {
+      <div>
+        <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
+          {{ file.fileName }}
+        </a>
+      </div>
+    }
   </div>
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed non-farm use?
   </div>
   <div class="grid-double">
-    <span *ngIf="applicationSubmission.nfuWillImportFill !== null">{{
-      applicationSubmission.nfuWillImportFill === true ? 'Yes' : 'No'
-    }}</span>
+    @if (applicationSubmission.nfuWillImportFill !== null) {
+      <span>{{
+        applicationSubmission.nfuWillImportFill === true ? 'Yes' : 'No'
+      }}</span>
+    }
   </div>
-  <ng-container *ngIf="applicationSubmission.nfuWillImportFill === true">
+  @if (applicationSubmission.nfuWillImportFill === true) {
     <div class="full-width">
       <hr />
     </div>
@@ -42,7 +49,6 @@
     <div class="grid-double">
       {{ applicationSubmission.nfuFillTypeDescription }}
     </div>
-
     <div class="subheading1 full-width">Fill to be Placed</div>
     <div class="full-width soil-table">
       <div class="grid-1"><strong>Area</strong></div>
@@ -52,5 +58,6 @@
       <div class="grid-1"><strong>Average Depth</strong></div>
       <div class="grid-2">{{ applicationSubmission.nfuAverageFillDepth }} m</div>
     </div>
-  </ng-container>
+  }
 </div>
+}

@@ -32,9 +32,10 @@ export interface NoticeOfIntentDecisionConditionDateWithIndex extends NoticeOfIn
 }
 
 @Component({
-  selector: 'app-condition',
-  templateUrl: './condition.component.html',
-  styleUrls: ['./condition.component.scss'],
+    selector: 'app-condition',
+    templateUrl: './condition.component.html',
+    styleUrls: ['./condition.component.scss'],
+    standalone: false
 })
 export class ConditionComponent implements OnInit, AfterViewInit {
   @Input() condition!: Condition;

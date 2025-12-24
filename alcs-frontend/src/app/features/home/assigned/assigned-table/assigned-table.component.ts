@@ -15,9 +15,10 @@ export interface AssignedToMeFile {
 }
 
 @Component({
-  selector: 'app-assigned-table',
-  templateUrl: './assigned-table.component.html',
-  styleUrls: ['./assigned-table.component.scss'],
+    selector: 'app-assigned-table',
+    templateUrl: './assigned-table.component.html',
+    styleUrls: ['./assigned-table.component.scss'],
+    standalone: false
 })
 export class AssignedTableComponent {
   @Input() assignedFiles: AssignedToMeFile[] = [];

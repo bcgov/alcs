@@ -15,9 +15,10 @@ import { DecisionConditionFinancialInstrumentService } from '../../../services/c
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-decision-condition-financial-instrument-dialog',
-  templateUrl: './decision-condition-financial-instrument-dialog.component.html',
-  styleUrl: './decision-condition-financial-instrument-dialog.component.scss',
+    selector: 'app-decision-condition-financial-instrument-dialog',
+    templateUrl: './decision-condition-financial-instrument-dialog.component.html',
+    styleUrl: './decision-condition-financial-instrument-dialog.component.scss',
+    standalone: false
 })
 export class DecisionConditionFinancialInstrumentDialogComponent implements OnInit {
   @Input() service?: DecisionConditionFinancialInstrumentService;

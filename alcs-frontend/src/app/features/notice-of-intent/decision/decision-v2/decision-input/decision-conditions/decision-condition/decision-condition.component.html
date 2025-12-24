@@ -1,7 +1,7 @@
 <div class="split">
   <h5>{{ data.type?.label }}</h5>
   <div class="buttons">
-    <ng-container *ngIf="showMultiDateUi">
+    @if (showMultiDateUi) {
       <div class="add-date-button-wrapper">
         <button
           type="button"
@@ -9,12 +9,14 @@
           mat-flat-button
           color="primary"
           (click)="openDateDialog(true)"
-        >
+          >
           + Due Dates
         </button>
-        <app-error-message *ngIf="showDateError"></app-error-message>
+        @if (showDateError) {
+          <app-error-message></app-error-message>
+        }
       </div>
-    </ng-container>
+    }
     <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
   </div>
 </div>
@@ -24,50 +26,58 @@
     <mat-form-field
       appearance="outline"
       [class.condition-full-width]="numberOfSelectedConditions === 2 || numberOfSelectedConditions === 0"
-    >
+      >
       <mat-label>Component to Condition</mat-label>
       <mat-select [formControl]="componentsToCondition" multiple>
-        <mat-option *ngFor="let component of selectableComponents" [value]="component.tempId">{{
-          component.label
-        }}</mat-option>
+        @for (component of selectableComponents; track component) {
+          <mat-option [value]="component.tempId">{{
+            component.label
+          }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" *ngIf="showAdmFeeField">
-      <mat-label>Administrative Fee Amount</mat-label>
-      <input
-        matInput
-        mask="separator.2"
-        thousandSeparator=","
-        separatorLimit="99999999"
-        formControlName="administrativeFee"
-      />
-    </mat-form-field>
+    @if (showAdmFeeField) {
+      <mat-form-field appearance="outline">
+        <mat-label>Administrative Fee Amount</mat-label>
+        <input
+          matInput
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="99999999"
+          formControlName="administrativeFee"
+          />
+      </mat-form-field>
+    }
 
-    <mat-form-field appearance="outline" class="date-picker" *ngIf="showSingleDateField">
-      <mat-label>{{ singleDateLabel }}</mat-label>
-      <input
-        matInput
-        (click)="datePicker.open()"
-        [matDatepicker]="datePicker"
-        formControlName="singleDate"
-        name="singleDate"
-        [min]="minDate | startOfDay"
-      />
-      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-      <mat-datepicker #datePicker type="date"></mat-datepicker>
-    </mat-form-field>
+    @if (showSingleDateField) {
+      <mat-form-field appearance="outline" class="date-picker">
+        <mat-label>{{ singleDateLabel }}</mat-label>
+        <input
+          matInput
+          (click)="datePicker.open()"
+          [matDatepicker]="datePicker"
+          formControlName="singleDate"
+          name="singleDate"
+          [min]="minDate | startOfDay"
+          />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker type="date"></mat-datepicker>
+      </mat-form-field>
+    }
 
-    <mat-form-field appearance="outline" *ngIf="showSecurityAmountField">
-      <mat-label>Security Amount</mat-label>
-      <input
-        matInput
-        mask="separator.2"
-        thousandSeparator=","
-        separatorLimit="99999999"
-        formControlName="securityAmount"
-      />
-    </mat-form-field>
+    @if (showSecurityAmountField) {
+      <mat-form-field appearance="outline">
+        <mat-label>Security Amount</mat-label>
+        <input
+          matInput
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="99999999"
+          formControlName="securityAmount"
+          />
+      </mat-form-field>
+    }
 
     <mat-form-field appearance="outline" class="condition-full-width">
       <mat-label>Description</mat-label>
@@ -76,12 +86,14 @@
   </div>
 </form>
 
-<ng-container *ngIf="showMultiDateUi && dates.length > 0">
+@if (showMultiDateUi && dates.length > 0) {
   <div class="date-list">
     <strong>Due Dates:</strong>
-    <div class="date-chip" *ngFor="let date of dates">{{ formatDate(date.date) }}</div>
+    @for (date of dates; track date) {
+      <div class="date-chip">{{ formatDate(date.date) }}</div>
+    }
     <button type="button" mat-icon-button class="edit-date-button" (click)="openDateDialog(false)">
       <mat-icon>edit</mat-icon>
     </button>
   </div>
-</ng-container>
+}

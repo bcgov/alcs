@@ -8,9 +8,10 @@ import { UserService } from '../../../services/user/user.service';
 import { CardType } from '../../../shared/card/card.component';
 
 @Component({
-  selector: 'app-subtask',
-  templateUrl: './subtask.component.html',
-  styleUrls: ['./subtask.component.scss'],
+    selector: 'app-subtask',
+    templateUrl: './subtask.component.html',
+    styleUrls: ['./subtask.component.scss'],
+    standalone: false
 })
 export class SubtaskComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

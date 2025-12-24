@@ -15,9 +15,10 @@ type LoadingModifications = NoticeOfIntentModificationDto & {
   canBeDeleted: boolean;
 };
 @Component({
-  selector: 'app-noi-post-decision',
-  templateUrl: './post-decision.component.html',
-  styleUrls: ['./post-decision.component.scss'],
+    selector: 'app-noi-post-decision',
+    templateUrl: './post-decision.component.html',
+    styleUrls: ['./post-decision.component.scss'],
+    standalone: false
 })
 export class PostDecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

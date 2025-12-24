@@ -1,19 +1,16 @@
-<ng-container *ngIf="isDraft; else viewTemplate">
+@if (isDraft) {
   <strong>Documents:</strong>
-
   <table mat-table [dataSource]="documentsTableData" matSort class="mat-elevation-z3 document-table full-width">
     <ng-container matColumnDef="source">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by source">Source</th>
       <td mat-cell *matCellDef="let document">{{ document.source }}</td>
     </ng-container>
-
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by type">Type</th>
       <td mat-cell *matCellDef="let document" [matTooltip]="document.type.label">
         {{ document.type.label }}
       </td>
     </ng-container>
-
     <ng-container matColumnDef="fileName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">Document Name</th>
       <td mat-cell *matCellDef="let document">
@@ -22,52 +19,47 @@
           target="_blank"
           [matTooltip]="document.fileName"
           [matTooltipDisabled]="document.fileName.length <= fileNameTruncLen"
-        >
+          >
           {{ document.fileName }}
         </a>
       </td>
     </ng-container>
-
     <ng-container matColumnDef="uploadedAt">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">Upload Date</th>
       <td mat-cell *matCellDef="let document">{{ document.uploadedAt | date }}</td>
     </ng-container>
-
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
       <td mat-cell *matCellDef="let document">
         <button class="action-button" mat-icon-button (click)="edit.emit(document)">
           <mat-icon>edit</mat-icon>
         </button>
-
         <button class="action-button" mat-icon-button (click)="delete.emit(document)">
           <mat-icon color="warn">delete</mat-icon>
         </button>
       </td>
     </ng-container>
-
     <tr mat-header-row *matHeaderRowDef="documentColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: documentColumns"></tr>
     <tr class="mat-row" *matNoDataRow>
       <td class="no-documents" colspan="6">No documents</td>
     </tr>
   </table>
-</ng-container>
-
-<ng-template #viewTemplate>
+} @else {
   <div class="documents-wrapper">
     <strong>Documents:</strong>
-
     <div class="document-list">
-      <a
-        *ngFor="let document of documentsTableData.data"
-        routerLink="/document/{{ document.documentUuid }}"
-        target="_blank"
-        [matTooltip]="document.fileName"
-        [matTooltipDisabled]="document.fileName.length <= fileNameTruncLen"
-      >
-        {{ document.fileName }}
-      </a>
+      @for (document of documentsTableData.data; track document) {
+        <a
+          routerLink="/document/{{ document.documentUuid }}"
+          target="_blank"
+          [matTooltip]="document.fileName"
+          [matTooltipDisabled]="document.fileName.length <= fileNameTruncLen"
+          >
+          {{ document.fileName }}
+        </a>
+      }
     </div>
   </div>
-</ng-template>
+}
+

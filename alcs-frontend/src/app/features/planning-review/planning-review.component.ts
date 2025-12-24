@@ -45,9 +45,10 @@ export const childRoutes = [
 ];
 
 @Component({
-  selector: 'app-planning-review',
-  templateUrl: './planning-review.component.html',
-  styleUrls: ['./planning-review.component.scss'],
+    selector: 'app-planning-review',
+    templateUrl: './planning-review.component.html',
+    styleUrls: ['./planning-review.component.scss'],
+    standalone: false
 })
 export class PlanningReviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

@@ -36,9 +36,10 @@ import {
 import { ConfirmationDialogStyle } from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-chronology',
-  templateUrl: './chronology.component.html',
-  styleUrls: ['./chronology.component.scss'],
+    selector: 'app-compliance-and-enforcement-chronology',
+    templateUrl: './chronology.component.html',
+    styleUrls: ['./chronology.component.scss'],
+    standalone: false
 })
 export class ComplianceAndEnforcementChronologyComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(ComplianceAndEnforcementChronologyEntryComponent)

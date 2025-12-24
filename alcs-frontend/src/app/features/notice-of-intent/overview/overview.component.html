@@ -1,12 +1,16 @@
 <div class="split">
   <h3>Overview</h3>
   <div>
-    <button *ngIf="!isCancelled" type="button" mat-stroked-button color="warn" (click)="onCancel()">
-      Cancel NOI
-    </button>
-    <button *ngIf="isCancelled" type="button" mat-stroked-button color="primary" (click)="onUncancel()">
-      Uncancel NOI
-    </button>
+    @if (!isCancelled) {
+      <button type="button" mat-stroked-button color="warn" (click)="onCancel()">
+        Cancel NOI
+      </button>
+    }
+    @if (isCancelled) {
+      <button type="button" mat-stroked-button color="primary" (click)="onUncancel()">
+        Uncancel NOI
+      </button>
+    }
   </div>
 </div>
 <section>
@@ -20,7 +24,9 @@
 </section>
 <section>
   <section>
-    <app-staff-journal *ngIf="noticeOfIntent" parentType="NOI" [parentUuid]="noticeOfIntent.uuid" />
+    @if (noticeOfIntent) {
+      <app-staff-journal parentType="NOI" [parentUuid]="noticeOfIntent.uuid" />
+    }
   </section>
 </section>
 <section>

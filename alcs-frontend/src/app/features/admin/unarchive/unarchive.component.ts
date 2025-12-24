@@ -8,9 +8,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { CardType } from '../../../shared/card/card.component';
 
 @Component({
-  selector: 'app-unarchive',
-  templateUrl: './unarchive.component.html',
-  styleUrls: ['./unarchive.component.scss'],
+    selector: 'app-unarchive',
+    templateUrl: './unarchive.component.html',
+    styleUrls: ['./unarchive.component.scss'],
+    standalone: false
 })
 export class UnarchiveComponent {
   search = '';

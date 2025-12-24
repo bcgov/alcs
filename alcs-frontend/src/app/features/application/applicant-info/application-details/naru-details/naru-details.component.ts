@@ -6,9 +6,10 @@ import { ApplicationSubmissionDto } from '../../../../../services/application/ap
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-naru-details[applicationSubmission]',
-  templateUrl: './naru-details.component.html',
-  styleUrls: ['./naru-details.component.scss'],
+    selector: 'app-naru-details[applicationSubmission]',
+    templateUrl: './naru-details.component.html',
+    styleUrls: ['./naru-details.component.scss'],
+    standalone: false
 })
 export class NaruDetailsComponent {
   _applicationSubmission: ApplicationSubmissionDto | undefined;

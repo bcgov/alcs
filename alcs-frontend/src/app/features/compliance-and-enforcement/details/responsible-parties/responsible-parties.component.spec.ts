@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -13,6 +13,7 @@ import {
 import { ResponsiblePartiesService } from '../../../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ResponsiblePartiesDetailsComponent } from './responsible-parties.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ResponsiblePartiesDetailsComponent', () => {
   let component: ResponsiblePartiesDetailsComponent;
@@ -33,35 +34,37 @@ describe('ResponsiblePartiesDetailsComponent', () => {
     mockPropertyService = createMock<ComplianceAndEnforcementPropertyService>();
 
     TestBed.configureTestingModule({
-      declarations: [ResponsiblePartiesDetailsComponent],
-      imports: [HttpClientTestingModule],
-      providers: [
+    declarations: [ResponsiblePartiesDetailsComponent],
+    imports: [],
+    providers: [
         {
-          provide: ActivatedRoute,
-          useValue: mockActivatedRoute,
+            provide: ActivatedRoute,
+            useValue: mockActivatedRoute,
         },
         {
-          provide: Router,
-          useValue: mockRouter,
+            provide: Router,
+            useValue: mockRouter,
         },
         {
-          provide: ComplianceAndEnforcementService,
-          useValue: mockService,
+            provide: ComplianceAndEnforcementService,
+            useValue: mockService,
         },
         {
-          provide: ResponsiblePartiesService,
-          useValue: mockResponsiblePartiesService,
+            provide: ResponsiblePartiesService,
+            useValue: mockResponsiblePartiesService,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ComplianceAndEnforcementPropertyService,
-          useValue: mockPropertyService,
+            provide: ComplianceAndEnforcementPropertyService,
+            useValue: mockPropertyService,
         },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
 
     fixture = TestBed.createComponent(ResponsiblePartiesDetailsComponent);
     component = fixture.componentInstance;

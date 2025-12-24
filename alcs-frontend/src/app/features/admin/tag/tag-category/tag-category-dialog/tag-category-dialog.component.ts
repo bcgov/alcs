@@ -5,9 +5,10 @@ import { TagCategoryService } from '../../../../../services/tag/tag-category/tag
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-tag-category-dialog',
-  templateUrl: './tag-category-dialog.component.html',
-  styleUrls: ['./tag-category-dialog.component.scss'],
+    selector: 'app-tag-category-dialog',
+    templateUrl: './tag-category-dialog.component.html',
+    styleUrls: ['./tag-category-dialog.component.scss'],
+    standalone: false
 })
 export class TagCategoryDialogComponent {
   name = '';

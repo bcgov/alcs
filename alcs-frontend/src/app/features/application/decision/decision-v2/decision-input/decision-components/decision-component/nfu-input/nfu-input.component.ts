@@ -3,9 +3,10 @@ import { FormGroup } from '@angular/forms';
 import { NFU_SUBTYPES_OPTIONS, NFU_TYPES_OPTIONS } from '../../../../../../proposal/nfu/nfu.constants';
 
 @Component({
-  selector: 'app-nfu-input',
-  templateUrl: './nfu-input.component.html',
-  styleUrls: ['./nfu-input.component.scss'],
+    selector: 'app-nfu-input',
+    templateUrl: './nfu-input.component.html',
+    styleUrls: ['./nfu-input.component.scss'],
+    standalone: false
 })
 export class NfuInputComponent {
   @Input() form!: FormGroup;

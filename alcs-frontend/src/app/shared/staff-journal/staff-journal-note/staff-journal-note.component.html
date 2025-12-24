@@ -1,21 +1,33 @@
-<div *ngIf="note" class="note">
-  <div class="body">
-    <div class="made-by button-text">{{ note.author }}</div>
-    <div *ngIf="isEditing">
-      <app-staff-journal-note-input [note]="note" (cancel)="onCancel()" (save)="onSave($event)" labelText="Edit note" />
-    </div>
-
-    <div *ngIf="!isEditing" class="content body-text">{{ note.body }}</div>
-
-    <div class="footer" *ngIf="!isEditing">
-      <div class="edited">
-        {{ noteDate }}
-        <span *ngIf="note.edited">&nbsp;(edited)</span>
-      </div>
-      <div>
-        <button *ngIf="note.isEditable" (click)="onDelete()" mat-button>Delete</button>
-        <button *ngIf="note.isEditable" (click)="onEdit()" mat-button>Edit</button>
-      </div>
+@if (note) {
+  <div class="note">
+    <div class="body">
+      <div class="made-by button-text">{{ note.author }}</div>
+      @if (isEditing) {
+        <div>
+          <app-staff-journal-note-input [note]="note" (cancel)="onCancel()" (save)="onSave($event)" labelText="Edit note" />
+        </div>
+      }
+      @if (!isEditing) {
+        <div class="content body-text">{{ note.body }}</div>
+      }
+      @if (!isEditing) {
+        <div class="footer">
+          <div class="edited">
+            {{ noteDate }}
+            @if (note.edited) {
+              <span>&nbsp;(edited)</span>
+            }
+          </div>
+          <div>
+            @if (note.isEditable) {
+              <button (click)="onDelete()" mat-button>Delete</button>
+            }
+            @if (note.isEditable) {
+              <button (click)="onEdit()" mat-button>Edit</button>
+            }
+          </div>
+        </div>
+      }
     </div>
   </div>
-</div>
+}

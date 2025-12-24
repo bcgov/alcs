@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeepMocked } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../../services/application/application-parcel/application-parcel.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
@@ -14,6 +14,10 @@ describe('CoveDetailsComponent', () => {
   let mockAppSubService: DeepMocked<ApplicationSubmissionService>;
 
   beforeEach(async () => {
+    mockAppDocumentService = createMock();
+    mockAppParcelService = createMock();
+    mockAppSubService = createMock();
+
     await TestBed.configureTestingModule({
       declarations: [CoveDetailsComponent],
       providers: [

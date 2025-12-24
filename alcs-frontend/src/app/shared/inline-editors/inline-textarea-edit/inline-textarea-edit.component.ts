@@ -1,9 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-inline-edit[value]',
-  templateUrl: './inline-textarea-edit.component.html',
-  styleUrls: ['./inline-textarea-edit.component.scss'],
+    selector: 'app-inline-edit[value]',
+    templateUrl: './inline-textarea-edit.component.html',
+    styleUrls: ['./inline-textarea-edit.component.scss'],
+    standalone: false
 })
 export class InlineTextareaEditComponent {
   @Input() value: string = '';

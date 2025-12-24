@@ -3,9 +3,10 @@ import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 
 @Component({
-  selector: 'app-review',
-  templateUrl: './review.component.html',
-  styleUrls: ['./review.component.scss'],
+    selector: 'app-review',
+    templateUrl: './review.component.html',
+    styleUrls: ['./review.component.scss'],
+    standalone: false
 })
 export class ReviewComponent implements OnInit {
   fileNumber: string = '';

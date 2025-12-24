@@ -7,9 +7,10 @@ import { AdminLocalGovernmentService } from '../../../services/admin-local-gover
 import { LocalGovernmentDialogComponent } from './dialog/local-government-dialog.component';
 
 @Component({
-  selector: 'app-admin-local-government',
-  templateUrl: './local-government.component.html',
-  styleUrls: ['./local-government.component.scss'],
+    selector: 'app-admin-local-government',
+    templateUrl: './local-government.component.html',
+    styleUrls: ['./local-government.component.scss'],
+    standalone: false
 })
 export class LocalGovernmentComponent implements OnDestroy, OnInit {
   destroy = new Subject<void>();

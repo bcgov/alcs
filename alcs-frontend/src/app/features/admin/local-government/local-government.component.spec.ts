@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -12,6 +12,7 @@ import {
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { LocalGovernmentComponent } from './local-government.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LocalGovernmentComponent', () => {
   let component: LocalGovernmentComponent;
@@ -27,24 +28,26 @@ describe('LocalGovernmentComponent', () => {
     mockLgService.$localGovernments = new BehaviorSubject<PaginatedLocalGovernmentResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
-      declarations: [LocalGovernmentComponent],
-      providers: [
+    declarations: [LocalGovernmentComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatAutocompleteModule],
+    providers: [
         {
-          provide: AdminLocalGovernmentService,
-          useValue: mockLgService,
+            provide: AdminLocalGovernmentService,
+            useValue: mockLgService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule, MatAutocompleteModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(LocalGovernmentComponent);
     component = fixture.componentInstance;

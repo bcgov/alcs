@@ -6,9 +6,11 @@
         <mat-label>Year</mat-label>
         <mat-select [(ngModel)]="selectedYear" (valueChange)="onChangeFilter($event)">
           <mat-option value="allYears"> All Years </mat-option>
-          <mat-option *ngFor="let year of years" [value]="year">
-            {{ year }}
-          </mat-option>
+          @for (year of years; track year) {
+            <mat-option [value]="year">
+              {{ year }}
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>

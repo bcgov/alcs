@@ -54,9 +54,10 @@ export const postSubmissionRoutes = [
 ];
 
 @Component({
-  selector: 'app-notice-of-intent',
-  templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss'],
+    selector: 'app-notice-of-intent',
+    templateUrl: './notification.component.html',
+    styleUrls: ['./notification.component.scss'],
+    standalone: false
 })
 export class NotificationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

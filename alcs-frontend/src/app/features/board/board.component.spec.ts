@@ -31,7 +31,8 @@ import { ApplicationDecisionConditionCardService } from '../../services/applicat
 import { NoticeOfIntentDecisionConditionCardService } from '../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition-card/notice-of-intent-decision-condition-card.service';
 import { AssigneeDto } from '../../services/user/user.dto';
 import { CardStatusDto } from '../../services/application/application-code.dto';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('BoardComponent', () => {
   let component: BoardComponent;
@@ -177,83 +178,85 @@ describe('BoardComponent', () => {
     queryParamMapEmitter = new BehaviorSubject(new Map());
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatMenuModule, HttpClientTestingModule],
-      providers: [
+    declarations: [BoardComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [RouterTestingModule, MatMenuModule],
+    providers: [
         {
-          provide: ApplicationService,
-          useValue: applicationService,
+            provide: ApplicationService,
+            useValue: applicationService,
         },
         {
-          provide: BoardService,
-          useValue: boardService,
+            provide: BoardService,
+            useValue: boardService,
         },
         {
-          provide: MatDialog,
-          useValue: dialog,
+            provide: MatDialog,
+            useValue: dialog,
         },
         {
-          provide: ToastService,
-          useValue: toastService,
+            provide: ToastService,
+            useValue: toastService,
         },
         {
-          provide: Router,
-          useValue: router,
+            provide: Router,
+            useValue: router,
         },
         {
-          provide: CardService,
-          useValue: cardService,
+            provide: CardService,
+            useValue: cardService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            params: of(params),
-            queryParamMap: queryParamMapEmitter,
-          },
+            provide: ActivatedRoute,
+            useValue: {
+                params: of(params),
+                queryParamMap: queryParamMapEmitter,
+            },
         },
         {
-          provide: ApplicationReconsiderationService,
-          useValue: reconsiderationService,
+            provide: ApplicationReconsiderationService,
+            useValue: reconsiderationService,
         },
         {
-          provide: PlanningReferralService,
-          useValue: planningReferralService,
+            provide: PlanningReferralService,
+            useValue: planningReferralService,
         },
         {
-          provide: ApplicationModificationService,
-          useValue: modificationService,
+            provide: ApplicationModificationService,
+            useValue: modificationService,
         },
         {
-          provide: NoticeOfIntentService,
-          useValue: noticeOfIntentService,
+            provide: NoticeOfIntentService,
+            useValue: noticeOfIntentService,
         },
         {
-          provide: NoticeOfIntentModificationService,
-          useValue: noticeOfIntentModificationService,
+            provide: NoticeOfIntentModificationService,
+            useValue: noticeOfIntentModificationService,
         },
         {
-          provide: NotificationService,
-          useValue: notificationService,
+            provide: NotificationService,
+            useValue: notificationService,
         },
         {
-          provide: InquiryService,
-          useValue: inquiryService,
+            provide: InquiryService,
+            useValue: inquiryService,
         },
         {
-          provide: ApplicationDecisionConditionCardService,
-          useValue: applicationDecisionConditionCardService,
+            provide: ApplicationDecisionConditionCardService,
+            useValue: applicationDecisionConditionCardService,
         },
         {
-          provide: NoticeOfIntentDecisionConditionCardService,
-          useValue: noticeOfIntentDecisionConditionCardService,
+            provide: NoticeOfIntentDecisionConditionCardService,
+            useValue: noticeOfIntentDecisionConditionCardService,
         },
         {
-          provide: Title,
-          useValue: titleService,
+            provide: Title,
+            useValue: titleService,
         },
-      ],
-      declarations: [BoardComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(BoardComponent);
     component = fixture.componentInstance;

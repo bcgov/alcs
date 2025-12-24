@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { StartOfDayPipe } from '../../../../shared/pipes/startOfDay.pipe';
 
 import { InfoRequestDialogComponent } from './info-request-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('InfoRequestDialogComponent', () => {
   let component: InfoRequestDialogComponent;
@@ -14,20 +15,22 @@ describe('InfoRequestDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule, MatSnackBarModule],
-      providers: [
+    declarations: [InfoRequestDialogComponent, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [ReactiveFormsModule, FormsModule, MatSnackBarModule],
+    providers: [
         {
-          provide: MatDialogRef,
-          useValue: {},
+            provide: MatDialogRef,
+            useValue: {},
         },
         {
-          provide: MAT_DIALOG_DATA,
-          useValue: {},
+            provide: MAT_DIALOG_DATA,
+            useValue: {},
         },
-      ],
-      declarations: [InfoRequestDialogComponent, StartOfDayPipe],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(InfoRequestDialogComponent);
     component = fixture.componentInstance;

@@ -6,9 +6,10 @@ import { NoticeOfIntentSubmissionDetailedDto } from '../../../../../services/not
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-pofo-details',
-  templateUrl: './pofo-details.component.html',
-  styleUrls: ['./pofo-details.component.scss'],
+    selector: 'app-pofo-details',
+    templateUrl: './pofo-details.component.html',
+    styleUrls: ['./pofo-details.component.scss'],
+    standalone: false
 })
 export class PofoDetailsComponent {
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;

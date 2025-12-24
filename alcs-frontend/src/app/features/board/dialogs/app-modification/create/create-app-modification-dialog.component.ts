@@ -11,9 +11,10 @@ import { ApplicationDecisionV2Service } from '../../../../../services/applicatio
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-create',
-  templateUrl: './create-app-modification-dialog.html',
-  styleUrls: ['./create-app-modification-dialog.component.scss'],
+    selector: 'app-create',
+    templateUrl: './create-app-modification-dialog.html',
+    styleUrls: ['./create-app-modification-dialog.component.scss'],
+    standalone: false
 })
 export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

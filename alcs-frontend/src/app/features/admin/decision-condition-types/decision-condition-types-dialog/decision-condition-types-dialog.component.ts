@@ -26,9 +26,10 @@ enum ValidationFields {
 }
 
 @Component({
-  selector: 'app-decision-condition-types-dialog',
-  templateUrl: './decision-condition-types-dialog.component.html',
-  styleUrls: ['./decision-condition-types-dialog.component.scss'],
+    selector: 'app-decision-condition-types-dialog',
+    templateUrl: './decision-condition-types-dialog.component.html',
+    styleUrls: ['./decision-condition-types-dialog.component.scss'],
+    standalone: false
 })
 export class DecisionConditionTypesDialogComponent {
   // Reference for use in templates

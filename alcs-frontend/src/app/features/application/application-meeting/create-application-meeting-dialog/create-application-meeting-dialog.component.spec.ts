@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationDecisionMeetingService } from '../../../../services/application/application-decision-meeting/application-decision-meeting.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 import { CreateApplicationMeetingDialogComponent } from './create-application-meeting-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ApplicationMeetingDialogComponent', () => {
   let component: CreateApplicationMeetingDialogComponent;
@@ -14,18 +15,20 @@ describe('ApplicationMeetingDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateApplicationMeetingDialogComponent, MomentPipe],
-      providers: [
+    declarations: [CreateApplicationMeetingDialogComponent, MomentPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule, MatSnackBarModule, FormsModule],
+    providers: [
         {
-          provide: ApplicationDecisionMeetingService,
-          useValue: {},
+            provide: ApplicationDecisionMeetingService,
+            useValue: {},
         },
         { provide: MAT_DIALOG_DATA, useValue: { meetingType: { code: 'fake', label: 'fake' } } },
         { provide: MatDialogRef, useValue: {} },
-      ],
-      imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CreateApplicationMeetingDialogComponent);
     component = fixture.componentInstance;

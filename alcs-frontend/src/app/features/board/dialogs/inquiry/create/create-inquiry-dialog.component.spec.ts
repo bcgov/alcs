@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -11,6 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { CreateInquiryDialogComponent } from './create-inquiry-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CreateInquiryDialogComponent', () => {
   let component: CreateInquiryDialogComponent;
@@ -18,25 +19,24 @@ describe('CreateInquiryDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateInquiryDialogComponent],
-      imports: [
-        MatDialogModule,
-        HttpClientTestingModule,
+    declarations: [CreateInquiryDialogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule,
         MatFormFieldModule,
         MatDividerModule,
         MatInputModule,
         MatSelectModule,
         BrowserAnimationsModule,
         MatSnackBarModule,
-        MatAutocompleteModule,
-      ],
-      providers: [
+        MatAutocompleteModule],
+    providers: [
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
         { provide: ActivatedRoute, useValue: {} },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CreateInquiryDialogComponent);
     component = fixture.componentInstance;

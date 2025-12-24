@@ -12,9 +12,10 @@ export interface TimeTrackable {
 }
 
 @Component({
-  selector: 'app-time-tracker[data]',
-  templateUrl: './time-tracker.component.html',
-  styleUrls: ['./time-tracker.component.scss'],
+    selector: 'app-time-tracker[data]',
+    templateUrl: './time-tracker.component.html',
+    styleUrls: ['./time-tracker.component.scss'],
+    standalone: false
 })
 export class TimeTrackerComponent implements OnChanges {
   paused = false;

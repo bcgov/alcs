@@ -6,9 +6,10 @@ import { environment } from '../../../../environments/environment';
 import { formatDateForApi } from '../../utils/api-date-formatter';
 
 @Component({
-  selector: 'app-inline-datepicker',
-  templateUrl: './inline-datepicker.component.html',
-  styleUrls: ['./inline-datepicker.component.scss'],
+    selector: 'app-inline-datepicker',
+    templateUrl: './inline-datepicker.component.html',
+    styleUrls: ['./inline-datepicker.component.scss'],
+    standalone: false
 })
 export class InlineDatepickerComponent implements OnInit, OnChanges {
   @Input() value: number | undefined;

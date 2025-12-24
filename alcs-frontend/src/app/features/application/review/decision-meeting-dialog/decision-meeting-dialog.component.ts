@@ -13,9 +13,10 @@ export class ApplicationDecisionMeetingForm {
 }
 
 @Component({
-  selector: 'app-decision-meeting-dialog',
-  templateUrl: './decision-meeting-dialog.component.html',
-  styleUrls: ['./decision-meeting-dialog.component.scss'],
+    selector: 'app-decision-meeting-dialog',
+    templateUrl: './decision-meeting-dialog.component.html',
+    styleUrls: ['./decision-meeting-dialog.component.scss'],
+    standalone: false
 })
 export class DecisionMeetingDialogComponent {
   model: ApplicationDecisionMeetingForm;

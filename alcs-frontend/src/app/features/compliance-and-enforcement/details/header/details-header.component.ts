@@ -12,9 +12,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-details-header',
-  templateUrl: './details-header.component.html',
-  styleUrls: ['./details-header.component.scss'],
+    selector: 'app-compliance-and-enforcement-details-header',
+    templateUrl: './details-header.component.html',
+    styleUrls: ['./details-header.component.scss'],
+    standalone: false
 })
 export class DetailsHeaderComponent implements OnDestroy {
   Status = Status;

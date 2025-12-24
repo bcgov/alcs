@@ -6,9 +6,10 @@ import { NgModel } from '@angular/forms';
 import { codeExistsDirectiveValidator } from '../../../../shared/validators/code-exists-validator';
 
 @Component({
-  selector: 'app-decision-maker-dialog',
-  templateUrl: './decision-maker-dialog.component.html',
-  styleUrls: ['./decision-maker-dialog.component.scss'],
+    selector: 'app-decision-maker-dialog',
+    templateUrl: './decision-maker-dialog.component.html',
+    styleUrls: ['./decision-maker-dialog.component.scss'],
+    standalone: false
 })
 export class DecisionMakerDialogComponent {
   description = '';

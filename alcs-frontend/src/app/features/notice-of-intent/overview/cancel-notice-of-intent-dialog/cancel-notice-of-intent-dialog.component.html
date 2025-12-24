@@ -11,21 +11,25 @@
           [(ngModel)]="sendEmail"
           aria-labelledby="sendEmailLabel"
           ></mat-slide-toggle
-        >
+          >
+        </div>
       </div>
+      @if (sendEmail) {
+        <p class="msg-padding">Email will be sent to the primary contact and L/FNG</p>
+      }
+      @if (!sendEmail) {
+        <div class="warning-section">
+          <div class="warning">
+            <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Email will not be sent
+          </div>
+        </div>
+      }
     </div>
-    <p *ngIf="sendEmail" class="msg-padding">Email will be sent to the primary contact and L/FNG</p>
-    <div *ngIf="!sendEmail" class="warning-section">
-      <div class="warning">
-        <mat-icon>info</mat-icon> <b>Warning: </b>&nbsp; Email will not be sent
-      </div>
-    </div>
-  </div>
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <div class="button-container">
-    <button mat-stroked-button color="primary" [mat-dialog-close]="false">No</button>
-    <button mat-flat-button color="primary" type="button" (click)="onConfirm()">Yes</button>
-  </div>
-</mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" [mat-dialog-close]="false">No</button>
+      <button mat-flat-button color="primary" type="button" (click)="onConfirm()">Yes</button>
+    </div>
+  </mat-dialog-actions>

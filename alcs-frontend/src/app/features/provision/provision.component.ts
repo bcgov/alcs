@@ -5,9 +5,10 @@ import { environment } from '../../../environments/environment';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
-  selector: 'app-provision',
-  templateUrl: './provision.component.html',
-  styleUrls: ['./provision.component.scss'],
+    selector: 'app-provision',
+    templateUrl: './provision.component.html',
+    styleUrls: ['./provision.component.scss'],
+    standalone: false
 })
 export class ProvisionComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

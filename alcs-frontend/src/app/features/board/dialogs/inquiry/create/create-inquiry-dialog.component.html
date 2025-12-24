@@ -1,19 +1,23 @@
 <div mat-dialog-title>
   <h2 class="card-title">Create Inquiry</h2>
 </div>
-<ng-container *ngIf="currentStep === 0">
+@if (currentStep === 0) {
   <form [formGroup]="createForm" class="content">
     <h4 class="subtitle">Type</h4>
     <div class="subheading2">Select an inquiry type to learn more</div>
     <mat-radio-group (change)="onChange($event)" [formControl]="typeControl" class="type-selector" id="type">
-      <mat-radio-button *ngFor="let type of types" [value]="type.code">{{ type.label }}</mat-radio-button>
+      @for (type of types; track type) {
+        <mat-radio-button [value]="type.code">{{ type.label }}</mat-radio-button>
+      }
     </mat-radio-group>
-    <div *ngIf="selectedType" class="warning-banner" id="warningBanner">
-      <div class="subheading2">{{ selectedType.label }}</div>
-      <div style="margin-top: 12px">
-        {{ selectedType.description }}
+    @if (selectedType) {
+      <div class="warning-banner" id="warningBanner">
+        <div class="subheading2">{{ selectedType.label }}</div>
+        <div style="margin-top: 12px">
+          {{ selectedType.description }}
+        </div>
       </div>
-    </div>
+    }
     <mat-dialog-actions align="end">
       <div class="button-container">
         <button [mat-dialog-close]="false" color="primary" mat-stroked-button>Cancel</button>
@@ -23,8 +27,8 @@
       </div>
     </mat-dialog-actions>
   </form>
-</ng-container>
-<ng-container *ngIf="currentStep === 1">
+}
+@if (currentStep === 1) {
   <form (ngSubmit)="onSubmit()" [formGroup]="createForm" class="content">
     <mat-dialog-content>
       <h4>Details</h4>
@@ -39,7 +43,7 @@
             matInput
             name="date"
             required
-          />
+            />
           <mat-datepicker-toggle [for]="submissionDate" matSuffix></mat-datepicker-toggle>
           <mat-datepicker #submissionDate type="date"></mat-datepicker>
         </mat-form-field>
@@ -55,7 +59,7 @@
             bindValue="uuid"
             class="card-local-government"
             placeholder="Local/First Nation Government*"
-          >
+            >
             <ng-template let-item="item" let-search="searchTerm" ng-option-tmp>
               <div [ngOptionHighlight]="search">{{ item.name }}</div>
             </ng-template>
@@ -71,58 +75,47 @@
             bindLabel="label"
             bindValue="code"
             placeholder="Region*"
-          >
+            >
           </ng-select>
         </div>
-
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Summary</mat-label>
           <input [formControl]="summaryControl" matInput required />
         </mat-form-field>
       </div>
-
       <h4>Inquirer</h4>
-
       <div class="two-item-row">
         <mat-form-field appearance="outline">
           <mat-label>First Name</mat-label>
           <input [formControl]="firstName" matInput />
         </mat-form-field>
-
         <mat-form-field appearance="outline">
           <mat-label>Last Name</mat-label>
           <input [formControl]="lastName" matInput />
         </mat-form-field>
-
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Organization</mat-label>
           <input [formControl]="organization" matInput />
         </mat-form-field>
-
         <mat-form-field appearance="outline">
           <mat-label>Phone</mat-label>
           <input [formControl]="phone" mask="(000) 000-0000" matInput maxlength="14" placeholder="(555) 555-5555" />
         </mat-form-field>
-
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input [formControl]="email" matInput />
         </mat-form-field>
       </div>
-
       <h4>Parcels</h4>
-
       <table [dataSource]="tableSource" mat-table>
         <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
         <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-
         <ng-container matColumnDef="index">
           <th *matHeaderCellDef mat-header-cell>#</th>
           <td *matCellDef="let row; let i = index" mat-cell style="width: 6%">
             {{ i + 1 }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="address">
           <th *matHeaderCellDef mat-header-cell>Civic Address*</th>
           <td *matCellDef="let row; let i = index" mat-cell style="width: 27%">
@@ -131,20 +124,20 @@
             </mat-form-field>
           </td>
         </ng-container>
-
         <ng-container matColumnDef="pid">
           <th *matHeaderCellDef mat-header-cell>PID</th>
           <td *matCellDef="let row; let i = index" mat-cell style="width: 27%">
             <mat-form-field appearance="outline">
               <input [(ngModel)]="parcels[i].pid" [ngModelOptions]="{ standalone: true }" mask="000-000-000" matInput />
             </mat-form-field>
-            <mat-error *ngIf="parcels[i].pid && parcels[i].pid!.length > 0 && parcels[i].pid!.length < 9" class="error">
-              <mat-icon color="warn">warning</mat-icon>
-              PID must be 9 digits including leading zeroes
-            </mat-error>
+            @if (parcels[i].pid && parcels[i].pid!.length > 0 && parcels[i].pid!.length < 9) {
+              <mat-error class="error">
+                <mat-icon color="warn">warning</mat-icon>
+                PID must be 9 digits including leading zeroes
+              </mat-error>
+            }
           </td>
         </ng-container>
-
         <ng-container matColumnDef="pin">
           <th *matHeaderCellDef mat-header-cell>PIN</th>
           <td *matCellDef="let row; let i = index" mat-cell style="width: 27%">
@@ -153,7 +146,6 @@
             </mat-form-field>
           </td>
         </ng-container>
-
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef mat-header-cell>Action</th>
           <td *matCellDef="let row; let i = index" mat-cell style="width: 10%">
@@ -162,7 +154,6 @@
             </button>
           </td>
         </ng-container>
-
         <tr *matNoDataRow class="mat-row no-data">
           <td class="text-center" colspan="5">No Parcels</td>
         </tr>
@@ -180,10 +171,10 @@
           color="primary"
           mat-flat-button
           type="submit"
-        >
+          >
           Create
         </button>
       </div>
     </mat-dialog-actions>
   </form>
-</ng-container>
+}

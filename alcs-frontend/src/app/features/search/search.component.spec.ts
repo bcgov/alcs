@@ -14,7 +14,8 @@ import { ToastService } from '../../services/toast/toast.service';
 
 import { SearchComponent } from './search.component';
 import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -40,46 +41,48 @@ describe('SearchComponent', () => {
     currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-      providers: [
+    declarations: [SearchComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatAutocompleteModule],
+    providers: [
         {
-          provide: SearchService,
-          useValue: mockSearchService,
+            provide: SearchService,
+            useValue: mockSearchService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParamMap: new Observable<ParamMap>(),
-          },
+            provide: ActivatedRoute,
+            useValue: {
+                queryParamMap: new Observable<ParamMap>(),
+            },
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
-          useValue: mockLocalGovernmentService,
+            provide: ApplicationLocalGovernmentService,
+            useValue: mockLocalGovernmentService,
         },
         {
-          provide: ApplicationService,
-          useValue: mockApplicationService,
+            provide: ApplicationService,
+            useValue: mockApplicationService,
         },
         {
-          provide: NotificationSubmissionStatusService,
-          useValue: mockNotificationStatusService,
+            provide: NotificationSubmissionStatusService,
+            useValue: mockNotificationStatusService,
         },
         {
-          provide: NoticeOfIntentSubmissionStatusService,
-          useValue: mockNOIStatusService,
+            provide: NoticeOfIntentSubmissionStatusService,
+            useValue: mockNOIStatusService,
         },
         {
-          provide: AuthenticationService,
-          useValue: mockAuthService,
+            provide: AuthenticationService,
+            useValue: mockAuthService,
         },
-      ],
-      declarations: [SearchComponent],
-      imports: [MatAutocompleteModule, HttpClientTestingModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     mockAuthService.$currentUser = currentUser;
     fixture = TestBed.createComponent(SearchComponent);

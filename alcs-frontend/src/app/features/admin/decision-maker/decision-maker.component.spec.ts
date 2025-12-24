@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { ApplicationDecisionMakerService } from '../../../services/application/a
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionMakerComponent } from './decision-maker.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DecisionMakerComponent', () => {
   let component: DecisionMakerComponent;
@@ -22,24 +23,26 @@ describe('DecisionMakerComponent', () => {
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [DecisionMakerComponent],
-      providers: [
+    declarations: [DecisionMakerComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ApplicationDecisionMakerService,
-          useValue: mockCeoCriterionService,
+            provide: ApplicationDecisionMakerService,
+            useValue: mockCeoCriterionService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DecisionMakerComponent);
     component = fixture.componentInstance;

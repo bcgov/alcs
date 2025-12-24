@@ -4,9 +4,10 @@ import { NoiSubtypeService } from '../../../../services/noi-subtype/noi-subtype.
 import { NoticeOfIntentSubtypeDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 
 @Component({
-  selector: 'app-noi-subtype-dialog',
-  templateUrl: './noi-subtype-dialog.component.html',
-  styleUrls: ['./noi-subtype-dialog.component.scss'],
+    selector: 'app-noi-subtype-dialog',
+    templateUrl: './noi-subtype-dialog.component.html',
+    styleUrls: ['./noi-subtype-dialog.component.scss'],
+    standalone: false
 })
 export class NoiSubtypeDialogComponent {
   description = '';

@@ -2,9 +2,10 @@ import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-incl-excl-input',
-  templateUrl: './incl-excl-input.component.html',
-  styleUrls: ['./incl-excl-input.component.scss'],
+    selector: 'app-incl-excl-input',
+    templateUrl: './incl-excl-input.component.html',
+    styleUrls: ['./incl-excl-input.component.scss'],
+    standalone: false
 })
 export class InclExclInputComponent {
   @Input() form?: FormGroup;

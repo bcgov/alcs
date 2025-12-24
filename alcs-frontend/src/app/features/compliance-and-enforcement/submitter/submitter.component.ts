@@ -9,9 +9,10 @@ import { strictEmailValidator } from '../../../shared/validators/email-validator
 import { InitialSubmissionType } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-submitter',
-  templateUrl: './submitter.component.html',
-  styleUrls: ['./submitter.component.scss'],
+    selector: 'app-compliance-and-enforcement-submitter',
+    templateUrl: './submitter.component.html',
+    styleUrls: ['./submitter.component.scss'],
+    standalone: false
 })
 export class SubmitterComponent implements OnDestroy {
   $destroy = new Subject<void>();

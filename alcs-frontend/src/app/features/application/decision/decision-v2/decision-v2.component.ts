@@ -44,9 +44,10 @@ type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
 };
 
 @Component({
-  selector: 'app-decision-v2',
-  templateUrl: './decision-v2.component.html',
-  styleUrls: ['./decision-v2.component.scss'],
+    selector: 'app-decision-v2',
+    templateUrl: './decision-v2.component.html',
+    styleUrls: ['./decision-v2.component.scss'],
+    standalone: false
 })
 export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

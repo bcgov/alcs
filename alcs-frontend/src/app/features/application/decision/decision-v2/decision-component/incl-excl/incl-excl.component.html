@@ -2,8 +2,9 @@
 <div>
   <div class="subheading2">Applicant Type</div>
   {{ component.inclExclApplicantType }}
-  <app-no-data
-    *ngIf="component.inclExclApplicantType === null || component.inclExclApplicantType === undefined"
-  ></app-no-data>
+  @if (component.inclExclApplicantType === null || component.inclExclApplicantType === undefined) {
+    <app-no-data
+    ></app-no-data>
+  }
 </div>
 

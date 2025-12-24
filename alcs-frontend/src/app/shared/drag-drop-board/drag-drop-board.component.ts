@@ -5,9 +5,10 @@ import { CardData, CardSelectedEvent, CardType } from '../card/card.component';
 import { DragDropColumn } from './drag-drop-column.interface';
 
 @Component({
-  selector: 'app-drag-drop-board',
-  templateUrl: './drag-drop-board.component.html',
-  styleUrls: ['./drag-drop-board.component.scss'],
+    selector: 'app-drag-drop-board',
+    templateUrl: './drag-drop-board.component.html',
+    styleUrls: ['./drag-drop-board.component.scss'],
+    standalone: false
 })
 export class DragDropBoardComponent {
   @Input() cards: CardData[] = [];

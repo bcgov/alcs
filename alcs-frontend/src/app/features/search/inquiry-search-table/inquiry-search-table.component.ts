@@ -17,9 +17,10 @@ interface SearchResult {
 }
 
 @Component({
-  selector: 'app-inquiry-search-table',
-  templateUrl: './inquiry-search-table.component.html',
-  styleUrls: ['./inquiry-search-table.component.scss'],
+    selector: 'app-inquiry-search-table',
+    templateUrl: './inquiry-search-table.component.html',
+    styleUrls: ['./inquiry-search-table.component.scss'],
+    standalone: false
 })
 export class InquirySearchTableComponent {
   _planningReviews: InquirySearchResultDto[] = [];

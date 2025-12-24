@@ -1,29 +1,33 @@
 <div class="comments">
   <div>
     <div class="subheading2 header">Comments ({{ comments.length }})</div>
-    <mat-form-field *ngIf="!isEditing" class="placeholder-input" appearance="outline" (click)="onEdit()">
-      <input matInput placeholder="Add a comment..." />
-    </mat-form-field>
+    @if (!isEditing) {
+      <mat-form-field class="placeholder-input" appearance="outline" (click)="onEdit()">
+        <input matInput placeholder="Add a comment..." />
+      </mat-form-field>
+    }
 
-    <app-mention-textarea
-      *ngIf="isEditing"
-      (create)="onSave($event)"
-      [comment]="comment"
-      (cancel)="onCancel()"
-      [isNewComment]="true"
-      [notificationTitle]="notificationTitle"
-      labelText="Add a comment"
-    >
-    </app-mention-textarea>
+    @if (isEditing) {
+      <app-mention-textarea
+        (create)="onSave($event)"
+        [comment]="comment"
+        (cancel)="onCancel()"
+        [isNewComment]="true"
+        [notificationTitle]="notificationTitle"
+        labelText="Add a comment"
+        >
+      </app-mention-textarea>
+    }
   </div>
-  <app-comment
-    *ngFor="let comment of comments"
-    [comment]="comment"
-    (edit)="onEditComment($event)"
-    (delete)="onDeleteComment($event)"
-    [mentions]="comment.mentions"
-    [notificationTitle]="notificationTitle"
-  ></app-comment>
+  @for (comment of comments; track comment) {
+    <app-comment
+      [comment]="comment"
+      (edit)="onEditComment($event)"
+      (delete)="onDeleteComment($event)"
+      [mentions]="comment.mentions"
+      [notificationTitle]="notificationTitle"
+    ></app-comment>
+  }
 </div>
 
 <ng-template #mentionListTemplate let-item="item">

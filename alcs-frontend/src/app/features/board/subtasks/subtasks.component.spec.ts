@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -9,6 +9,7 @@ import { AssigneeDto, UserDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SubtasksComponent } from './subtasks.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SubtasksComponent', () => {
   let component: SubtasksComponent;
@@ -20,23 +21,25 @@ describe('SubtasksComponent', () => {
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
-      providers: [
+    declarations: [SubtasksComponent],
+    imports: [MatSnackBarModule, MatMenuModule],
+    providers: [
         {
-          provide: CardSubtaskService,
-          useValue: {},
+            provide: CardSubtaskService,
+            useValue: {},
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: {},
+            provide: ConfirmationDialogService,
+            useValue: {},
         },
         {
-          provide: UserService,
-          useValue: mockUserService,
+            provide: UserService,
+            useValue: mockUserService,
         },
-      ],
-      declarations: [SubtasksComponent],
-      imports: [HttpClientTestingModule, MatSnackBarModule, MatMenuModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(SubtasksComponent);
     component = fixture.componentInstance;

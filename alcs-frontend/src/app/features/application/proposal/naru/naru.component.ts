@@ -11,9 +11,10 @@ interface InlineSelect {
 }
 
 @Component({
-  selector: 'app-proposal-naru',
-  templateUrl: './naru.component.html',
-  styleUrls: ['./naru.component.scss'],
+    selector: 'app-proposal-naru',
+    templateUrl: './naru.component.html',
+    styleUrls: ['./naru.component.scss'],
+    standalone: false
 })
 export class NaruProposalComponent implements OnDestroy, OnInit {
   $destroy = new Subject<void>();

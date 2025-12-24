@@ -3,14 +3,17 @@
 <div class="full-width">
   <div class="subheading2">Type of soil approved to be removed</div>
   <div class="pre-wrapped-text">{{ component.soilTypeRemoved }}</div>
-  <app-no-data *ngIf="component.soilTypeRemoved === null || component.soilTypeRemoved === undefined"></app-no-data>
+  @if (component.soilTypeRemoved === null || component.soilTypeRemoved === undefined) {
+    <app-no-data></app-no-data>
+  }
 </div>
 <div class="full-width">
   <div class="subheading2">Type, origin and quality of fill proposed to be placed</div>
   <div class="pre-wrapped-text">{{ component.soilFillTypeToPlace }}</div>
-  <app-no-data
-    *ngIf="component.soilFillTypeToPlace === null || component.soilFillTypeToPlace === undefined"
-  ></app-no-data>
+  @if (component.soilFillTypeToPlace === null || component.soilFillTypeToPlace === undefined) {
+    <app-no-data
+    ></app-no-data>
+  }
 </div>
 <div class="full-width">
   <table>
@@ -23,83 +26,107 @@
       <tr>
         <td class="soil-table-label">Volume</td>
         <td>
-          <span *ngIf="component.soilToRemoveVolume !== null && component.soilToRemoveVolume !== undefined"
-            >{{ component.soilToRemoveVolume }} m<sup>3</sup></span
-          >
-          <app-no-data
-            *ngIf="component.soilToRemoveVolume === null || component.soilToRemoveVolume === undefined"
-          ></app-no-data>
-        </td>
+          @if (component.soilToRemoveVolume !== null && component.soilToRemoveVolume !== undefined) {
+            <span
+              >{{ component.soilToRemoveVolume }} m<sup>3</sup></span
+              >
+            }
+            @if (component.soilToRemoveVolume === null || component.soilToRemoveVolume === undefined) {
+              <app-no-data
+              ></app-no-data>
+            }
+          </td>
 
-        <td>
-          <span *ngIf="component.soilToPlaceVolume !== null && component.soilToPlaceVolume !== undefined"
-            >{{ component.soilToPlaceVolume }} m<sup>3</sup></span
-          >
-          <app-no-data
-            *ngIf="component.soilToPlaceVolume === null || component.soilToPlaceVolume === undefined"
-          ></app-no-data>
-        </td>
-      </tr>
-      <tr>
-        <td class="soil-table-label">Area</td>
-        <td>
-          <span *ngIf="component.soilToRemoveArea !== null && component.soilToRemoveArea !== undefined">
-            {{ component.soilToRemoveArea }} m<sup>2</sup></span
-          >
-          <app-no-data
-            *ngIf="component.soilToRemoveArea === null || component.soilToRemoveArea === undefined"
-          ></app-no-data>
-        </td>
+          <td>
+            @if (component.soilToPlaceVolume !== null && component.soilToPlaceVolume !== undefined) {
+              <span
+                >{{ component.soilToPlaceVolume }} m<sup>3</sup></span
+                >
+              }
+              @if (component.soilToPlaceVolume === null || component.soilToPlaceVolume === undefined) {
+                <app-no-data
+                ></app-no-data>
+              }
+            </td>
+          </tr>
+          <tr>
+            <td class="soil-table-label">Area</td>
+            <td>
+              @if (component.soilToRemoveArea !== null && component.soilToRemoveArea !== undefined) {
+                <span>
+                  {{ component.soilToRemoveArea }} m<sup>2</sup></span
+                  >
+                }
+                @if (component.soilToRemoveArea === null || component.soilToRemoveArea === undefined) {
+                  <app-no-data
+                  ></app-no-data>
+                }
+              </td>
 
-        <td>
-          <span *ngIf="component.soilToPlaceArea !== null && component.soilToPlaceArea !== undefined"
-            >{{ component.soilToPlaceArea }} m<sup>2</sup></span
-          >
-          <app-no-data
-            *ngIf="component.soilToPlaceArea === null || component.soilToPlaceArea === undefined"
-          ></app-no-data>
-        </td>
-      </tr>
-      <tr>
-        <td class="soil-table-label">Maximum Depth</td>
-        <td>
-          <span *ngIf="component.soilToRemoveMaximumDepth !== null && component.soilToRemoveMaximumDepth !== undefined"
-            >{{ component.soilToRemoveMaximumDepth }} m</span
-          >
-          <app-no-data
-            *ngIf="component.soilToRemoveMaximumDepth === null || component.soilToRemoveMaximumDepth === undefined"
-          ></app-no-data>
-        </td>
+              <td>
+                @if (component.soilToPlaceArea !== null && component.soilToPlaceArea !== undefined) {
+                  <span
+                    >{{ component.soilToPlaceArea }} m<sup>2</sup></span
+                    >
+                  }
+                  @if (component.soilToPlaceArea === null || component.soilToPlaceArea === undefined) {
+                    <app-no-data
+                    ></app-no-data>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td class="soil-table-label">Maximum Depth</td>
+                <td>
+                  @if (component.soilToRemoveMaximumDepth !== null && component.soilToRemoveMaximumDepth !== undefined) {
+                    <span
+                      >{{ component.soilToRemoveMaximumDepth }} m</span
+                      >
+                    }
+                    @if (component.soilToRemoveMaximumDepth === null || component.soilToRemoveMaximumDepth === undefined) {
+                      <app-no-data
+                      ></app-no-data>
+                    }
+                  </td>
 
-        <td>
-          <span *ngIf="component.soilToPlaceMaximumDepth !== null && component.soilToPlaceMaximumDepth !== undefined"
-            >{{ component.soilToPlaceMaximumDepth }} m</span
-          >
-          <app-no-data
-            *ngIf="component.soilToPlaceMaximumDepth === null || component.soilToPlaceMaximumDepth === undefined"
-          ></app-no-data>
-        </td>
-      </tr>
-      <tr>
-        <td class="soil-table-label">Average Depth</td>
-        <td>
-          <span *ngIf="component.soilToRemoveAverageDepth !== null && component.soilToRemoveAverageDepth !== undefined"
-            >{{ component.soilToRemoveAverageDepth }} m</span
-          >
-          <app-no-data
-            *ngIf="component.soilToRemoveAverageDepth === null || component.soilToRemoveAverageDepth === undefined"
-          ></app-no-data>
-        </td>
+                  <td>
+                    @if (component.soilToPlaceMaximumDepth !== null && component.soilToPlaceMaximumDepth !== undefined) {
+                      <span
+                        >{{ component.soilToPlaceMaximumDepth }} m</span
+                        >
+                      }
+                      @if (component.soilToPlaceMaximumDepth === null || component.soilToPlaceMaximumDepth === undefined) {
+                        <app-no-data
+                        ></app-no-data>
+                      }
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="soil-table-label">Average Depth</td>
+                    <td>
+                      @if (component.soilToRemoveAverageDepth !== null && component.soilToRemoveAverageDepth !== undefined) {
+                        <span
+                          >{{ component.soilToRemoveAverageDepth }} m</span
+                          >
+                        }
+                        @if (component.soilToRemoveAverageDepth === null || component.soilToRemoveAverageDepth === undefined) {
+                          <app-no-data
+                          ></app-no-data>
+                        }
+                      </td>
 
-        <td>
-          <span *ngIf="component.soilToPlaceAverageDepth !== null && component.soilToPlaceAverageDepth !== undefined">
-            {{ component.soilToPlaceAverageDepth }} m</span
-          >
-          <app-no-data
-            *ngIf="component.soilToPlaceAverageDepth === null || component.soilToPlaceAverageDepth === undefined"
-          ></app-no-data>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+                      <td>
+                        @if (component.soilToPlaceAverageDepth !== null && component.soilToPlaceAverageDepth !== undefined) {
+                          <span>
+                            {{ component.soilToPlaceAverageDepth }} m</span
+                            >
+                          }
+                          @if (component.soilToPlaceAverageDepth === null || component.soilToPlaceAverageDepth === undefined) {
+                            <app-no-data
+                            ></app-no-data>
+                          }
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>

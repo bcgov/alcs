@@ -23,9 +23,10 @@ interface SearchResult {
 }
 
 @Component({
-  selector: 'app-notice-of-intent-search-table',
-  templateUrl: './notice-of-intent-search-table.component.html',
-  styleUrls: ['./notice-of-intent-search-table.component.scss'],
+    selector: 'app-notice-of-intent-search-table',
+    templateUrl: './notice-of-intent-search-table.component.html',
+    styleUrls: ['./notice-of-intent-search-table.component.scss'],
+    standalone: false
 })
 export class NoticeOfIntentSearchTableComponent {
   _noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];

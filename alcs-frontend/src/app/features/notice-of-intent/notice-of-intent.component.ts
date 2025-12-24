@@ -95,16 +95,17 @@ const preSubmissionRoutes = [
 ];
 
 @Component({
-  selector: 'app-notice-of-intent',
-  templateUrl: './notice-of-intent.component.html',
-  styleUrls: ['./notice-of-intent.component.scss'],
-  providers: [
-    { provide: FileTagService, useClass: NoticeOfIntentTagService },
-    {
-      provide: DecisionConditionFinancialInstrumentService,
-      useClass: NoticeOfIntentDecisionConditionFinancialInstrumentService,
-    },
-  ],
+    selector: 'app-notice-of-intent',
+    templateUrl: './notice-of-intent.component.html',
+    styleUrls: ['./notice-of-intent.component.scss'],
+    providers: [
+        { provide: FileTagService, useClass: NoticeOfIntentTagService },
+        {
+            provide: DecisionConditionFinancialInstrumentService,
+            useClass: NoticeOfIntentDecisionConditionFinancialInstrumentService,
+        },
+    ],
+    standalone: false
 })
 export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

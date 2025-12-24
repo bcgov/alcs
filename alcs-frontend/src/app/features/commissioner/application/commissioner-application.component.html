@@ -9,24 +9,28 @@
       [showStatus]="true"
     ></app-details-header>
     <section class="content">
-      <div class="summary" *ngIf="!application?.decisions">
-        <h4>Proposal Summary</h4>
-        <div class="summary-content">
-          <ng-container *ngIf="application?.summary">
-            <p>{{ application?.summary }}</p>
-          </ng-container>
+      @if (!application?.decisions) {
+        <div class="summary">
+          <h4>Proposal Summary</h4>
+          <div class="summary-content">
+            @if (application?.summary) {
+              <p>{{ application?.summary }}</p>
+            }
+          </div>
         </div>
-      </div>
-      <app-commissioner-decisions
-        *ngIf="application?.decisions"
-        [applicationDecisions]="application?.decisions!"
-      ></app-commissioner-decisions>
-      <app-document
-        *ngIf="fileNumber"
-        [fileNumber]="fileNumber"
-        [visibilityFlags]="['C']"
-        tableTitle="Evidentiary Record"
-      ></app-document>
+      }
+      @if (application?.decisions) {
+        <app-commissioner-decisions
+          [applicationDecisions]="application?.decisions!"
+        ></app-commissioner-decisions>
+      }
+      @if (fileNumber) {
+        <app-document
+          [fileNumber]="fileNumber"
+          [visibilityFlags]="['C']"
+          tableTitle="Evidentiary Record"
+        ></app-document>
+      }
     </section>
   </div>
 </div>

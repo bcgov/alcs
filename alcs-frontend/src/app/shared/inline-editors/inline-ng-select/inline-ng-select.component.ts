@@ -1,9 +1,10 @@
 import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-inline-ng-select[options][value]',
-  templateUrl: './inline-ng-select.component.html',
-  styleUrls: ['./inline-ng-select.component.scss'],
+    selector: 'app-inline-ng-select[options][value]',
+    templateUrl: './inline-ng-select.component.html',
+    styleUrls: ['./inline-ng-select.component.scss'],
+    standalone: false
 })
 export class InlineNgSelectComponent implements AfterContentChecked {
   @Input() value?: string | string[] | undefined;

@@ -1,204 +1,229 @@
-<div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    Is your proposal for a principal residence with a total floor area greater than 500 m<sup>2</sup>?
-  </div>
-  <div class="grid-double">
-    <ng-container *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === true"> Yes </ng-container>
-    <ng-container *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === false"> No </ng-container>
-    <app-no-data *ngIf="_applicationSubmission.naruWillBeOverFiveHundredM2 === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Is your proposal to retain an existing residence while building a new residence?</div>
-  <div class="grid-double">
-    <ng-container *ngIf="_applicationSubmission.naruWillRetainResidence === true"> Yes </ng-container>
-    <ng-container *ngIf="_applicationSubmission.naruWillRetainResidence === false"> No </ng-container>
-    <app-no-data *ngIf="_applicationSubmission.naruWillRetainResidence === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Is your proposal for an additional residence?</div>
-  <div class="grid-double">
-    <ng-container *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === true"> Yes </ng-container>
-    <ng-container *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === false"> No </ng-container>
-    <app-no-data *ngIf="_applicationSubmission.naruWillHaveAdditionalResidence === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Is your proposal for temporary foreign worker housing?</div>
-  <div class="grid-double">
-    <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === true"> Yes </ng-container>
-    <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === false"> No </ng-container>
-    <app-no-data *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">
-    Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
-  </div>
-  <div class="grid-double">
-    <ng-container *ngIf="_applicationSubmission.naruWillImportFill === true"> Yes </ng-container>
-    <ng-container *ngIf="_applicationSubmission.naruWillImportFill === false"> No </ng-container>
-    <app-no-data *ngIf="_applicationSubmission.naruWillImportFill === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.purpose }}
-    <app-no-data *ngIf="_applicationSubmission.purpose === null"></app-no-data>
-  </div>
-
-  <ng-container
-    *ngIf="
+@if (_applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">
+      Is your proposal for a principal residence with a total floor area greater than 500 m<sup>2</sup>?
+    </div>
+    <div class="grid-double">
+      @if (_applicationSubmission.naruWillBeOverFiveHundredM2 === true) {
+        Yes
+      }
+      @if (_applicationSubmission.naruWillBeOverFiveHundredM2 === false) {
+        No
+      }
+      @if (_applicationSubmission.naruWillBeOverFiveHundredM2 === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">Is your proposal to retain an existing residence while building a new residence?</div>
+    <div class="grid-double">
+      @if (_applicationSubmission.naruWillRetainResidence === true) {
+        Yes
+      }
+      @if (_applicationSubmission.naruWillRetainResidence === false) {
+        No
+      }
+      @if (_applicationSubmission.naruWillRetainResidence === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">Is your proposal for an additional residence?</div>
+    <div class="grid-double">
+      @if (_applicationSubmission.naruWillHaveAdditionalResidence === true) {
+        Yes
+      }
+      @if (_applicationSubmission.naruWillHaveAdditionalResidence === false) {
+        No
+      }
+      @if (_applicationSubmission.naruWillHaveAdditionalResidence === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">Is your proposal for temporary foreign worker housing?</div>
+    <div class="grid-double">
+      @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === true) {
+        Yes
+      }
+      @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === false) {
+        No
+      }
+      @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">
+      Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
+    </div>
+    <div class="grid-double">
+      @if (_applicationSubmission.naruWillImportFill === true) {
+        Yes
+      }
+      @if (_applicationSubmission.naruWillImportFill === false) {
+        No
+      }
+      @if (_applicationSubmission.naruWillImportFill === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.purpose }}
+      @if (_applicationSubmission.purpose === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    @if (
       _applicationSubmission.naruWillBeOverFiveHundredM2 ||
       _applicationSubmission.naruWillHaveAdditionalResidence ||
       _applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing
-    "
-  >
+      ) {
+      <div class="subheading2 grid-1">
+        Is your proposal necessary for farm use? If so, please explain@if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing) {
+        what the temporary foreign workers will be doing on the farm
+        }.
+      </div>
+      <div class="grid-double">
+        {{ _applicationSubmission.naruResidenceNecessity }}
+        @if (_applicationSubmission.naruResidenceNecessity === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+    }
+    @if (_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing) {
+      <div class="subheading2 grid-1">How many temporary foreign workers will be housed by the proposal?</div>
+      <div class="grid-double">
+        {{ _applicationSubmission.tfwhCount }}
+      </div>
+      <div class="subheading2 grid-1">
+        Will the temporary foreign worker housing be designed to move from one place to another?
+      </div>
+      <div class="grid-double">
+        {{ _applicationSubmission.tfwhDesign ? 'Yes' : 'No' }}
+      </div>
+      <div class="subheading2 grid-1">
+        What is the size (in hectares) of the farm operation that the temporary foreign workers will be supporting?
+      </div>
+      <div class="grid-double">
+        {{ _applicationSubmission.tfwhFarmSize }}
+      </div>
+    }
     <div class="subheading2 grid-1">
-      Is your proposal necessary for farm use? If so, please explain<ng-container
-        *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing"
-      >
-        what the temporary foreign workers will be doing on the farm</ng-container
-      >.
+      Will the proposed residence(s) be clustered with existing residential structures? Please explain.
     </div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruResidenceNecessity }}
-      <app-no-data *ngIf="_applicationSubmission.naruResidenceNecessity === null"></app-no-data>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="_applicationSubmission.naruWillHaveTemporaryForeignWorkerHousing">
-    <div class="subheading2 grid-1">How many temporary foreign workers will be housed by the proposal?</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.tfwhCount }}
-    </div>
-
-    <div class="subheading2 grid-1">
-      Will the temporary foreign worker housing be designed to move from one place to another?
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.tfwhDesign ? 'Yes' : 'No' }}
-    </div>
-
-    <div class="subheading2 grid-1">
-      What is the size (in hectares) of the farm operation that the temporary foreign workers will be supporting?
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.tfwhFarmSize }}
-    </div>
-  </ng-container>
-
-  <div class="subheading2 grid-1">
-    Will the proposed residence(s) be clustered with existing residential structures? Please explain.
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruClustered }}
-    <app-no-data *ngIf="_applicationSubmission.naruClustered === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">
-    Will the proposed residence(s) be located within a 60 m setback from the front lot line? Please explain.
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruSetback }}
-    <app-no-data *ngIf="_applicationSubmission.naruSetback === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">
-    Where on the parcel will the proposal be situated and is there an agricultural rationale for the proposed location?
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruLocationRationale }}
-    <app-no-data *ngIf="_applicationSubmission.naruLocationRationale === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">
-    Describe any infrastructure required to support the proposed residence(s) and the approximate area (m<sup>2</sup>)
-    required for that infrastructure
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.naruInfrastructure }}
-    <app-no-data *ngIf="_applicationSubmission.naruInfrastructure === null"></app-no-data>
-  </div>
-
-  <ng-container *ngIf="_applicationSubmission.naruExistingResidences">
-    <div class="full-width existing-residences">
-      <div class="grid-1 subheading2">Existing Residence</div>
-      <div class="grid-2 subheading2">Total Floor Area</div>
-      <div class="grid-3 subheading2">Description</div>
-      <ng-container *ngIf="_applicationSubmission.naruExistingResidences?.length === 0">
+      {{ _applicationSubmission.naruClustered }}
+      @if (_applicationSubmission.naruClustered === null) {
         <app-no-data></app-no-data>
-      </ng-container>
-      <ng-container *ngFor="let existingResidence of _applicationSubmission.naruExistingResidences; let i = index">
-        <div class="grid-1">#{{ i + 1 }}</div>
-        <div class="grid-2">
-          <ng-container *ngIf="existingResidence.floorArea === 0; else validFloorArea">
-            <app-no-data></app-no-data>
-          </ng-container>
-          <ng-template #validFloorArea>
-            {{ existingResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
-          </ng-template>
-        </div>
-        <div class="grid-3">{{ existingResidence.description }}</div>
-      </ng-container>
+      }
     </div>
-  </ng-container>
-
-  <ng-container>
-    <div class="full-width existing-residences">
-      <div class="grid-1 subheading2">Proposed Residence</div>
-      <div class="grid-2 subheading2">Total Floor Area</div>
-      <div class="grid-3 subheading2">Description</div>
-      <ng-container *ngIf="_applicationSubmission.naruExistingResidences?.length === 0">
-        <app-no-data></app-no-data>
-      </ng-container>
-      <ng-container *ngFor="let proposedResidence of _applicationSubmission.naruProposedResidences; let i = index">
-        <div class="grid-1">#{{ i + 1 }}</div>
-        <div class="grid-2">
-          {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
-        </div>
-        <div class="grid-3">
-          <ng-container *ngIf="!proposedResidence.description; else validDescription">
-            <app-no-data></app-no-data>
-          </ng-container>
-          <ng-template #validDescription>
-            {{ proposedResidence.description }}
-          </ng-template>
-        </div>
-      </ng-container>
+    <div class="subheading2 grid-1">
+      Will the proposed residence(s) be located within a 60 m setback from the front lot line? Please explain.
     </div>
-  </ng-container>
-
-  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
-  <div class="grid-double">
-    <div *ngFor="let file of proposalMap">
-      <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
-    </div>
-  </div>
-
-  <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
-  <div class="grid-double">
-    <div *ngFor="let file of buildingPlans">
-      <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
-    </div>
-    <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
-  </div>
-
-  <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
-    <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruFillType }}
+      {{ _applicationSubmission.naruSetback }}
+      @if (_applicationSubmission.naruSetback === null) {
+        <app-no-data></app-no-data>
+      }
     </div>
-
-    <div class="subheading1 full-width">Fill to be Placed</div>
-    <div class="full-width soil-table">
-      <div class="grid-1"><strong>Area</strong></div>
-      <div class="grid-2">{{ _applicationSubmission.naruToPlaceArea }} m<sup>2</sup></div>
-      <div class="grid-1"><strong>Maximum Depth</strong></div>
-      <div class="grid-2">{{ _applicationSubmission.naruToPlaceMaximumDepth }} m</div>
-      <div class="grid-1"><strong>Average Depth</strong></div>
-      <div class="grid-2">{{ _applicationSubmission.naruToPlaceAverageDepth }} m</div>
+    <div class="subheading2 grid-1">
+      Where on the parcel will the proposal be situated and is there an agricultural rationale for the proposed location?
     </div>
-  </ng-container>
-</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruLocationRationale }}
+      @if (_applicationSubmission.naruLocationRationale === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">
+      Describe any infrastructure required to support the proposed residence(s) and the approximate area (m<sup>2</sup>)
+      required for that infrastructure
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruInfrastructure }}
+      @if (_applicationSubmission.naruInfrastructure === null) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    @if (_applicationSubmission.naruExistingResidences) {
+      <div class="full-width existing-residences">
+        <div class="grid-1 subheading2">Existing Residence</div>
+        <div class="grid-2 subheading2">Total Floor Area</div>
+        <div class="grid-3 subheading2">Description</div>
+        @if (_applicationSubmission.naruExistingResidences.length === 0) {
+          <app-no-data></app-no-data>
+        }
+        @for (existingResidence of _applicationSubmission.naruExistingResidences; track existingResidence; let i = $index) {
+          <div class="grid-1">#{{ i + 1 }}</div>
+          <div class="grid-2">
+            @if (existingResidence.floorArea === 0) {
+              <app-no-data></app-no-data>
+            } @else {
+              {{ existingResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+            }
+          </div>
+          <div class="grid-3">{{ existingResidence.description }}</div>
+        }
+      </div>
+    }
+    <ng-container>
+      <div class="full-width existing-residences">
+        <div class="grid-1 subheading2">Proposed Residence</div>
+        <div class="grid-2 subheading2">Total Floor Area</div>
+        <div class="grid-3 subheading2">Description</div>
+        @if (_applicationSubmission.naruExistingResidences?.length === 0) {
+          <app-no-data></app-no-data>
+        }
+        @for (proposedResidence of _applicationSubmission.naruProposedResidences; track proposedResidence; let i = $index) {
+          <div class="grid-1">#{{ i + 1 }}</div>
+          <div class="grid-2">
+            {{ proposedResidence.floorArea }} <span matTextSuffix>m<sup>2</sup></span>
+          </div>
+          <div class="grid-3">
+            @if (!proposedResidence.description) {
+              <app-no-data></app-no-data>
+            } @else {
+              {{ proposedResidence.description }}
+            }
+          </div>
+        }
+      </div>
+    </ng-container>
+    <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+    <div class="grid-double">
+      @for (file of proposalMap; track file) {
+        <div>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
+            {{ file.fileName }}
+          </a>
+        </div>
+      }
+    </div>
+    <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
+    <div class="grid-double">
+      @for (file of buildingPlans; track file) {
+        <div>
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
+            {{ file.fileName }}
+          </a>
+        </div>
+      }
+      @if (buildingPlans.length === 0) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    @if (_applicationSubmission.naruWillImportFill) {
+      <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
+      <div class="grid-double">
+        {{ _applicationSubmission.naruFillType }}
+      </div>
+      <div class="subheading1 full-width">Fill to be Placed</div>
+      <div class="full-width soil-table">
+        <div class="grid-1"><strong>Area</strong></div>
+        <div class="grid-2">{{ _applicationSubmission.naruToPlaceArea }} m<sup>2</sup></div>
+        <div class="grid-1"><strong>Maximum Depth</strong></div>
+        <div class="grid-2">{{ _applicationSubmission.naruToPlaceMaximumDepth }} m</div>
+        <div class="grid-1"><strong>Average Depth</strong></div>
+        <div class="grid-2">{{ _applicationSubmission.naruToPlaceAverageDepth }} m</div>
+      </div>
+    }
+  </div>
+}

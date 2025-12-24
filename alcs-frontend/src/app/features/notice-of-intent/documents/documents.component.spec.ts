@@ -31,6 +31,8 @@ describe('NoiDocumentsComponent', () => {
     mockToastService = createMock();
     mockNoiDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
     mockNoiSubStatusService = createMock();
+    mockAppSubService = createMock();
+    mockAppParcelService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [NoiDocumentsComponent],

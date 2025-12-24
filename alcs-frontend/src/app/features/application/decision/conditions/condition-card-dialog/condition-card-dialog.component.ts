@@ -14,9 +14,10 @@ import { CardType } from '../../../../../shared/card/card.component';
 import { countToString } from '../../../../../shared/utils/count-to-string';
 
 @Component({
-  selector: 'app-condition-card-dialog',
-  templateUrl: './condition-card-dialog.component.html',
-  styleUrl: './condition-card-dialog.component.scss',
+    selector: 'app-condition-card-dialog',
+    templateUrl: './condition-card-dialog.component.html',
+    styleUrl: './condition-card-dialog.component.scss',
+    standalone: false
 })
 export class ConditionCardDialogComponent implements OnInit {
   displayColumns: string[] = ['select', 'condition', 'description'];

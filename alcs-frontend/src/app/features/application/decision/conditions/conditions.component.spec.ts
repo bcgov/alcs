@@ -8,7 +8,8 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 
 import { ConditionsComponent } from './conditions.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConditionsComponent', () => {
   let component: ConditionsComponent;
@@ -23,28 +24,30 @@ describe('ConditionsComponent', () => {
     mockApplicationDecisionV2Service = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [ConditionsComponent],
-      providers: [
+    declarations: [ConditionsComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ApplicationDetailService,
-          useValue: mockApplicationDetailService,
+            provide: ApplicationDetailService,
+            useValue: mockApplicationDetailService,
         },
         {
-          provide: ApplicationDecisionV2Service,
-          useValue: mockApplicationDecisionV2Service,
+            provide: ApplicationDecisionV2Service,
+            useValue: mockApplicationDecisionV2Service,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ uuid: 'fake' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ uuid: 'fake' }),
+                },
             },
-          },
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ConditionsComponent);
     component = fixture.componentInstance;

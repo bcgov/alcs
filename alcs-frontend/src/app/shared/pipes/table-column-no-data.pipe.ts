@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'emptyColumn'
+    name: 'emptyColumn',
+    standalone: false
 })
 export class TableColumnNoDataPipe implements PipeTransform {
   transform(value: any): any {

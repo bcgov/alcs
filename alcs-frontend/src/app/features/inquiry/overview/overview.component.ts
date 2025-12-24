@@ -4,9 +4,10 @@ import { InquiryDetailService } from '../../../services/inquiry/inquiry-detail.s
 import { InquiryDto } from '../../../services/inquiry/inquiry.dto';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
+    selector: 'app-overview',
+    templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.scss'],
+    standalone: false
 })
 export class OverviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

@@ -7,9 +7,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { NoiSubtypeDialogComponent } from './noi-subtype-dialog/noi-subtype-dialog.component';
 
 @Component({
-  selector: 'app-noi-subtype',
-  templateUrl: './noi-subtype.component.html',
-  styleUrls: ['./noi-subtype.component.scss'],
+    selector: 'app-noi-subtype',
+    templateUrl: './noi-subtype.component.html',
+    styleUrls: ['./noi-subtype.component.scss'],
+    standalone: false
 })
 export class NoiSubtypeComponent implements OnInit {
   destroy = new Subject<void>();

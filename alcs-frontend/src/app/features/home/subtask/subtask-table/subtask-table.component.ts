@@ -12,9 +12,10 @@ import {
 import { CardType } from '../../../../shared/card/card.component';
 
 @Component({
-  selector: 'app-subtask-table',
-  templateUrl: './subtask-table.component.html',
-  styleUrls: ['./subtask-table.component.scss'],
+    selector: 'app-subtask-table',
+    templateUrl: './subtask-table.component.html',
+    styleUrls: ['./subtask-table.component.scss'],
+    standalone: false
 })
 export class SubtaskTableComponent {
   @Input() subtasks: HomepageSubtaskDto[] = [];

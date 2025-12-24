@@ -8,9 +8,10 @@ import { NoticeOfIntentDto, UpdateNoticeOfIntentDto } from '../../../services/no
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-intake',
-  templateUrl: './intake.component.html',
-  styleUrls: ['./intake.component.scss'],
+    selector: 'app-intake',
+    templateUrl: './intake.component.html',
+    styleUrls: ['./intake.component.scss'],
+    standalone: false
 })
 export class IntakeComponent implements OnInit {
   $destroy = new Subject<void>();

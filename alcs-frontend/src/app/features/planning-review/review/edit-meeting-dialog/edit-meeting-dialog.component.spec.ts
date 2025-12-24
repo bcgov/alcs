@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { PlanningReviewMeetingService } from '../../../../services/planning-revi
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 
 import { EditMeetingDialogComponent } from './edit-meeting-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EditMeetingDialogComponent', () => {
   let component: EditMeetingDialogComponent;
@@ -20,18 +21,20 @@ describe('EditMeetingDialogComponent', () => {
     mockPlanningReviewMeetingService.fetchTypes.mockResolvedValue([]);
 
     await TestBed.configureTestingModule({
-      declarations: [EditMeetingDialogComponent, MomentPipe],
-      providers: [
+    declarations: [EditMeetingDialogComponent, MomentPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule, MatSnackBarModule, FormsModule],
+    providers: [
         {
-          provide: PlanningReviewMeetingService,
-          useValue: mockPlanningReviewMeetingService,
+            provide: PlanningReviewMeetingService,
+            useValue: mockPlanningReviewMeetingService,
         },
         { provide: MAT_DIALOG_DATA, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
-      ],
-      imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(EditMeetingDialogComponent);
     component = fixture.componentInstance;

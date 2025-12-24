@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { SYSTEM_SOURCE_TYPES } from '../../../../shared/dto/system-source.types.dto';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ApplicationDialogComponent } from './application-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ApplicationDialogComponent', () => {
   let component: ApplicationDialogComponent;
@@ -98,22 +99,24 @@ describe('ApplicationDialogComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      declarations: [ApplicationDialogComponent],
-      imports: [HttpClientTestingModule, SharedModule, BrowserAnimationsModule, RouterTestingModule],
-      providers: [
+    declarations: [ApplicationDialogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [SharedModule, BrowserAnimationsModule, RouterTestingModule],
+    providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
         {
-          provide: MatDialogRef,
-          useValue: mockDialogRef,
+            provide: MatDialogRef,
+            useValue: mockDialogRef,
         },
         {
-          provide: BoardService,
-          useValue: mockBoardService,
+            provide: BoardService,
+            useValue: mockBoardService,
         },
         { provide: ConfirmationDialogService, useValue: {} },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ApplicationDialogComponent);
     component = fixture.componentInstance;

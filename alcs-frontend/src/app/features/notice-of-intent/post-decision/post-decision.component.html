@@ -5,65 +5,73 @@
   <button mat-flat-button color="primary" (click)="onCreateModification()">+ Modification</button>
 </h5>
 
-<section class="no-decisions" *ngIf="!modifications.length">
-  <div>No Requests</div>
-</section>
+@if (!modifications.length) {
+  <section class="no-decisions">
+    <div>No Requests</div>
+  </section>
+}
 
 <section>
-  <div class="post-decision" *ngFor="let modification of modifications; let i = index">
-    <div class="decision-menu">
-      <div class="modification">
-        <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-      <div
-        [ngClass]="{ 'recon-modi-disabled': !modification.canBeDeleted, modification: modification.canBeDeleted }"
+  @for (modification of modifications; track modification; let i = $index) {
+    <div class="post-decision">
+      <div class="decision-menu">
+        <div class="modification">
+          <button (click)="onEditModification(modification)" matTooltip="Edit Request" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <div
+          [ngClass]="{ 'recon-modi-disabled': !modification.canBeDeleted, modification: modification.canBeDeleted }"
         [matTooltip]="
           modification.canBeDeleted ? 'Delete Request' : 'Contact administrator if you need to delete this request'
         "
-      >
-        <button
-          [ngClass]="{ 'button-disabled': !modification.canBeDeleted }"
-          [disabled]="!modification.canBeDeleted"
-          (click)="deleteModification(modification.uuid, modifications.length - i)"
-          matTooltip="Delete Request"
-          mat-icon-button
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
+          >
+          <button
+            [ngClass]="{ 'button-disabled': !modification.canBeDeleted }"
+            [disabled]="!modification.canBeDeleted"
+            (click)="deleteModification(modification.uuid, modifications.length - i)"
+            matTooltip="Delete Request"
+            mat-icon-button
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="subheading1">Modification Request #{{ modifications.length - i }}</div>
+      <div class="decision-content">
+        <div>
+          <div class="subheading2">Request Submission Date</div>
+          {{ modification.submittedDate | momentFormat }}
+        </div>
+        <div>
+          <div class="subheading2">Resolutions to be Modified</div>
+          <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
+        </div>
+        <div class="full-grid">
+          <div class="subheading2">Request Description</div>
+          {{ modification.description }}
+        </div>
+        <div>
+          <div class="subheading2">Review Outcome</div>
+          @if (modification.reviewOutcome.code === 'PEN') {
+            <span>
+              <app-inline-review-outcome
+                [isModification]="true"
+                (save)="onSaveModificationOutcome(modification.uuid, $event)"
+              ></app-inline-review-outcome>
+            </span>
+          }
+          @if (modification.reviewOutcome.code !== 'PEN') {
+            <span>{{ modification.reviewOutcome.label }}</span>
+          }
+        </div>
+        <div>
+          @if (!!modification.resultingDecision) {
+            <div class="subheading2">Resulting Resolution</div>
+            #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
+          }
+        </div>
       </div>
     </div>
-    <div class="subheading1">Modification Request #{{ modifications.length - i }}</div>
-    <div class="decision-content">
-      <div>
-        <div class="subheading2">Request Submission Date</div>
-        {{ modification.submittedDate | momentFormat }}
-      </div>
-      <div>
-        <div class="subheading2">Resolutions to be Modified</div>
-        <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
-      </div>
-      <div class="full-grid">
-        <div class="subheading2">Request Description</div>
-        {{ modification.description }}
-      </div>
-      <div>
-        <div class="subheading2">Review Outcome</div>
-        <span *ngIf="modification.reviewOutcome.code === 'PEN'">
-          <app-inline-review-outcome
-            [isModification]="true"
-            (save)="onSaveModificationOutcome(modification.uuid, $event)"
-          ></app-inline-review-outcome>
-        </span>
-        <span *ngIf="modification.reviewOutcome.code !== 'PEN'">{{ modification.reviewOutcome.label }}</span>
-      </div>
-      <div>
-        <ng-container *ngIf="!!modification.resultingDecision">
-          <div class="subheading2">Resulting Resolution</div>
-          #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
-        </ng-container>
-      </div>
-    </div>
-  </div>
+  }
 </section>

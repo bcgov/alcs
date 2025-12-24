@@ -1,87 +1,101 @@
 <div>
-  <mat-expansion-panel [(expanded)]="boardMeeting.isExpanded" class="main-panel" *ngFor="let boardMeeting of viewData">
-    <mat-expansion-panel-header expandedHeight="80px" collapsedHeight="80px" class="main-panel-header">
-      <mat-panel-title>
-        <h3 class="center">
-          <app-favorite-button
-            class="center"
-            [boardCode]="boardMeeting.boardCode"
-            [isFavorite]="boardMeeting.isFavourite"
-          ></app-favorite-button>
-          {{ boardMeeting.boardTitle }}
-        </h3>
-      </mat-panel-title>
-      <mat-panel-description
-        class="main-panel-description"
+  @for (boardMeeting of viewData; track boardMeeting) {
+    <mat-expansion-panel [(expanded)]="boardMeeting.isExpanded" class="main-panel">
+      <mat-expansion-panel-header expandedHeight="80px" collapsedHeight="80px" class="main-panel-header">
+        <mat-panel-title>
+          <h3 class="center">
+            <app-favorite-button
+              class="center"
+              [boardCode]="boardMeeting.boardCode"
+              [isFavorite]="boardMeeting.isFavourite"
+            ></app-favorite-button>
+            {{ boardMeeting.boardTitle }}
+          </h3>
+        </mat-panel-title>
+        <mat-panel-description
+          class="main-panel-description"
         [ngClass]="{
           'panel-favourite': boardMeeting.isFavourite,
         }"
-      >
-        <div class="main-panel-date center" *ngIf="boardMeeting.nextMeeting?.meetingDate">
-          <mat-icon>event</mat-icon>
-          <h4>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}</h4>
-        </div>
-        <h4 class="main-panel-no-meetings center" *ngIf="!boardMeeting.nextMeeting?.meetingDate">None</h4>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div class="meetings-container">
-      <div class="previous-meetings">
-        <h4>Previous</h4>
-        <h5 *ngIf="!boardMeeting.pastMeetings.length" class="no-meetings">None</h5>
-        <mat-expansion-panel
-          class="meeting-panel"
-          hideToggle="true"
-          [(expanded)]="pastMeeting.isExpanded"
-          *ngFor="let pastMeeting of boardMeeting.pastMeetings"
-        >
-          <mat-expansion-panel-header
-            expandedHeight="54px"
-            collapsedHeight="54px"
-            class="meeting-header meeting-header-previous"
           >
-            <mat-panel-title class="center">
-              <h5>{{ pastMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-container *ngFor="let meeting of pastMeeting.meetings">
-            <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
-          </ng-container>
-        </mat-expansion-panel>
-      </div>
-      <div class="for-discussion">
-        <h4>For Discussion</h4>
-        <h5 *ngIf="!boardMeeting.upcomingMeetings.length" class="no-meetings">None Scheduled</h5>
-        <mat-expansion-panel
-          class="meeting-panel"
-          hideToggle="true"
-          [(expanded)]="upcomingMeeting.isExpanded"
-          *ngFor="let upcomingMeeting of boardMeeting.upcomingMeetings"
-        >
-          <mat-expansion-panel-header
-            expandedHeight="54px"
-            collapsedHeight="54px"
-            class="meeting-header meeting-header-for-discussion"
-          >
-            <mat-panel-title class="center">
-              <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-container *ngFor="let meeting of upcomingMeeting.meetings">
-            <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
-          </ng-container>
-        </mat-expansion-panel>
-      </div>
-      <div class="upcoming-meetings">
-        <h4>Incoming</h4>
-        <h5 *ngIf="!boardMeeting.incomingFiles" class="no-meetings">None</h5>
-        <div class="incoming-files-panel">
-          <ng-container *ngFor="let incomingFile of boardMeeting.incomingFiles">
-            <ng-template *ngTemplateOutlet="incomingFilePanel; context: { $implicit: incomingFile }"></ng-template>
-          </ng-container>
+          @if (boardMeeting.nextMeeting?.meetingDate) {
+            <div class="main-panel-date center">
+              <mat-icon>event</mat-icon>
+              <h4>{{ boardMeeting.nextMeeting!.meetingDate | momentFormat: customDateFormat }}</h4>
+            </div>
+          }
+          @if (!boardMeeting.nextMeeting?.meetingDate) {
+            <h4 class="main-panel-no-meetings center">None</h4>
+          }
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="meetings-container">
+        <div class="previous-meetings">
+          <h4>Previous</h4>
+          @if (!boardMeeting.pastMeetings.length) {
+            <h5 class="no-meetings">None</h5>
+          }
+          @for (pastMeeting of boardMeeting.pastMeetings; track pastMeeting) {
+            <mat-expansion-panel
+              class="meeting-panel"
+              hideToggle="true"
+              [(expanded)]="pastMeeting.isExpanded"
+              >
+              <mat-expansion-panel-header
+                expandedHeight="54px"
+                collapsedHeight="54px"
+                class="meeting-header meeting-header-previous"
+                >
+                <mat-panel-title class="center">
+                  <h5>{{ pastMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              @for (meeting of pastMeeting.meetings; track meeting) {
+                <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
+              }
+            </mat-expansion-panel>
+          }
+        </div>
+        <div class="for-discussion">
+          <h4>For Discussion</h4>
+          @if (!boardMeeting.upcomingMeetings.length) {
+            <h5 class="no-meetings">None Scheduled</h5>
+          }
+          @for (upcomingMeeting of boardMeeting.upcomingMeetings; track upcomingMeeting) {
+            <mat-expansion-panel
+              class="meeting-panel"
+              hideToggle="true"
+              [(expanded)]="upcomingMeeting.isExpanded"
+              >
+              <mat-expansion-panel-header
+                expandedHeight="54px"
+                collapsedHeight="54px"
+                class="meeting-header meeting-header-for-discussion"
+                >
+                <mat-panel-title class="center">
+                  <h5>{{ upcomingMeeting.meetingDate | momentFormat: customDateFormat }}</h5>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              @for (meeting of upcomingMeeting.meetings; track meeting) {
+                <ng-template *ngTemplateOutlet="meetingPanel; context: { $implicit: meeting }"></ng-template>
+              }
+            </mat-expansion-panel>
+          }
+        </div>
+        <div class="upcoming-meetings">
+          <h4>Incoming</h4>
+          @if (!boardMeeting.incomingFiles) {
+            <h5 class="no-meetings">None</h5>
+          }
+          <div class="incoming-files-panel">
+            @for (incomingFile of boardMeeting.incomingFiles; track incomingFile) {
+              <ng-template *ngTemplateOutlet="incomingFilePanel; context: { $implicit: incomingFile }"></ng-template>
+            }
+          </div>
         </div>
       </div>
-    </div>
-  </mat-expansion-panel>
+    </mat-expansion-panel>
+  }
 </div>
 
 <ng-template #meetingPanel let-meeting>
@@ -92,7 +106,7 @@
       'meeting-highlighted': meeting.isHighlighted,
       'file-paused': meeting.isPaused,
     }"
-  >
+    >
     <div class="split">
       <div
         class="ellipsis"
@@ -100,15 +114,16 @@
         matTooltipClass="no-wrap-tooltip"
         [matTooltip]="meeting.fileNumber + ' (' + meeting.applicant + ')'"
         [matTooltipDisabled]="!isEllipsisActive(meeting.fileNumber)"
-      >
+        >
         {{ meeting.fileNumber }} ({{ meeting.applicant }})
       </div>
       <div>
-        <app-avatar-circle
-          *ngIf="meeting.assignee"
-          [initials]="meeting.assignee.initials"
-          [name]="meeting.assignee.prettyName"
-        ></app-avatar-circle>
+        @if (meeting.assignee) {
+          <app-avatar-circle
+            [initials]="meeting.assignee.initials"
+            [name]="meeting.assignee.prettyName"
+          ></app-avatar-circle>
+        }
       </div>
     </div>
   </mat-card>
@@ -122,7 +137,7 @@
       'meeting-highlighted': incomingFile.isHighlighted,
       'file-paused': incomingFile.isPaused,
     }"
-  >
+    >
     <div class="split">
       <div
         class="ellipsis"
@@ -130,15 +145,16 @@
         matTooltipClass="no-wrap-tooltip"
         [matTooltip]="incomingFile.fileNumber + ' (' + incomingFile.applicant + ')'"
         [matTooltipDisabled]="!isEllipsisActive(incomingFile.fileNumber)"
-      >
+        >
         {{ incomingFile.fileNumber }} ({{ incomingFile.applicant }})
       </div>
       <div>
-        <app-avatar-circle
-          *ngIf="incomingFile.assignee"
-          [initials]="incomingFile.assignee.initials"
-          [name]="incomingFile.assignee.prettyName"
-        ></app-avatar-circle>
+        @if (incomingFile.assignee) {
+          <app-avatar-circle
+            [initials]="incomingFile.assignee.initials"
+            [name]="incomingFile.assignee.prettyName"
+          ></app-avatar-circle>
+        }
       </div>
     </div>
   </mat-card>

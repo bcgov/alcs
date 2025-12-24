@@ -4,23 +4,27 @@
   </div>
 
   <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
-    <button *ngFor="let type of activeTypes" mat-menu-item (click)="onAddNewCondition(type.code)">
-      <div class="board-menu-item">
-        <span>{{ type.label }}</span>
-      </div>
-    </button>
+    @for (type of activeTypes; track type) {
+      <button mat-menu-item (click)="onAddNewCondition(type.code)">
+        <div class="board-menu-item">
+          <span>{{ type.label }}</span>
+        </div>
+      </button>
+    }
   </mat-menu>
 
-  <div class="condition" *ngFor="let condition of mappedConditions; let index = index; trackBy: trackByFn">
-    <app-app-decision-condition
-      [(data)]="mappedConditions[index]"
-      (dataChange)="onChanges()"
-      (remove)="onRemoveCondition(index)"
-      [selectableComponents]="selectableComponents"
-      [showDateError]="showDateErrors"
-      [index]="index"
-    ></app-app-decision-condition>
-  </div>
+  @for (condition of mappedConditions; track trackByFn(index, condition); let index = $index) {
+    <div class="condition">
+      <app-app-decision-condition
+        [(data)]="mappedConditions[index]"
+        (dataChange)="onChanges()"
+        (remove)="onRemoveCondition(index)"
+        [selectableComponents]="selectableComponents"
+        [showDateError]="showDateErrors"
+        [index]="index"
+      ></app-app-decision-condition>
+    </div>
+  }
   <div class="cond-footer">
     <div>
       <button
@@ -30,7 +34,7 @@
         color="primary"
         type="button"
         (click)="openOrderDialog()"
-      >
+        >
         Re-Order Conditions
       </button>
     </div>
@@ -41,10 +45,12 @@
         [matMenuTriggerFor]="decisionComponentMenu"
         mat-flat-button
         color="primary"
-      >
+        >
         Add Condition ▾
       </button>
-      <app-error-message *ngIf="showError"></app-error-message>
+      @if (showError) {
+        <app-error-message></app-error-message>
+      }
     </div>
   </div>
 </section>

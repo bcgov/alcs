@@ -1,3 +1,5 @@
 <div class="tag-container">
-  <app-tag-chip *ngFor="let tag of tags" [tag]="tag" [removable]="false" [isCommissioner]="true"></app-tag-chip>
+  @for (tag of tags; track tag) {
+    <app-tag-chip [tag]="tag" [removable]="false" [isCommissioner]="true"></app-tag-chip>
+  }
 </div>

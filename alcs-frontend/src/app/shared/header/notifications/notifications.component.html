@@ -1,11 +1,15 @@
-<button *ngIf="!hasUnread" mat-icon-button [matMenuTriggerFor]="notificationMenu">
-  <mat-icon class="icon">notifications_outlined</mat-icon>
-</button>
+@if (!hasUnread) {
+  <button mat-icon-button [matMenuTriggerFor]="notificationMenu">
+    <mat-icon class="icon">notifications_outlined</mat-icon>
+  </button>
+}
 
-<button *ngIf="hasUnread" [matMenuTriggerFor]="notificationMenu" class="unread">
-  <mat-icon class="icon">notifications</mat-icon>
-  <span>{{ unreadCount }}</span>
-</button>
+@if (hasUnread) {
+  <button [matMenuTriggerFor]="notificationMenu" class="unread">
+    <mat-icon class="icon">notifications</mat-icon>
+    <span>{{ unreadCount }}</span>
+  </button>
+}
 
 <mat-menu #notificationMenu="matMenu" xPosition="before">
   <div class="notifications-header">
@@ -16,16 +20,19 @@
     </div>
   </div>
 
-  <button
-    mat-button
-    class="notification"
-    [ngClass]="{ unread: !notification.read }"
-    *ngFor="let notification of formattedNotifications"
-    (click)="onSelectNotification(notification)"
-  >
-    <div class="header">{{ notification.title }}</div>
-    <div class="body">{{ notification.body }}</div>
-    <div class="date">{{ notification.createdAt }}</div>
-  </button>
-  <div class="no-notifications" *ngIf="formattedNotifications.length === 0">No notifications</div>
+  @for (notification of formattedNotifications; track notification) {
+    <button
+      mat-button
+      class="notification"
+      [ngClass]="{ unread: !notification.read }"
+      (click)="onSelectNotification(notification)"
+      >
+      <div class="header">{{ notification.title }}</div>
+      <div class="body">{{ notification.body }}</div>
+      <div class="date">{{ notification.createdAt }}</div>
+    </button>
+  }
+  @if (formattedNotifications.length === 0) {
+    <div class="no-notifications">No notifications</div>
+  }
 </mat-menu>

@@ -7,9 +7,10 @@ import { UserService } from '../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-subtasks[cardUuid]',
-  templateUrl: './subtasks.component.html',
-  styleUrls: ['./subtasks.component.scss'],
+    selector: 'app-subtasks[cardUuid]',
+    templateUrl: './subtasks.component.html',
+    styleUrls: ['./subtasks.component.scss'],
+    standalone: false
 })
 export class SubtasksComponent implements OnInit, OnDestroy {
   @Input() cardUuid: string = '';

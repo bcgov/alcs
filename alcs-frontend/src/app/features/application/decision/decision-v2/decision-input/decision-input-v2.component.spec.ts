@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 import { StartOfDayPipe } from '../../../../../shared/pipes/startOfDay.pipe';
 
 import { DecisionInputV2Component } from './decision-input-v2.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DecisionInputComponent', () => {
   let component: DecisionInputV2Component;
@@ -35,45 +36,47 @@ describe('DecisionInputComponent', () => {
     mockApplicationDetailService = createMock();
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [DecisionInputV2Component, StartOfDayPipe],
-      providers: [
+    declarations: [DecisionInputV2Component, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ApplicationDecisionV2Service,
-          useValue: mockApplicationDecisionV2Service,
+            provide: ApplicationDecisionV2Service,
+            useValue: mockApplicationDecisionV2Service,
         },
         {
-          provide: ApplicationReconsiderationService,
-          useValue: mockApplicationReconsiderationService,
+            provide: ApplicationReconsiderationService,
+            useValue: mockApplicationReconsiderationService,
         },
         {
-          provide: ApplicationModificationService,
-          useValue: mockApplicationModificationService,
+            provide: ApplicationModificationService,
+            useValue: mockApplicationModificationService,
         },
         { provide: ApplicationDetailService, useValue: mockApplicationDetailService },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ uuid: 'fake' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ uuid: 'fake' }),
+                },
             },
-          },
         },
         {
-          provide: Router,
-          useValue: mockRouter,
+            provide: Router,
+            useValue: mockRouter,
         },
         {
-          provide: MatDialog,
-          useValue: mockMatDialog,
+            provide: MatDialog,
+            useValue: mockMatDialog,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DecisionInputV2Component);
     component = fixture.componentInstance;

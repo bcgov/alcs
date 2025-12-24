@@ -4,9 +4,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DecisionConditionOrderDialogComponent } from './decision-condition-order-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DecisionConditionOrderDialogComponent', () => {
   let component: DecisionConditionOrderDialogComponent;
@@ -15,21 +16,20 @@ describe('DecisionConditionOrderDialogComponent', () => {
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-      declarations: [DecisionConditionOrderDialogComponent],
-      imports: [
-        MatDialogModule,
+    declarations: [DecisionConditionOrderDialogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule,
         BrowserAnimationsModule,
         MatTableModule,
         MatSortModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-      ],
-      providers: [
+        RouterTestingModule],
+    providers: [
         { provide: MAT_DIALOG_DATA, useValue: { conditions: [] } },
         { provide: MatDialogRef, useValue: {} },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DecisionConditionOrderDialogComponent);
     component = fixture.componentInstance;

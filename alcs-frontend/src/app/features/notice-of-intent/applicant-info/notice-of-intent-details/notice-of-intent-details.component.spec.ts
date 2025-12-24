@@ -22,6 +22,7 @@ describe('NoticeOfIntentDetailsComponent', () => {
   beforeEach(async () => {
     mockNoiDocumentService = createMock();
     mockRouter = createMock();
+    mockToastService = createMock();
     mockNoiSubmissionService = createMock();
 
     await TestBed.configureTestingModule({

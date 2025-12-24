@@ -30,6 +30,9 @@ describe('DocumentsComponent', () => {
     mockDialog = createMock();
     mockToastService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
+    mockAppSubStatusService = createMock();
+    mockAppSubService = createMock();
+    mockAppParcelService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [DocumentsComponent],

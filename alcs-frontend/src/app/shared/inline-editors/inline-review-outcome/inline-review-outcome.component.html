@@ -1,16 +1,22 @@
 <div>
-  <span *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="!pendingReviewOutcome"> Select Outcome </a>
-    <span *ngIf="!pendingReviewOutcome || pendingReviewOutcome === 'PEN'">
-      {{ pendingReviewOutcome }}
+  @if (!isEditing) {
+    <span>
+      @if (!pendingReviewOutcome) {
+        <a (click)="toggleEdit()" class="add-date"> Select Outcome </a>
+      }
+      @if (!pendingReviewOutcome || pendingReviewOutcome === 'PEN') {
+        <span>
+          {{ pendingReviewOutcome }}
+        </span>
+      }
     </span>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing
     }"
-  >
+    >
     <form [formGroup]="form">
       <mat-button-toggle-group id="reviewOutcome" formControlName="reviewOutcome" name="reviewOutcome">
         <mat-button-toggle value="PEN">Pending</mat-button-toggle>

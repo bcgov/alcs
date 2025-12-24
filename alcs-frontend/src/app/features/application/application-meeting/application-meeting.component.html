@@ -23,45 +23,51 @@
   <ng-container matColumnDef="meetingEndDate">
     <th mat-header-cell *matHeaderCellDef>Visit Conducted</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.meetingEndDate">{{ element.meetingEndDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.meetingEndDate">
+      @if (element.meetingEndDate) {
+        {{ element.meetingEndDate | momentFormat }}
+      }
+      @if (!element.meetingEndDate) {
         <app-inline-datepicker
           class="date-picker"
           [value]="undefined"
           [min]="element.meetingStartDate | startOfDay"
           (save)="onSaveMeetingEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
-      </ng-container>
+      }
     </td>
   </ng-container>
 
   <ng-container matColumnDef="reportStartDate">
     <th mat-header-cell *matHeaderCellDef>Report Sent</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.reportStartDate">{{ element.reportStartDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.reportStartDate && element.meetingEndDate">
+      @if (element.reportStartDate) {
+        {{ element.reportStartDate | momentFormat }}
+      }
+      @if (!element.reportStartDate && element.meetingEndDate) {
         <app-inline-datepicker
           class="date-picker"
           [value]="undefined"
           [min]="element.meetingEndDate | startOfDay"
           (save)="onSaveReportStartDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
-      </ng-container>
+      }
     </td>
   </ng-container>
 
   <ng-container matColumnDef="reportEndDate">
     <th mat-header-cell *matHeaderCellDef>Report Approved</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.reportEndDate">{{ element.reportEndDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.reportEndDate && element.reportStartDate">
+      @if (element.reportEndDate) {
+        {{ element.reportEndDate | momentFormat }}
+      }
+      @if (!element.reportEndDate && element.reportStartDate) {
         <app-inline-datepicker
           class="date-picker"
           [value]="undefined"
           [min]="element.reportStartDate | startOfDay"
           (save)="onSaveReportEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
-      </ng-container>
+      }
     </td>
   </ng-container>
 
@@ -94,7 +100,7 @@
       color="primary"
       class="pull-right"
       (click)="onCreate({ code: 'AM', label: 'Applicant Meeting' })"
-    >
+      >
       + New meeting
     </button>
   </div>
@@ -114,45 +120,51 @@
   <ng-container matColumnDef="meetingEndDate">
     <th mat-header-cell *matHeaderCellDef>Meeting Conducted</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.meetingEndDate">{{ element.meetingEndDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.meetingEndDate">
+      @if (element.meetingEndDate) {
+        {{ element.meetingEndDate | momentFormat }}
+      }
+      @if (!element.meetingEndDate) {
         <app-inline-datepicker
           class="date-picker"
           [value]="undefined"
           [min]="element.meetingStartDate | startOfDay"
           (save)="onSaveMeetingEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
-      </ng-container>
+      }
     </td>
   </ng-container>
 
   <ng-container matColumnDef="reportStartDate">
     <th mat-header-cell *matHeaderCellDef>Report Sent</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.reportStartDate">{{ element.reportStartDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.reportStartDate && element.meetingEndDate">
+      @if (element.reportStartDate) {
+        {{ element.reportStartDate | momentFormat }}
+      }
+      @if (!element.reportStartDate && element.meetingEndDate) {
         <app-inline-datepicker
           class="date-picker"
           [value]="undefined"
           [min]="element.meetingEndDate | startOfDay"
           (save)="onSaveReportStartDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
-      </ng-container>
+      }
     </td>
   </ng-container>
 
   <ng-container matColumnDef="reportEndDate">
     <th mat-header-cell *matHeaderCellDef>Report Approved</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.reportEndDate">{{ element.reportEndDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.reportEndDate && element.reportStartDate">
+      @if (element.reportEndDate) {
+        {{ element.reportEndDate | momentFormat }}
+      }
+      @if (!element.reportEndDate && element.reportStartDate) {
         <app-inline-datepicker
           class="date-picker"
           [value]="undefined"
           [min]="element.reportStartDate | startOfDay"
           (save)="onSaveReportEndDate(element.uuid, element.meetingType.label, $event)"
         ></app-inline-datepicker>
-      </ng-container>
+      }
     </td>
   </ng-container>
 

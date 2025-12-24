@@ -7,25 +7,35 @@
       <th class="timeline-event">Event</th>
     </thead>
     <tbody>
-      <tr class="timeline-row" *ngFor="let event of events">
-        <td class="line">
-          <div
+      @for (event of events; track event) {
+        <tr class="timeline-row">
+          <td class="line">
+            <div
             [ngClass]="{
               'hollow-dot': !event.isFulfilled
             }"
-            class="dot"
-          ></div>
-        </td>
-        <td>{{ event.startDate | momentFormat }}</td>
-        <td>
-          <span *ngIf="event.fulfilledDate">{{ event.fulfilledDate | momentFormat }}</span>
-          <span *ngIf="!event.fulfilledDate">
-            <a *ngIf="event.link" [routerLink]="event.link">Add date</a>
-            <span *ngIf="!event.link">-</span>
-          </span>
-        </td>
-        <td><span [innerHTML]="event.htmlText"></span></td>
-      </tr>
+              class="dot"
+            ></div>
+          </td>
+          <td>{{ event.startDate | momentFormat }}</td>
+          <td>
+            @if (event.fulfilledDate) {
+              <span>{{ event.fulfilledDate | momentFormat }}</span>
+            }
+            @if (!event.fulfilledDate) {
+              <span>
+                @if (event.link) {
+                  <a [routerLink]="event.link">Add date</a>
+                }
+                @if (!event.link) {
+                  <span>-</span>
+                }
+              </span>
+            }
+          </td>
+          <td><span [innerHTML]="event.htmlText"></span></td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>

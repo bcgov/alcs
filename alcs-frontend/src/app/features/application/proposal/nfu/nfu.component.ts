@@ -6,9 +6,10 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { NFU_SUBTYPES_OPTIONS, NFU_TYPES_OPTIONS } from './nfu.constants';
 
 @Component({
-  selector: 'app-proposal-nfu',
-  templateUrl: './nfu.component.html',
-  styleUrls: ['./nfu.component.scss'],
+    selector: 'app-proposal-nfu',
+    templateUrl: './nfu.component.html',
+    styleUrls: ['./nfu.component.scss'],
+    standalone: false
 })
 export class NfuProposalComponent implements OnDestroy, OnInit {
   $destroy = new Subject<void>();

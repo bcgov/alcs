@@ -8,9 +8,10 @@ import { ToastService } from '../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-staff-journal',
-  templateUrl: './staff-journal.component.html',
-  styleUrls: ['./staff-journal.component.scss'],
+    selector: 'app-staff-journal',
+    templateUrl: './staff-journal.component.html',
+    styleUrls: ['./staff-journal.component.scss'],
+    standalone: false
 })
 export class StaffJournalComponent implements OnChanges {
   @Input() parentUuid: string = '';

@@ -8,9 +8,10 @@ import { ApplicationDecisionV2Service } from '../../../../services/application/d
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-boundary-amendment-dialog',
-  templateUrl: './edit-boundary-amendment-dialog.component.html',
-  styleUrls: ['./edit-boundary-amendment-dialog.component.scss'],
+    selector: 'app-boundary-amendment-dialog',
+    templateUrl: './edit-boundary-amendment-dialog.component.html',
+    styleUrls: ['./edit-boundary-amendment-dialog.component.scss'],
+    standalone: false
 })
 export class EditBoundaryAmendmentDialogComponent implements OnInit {
   uuid = new FormControl<string | null>(null);

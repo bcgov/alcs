@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { ApplicationDecisionConditionTypesService } from '../../../services/appl
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { CardStatusComponent } from './card-status.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CardStatusComponent', () => {
   let component: CardStatusComponent;
@@ -22,24 +23,26 @@ describe('CardStatusComponent', () => {
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [CardStatusComponent],
-      providers: [
+    declarations: [CardStatusComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: CardStatusService,
-          useValue: mockCardStatusService,
+            provide: CardStatusService,
+            useValue: mockCardStatusService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CardStatusComponent);
     component = fixture.componentInstance;

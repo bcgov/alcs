@@ -18,9 +18,10 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 
 @Component({
-  selector: 'app-detail-dialog',
-  templateUrl: './notification-dialog.component.html',
-  styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    selector: 'app-detail-dialog',
+    templateUrl: './notification-dialog.component.html',
+    styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    standalone: false
 })
 export class NotificationDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

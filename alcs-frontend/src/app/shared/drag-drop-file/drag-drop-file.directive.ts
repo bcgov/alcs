@@ -7,7 +7,8 @@ export interface FileHandle {
 }
 
 @Directive({
-  selector: '[appDragDropFile]',
+    selector: '[appDragDropFile]',
+    standalone: false
 })
 export class DragDropDirective {
   private backgroundColor = '#fff';

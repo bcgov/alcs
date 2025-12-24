@@ -4,10 +4,12 @@
   (mouseleave)="hovered = false"
   (mouseenter)="hovered = true"
   (click)="onClick()"
->
+  >
   <mat-form-field class="tag-field" appearance="outline">
     <mat-chip-grid #chipGrid>
-      <app-tag-chip *ngFor="let tag of tags" (removeClicked)="removeTag(tag)" [tag]="tag"></app-tag-chip>
+      @for (tag of tags; track tag) {
+        <app-tag-chip (removeClicked)="removeTag(tag)" [tag]="tag"></app-tag-chip>
+      }
       <input
         placeholder="Add tag..."
         #tagInput
@@ -17,17 +19,21 @@
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         (matChipInputTokenEnd)="addTag($event)"
         (focus)="autoCompleteTrigger.openPanel()"
-      />
+        />
     </mat-chip-grid>
     <mat-autocomplete
       #auto="matAutocomplete"
       (optionSelected)="selectTag($event)"
       autoActiveFirstOption
       class="auto-complete"
-    >
-      <mat-option (mousedown)="markClicked()" *ngFor="let tag of filteredTags | async" [value]="tag"
-        >{{ tag.name }} <span class="category" *ngIf="tag.category"> : {{ tag.category.name }}</span></mat-option
       >
-    </mat-autocomplete>
-  </mat-form-field>
-</div>
+      @for (tag of filteredTags | async; track tag) {
+        <mat-option (mousedown)="markClicked()" [value]="tag"
+          >{{ tag.name }} @if (tag.category) {
+          <span class="category"> : {{ tag.category.name }}</span>
+          }</mat-option
+          >
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>

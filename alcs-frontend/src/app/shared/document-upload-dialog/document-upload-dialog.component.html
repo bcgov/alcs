@@ -8,53 +8,62 @@
         <mat-label>Document Upload*</mat-label>
       </div>
       <input #fileInput (change)="uploadFile($event)" hidden placeholder="Upload file" type="file" />
-      <div
-        *ngIf="!pendingFile && !existingFile"
+      @if (!pendingFile && !existingFile) {
+        <div
         [ngClass]="{
           'file-drag-drop': true,
           error: showHasVirusError || showVirusScanFailedError,
         }"
-        class="full-width upload-button"
-        appDragDropFile
-        color="accent"
-        (files)="filesDropped($event)"
-      >
-        <button class="content" type="button" (click)="fileInput.click()">
-          <div class="icon">
-            <mat-icon inline="true">file_upload</mat-icon>
+          class="full-width upload-button"
+          appDragDropFile
+          color="accent"
+          (files)="filesDropped($event)"
+          >
+          <button class="content" type="button" (click)="fileInput.click()">
+            <div class="icon">
+              <mat-icon inline="true">file_upload</mat-icon>
+            </div>
+            <button type="button" mat-flat-button color="accent">Upload File</button>
+            <div class="drag-text">or drag and drop them here</div>
+          </button>
+        </div>
+      }
+      @if (pendingFile) {
+        <div class="file">
+          <div>
+            <a (click)="openFile()">{{ pendingFile.name }}</a>
+            &nbsp;({{ pendingFile.size | filesize }})
           </div>
-          <button type="button" mat-flat-button color="accent">Upload File</button>
-          <div class="drag-text">or drag and drop them here</div>
-        </button>
-      </div>
-      <div *ngIf="pendingFile" class="file">
-        <div>
-          <a (click)="openFile()">{{ pendingFile.name }}</a>
-          &nbsp;({{ pendingFile.size | filesize }})
+          <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
+            <mat-icon>close</mat-icon>
+            Remove
+          </button>
         </div>
-        <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
-          <mat-icon>close</mat-icon>
-          Remove
-        </button>
-      </div>
-      <div *ngIf="existingFile && data.existingDocument" class="file">
-        <div>
-          <a routerLink="/document/{{ data.existingDocument?.documentUuid }}" target="_blank">{{
-            existingFile.name
-          }}</a>
+      }
+      @if (existingFile && data.existingDocument) {
+        <div class="file">
+          <div>
+            <a routerLink="/document/{{ data.existingDocument.documentUuid }}" target="_blank">{{
+              existingFile.name
+            }}</a>
+          </div>
+          <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
+            <mat-icon>close</mat-icon>
+            Remove
+          </button>
         </div>
-        <button (click)="onRemoveFile()" [disabled]="!allowsFileEdit" mat-button>
-          <mat-icon>close</mat-icon>
-          Remove
-        </button>
-      </div>
+      }
 
-      <mat-error *ngIf="showHasVirusError" class="left" style="display: flex">
-        <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
-      </mat-error>
-      <mat-error *ngIf="showVirusScanFailedError" class="left" style="display: flex">
-        <mat-icon>warning</mat-icon>&nbsp;There was a problem scanning the file for viruses. Please try again.
-      </mat-error>
+      @if (showHasVirusError) {
+        <mat-error class="left" style="display: flex">
+          <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
+        </mat-error>
+      }
+      @if (showVirusScanFailedError) {
+        <mat-error class="left" style="display: flex">
+          <mat-icon>warning</mat-icon>&nbsp;There was a problem scanning the file for viruses. Please try again.
+        </mat-error>
+      }
     </div>
 
     <div class="double">
@@ -76,7 +85,7 @@
         bindValue="code"
         appearance="outline"
         placeholder="Document Type*"
-      >
+        >
       </ng-select>
     </div>
 
@@ -88,69 +97,120 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div
-      *ngIf="
-        type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE &&
-        !data.fixedParcel &&
-        selectableParcels &&
-        selectableParcels.length > 0
-      "
-    >
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Associated Parcel</mat-label>
-        <mat-select [formControl]="parcelId">
-          <mat-option *ngFor="let parcel of selectableParcels; let i = index" [value]="parcel.uuid">
-            #{{ i + 1 }} PID:
-            <span *ngIf="parcel.pid">{{ parcel.pid | mask: '000-000-000' }}</span>
-            <span *ngIf="!parcel.pid">No Data</span></mat-option
-          >
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div *ngIf="selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Associated Organization</mat-label>
-        <mat-select [formControl]="ownerId">
-          <mat-option *ngFor="let owner of selectableOwners" [value]="owner.uuid">
-            {{ owner.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div *ngIf="data.allowedVisibilityFlags && data.allowedVisibilityFlags.length > 0" class="double">
-      <mat-label>Visible To:</mat-label>
-      <div
-        *ngIf="
-          data.allowedVisibilityFlags?.includes('A') ||
-          data.allowedVisibilityFlags?.includes('C') ||
-          data.allowedVisibilityFlags?.includes('G')
-        "
-      >
-        <mat-checkbox [formControl]="visibleToInternal">{{ internalVisibilityLabel }}</mat-checkbox>
+    @if (
+      type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE &&
+      !data.fixedParcel &&
+      selectableParcels &&
+      selectableParcels.length > 0
+    ) {
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Associated Parcel</mat-label>
+          <mat-select [formControl]="parcelId">
+            @for (parcel of selectableParcels; track parcel; let i = $index) {
+              <mat-option [value]="parcel.uuid">
+                #{{ i + 1 }} PID:
+                @if (parcel.pid) {
+                  <span>{{ parcel.pid | mask: '000-000-000' }}</span>
+                }
+                @if (!parcel.pid) {
+                  <span>No Data</span>
+                }
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       </div>
-      <div *ngIf="data.allowedVisibilityFlags?.includes('P')">
-        <mat-checkbox [formControl]="visibleToPublic">Public</mat-checkbox>
+    }
+    @if (selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Associated Organization</mat-label>
+          <mat-select [formControl]="ownerId">
+            @for (owner of selectableOwners; track owner) {
+              <mat-option [value]="owner.uuid">
+                {{ owner.label }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       </div>
-    </div>
-  </form>
+    }
+    @if (type.value !== DOCUMENT_TYPE.CERTIFICATE_OF_TITLE && type.value !== DOCUMENT_TYPE.SURVEY_PLAN && !data.fixedParcel && selectableParcels) {
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Associated Parcel</mat-label>
+          <mat-select [formControl]="parcelId">
+            @for (parcel of selectableParcels; track parcel; let i = $index) {
+              <mat-option [value]="parcel.uuid">
+                #{{ i + 1 }} PID:
+                @if (parcel.pid) {
+                  <span>{{ parcel.pid | mask: '000-000-000' }}</span>
+                }
+                @if (!parcel.pid) {
+                  <span>No Data</span>
+                  }</mat-option
+                  >
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        }
+        @if (selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+          <div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Associated Organization</mat-label>
+              <mat-select [formControl]="ownerId">
+                @for (owner of selectableOwners; track owner) {
+                  <mat-option [value]="owner.uuid">
+                    {{ owner.label }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        }
+        @if (data.allowedVisibilityFlags && data.allowedVisibilityFlags.length > 0) {
+          <div class="double">
+            <mat-label>Visible To:</mat-label>
+            @if (
+          data.allowedVisibilityFlags.includes('A') ||
+          data.allowedVisibilityFlags.includes('C') ||
+          data.allowedVisibilityFlags.includes('G')
+              ) {
+          <div>
+                <mat-checkbox [formControl]="visibleToInternal">{{ internalVisibilityLabel }}</mat-checkbox>
+              </div>
+            }
+        @if (data.allowedVisibilityFlags.includes('P')) {
+              <div>
+                <mat-checkbox [formControl]="visibleToPublic">Public</mat-checkbox>
+              </div>
+            }
+          </div>
+        }
+      </form>
 
-  <mat-dialog-actions align="end">
-    <div class="button-container">
-      <button [mat-dialog-close]="false" color="primary" mat-stroked-button type="button">Close</button>
-      <button
-        (click)="onSubmit()"
-        *ngIf="!isSaving"
-        [disabled]="!form.valid || (!pendingFile && !existingFile)"
-        color="primary"
-        mat-flat-button
-        type="button"
-      >
-        Save
-      </button>
-      <button *ngIf="isSaving" [disabled]="true" color="primary" mat-flat-button type="button">
-        <mat-spinner class="spinner" diameter="20"></mat-spinner>
-        Uploading
-      </button>
+      <mat-dialog-actions align="end">
+        <div class="button-container">
+          <button [mat-dialog-close]="false" color="primary" mat-stroked-button type="button">Close</button>
+          @if (!isSaving) {
+            <button
+              (click)="onSubmit()"
+              [disabled]="!form.valid || (!pendingFile && !existingFile)"
+              color="primary"
+              mat-flat-button
+              type="button"
+              >
+              Save
+            </button>
+          }
+          @if (isSaving) {
+            <button [disabled]="true" color="primary" mat-flat-button type="button">
+              <mat-spinner class="spinner" diameter="20"></mat-spinner>
+              Uploading
+            </button>
+          }
+        </div>
+      </mat-dialog-actions>
     </div>
-  </mat-dialog-actions>
-</div>

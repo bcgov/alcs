@@ -2,9 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-release-dialog',
-  templateUrl: './release-dialog.component.html',
-  styleUrls: ['./release-dialog.component.scss'],
+    selector: 'app-release-dialog',
+    templateUrl: './release-dialog.component.html',
+    styleUrls: ['./release-dialog.component.scss'],
+    standalone: false
 })
 export class ReleaseDialogComponent {
   constructor(

@@ -13,9 +13,10 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 
 @Component({
-  selector: 'app-recon-detail-dialog',
-  templateUrl: './reconsideration-dialog.component.html',
-  styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    selector: 'app-recon-detail-dialog',
+    templateUrl: './reconsideration-dialog.component.html',
+    styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    standalone: false
 })
 export class ReconsiderationDialogComponent extends CardDialogComponent implements OnInit, OnDestroy {
   selectedRegion?: string;

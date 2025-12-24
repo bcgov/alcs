@@ -11,9 +11,10 @@ import {
 } from '../../../../services/planning-review/planning-review.dto';
 
 @Component({
-  selector: 'app-create',
-  templateUrl: './create-planning-referral-dialog.component.html',
-  styleUrls: ['./create-planning-referral-dialog.component.scss'],
+    selector: 'app-create',
+    templateUrl: './create-planning-referral-dialog.component.html',
+    styleUrls: ['./create-planning-referral-dialog.component.scss'],
+    standalone: false
 })
 export class CreatePlanningReferralDialogComponent {
   isLoading = false;

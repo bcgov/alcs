@@ -18,51 +18,55 @@
       ></app-inline-dropdown>
     </div>
   </div>
-  <div *ngIf="application && application.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS">
-    <h5>Payment</h5>
-    <div class="two-grid">
-      <div>
-        <div class="subheading2">Payment Date</div>
-        <app-inline-datepicker
-          [value]="application.feePaidDate"
-          (save)="updateApplicationDate('feePaidDate', $event)"
-        ></app-inline-datepicker>
-      </div>
-      <div>
-        <div class="subheading2">Payment Amount</div>
-        <app-inline-number
-          [value]="application.feeAmount"
-          (save)="updateApplicationNumber('feeAmount', $event)"
-        ></app-inline-number>
-      </div>
-      <div>
-        <div class="subheading2">Split with L/FNG</div>
-        <app-inline-boolean
-          [selectedValue]="application.feeSplitWithLg ?? null"
-          (save)="updateApplicationBoolean('feeSplitWithLg', $event)"
-        ></app-inline-boolean>
-      </div>
-      <div>
-        <div class="subheading2">Fee Waived</div>
-        <app-inline-boolean
-          [selectedValue]="application.feeWaived ?? null"
-          (save)="updateApplicationBoolean('feeWaived', $event)"
-        ></app-inline-boolean>
+  @if (application && application.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS) {
+    <div>
+      <h5>Payment</h5>
+      <div class="two-grid">
+        <div>
+          <div class="subheading2">Payment Date</div>
+          <app-inline-datepicker
+            [value]="application.feePaidDate"
+            (save)="updateApplicationDate('feePaidDate', $event)"
+          ></app-inline-datepicker>
+        </div>
+        <div>
+          <div class="subheading2">Payment Amount</div>
+          <app-inline-number
+            [value]="application.feeAmount"
+            (save)="updateApplicationNumber('feeAmount', $event)"
+          ></app-inline-number>
+        </div>
+        <div>
+          <div class="subheading2">Split with L/FNG</div>
+          <app-inline-boolean
+            [selectedValue]="application.feeSplitWithLg ?? null"
+            (save)="updateApplicationBoolean('feeSplitWithLg', $event)"
+          ></app-inline-boolean>
+        </div>
+        <div>
+          <div class="subheading2">Fee Waived</div>
+          <app-inline-boolean
+            [selectedValue]="application.feeWaived ?? null"
+            (save)="updateApplicationBoolean('feeWaived', $event)"
+          ></app-inline-boolean>
+        </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="application?.source === APPLICATION_SYSTEM_SOURCE_TYPES.ALCS">
-    <h5>Payment Date</h5>
-    <app-inline-datepicker
-      [value]="application?.feePaidDate"
-      (save)="updateApplicationDate('feePaidDate', $event)"
-    ></app-inline-datepicker>
-  </div>
+  }
+  @if (application?.source === APPLICATION_SYSTEM_SOURCE_TYPES.ALCS) {
+    <div>
+      <h5>Payment Date</h5>
+      <app-inline-datepicker
+        [value]="application?.feePaidDate"
+        (save)="updateApplicationDate('feePaidDate', $event)"
+      ></app-inline-datepicker>
+    </div>
+  }
   <div>
     <div class="label-wrapper">
       <h5>Acknowledged Incomplete</h5>
       <mat-icon class="icon" matTooltip='Creates / deletes "Submitted to ALC Incomplete" portal status'
-      >info_outline
+        >info_outline
       </mat-icon>
     </div>
     <div>
@@ -76,7 +80,7 @@
     <div class="label-wrapper">
       <h5>Received All Items</h5>
       <mat-icon class="icon" matTooltip='Creates / deletes "Received by ALC" portal status and controls public release'
-      >info_outline
+        >info_outline
       </mat-icon>
     </div>
     <div>

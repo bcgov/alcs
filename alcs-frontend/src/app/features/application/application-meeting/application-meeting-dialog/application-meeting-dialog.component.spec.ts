@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 import { StartOfDayPipe } from '../../../../shared/pipes/startOfDay.pipe';
 
 import { ApplicationMeetingDialogComponent } from './application-meeting-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ApplicationMeetingDialogComponent', () => {
   let component: ApplicationMeetingDialogComponent;
@@ -16,18 +17,20 @@ describe('ApplicationMeetingDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ApplicationMeetingDialogComponent, MomentPipe, StartOfDayPipe],
-      providers: [
+    declarations: [ApplicationMeetingDialogComponent, MomentPipe, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule, MatSnackBarModule, FormsModule, ReactiveFormsModule],
+    providers: [
         {
-          provide: ApplicationDecisionMeetingService,
-          useValue: {},
+            provide: ApplicationDecisionMeetingService,
+            useValue: {},
         },
         { provide: MAT_DIALOG_DATA, useValue: { meetingType: { code: 'fake', label: 'fake' } } },
         { provide: MatDialogRef, useValue: {} },
-      ],
-      imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule, ReactiveFormsModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ApplicationMeetingDialogComponent);
     component = fixture.componentInstance;

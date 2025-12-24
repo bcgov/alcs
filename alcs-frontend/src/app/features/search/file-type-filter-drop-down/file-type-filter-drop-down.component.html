@@ -8,20 +8,23 @@
     [matAutocomplete]="auto"
     onkeydown="return false;"
     [formControl]="componentTypeControl"
-  />
-  <button
-    matSuffix
-    mat-icon-button
-    aria-label="Clear"
-    *ngIf="hasItemsSelected"
-    class="clear-button"
-    type="button"
-    (click)="clear()"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
+    />
+  @if (hasItemsSelected) {
+    <button
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      class="clear-button"
+      type="button"
+      (click)="clear()"
+      >
+      <mat-icon>close</mat-icon>
+    </button>
+  }
   <mat-icon class="dropdown-arrow" matSuffix>arrow_drop_down</mat-icon>
-  <mat-icon *ngIf="tooltip" matSuffix>info</mat-icon>
+  @if (tooltip) {
+    <mat-icon matSuffix>info</mat-icon>
+  }
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" class="tall-autocomplete">
     <mat-option disabled>Please select an item from below</mat-option>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
@@ -31,7 +34,7 @@
           class="checklist-leaf-node"
           [checked]="checklistSelection.isSelected(node)"
           (change)="leafItemSelectionToggle(node)"
-        >{{ node.item?.label ?? node.item }}
+          >{{ node.item?.label ?? node.item }}
         </mat-checkbox>
       </mat-tree-node>
 
@@ -45,7 +48,7 @@
           [checked]="descendantsAllSelected(node)"
           [indeterminate]="descendantsPartiallySelected(node)"
           (change)="itemSelectionToggle(node)"
-        >
+          >
           {{ node.item?.label ?? node.item }}
         </mat-checkbox>
       </mat-tree-node>

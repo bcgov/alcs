@@ -8,9 +8,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-tag-dialog',
-  templateUrl: './tag-dialog.component.html',
-  styleUrls: ['./tag-dialog.component.scss'],
+    selector: 'app-tag-dialog',
+    templateUrl: './tag-dialog.component.html',
+    styleUrls: ['./tag-dialog.component.scss'],
+    standalone: false
 })
 export class TagDialogComponent implements OnInit {
   destroy = new Subject<void>();

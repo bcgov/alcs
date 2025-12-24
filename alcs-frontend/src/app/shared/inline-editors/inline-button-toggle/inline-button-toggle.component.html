@@ -1,22 +1,32 @@
 <div class="inline-button-toggle">
-  <span class="left" *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="!selectedValue"> Select Option </a>
-    <span *ngIf="selectedValue">
-      {{ selectedValue }}
+  @if (!isEditing) {
+    <span class="left">
+      @if (!selectedValue) {
+        <a (click)="toggleEdit()" class="add-date"> Select Option </a>
+      }
+      @if (selectedValue) {
+        <span>
+          {{ selectedValue }}
+        </span>
+      }
+      @if (selectedValue !== null) {
+        <button class="edit-button" mat-icon-button (click)="toggleEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      }
     </span>
-    <button *ngIf="selectedValue !== null" class="edit-button" mat-icon-button (click)="toggleEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing
     }"
-  >
+    >
     <form [formGroup]="form">
       <mat-button-toggle-group [formControl]="selectFormControl">
-        <mat-button-toggle *ngFor="let option of options" [value]="option.value">{{ option.label }}</mat-button-toggle>
+        @for (option of options; track option) {
+          <mat-button-toggle [value]="option.value">{{ option.label }}</mat-button-toggle>
+        }
       </mat-button-toggle-group>
     </form>
     <div class="button-container">

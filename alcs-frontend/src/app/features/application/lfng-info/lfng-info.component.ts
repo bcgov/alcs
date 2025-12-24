@@ -14,9 +14,10 @@ import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
 
 @Component({
-  selector: 'app-lfng-info',
-  templateUrl: './lfng-info.component.html',
-  styleUrls: ['./lfng-info.component.scss'],
+    selector: 'app-lfng-info',
+    templateUrl: './lfng-info.component.html',
+    styleUrls: ['./lfng-info.component.scss'],
+    standalone: false
 })
 export class LfngInfoComponent implements OnInit {
   applicationReview: ApplicationReviewDto | undefined;

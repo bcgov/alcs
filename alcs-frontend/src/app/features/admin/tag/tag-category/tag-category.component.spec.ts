@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 
 import { TagCategoryComponent } from './tag-category.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 fdescribe('TagCategoryComponent', () => {
   let component: TagCategoryComponent;
@@ -22,24 +23,26 @@ fdescribe('TagCategoryComponent', () => {
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [TagCategoryComponent],
-      providers: [
+    declarations: [TagCategoryComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatAutocompleteModule],
+    providers: [
         {
-          provide: NoiSubtypeService,
-          useValue: mockNoiSubtypeService,
+            provide: NoiSubtypeService,
+            useValue: mockNoiSubtypeService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule, MatAutocompleteModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(TagCategoryComponent);
     component = fixture.componentInstance;

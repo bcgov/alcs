@@ -23,9 +23,10 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 import { NOI_ROUTER_LINK_BASE } from '../../../../shared/constants';
 
 @Component({
-  selector: 'app-notice-of-intent-dialog',
-  templateUrl: './notice-of-intent-dialog.component.html',
-  styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    selector: 'app-notice-of-intent-dialog',
+    templateUrl: './notice-of-intent-dialog.component.html',
+    styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    standalone: false
 })
 export class NoticeOfIntentDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

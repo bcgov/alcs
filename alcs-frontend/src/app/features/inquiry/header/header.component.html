@@ -5,37 +5,41 @@
   <div class="first-row">
     <div class="title">
       <h5>{{ inquiry.fileNumber }} ({{ inquiry.inquirerLastName ?? 'Unknown' }})</h5>
-      <app-application-legacy-id
-        *ngIf="inquiry.legacyId"
-        [legacyId]="inquiry.legacyId"
-      ></app-application-legacy-id>
+      @if (inquiry.legacyId) {
+        <app-application-legacy-id
+          [legacyId]="inquiry.legacyId"
+        ></app-application-legacy-id>
+      }
       <div class="labels">
         <app-application-type-pill [type]="inquiry.type"></app-application-type-pill>
       </div>
     </div>
     <div class="center">
-      <button
-        *ngIf="linkedCards.length === 1"
-        class="menu-item"
-        mat-flat-button
-        color="accent"
-        (click)="onGoToCard(linkedCards[0])"
-      >
-        <div class="center">
-          Go to card
-          <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
-        </div>
-      </button>
-      <ng-container *ngIf="linkedCards.length > 1">
+      @if (linkedCards.length === 1) {
+        <button
+          class="menu-item"
+          mat-flat-button
+          color="accent"
+          (click)="onGoToCard(linkedCards[0])"
+          >
+          <div class="center">
+            Go to card
+            <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+          </div>
+        </button>
+      }
+      @if (linkedCards.length > 1) {
         <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
           Go to card ▾
         </button>
         <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
-          <button *ngFor="let card of linkedCards" mat-menu-item (click)="onGoToCard(card)">
-            {{ card.displayName }}
-          </button>
+          @for (card of linkedCards; track card) {
+            <button mat-menu-item (click)="onGoToCard(card)">
+              {{ card.displayName }}
+            </button>
+          }
         </mat-menu>
-      </ng-container>
+      }
     </div>
   </div>
   <div class="sub-heading">
@@ -43,7 +47,9 @@
       <div class="subheading2">Local/First Nation Government:</div>
       <div class="body-text">
         {{ inquiry.localGovernment.name }}
-        <app-no-data *ngIf="!inquiry.localGovernment"></app-no-data>
+        @if (!inquiry.localGovernment) {
+          <app-no-data></app-no-data>
+        }
       </div>
     </div>
     <div class="status-wrapper">

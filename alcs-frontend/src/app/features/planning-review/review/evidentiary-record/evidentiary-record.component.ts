@@ -8,9 +8,10 @@ import { PlanningReviewDocumentDto } from '../../../../services/planning-review/
 import { PlanningReviewDocumentService } from '../../../../services/planning-review/planning-review-document/planning-review-document.service';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../shared/constants';
 @Component({
-  selector: 'app-evidentiary-record[tableTitle][fileNumber][visibilityFlags]',
-  templateUrl: './evidentiary-record.component.html',
-  styleUrls: ['./evidentiary-record.component.scss'],
+    selector: 'app-evidentiary-record[tableTitle][fileNumber][visibilityFlags]',
+    templateUrl: './evidentiary-record.component.html',
+    styleUrls: ['./evidentiary-record.component.scss'],
+    standalone: false
 })
 export class EvidentiaryRecordComponent implements OnChanges {
   @Input() tableTitle = '';

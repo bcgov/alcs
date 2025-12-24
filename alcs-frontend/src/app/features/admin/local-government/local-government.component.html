@@ -7,9 +7,11 @@
           <mat-label>Enter name</mat-label>
           <input matInput placeholder="Peace river" type="text" [(ngModel)]="search" [matAutocomplete]="auto" (ngModelChange)='updateFilter($event)'>
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptions" [value]="option">
-              {{option}}
-            </mat-option>
+            @for (option of filteredOptions; track option) {
+              <mat-option [value]="option">
+                {{option}}
+              </mat-option>
+            }
           </mat-autocomplete>
         </mat-form-field>
       </div>
@@ -39,25 +41,33 @@
     <ng-container matColumnDef="isFirstNation">
       <th mat-header-cell *matHeaderCellDef>This is a First Nation Government</th>
       <td mat-cell *matCellDef="let row">
-        <div class="left" *ngIf="row.isFirstNation">
-          <mat-icon color="primary">check</mat-icon>
-          Yes
-        </div>
-        <div class="left" *ngIf="!row.isFirstNation">-</div>
+        @if (row.isFirstNation) {
+          <div class="left">
+            <mat-icon color="primary">check</mat-icon>
+            Yes
+          </div>
+        }
+        @if (!row.isFirstNation) {
+          <div class="left">-</div>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="isActive">
       <th mat-header-cell *matHeaderCellDef>Status</th>
       <td mat-cell *matCellDef="let row">
-        <div class="left" *ngIf="row.isActive">
-          <mat-icon color="primary">check_circle_outline</mat-icon>
-          Active
-        </div>
-        <div class="left" *ngIf="!row.isActive">
-          <mat-icon color="warn">not_interested</mat-icon>
-          Inactive
-        </div>
+        @if (row.isActive) {
+          <div class="left">
+            <mat-icon color="primary">check_circle_outline</mat-icon>
+            Active
+          </div>
+        }
+        @if (!row.isActive) {
+          <div class="left">
+            <mat-icon color="warn">not_interested</mat-icon>
+            Inactive
+          </div>
+        }
       </td>
     </ng-container>
 

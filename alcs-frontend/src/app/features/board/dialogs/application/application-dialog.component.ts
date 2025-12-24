@@ -21,9 +21,10 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 import { APPLICATION_ROUTER_LINK_BASE } from '../../../../shared/constants';
 
 @Component({
-  selector: 'app-detail-dialog',
-  templateUrl: './application-dialog.component.html',
-  styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    selector: 'app-detail-dialog',
+    templateUrl: './application-dialog.component.html',
+    styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    standalone: false
 })
 export class ApplicationDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

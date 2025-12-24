@@ -8,9 +8,10 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { DecisionMeetingDialogComponent } from '../decision-meeting-dialog/decision-meeting-dialog.component';
 
 @Component({
-  selector: 'app-decision-meeting',
-  templateUrl: './decision-meeting.component.html',
-  styleUrls: ['./decision-meeting.component.scss'],
+    selector: 'app-decision-meeting',
+    templateUrl: './decision-meeting.component.html',
+    styleUrls: ['./decision-meeting.component.scss'],
+    standalone: false
 })
 export class DecisionMeetingComponent implements OnInit {
   displayedColumns: string[] = ['date', 'action'];
