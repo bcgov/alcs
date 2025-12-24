@@ -35,7 +35,7 @@ export interface DocumentDto {
 
 export interface SelectableParcelDto {
   uuid: string;
-  pid?: string;
+  pid?: string | null;
   certificateOfTitleUuid?: string;
 }
 

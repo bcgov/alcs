@@ -271,19 +271,26 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.parcelId.updateValueAndValidity();
       return;
     }
-    
-    this.parcelId.setValidators([Validators.required]);
-    this.parcelId.updateValueAndValidity();
 
     if (!this.data.parcelService) {
+      // No parcel service, so no parcels, we will not require it
+      this.parcelId.clearValidators();
+      this.parcelId.updateValueAndValidity();
       return;
     }
 
     this.selectableParcels = await this.data.parcelService.fetchParcels(this.data.fileId);
 
     if (this.selectableParcels.length < 1) {
+      // No parcels available, we will not require it
+      this.parcelId.clearValidators();
+      this.parcelId.updateValueAndValidity();
       return;
     }
+    
+    // We have parcels to select from now, so we will require it here
+    this.parcelId.setValidators([Validators.required]);
+    this.parcelId.updateValueAndValidity();
 
     const selectedParcel = this.selectableParcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
     if (selectedParcel) {

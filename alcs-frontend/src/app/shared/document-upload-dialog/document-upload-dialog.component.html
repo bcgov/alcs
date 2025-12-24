@@ -93,9 +93,36 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Source</mat-label>
         <mat-select [formControl]="source">
-          @for (source of documentSources; track source) {
-            <mat-option [value]="source">{{ source }}</mat-option>
-          }
+          <mat-option *ngFor="let source of documentSources" [value]="source">{{ source }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div
+      *ngIf="
+        type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE &&
+        !data.fixedParcel &&
+        selectableParcels &&
+        selectableParcels.length > 0
+      "
+    >
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Associated Parcel</mat-label>
+        <mat-select [formControl]="parcelId">
+          <mat-option *ngFor="let parcel of selectableParcels; let i = index" [value]="parcel.uuid">
+            #{{ i + 1 }} PID:
+            <span *ngIf="parcel.pid">{{ parcel.pid | mask: '000-000-000' }}</span>
+            <span *ngIf="!parcel.pid">No Data</span></mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="selectableOwners && type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Associated Organization</mat-label>
+        <mat-select [formControl]="ownerId">
+          <mat-option *ngFor="let owner of selectableOwners" [value]="owner.uuid">
+            {{ owner.label }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>

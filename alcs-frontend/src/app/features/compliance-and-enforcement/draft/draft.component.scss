@@ -23,11 +23,3 @@ section.form-section {
 }
 .left-actions { display: flex; }
 .right-actions { display: flex; gap: 12px; }
-
-
-::ng-deep .cdk-overlay-container .mat-mdc-dialog-container {
-  .button-container button[mat-flat-button]:last-child {
-    background-color: colors.$error-color !important;
-    color: white !important;
-  }
-}
