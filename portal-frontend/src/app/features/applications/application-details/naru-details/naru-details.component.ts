@@ -9,9 +9,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-naru-details[applicationSubmission]',
-  templateUrl: './naru-details.component.html',
-  styleUrls: ['./naru-details.component.scss'],
+    selector: 'app-naru-details[applicationSubmission]',
+    templateUrl: './naru-details.component.html',
+    styleUrls: ['./naru-details.component.scss'],
+    standalone: false
 })
 export class NaruDetailsComponent {
   @Input() showErrors = true;

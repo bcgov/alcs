@@ -8,9 +8,10 @@ import { StepComponent } from '../step.partial';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-other-parcels',
-  templateUrl: './other-parcels.component.html',
-  styleUrls: ['./other-parcels.component.scss'],
+    selector: 'app-other-parcels',
+    templateUrl: './other-parcels.component.html',
+    styleUrls: ['./other-parcels.component.scss'],
+    standalone: false
 })
 export class OtherParcelsComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.OtherParcel;

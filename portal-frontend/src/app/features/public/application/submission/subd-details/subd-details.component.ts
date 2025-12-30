@@ -7,9 +7,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-subd-details[applicationSubmission]',
-  templateUrl: './subd-details.component.html',
-  styleUrls: ['./subd-details.component.scss'],
+    selector: 'app-subd-details[applicationSubmission]',
+    templateUrl: './subd-details.component.html',
+    styleUrls: ['./subd-details.component.scss'],
+    standalone: false
 })
 export class SubdDetailsComponent {
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;

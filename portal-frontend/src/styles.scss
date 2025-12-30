@@ -12,7 +12,8 @@
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 html,
 body {
@@ -114,8 +115,8 @@ a {
 .mat-primary {
   &.mat-mdc-button-base {
     --mat-fab-foreground-color: #fff;
-    --mdc-filled-button-label-text-color: #fff;
-    --mdc-protected-button-label-text-color: #fff;
+    --mat-button-filled-label-text-color: #fff;
+    --mat-button-protected-label-text-color: #fff;
   }
 
   &.mat-mdc-fab,
@@ -125,7 +126,7 @@ a {
 }
 
 .mdc-checkbox {
-  --mdc-checkbox-selected-checkmark-color: #fff;
+  --mat-checkbox-selected-checkmark-color: #fff;
 }
 
 .cdk-overlay-backdrop {

@@ -12,9 +12,10 @@ import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { VISIBLE_COUNT_INCREMENT } from '../../../../shared/constants';
 
 @Component({
-  selector: 'app-transferees',
-  templateUrl: './transferees.component.html',
-  styleUrls: ['./transferees.component.scss'],
+    selector: 'app-transferees',
+    templateUrl: './transferees.component.html',
+    styleUrls: ['./transferees.component.scss'],
+    standalone: false
 })
 export class TransfereesComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditNotificationSteps.Transferees;

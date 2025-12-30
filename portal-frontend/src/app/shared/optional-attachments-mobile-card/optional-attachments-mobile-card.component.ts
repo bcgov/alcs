@@ -8,6 +8,7 @@ import { NotificationDocumentDto } from "../../services/notification-document/no
     selector: 'app-optional-attachments-mobile-card',
     templateUrl: './optional-attachments-mobile-card.component.html',
     styleUrl: './optional-attachments-mobile-card.component.scss',
+    standalone: false
 })
 export class OptionalAttachmentsMobileCardComponent {
     @Input() file!: ApplicationDocumentDto | NoticeOfIntentDocumentDto | NotificationDocumentDto;

@@ -12,9 +12,10 @@ import {
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 
 @Component({
-  selector: 'app-additional-information',
-  templateUrl: './additional-information.component.html',
-  styleUrls: ['./additional-information.component.scss'],
+    selector: 'app-additional-information',
+    templateUrl: './additional-information.component.html',
+    styleUrls: ['./additional-information.component.scss'],
+    standalone: false
 })
 export class AdditionalInformationComponent implements OnInit {
   firstQuestion = 'FIX THIS';

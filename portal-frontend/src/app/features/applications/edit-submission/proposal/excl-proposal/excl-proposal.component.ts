@@ -16,9 +16,10 @@ import { FilesStepComponent } from '../../files-step.partial';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-excl-proposal',
-  templateUrl: './excl-proposal.component.html',
-  styleUrls: ['./excl-proposal.component.scss'],
+    selector: 'app-excl-proposal',
+    templateUrl: './excl-proposal.component.html',
+    styleUrls: ['./excl-proposal.component.scss'],
+    standalone: false
 })
 export class ExclProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   DOCUMENT = DOCUMENT_TYPE;

@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { AuthInterceptorService } from './auth-interceptor.service';
 import { AuthenticationService, ICurrentUser } from './authentication.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AuthInterceptorService', () => {
   let service: AuthInterceptorService;
@@ -16,15 +17,17 @@ describe('AuthInterceptorService', () => {
     mockAuthService.$currentTokenUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     TestBed.configureTestingModule({
-      providers: [
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: AuthenticationService,
-          useValue: mockAuthService,
+            provide: AuthenticationService,
+            useValue: mockAuthService,
         },
-      ],
-      imports: [HttpClientTestingModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(AuthInterceptorService);
   });
 

@@ -3,7 +3,7 @@
 </div>
 
 <div mat-dialog-content class="content">
-  <ng-container *ngIf="data.isAuthorizing">
+  @if (data.isAuthorizing) {
     <div>
       <div class="subheading2">Terms and Conditions:</div>
       <mat-checkbox #checkbox1 color="primary" class="checkbox">
@@ -28,13 +28,13 @@
           color="primary"
           [disabled]="!checkbox1.checked || !checkbox2.checked"
           [mat-dialog-close]="true"
-        >
+          >
           submit
         </button>
       </div>
     </div>
-  </ng-container>
-  <ng-container *ngIf="!data.isAuthorizing">
+  }
+  @if (!data.isAuthorizing) {
     <div>
       <div class="subheading2">Terms and Conditions:</div>
       <mat-checkbox #checkbox1 color="primary" class="checkbox">
@@ -54,5 +54,5 @@
         </button>
       </div>
     </div>
-  </ng-container>
+  }
 </div>

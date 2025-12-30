@@ -11,9 +11,10 @@ import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../ser
 import { PublicService } from '../../../services/public/public.service';
 
 @Component({
-  selector: 'app-public-application',
-  templateUrl: './public-application.component.html',
-  styleUrls: ['./public-application.component.scss'],
+    selector: 'app-public-application',
+    templateUrl: './public-application.component.html',
+    styleUrls: ['./public-application.component.scss'],
+    standalone: false
 })
 export class PublicApplicationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

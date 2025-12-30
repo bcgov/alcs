@@ -9,9 +9,10 @@ export type SoilTableData = {
 };
 
 @Component({
-  selector: 'app-soil-table',
-  templateUrl: './soil-table.component.html',
-  styleUrls: ['./soil-table.component.scss'],
+    selector: 'app-soil-table',
+    templateUrl: './soil-table.component.html',
+    styleUrls: ['./soil-table.component.scss'],
+    standalone: false
 })
 export class SoilTableComponent implements OnInit, OnChanges {
   @Input() tableHeader = 'Soil to be Removed';

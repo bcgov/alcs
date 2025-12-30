@@ -10,9 +10,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-submission-documents',
-  templateUrl: './submission-documents.component.html',
-  styleUrls: ['./submission-documents.component.scss'],
+    selector: 'app-submission-documents',
+    templateUrl: './submission-documents.component.html',
+    styleUrls: ['./submission-documents.component.scss'],
+    standalone: false
 })
 export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();

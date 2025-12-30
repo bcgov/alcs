@@ -27,9 +27,10 @@ export type FormExisingResidence = { id?: number; floorArea: number; description
 export type FormProposedResidence = { id?: number; floorArea: number; description: string; isExpanded?: boolean };
 
 @Component({
-  selector: 'app-naru-proposal',
-  templateUrl: './naru-proposal.component.html',
-  styleUrls: ['./naru-proposal.component.scss'],
+    selector: 'app-naru-proposal',
+    templateUrl: './naru-proposal.component.html',
+    styleUrls: ['./naru-proposal.component.scss'],
+    standalone: false
 })
 export class NaruProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;

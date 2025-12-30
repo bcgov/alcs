@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { CodeService } from '../../services/code/code.service';
 
 @Component({
-  selector: 'app-maintenance',
-  templateUrl: './maintenance.component.html',
-  styleUrls: ['./maintenance.component.scss'],
+    selector: 'app-maintenance',
+    templateUrl: './maintenance.component.html',
+    styleUrls: ['./maintenance.component.scss'],
+    standalone: false
 })
 export class MaintenanceComponent implements OnInit {
   constructor(private codeService: CodeService, private router: Router) {}

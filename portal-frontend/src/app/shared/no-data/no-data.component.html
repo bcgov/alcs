@@ -1,7 +1,9 @@
 <div class="no-data">
   <div class="text">{{ text }}</div>
-  <div class="subtext error" *ngIf="showRequired">
-    <mat-icon>warning</mat-icon>
-    {{ errorText }}
-  </div>
+  @if (showRequired) {
+    <div class="subtext error">
+      <mat-icon>warning</mat-icon>
+      {{ errorText }}
+    </div>
+  }
 </div>

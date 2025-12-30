@@ -8,9 +8,10 @@ import { isTruncated, truncate } from '../../utils/string-helper';
 import { EXISTING_RESIDENCE_DESCRIPTION_CHAR_LIMIT_MOBILE } from '../../constants';
 
 @Component({
-  selector: 'app-naru-residence-mobile-card',
-  templateUrl: './naru-residence-mobile-card.component.html',
-  styleUrl: './naru-residence-mobile-card.component.scss',
+    selector: 'app-naru-residence-mobile-card',
+    templateUrl: './naru-residence-mobile-card.component.html',
+    styleUrl: './naru-residence-mobile-card.component.scss',
+    standalone: false
 })
 export class NaruResidenceMobileCardComponent implements OnInit {
   @Input() residence!: FormExisingResidence | FormProposedResidence;

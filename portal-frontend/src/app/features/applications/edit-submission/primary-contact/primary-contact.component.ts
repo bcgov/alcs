@@ -25,9 +25,10 @@ import { strictEmailValidator } from '../../../../shared/validators/email-valida
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-primary-contact',
-  templateUrl: './primary-contact.component.html',
-  styleUrls: ['./primary-contact.component.scss'],
+    selector: 'app-primary-contact',
+    templateUrl: './primary-contact.component.html',
+    styleUrls: ['./primary-contact.component.scss'],
+    standalone: false
 })
 export class PrimaryContactComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.PrimaryContact;

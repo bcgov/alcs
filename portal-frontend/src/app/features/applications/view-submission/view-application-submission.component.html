@@ -1,15 +1,21 @@
 <div class="banner">
   <div>
-    <h4 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h4>
+    @if (application) {
+      <h4>Application ID: {{ application.fileNumber }} | {{ application.type }}</h4>
+    }
   </div>
   <div class="banner-status">
     <div>
       <div class="subheading2">Status Date</div>
-      <span *ngIf="application">{{ application.lastStatusUpdate | date }}</span>
+      @if (application) {
+        <span>{{ application.lastStatusUpdate | date }}</span>
+      }
     </div>
     <div>
       <div class="subheading2">Application Status</div>
-      <span *ngIf="application" data-testid="application-status">{{ application.status.label }}</span>
+      @if (application) {
+        <span data-testid="application-status">{{ application.status.label }}</span>
+      }
     </div>
   </div>
 </div>
@@ -17,169 +23,192 @@
   <button (click)="onNavigateHome()" mat-button color="accent"><mat-icon>chevron_left</mat-icon>Return to Inbox</button>
   <div class="btns-wrapper">
     <div
-          matTooltip="Start application review in order to return"
-          [matTooltipDisabled]="application && application.status.code !== SUBMISSION_STATUS.SUBMITTED_TO_LG"
-          class="return-tooltip"
-        >
-      <button
-        (click)="onReturnApplication()"
-        [disabled]="isLoading || (application && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)"
-        mat-flat-button
-        color="accent"
-        class="return-button"
-        *ngIf="
-          application &&
-          application.canReview &&
-          (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
-            application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
-        "
+      matTooltip="Start application review in order to return"
+      [matTooltipDisabled]="application && application.status.code !== SUBMISSION_STATUS.SUBMITTED_TO_LG"
+      class="return-tooltip"
       >
-          
-            <div>
-              <span>Return Application</span>
-              <mat-icon class="icon" *ngIf="application && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG">info_outline</mat-icon>
-            </div>
-      </button>
-    </div>
-    <button
-      mat-flat-button
-      color="primary"
-      *ngIf="application && application.canEdit"
-      [routerLink]="'/application/' + application.fileNumber + '/edit'"
-    >
-      <div class="continue-button-content">
-        <span>Continue Application</span>
-        <mat-icon>keyboard_double_arrow_right</mat-icon>
-      </div>
-    </button>
-    <button
-      (click)="onReview(application.fileNumber)"
-      [disabled]="isLoading"
-      mat-flat-button
-      color="primary"
-      *ngIf="
+      @if (
         application &&
         application.canReview &&
         (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
-          application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
-      "
-    >
-      <div class="continue-button-content">
-        <span
-          *ngIf="
-            application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-            application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
-          "
-          class="subheading2"
-          >Continue Application Review</span
-        >
-        <span *ngIf="application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG" class="subheading2"
-          >Start Application Review</span
-        >
-        <mat-icon>keyboard_double_arrow_right</mat-icon>
-      </div>
-    </button>
-  </div>
-</div>
-<div>
-  <div class="navigation">
-    <mat-tab-group [(selectedIndex)]="selectedIndex">
-      <mat-tab label="Applicant Submission">
-        <div *ngIf="!application" class="center">
-          <mat-spinner></mat-spinner>
-        </div>
-        <div *ngIf="application" class="content">
-          <section>
-            <div class="header">
-              <h2>Applicant Submission</h2>
-              <div class="btns-wrapper">
-                <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
-                  Download PDF
-                </button>
-              </div>
-            </div>
-            <div
-              *ngIf="
-                application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
-                application.status.code === SUBMISSION_STATUS.INCOMPLETE
-              "
-              class="comment-container"
-            >
-              <div><strong>Comment for Applicant</strong></div>
-              {{ application.returnedComment }}
-              <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
-            </div>
-            <app-application-details
-              [showEdit]="false"
-              [showErrors]="false"
-              [$application]="$application"
-              [$applicationDocuments]="$applicationDocuments"
-            ></app-application-details>
-          </section>
-        </div>
-      </mat-tab>
-      <mat-tab label="Local/First Nation Gov Review">
-        <div class="content">
-          <app-lfng-review
-            [$application]="$application"
-            [$applicationDocuments]="$applicationDocuments"
-            (onCancel)="onCancelWrapper($event)"
-          ></app-lfng-review>
-        </div>
-      </mat-tab>
-      <mat-tab label="ALC Review and Decision">
-        <div class="content">
-          <app-alc-review
-            [$application]="$application"
-            [$applicationDocuments]="$applicationDocuments"
-          ></app-alc-review>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-    <div *ngIf="application && application.canEdit" class="continue-button-container">
-      <button mat-stroked-button color="warn" (click)="onCancel(application.uuid)">Cancel Application</button>
+        application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
+        application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
+        ) {
+        <button
+          (click)="onReturnApplication()"
+          [disabled]="isLoading || (application && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)"
+          mat-flat-button
+          color="accent"
+          class="return-button"
+          >
+          <div>
+            <span>Return Application</span>
+            @if (application && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
+              <mat-icon class="icon">info_outline</mat-icon>
+            }
+          </div>
+        </button>
+      }
+    </div>
+    @if (application && application.canEdit) {
       <button
         mat-flat-button
         color="primary"
-        *ngIf="application && application.canEdit"
         [routerLink]="'/application/' + application.fileNumber + '/edit'"
-      >
+        >
         <div class="continue-button-content">
           <span>Continue Application</span>
           <mat-icon>keyboard_double_arrow_right</mat-icon>
         </div>
       </button>
-    </div>
-    <div *ngIf="application && application.canReview" class="continue-button-container">
-      <button mat-stroked-button color="warn" (click)="onCancel(application.uuid)">Cancel Application</button>
+    }
+    @if (
+      application &&
+      application.canReview &&
+      (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+      application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
+      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
+      ) {
       <button
         (click)="onReview(application.fileNumber)"
         [disabled]="isLoading"
         mat-flat-button
         color="primary"
-        *ngIf="
-          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
-          application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG
-        "
-      >
+        >
         <div class="continue-button-content">
-          <span
-            *ngIf="
-              application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-              application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
-            "
-            class="subheading2"
-            >Continue Application Review</span
-          >
-          <span *ngIf="application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG" class="subheading2"
-            >Start Application Review</span
-          >
-          <mat-icon>keyboard_double_arrow_right</mat-icon>
-        </div>
-      </button>
+          @if (
+            application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+            application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
+            ) {
+            <span
+              class="subheading2"
+              >Continue Application Review</span
+              >
+            }
+            @if (application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
+              <span class="subheading2"
+                >Start Application Review</span
+                >
+              }
+              <mat-icon>keyboard_double_arrow_right</mat-icon>
+            </div>
+          </button>
+        }
+      </div>
     </div>
-  </div>
-</div>
+    <div>
+      <div class="navigation">
+        <mat-tab-group [(selectedIndex)]="selectedIndex">
+          <mat-tab label="Applicant Submission">
+            @if (!application) {
+              <div class="center">
+                <mat-spinner></mat-spinner>
+              </div>
+            }
+            @if (application) {
+              <div class="content">
+                <section>
+                  <div class="header">
+                    <h2>Applicant Submission</h2>
+                    <div class="btns-wrapper">
+                      <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
+                        Download PDF
+                      </button>
+                    </div>
+                  </div>
+                  @if (
+                    application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+                    application.status.code === SUBMISSION_STATUS.INCOMPLETE
+                    ) {
+                    <div
+                      class="comment-container"
+                      >
+                      <div><strong>Comment for Applicant</strong></div>
+                      {{ application.returnedComment }}
+                      @if (!application.returnedComment) {
+                        <span class="no-comment">No comment added</span>
+                      }
+                    </div>
+                  }
+                  <app-application-details
+                    [showEdit]="false"
+                    [showErrors]="false"
+                    [$application]="$application"
+                    [$applicationDocuments]="$applicationDocuments"
+                  ></app-application-details>
+                </section>
+              </div>
+            }
+          </mat-tab>
+          <mat-tab label="Local/First Nation Gov Review">
+            <div class="content">
+              <app-lfng-review
+                [$application]="$application"
+                [$applicationDocuments]="$applicationDocuments"
+                (onCancel)="onCancelWrapper($event)"
+              ></app-lfng-review>
+            </div>
+          </mat-tab>
+          <mat-tab label="ALC Review and Decision">
+            <div class="content">
+              <app-alc-review
+                [$application]="$application"
+                [$applicationDocuments]="$applicationDocuments"
+              ></app-alc-review>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+        @if (application && application.canEdit) {
+          <div class="continue-button-container">
+            <button mat-stroked-button color="warn" (click)="onCancel(application.uuid)">Cancel Application</button>
+            @if (application && application.canEdit) {
+              <button
+                mat-flat-button
+                color="primary"
+                [routerLink]="'/application/' + application.fileNumber + '/edit'"
+                >
+                <div class="continue-button-content">
+                  <span>Continue Application</span>
+                  <mat-icon>keyboard_double_arrow_right</mat-icon>
+                </div>
+              </button>
+            }
+          </div>
+        }
+        @if (application && application.canReview) {
+          <div class="continue-button-container">
+            <button mat-stroked-button color="warn" (click)="onCancel(application.uuid)">Cancel Application</button>
+            @if (
+              application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+              application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG ||
+              application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG
+              ) {
+              <button
+                (click)="onReview(application.fileNumber)"
+                [disabled]="isLoading"
+                mat-flat-button
+                color="primary"
+                >
+                <div class="continue-button-content">
+                  @if (
+                    application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+                    application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
+                    ) {
+                    <span
+                      class="subheading2"
+                      >Continue Application Review</span
+                      >
+                    }
+                    @if (application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
+                      <span class="subheading2"
+                        >Start Application Review</span
+                        >
+                      }
+                      <mat-icon>keyboard_double_arrow_right</mat-icon>
+                    </div>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>

@@ -29,9 +29,10 @@ import { v4 } from 'uuid';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-roso-proposal',
-  templateUrl: './roso-proposal.component.html',
-  styleUrls: ['./roso-proposal.component.scss'],
+    selector: 'app-roso-proposal',
+    templateUrl: './roso-proposal.component.html',
+    styleUrls: ['./roso-proposal.component.scss'],
+    standalone: false
 })
 export class RosoProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;

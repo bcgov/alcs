@@ -6,9 +6,10 @@ import { MaintenanceService } from '../../services/maintenance/maintenance.servi
 import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

@@ -8,9 +8,10 @@ import { downloadFile } from '../../../../shared/utils/file';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-excl-details',
-  templateUrl: './excl-details.component.html',
-  styleUrls: ['./excl-details.component.scss'],
+    selector: 'app-excl-details',
+    templateUrl: './excl-details.component.html',
+    styleUrls: ['./excl-details.component.scss'],
+    standalone: false
 })
 export class ExclDetailsComponent {
   @Input() showErrors = true;

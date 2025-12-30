@@ -11,9 +11,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-public-lfng-review',
-  templateUrl: './lfng-review.component.html',
-  styleUrls: ['./lfng-review.component.scss'],
+    selector: 'app-public-lfng-review',
+    templateUrl: './lfng-review.component.html',
+    styleUrls: ['./lfng-review.component.scss'],
+    standalone: false
 })
 export class PublicLfngReviewComponent implements OnInit {
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;

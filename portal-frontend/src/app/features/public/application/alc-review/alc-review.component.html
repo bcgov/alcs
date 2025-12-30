@@ -1,12 +1,14 @@
-<div *ngIf="applicationSubmission">
-  <div class="header">
-    <h2>ALC Review and Decision</h2>
-  </div>
+@if (applicationSubmission) {
   <div>
-    <app-public-decisions [applicationDecisions]="applicationDecisions"></app-public-decisions>
-    <app-submission-documents
-      [applicationSubmission]="applicationSubmission"
-      [applicationDocuments]="applicationDocuments"
-    ></app-submission-documents>
+    <div class="header">
+      <h2>ALC Review and Decision</h2>
+    </div>
+    <div>
+      <app-public-decisions [applicationDecisions]="applicationDecisions"></app-public-decisions>
+      <app-submission-documents
+        [applicationSubmission]="applicationSubmission"
+        [applicationDocuments]="applicationDocuments"
+      ></app-submission-documents>
+    </div>
   </div>
-</div>
+}

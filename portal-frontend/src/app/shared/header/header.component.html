@@ -4,47 +4,65 @@
       <li>
         <a href="https://www.alc.gov.bc.ca/">ALC Website</a>
       </li>
-      <li *ngIf="!isOnPublicPage">
-        <a routerLink="/public">Public Search</a>
-      </li>
-      <li *ngIf="isOnPublicPage">
-        <a routerLink="/">Portal</a>
-      </li>
+      @if (!isOnPublicPage) {
+        <li>
+          <a routerLink="/public">Public Search</a>
+        </li>
+      }
+      @if (isOnPublicPage) {
+        <li>
+          <a routerLink="/">Portal</a>
+        </li>
+      }
     </ul>
   </div>
-  <app-maintenance-banner *ngIf="showMaintenanceBanner">{{ maintenanceBannerMessage }}</app-maintenance-banner>
+  @if (showMaintenanceBanner) {
+    <app-maintenance-banner>{{ maintenanceBannerMessage }}</app-maintenance-banner>
+  }
   <div class="title-wrapper">
     <div class="title">
       <img class="logo" (click)="onClickLogo()" src="assets/alc_logo.svg" alt="ALC Portal" />
       <h5 class="center">
-        <span *ngIf="isOnPublicPage">Provincial Agricultural Land Commission Public Search</span>
-        <span *ngIf="!isOnPublicPage">Provincial Agricultural Land Commission Portal</span>
+        @if (isOnPublicPage) {
+          <span>Provincial Agricultural Land Commission Public Search</span>
+        }
+        @if (!isOnPublicPage) {
+          <span>Provincial Agricultural Land Commission Portal</span>
+        }
       </h5>
-      <div *ngIf="isAuthenticated" class="burger-menu">
-        <button (click)="onMenuToggle()" mat-icon-button>
-          <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+      @if (isAuthenticated) {
+        <div class="burger-menu">
+          <button (click)="onMenuToggle()" mat-icon-button>
+            <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (isAuthenticated && !isOnPublicPage) {
+      <div class="controls">
+        <button mat-button color="primary" class="user-menu-button" (click)="onUserMenuToggle()">
+          <div class="center">{{ user?.name }} <mat-icon> arrow_drop_down </mat-icon></div>
         </button>
+        @if (isUserMenuOpen) {
+          <ul class="user-menu mat-elevation-z8">
+            <div class="item">User ID: {{ user?.bceidUserName }}</div>
+            <div class="item">Business: {{ user?.government || user?.businessName }}</div>
+            <div class="item">Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
+          </ul>
+        }
+        <button class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
       </div>
-    </div>
+    }
 
-    <div *ngIf="isAuthenticated && !isOnPublicPage" class="controls">
-      <button mat-button color="primary" class="user-menu-button" (click)="onUserMenuToggle()">
-        <div class="center">{{ user?.name }} <mat-icon> arrow_drop_down </mat-icon></div>
-      </button>
-      <ul *ngIf="isUserMenuOpen" class="user-menu mat-elevation-z8">
-        <div class="item">User ID: {{ user?.bceidUserName }}</div>
-        <div class="item">Business: {{ user?.government || user?.businessName }}</div>
-        <div class="item">Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
-      </ul>
-      <button class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
-    </div>
-
-    <div *ngIf="isMenuOpen" class="mobile-menu-wrapper">
-      <div class="subheading2 username item">{{ user?.name }}</div>
-      <div>User ID: {{ user?.bceidUserName }}</div>
-      <div>Business: {{ user?.government || user?.businessName }}</div>
-      <div>Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
-      <button class="mobile-logout" mat-stroked-button color="primary" (click)="onLogout()">Log Out</button>
-    </div>
+    @if (isMenuOpen) {
+      <div class="mobile-menu-wrapper">
+        <div class="subheading2 username item">{{ user?.name }}</div>
+        <div>User ID: {{ user?.bceidUserName }}</div>
+        <div>Business: {{ user?.government || user?.businessName }}</div>
+        <div>Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
+        <button class="mobile-logout" mat-stroked-button color="primary" (click)="onLogout()">Log Out</button>
+      </div>
+    }
   </div>
 </header>

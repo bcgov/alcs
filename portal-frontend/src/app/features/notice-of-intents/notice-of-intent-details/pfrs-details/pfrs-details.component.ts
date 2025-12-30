@@ -8,9 +8,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-pfrs-details[noiSubmission]',
-  templateUrl: './pfrs-details.component.html',
-  styleUrls: ['./pfrs-details.component.scss'],
+    selector: 'app-pfrs-details[noiSubmission]',
+    templateUrl: './pfrs-details.component.html',
+    styleUrls: ['./pfrs-details.component.scss'],
+    standalone: false
 })
 export class PfrsDetailsComponent {
   @Input() showErrors = true;

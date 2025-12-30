@@ -16,9 +16,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-lfng-review',
-  templateUrl: './lfng-review.component.html',
-  styleUrls: ['./lfng-review.component.scss'],
+    selector: 'app-lfng-review',
+    templateUrl: './lfng-review.component.html',
+    styleUrls: ['./lfng-review.component.scss'],
+    standalone: false
 })
 export class LfngReviewComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();

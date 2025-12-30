@@ -1,12 +1,18 @@
 <div mat-dialog-title>
-  <h2 *ngIf="!isEdit">Add New Owner</h2>
-  <h2 *ngIf="isEdit">Edit Owner</h2>
+  @if (!isEdit) {
+    <h2>Add New Owner</h2>
+  }
+  @if (isEdit) {
+    <h2>Edit Owner</h2>
+  }
 </div>
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <app-warning-banner *ngIf="isEdit" class="full-row error" class="changes-banner">
-      The changes made to this owner will be reflected across the submission.
-    </app-warning-banner>
+    @if (isEdit) {
+      <app-warning-banner class="full-row error" class="changes-banner">
+        The changes made to this owner will be reflected across the submission.
+      </app-warning-banner>
+    }
     <div class="form-row">
       <div class="full-row">
         <mat-label for="type">Owner Type</mat-label>
@@ -15,101 +21,136 @@
           <mat-button-toggle [value]="OWNER_TYPE.ORGANIZATION">Organization</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <div class="full-row" *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">
-        <label for="orgName">Organization Name</label>
-        <mat-form-field appearance="outline">
-          <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
-        </mat-form-field>
-        <div
-          *ngIf="organizationName.invalid && (organizationName.dirty || organizationName.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="organizationName.errors?.['required']">This field is required</div>
+      @if (type.getRawValue() === OWNER_TYPE.ORGANIZATION) {
+        <div class="full-row">
+          <label for="orgName">Organization Name</label>
+          <mat-form-field appearance="outline">
+            <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
+          </mat-form-field>
+          @if (organizationName.invalid && (organizationName.dirty || organizationName.touched)) {
+            <div
+              class="field-error"
+              >
+              <mat-icon>warning</mat-icon>
+              @if (organizationName.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-      </div>
-      <div *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION" class="full-row">
-        <label for="fileUpload">Corporate Summary</label>
+      }
+      @if (type.getRawValue() === OWNER_TYPE.ORGANIZATION) {
+        <div class="full-row">
+          <label for="fileUpload">Corporate Summary</label>
+          <div>
+            <mat-hint class="subtext">
+              A corporate/company summary provides the names of the directors, which is required to determine the signing
+              authority for the application. Visit BC Registry Services online or call their Help Desk at 1-877-526-1526
+              to submit a search request.</mat-hint
+              >
+            </div>
+            <h6></h6>
+            <app-file-drag-drop
+              [uploadedFiles]="files"
+              [pendingFile]="pendingFile"
+              (uploadFiles)="attachFile($event)"
+              (deleteFile)="removeCorporateSummary()"
+              id="fileUpload"
+              [showErrors]="showFileErrors"
+              [isRequired]="true"
+              [showHasVirusError]="showHasVirusError"
+              [showVirusScanFailedError]="showVirusScanFailedError"
+            ></app-file-drag-drop>
+            <mat-form-field style="display: none">
+              <input id="corporateSummary" matInput formControlName="corporateSummary" />
+            </mat-form-field>
+          </div>
+        }
+        @if (type.getRawValue() === OWNER_TYPE.ORGANIZATION) {
+          <h4 class="full-row">Organization Contact Info</h4>
+        }
         <div>
-          <mat-hint class="subtext">
-            A corporate/company summary provides the names of the directors, which is required to determine the signing
-            authority for the application. Visit BC Registry Services online or call their Help Desk at 1-877-526-1526
-            to submit a search request.</mat-hint
-          >
+          <label for="firstName">First Name</label>
+          <mat-form-field appearance="outline">
+            <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
+          </mat-form-field>
+          @if (firstName.invalid && (firstName.dirty || firstName.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (firstName.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-        <h6></h6>
-        <app-file-drag-drop
-          [uploadedFiles]="files"
-          [pendingFile]="pendingFile"
-          (uploadFiles)="attachFile($event)"
-          (deleteFile)="removeCorporateSummary()"
-          id="fileUpload"
-          [showErrors]="showFileErrors"
-          [isRequired]="true"
-          [showHasVirusError]="showHasVirusError"
-          [showVirusScanFailedError]="showVirusScanFailedError"
-        ></app-file-drag-drop>
-        <mat-form-field style="display: none">
-          <input id="corporateSummary" matInput formControlName="corporateSummary" />
-        </mat-form-field>
-      </div>
-      <h4 class="full-row" *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION">Organization Contact Info</h4>
-      <div>
-        <label for="firstName">First Name</label>
-        <mat-form-field appearance="outline">
-          <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
-        </mat-form-field>
-        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="firstName.errors?.['required']">This field is required</div>
+        <div>
+          <label for="lastName">Last Name</label>
+          <mat-form-field appearance="outline">
+            <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
+          </mat-form-field>
+          @if (lastName.invalid && (lastName.dirty || lastName.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (lastName.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-      </div>
-      <div>
-        <label for="lastName">Last Name</label>
-        <mat-form-field appearance="outline">
-          <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
-        </mat-form-field>
-        <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="lastName.errors?.['required']">This field is required</div>
+        <div>
+          <label for="phoneNumber">Phone Number</label>
+          <mat-form-field appearance="outline">
+            <input
+              id="phoneNumber"
+              mask="(000) 000-0000"
+              matInput
+              placeholder="(555) 555-5555"
+              formControlName="phoneNumber"
+              />
+          </mat-form-field>
+          @if (phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (phoneNumber.errors?.['required']) {
+                <div>This field is required</div>
+              }
+              @if (phoneNumber.errors?.['mask']) {
+                <div>Invalid format</div>
+              }
+            </div>
+          }
         </div>
-      </div>
-      <div>
-        <label for="phoneNumber">Phone Number</label>
-        <mat-form-field appearance="outline">
-          <input
-            id="phoneNumber"
-            mask="(000) 000-0000"
-            matInput
-            placeholder="(555) 555-5555"
-            formControlName="phoneNumber"
-          />
-        </mat-form-field>
-        <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="phoneNumber.errors?.['required']">This field is required</div>
-          <div *ngIf="phoneNumber.errors?.['mask']">Invalid format</div>
-        </div>
-      </div>
-      <div>
-        <label for="email">Email</label>
-        <mat-form-field appearance="outline">
-          <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
-        </mat-form-field>
-        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="email.errors?.['required']">This field is required</div>
-          <div *ngIf="email.errors?.['email']">Invalid format</div>
+        <div>
+          <label for="email">Email</label>
+          <mat-form-field appearance="outline">
+            <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+          </mat-form-field>
+          @if (email.invalid && (email.dirty || email.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (email.errors?.['required']) {
+                <div>This field is required</div>
+              }
+              @if (email.errors?.['email']) {
+                <div>Invalid format</div>
+              }
+            </div>
+          }
         </div>
       </div>
-    </div>
-  </form>
-</div>
-<div mat-dialog-actions class="actions" align="end">
-  <button *ngIf="isEdit" mat-stroked-button color="warn" class="delete-btn" (click)="onDelete()">Delete Owner</button>
-  <div class="btn-group">
-    <button mat-stroked-button (click)="onClose()" style="margin-left: auto">Cancel</button>
-    <button mat-flat-button color="primary" *ngIf="!isEdit" [disabled]="isLoading" (click)="onCreate()">Add</button>
-    <button mat-flat-button color="primary" *ngIf="isEdit" [disabled]="isLoading" (click)="onSave()">Save</button>
+    </form>
   </div>
-</div>
+  <div mat-dialog-actions class="actions" align="end">
+    @if (isEdit) {
+      <button mat-stroked-button color="warn" class="delete-btn" (click)="onDelete()">Delete Owner</button>
+    }
+    <div class="btn-group">
+      <button mat-stroked-button (click)="onClose()" style="margin-left: auto">Cancel</button>
+      @if (!isEdit) {
+        <button mat-flat-button color="primary" [disabled]="isLoading" (click)="onCreate()">Add</button>
+      }
+      @if (isEdit) {
+        <button mat-flat-button color="primary" [disabled]="isLoading" (click)="onSave()">Save</button>
+      }
+    </div>
+  </div>

@@ -1,74 +1,103 @@
-<div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 full-width">Proposed Lot Areas</div>
-  <div class="full-width parcel-table">
-    <div class="grid-1 subheading2">#</div>
-    <div class="grid-2 subheading2">Type</div>
-    <div class="grid-3 subheading2">Size</div>
-    <ng-container *ngFor="let lot of _applicationSubmission.subdProposedLots; let i = index">
-      <div class="grid-1">
-        {{ i + 1 }}
+@if (_applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 full-width">Proposed Lot Areas</div>
+    <div class="full-width parcel-table">
+      <div class="grid-1 subheading2">#</div>
+      <div class="grid-2 subheading2">Type</div>
+      <div class="grid-3 subheading2">Size</div>
+      @for (lot of _applicationSubmission.subdProposedLots; track lot; let i = $index) {
+        <div class="grid-1">
+          {{ i + 1 }}
+        </div>
+        <div class="grid-2">
+          {{ lot.type }}
+          @if (!lot.type) {
+            <app-no-data [showRequired]="showErrors"></app-no-data>
+          }
+        </div>
+        <div class="grid-3">
+          {{ lot.size }} @if (lot.size !== null) {
+          <span>ha</span>
+        }
+        @if (!lot.size) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
       </div>
-      <div class="grid-2">
-        {{ lot.type }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!lot.type"></app-no-data>
+    }
+    @if (_applicationSubmission.subdProposedLots.length === 0) {
+      <div class="full-width">
+        <app-no-data [showRequired]="showErrors"></app-no-data>
       </div>
-      <div class="grid-3">
-        {{ lot.size }} <span *ngIf="lot.size !== null">ha</span>
-        <app-no-data [showRequired]="showErrors" *ngIf="!lot.size"></app-no-data>
+    }
+    @if (showErrors && totalAcres !== totalTargetAcres) {
+      <div class="full-width error field-error">
+        <mat-icon>warning</mat-icon>
+        <div>The total lot area proposed must match {{ totalTargetAcres }} hectares as provided in Step 1</div>
       </div>
-    </ng-container>
-    <div *ngIf="_applicationSubmission.subdProposedLots.length === 0" class="full-width">
-      <app-no-data [showRequired]="showErrors"></app-no-data>
-    </div>
-    <div *ngIf="showErrors && totalAcres !== totalTargetAcres" class="full-width error field-error">
-      <mat-icon>warning</mat-icon>
-      <div>The total lot area proposed must match {{ totalTargetAcres }} hectares as provided in Step 1</div>
-    </div>
+    }
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+    @if (!_applicationSubmission.purpose) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">Why do you believe this parcel is suitable for subdivision?</div>
   <div class="grid-double">
     {{ _applicationSubmission.subdSuitability }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.subdSuitability"></app-no-data>
+    @if (!_applicationSubmission.subdSuitability) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
   <div class="grid-double">
     {{ _applicationSubmission.subdAgricultureSupport }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.subdAgricultureSupport"></app-no-data>
+    @if (!_applicationSubmission.subdAgricultureSupport) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <ng-container *ngFor="let map of proposalMap">
+    @for (map of proposalMap; track map) {
       <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
       <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
-    </ng-container>
-    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+    }
+    @if (proposalMap.length === 0) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
   <div class="subheading2 grid-1">Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?</div>
   <div class="grid-double">
-    <span *ngIf="_applicationSubmission.subdIsHomeSiteSeverance !== null">
-      {{ _applicationSubmission.subdIsHomeSiteSeverance ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data
-      [showRequired]="showErrors"
-      *ngIf="_applicationSubmission.subdIsHomeSiteSeverance === null"
-    ></app-no-data>
+    @if (_applicationSubmission.subdIsHomeSiteSeverance !== null) {
+      <span>
+        {{ _applicationSubmission.subdIsHomeSiteSeverance ? 'Yes' : 'No' }}
+      </span>
+    }
+    @if (_applicationSubmission.subdIsHomeSiteSeverance === null) {
+      <app-no-data
+        [showRequired]="showErrors"
+      ></app-no-data>
+    }
   </div>
-  <ng-container *ngIf="_applicationSubmission.subdIsHomeSiteSeverance === true">
+  @if (_applicationSubmission.subdIsHomeSiteSeverance === true) {
     <div class="subheading2 grid-1">Proof of Homesite Severance Qualification</div>
     <div class="grid-double">
-      <div *ngFor="let file of homesiteDocuments">
-        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-      </div>
-      <app-no-data [showRequired]="showErrors" *ngIf="homesiteDocuments.length === 0"></app-no-data>
+      @for (file of homesiteDocuments; track file) {
+        <div>
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        </div>
+      }
+      @if (homesiteDocuments.length === 0) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
     </div>
-  </ng-container>
-  <div *ngIf="showEdit" class="edit-button">
-    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
-  </div>
+  }
+  @if (showEdit) {
+    <div class="edit-button">
+      <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+    </div>
+  }
 </div>
+}

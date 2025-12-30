@@ -1,314 +1,432 @@
-<div *ngIf="applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">Are you removing soil and placing fill in order to build a structure?</div>
-  <div class="grid-double">
-    <span *ngIf="applicationSubmission.soilIsNewStructure !== null">
-      {{ applicationSubmission.soilIsNewStructure ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data *ngIf="applicationSubmission.soilIsNewStructure === null"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">
-    Has the ALC previously received an application or Notice of Intent for this proposal?
-  </div>
-  <div class="grid-double">
-    <span *ngIf="applicationSubmission.soilIsFollowUp !== null">
-      {{ applicationSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data *ngIf="applicationSubmission.soilIsFollowUp === null"></app-no-data>
-  </div>
-
-  <div *ngIf="applicationSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
-  <div *ngIf="applicationSubmission.soilIsFollowUp" class="grid-double">
-    {{ applicationSubmission.soilFollowUpIDs }}
-    <app-no-data *ngIf="!applicationSubmission.soilFollowUpIDs"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
-  <div class="grid-double">
-    {{ applicationSubmission.purpose }}
-    <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
-  <div class="grid-double">
-    <div *ngIf="applicationSubmission.fillProjectDuration">
-      {{ applicationSubmission.fillProjectDuration }}
+@if (applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">Are you removing soil and placing fill in order to build a structure?</div>
+    <div class="grid-double">
+      @if (applicationSubmission.soilIsNewStructure !== null) {
+        <span>
+          {{ applicationSubmission.soilIsNewStructure ? 'Yes' : 'No' }}
+        </span>
+      }
+      @if (applicationSubmission.soilIsNewStructure === null) {
+        <app-no-data></app-no-data>
+      }
     </div>
-    <app-no-data *ngIf="!applicationSubmission.fillProjectDuration"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Removal of Soil Project Duration</div>
-  <div class="grid-double">
-    <div *ngIf="applicationSubmission.soilProjectDuration">
-      {{ applicationSubmission.soilProjectDuration }}
-    </div>
-    <app-no-data *ngIf="!applicationSubmission.soilProjectDuration"></app-no-data>
-  </div>
-
-  <div class="full-width soil-table">
-    <div></div>
-    <div class="subheading2">Soil to be Removed</div>
-    <div class="subheading2">Fill to be Placed</div>
-
-    <div class="subheading2">Volume</div>
-    <div>
-      {{ applicationSubmission.soilToRemoveVolume }}
-      <span *ngIf="applicationSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilToRemoveVolume === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilToPlaceVolume }}
-      <span *ngIf="applicationSubmission.soilToPlaceVolume !== null">m<sup>3</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilToPlaceVolume === null"></app-no-data>
-    </div>
-
-    <div class="subheading2">Area</div>
-    <div>
-      {{ applicationSubmission.soilToRemoveArea }}
-      <span *ngIf="applicationSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilToRemoveArea === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilToPlaceArea }}
-      <span *ngIf="applicationSubmission.soilToPlaceArea !== null">m<sup>2</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilToPlaceArea === null"></app-no-data>
-    </div>
-
-    <div class="subheading2">Maximum Depth</div>
-    <div>
-      {{ applicationSubmission.soilToRemoveMaximumDepth }}
-      <span *ngIf="applicationSubmission.soilToRemoveMaximumDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilToRemoveMaximumDepth === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilToPlaceMaximumDepth }}
-      <span *ngIf="applicationSubmission.soilToPlaceMaximumDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilToPlaceMaximumDepth === null"></app-no-data>
-    </div>
-
-    <div class="subheading2">Average Depth</div>
-    <div>
-      {{ applicationSubmission.soilToRemoveAverageDepth }}
-      <span *ngIf="applicationSubmission.soilToRemoveAverageDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilToRemoveAverageDepth === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilToPlaceAverageDepth }}
-      <span *ngIf="applicationSubmission.soilToPlaceAverageDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilToPlaceAverageDepth === null"></app-no-data>
-    </div>
-
-    <div class="spacer-row"></div>
-
-    <div></div>
-    <div class="subheading2">Soil already Removed</div>
-    <div class="subheading2">Fill already Placed</div>
-
-    <div class="subheading2">Volume</div>
-    <div>
-      {{ applicationSubmission.soilAlreadyRemovedVolume }}
-      <span *ngIf="applicationSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedVolume === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilAlreadyPlacedVolume }}
-      <span *ngIf="applicationSubmission.soilAlreadyPlacedVolume !== null">m<sup>3</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedVolume === null"></app-no-data>
-    </div>
-
-    <div class="subheading2">Area</div>
-    <div>
-      {{ applicationSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="applicationSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedArea === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilAlreadyPlacedArea }}
-      <span *ngIf="applicationSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedArea === null"></app-no-data>
-    </div>
-
-    <div class="subheading2">Maximum Depth</div>
-    <div>
-      {{ applicationSubmission.soilAlreadyRemovedMaximumDepth }}
-      <span *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilAlreadyPlacedMaximumDepth }}
-      <span *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth === null"></app-no-data>
-    </div>
-
-    <div class="subheading2">Average Depth</div>
-    <div>
-      {{ applicationSubmission.soilAlreadyRemovedAverageDepth }}
-      <span *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth === null"></app-no-data>
-    </div>
-    <div>
-      {{ applicationSubmission.soilAlreadyPlacedAverageDepth }}
-      <span *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
-      <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth === null"></app-no-data>
-    </div>
-  </div>
-
-  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilFillTypeToPlace }}
-    <app-no-data *ngIf="!applicationSubmission.soilFillTypeToPlace"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilTypeRemoved }}
-    <app-no-data *ngIf="!applicationSubmission.soilTypeRemoved"></app-no-data>
-  </div>
-
-  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === false">
     <div class="subheading2 grid-1">
-      What alternative measures have you considered or attempted before proposing to place fill?
+      Has the ALC previously received an application or Notice of Intent for this proposal?
     </div>
     <div class="grid-double">
-      {{ applicationSubmission.soilAlternativeMeasures }}
-      <app-no-data *ngIf="!applicationSubmission.soilAlternativeMeasures"></app-no-data>
+      @if (applicationSubmission.soilIsFollowUp !== null) {
+        <span>
+          {{ applicationSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
+        </span>
+      }
+      @if (applicationSubmission.soilIsFollowUp === null) {
+        <app-no-data></app-no-data>
+      }
     </div>
-
-    <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
+    @if (applicationSubmission.soilIsFollowUp) {
+      <div class="subheading2 grid-1">Application or NOI ID</div>
+    }
+    @if (applicationSubmission.soilIsFollowUp) {
+      <div class="grid-double">
+        {{ applicationSubmission.soilFollowUpIDs }}
+        @if (!applicationSubmission.soilFollowUpIDs) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+    }
+    <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
     <div class="grid-double">
-      {{ applicationSubmission.soilReduceNegativeImpacts }}
-      <app-no-data *ngIf="!applicationSubmission.soilReduceNegativeImpacts"></app-no-data>
+      {{ applicationSubmission.purpose }}
+      @if (!applicationSubmission.purpose) {
+        <app-no-data></app-no-data>
+      }
     </div>
-  </ng-container>
-
-  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === true">
-    <div class="full-width subheading2">The total floor area (m<sup>2</sup>) for each of the proposed structure(s)</div>
-    <div class="full-width structure-table" *ngIf="!isMobile">
-      <div class="grid-1 subheading2">#</div>
-      <div class="grid-2 subheading2">Type</div>
-      <div class="grid-3 subheading2">Area</div>
-      <ng-container *ngFor="let structure of applicationSubmission.soilProposedStructures; let i = index">
-        <div class="grid-1">
-          {{ i + 1 }}
+    <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
+    <div class="grid-double">
+      @if (applicationSubmission.fillProjectDuration) {
+        <div>
+          {{ applicationSubmission.fillProjectDuration }}
         </div>
-        <div class="grid-2">
-          {{ mapStructureTypeValueToLabel(structure.type) }}
-          <app-no-data *ngIf="!structure.type"></app-no-data>
-        </div>
-        <div class="grid-3">
-          {{ structure.area }} <span *ngIf="structure.area">m<sup>2</sup></span>
-          <app-no-data *ngIf="!structure.area"></app-no-data>
-        </div>
-      </ng-container>
+      }
+      @if (!applicationSubmission.fillProjectDuration) {
+        <app-no-data></app-no-data>
+      }
     </div>
-    <ng-container *ngIf="isMobile">
-      <app-structure-mobile-card
-        *ngFor="let structure of applicationSubmission.soilProposedStructures; let last = last; index as i"
-        [structure]="structure"
-        [isLast]="last"
-        [index]="i"
-        [isReviewStep]="true"
-      >
-      </app-structure-mobile-card>
-    </ng-container>
-    <div *ngIf="applicationSubmission.soilProposedStructures.length === 0" class="full-width">
-      <app-no-data></app-no-data>
+    <div class="subheading2 grid-1">Removal of Soil Project Duration</div>
+    <div class="grid-double">
+      @if (applicationSubmission.soilProjectDuration) {
+        <div>
+          {{ applicationSubmission.soilProjectDuration }}
+        </div>
+      }
+      @if (!applicationSubmission.soilProjectDuration) {
+        <app-no-data></app-no-data>
+      }
     </div>
-
-    <ng-container *ngIf="isSoilStructureFarmUseReasonVisible">
+    <div class="full-width soil-table">
+      <div></div>
+      <div class="subheading2">Soil to be Removed</div>
+      <div class="subheading2">Fill to be Placed</div>
+      <div class="subheading2">Volume</div>
+      <div>
+        {{ applicationSubmission.soilToRemoveVolume }}
+        @if (applicationSubmission.soilToRemoveVolume !== null) {
+          <span>m<sup>3</sup></span>
+        }
+        @if (applicationSubmission.soilToRemoveVolume === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilToPlaceVolume }}
+        @if (applicationSubmission.soilToPlaceVolume !== null) {
+          <span>m<sup>3</sup></span>
+        }
+        @if (applicationSubmission.soilToPlaceVolume === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2">Area</div>
+      <div>
+        {{ applicationSubmission.soilToRemoveArea }}
+        @if (applicationSubmission.soilToRemoveArea !== null) {
+          <span>m<sup>2</sup></span>
+        }
+        @if (applicationSubmission.soilToRemoveArea === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilToPlaceArea }}
+        @if (applicationSubmission.soilToPlaceArea !== null) {
+          <span>m<sup>2</sup></span>
+        }
+        @if (applicationSubmission.soilToPlaceArea === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2">Maximum Depth</div>
+      <div>
+        {{ applicationSubmission.soilToRemoveMaximumDepth }}
+        @if (applicationSubmission.soilToRemoveMaximumDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilToRemoveMaximumDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilToPlaceMaximumDepth }}
+        @if (applicationSubmission.soilToPlaceMaximumDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilToPlaceMaximumDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2">Average Depth</div>
+      <div>
+        {{ applicationSubmission.soilToRemoveAverageDepth }}
+        @if (applicationSubmission.soilToRemoveAverageDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilToRemoveAverageDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilToPlaceAverageDepth }}
+        @if (applicationSubmission.soilToPlaceAverageDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilToPlaceAverageDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="spacer-row"></div>
+      <div></div>
+      <div class="subheading2">Soil already Removed</div>
+      <div class="subheading2">Fill already Placed</div>
+      <div class="subheading2">Volume</div>
+      <div>
+        {{ applicationSubmission.soilAlreadyRemovedVolume }}
+        @if (applicationSubmission.soilAlreadyRemovedVolume !== null) {
+          <span>m<sup>3</sup></span>
+        }
+        @if (applicationSubmission.soilAlreadyRemovedVolume === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilAlreadyPlacedVolume }}
+        @if (applicationSubmission.soilAlreadyPlacedVolume !== null) {
+          <span>m<sup>3</sup></span>
+        }
+        @if (applicationSubmission.soilAlreadyPlacedVolume === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2">Area</div>
+      <div>
+        {{ applicationSubmission.soilAlreadyRemovedArea }}
+        @if (applicationSubmission.soilAlreadyRemovedArea !== null) {
+          <span>m<sup>2</sup></span>
+        }
+        @if (applicationSubmission.soilAlreadyRemovedArea === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilAlreadyPlacedArea }}
+        @if (applicationSubmission.soilAlreadyPlacedArea !== null) {
+          <span>m<sup>2</sup></span>
+        }
+        @if (applicationSubmission.soilAlreadyPlacedArea === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2">Maximum Depth</div>
+      <div>
+        {{ applicationSubmission.soilAlreadyRemovedMaximumDepth }}
+        @if (applicationSubmission.soilAlreadyRemovedMaximumDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilAlreadyRemovedMaximumDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilAlreadyPlacedMaximumDepth }}
+        @if (applicationSubmission.soilAlreadyPlacedMaximumDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilAlreadyPlacedMaximumDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2">Average Depth</div>
+      <div>
+        {{ applicationSubmission.soilAlreadyRemovedAverageDepth }}
+        @if (applicationSubmission.soilAlreadyRemovedAverageDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilAlreadyRemovedAverageDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div>
+        {{ applicationSubmission.soilAlreadyPlacedAverageDepth }}
+        @if (applicationSubmission.soilAlreadyPlacedAverageDepth !== null) {
+          <span>m</span>
+        }
+        @if (applicationSubmission.soilAlreadyPlacedAverageDepth === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+    </div>
+    <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.soilFillTypeToPlace }}
+      @if (!applicationSubmission.soilFillTypeToPlace) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.soilTypeRemoved }}
+      @if (!applicationSubmission.soilTypeRemoved) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+    @if (applicationSubmission.soilIsNewStructure === false) {
+      <div class="subheading2 grid-1">
+        What alternative measures have you considered or attempted before proposing to place fill?
+      </div>
+      <div class="grid-double">
+        {{ applicationSubmission.soilAlternativeMeasures }}
+        @if (!applicationSubmission.soilAlternativeMeasures) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
+      <div class="grid-double">
+        {{ applicationSubmission.soilReduceNegativeImpacts }}
+        @if (!applicationSubmission.soilReduceNegativeImpacts) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+    }
+    @if (applicationSubmission.soilIsNewStructure === true) {
+      <div class="full-width subheading2">The total floor area (m<sup>2</sup>) for each of the proposed structure(s)</div>
+      @if (!isMobile) {
+        <div class="full-width structure-table">
+          <div class="grid-1 subheading2">#</div>
+          <div class="grid-2 subheading2">Type</div>
+          <div class="grid-3 subheading2">Area</div>
+          @for (structure of applicationSubmission.soilProposedStructures; track structure; let i = $index) {
+            <div class="grid-1">
+              {{ i + 1 }}
+            </div>
+            <div class="grid-2">
+              {{ mapStructureTypeValueToLabel(structure.type) }}
+              @if (!structure.type) {
+                <app-no-data></app-no-data>
+              }
+            </div>
+            <div class="grid-3">
+              {{ structure.area }} @if (structure.area) {
+              <span>m<sup>2</sup></span>
+            }
+            @if (!structure.area) {
+              <app-no-data></app-no-data>
+            }
+          </div>
+        }
+      </div>
+    }
+    @if (isMobile) {
+      @for (structure of applicationSubmission.soilProposedStructures; track structure; let last = $last; let i = $index) {
+        <app-structure-mobile-card
+          [structure]="structure"
+          [isLast]="last"
+          [index]="i"
+          [isReviewStep]="true"
+          >
+        </app-structure-mobile-card>
+      }
+    }
+    @if (applicationSubmission.soilProposedStructures.length === 0) {
+      <div class="full-width">
+        <app-no-data></app-no-data>
+      </div>
+    }
+    @if (isSoilStructureFarmUseReasonVisible) {
       <div class="subheading2 grid-1">Describe how the structure is necessary for farm use</div>
       <div class="grid-double">
         {{ applicationSubmission.soilStructureFarmUseReason }}
-        <app-no-data *ngIf="!applicationSubmission.soilStructureFarmUseReason"></app-no-data>
+        @if (!applicationSubmission.soilStructureFarmUseReason) {
+          <app-no-data></app-no-data>
+        }
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilStructureResidentialUseReasonVisible">
+    }
+    @if (isSoilStructureResidentialUseReasonVisible) {
       <div class="subheading2 grid-1">
         Describe why placing fill/removing soil is required for the residential structure(s)
       </div>
       <div class="grid-double">
         {{ applicationSubmission.soilStructureResidentialUseReason }}
-        <app-no-data *ngIf="!applicationSubmission.soilStructureResidentialUseReason"></app-no-data>
+        @if (!applicationSubmission.soilStructureResidentialUseReason) {
+          <app-no-data></app-no-data>
+        }
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilAgriParcelActivityVisible">
+    }
+    @if (isSoilAgriParcelActivityVisible) {
       <div class="subheading2 grid-1">Describe the current or proposed agricultural activity on the parcel(s)</div>
       <div class="grid-double">
         {{ applicationSubmission.soilAgriParcelActivity }}
-        <app-no-data *ngIf="!applicationSubmission.soilAgriParcelActivity"></app-no-data>
+        @if (!applicationSubmission.soilAgriParcelActivity) {
+          <app-no-data></app-no-data>
+        }
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
+    }
+    @if (isSoilStructureResidentialAccessoryUseReasonVisible) {
       <div class="subheading2 grid-1">
         Describe the intended use of the residential accessory structure(s) and why placing fill/removing soil is
         required
       </div>
       <div class="grid-double">
         {{ applicationSubmission.soilStructureResidentialAccessoryUseReason }}
-        <app-no-data *ngIf="!applicationSubmission.soilStructureResidentialAccessoryUseReason"></app-no-data>
+        @if (!applicationSubmission.soilStructureResidentialAccessoryUseReason) {
+          <app-no-data></app-no-data>
+        }
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilOtherStructureVisible">
+    }
+    @if (isSoilOtherStructureVisible) {
       <div class="subheading2 grid-1">
         Describe the intended use of the 'Other' structure(s) and why placing fill/removing soil is required
       </div>
       <div class="grid-double">
         {{ applicationSubmission.soilStructureOtherUseReason }}
-        <app-no-data *ngIf="!applicationSubmission.soilStructureOtherUseReason"></app-no-data>
+        @if (!applicationSubmission.soilStructureOtherUseReason) {
+          <app-no-data></app-no-data>
+        }
       </div>
-    </ng-container>
-  </ng-container>
-
+    }
+  }
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <ng-container *ngFor="let map of proposalMap">
-      <a *ngIf="isMobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
-      <a *ngIf="!isMobile" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
-    </ng-container>
-    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+    @for (map of proposalMap; track map) {
+      @if (isMobile) {
+        <a (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
+      }
+      @if (!isMobile) {
+        <a routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
+      }
+    }
+    @if (proposalMap.length === 0) {
+      <app-no-data></app-no-data>
+    }
   </div>
-
-  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === false">
+  @if (applicationSubmission.soilIsNewStructure === false) {
     <div class="subheading2 grid-1">Cross Sections</div>
     <div class="grid-double multiple-documents">
-      <ng-container *ngFor="let file of crossSections">
-        <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-        <a *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-      </ng-container>
-      <app-no-data *ngIf="crossSections.length === 0"></app-no-data>
+      @for (file of crossSections; track file) {
+        @if (isMobile) {
+          <a (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        }
+        @if (!isMobile) {
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        }
+      }
+      @if (crossSections.length === 0) {
+        <app-no-data></app-no-data>
+      }
     </div>
-
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double multiple-documents">
-      <ng-container *ngFor="let file of reclamationPlans">
-        <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-        <a *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-      </ng-container>
-      <app-no-data *ngIf="reclamationPlans.length === 0"></app-no-data>
+      @for (file of reclamationPlans; track file) {
+        @if (isMobile) {
+          <a (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        }
+        @if (!isMobile) {
+          <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        }
+      }
+      @if (reclamationPlans.length === 0) {
+        <app-no-data></app-no-data>
+      }
     </div>
-  </ng-container>
-
-  <ng-container *ngIf="applicationSubmission.soilIsNewStructure === false">
+  }
+  @if (applicationSubmission.soilIsNewStructure === false) {
     <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
     <div class="grid-double">
-      <span *ngIf="applicationSubmission.soilIsExtractionOrMining !== null">
-        {{ applicationSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
-      </span>
-      <app-no-data *ngIf="applicationSubmission.soilIsExtractionOrMining === null"></app-no-data>
+      @if (applicationSubmission.soilIsExtractionOrMining !== null) {
+        <span>
+          {{ applicationSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
+        </span>
+      }
+      @if (applicationSubmission.soilIsExtractionOrMining === null) {
+        <app-no-data></app-no-data>
+      }
     </div>
-
-    <div *ngIf="applicationSubmission.soilIsExtractionOrMining" class="subheading2 grid-1">
-      Have you submitted a Notice of Work to the Ministry of Mining and Critical Minerals (MCM)?
-    </div>
-    <div *ngIf="applicationSubmission.soilIsExtractionOrMining" class="grid-double">
-      <span *ngIf="applicationSubmission.soilHasSubmittedNotice !== null">
-        {{ applicationSubmission.soilHasSubmittedNotice ? 'Yes' : 'No' }}
-      </span>
-      <app-no-data *ngIf="applicationSubmission.soilHasSubmittedNotice === null"></app-no-data>
-    </div>
-  </ng-container>
+    @if (applicationSubmission.soilIsExtractionOrMining) {
+      <div class="subheading2 grid-1">
+        Have you submitted a Notice of Work to the Ministry of Mining and Critical Minerals (MCM)?
+      </div>
+    }
+    @if (applicationSubmission.soilIsExtractionOrMining) {
+      <div class="grid-double">
+        @if (applicationSubmission.soilHasSubmittedNotice !== null) {
+          <span>
+            {{ applicationSubmission.soilHasSubmittedNotice ? 'Yes' : 'No' }}
+          </span>
+        }
+        @if (applicationSubmission.soilHasSubmittedNotice === null) {
+          <app-no-data></app-no-data>
+        }
+      </div>
+    }
+  }
 </div>
+}

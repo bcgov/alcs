@@ -8,9 +8,10 @@ import { ApplicationSearchResultDto, displayedColumns } from '../../../../servic
 import { SearchResult, TableChange } from '../search.interface';
 
 @Component({
-  selector: 'app-application-search-table',
-  templateUrl: './application-search-table.component.html',
-  styleUrls: ['./application-search-table.component.scss'],
+    selector: 'app-application-search-table',
+    templateUrl: './application-search-table.component.html',
+    styleUrls: ['./application-search-table.component.scss'],
+    standalone: false
 })
 export class ApplicationSearchTableComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

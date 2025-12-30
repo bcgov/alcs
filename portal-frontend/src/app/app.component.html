@@ -1,7 +1,11 @@
 <div class="site-layout" id="siteLayout">
-  <app-header *ngIf="showHeaderFooter"></app-header>
+  @if (showHeaderFooter) {
+    <app-header></app-header>
+  }
   <div id="appBody" class="main-content">
     <router-outlet></router-outlet>
   </div>
-  <app-footer *ngIf="showHeaderFooter" id="appFooter"></app-footer>
+  @if (showHeaderFooter) {
+    <app-footer id="appFooter"></app-footer>
+  }
 </div>

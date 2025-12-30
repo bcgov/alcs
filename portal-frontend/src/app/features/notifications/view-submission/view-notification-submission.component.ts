@@ -11,9 +11,10 @@ import { NotificationSubmissionService } from '../../../services/notification-su
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-view-notification-submission',
-  templateUrl: './view-notification-submission.component.html',
-  styleUrls: ['./view-notification-submission.component.scss'],
+    selector: 'app-view-notification-submission',
+    templateUrl: './view-notification-submission.component.html',
+    styleUrls: ['./view-notification-submission.component.scss'],
+    standalone: false
 })
 export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

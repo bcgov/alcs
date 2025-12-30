@@ -6,9 +6,10 @@ import { CodeService } from '../../../../services/code/code.service';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-submission.component';
 
 @Component({
-  selector: 'app-review-resolution',
-  templateUrl: './review-resolution.component.html',
-  styleUrls: ['./review-resolution.component.scss'],
+    selector: 'app-review-resolution',
+    templateUrl: './review-resolution.component.html',
+    styleUrls: ['./review-resolution.component.scss'],
+    standalone: false
 })
 export class ReviewResolutionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

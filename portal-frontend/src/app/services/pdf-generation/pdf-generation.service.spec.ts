@@ -4,7 +4,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import moment from 'moment';
 import { of } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { openPdfFile } from '../../shared/utils/file';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import * as fileModule from '../../shared/utils/file';
 import { ToastService } from '../toast/toast.service';
 import { PdfGenerationService } from './pdf-generation.service';
@@ -18,10 +18,12 @@ describe('PdfGenerationService', () => {
   let service: PdfGenerationService;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
+  let mockOverlayService: DeepMocked<OverlaySpinnerService>;
 
   beforeEach(() => {
     mockToastService = createMock();
     mockHttpClient = createMock();
+    mockOverlayService = createMock();
 
     jest.resetAllMocks();
 
@@ -34,6 +36,10 @@ describe('PdfGenerationService', () => {
         {
           provide: HttpClient,
           useValue: mockHttpClient,
+        },
+        {
+          provide: OverlaySpinnerService,
+          useValue: mockOverlayService,
         },
       ],
     });

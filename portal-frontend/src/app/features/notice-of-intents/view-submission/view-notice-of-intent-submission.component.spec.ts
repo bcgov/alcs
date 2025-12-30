@@ -25,6 +25,7 @@ describe('ViewNoticeOfIntentSubmissionComponent', () => {
     mockNoiDocumentService = createMock();
     mockActivatedRoute = createMock();
     mockPDFGenerationService = createMock();
+    mockDialogService = createMock();
 
     mockActivatedRoute.paramMap = new BehaviorSubject(new Map());
 

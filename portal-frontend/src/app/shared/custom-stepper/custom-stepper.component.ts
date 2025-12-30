@@ -15,10 +15,11 @@ import {
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-custom-stepper',
-  templateUrl: './custom-stepper.component.html',
-  styleUrls: ['./custom-stepper.component.scss'],
-  providers: [{ provide: CdkStepper, useExisting: CustomStepperComponent }],
+    selector: 'app-custom-stepper',
+    templateUrl: './custom-stepper.component.html',
+    styleUrls: ['./custom-stepper.component.scss'],
+    providers: [{ provide: CdkStepper, useExisting: CustomStepperComponent }],
+    standalone: false
 })
 export class CustomStepperComponent extends CdkStepper implements OnInit, OnDestroy {
   @Input()

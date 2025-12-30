@@ -9,9 +9,10 @@ import { EditNoiSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 
 @Component({
-  selector: 'app-select-government',
-  templateUrl: './select-government.component.html',
-  styleUrls: ['./select-government.component.scss'],
+    selector: 'app-select-government',
+    templateUrl: './select-government.component.html',
+    styleUrls: ['./select-government.component.scss'],
+    standalone: false
 })
 export class SelectGovernmentComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditNoiSteps.Government;

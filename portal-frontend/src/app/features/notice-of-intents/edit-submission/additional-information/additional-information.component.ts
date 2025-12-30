@@ -80,9 +80,10 @@ export const STRUCTURE_TYPE_OPTIONS = [
 ];
 
 @Component({
-  selector: 'app-additional-information',
-  templateUrl: './additional-information.component.html',
-  styleUrls: ['./additional-information.component.scss'],
+    selector: 'app-additional-information',
+    templateUrl: './additional-information.component.html',
+    styleUrls: ['./additional-information.component.scss'],
+    standalone: false
 })
 export class AdditionalInformationComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditNoiSteps.ExtraInfo;

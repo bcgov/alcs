@@ -6,9 +6,10 @@ import { DocumentService } from '../../../services/document/document.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-parcel-owner-mobile-card',
-  templateUrl: './parcel-owner-mobile-card.component.html',
-  styleUrl: './parcel-owner-mobile-card.component.scss',
+    selector: 'app-parcel-owner-mobile-card',
+    templateUrl: './parcel-owner-mobile-card.component.html',
+    styleUrl: './parcel-owner-mobile-card.component.scss',
+    standalone: false
 })
 export class ParcelOwnerMobileCardComponent implements OnInit {
   @Input() owner!: ApplicationOwnerDto | NoticeOfIntentOwnerDto;

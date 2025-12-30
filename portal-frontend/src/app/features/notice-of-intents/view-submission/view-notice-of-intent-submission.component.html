@@ -1,15 +1,21 @@
 <div class="banner">
   <div>
-    <h4 *ngIf="submission">NOI ID: {{ submission.fileNumber }} | {{ submission.type }}</h4>
+    @if (submission) {
+      <h4>NOI ID: {{ submission.fileNumber }} | {{ submission.type }}</h4>
+    }
   </div>
   <div class="banner-status">
     <div>
       <div class="subheading2">Status Date</div>
-      <span *ngIf="submission">{{ submission.lastStatusUpdate | date }}</span>
+      @if (submission) {
+        <span>{{ submission.lastStatusUpdate | date }}</span>
+      }
     </div>
     <div>
       <div class="subheading2">NOI Status</div>
-      <span *ngIf="submission">{{ submission.status.label }}</span>
+      @if (submission) {
+        <span>{{ submission.status.label }}</span>
+      }
     </div>
   </div>
 </div>
@@ -18,41 +24,46 @@
   <div class="navigation">
     <mat-tab-group [(selectedIndex)]="selectedIndex">
       <mat-tab label="Applicant Submission">
-        <div *ngIf="!submission" class="center">
-          <mat-spinner></mat-spinner>
-        </div>
-        <div *ngIf="submission" class="content">
-          <section>
-            <div class="header">
-              <h2>Applicant Submission</h2>
-              <div class="btns-wrapper">
-                <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(submission.fileNumber)">
-                  Download PDF
-                </button>
-                <button
-                  mat-flat-button
-                  color="primary"
-                  *ngIf="submission && submission.canEdit"
-                  [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
-                >
-                  <div class="continue-button-content">
-                    <span>Continue NOI</span>
-                    <mat-icon>keyboard_double_arrow_right</mat-icon>
-                  </div>
-                </button>
+        @if (!submission) {
+          <div class="center">
+            <mat-spinner></mat-spinner>
+          </div>
+        }
+        @if (submission) {
+          <div class="content">
+            <section>
+              <div class="header">
+                <h2>Applicant Submission</h2>
+                <div class="btns-wrapper">
+                  <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(submission.fileNumber)">
+                    Download PDF
+                  </button>
+                  @if (submission && submission.canEdit) {
+                    <button
+                      mat-flat-button
+                      color="primary"
+                      [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
+                      >
+                      <div class="continue-button-content">
+                        <span>Continue NOI</span>
+                        <mat-icon>keyboard_double_arrow_right</mat-icon>
+                      </div>
+                    </button>
+                  }
+                </div>
               </div>
-            </div>
-            <div>
-              <app-noi-details
-                [$noticeOfIntentSubmission]="$noiSubmission"
-                [$noiDocuments]="$noiDocuments"
-                [draftMode]="false"
-                [showEdit]="false"
-                [showErrors]="false"
-              ></app-noi-details>
-            </div>
-          </section>
-        </div>
+              <div>
+                <app-noi-details
+                  [$noticeOfIntentSubmission]="$noiSubmission"
+                  [$noiDocuments]="$noiDocuments"
+                  [draftMode]="false"
+                  [showEdit]="false"
+                  [showErrors]="false"
+                ></app-noi-details>
+              </div>
+            </section>
+          </div>
+        }
       </mat-tab>
       <mat-tab label="ALC Review and Decision">
         <div class="content">
@@ -60,19 +71,22 @@
         </div>
       </mat-tab>
     </mat-tab-group>
-    <div *ngIf="submission && submission.canEdit" class="continue-button-container">
-      <button mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">Cancel NOI</button>
-      <button
-        mat-flat-button
-        color="primary"
-        *ngIf="submission && submission.canEdit"
-        [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
-      >
-        <div class="continue-button-content">
-          <span>Continue NOI</span>
-          <mat-icon>keyboard_double_arrow_right</mat-icon>
-        </div>
-      </button>
-    </div>
+    @if (submission && submission.canEdit) {
+      <div class="continue-button-container">
+        <button mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">Cancel NOI</button>
+        @if (submission && submission.canEdit) {
+          <button
+            mat-flat-button
+            color="primary"
+            [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
+            >
+            <div class="continue-button-content">
+              <span>Continue NOI</span>
+              <mat-icon>keyboard_double_arrow_right</mat-icon>
+            </div>
+          </button>
+        }
+      </div>
+    }
   </div>
 </div>

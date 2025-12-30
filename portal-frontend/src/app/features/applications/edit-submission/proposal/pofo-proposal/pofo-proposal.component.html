@@ -10,7 +10,7 @@
       <a
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
         target="_blank"
-      >
+        >
         What the Commission Considers
       </a>
     </li>
@@ -19,633 +19,148 @@
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
         target="_blank"
         >Placement of Fill</a
-      >
-    </li>
-  </ul>
-</app-warning-banner>
-<form [formGroup]="form">
-  <div class="form-row">
-    <div class="full-row">
-      <mat-label for="is-new-structure"> Are you placing fill in order to build a structure? </mat-label>
-      <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
-      <div>
-        <mat-button-toggle-group
-          class="input"
-          (change)="onChangeIsNewStructure($event.value)"
-          id="is-new-structure"
-          [formControl]="isNewStructure"
         >
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
-            }"
-            [value]="true"
-            >Yes
-          </mat-button-toggle>
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
-            }"
-            [value]="false"
-            >No
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <mat-hint class="subtext"
-        >Note: The form will be updated with additional required questions if you are building a structure
-      </mat-hint>
-    </div>
-
-    <div class="full-row">
-      <mat-label for="noi-follow-up">
-        Has the ALC previously received an application or Notice of Intent for this proposal?
-      </mat-label>
-      <div class="subtext">If yes, provide the ALC Application or Notice of Intent ID in the field below</div>
-      <div>
-        <mat-button-toggle-group
-          class="input"
-          (valueChange)="onChangeFollowUp($event)"
-          id="noi-follow-up"
-          [formControl]="isFollowUp"
-        >
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
-            }"
-            value="true"
-            >Yes
-          </mat-button-toggle>
-          <mat-button-toggle
-            class="toggle-button"
-            [ngClass]="{
-              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
-            }"
-            value="false"
-            >No
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-    </div>
-    <div class="full-row">
-      <label for="followUpIDs">Application or NOI IDs</label>
-      <div class="subtext">If you have multiple IDs, please separate with a comma.</div>
-      <mat-form-field appearance="outline">
-        <input type="text" [formControl]="followUpIDs" id="followUpIDs" matInput />
-      </mat-form-field>
-      <div *ngIf="followUpIDs.invalid && (followUpIDs.dirty || followUpIDs.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="followUpIDs.errors?.['required']">This field is required</div>
-      </div>
-    </div>
-    <div class="full-row">
-      <label for="purpose">What is the purpose of the proposal?</label>
-      <div class="subtext">
-        Include why you are applying for placement of fill, what the proposal will achieve, and any benefits to
-        agriculture that the proposal provides.
-      </div>
-      <mat-form-field appearance="outline">
-        <textarea
-          formControlName="purpose"
-          #purposeText
-          maxlength="4000"
-          id="purpose"
-          matInput
-          placeholder="Type comment"
-        ></textarea>
-      </mat-form-field>
-      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="purpose.errors?.['required']">This field is required</div>
-      </div>
-      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
-    </div>
-
-    <div class="full-row">
-      <label for="projectDuration">Placement of Fill Project Duration</label>
-      <div class="subtext">Length of time you anticipate it would take to complete the project</div>
-      <mat-form-field appearance="outline">
-        <input
-          id="projectDuration"
-          maxlength="500"
-          matInput
-          [formControl]="projectDuration"
-          placeholder="Type project duration"
-        />
-      </mat-form-field>
-      <div *ngIf="projectDuration.invalid && (projectDuration.dirty || projectDuration.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="projectDuration.errors?.['required']">This field is required</div>
-      </div>
-      <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
-      <div class="subtext">Characters left: {{ 500 - (projectDuration.value || '').length }}</div>
-    </div>
-
-    <div class="full-row">
-      <mat-label>Proposal Dimensions</mat-label>
-      <div class="subtext">
-        Please provide accurate numbers that align with your cross sections, reclamation plan, and site plan. The
-        Commission will consider your proposal dimensions when determining the potential impact it will have on the
-        agricultural capability of the land.
-      </div>
-      <app-info-banner>
-        Please refer to
-        <a
-          href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
-          target="_blank"
-          >Placement of Fill</a
-        >
-        on the ALC website for more detail.
-      </app-info-banner>
-      <app-soil-table
-        tableHeader="Fill to be Placed"
-        [touchAll]="showErrors"
-        [(data)]="fillTableData"
-        (dataChange)="markDirty()"
-      ></app-soil-table>
-    </div>
-    <div class="full-row">
-      <mat-label
-        >Of the proposed totals provided above, please input the dimensions of fill that has already been
-        place.</mat-label
-      >
-      <app-soil-table
-        tableHeader="Fill already Placed"
-        [touchAll]="showErrors"
-        [(data)]="alreadyFilledTableData"
-        (dataChange)="markDirty()"
-      ></app-soil-table>
-    </div>
-
-    <div class="full-row">
-      <label for="fillTypeToPlace">Describe the type, origin and quality of fill proposed to be placed.</label>
-      <div class="subtext">
-        List all proposed types of fill. Prohibited fill cannot be placed within the Agricultural Land Reserve.
-      </div>
-      <mat-form-field appearance="outline">
-        <textarea
-          formControlName="fillTypeToPlace"
-          #fillTypeToPlaceText
-          maxlength="4000"
-          id="fillTypeToPlace"
-          matInput
-          placeholder="Type comment"
-        ></textarea>
-      </mat-form-field>
-      <div *ngIf="fillTypeToPlace.invalid && (fillTypeToPlace.dirty || fillTypeToPlace.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
-      </div>
-      <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
-      <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
-    </div>
-  </div>
-
-  <ng-container *ngIf="isNewStructure.value === true">
-    <form [formGroup]="structuresForm">
-      <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
-      <div class="scrollable">
-        <div *ngIf="isMobile">
-          <app-structure-mobile-card
-            *ngFor="let structure of proposedStructures; let last = last; index as i"
-            [structure]="structure"
-            [isLast]="last"
-            [index]="i"
-            [isReviewStep]="false"
-            (removeClicked)="onStructureRemove(structure.id)"
-            (editClicked)="onStructureEdit(structure.id)"
-          >
-          </app-structure-mobile-card>
-        </div>
-        <table mat-table [dataSource]="structuresSource" multiTemplateDataRows *ngIf="!isMobile">
-          <ng-container matColumnDef="index">
-            <th mat-header-cell *matHeaderCellDef>#</th>
-            <td
-              mat-cell
-              *matCellDef="let i = dataIndex; let element"
-              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
-            >
-              {{ i + 1 }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td
-              mat-cell
-              *matCellDef="let i = dataIndex; let element"
-              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
-            >
-              <mat-form-field appearance="outline">
-                <mat-select
-                  [value]="element.type"
-                  placeholder="Please select"
-                  [formControlName]="element.id + '-type'"
-                  (valueChange)="onChangeStructureType(element.id, $event)"
-                >
-                  <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
-                    {{ type.label }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <div
-                *ngIf="
-                  structuresForm.controls[element.id + '-type']!.invalid &&
-                  (structuresForm.controls[element.id + '-type']!.dirty ||
-                    structuresForm.controls[element.id + '-type']!.touched)
-                "
-                class="field-error"
-              >
-                <mat-icon>warning</mat-icon>
-                <div *ngIf="structuresForm.controls[element.id + '-type']!.errors?.['required']">
-                  This field is required
-                </div>
-              </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="area">
-            <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
-            <td
-              mat-cell
-              *matCellDef="let i = dataIndex; let element"
-              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
-            >
-              <mat-form-field appearance="outline">
-                <input
-                  type="text"
-                  matInput
-                  thousandSeparator=","
-                  mask="separator.5"
-                  separatorLimit="9999999999"
-                  min="0.01"
-                  placeholder="Type area"
-                  [formControlName]="element.id + '-area'"
-                  (change)="onChangeArea(element.id, $event)"
-                />
-                <span matTextSuffix>m<sup>2</sup></span>
-              </mat-form-field>
-              <div
-                *ngIf="
-                  structuresForm.controls[element.id + '-area']!.invalid &&
-                  (structuresForm.controls[element.id + '-area']!.dirty ||
-                    structuresForm.controls[element.id + '-area']!.touched)
-                "
-                class="field-error"
-              >
-                <mat-icon>warning</mat-icon>
-                <div *ngIf="structuresForm.controls[element.id + '-area']!.errors?.['required']">
-                  This field is required
-                </div>
-              </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Action</th>
-            <td
-              mat-cell
-              *matCellDef="let i = dataIndex; let element"
-              [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
-            >
-              <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
-                Remove
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-          <ng-container matColumnDef="msgWarning">
-            <td colspan="7" mat-cell *matCellDef>
-              <div class="residential-warning">
-                <div class="residential-warning-text">
-                  The proposed residential structure and its total floor area must be allowed under the ALC Act and/or
-                  ALR Use Regulation. If not, you may require a 'Non-Adhering Residential Use' application instead. For
-                  more info, please see
-                  <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
-                    >Housing in the ALR</a
-                  >
-                  on the ALC website.
-                </div>
-              </div>
-            </td>
-          </ng-container>
-
-          <tr mat-row class="row-group" *matRowDef="let row; columns: ['msgWarning']; when: isWarning"></tr>
-
-          <tr class="mat-row no-data" *matNoDataRow>
-            <td class="text-center" colspan="7">
-              No Proposed Structures Entered. Use the button below to add your first structure.
-            </td>
-          </tr>
-        </table>
-      </div>
-    </form>
-
+      </li>
+    </ul>
+  </app-warning-banner>
+  <form [formGroup]="form">
     <div class="form-row">
       <div class="full-row">
-        <button
-          mat-stroked-button
-          color="primary"
-          (click)="onStructureAdd()"
-          [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
-          type="button"
-        >
-          + Add Structure
-        </button>
-        <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
-          At least one structure is required
-        </app-validation-error>
-      </div>
-    </div>
-
-    <div class="full-row">
-      <app-warning-banner>
-        Selected proposed structure type(s) will determine the proposal questions below
-      </app-warning-banner>
-    </div>
-  </ng-container>
-
-  <div class="form-row">
-    <ng-container *ngIf="structureTypeCounts[structureTypes.FARM_STRUCTURE] > 0">
-      <div class="full-row">
-        <label for="soilStructureFarmUseReason">Describe how the structure is necessary for farm use</label>
-        <div class="info-banner subtext">
-          Please refer to
-          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#farmstructures" target="_blank"
-            >Farm Structures in the ALR</a
-          >
-          on the ALC website for more detail.
+        <mat-label for="is-new-structure"> Are you placing fill in order to build a structure? </mat-label>
+        <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
+        <div>
+          <mat-button-toggle-group
+            class="input"
+            (change)="onChangeIsNewStructure($event.value)"
+            id="is-new-structure"
+            [formControl]="isNewStructure"
+            >
+            <mat-button-toggle
+              class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
+            }"
+              [value]="true"
+              >Yes
+            </mat-button-toggle>
+            <mat-button-toggle
+              class="toggle-button"
+            [ngClass]="{
+              'error-outline': isNewStructure.invalid && (isNewStructure.dirty || isNewStructure.touched),
+            }"
+              [value]="false"
+              >No
+            </mat-button-toggle>
+          </mat-button-toggle-group>
         </div>
+        <mat-hint class="subtext"
+          >Note: The form will be updated with additional required questions if you are building a structure
+        </mat-hint>
+      </div>
+
+      <div class="full-row">
+        <mat-label for="noi-follow-up">
+          Has the ALC previously received an application or Notice of Intent for this proposal?
+        </mat-label>
+        <div class="subtext">If yes, provide the ALC Application or Notice of Intent ID in the field below</div>
+        <div>
+          <mat-button-toggle-group
+            class="input"
+            (valueChange)="onChangeFollowUp($event)"
+            id="noi-follow-up"
+            [formControl]="isFollowUp"
+            >
+            <mat-button-toggle
+              class="toggle-button"
+            [ngClass]="{
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
+            }"
+              value="true"
+              >Yes
+            </mat-button-toggle>
+            <mat-button-toggle
+              class="toggle-button"
+            [ngClass]="{
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched),
+            }"
+              value="false"
+              >No
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+      <div class="full-row">
+        <label for="followUpIDs">Application or NOI IDs</label>
+        <div class="subtext">If you have multiple IDs, please separate with a comma.</div>
         <mat-form-field appearance="outline">
-          <textarea
-            formControlName="soilStructureFarmUseReason"
-            #soilStructureFarmUseReasonText
-            maxlength="4000"
-            id="soilStructureFarmUseReason"
-            matInput
-            placeholder="Type comment"
-          ></textarea>
+          <input type="text" [formControl]="followUpIDs" id="followUpIDs" matInput />
         </mat-form-field>
-        <div
-          *ngIf="
-            soilStructureFarmUseReason.invalid &&
-            (soilStructureFarmUseReason.dirty || soilStructureFarmUseReason.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="soilStructureFarmUseReason.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - soilStructureFarmUseReasonText.textLength }}</div>
-      </div>
-
-      <div class="full-row">
-        <label for="soilAgriParcelActivity"
-          >Describe the current or proposed agricultural activity on the parcel(s)</label
-        >
-        <div class="subtext">Include the area, yields, crop types, and farm equipment size and attachments</div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="soilAgriParcelActivity"
-            #soilAgriParcelActivityText
-            maxlength="4000"
-            id="soilAgriParcelActivity"
-            matInput
-            placeholder="Type comment"
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="soilAgriParcelActivity.invalid && (soilAgriParcelActivity.dirty || soilAgriParcelActivity.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="soilAgriParcelActivity.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - soilAgriParcelActivityText.textLength }}</div>
-      </div>
-    </ng-container>
-
-    <ng-container
-      *ngIf="
-        structureTypeCounts[structureTypes.PRINCIPAL_RESIDENCE] > 0 ||
-        structureTypeCounts[structureTypes.ADDITIONAL_RESIDENCE] > 0 ||
-        structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0
-      "
-    >
-      <div class="full-row">
-        <label for="soilStructureResidentialUseReason"
-          >Describe why placing fill is required for the residential structure(s)</label
-        >
-        <div class="info-banner subtext">
-          Please refer to
-          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
-            >Housing in the ALR</a
-          >
-          on the ALC website for more detail.
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="soilStructureResidentialUseReason"
-            #soilStructureResidentialUseReasonText
-            maxlength="4000"
-            id="soilStructureResidentialUseReason"
-            matInput
-            placeholder="Type comment"
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="
-            soilStructureResidentialUseReason.invalid &&
-            (soilStructureResidentialUseReason.dirty || soilStructureResidentialUseReason.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="soilStructureResidentialUseReason.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - soilStructureResidentialUseReasonText.textLength }}</div>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0">
-      <div class="full-row">
-        <label for="soilStructureResidentialAccessoryUseReason"
-          >Describe the intended use of the residential accessory structure(s) and why placing fill is required</label
-        >
-        <div class="info-banner subtext">
-          Please refer to
-          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
-            >Housing in the ALR</a
-          >
-          on the ALC website for more detail.
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="soilStructureResidentialAccessoryUseReason"
-            #structureResidentialAccessoryUseReasonText
-            maxlength="4000"
-            id="soilStructureResidentialAccessoryUseReason"
-            matInput
-            placeholder="Type comment"
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="
-            soilStructureResidentialAccessoryUseReason.invalid &&
-            (soilStructureResidentialAccessoryUseReason.dirty || soilStructureResidentialAccessoryUseReason.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="soilStructureResidentialAccessoryUseReason.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - structureResidentialAccessoryUseReasonText.textLength }}</div>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="structureTypeCounts[structureTypes.OTHER_STRUCTURE] > 0">
-      <div class="full-row">
-        <label for="soilStructureOtherUseReason">
-          Describe the intended use of the 'Other' structure(s) and why placing fill is required
-        </label>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="soilStructureOtherUseReason"
-            #soilStructureOtherUseReasonText
-            maxlength="4000"
-            id="soilStructureOtherUseReason"
-            matInput
-            placeholder="Type comment"
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="
-            soilStructureOtherUseReason.invalid &&
-            (soilStructureOtherUseReason.dirty || soilStructureOtherUseReason.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="soilStructureOtherUseReason.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - soilStructureOtherUseReasonText.textLength }}</div>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="isNewStructure.value === false">
-      <div class="full-row">
-        <label for="alternativeMeasures">
-          What alternative measures have you considered or attempted before proposing to place fill?
-          <div class="subtext">
-            Applicants should provide evidence demonstrating that normal farm practices have been attempted prior to the
-            submission of this application to place fill.
+        @if (followUpIDs.invalid && (followUpIDs.dirty || followUpIDs.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (followUpIDs.errors?.['required']) {
+              <div>This field is required</div>
+            }
           </div>
-        </label>
-        <mat-form-field appearance="outline">
-          <textarea
-            [formControl]="alternativeMeasures"
-            #alternativeMeasuresText
-            maxlength="4000"
-            id="alternativeMeasures"
-            matInput
-            placeholder="Type comment"
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="alternativeMeasures.invalid && (alternativeMeasures.dirty || alternativeMeasures.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="alternativeMeasures.errors?.['required']">This field is required</div>
-        </div>
-        <mat-hint class="subtext">
-          Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
-          temporary or permanent drainage, etc.
-        </mat-hint>
-        <div class="subtext">Characters left: {{ 4000 - alternativeMeasuresText.textLength }}</div>
+        }
       </div>
-
       <div class="full-row">
-        <label for="agricultural-support">
-          What steps will be taken to reduce impacts to surrounding agricultural land?
-          <div class="subtext">Describe impact reducing measures.</div>
-        </label>
-        <mat-form-field appearance="outline">
-          <textarea
-            [formControl]="reduceNegativeImpacts"
-            #reduceNegativeImpactsText
-            maxlength="4000"
-            id="agricultural-support"
-            matInput
-            placeholder="Type comment"
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
-        </div>
-        <mat-hint class="subtext">
-          Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
-          temporary or permanent drainage, etc.
-        </mat-hint>
-        <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
-      </div>
-    </ng-container>
-
-    <div class="full-row">
-      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
-      <div class="subtext">A visual representation of your proposal.</div>
-      <app-file-drag-drop
-        id="proposal-map"
-        [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachProposalMap($event)"
-        (deleteFile)="onDeleteFile($event)"
-        [showErrors]="showErrors"
-        [isRequired]="true"
-        [showHasVirusError]="showProposalMapHasVirusError"
-        [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
-      ></app-file-drag-drop>
-    </div>
-
-    <ng-container *ngIf="isNewStructure.value === false">
-      <div class="full-row">
-        <mat-label class="subheading2" for="cross-section">Cross Sections</mat-label>
-        <div class="subtext">Include North-South and East-West cross sections</div>
-        <app-info-banner>
-          Please refer to
-          <a
-            href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
-            target="_blank"
-            >Placement of Fill</a
-          >
-          on the ALC website for more information
-        </app-info-banner>
-        <app-file-drag-drop
-          id="cross-section"
-          [uploadedFiles]="crossSections"
-          (uploadFiles)="attachCrossSection($event)"
-          (deleteFile)="onDeleteFile($event)"
-          [showErrors]="showErrors"
-          [isRequired]="true"
-          [allowMultiple]="true"
-          [showHasVirusError]="showCrossSectionHasVirusError"
-          [showVirusScanFailedError]="showCrossSectionVirusScanFailedError"
-        ></app-file-drag-drop>
-      </div>
-
-      <div class="full-row">
-        <mat-label class="subheading2" for="reclamation-plan">Reclamation Plan</mat-label>
+        <label for="purpose">What is the purpose of the proposal?</label>
         <div class="subtext">
-          The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
-          agricultural capability assessment.
+          Include why you are applying for placement of fill, what the proposal will achieve, and any benefits to
+          agriculture that the proposal provides.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="purpose"
+            #purposeText
+            maxlength="4000"
+            id="purpose"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        @if (purpose.invalid && (purpose.dirty || purpose.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (purpose.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
+        <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
+        <label for="projectDuration">Placement of Fill Project Duration</label>
+        <div class="subtext">Length of time you anticipate it would take to complete the project</div>
+        <mat-form-field appearance="outline">
+          <input
+            id="projectDuration"
+            maxlength="500"
+            matInput
+            [formControl]="projectDuration"
+            placeholder="Type project duration"
+            />
+        </mat-form-field>
+        @if (projectDuration.invalid && (projectDuration.dirty || projectDuration.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (projectDuration.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
+        <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
+        <div class="subtext">Characters left: {{ 500 - (projectDuration.value || '').length }}</div>
+      </div>
+
+      <div class="full-row">
+        <mat-label>Proposal Dimensions</mat-label>
+        <div class="subtext">
+          Please provide accurate numbers that align with your cross sections, reclamation plan, and site plan. The
+          Commission will consider your proposal dimensions when determining the potential impact it will have on the
+          agricultural capability of the land.
         </div>
         <app-info-banner>
           Please refer to
@@ -653,54 +168,581 @@
             href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
             target="_blank"
             >Placement of Fill</a
-          >
-          on the ALC website for more information
-        </app-info-banner>
-        <app-file-drag-drop
-          id="reclamation-plan"
-          [uploadedFiles]="reclamationPlan"
-          (uploadFiles)="attachReclamationPlan($event)"
-          (deleteFile)="onDeleteFile($event)"
-          [showErrors]="showErrors"
-          [isRequired]="true"
-          [allowMultiple]="true"
-          [showHasVirusError]="showReclamationPlanHasVirusError"
-          [showVirusScanFailedError]="showReclamationPlanVirusScanFailedError"
-        ></app-file-drag-drop>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="isNewStructure.value === true">
-      <div class="full-row">
-        <mat-label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</mat-label>
-        <div class="subtext">
-          Building plans must be the most up to date, current version and should include (1) the total floor area of all
-          levels and intended use; and (2) interior and exterior views
+            >
+            on the ALC website for more detail.
+          </app-info-banner>
+          <app-soil-table
+            tableHeader="Fill to be Placed"
+            [touchAll]="showErrors"
+            [(data)]="fillTableData"
+            (dataChange)="markDirty()"
+          ></app-soil-table>
         </div>
-        <app-file-drag-drop
-          id="detailed-building-plans"
-          [uploadedFiles]="buildingPlans"
-          (uploadFiles)="attachBuildingPlan($event)"
-          (deleteFile)="onDeleteFile($event)"
-          [showErrors]="showErrors"
-          [showHasVirusError]="showBuildingPlanHasVirusError"
-          [showVirusScanFailedError]="showBuildingPlanVirusScanFailedError"
-          [isRequired]="true"
-          [allowMultiple]="true"
-        ></app-file-drag-drop>
-      </div>
-    </ng-container>
-  </div>
-</form>
-<div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
-  <div>
-    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
-      Previous<span class="mobile-hidden"> Step</span>
-    </button>
-    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
-      Next<span class="mobile-hidden"> Step</span>
-    </button>
-  </div>
-</div>
+        <div class="full-row">
+          <mat-label
+            >Of the proposed totals provided above, please input the dimensions of fill that has already been
+            place.</mat-label
+            >
+            <app-soil-table
+              tableHeader="Fill already Placed"
+              [touchAll]="showErrors"
+              [(data)]="alreadyFilledTableData"
+              (dataChange)="markDirty()"
+            ></app-soil-table>
+          </div>
+
+          <div class="full-row">
+            <label for="fillTypeToPlace">Describe the type, origin and quality of fill proposed to be placed.</label>
+            <div class="subtext">
+              List all proposed types of fill. Prohibited fill cannot be placed within the Agricultural Land Reserve.
+            </div>
+            <mat-form-field appearance="outline">
+              <textarea
+                formControlName="fillTypeToPlace"
+                #fillTypeToPlaceText
+                maxlength="4000"
+                id="fillTypeToPlace"
+                matInput
+                placeholder="Type comment"
+              ></textarea>
+            </mat-form-field>
+            @if (fillTypeToPlace.invalid && (fillTypeToPlace.dirty || fillTypeToPlace.touched)) {
+              <div class="field-error">
+                <mat-icon>warning</mat-icon>
+                @if (fillTypeToPlace.errors?.['required']) {
+                  <div>This field is required</div>
+                }
+              </div>
+            }
+            <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
+            <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
+          </div>
+        </div>
+
+        @if (isNewStructure.value === true) {
+          <form [formGroup]="structuresForm">
+            <mat-label>Provide the total floor area (m<sup>2</sup>) for each of the proposed structure(s)</mat-label>
+            <div class="scrollable">
+              @if (isMobile) {
+                <div>
+                  @for (structure of proposedStructures; track structure; let last = $last; let i = $index) {
+                    <app-structure-mobile-card
+                      [structure]="structure"
+                      [isLast]="last"
+                      [index]="i"
+                      [isReviewStep]="false"
+                      (removeClicked)="onStructureRemove(structure.id)"
+                      (editClicked)="onStructureEdit(structure.id)"
+                      >
+                    </app-structure-mobile-card>
+                  }
+                </div>
+              }
+              @if (!isMobile) {
+                <table mat-table [dataSource]="structuresSource" multiTemplateDataRows>
+                  <ng-container matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef>#</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let i = dataIndex; let element"
+                      [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                      >
+                      {{ i + 1 }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef>Type</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let i = dataIndex; let element"
+                      [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                      >
+                      <mat-form-field appearance="outline">
+                        <mat-select
+                          [value]="element.type"
+                          placeholder="Please select"
+                          [formControlName]="element.id + '-type'"
+                          (valueChange)="onChangeStructureType(element.id, $event)"
+                          >
+                          @for (type of structureTypeOptions; track type) {
+                            <mat-option [value]="type.value">
+                              {{ type.label }}
+                            </mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                      @if (
+                        structuresForm.controls[element.id + '-type']!.invalid &&
+                        (structuresForm.controls[element.id + '-type']!.dirty ||
+                        structuresForm.controls[element.id + '-type']!.touched)
+                        ) {
+                        <div
+                          class="field-error"
+                          >
+                          <mat-icon>warning</mat-icon>
+                          @if (structuresForm.controls[element.id + '-type']!.errors?.['required']) {
+                            <div>
+                              This field is required
+                            </div>
+                          }
+                        </div>
+                      }
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="area">
+                    <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let i = dataIndex; let element"
+                      [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                      >
+                      <mat-form-field appearance="outline">
+                        <input
+                          type="text"
+                          matInput
+                          thousandSeparator=","
+                          mask="separator.5"
+                          separatorLimit="9999999999"
+                          min="0.01"
+                          placeholder="Type area"
+                          [formControlName]="element.id + '-area'"
+                          (change)="onChangeArea(element.id, $event)"
+                          />
+                        <span matTextSuffix>m<sup>2</sup></span>
+                      </mat-form-field>
+                      @if (
+                        structuresForm.controls[element.id + '-area']!.invalid &&
+                        (structuresForm.controls[element.id + '-area']!.dirty ||
+                        structuresForm.controls[element.id + '-area']!.touched)
+                        ) {
+                        <div
+                          class="field-error"
+                          >
+                          <mat-icon>warning</mat-icon>
+                          @if (structuresForm.controls[element.id + '-area']!.errors?.['required']) {
+                            <div>
+                              This field is required
+                            </div>
+                          }
+                        </div>
+                      }
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>Action</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let i = dataIndex; let element"
+                      [ngClass]="{ 'no-bottom-border': isWarning(i, element) }"
+                      >
+                      <button mat-stroked-button color="accent" (click)="onStructureRemove(element.id)" type="button">
+                        Remove
+                      </button>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  <ng-container matColumnDef="msgWarning">
+                    <td colspan="7" mat-cell *matCellDef>
+                      <div class="residential-warning">
+                        <div class="residential-warning-text">
+                          The proposed residential structure and its total floor area must be allowed under the ALC Act and/or
+                          ALR Use Regulation. If not, you may require a 'Non-Adhering Residential Use' application instead. For
+                          more info, please see
+                          <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+                            >Housing in the ALR</a
+                            >
+                            on the ALC website.
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <tr mat-row class="row-group" *matRowDef="let row; columns: ['msgWarning']; when: isWarning"></tr>
+                    <tr class="mat-row no-data" *matNoDataRow>
+                      <td class="text-center" colspan="7">
+                        No Proposed Structures Entered. Use the button below to add your first structure.
+                      </td>
+                    </tr>
+                  </table>
+                }
+              </div>
+            </form>
+            <div class="form-row">
+              <div class="full-row">
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  (click)="onStructureAdd()"
+                  [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
+                  type="button"
+                  >
+                  + Add Structure
+                </button>
+                @if (proposedStructures.length < 1 && showErrors) {
+                  <app-validation-error>
+                    At least one structure is required
+                  </app-validation-error>
+                }
+              </div>
+            </div>
+            <div class="full-row">
+              <app-warning-banner>
+                Selected proposed structure type(s) will determine the proposal questions below
+              </app-warning-banner>
+            </div>
+          }
+
+          <div class="form-row">
+            @if (structureTypeCounts[structureTypes.FARM_STRUCTURE] > 0) {
+              <div class="full-row">
+                <label for="soilStructureFarmUseReason">Describe how the structure is necessary for farm use</label>
+                <div class="info-banner subtext">
+                  Please refer to
+                  <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#farmstructures" target="_blank"
+                    >Farm Structures in the ALR</a
+                    >
+                    on the ALC website for more detail.
+                  </div>
+                  <mat-form-field appearance="outline">
+                    <textarea
+                      formControlName="soilStructureFarmUseReason"
+                      #soilStructureFarmUseReasonText
+                      maxlength="4000"
+                      id="soilStructureFarmUseReason"
+                      matInput
+                      placeholder="Type comment"
+                    ></textarea>
+                  </mat-form-field>
+                  @if (
+                    soilStructureFarmUseReason.invalid &&
+                    (soilStructureFarmUseReason.dirty || soilStructureFarmUseReason.touched)
+                    ) {
+                    <div
+                      class="field-error"
+                      >
+                      <mat-icon>warning</mat-icon>
+                      @if (soilStructureFarmUseReason.errors?.['required']) {
+                        <div>This field is required</div>
+                      }
+                    </div>
+                  }
+                  <div class="subtext">Characters left: {{ 4000 - soilStructureFarmUseReasonText.textLength }}</div>
+                </div>
+                <div class="full-row">
+                  <label for="soilAgriParcelActivity"
+                    >Describe the current or proposed agricultural activity on the parcel(s)</label
+                    >
+                    <div class="subtext">Include the area, yields, crop types, and farm equipment size and attachments</div>
+                    <mat-form-field appearance="outline">
+                      <textarea
+                        formControlName="soilAgriParcelActivity"
+                        #soilAgriParcelActivityText
+                        maxlength="4000"
+                        id="soilAgriParcelActivity"
+                        matInput
+                        placeholder="Type comment"
+                      ></textarea>
+                    </mat-form-field>
+                    @if (soilAgriParcelActivity.invalid && (soilAgriParcelActivity.dirty || soilAgriParcelActivity.touched)) {
+                      <div
+                        class="field-error"
+                        >
+                        <mat-icon>warning</mat-icon>
+                        @if (soilAgriParcelActivity.errors?.['required']) {
+                          <div>This field is required</div>
+                        }
+                      </div>
+                    }
+                    <div class="subtext">Characters left: {{ 4000 - soilAgriParcelActivityText.textLength }}</div>
+                  </div>
+                }
+
+                @if (
+                  structureTypeCounts[structureTypes.PRINCIPAL_RESIDENCE] > 0 ||
+                  structureTypeCounts[structureTypes.ADDITIONAL_RESIDENCE] > 0 ||
+                  structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0
+                  ) {
+                  <div class="full-row">
+                    <label for="soilStructureResidentialUseReason"
+                      >Describe why placing fill is required for the residential structure(s)</label
+                      >
+                      <div class="info-banner subtext">
+                        Please refer to
+                        <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+                          >Housing in the ALR</a
+                          >
+                          on the ALC website for more detail.
+                        </div>
+                        <mat-form-field appearance="outline">
+                          <textarea
+                            formControlName="soilStructureResidentialUseReason"
+                            #soilStructureResidentialUseReasonText
+                            maxlength="4000"
+                            id="soilStructureResidentialUseReason"
+                            matInput
+                            placeholder="Type comment"
+                          ></textarea>
+                        </mat-form-field>
+                        @if (
+                          soilStructureResidentialUseReason.invalid &&
+                          (soilStructureResidentialUseReason.dirty || soilStructureResidentialUseReason.touched)
+                          ) {
+                          <div
+                            class="field-error"
+                            >
+                            <mat-icon>warning</mat-icon>
+                            @if (soilStructureResidentialUseReason.errors?.['required']) {
+                              <div>This field is required</div>
+                            }
+                          </div>
+                        }
+                        <div class="subtext">Characters left: {{ 4000 - soilStructureResidentialUseReasonText.textLength }}</div>
+                      </div>
+                    }
+
+                    @if (structureTypeCounts[structureTypes.ACCESSORY_STRUCTURE] > 0) {
+                      <div class="full-row">
+                        <label for="soilStructureResidentialAccessoryUseReason"
+                          >Describe the intended use of the residential accessory structure(s) and why placing fill is required</label
+                          >
+                          <div class="info-banner subtext">
+                            Please refer to
+                            <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank"
+                              >Housing in the ALR</a
+                              >
+                              on the ALC website for more detail.
+                            </div>
+                            <mat-form-field appearance="outline">
+                              <textarea
+                                formControlName="soilStructureResidentialAccessoryUseReason"
+                                #structureResidentialAccessoryUseReasonText
+                                maxlength="4000"
+                                id="soilStructureResidentialAccessoryUseReason"
+                                matInput
+                                placeholder="Type comment"
+                              ></textarea>
+                            </mat-form-field>
+                            @if (
+                              soilStructureResidentialAccessoryUseReason.invalid &&
+                              (soilStructureResidentialAccessoryUseReason.dirty || soilStructureResidentialAccessoryUseReason.touched)
+                              ) {
+                              <div
+                                class="field-error"
+                                >
+                                <mat-icon>warning</mat-icon>
+                                @if (soilStructureResidentialAccessoryUseReason.errors?.['required']) {
+                                  <div>This field is required</div>
+                                }
+                              </div>
+                            }
+                            <div class="subtext">Characters left: {{ 4000 - structureResidentialAccessoryUseReasonText.textLength }}</div>
+                          </div>
+                        }
+
+                        @if (structureTypeCounts[structureTypes.OTHER_STRUCTURE] > 0) {
+                          <div class="full-row">
+                            <label for="soilStructureOtherUseReason">
+                              Describe the intended use of the 'Other' structure(s) and why placing fill is required
+                            </label>
+                            <mat-form-field appearance="outline">
+                              <textarea
+                                formControlName="soilStructureOtherUseReason"
+                                #soilStructureOtherUseReasonText
+                                maxlength="4000"
+                                id="soilStructureOtherUseReason"
+                                matInput
+                                placeholder="Type comment"
+                              ></textarea>
+                            </mat-form-field>
+                            @if (
+                              soilStructureOtherUseReason.invalid &&
+                              (soilStructureOtherUseReason.dirty || soilStructureOtherUseReason.touched)
+                              ) {
+                              <div
+                                class="field-error"
+                                >
+                                <mat-icon>warning</mat-icon>
+                                @if (soilStructureOtherUseReason.errors?.['required']) {
+                                  <div>This field is required</div>
+                                }
+                              </div>
+                            }
+                            <div class="subtext">Characters left: {{ 4000 - soilStructureOtherUseReasonText.textLength }}</div>
+                          </div>
+                        }
+
+                        @if (isNewStructure.value === false) {
+                          <div class="full-row">
+                            <label for="alternativeMeasures">
+                              What alternative measures have you considered or attempted before proposing to place fill?
+                              <div class="subtext">
+                                Applicants should provide evidence demonstrating that normal farm practices have been attempted prior to the
+                                submission of this application to place fill.
+                              </div>
+                            </label>
+                            <mat-form-field appearance="outline">
+                              <textarea
+                                [formControl]="alternativeMeasures"
+                                #alternativeMeasuresText
+                                maxlength="4000"
+                                id="alternativeMeasures"
+                                matInput
+                                placeholder="Type comment"
+                              ></textarea>
+                            </mat-form-field>
+                            @if (alternativeMeasures.invalid && (alternativeMeasures.dirty || alternativeMeasures.touched)) {
+                              <div
+                                class="field-error"
+                                >
+                                <mat-icon>warning</mat-icon>
+                                @if (alternativeMeasures.errors?.['required']) {
+                                  <div>This field is required</div>
+                                }
+                              </div>
+                            }
+                            <mat-hint class="subtext">
+                              Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
+                              temporary or permanent drainage, etc.
+                            </mat-hint>
+                            <div class="subtext">Characters left: {{ 4000 - alternativeMeasuresText.textLength }}</div>
+                          </div>
+                          <div class="full-row">
+                            <label for="agricultural-support">
+                              What steps will be taken to reduce impacts to surrounding agricultural land?
+                              <div class="subtext">Describe impact reducing measures.</div>
+                            </label>
+                            <mat-form-field appearance="outline">
+                              <textarea
+                                [formControl]="reduceNegativeImpacts"
+                                #reduceNegativeImpactsText
+                                maxlength="4000"
+                                id="agricultural-support"
+                                matInput
+                                placeholder="Type comment"
+                              ></textarea>
+                            </mat-form-field>
+                            @if (reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)) {
+                              <div
+                                class="field-error"
+                                >
+                                <mat-icon>warning</mat-icon>
+                                @if (reduceNegativeImpacts.errors?.['required']) {
+                                  <div>This field is required</div>
+                                }
+                              </div>
+                            }
+                            <mat-hint class="subtext">
+                              Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
+                              temporary or permanent drainage, etc.
+                            </mat-hint>
+                            <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
+                          </div>
+                        }
+
+                        <div class="full-row">
+                          <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
+                          <div class="subtext">A visual representation of your proposal.</div>
+                          <app-file-drag-drop
+                            id="proposal-map"
+                            [uploadedFiles]="proposalMap"
+                            (uploadFiles)="attachProposalMap($event)"
+                            (deleteFile)="onDeleteFile($event)"
+                            [showErrors]="showErrors"
+                            [isRequired]="true"
+                            [showHasVirusError]="showProposalMapHasVirusError"
+                            [showVirusScanFailedError]="showProposalMapVirusScanFailedError"
+                          ></app-file-drag-drop>
+                        </div>
+
+                        @if (isNewStructure.value === false) {
+                          <div class="full-row">
+                            <mat-label class="subheading2" for="cross-section">Cross Sections</mat-label>
+                            <div class="subtext">Include North-South and East-West cross sections</div>
+                            <app-info-banner>
+                              Please refer to
+                              <a
+                                href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
+                                target="_blank"
+                                >Placement of Fill</a
+                                >
+                                on the ALC website for more information
+                              </app-info-banner>
+                              <app-file-drag-drop
+                                id="cross-section"
+                                [uploadedFiles]="crossSections"
+                                (uploadFiles)="attachCrossSection($event)"
+                                (deleteFile)="onDeleteFile($event)"
+                                [showErrors]="showErrors"
+                                [isRequired]="true"
+                                [allowMultiple]="true"
+                                [showHasVirusError]="showCrossSectionHasVirusError"
+                                [showVirusScanFailedError]="showCrossSectionVirusScanFailedError"
+                              ></app-file-drag-drop>
+                            </div>
+                            <div class="full-row">
+                              <mat-label class="subheading2" for="reclamation-plan">Reclamation Plan</mat-label>
+                              <div class="subtext">
+                                The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
+                                agricultural capability assessment.
+                              </div>
+                              <app-info-banner>
+                                Please refer to
+                                <a
+                                  href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#pfrs"
+                                  target="_blank"
+                                  >Placement of Fill</a
+                                  >
+                                  on the ALC website for more information
+                                </app-info-banner>
+                                <app-file-drag-drop
+                                  id="reclamation-plan"
+                                  [uploadedFiles]="reclamationPlan"
+                                  (uploadFiles)="attachReclamationPlan($event)"
+                                  (deleteFile)="onDeleteFile($event)"
+                                  [showErrors]="showErrors"
+                                  [isRequired]="true"
+                                  [allowMultiple]="true"
+                                  [showHasVirusError]="showReclamationPlanHasVirusError"
+                                  [showVirusScanFailedError]="showReclamationPlanVirusScanFailedError"
+                                ></app-file-drag-drop>
+                              </div>
+                            }
+
+                            @if (isNewStructure.value === true) {
+                              <div class="full-row">
+                                <mat-label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</mat-label>
+                                <div class="subtext">
+                                  Building plans must be the most up to date, current version and should include (1) the total floor area of all
+                                  levels and intended use; and (2) interior and exterior views
+                                </div>
+                                <app-file-drag-drop
+                                  id="detailed-building-plans"
+                                  [uploadedFiles]="buildingPlans"
+                                  (uploadFiles)="attachBuildingPlan($event)"
+                                  (deleteFile)="onDeleteFile($event)"
+                                  [showErrors]="showErrors"
+                                  [showHasVirusError]="showBuildingPlanHasVirusError"
+                                  [showVirusScanFailedError]="showBuildingPlanVirusScanFailedError"
+                                  [isRequired]="true"
+                                  [allowMultiple]="true"
+                                ></app-file-drag-drop>
+                              </div>
+                            }
+                          </div>
+                        </form>
+                        <div class="button-container">
+                          @if (!draftMode) {
+                            <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+                          }
+                          @if (draftMode) {
+                            <button (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+                          }
+                          <div>
+                            <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+                              Previous<span class="mobile-hidden"> Step</span>
+                            </button>
+                            <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+                              Next<span class="mobile-hidden"> Step</span>
+                            </button>
+                          </div>
+                        </div>

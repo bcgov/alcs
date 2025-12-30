@@ -1,162 +1,220 @@
 <h2>Review & Submit</h2>
 <div>
-  <div *ngIf="_applicationReview" class="description">
-    <div>Complete {{ _applicationReview.governmentName }} review and submit to ALC</div>
-  </div>
-  <div *ngIf="_applicationReview && !isMobile" class="mobile-hidden">
-    <section>
-      <h4>1. Contact Information</h4>
-      <div class="review-table">
-        <div>
-          <div class="subheading2">Local Government File Number</div>
+  @if (_applicationReview) {
+    <div class="description">
+      <div>Complete {{ _applicationReview.governmentName }} review and submit to ALC</div>
+    </div>
+  }
+  @if (_applicationReview && !isMobile) {
+    <div class="mobile-hidden">
+      <section>
+        <h4>1. Contact Information</h4>
+        <div class="review-table">
           <div>
-            {{ _applicationReview.localGovernmentFileNumber }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.localGovernmentFileNumber">
-            </app-no-data>
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">First Name</div>
-          <div>
-            {{ _applicationReview.firstName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.firstName"></app-no-data>
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Last Name</div>
-          <div>
-            {{ _applicationReview.lastName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.lastName"></app-no-data>
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Position</div>
-          <div>
-            {{ _applicationReview.position }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.position"></app-no-data>
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Department</div>
-          <div>
-            {{ _applicationReview.department }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.department"></app-no-data>
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Phone Number</div>
-          <div>
-            {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000' }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.phoneNumber"></app-no-data>
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Email</div>
-          <div>
-            {{ _applicationReview.email }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.email"></app-no-data>
-          </div>
-        </div>
-        <div class="edit-button">
-          <button mat-flat-button (click)="onNavigateToStep(0)" color="accent">Edit Section</button>
-        </div>
-      </div>
-    </section>
-    <section>
-      <h4>2. Plans & Bylaws: OCP</h4>
-      <div class="review-table">
-        <div class="full-width">
-          <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
-          <div>
-            <span *ngIf="_applicationReview.isOCPDesignation !== null">{{
-              _applicationReview.isOCPDesignation ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isOCPDesignation === null"></app-no-data>
-          </div>
-        </div>
-        <div *ngIf="_applicationReview.isOCPDesignation">
-          <div class="subheading2">OCP Bylaw Name</div>
-          <div>
-            {{ _applicationReview.OCPBylawName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPBylawName"></app-no-data>
-          </div>
-        </div>
-        <div *ngIf="_applicationReview.isOCPDesignation">
-          <div class="subheading2">OCP Designation</div>
-          <div>
-            {{ _applicationReview.OCPDesignation }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data>
-          </div>
-        </div>
-        <div *ngIf="_applicationReview.isOCPDesignation">
-          <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
-          <div>
-            <span *ngIf="_applicationReview.OCPConsistent !== null">{{
-              _applicationReview.OCPConsistent ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.OCPConsistent === null"></app-no-data>
-          </div>
-        </div>
-        <div class="edit-button">
-          <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
-        </div>
-      </div>
-    </section>
-    <section>
-      <h4>3. Plans & Bylaws: Zoning</h4>
-      <div class="review-table">
-        <div class="full-width">
-          <div class="subheading2">Is the application parcel(s) subject to a Local Government zoning designation?</div>
-          <div>
-            <span *ngIf="_applicationReview.isSubjectToZoning !== null">{{
-              _applicationReview.isSubjectToZoning ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="_applicationReview.isSubjectToZoning === null"
-            ></app-no-data>
-          </div>
-        </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">Zoning Bylaw Name</div>
-          <div>
-            {{ _applicationReview.zoningBylawName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningBylawName"></app-no-data>
-          </div>
-        </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">
-            Zoning Designation
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="!_applicationReview.isSubjectToZoning === null"
-            ></app-no-data>
+            <div class="subheading2">Local Government File Number</div>
+            <div>
+              {{ _applicationReview.localGovernmentFileNumber }}
+              @if (!_applicationReview.localGovernmentFileNumber) {
+                <app-no-data [showRequired]="showErrors">
+                </app-no-data>
+              }
+            </div>
           </div>
           <div>
-            {{ _applicationReview.zoningDesignation }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningDesignation"></app-no-data>
+            <div class="subheading2">First Name</div>
+            <div>
+              {{ _applicationReview.firstName }}
+              @if (!_applicationReview.firstName) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
           </div>
-        </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">Minimum Lot Size (hectares)</div>
           <div>
-            {{ _applicationReview.zoningMinimumLotSize
-            }}<span *ngIf="_applicationReview.zoningMinimumLotSize"> ha</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningMinimumLotSize"></app-no-data>
+            <div class="subheading2">Last Name</div>
+            <div>
+              {{ _applicationReview.lastName }}
+              @if (!_applicationReview.lastName) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
           </div>
-        </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
           <div>
-            <span *ngIf="_applicationReview.isZoningConsistent !== null">{{
-              _applicationReview.isZoningConsistent ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="_applicationReview.isZoningConsistent === null"
-            ></app-no-data>
+            <div class="subheading2">Position</div>
+            <div>
+              {{ _applicationReview.position }}
+              @if (!_applicationReview.position) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          </div>
+          <div>
+            <div class="subheading2">Department</div>
+            <div>
+              {{ _applicationReview.department }}
+              @if (!_applicationReview.department) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          </div>
+          <div>
+            <div class="subheading2">Phone Number</div>
+            <div>
+              {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000' }}
+              @if (!_applicationReview.phoneNumber) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          </div>
+          <div>
+            <div class="subheading2">Email</div>
+            <div>
+              {{ _applicationReview.email }}
+              @if (!_applicationReview.email) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          </div>
+          <div class="edit-button">
+            <button mat-flat-button (click)="onNavigateToStep(0)" color="accent">Edit Section</button>
           </div>
         </div>
+      </section>
+      <section>
+        <h4>2. Plans & Bylaws: OCP</h4>
+        <div class="review-table">
+          <div class="full-width">
+            <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
+            <div>
+              @if (_applicationReview.isOCPDesignation !== null) {
+                <span>{{
+                  _applicationReview.isOCPDesignation ? 'Yes' : 'No'
+                }}</span>
+              }
+              @if (_applicationReview.isOCPDesignation === null) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          </div>
+          @if (_applicationReview.isOCPDesignation) {
+            <div>
+              <div class="subheading2">OCP Bylaw Name</div>
+              <div>
+                {{ _applicationReview.OCPBylawName }}
+                @if (!_applicationReview.OCPBylawName) {
+                  <app-no-data [showRequired]="showErrors"></app-no-data>
+                }
+              </div>
+            </div>
+          }
+          @if (_applicationReview.isOCPDesignation) {
+            <div>
+              <div class="subheading2">OCP Designation</div>
+              <div>
+                {{ _applicationReview.OCPDesignation }}
+                @if (!_applicationReview.OCPDesignation) {
+                  <app-no-data [showRequired]="showErrors"></app-no-data>
+                }
+              </div>
+            </div>
+          }
+          @if (_applicationReview.isOCPDesignation) {
+            <div>
+              <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+              <div>
+                @if (_applicationReview.OCPConsistent !== null) {
+                  <span>{{
+                    _applicationReview.OCPConsistent ? 'Yes' : 'No'
+                  }}</span>
+                }
+                @if (_applicationReview.OCPConsistent === null) {
+                  <app-no-data [showRequired]="showErrors"></app-no-data>
+                }
+              </div>
+            </div>
+          }
+          <div class="edit-button">
+            <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h4>3. Plans & Bylaws: Zoning</h4>
+        <div class="review-table">
+          <div class="full-width">
+            <div class="subheading2">Is the application parcel(s) subject to a Local Government zoning designation?</div>
+            <div>
+              @if (_applicationReview.isSubjectToZoning !== null) {
+                <span>{{
+                  _applicationReview.isSubjectToZoning ? 'Yes' : 'No'
+                }}</span>
+              }
+              @if (_applicationReview.isSubjectToZoning === null) {
+                <app-no-data
+                  [showRequired]="showErrors"
+                ></app-no-data>
+              }
+            </div>
+          </div>
+          @if (_applicationReview.isSubjectToZoning) {
+            <div>
+              <div class="subheading2">Zoning Bylaw Name</div>
+              <div>
+                {{ _applicationReview.zoningBylawName }}
+                @if (!_applicationReview.zoningBylawName) {
+                  <app-no-data [showRequired]="showErrors"></app-no-data>
+                }
+              </div>
+            </div>
+          }
+          @if (_applicationReview.isSubjectToZoning) {
+            <div>
+              <div class="subheading2">
+                Zoning Designation
+                @if (!_applicationReview.isSubjectToZoning === null) {
+                  <app-no-data
+                    [showRequired]="showErrors"
+                  ></app-no-data>
+                }
+              </div>
+              <div>
+                {{ _applicationReview.zoningDesignation }}
+                @if (!_applicationReview.zoningDesignation) {
+                  <app-no-data [showRequired]="showErrors"></app-no-data>
+                }
+              </div>
+            </div>
+          }
+          @if (_applicationReview.isSubjectToZoning) {
+            <div>
+              <div class="subheading2">Minimum Lot Size (hectares)</div>
+              <div>
+                {{ _applicationReview.zoningMinimumLotSize
+                }}@if (_applicationReview.zoningMinimumLotSize) {
+                <span> ha</span>
+              }
+              @if (!_applicationReview.zoningMinimumLotSize) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          </div>
+        }
+        @if (_applicationReview.isSubjectToZoning) {
+          <div>
+            <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+            <div>
+              @if (_applicationReview.isZoningConsistent !== null) {
+                <span>{{
+                  _applicationReview.isZoningConsistent ? 'Yes' : 'No'
+                }}</span>
+              }
+              @if (_applicationReview.isZoningConsistent === null) {
+                <app-no-data
+                  [showRequired]="showErrors"
+                ></app-no-data>
+              }
+            </div>
+          </div>
+        }
         <div class="edit-button">
           <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
         </div>
@@ -165,101 +223,142 @@
     <section>
       <h4>4. Resolution</h4>
       <div class="review-table">
-        <div
-          class="full-width"
-          *ngIf="_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null"
-        >
-          Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
-        </div>
-        <div
-          class="full-width"
-          *ngIf="_applicationReview.isOCPDesignation === false && _applicationReview.isSubjectToZoning === false"
-        >
-          By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
-          <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
-          The only option available to you is to forward this application on to the ALC.
-        </div>
-        <div
-          *ngIf="
-            _applicationReview.isOCPDesignation !== null &&
-            _applicationReview.isSubjectToZoning !== null &&
-            (_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true)
-          "
-          class="full-width"
-        >
-          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
-          <div>
-            <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
-            }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
+        @if (_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null) {
+          <div
+            class="full-width"
+            >
+            Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
           </div>
-        </div>
-        <div
-          *ngIf="_applicationReview.isOCPDesignation !== null && _applicationReview.isSubjectToZoning !== null"
-          class="edit-button"
-        >
-          <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
-        </div>
+        }
+        @if (_applicationReview.isOCPDesignation === false && _applicationReview.isSubjectToZoning === false) {
+          <div
+            class="full-width"
+            >
+            By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
+            <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
+            The only option available to you is to forward this application on to the ALC.
+          </div>
+        }
+        @if (
+          _applicationReview.isOCPDesignation !== null &&
+          _applicationReview.isSubjectToZoning !== null &&
+          (_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true)
+          ) {
+          <div
+            class="full-width"
+            >
+            <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
+            <div>
+              @if (_applicationReview.isAuthorized !== null) {
+                <span>{{
+                  _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
+                }}</span>
+              }
+              @if (_applicationReview.isAuthorized === null) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+          </div>
+        }
+        @if (_applicationReview.isOCPDesignation !== null && _applicationReview.isSubjectToZoning !== null) {
+          <div
+            class="edit-button"
+            >
+            <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
+          </div>
+        }
       </div>
     </section>
     <section>
       <h4>5. Attachments</h4>
-      <div *ngIf="!this.hasCompletedStepsBeforeDocuments" class="review-table">
-        <div class="full-width">
-          Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
-          with this step.
-        </div>
-      </div>
-      <div *ngIf="this.hasCompletedStepsBeforeDocuments" class="review-table">
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning" class="full-width">
-          <div class="subheading2">Resolution Document</div>
-          <div>
-            <ng-container *ngFor="let file of resolutionDocument">
-              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
-                file.fileName
-              }}</a>
-            </ng-container>
-            <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
+      @if (!this.hasCompletedStepsBeforeDocuments) {
+        <div class="review-table">
+          <div class="full-width">
+            Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
+            with this step.
           </div>
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning" class="full-width">
-          <div class="subheading2">
-            Staff Report <span *ngIf="_applicationReview.isAuthorized === false">(optional)</span>
-          </div>
-          <div>
-            <div class="document" *ngFor="let file of staffReport">
-              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
-                file.fileName
-              }}</a>
+      }
+      @if (this.hasCompletedStepsBeforeDocuments) {
+        <div class="review-table">
+          @if (_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning) {
+            <div class="full-width">
+              <div class="subheading2">Resolution Document</div>
+              <div>
+                @for (file of resolutionDocument; track file) {
+                  @if (isMobile) {
+                    <a class="link" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+                  }
+                  @if (!isMobile) {
+                    <a class="link" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                      file.fileName
+                    }}</a>
+                  }
+                }
+                @if (resolutionDocument.length === 0) {
+                  <app-no-data [showRequired]="showErrors"></app-no-data>
+                }
+              </div>
             </div>
-            <app-no-data
-              [showRequired]="showErrors && _applicationReview.isAuthorized === true"
-              *ngIf="staffReport.length === 0"
-            ></app-no-data>
+          }
+          @if (_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning) {
+            <div class="full-width">
+              <div class="subheading2">
+                Staff Report @if (_applicationReview.isAuthorized === false) {
+                <span>(optional)</span>
+              }
+            </div>
+            <div>
+              @for (file of staffReport; track file) {
+                <div class="document">
+                  @if (isMobile) {
+                    <a class="link" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+                  }
+                  @if (!isMobile) {
+                    <a class="link" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                      file.fileName
+                    }}</a>
+                  }
+                </div>
+              }
+              @if (staffReport.length === 0) {
+                <app-no-data
+                  [showRequired]="showErrors && _applicationReview.isAuthorized === true"
+                ></app-no-data>
+              }
+            </div>
           </div>
-        </div>
+        }
         <div class="full-width">
           <div class="subheading2">Other Attachments (optional):</div>
           <div>
-            <div class="document" *ngFor="let file of otherAttachments">
-              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
-                file.fileName
-              }}</a>
-            </div>
-            <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
+            @for (file of otherAttachments; track file) {
+              <div class="document">
+                @if (isMobile) {
+                  <a class="link" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+                }
+                @if (!isMobile) {
+                  <a class="link" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                    file.fileName
+                  }}</a>
+                }
+              </div>
+            }
+            @if (otherAttachments.length === 0) {
+              <app-no-data></app-no-data>
+            }
           </div>
         </div>
         <div class="edit-button">
           <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
         </div>
       </div>
-    </section>
-  </div>
-  <div *ngIf="_applicationReview && isMobile" class="tablet-hidden">
+    }
+  </section>
+</div>
+}
+@if (_applicationReview && isMobile) {
+  <div class="tablet-hidden">
     <mat-expansion-panel #contactInfo>
       <mat-expansion-panel-header>
         <h4>1. Contact Information</h4>
@@ -269,52 +368,65 @@
           <div class="subheading2">Local Government File Number</div>
           <div>
             {{ _applicationReview.localGovernmentFileNumber }}
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="!_applicationReview.localGovernmentFileNumber"
-            ></app-no-data>
+            @if (!_applicationReview.localGovernmentFileNumber) {
+              <app-no-data
+                [showRequired]="showErrors"
+              ></app-no-data>
+            }
           </div>
         </div>
         <div>
           <div class="subheading2">First Name</div>
           <div>
             {{ _applicationReview.firstName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.firstName"></app-no-data>
+            @if (!_applicationReview.firstName) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
         <div>
           <div class="subheading2">Last Name</div>
           <div>
             {{ _applicationReview.lastName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.lastName"></app-no-data>
+            @if (!_applicationReview.lastName) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
         <div>
           <div class="subheading2">Position</div>
           <div>
             {{ _applicationReview.position }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.position"></app-no-data>
+            @if (!_applicationReview.position) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
         <div>
           <div class="subheading2">Department</div>
           <div>
             {{ _applicationReview.department }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.department"></app-no-data>
+            @if (!_applicationReview.department) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
             {{ _applicationReview.phoneNumber ?? '' | mask : '(000) 000-0000' }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.phoneNumber"></app-no-data>
+            @if (!_applicationReview.phoneNumber) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
         <div>
           <div class="subheading2">Email</div>
           <div>
             {{ _applicationReview.email }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.email"></app-no-data>
+            @if (!_applicationReview.email) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
         <div class="edit-button">
@@ -330,35 +442,53 @@
         <div class="full-width">
           <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
           <div>
-            <span *ngIf="_applicationReview.isOCPDesignation !== null">{{
-              _applicationReview.isOCPDesignation ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isOCPDesignation === null"></app-no-data>
+            @if (_applicationReview.isOCPDesignation !== null) {
+              <span>{{
+                _applicationReview.isOCPDesignation ? 'Yes' : 'No'
+              }}</span>
+            }
+            @if (_applicationReview.isOCPDesignation === null) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
-        <div *ngIf="_applicationReview.isOCPDesignation">
-          <div class="subheading2">OCP Bylaw Name</div>
+        @if (_applicationReview.isOCPDesignation) {
           <div>
-            {{ _applicationReview.OCPBylawName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPBylawName"></app-no-data>
+            <div class="subheading2">OCP Bylaw Name</div>
+            <div>
+              {{ _applicationReview.OCPBylawName }}
+              @if (!_applicationReview.OCPBylawName) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
           </div>
-        </div>
-        <div *ngIf="_applicationReview.isOCPDesignation">
-          <div class="subheading2">OCP Designation</div>
+        }
+        @if (_applicationReview.isOCPDesignation) {
           <div>
-            {{ _applicationReview.OCPDesignation }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.OCPDesignation"></app-no-data>
+            <div class="subheading2">OCP Designation</div>
+            <div>
+              {{ _applicationReview.OCPDesignation }}
+              @if (!_applicationReview.OCPDesignation) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
           </div>
-        </div>
-        <div *ngIf="_applicationReview.isOCPDesignation">
-          <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+        }
+        @if (_applicationReview.isOCPDesignation) {
           <div>
-            <span *ngIf="_applicationReview.OCPConsistent !== null">{{
-              _applicationReview.OCPConsistent ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.OCPConsistent === null"></app-no-data>
+            <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+            <div>
+              @if (_applicationReview.OCPConsistent !== null) {
+                <span>{{
+                  _applicationReview.OCPConsistent ? 'Yes' : 'No'
+                }}</span>
+              }
+              @if (_applicationReview.OCPConsistent === null) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
           </div>
-        </div>
+        }
         <div class="edit-button">
           <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
         </div>
@@ -370,166 +500,228 @@
         <div class="full-width">
           <div class="subheading2">Is the application parcel(s) subject to a Local Government zoning designation?</div>
           <div>
-            <span *ngIf="_applicationReview.isSubjectToZoning !== null">{{
-              _applicationReview.isSubjectToZoning ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="_applicationReview.isSubjectToZoning === null"
-            ></app-no-data>
+            @if (_applicationReview.isSubjectToZoning !== null) {
+              <span>{{
+                _applicationReview.isSubjectToZoning ? 'Yes' : 'No'
+              }}</span>
+            }
+            @if (_applicationReview.isSubjectToZoning === null) {
+              <app-no-data
+                [showRequired]="showErrors"
+              ></app-no-data>
+            }
           </div>
         </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">Zoning Bylaw Name</div>
+        @if (_applicationReview.isSubjectToZoning) {
           <div>
-            {{ _applicationReview.zoningBylawName }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningBylawName"></app-no-data>
+            <div class="subheading2">Zoning Bylaw Name</div>
+            <div>
+              {{ _applicationReview.zoningBylawName }}
+              @if (!_applicationReview.zoningBylawName) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
           </div>
-        </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">Zoning Designation</div>
+        }
+        @if (_applicationReview.isSubjectToZoning) {
           <div>
-            {{ _applicationReview.zoningDesignation }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningDesignation"></app-no-data>
+            <div class="subheading2">Zoning Designation</div>
+            <div>
+              {{ _applicationReview.zoningDesignation }}
+              @if (!_applicationReview.zoningDesignation) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
           </div>
-        </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">
-            Minimum Lot Size (hectares)<span *ngIf="_applicationReview.zoningMinimumLotSize"> ha</span>
+        }
+        @if (_applicationReview.isSubjectToZoning) {
+          <div>
+            <div class="subheading2">
+              Minimum Lot Size (hectares)@if (_applicationReview.zoningMinimumLotSize) {
+              <span> ha</span>
+            }
           </div>
           <div>
             {{ _applicationReview.zoningMinimumLotSize }}
-            <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningMinimumLotSize"></app-no-data>
+            @if (!_applicationReview.zoningMinimumLotSize) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
-        <div *ngIf="_applicationReview.isSubjectToZoning">
+      }
+      @if (_applicationReview.isSubjectToZoning) {
+        <div>
           <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
           <div>
-            <span *ngIf="_applicationReview.isZoningConsistent !== null">{{
-              _applicationReview.isZoningConsistent ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data
-              [showRequired]="showErrors"
-              *ngIf="_applicationReview.isZoningConsistent === null"
-            ></app-no-data>
+            @if (_applicationReview.isZoningConsistent !== null) {
+              <span>{{
+                _applicationReview.isZoningConsistent ? 'Yes' : 'No'
+              }}</span>
+            }
+            @if (_applicationReview.isZoningConsistent === null) {
+              <app-no-data
+                [showRequired]="showErrors"
+              ></app-no-data>
+            }
           </div>
         </div>
-        <div class="edit-button">
-          <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
-        </div>
+      }
+      <div class="edit-button">
+        <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
       </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel #authorizationInfo>
-      <mat-expansion-panel-header>
-        <h4>4. Resolution</h4>
-      </mat-expansion-panel-header>
-      <div class="review-table">
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel #authorizationInfo>
+    <mat-expansion-panel-header>
+      <h4>4. Resolution</h4>
+    </mat-expansion-panel-header>
+    <div class="review-table">
+      @if (_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null) {
         <div
           class="full-width"
-          *ngIf="_applicationReview.isOCPDesignation === null || _applicationReview.isSubjectToZoning === null"
-        >
+          >
           Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
         </div>
+      }
+      @if (_applicationReview.isOCPDesignation === false && _applicationReview.isSubjectToZoning === false) {
         <div
           class="full-width"
-          *ngIf="_applicationReview.isOCPDesignation === false && _applicationReview.isSubjectToZoning === false"
-        >
+          >
           By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
           <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
           The only option available to you is to forward this application on to the ALC.
         </div>
+      }
+      @if (
+        _applicationReview.isOCPDesignation !== null &&
+        _applicationReview.isSubjectToZoning !== null &&
+        (_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true)
+        ) {
         <div
-          *ngIf="
-            _applicationReview.isOCPDesignation !== null &&
-            _applicationReview.isSubjectToZoning !== null &&
-            (_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true)
-          "
           class="full-width"
-        >
+          >
           <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
           <div>
-            <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
-            }}</span>
-            <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
+            @if (_applicationReview.isAuthorized !== null) {
+              <span>{{
+                _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
+              }}</span>
+            }
+            @if (_applicationReview.isAuthorized === null) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
           </div>
         </div>
+      }
+      @if (_applicationReview.isOCPDesignation !== null && _applicationReview.isSubjectToZoning !== null) {
         <div
-          *ngIf="_applicationReview.isOCPDesignation !== null && _applicationReview.isSubjectToZoning !== null"
           class="edit-button"
-        >
+          >
           <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
         </div>
-      </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel #attachmentInfo>
-      <mat-expansion-panel-header>
-        <h4>5. Attachments</h4>
-      </mat-expansion-panel-header>
-      <div *ngIf="!this.hasCompletedStepsBeforeDocuments" class="review-table">
+      }
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel #attachmentInfo>
+    <mat-expansion-panel-header>
+      <h4>5. Attachments</h4>
+    </mat-expansion-panel-header>
+    @if (!this.hasCompletedStepsBeforeDocuments) {
+      <div class="review-table">
         <div class="full-width">
           Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
           with this step.
         </div>
       </div>
-      <div *ngIf="this.hasCompletedStepsBeforeDocuments" class="review-table">
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
-          <div class="subheading2">Resolution Document</div>
+    }
+    @if (this.hasCompletedStepsBeforeDocuments) {
+      <div class="review-table">
+        @if (_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning) {
           <div>
-            <ng-container *ngFor="let file of resolutionDocument">
-              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
-                file.fileName
-              }}</a>
-            </ng-container>
-            <app-no-data [showRequired]="showErrors" *ngIf="resolutionDocument.length === 0"></app-no-data>
-          </div>
-        </div>
-        <div *ngIf="_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning">
-          <div class="subheading2">
-            Staff Report <span *ngIf="_applicationReview.isAuthorized === false">(optional)</span>
-          </div>
-          <div>
-            <div class="document" *ngFor="let file of staffReport">
-              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
-                file.fileName
-              }}</a>
+            <div class="subheading2">Resolution Document</div>
+            <div>
+              @for (file of resolutionDocument; track file) {
+                @if (isMobile) {
+                  <a class="link" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+                }
+                @if (!isMobile) {
+                  <a class="link" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                    file.fileName
+                  }}</a>
+                }
+              }
+              @if (resolutionDocument.length === 0) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
             </div>
-            <app-no-data
-              [showRequired]="showErrors && _applicationReview.isAuthorized === true"
-              *ngIf="staffReport.length === 0"
-            ></app-no-data>
           </div>
-        </div>
-        <div class="full-width">
-          <div class="subheading2">Other Attachments (optional):</div>
+        }
+        @if (_applicationReview.isOCPDesignation || _applicationReview.isSubjectToZoning) {
           <div>
-            <div class="document" *ngFor="let file of otherAttachments">
-              <a class="link" *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-              <a class="link" *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
-                file.fileName
-              }}</a>
-            </div>
-            <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
+            <div class="subheading2">
+              Staff Report @if (_applicationReview.isAuthorized === false) {
+              <span>(optional)</span>
+            }
+          </div>
+          <div>
+            @for (file of staffReport; track file) {
+              <div class="document">
+                @if (isMobile) {
+                  <a class="link" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+                }
+                @if (!isMobile) {
+                  <a class="link" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                    file.fileName
+                  }}</a>
+                }
+              </div>
+            }
+            @if (staffReport.length === 0) {
+              <app-no-data
+                [showRequired]="showErrors && _applicationReview.isAuthorized === true"
+              ></app-no-data>
+            }
           </div>
         </div>
-        <div class="edit-button">
-          <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
+      }
+      <div class="full-width">
+        <div class="subheading2">Other Attachments (optional):</div>
+        <div>
+          @for (file of otherAttachments; track file) {
+            <div class="document">
+              @if (isMobile) {
+                <a class="link" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+              }
+              @if (!isMobile) {
+                <a class="link" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{
+                  file.fileName
+                }}</a>
+              }
+            </div>
+          }
+          @if (otherAttachments.length === 0) {
+            <app-no-data></app-no-data>
+          }
         </div>
       </div>
-    </mat-expansion-panel>
-  </div>
-  <div>
-    <button (click)="onDownloadPdf()" mat-flat-button color="primary">Download PDF</button>
-  </div>
-  <div class="menu">
-    <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <div>
-      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button (click)="onSubmit()" mat-flat-button color="primary">Submit</button>
+      <div class="edit-button">
+        <button mat-flat-button (click)="onNavigateToStep(4)" color="accent">Edit Section</button>
+      </div>
     </div>
+  }
+</mat-expansion-panel>
+</div>
+}
+<div>
+  <button (click)="onDownloadPdf()" mat-flat-button color="primary">Download PDF</button>
+</div>
+<div class="menu">
+  <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button (click)="onSubmit()" mat-flat-button color="primary">Submit</button>
   </div>
+</div>
 </div>

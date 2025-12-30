@@ -7,9 +7,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-incl-details',
-  templateUrl: './incl-details.component.html',
-  styleUrls: ['./incl-details.component.scss'],
+    selector: 'app-incl-details',
+    templateUrl: './incl-details.component.html',
+    styleUrls: ['./incl-details.component.scss'],
+    standalone: false
 })
 export class InclDetailsComponent {
   proposalMap: PublicDocumentDto[] = [];

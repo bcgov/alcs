@@ -22,9 +22,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 type FormProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null };
 
 @Component({
-  selector: 'app-subd-proposal',
-  templateUrl: './subd-proposal.component.html',
-  styleUrls: ['./subd-proposal.component.scss'],
+    selector: 'app-subd-proposal',
+    templateUrl: './subd-proposal.component.html',
+    styleUrls: ['./subd-proposal.component.scss'],
+    standalone: false
 })
 export class SubdProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;

@@ -12,9 +12,10 @@ const CLASS_TO_URL_MAP: Record<string, string> = {
 };
 
 @Component({
-  selector: 'app-search-list[type]',
-  templateUrl: './search-list.component.html',
-  styleUrls: ['./search-list.component.scss'],
+    selector: 'app-search-list[type]',
+    templateUrl: './search-list.component.html',
+    styleUrls: ['./search-list.component.scss'],
+    standalone: false
 })
 export class SearchListComponent implements OnDestroy {
   $destroy = new Subject<void>();

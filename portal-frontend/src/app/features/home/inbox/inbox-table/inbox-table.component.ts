@@ -6,9 +6,10 @@ import { TableChange } from '../../../public/search/search.interface';
 import { InboxResultDto } from '../inbox.component';
 
 @Component({
-  selector: 'app-inbox-table',
-  templateUrl: './inbox-table.component.html',
-  styleUrls: ['./inbox-table.component.scss'],
+    selector: 'app-inbox-table',
+    templateUrl: './inbox-table.component.html',
+    styleUrls: ['./inbox-table.component.scss'],
+    standalone: false
 })
 export class InboxTableComponent {
   _items: InboxResultDto[] = [];

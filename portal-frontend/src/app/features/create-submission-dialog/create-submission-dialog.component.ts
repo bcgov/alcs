@@ -18,10 +18,11 @@ export enum ApplicationCreateDialogStepsEnum {
 }
 
 @Component({
-  selector: 'app-create-application-dialog',
-  templateUrl: './create-submission-dialog.component.html',
-  styleUrls: ['./create-submission-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-create-application-dialog',
+    templateUrl: './create-submission-dialog.component.html',
+    styleUrls: ['./create-submission-dialog.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked {
   steps = ApplicationCreateDialogStepsEnum;

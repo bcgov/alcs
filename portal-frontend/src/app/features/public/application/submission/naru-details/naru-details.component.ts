@@ -8,9 +8,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-naru-details[applicationSubmission]',
-  templateUrl: './naru-details.component.html',
-  styleUrls: ['./naru-details.component.scss'],
+    selector: 'app-naru-details[applicationSubmission]',
+    templateUrl: './naru-details.component.html',
+    styleUrls: ['./naru-details.component.scss'],
+    standalone: false
 })
 export class NaruDetailsComponent {
   proposalMap: PublicDocumentDto[] = [];

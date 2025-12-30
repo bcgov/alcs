@@ -9,9 +9,10 @@ import { PublicDocumentDto, PublicParcelDto } from '../../../services/public/pub
 import { PublicService } from '../../../services/public/public.service';
 
 @Component({
-  selector: 'app-public-notice-of-intent',
-  templateUrl: './public-notice-of-intent.component.html',
-  styleUrls: ['./public-notice-of-intent.component.scss'],
+    selector: 'app-public-notice-of-intent',
+    templateUrl: './public-notice-of-intent.component.html',
+    styleUrls: ['./public-notice-of-intent.component.scss'],
+    standalone: false
 })
 export class PublicNoticeOfIntentComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

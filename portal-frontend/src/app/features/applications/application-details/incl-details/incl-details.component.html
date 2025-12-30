@@ -1,84 +1,106 @@
-<div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">How many hectares are you proposing to include?</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.inclExclHectares }} <span *ngIf="_applicationSubmission.inclExclHectares">ha</span>
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclExclHectares"></app-no-data>
+@if (_applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">How many hectares are you proposing to include?</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.inclExclHectares }} @if (_applicationSubmission.inclExclHectares) {
+      <span>ha</span>
+    }
+    @if (!_applicationSubmission.inclExclHectares) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+    @if (!_applicationSubmission.purpose) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
   <div class="grid-double">
     {{ _applicationSubmission.inclAgricultureSupport }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclAgricultureSupport"></app-no-data>
+    @if (!_applicationSubmission.inclAgricultureSupport) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">
     Describe any improvements that have been made to, or are planned for the parcel proposed for inclusion.
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.inclImprovements }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclImprovements"></app-no-data>
+    @if (!_applicationSubmission.inclImprovements) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <ng-container *ngFor="let map of proposalMap">
+    @for (map of proposalMap; track map) {
       <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
       <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
-    </ng-container>
-    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+    }
+    @if (proposalMap.length === 0) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
-  <ng-container *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null || isGovernmentCreator">
+  @if (_applicationSubmission.inclGovernmentOwnsAllParcels !== null || isGovernmentCreator) {
     <div class="subheading2 grid-1">
       Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?
     </div>
     <div class="grid-double">
-      <span *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null">
-        {{ _applicationSubmission.inclGovernmentOwnsAllParcels ? 'Yes' : 'No' }}
-      </span>
-      <app-no-data
-        [showRequired]="showErrors"
-        *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels === null"
-      ></app-no-data>
+      @if (_applicationSubmission.inclGovernmentOwnsAllParcels !== null) {
+        <span>
+          {{ _applicationSubmission.inclGovernmentOwnsAllParcels ? 'Yes' : 'No' }}
+        </span>
+      }
+      @if (_applicationSubmission.inclGovernmentOwnsAllParcels === null) {
+        <app-no-data
+          [showRequired]="showErrors"
+        ></app-no-data>
+      }
     </div>
-  </ng-container>
-
-  <ng-container *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels === false">
+  }
+  @if (_applicationSubmission.inclGovernmentOwnsAllParcels === false) {
     <div class="subheading2 grid-1">Notice of Public Hearing (Advertisement)</div>
     <div class="grid-double">
-      <div *ngFor="let file of noticeOfPublicHearing">
-        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-      </div>
-      <app-no-data [showRequired]="showErrors" *ngIf="noticeOfPublicHearing.length === 0"></app-no-data>
+      @for (file of noticeOfPublicHearing; track file) {
+        <div>
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        </div>
+      }
+      @if (noticeOfPublicHearing.length === 0) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
     </div>
-
     <div class="subheading2 grid-1">Proof of Signage</div>
     <div class="grid-double">
-      <div *ngFor="let file of proofOfSignage">
-        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-      </div>
-      <app-no-data [showRequired]="showErrors" *ngIf="proofOfSignage.length === 0"></app-no-data>
+      @for (file of proofOfSignage; track file) {
+        <div>
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        </div>
+      }
+      @if (proofOfSignage.length === 0) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
     </div>
-
     <div class="subheading2 grid-1">Report of Public Hearing</div>
     <div class="grid-double">
-      <div *ngFor="let file of reportOfPublicHearing">
-        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-      </div>
-      <app-no-data [showRequired]="showErrors" *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+      @for (file of reportOfPublicHearing; track file) {
+        <div>
+          <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        </div>
+      }
+      @if (reportOfPublicHearing.length === 0) {
+        <app-no-data [showRequired]="showErrors"></app-no-data>
+      }
     </div>
-  </ng-container>
-
-  <div *ngIf="showEdit" class="edit-button">
-    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
-  </div>
+  }
+  @if (showEdit) {
+    <div class="edit-button">
+      <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+    </div>
+  }
 </div>
+}

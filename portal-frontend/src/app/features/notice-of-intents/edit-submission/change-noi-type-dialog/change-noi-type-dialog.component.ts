@@ -13,9 +13,10 @@ export enum NoiChangeTypeStepsEnum {
 }
 
 @Component({
-  selector: 'app-change-noi-type-dialog',
-  templateUrl: './change-noi-type-dialog.component.html',
-  styleUrls: ['./change-noi-type-dialog.component.scss'],
+    selector: 'app-change-noi-type-dialog',
+    templateUrl: './change-noi-type-dialog.component.html',
+    styleUrls: ['./change-noi-type-dialog.component.scss'],
+    standalone: false
 })
 export class ChangeNoiTypeDialogComponent implements OnInit, AfterViewChecked {
   submissionUuid: string;

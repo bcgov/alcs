@@ -22,9 +22,10 @@ import { downloadFile } from '../../../../shared/utils/file';
 import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
-  selector: 'app-proposal',
-  templateUrl: './proposal.component.html',
-  styleUrls: ['./proposal.component.scss'],
+    selector: 'app-proposal',
+    templateUrl: './proposal.component.html',
+    styleUrls: ['./proposal.component.scss'],
+    standalone: false
 })
 export class ProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditNotificationSteps.Proposal;

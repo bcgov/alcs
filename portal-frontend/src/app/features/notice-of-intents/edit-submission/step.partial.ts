@@ -4,9 +4,10 @@ import { ApplicationSubmissionDetailedDto } from '../../../services/application-
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 @Component({
-  selector: 'app-step',
-  template: '<p></p>',
-  styleUrls: [],
+    selector: 'app-step',
+    template: '<p></p>',
+    styleUrls: [],
+    standalone: false
 })
 export class StepComponent implements OnDestroy {
   protected $destroy = new Subject<void>();

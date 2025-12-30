@@ -7,9 +7,10 @@ import { ReviewApplicationSteps } from '../review-submission.component';
 import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
-  selector: 'app-review-contact-information',
-  templateUrl: './review-contact-information.component.html',
-  styleUrls: ['./review-contact-information.component.scss'],
+    selector: 'app-review-contact-information',
+    templateUrl: './review-contact-information.component.html',
+    styleUrls: ['./review-contact-information.component.scss'],
+    standalone: false
 })
 export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

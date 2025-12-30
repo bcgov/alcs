@@ -12,9 +12,10 @@ import { StepComponent } from './step.partial';
 import { openFileInline } from '../../../shared/utils/file';
 
 @Component({
-  selector: 'app-file-step',
-  template: '<p></p>',
-  styleUrls: [],
+    selector: 'app-file-step',
+    template: '<p></p>',
+    styleUrls: [],
+    standalone: false
 })
 export abstract class FilesStepComponent extends StepComponent {
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;

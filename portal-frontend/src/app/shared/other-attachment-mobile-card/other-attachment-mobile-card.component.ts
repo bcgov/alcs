@@ -8,6 +8,7 @@ import { NotificationDocumentDto } from "src/app/services/notification-document/
     selector: 'app-other-attachment-mobile-card',
     templateUrl: './other-attachment-mobile-card.component.html',
     styleUrl: './other-attachment-mobile-card.component.scss',
+    standalone: false
 })
 export class OtherAttachmentMobileCardComponent implements OnInit {
     @Input() file!: ApplicationDocumentDto | NoticeOfIntentDocumentDto | NotificationDocumentDto;

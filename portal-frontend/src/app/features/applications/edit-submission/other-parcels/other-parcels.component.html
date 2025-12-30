@@ -16,7 +16,7 @@
         id="has-other-parcels"
         [formControl]="hasOtherParcelsInCommunity"
         (change)="onChangeOtherParcels($event.value)"
-      >
+        >
         <mat-button-toggle
           class="toggle-button"
           [ngClass]="{
@@ -38,15 +38,18 @@
           >No
         </mat-button-toggle>
       </mat-button-toggle-group>
-      <div
-        *ngIf="
-          hasOtherParcelsInCommunity.invalid && (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
-        "
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="hasOtherParcelsInCommunity.errors?.['required']">This field is required</div>
-      </div>
+      @if (
+        hasOtherParcelsInCommunity.invalid && (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+        ) {
+        <div
+          class="field-error"
+          >
+          <mat-icon>warning</mat-icon>
+          @if (hasOtherParcelsInCommunity.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
     </div>
     <div class="full-row">
       <label for="otherParcelsDescription">
@@ -63,13 +66,16 @@
           maxlength="4000"
         ></textarea>
       </mat-form-field>
-      <div
-        *ngIf="otherParcelsDescription.invalid && (otherParcelsDescription.dirty || otherParcelsDescription.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="otherParcelsDescription.errors?.['required']">This field is required</div>
-      </div>
+      @if (otherParcelsDescription.invalid && (otherParcelsDescription.dirty || otherParcelsDescription.touched)) {
+        <div
+          class="field-error"
+          >
+          <mat-icon>warning</mat-icon>
+          @if (otherParcelsDescription.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
       <div class="subtext">
         Example 1: PID 112-345-678 in Kelowna partially owned by Jane Doe, used for temporary farm worker housing.
       </div>
@@ -83,8 +89,12 @@
 </section>
 
 <div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  @if (!draftMode) {
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  }
+  @if (draftMode) {
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  }
   <div>
     <button mat-stroked-button (click)="onNavigateToStep(currentStep - 1)" color="primary">
       Previous<span class="mobile-hidden"> Step</span>

@@ -1,12 +1,24 @@
 <div mat-dialog-title>
-  <h2 *ngIf="!data.isEdit">
-    <ng-container *ngIf="data.isExisting">Add Existing Residence</ng-container>
-    <ng-container *ngIf="!data.isExisting">Add Proposed Residence</ng-container>
-  </h2>
-  <h2 *ngIf="data.isEdit">
-    <ng-container *ngIf="data.isExisting">Edit Existing Residence</ng-container>
-    <ng-container *ngIf="!data.isExisting">Edit Proposed Residence</ng-container>
-  </h2>
+  @if (!data.isEdit) {
+    <h2>
+      @if (data.isExisting) {
+        Add Existing Residence
+      }
+      @if (!data.isExisting) {
+        Add Proposed Residence
+      }
+    </h2>
+  }
+  @if (data.isEdit) {
+    <h2>
+      @if (data.isExisting) {
+        Edit Existing Residence
+      }
+      @if (!data.isExisting) {
+        Edit Proposed Residence
+      }
+    </h2>
+  }
 </div>
 <div mat-dialog-content>
   <form [formGroup]="form">
@@ -28,22 +40,27 @@
             matInput
             id="floorAreaId"
             formControlName="floorArea"
-          />
+            />
           <span matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
-        <div
-          *ngIf="
-            form.controls['floorArea']!.invalid &&
-            (form.controls['floorArea']!.dirty || form.controls['floorArea']!.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon class="warning-icon">warning</mat-icon>
-          <div *ngIf="form.controls['floorArea']!.errors?.['required']">This field is required</div>
-          <div *ngIf="form.controls['floorArea']!.errors?.['pattern']">
-            This field must be a non-zero number with no more than 2 decimal places.
+        @if (
+          form.controls['floorArea']!.invalid &&
+          (form.controls['floorArea']!.dirty || form.controls['floorArea']!.touched)
+          ) {
+          <div
+            class="field-error"
+            >
+            <mat-icon class="warning-icon">warning</mat-icon>
+            @if (form.controls['floorArea']!.errors?.['required']) {
+              <div>This field is required</div>
+            }
+            @if (form.controls['floorArea']!.errors?.['pattern']) {
+              <div>
+                This field must be a non-zero number with no more than 2 decimal places.
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
 
       <div class="form-field-description">
@@ -61,34 +78,40 @@
           ></textarea>
         </mat-form-field>
         <div class="subtext">Characters left: {{ 4000 - description.value?.length! }}</div>
-        <div
-          *ngIf="
-            form.controls['description']!.invalid &&
-            (form.controls['description']!.dirty || form.controls['description']!.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="form.controls['description']!.errors?.['required']">This field is required</div>
-        </div>
+        @if (
+          form.controls['description']!.invalid &&
+          (form.controls['description']!.dirty || form.controls['description']!.touched)
+          ) {
+          <div
+            class="field-error"
+            >
+            <mat-icon>warning</mat-icon>
+            @if (form.controls['description']!.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
     </div>
   </form>
 </div>
 <mat-dialog-actions align="end">
   <div class="button-container">
-    <button
-      *ngIf="!this.data.residenceData"
-      mat-flat-button
-      color="primary"
-      (click)="onSaveAdd()"
-      [disabled]="isSaving"
-    >
-      ADD
-    </button>
-    <button *ngIf="this.data.residenceData" mat-flat-button color="primary" (click)="onSaveAdd()" [disabled]="isSaving">
-      SAVE
-    </button>
+    @if (!this.data.residenceData) {
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onSaveAdd()"
+        [disabled]="isSaving"
+        >
+        ADD
+      </button>
+    }
+    @if (this.data.residenceData) {
+      <button mat-flat-button color="primary" (click)="onSaveAdd()" [disabled]="isSaving">
+        SAVE
+      </button>
+    }
     <button mat-stroked-button color="primary" [mat-dialog-close]="false" (click)="onCancel()">CANCEL</button>
   </div>
 </mat-dialog-actions>

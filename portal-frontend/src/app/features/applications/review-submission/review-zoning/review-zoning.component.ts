@@ -7,9 +7,10 @@ import { ApplicationSubmissionReviewService } from '../../../../services/applica
 import { ReviewApplicationSteps } from '../review-submission.component';
 
 @Component({
-  selector: 'app-review-zoning',
-  templateUrl: './review-zoning.component.html',
-  styleUrls: ['./review-zoning.component.scss'],
+    selector: 'app-review-zoning',
+    templateUrl: './review-zoning.component.html',
+    styleUrls: ['./review-zoning.component.scss'],
+    standalone: false
 })
 export class ReviewZoningComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

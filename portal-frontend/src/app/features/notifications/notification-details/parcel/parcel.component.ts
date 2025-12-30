@@ -7,9 +7,10 @@ import { NotificationParcelService } from '../../../../services/notification-par
 import { NotificationSubmissionDetailedDto } from '../../../../services/notification-submission/notification-submission.dto';
 
 @Component({
-  selector: 'app-parcel',
-  templateUrl: './parcel.component.html',
-  styleUrls: ['./parcel.component.scss'],
+    selector: 'app-parcel',
+    templateUrl: './parcel.component.html',
+    styleUrls: ['./parcel.component.scss'],
+    standalone: false
 })
 export class ParcelComponent {
   $destroy = new Subject<void>();

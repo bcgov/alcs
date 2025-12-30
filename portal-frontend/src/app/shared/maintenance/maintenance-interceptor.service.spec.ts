@@ -1,18 +1,19 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { MaintenanceInterceptorService } from './maintenance-interceptor.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('MaintenanceInterceptorService', () => {
   let service: MaintenanceInterceptorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MaintenanceInterceptorService],
-      imports: [HttpClientTestingModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [MaintenanceInterceptorService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     service = TestBed.inject(MaintenanceInterceptorService);
   });
 

@@ -7,9 +7,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-pofo-details[noiSubmission]',
-  templateUrl: './pofo-details.component.html',
-  styleUrls: ['./pofo-details.component.scss'],
+    selector: 'app-pofo-details[noiSubmission]',
+    templateUrl: './pofo-details.component.html',
+    styleUrls: ['./pofo-details.component.scss'],
+    standalone: false
 })
 export class PofoDetailsComponent {
   @Input() noiSubmission!: PublicNoticeOfIntentSubmissionDto;

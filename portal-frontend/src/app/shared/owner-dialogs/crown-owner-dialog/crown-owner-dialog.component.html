@@ -1,12 +1,18 @@
 <div mat-dialog-title>
-  <h2 *ngIf="!isEdit">Add New Government Contact</h2>
-  <h2 *ngIf="isEdit">Edit Government Contact</h2>
+  @if (!isEdit) {
+    <h2>Add New Government Contact</h2>
+  }
+  @if (isEdit) {
+    <h2>Edit Government Contact</h2>
+  }
 </div>
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <app-warning-banner *ngIf="isEdit" class="full-row error changes-banner">
-      The changes made to this government contact will be reflected across the submission.
-    </app-warning-banner>
+    @if (isEdit) {
+      <app-warning-banner class="full-row error changes-banner">
+        The changes made to this government contact will be reflected across the submission.
+      </app-warning-banner>
+    }
     <div class="form-row">
       <div class="full-row">
         <label for="ministryName">Ministry or Department Responsible</label>
@@ -18,33 +24,45 @@
             matInput
             placeholder="Type ministry or department name"
             formControlName="ministryName"
-          />
+            />
         </mat-form-field>
         <span class="subtext">Characters left: {{ 30 - ministryNameText.value.length }}</span>
-        <div *ngIf="ministryName.invalid && (ministryName.dirty || ministryName.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="ministryName.errors?.['required']">This field is required</div>
-        </div>
+        @if (ministryName.invalid && (ministryName.dirty || ministryName.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (ministryName.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="firstName">First Name</label>
         <mat-form-field appearance="outline">
           <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
         </mat-form-field>
-        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="firstName.errors?.['required']">This field is required</div>
-        </div>
+        @if (firstName.invalid && (firstName.dirty || firstName.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (firstName.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="lastName">Last Name</label>
         <mat-form-field appearance="outline">
           <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
         </mat-form-field>
-        <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="lastName.errors?.['required']">This field is required</div>
-        </div>
+        @if (lastName.invalid && (lastName.dirty || lastName.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (lastName.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="phoneNumber">Phone Number</label>
@@ -55,24 +73,36 @@
             matInput
             placeholder="(555) 555-5555"
             formControlName="phoneNumber"
-          />
+            />
         </mat-form-field>
-        <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="phoneNumber.errors?.['required']">This field is required</div>
-          <div *ngIf="phoneNumber.errors?.['mask']">Invalid format</div>
-        </div>
+        @if (phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (phoneNumber.errors?.['required']) {
+              <div>This field is required</div>
+            }
+            @if (phoneNumber.errors?.['mask']) {
+              <div>Invalid format</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="firstName">Email</label>
         <mat-form-field appearance="outline">
           <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
         </mat-form-field>
-        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="email.errors?.['required']">This field is required</div>
-          <div *ngIf="email.errors?.['email']">Invalid format</div>
-        </div>
+        @if (email.invalid && (email.dirty || email.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (email.errors?.['required']) {
+              <div>This field is required</div>
+            }
+            @if (email.errors?.['email']) {
+              <div>Invalid format</div>
+            }
+          </div>
+        }
       </div>
       <div class="full-row">
         <mat-label for="type">Crown Type</mat-label>
@@ -80,30 +110,40 @@
           <mat-button-toggle
             value="provincial"
             [ngClass]="{ 'error-outline': crownLandOwnerType.touched && crownLandOwnerType.errors?.['required'] }"
-          >
+            >
             Provincial Crown
           </mat-button-toggle>
           <mat-button-toggle
             value="federal"
             [ngClass]="{ 'error-outline': crownLandOwnerType.touched && crownLandOwnerType.errors?.['required'] }"
-          >
+            >
             Federal Crown
           </mat-button-toggle>
         </mat-button-toggle-group>
-        <div *ngIf="crownLandOwnerType.touched && crownLandOwnerType.errors?.['required']" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="crownLandOwnerType.errors?.['required']">This field is required</div>
-        </div>
+        @if (crownLandOwnerType.touched && crownLandOwnerType.errors?.['required']) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (crownLandOwnerType.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
     </div>
   </form>
 </div>
 
 <div mat-dialog-actions class="actions" align="end">
-  <button *ngIf="isEdit" mat-stroked-button color="warn" class="delete-btn" (click)="onDelete()">Delete Contact</button>
+  @if (isEdit) {
+    <button mat-stroked-button color="warn" class="delete-btn" (click)="onDelete()">Delete Contact</button>
+  }
   <div class="btn-group">
     <button mat-stroked-button (click)="onClose()" style="margin-left: auto">Cancel</button>
-    <button mat-flat-button color="primary" *ngIf="!isEdit" [disabled]="isLoading" (click)="onCreate()">Add</button>
-    <button mat-flat-button color="primary" *ngIf="isEdit" [disabled]="isLoading" (click)="onSave()">Save</button>
+    @if (!isEdit) {
+      <button mat-flat-button color="primary" [disabled]="isLoading" (click)="onCreate()">Add</button>
+    }
+    @if (isEdit) {
+      <button mat-flat-button color="primary" [disabled]="isLoading" (click)="onSave()">Save</button>
+    }
   </div>
 </div>

@@ -7,9 +7,10 @@ import {
 import { ProposedStructure } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 @Component({
-  selector: 'app-structure-mobile-card',
-  templateUrl: './structure-mobile-card.component.html',
-  styleUrl: './structure-mobile-card.component.scss',
+    selector: 'app-structure-mobile-card',
+    templateUrl: './structure-mobile-card.component.html',
+    styleUrl: './structure-mobile-card.component.scss',
+    standalone: false
 })
 export class StructureMobileCardComponent implements OnInit {
   @Input() structure!: FormProposedStructure | ProposedStructure;

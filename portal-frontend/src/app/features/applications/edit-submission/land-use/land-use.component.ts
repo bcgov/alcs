@@ -20,9 +20,10 @@ export enum MainLandUseTypeOptions {
 }
 
 @Component({
-  selector: 'app-land-use',
-  templateUrl: './land-use.component.html',
-  styleUrls: ['./land-use.component.scss'],
+    selector: 'app-land-use',
+    templateUrl: './land-use.component.html',
+    styleUrls: ['./land-use.component.scss'],
+    standalone: false
 })
 export class LandUseComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.LandUse;

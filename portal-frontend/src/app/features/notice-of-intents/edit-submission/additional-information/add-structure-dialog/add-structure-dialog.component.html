@@ -1,7 +1,11 @@
 <div>
   <div mat-dialog-title>
-    <h2 *ngIf="!data.isEdit">Add Proposed Structure</h2>
-    <h2 *ngIf="data.isEdit">Edit Proposed Structure</h2>
+    @if (!data.isEdit) {
+      <h2>Add Proposed Structure</h2>
+    }
+    @if (data.isEdit) {
+      <h2>Edit Proposed Structure</h2>
+    }
   </div>
   <form [formGroup]="form">
     <div mat-dialog-content>
@@ -17,67 +21,80 @@
               id="type"
               formControlName="type"
               [compareWith]="compareSelected"
-            >
-              <mat-option *ngFor="let type of structureTypeOptions" [value]="type.value">
-                {{ type.label }}
-              </mat-option>
+              >
+              @for (type of structureTypeOptions; track type) {
+                <mat-option [value]="type.value">
+                  {{ type.label }}
+                </mat-option>
+              }
             </mat-select>
           </mat-form-field>
-          <app-warning-banner *ngIf="showTypeChangeWarning"
-            ><strong>Warning</strong>: Changing the structure type will remove some inputs from your saved progress. Do
-            you want to continue?</app-warning-banner
-          >
-          <div
-            *ngIf="form.controls['type']!.invalid && (form.controls['type']!.dirty || form.controls['type']!.touched)"
-            class="field-error"
-          >
-            <mat-icon class="warning-icon">warning</mat-icon>
-            <div *ngIf="form.controls['type']!.errors?.['required']">This field is required</div>
+          @if (showTypeChangeWarning) {
+            <app-warning-banner
+              ><strong>Warning</strong>: Changing the structure type will remove some inputs from your saved progress. Do
+              you want to continue?</app-warning-banner
+              >
+            }
+            @if (form.controls['type']!.invalid && (form.controls['type']!.dirty || form.controls['type']!.touched)) {
+              <div
+                class="field-error"
+                >
+                <mat-icon class="warning-icon">warning</mat-icon>
+                @if (form.controls['type']!.errors?.['required']) {
+                  <div>This field is required</div>
+                }
+              </div>
+            }
           </div>
-        </div>
-        <div class="form-field">
-          <div class="label">
-            <label for="area">Total Floor Area</label>
-          </div>
-          <mat-form-field appearance="outline">
-            <input
-              min="0.01"
-              mask="separator.5"
-              separatorLimit="9999999999"
-              thousandSeparator=","
-              matInput
-              id="area"
-              formControlName="area"
-              name="area"
-            />
-            <span matTextSuffix>m<sup>2</sup></span>
-          </mat-form-field>
-          <div
-            *ngIf="form.controls['area']!.invalid && (form.controls['area']!.dirty || form.controls['area']!.touched)"
-            class="field-error"
-          >
-            <mat-icon class="warning-icon">warning</mat-icon>
-            <div *ngIf="form.controls['area']!.errors?.['required']">This field is required</div>
-            <div *ngIf="form.controls['area']!.errors?.['pattern']">
-              This field must be a non-zero number with no more than 2 decimal places.
+          <div class="form-field">
+            <div class="label">
+              <label for="area">Total Floor Area</label>
             </div>
+            <mat-form-field appearance="outline">
+              <input
+                min="0.01"
+                mask="separator.5"
+                separatorLimit="9999999999"
+                thousandSeparator=","
+                matInput
+                id="area"
+                formControlName="area"
+                name="area"
+                />
+              <span matTextSuffix>m<sup>2</sup></span>
+            </mat-form-field>
+            @if (form.controls['area']!.invalid && (form.controls['area']!.dirty || form.controls['area']!.touched)) {
+              <div
+                class="field-error"
+                >
+                <mat-icon class="warning-icon">warning</mat-icon>
+                @if (form.controls['area']!.errors?.['required']) {
+                  <div>This field is required</div>
+                }
+                @if (form.controls['area']!.errors?.['pattern']) {
+                  <div>
+                    This field must be a non-zero number with no more than 2 decimal places.
+                  </div>
+                }
+              </div>
+            }
           </div>
         </div>
       </div>
-    </div>
-    <mat-dialog-actions align="end">
-      <div class="button-container">
-        <button
-          *ngIf="this.data.structureData"
-          mat-flat-button
-          color="primary"
-          (click)="onSubmit()"
-          [disabled]="isLoading"
-        >
-          {{ !data.isEdit ? 'ADD' : 'SAVE' }}
-        </button>
-        <button mat-stroked-button color="primary" [mat-dialog-close]="false" (click)="onCancel()">CANCEL</button>
-      </div>
-    </mat-dialog-actions>
-  </form>
-</div>
+      <mat-dialog-actions align="end">
+        <div class="button-container">
+          @if (this.data.structureData) {
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="onSubmit()"
+              [disabled]="isLoading"
+              >
+              {{ !data.isEdit ? 'ADD' : 'SAVE' }}
+            </button>
+          }
+          <button mat-stroked-button color="primary" [mat-dialog-close]="false" (click)="onCancel()">CANCEL</button>
+        </div>
+      </mat-dialog-actions>
+    </form>
+  </div>

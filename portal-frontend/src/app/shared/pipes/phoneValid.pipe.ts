@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'phoneValid',
+    name: 'phoneValid',
+    standalone: false
 })
 export class PhoneValidPipe implements PipeTransform {
   transform(phone: string | null) {

@@ -15,9 +15,10 @@ import { FilesStepComponent } from '../../files-step.partial';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-tur-proposal',
-  templateUrl: './tur-proposal.component.html',
-  styleUrls: ['./tur-proposal.component.scss'],
+    selector: 'app-tur-proposal',
+    templateUrl: './tur-proposal.component.html',
+    styleUrls: ['./tur-proposal.component.scss'],
+    standalone: false
 })
 export class TurProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;

@@ -8,9 +8,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-proposal-details[notificationSubmission]',
-  templateUrl: './proposal-details.component.html',
-  styleUrls: ['./proposal-details.component.scss'],
+    selector: 'app-proposal-details[notificationSubmission]',
+    templateUrl: './proposal-details.component.html',
+    styleUrls: ['./proposal-details.component.scss'],
+    standalone: false
 })
 export class ProposalDetailsComponent {
   @Input() showErrors = true;

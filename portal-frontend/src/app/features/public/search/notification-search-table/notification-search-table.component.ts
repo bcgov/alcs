@@ -8,9 +8,10 @@ import { NotificationSearchResultDto } from '../../../../services/search/search.
 import { SearchResult, TableChange } from '../search.interface';
 
 @Component({
-  selector: 'app-notification-search-table',
-  templateUrl: './notification-search-table.component.html',
-  styleUrls: ['./notification-search-table.component.scss'],
+    selector: 'app-notification-search-table',
+    templateUrl: './notification-search-table.component.html',
+    styleUrls: ['./notification-search-table.component.scss'],
+    standalone: false
 })
 export class NotificationSearchTableComponent {
   @Input() totalCount: number | undefined;

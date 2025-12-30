@@ -17,9 +17,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReturnApplicationDialogComponent } from '../review-submission/return-application-dialog/return-application-dialog.component';
 
 @Component({
-  selector: 'app-view-application-submission',
-  templateUrl: './view-application-submission.component.html',
-  styleUrls: ['./view-application-submission.component.scss'],
+    selector: 'app-view-application-submission',
+    templateUrl: './view-application-submission.component.html',
+    styleUrls: ['./view-application-submission.component.scss'],
+    standalone: false
 })
 export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   application: ApplicationSubmissionDetailedDto | undefined;

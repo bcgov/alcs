@@ -2,15 +2,14 @@
   <mat-card-header>
     <mat-card-title>
       #{{ residence.id }} Total Floor Area:
-      <ng-container *ngIf="residence.floorArea === 0; else validFloorArea">
+      @if (residence.floorArea === 0) {
         <div class="text-error">No Data</div>
-      </ng-container>
-      <ng-template #validFloorArea>
+      } @else {
         {{ residence.floorArea }}
         <span matTextSuffix>m<sup>2</sup></span>
-      </ng-template>
+      }
     </mat-card-title>
-    <ng-container *ngIf="!isReviewStep">
+    @if (!isReviewStep) {
       <button mat-icon-button [mat-menu-trigger-for]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -22,25 +21,30 @@
           <span class="span-action">Remove</span>
         </button>
       </mat-menu>
-    </ng-container>
+    }
   </mat-card-header>
   <mat-card-content>
-    <ng-container *ngIf="!residence.description">
+    @if (!residence.description) {
       <div class="text-error">No Data</div>
-    </ng-container>
-    <div class="field-error" *ngIf="(residence.floorArea === 0 || !residence.description) && !isReviewStep">
-      <mat-icon>warning</mat-icon>
-      <div>This field is required</div>
-    </div>
-    <app-no-data
-      class="no-data"
-      [showRequired]="showErrors"
-      *ngIf="(residence.floorArea === 0 || !residence.description) && isReviewStep"
-      text=""
-    ></app-no-data>
+    }
+    @if ((residence.floorArea === 0 || !residence.description) && !isReviewStep) {
+      <div class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div>This field is required</div>
+      </div>
+    }
+    @if ((residence.floorArea === 0 || !residence.description) && isReviewStep) {
+      <app-no-data
+        class="no-data"
+        [showRequired]="showErrors"
+        text=""
+      ></app-no-data>
+    }
     {{ residence.isExpanded ? residence.description : getTruncatedDescription(residence.description) }}
-    <a *ngIf="isDescriptionTruncated(residence.description)" (click)="toggleReadMore(residence)">
-      {{ residence.isExpanded ? 'Read Less' : 'Read More' }}
-    </a>
+    @if (isDescriptionTruncated(residence.description)) {
+      <a (click)="toggleReadMore(residence)">
+        {{ residence.isExpanded ? 'Read Less' : 'Read More' }}
+      </a>
+    }
   </mat-card-content>
 </mat-card>

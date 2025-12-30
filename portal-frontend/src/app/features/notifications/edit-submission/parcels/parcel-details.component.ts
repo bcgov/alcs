@@ -14,9 +14,10 @@ import { DeleteParcelDialogComponent } from './delete-parcel/delete-parcel-dialo
 import { ParcelEntryFormData } from './parcel-entry/parcel-entry.component';
 
 @Component({
-  selector: 'app-notification-parcel-details',
-  templateUrl: './parcel-details.component.html',
-  styleUrls: ['./parcel-details.component.scss'],
+    selector: 'app-notification-parcel-details',
+    templateUrl: './parcel-details.component.html',
+    styleUrls: ['./parcel-details.component.scss'],
+    standalone: false
 })
 export class ParcelDetailsComponent extends StepComponent implements OnInit, AfterViewInit {
   @Output() componentInitialized = new EventEmitter<boolean>();

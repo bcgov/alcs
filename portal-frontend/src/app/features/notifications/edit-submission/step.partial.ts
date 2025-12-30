@@ -6,9 +6,10 @@ import {
 } from '../../../services/notification-submission/notification-submission.dto';
 
 @Component({
-  selector: 'app-step',
-  template: '<p></p>',
-  styleUrls: [],
+    selector: 'app-step',
+    template: '<p></p>',
+    styleUrls: [],
+    standalone: false
 })
 export class StepComponent implements OnDestroy {
   protected $destroy = new Subject<void>();

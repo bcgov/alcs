@@ -16,9 +16,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
 @Component({
-  selector: 'app-other-attachments-upload-dialog',
-  templateUrl: './other-attachments-upload-dialog.component.html',
-  styleUrl: './other-attachments-upload-dialog.component.scss',
+    selector: 'app-other-attachments-upload-dialog',
+    templateUrl: './other-attachments-upload-dialog.component.html',
+    styleUrl: './other-attachments-upload-dialog.component.scss',
+    standalone: false
 })
 export class OtherAttachmentsUploadDialogComponent implements OnInit {
   isDirty = false;

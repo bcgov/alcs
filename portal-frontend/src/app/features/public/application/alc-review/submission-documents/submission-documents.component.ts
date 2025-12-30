@@ -12,9 +12,10 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 type PublicDocumentWithoutTypeDto = Omit<PublicDocumentDto, 'type'>;
 
 @Component({
-  selector: 'app-submission-documents[applicationSubmission]',
-  templateUrl: './submission-documents.component.html',
-  styleUrls: ['./submission-documents.component.scss'],
+    selector: 'app-submission-documents[applicationSubmission]',
+    templateUrl: './submission-documents.component.html',
+    styleUrls: ['./submission-documents.component.scss'],
+    standalone: false
 })
 export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();

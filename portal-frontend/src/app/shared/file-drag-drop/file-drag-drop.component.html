@@ -1,39 +1,48 @@
 <input type="file" class="file-input" (change)="fileSelected($event)" #fileUpload aria-label="upload" />
-<div *ngIf="uploadedFiles">
-  <ng-container *ngFor="let file of uploadedFiles">
-    <div
-      class="uploaded-file"
+@if (uploadedFiles) {
+  <div>
+    @for (file of uploadedFiles; track file) {
+      <div
+        class="uploaded-file"
       [ngClass]="{
         error: !!file.errorMessage && !disabled,
       }"
-    >
-      <a *ngIf="pendingFile" class="file-name" [href]="pendingFile.url" target="_blank">
-        {{ file.fileName }}
-      </a>
-      <a *ngIf="!pendingFile" class="file-name mobile" (click)="downloadFile(file.documentUuid)" target="_blank">
-        {{ file.fileName }}
-      </a>
-      <a *ngIf="!pendingFile" class="file-name desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
-
-      <div class="file-size-cta-container">
-        <div class="file-size">
-          <span class="file-size-parentheses">(</span>
-          {{ file.fileSize | filesize }}
-          <span class="file-size-parentheses">)</span>
+        >
+        @if (pendingFile) {
+          <a class="file-name" [href]="pendingFile.url" target="_blank">
+            {{ file.fileName }}
+          </a>
+        }
+        @if (!pendingFile) {
+          <a class="file-name mobile" (click)="downloadFile(file.documentUuid)" target="_blank">
+            {{ file.fileName }}
+          </a>
+        }
+        @if (!pendingFile) {
+          <a class="file-name desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">
+            {{ file.fileName }}
+          </a>
+        }
+        <div class="file-size-cta-container">
+          <div class="file-size">
+            <span class="file-size-parentheses">(</span>
+            {{ file.fileSize | filesize }}
+            <span class="file-size-parentheses">)</span>
+          </div>
+          <button mat-button aria-label="Remove File" (click)="_deleteFile(file)">
+            <mat-icon>close</mat-icon>
+            REMOVE
+          </button>
         </div>
-        <button mat-button aria-label="Remove File" (click)="_deleteFile(file)">
-          <mat-icon>close</mat-icon>
-          REMOVE
-        </button>
       </div>
-    </div>
-    <div class="error-message" *ngIf="!!file.errorMessage"><mat-icon>warning</mat-icon> {{ file.errorMessage }}</div>
-  </ng-container>
-</div>
-<div
-  *ngIf="!uploadedFiles.length || allowMultiple"
+      @if (!!file.errorMessage) {
+        <div class="error-message"><mat-icon>warning</mat-icon> {{ file.errorMessage }}</div>
+      }
+    }
+  </div>
+}
+@if (!uploadedFiles.length || allowMultiple) {
+  <div
   [ngClass]="{
     'desktop-file-drag-drop': true,
     'error-outline':
@@ -41,35 +50,43 @@
       ((isRequired && showErrors && !uploadedFiles.length) || showHasVirusError || showVirusScanFailedError),
     disabled: disabled,
   }"
-  dragDropFile
-  (files)="filesDropped($event)"
->
-  <button class="content" type="button" (click)="onFileUploadClicked()" [disabled]="disabled">
-    <div class="icon">
-      <mat-icon inline="true">file_upload</mat-icon>
-    </div>
-    <button [disabled]="disabled" type="button" mat-flat-button color="accent">Choose file to Upload</button>
-    <div class="drag-text">or drag and drop them here</div>
+    dragDropFile
+    (files)="filesDropped($event)"
+    >
+    <button class="content" type="button" (click)="onFileUploadClicked()" [disabled]="disabled">
+      <div class="icon">
+        <mat-icon inline="true">file_upload</mat-icon>
+      </div>
+      <button [disabled]="disabled" type="button" mat-flat-button color="accent">Choose file to Upload</button>
+      <div class="drag-text">or drag and drop them here</div>
+    </button>
+  </div>
+}
+@if (!uploadedFiles.length || allowMultiple) {
+  <button
+    [disabled]="disabled"
+    type="button"
+    class="mobile-file-drag-drop"
+    (click)="onFileUploadClicked()"
+    mat-flat-button
+    color="accent"
+    >
+    Upload File
   </button>
-</div>
-<button
-  [disabled]="disabled"
-  *ngIf="!uploadedFiles.length || allowMultiple"
-  type="button"
-  class="mobile-file-drag-drop"
-  (click)="onFileUploadClicked()"
-  mat-flat-button
-  color="accent"
->
-  Upload File
-</button>
-<app-validation-error *ngIf="isRequired && !disabled && showErrors && !uploadedFiles.length" errorClass="field-error">
-  This file upload is required
-</app-validation-error>
-<app-validation-error *ngIf="!disabled && showHasVirusError" errorClass="field-error">
-  A virus was detected in the file. Choose another file and try again.
-</app-validation-error>
-<app-validation-error *ngIf="!disabled && showVirusScanFailedError" errorClass="field-error">
-  A problem occurred while scanning for viruses. Please try again.
-</app-validation-error>
+}
+@if (isRequired && !disabled && showErrors && !uploadedFiles.length) {
+  <app-validation-error errorClass="field-error">
+    This file upload is required
+  </app-validation-error>
+}
+@if (!disabled && showHasVirusError) {
+  <app-validation-error errorClass="field-error">
+    A virus was detected in the file. Choose another file and try again.
+  </app-validation-error>
+}
+@if (!disabled && showVirusScanFailedError) {
+  <app-validation-error errorClass="field-error">
+    A problem occurred while scanning for viruses. Please try again.
+  </app-validation-error>
+}
 <mat-hint class="subtext">Maximum file size: 100 MB</mat-hint>

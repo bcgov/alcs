@@ -18,9 +18,10 @@ import { downloadFile } from '../../../../shared/utils/file';
 import { DocumentService } from '../../../../services/document/document.service';
 
 @Component({
-  selector: 'app-review-submit[stepper]',
-  templateUrl: './review-submit.component.html',
-  styleUrls: ['./review-submit.component.scss'],
+    selector: 'app-review-submit[stepper]',
+    templateUrl: './review-submit.component.html',
+    styleUrls: ['./review-submit.component.scss'],
+    standalone: false
 })
 export class ReviewSubmitComponent implements OnInit, OnDestroy {
   @Input() $application!: BehaviorSubject<ApplicationSubmissionDto | undefined>;

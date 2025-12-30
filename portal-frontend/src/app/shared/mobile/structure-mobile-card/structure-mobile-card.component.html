@@ -3,32 +3,30 @@
     <mat-card-title>
       <div class="line-info-floor">
         <span class="strong">#{{ index+1 }} Total Floor Area: </span>
-        <ng-container *ngIf="structure.area === 0 || !structure.area; else validFloorArea">
-            <div class="text-error">No Data</div>
-            <div [ngClass]="isReviewStep ? 'review-error' : 'field-error'">
-              <mat-icon>warning</mat-icon>
-              <div>{{ isReviewStep ? 'Required Field' : 'This field is required'}}</div>
-            </div>
-        </ng-container>
-        <ng-template #validFloorArea>
+        @if (structure.area === 0 || !structure.area) {
+          <div class="text-error">No Data</div>
+          <div [ngClass]="isReviewStep ? 'review-error' : 'field-error'">
+            <mat-icon>warning</mat-icon>
+            <div>{{ isReviewStep ? 'Required Field' : 'This field is required'}}</div>
+          </div>
+        } @else {
           <span [class.strong]="isReviewStep">{{ structure.area }} <span matTextSuffix>m<sup>2</sup></span></span>
-        </ng-template>
+        }
       </div>
       <div class="line-info-type">
-        <ng-container *ngIf="!structure.type; else validType">
+        @if (!structure.type) {
           <span class="strong">Type: </span>
           <div class="text-error">No Data</div>
           <div [ngClass]="isReviewStep ? 'review-error' : 'field-error'">
             <mat-icon>warning</mat-icon>
             <div>{{ isReviewStep ? 'Required Field' : 'This field is required'}}</div>
           </div>
-        </ng-container>
-        <ng-template #validType>
+        } @else {
           <span class="strong">Type: </span>{{ mapStructureTypeValueToLabel(structure.type) }}
-        </ng-template>
+        }
       </div>
     </mat-card-title>
-    <ng-container *ngIf="!isReviewStep">
+    @if (!isReviewStep) {
       <button mat-icon-button [mat-menu-trigger-for]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -40,14 +38,16 @@
           <span class="span-action">Remove</span>
         </button>
       </mat-menu>
-    </ng-container>
+    }
   </mat-card-header>
-  <div class="residential-warning" *ngIf="isResidential(structure.type) && !isReviewStep">
-    <div class="residential-warning-text">
-      The proposed residential structure and its total floor area must be allowed under the ALC Act and/or ALR Use Regulation. 
-      If not, you may require a 'Non-Adhering Residential Use' application instead. For more info, please see 
-      <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank">Housing in the ALR</a> 
-      on the ALC website.
+  @if (isResidential(structure.type) && !isReviewStep) {
+    <div class="residential-warning">
+      <div class="residential-warning-text">
+        The proposed residential structure and its total floor area must be allowed under the ALC Act and/or ALR Use Regulation.
+        If not, you may require a 'Non-Adhering Residential Use' application instead. For more info, please see
+        <a href="https://www.alc.gov.bc.ca/resources/alc-policies-and-bulletins/#housing" target="_blank">Housing in the ALR</a>
+        on the ALC website.
+      </div>
     </div>
-  </div>
+  }
 </mat-card>

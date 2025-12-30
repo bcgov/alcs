@@ -23,9 +23,10 @@ import { VISIBLE_COUNT_INCREMENT } from '../../../../../shared/constants';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-cove-proposal',
-  templateUrl: './cove-proposal.component.html',
-  styleUrls: ['./cove-proposal.component.scss'],
+    selector: 'app-cove-proposal',
+    templateUrl: './cove-proposal.component.html',
+    styleUrls: ['./cove-proposal.component.scss'],
+    standalone: false
 })
 export class CoveProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
