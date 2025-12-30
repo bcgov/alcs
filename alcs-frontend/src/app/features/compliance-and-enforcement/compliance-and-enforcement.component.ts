@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import {
   ComplianceAndEnforcementService,
@@ -32,6 +34,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
     private readonly service: ComplianceAndEnforcementService,
     private readonly responsiblePartyService: ResponsiblePartiesService,
     private readonly toastService: ToastService,
+    private readonly titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +88,10 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
               ? (owners[0].organizationName || owners[0].individualName) + (owners.length > 1 ? ' et al.' : '')
               : '';
         }
+
+        this.titleService.setTitle(
+          `${environment.siteName} | ${this.file.fileNumber} (${this.propertyOwnerName || 'Unknown'})`,
+        );
       }
     } catch (error) {
       console.error('Error loading file:', error);
