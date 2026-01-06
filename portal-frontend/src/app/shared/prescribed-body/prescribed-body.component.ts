@@ -6,9 +6,10 @@ const FIRST_NATION = 'First Nation Government';
 const LOCAL = 'Local Government';
 
 @Component({
-  selector: 'app-prescribed-body',
-  templateUrl: './prescribed-body.component.html',
-  styleUrls: ['./prescribed-body.component.scss'],
+    selector: 'app-prescribed-body',
+    templateUrl: './prescribed-body.component.html',
+    styleUrls: ['./prescribed-body.component.scss'],
+    standalone: false
 })
 export class PrescribedBodyComponent implements OnInit {
   @Input() value: string | undefined;

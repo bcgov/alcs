@@ -10,7 +10,7 @@
       <a
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
         target="_blank"
-      >
+        >
         What the Commission Considers
       </a>
     </li>
@@ -18,7 +18,7 @@
       <a
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#cov"
         target="_blank"
-      >
+        >
         Register a Restrictive Covenant within the ALR
       </a>
     </li>
@@ -35,81 +35,86 @@
           'error-outline': transferees.length === 0 && showErrors,
         }"
         (click)="onAdd()"
-      >
+        >
         Add New Transferee
       </button>
-      <app-validation-error *ngIf="transferees.length === 0 && showErrors">
-        At least one transferee is required
-      </app-validation-error>
+      @if (transferees.length === 0 && showErrors) {
+        <app-validation-error>
+          At least one transferee is required
+        </app-validation-error>
+      }
     </div>
   </div>
-  <div class="table" *ngIf="!isMobile">
-    <table mat-table [dataSource]="transferees">
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Type</th>
-        <td mat-cell *matCellDef="let element">{{ element.type.code === 'INDV' ? 'Individual' : 'Organization' }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="fullName">
-        <th mat-header-cell *matHeaderCellDef>Full Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.displayName }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="organizationName">
-        <th mat-header-cell *matHeaderCellDef>Organization Name</th>
-        <td mat-cell *matCellDef="let element">
-          <span *ngIf="element.organizationName">
-            {{ element.organizationName }}
-          </span>
-          <span class="no-data" *ngIf="!element.organizationName"> Not Applicable </span>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="phone">
-        <th mat-header-cell *matHeaderCellDef>Phone</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.phoneNumber | mask: '(000) 000-0000' }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>Email</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.email }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td class="actions-cell" mat-cell *matCellDef="let element">
-          <button mat-flat-button color="primary" (click)="onEdit(element.uuid)">Edit</button>
-          <button mat-stroked-button color="warn" (click)="onDelete(element.uuid)">Remove</button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      <tr class="mat-row" *matNoDataRow>
-        <td class="no-data" colspan="6">
-          No Transferee added. Use ‘Add New Transferee’ button to the right to add your first transferee.
-        </td>
-      </tr>
-    </table>
-  </div>
-  <ng-container *ngIf="isMobile">
-    <app-transferee-mobile-card
-      *ngFor="let transferee of transferees.slice(0, visibleCount); let last = last"
-      [transferee]="transferee"
-      [isLast]="last"
-      [isReviewStep]="false"
-      (editClicked)="onEdit(transferee.uuid)"
-      (removeClicked)="onDelete(transferee.uuid)"
-    >
-    </app-transferee-mobile-card>
-    <div class="visible-count-container" *ngIf="visibleCount < transferees.length">
-      <a (click)="increaseVisibleCount()">See more transferees</a>
+  @if (!isMobile) {
+    <div class="table">
+      <table mat-table [dataSource]="transferees">
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">{{ element.type.code === 'INDV' ? 'Individual' : 'Organization' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef>Full Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.displayName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="organizationName">
+          <th mat-header-cell *matHeaderCellDef>Organization Name</th>
+          <td mat-cell *matCellDef="let element">
+            @if (element.organizationName) {
+              <span>
+                {{ element.organizationName }}
+              </span>
+            }
+            @if (!element.organizationName) {
+              <span class="no-data"> Not Applicable </span>
+            }
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef>Phone</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.phoneNumber | mask: '(000) 000-0000' }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.email }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td class="actions-cell" mat-cell *matCellDef="let element">
+            <button mat-flat-button color="primary" (click)="onEdit(element.uuid)">Edit</button>
+            <button mat-stroked-button color="warn" (click)="onDelete(element.uuid)">Remove</button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="no-data" colspan="6">
+            No Transferee added. Use ‘Add New Transferee’ button to the right to add your first transferee.
+          </td>
+        </tr>
+      </table>
     </div>
-  </ng-container>
+  }
+  @if (isMobile) {
+    @for (transferee of transferees.slice(0, visibleCount); track transferee; let last = $last) {
+      <app-transferee-mobile-card
+        [transferee]="transferee"
+        [isLast]="last"
+        [isReviewStep]="false"
+        (editClicked)="onEdit(transferee.uuid)"
+        (removeClicked)="onDelete(transferee.uuid)"
+        >
+      </app-transferee-mobile-card>
+    }
+    @if (visibleCount < transferees.length) {
+      <div class="visible-count-container">
+        <a (click)="increaseVisibleCount()">See more transferees</a>
+      </div>
+    }
+  }
   <form [formGroup]="form">
     <div class="form-row">
       <div>
@@ -125,13 +130,17 @@
             matInput
             formControlName="hectares"
             placeholder="Type area in hectares"
-          />
+            />
           <span matTextSuffix>ha</span>
         </mat-form-field>
-        <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="hectares.errors?.['required']">This field is required</div>
-        </div>
+        @if (hectares.invalid && (hectares.dirty || hectares.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (hectares.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
       <div class="full-row">
         <label for="purpose">What is the purpose of the covenant?</label>
@@ -149,10 +158,14 @@
             placeholder="Type comment"
           ></textarea>
         </mat-form-field>
-        <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="purpose.errors?.['required']">This field is required</div>
-        </div>
+        @if (purpose.invalid && (purpose.dirty || purpose.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (purpose.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
         <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
       </div>
       <div class="full-row">
@@ -168,10 +181,14 @@
             placeholder="Type comment"
           ></textarea>
         </mat-form-field>
-        <div *ngIf="farmImpact.invalid && (farmImpact.dirty || farmImpact.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="farmImpact.errors?.['required']">This field is required</div>
-        </div>
+        @if (farmImpact.invalid && (farmImpact.dirty || farmImpact.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (farmImpact.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
         <div class="subtext">Characters left: {{ 4000 - farmImpactText.textLength }}</div>
       </div>
       <div class="full-row">
@@ -198,7 +215,7 @@
             (change)="onChangeHasDraftCopy($event.value)"
             id="hasDraftCopy"
             formControlName="hasDraftCopy"
-          >
+            >
             <mat-button-toggle
               class="toggle-button"
               [ngClass]="{
@@ -237,8 +254,12 @@
   </form>
 </section>
 <div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  @if (!draftMode) {
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  }
+  @if (draftMode) {
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  }
   <div>
     <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
       Previous<span class="mobile-hidden"> Step</span>

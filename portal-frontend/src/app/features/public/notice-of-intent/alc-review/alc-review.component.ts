@@ -4,9 +4,10 @@ import { PublicNoticeOfIntentSubmissionDto } from '../../../../services/public/p
 import { PublicDocumentDto } from '../../../../services/public/public.dto';
 
 @Component({
-  selector: 'app-public-alc-review',
-  templateUrl: './alc-review.component.html',
-  styleUrls: ['./alc-review.component.scss'],
+    selector: 'app-public-alc-review',
+    templateUrl: './alc-review.component.html',
+    styleUrls: ['./alc-review.component.scss'],
+    standalone: false
 })
 export class PublicAlcReviewComponent {
   @Input() submission!: PublicNoticeOfIntentSubmissionDto;

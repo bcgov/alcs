@@ -22,9 +22,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
 @Component({
-  selector: 'app-other-attachments',
-  templateUrl: './other-attachments.component.html',
-  styleUrls: ['./other-attachments.component.scss'],
+    selector: 'app-other-attachments',
+    templateUrl: './other-attachments.component.html',
+    styleUrls: ['./other-attachments.component.scss'],
+    standalone: false
 })
 export class OtherAttachmentsComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Attachments;

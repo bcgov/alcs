@@ -7,9 +7,10 @@ import { StepComponent } from '../step.partial';
 import { strictEmailValidator } from '../../../../shared/validators/email-validator';
 
 @Component({
-  selector: 'app-primary-contact',
-  templateUrl: './primary-contact.component.html',
-  styleUrls: ['./primary-contact.component.scss'],
+    selector: 'app-primary-contact',
+    templateUrl: './primary-contact.component.html',
+    styleUrls: ['./primary-contact.component.scss'],
+    standalone: false
 })
 export class PrimaryContactComponent extends StepComponent implements OnInit, OnDestroy {
   currentStep = EditNotificationSteps.PrimaryContact;

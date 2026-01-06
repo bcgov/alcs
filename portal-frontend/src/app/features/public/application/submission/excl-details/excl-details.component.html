@@ -1,52 +1,66 @@
-<div *ngIf="applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">The governmental or prescribed public body that is applying to exclude land</div>
-  <div class="grid-double">
-    {{ applicationSubmission.prescribedBody }}
+@if (applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">The governmental or prescribed public body that is applying to exclude land</div>
+    <div class="grid-double">
+      {{ applicationSubmission.prescribedBody }}
+    </div>
+    <div class="subheading2 grid-1">How many hectares are you proposing to exclude?</div>
+    <div class="grid-double">
+      {{ applicationSubmission.inclExclHectares }} @if (applicationSubmission.inclExclHectares) {
+      <span>ha</span>
+    }
+    @if (!applicationSubmission.inclExclHectares) {
+      <app-no-data></app-no-data>
+    }
   </div>
-
-  <div class="subheading2 grid-1">How many hectares are you proposing to exclude?</div>
-  <div class="grid-double">
-    {{ applicationSubmission.inclExclHectares }} <span *ngIf="applicationSubmission.inclExclHectares">ha</span>
-    <app-no-data *ngIf="!applicationSubmission.inclExclHectares"></app-no-data>
-  </div>
-
   <div class="subheading2 grid-1">
     Does any land under application share a common property line with land in another Local or First Nation Government?
   </div>
   <div class="grid-double">
-    <span *ngIf="applicationSubmission.exclShareGovernmentBorders !== null">
-      {{ applicationSubmission.exclShareGovernmentBorders ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data *ngIf="applicationSubmission.exclShareGovernmentBorders === null"></app-no-data>
+    @if (applicationSubmission.exclShareGovernmentBorders !== null) {
+      <span>
+        {{ applicationSubmission.exclShareGovernmentBorders ? 'Yes' : 'No' }}
+      </span>
+    }
+    @if (applicationSubmission.exclShareGovernmentBorders === null) {
+      <app-no-data></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ applicationSubmission.purpose }}
-    <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
+    @if (!applicationSubmission.purpose) {
+      <app-no-data></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Explain why you believe that the parcel(s) should be excluded from the ALR</div>
   <div class="grid-double">
     {{ applicationSubmission.exclWhyLand }}
-    <app-no-data *ngIf="!applicationSubmission.exclWhyLand"></app-no-data>
+    @if (!applicationSubmission.exclWhyLand) {
+      <app-no-data></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <ng-container *ngFor="let map of proposalMap">
+    @for (map of proposalMap; track map) {
       <a class="mobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
       <a class="desktop" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
-    </ng-container>
-    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+    }
+    @if (proposalMap.length === 0) {
+      <app-no-data></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Report of Public Hearing</div>
   <div class="grid-double">
-    <div *ngFor="let file of reportOfPublicHearing">
-      <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-      <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-    </div>
-    <app-no-data *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+    @for (file of reportOfPublicHearing; track file) {
+      <div>
+        <a class="mobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+        <a class="desktop" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+      </div>
+    }
+    @if (reportOfPublicHearing.length === 0) {
+      <app-no-data></app-no-data>
+    }
   </div>
 </div>
+}

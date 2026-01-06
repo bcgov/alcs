@@ -95,6 +95,7 @@ describe('AdditionalInformationComponent', () => {
     mockNoticeOfIntentSubmissionService = createMock();
     mockNoticeOfIntentDocumentService = createMock();
     mockDialog = createMock();
+    mockDialogService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [AdditionalInformationComponent],

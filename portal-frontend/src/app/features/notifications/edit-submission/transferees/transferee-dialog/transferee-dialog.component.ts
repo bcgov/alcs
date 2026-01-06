@@ -12,9 +12,10 @@ import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { strictEmailValidator } from '../../../../../shared/validators/email-validator';
 
 @Component({
-  selector: 'app-transferee-dialog',
-  templateUrl: './transferee-dialog.component.html',
-  styleUrls: ['./transferee-dialog.component.scss'],
+    selector: 'app-transferee-dialog',
+    templateUrl: './transferee-dialog.component.html',
+    styleUrls: ['./transferee-dialog.component.scss'],
+    standalone: false
 })
 export class TransfereeDialogComponent {
   OWNER_TYPE = OWNER_TYPE;

@@ -26,9 +26,10 @@ import { SelectGovernmentComponent } from '../edit-submission/select-government/
 import { ConfirmPublishDialogComponent } from './confirm-publish-dialog/confirm-publish-dialog.component';
 
 @Component({
-  selector: 'app-alcs-edit-submission',
-  templateUrl: './alcs-edit-submission.component.html',
-  styleUrls: ['./alcs-edit-submission.component.scss'],
+    selector: 'app-alcs-edit-submission',
+    templateUrl: './alcs-edit-submission.component.html',
+    styleUrls: ['./alcs-edit-submission.component.scss'],
+    standalone: false
 })
 export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit {
   fileId = '';

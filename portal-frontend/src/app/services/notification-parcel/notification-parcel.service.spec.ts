@@ -18,6 +18,7 @@ describe('NotificationParcelService', () => {
   beforeEach(() => {
     mockHttpClient = createMock();
     mockToastService = createMock();
+    mockDocumentService = createMock();
 
     TestBed.configureTestingModule({
       imports: [],

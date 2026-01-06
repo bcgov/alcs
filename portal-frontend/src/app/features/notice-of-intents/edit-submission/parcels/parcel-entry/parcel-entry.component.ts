@@ -39,9 +39,10 @@ export interface ParcelEntryFormData {
 }
 
 @Component({
-  selector: 'app-noi-parcel-entry[parcel][fileId][submissionUuid]',
-  templateUrl: './parcel-entry.component.html',
-  styleUrls: ['./parcel-entry.component.scss'],
+    selector: 'app-noi-parcel-entry[parcel][fileId][submissionUuid]',
+    templateUrl: './parcel-entry.component.html',
+    styleUrls: ['./parcel-entry.component.scss'],
+    standalone: false
 })
 export class ParcelEntryComponent implements OnInit {
   @Input() parcel!: NoticeOfIntentParcelDto;

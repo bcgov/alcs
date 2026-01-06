@@ -7,9 +7,10 @@ import {
 } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 
 @Component({
-  selector: 'app-alc-review',
-  templateUrl: './alc-review.component.html',
-  styleUrls: ['./alc-review.component.scss'],
+    selector: 'app-alc-review',
+    templateUrl: './alc-review.component.html',
+    styleUrls: ['./alc-review.component.scss'],
+    standalone: false
 })
 export class AlcReviewComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();

@@ -6,9 +6,10 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { MaintenanceService } from '../../services/maintenance/maintenance.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: false
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();

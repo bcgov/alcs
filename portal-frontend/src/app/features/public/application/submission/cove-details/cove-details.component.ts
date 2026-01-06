@@ -7,9 +7,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-cove-details',
-  templateUrl: './cove-details.component.html',
-  styleUrls: ['./cove-details.component.scss'],
+    selector: 'app-cove-details',
+    templateUrl: './cove-details.component.html',
+    styleUrls: ['./cove-details.component.scss'],
+    standalone: false
 })
 export class CoveDetailsComponent {
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;

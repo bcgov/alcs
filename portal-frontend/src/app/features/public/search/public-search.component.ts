@@ -40,9 +40,10 @@ const DECISION_MAP = {
 const SEARCH_SESSION_STORAGE_KEY = 'search';
 
 @Component({
-  selector: 'app-public',
-  templateUrl: './public-search.component.html',
-  styleUrls: ['./public-search.component.scss'],
+    selector: 'app-public',
+    templateUrl: './public-search.component.html',
+    styleUrls: ['./public-search.component.scss'],
+    standalone: false
 })
 export class PublicSearchComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
