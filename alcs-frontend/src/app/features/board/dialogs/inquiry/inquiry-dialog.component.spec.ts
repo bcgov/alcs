@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,7 @@ import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 import { InquiryDialogComponent } from './inquiry-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('InquiryDialogComponent', () => {
   let component: InquiryDialogComponent;
@@ -68,49 +69,48 @@ describe('InquiryDialogComponent', () => {
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [InquiryDialogComponent, MomentPipe],
-      providers: [
-        {
-          provide: MAT_DIALOG_DATA,
-          useValue: {
-            statusDetails: {
-              code: 'fake',
-            },
-          },
-        },
-        {
-          provide: UserService,
-          useValue: mockUserService,
-        },
-        {
-          provide: CardService,
-          useValue: {},
-        },
-        {
-          provide: BoardService,
-          useValue: mockBoardService,
-        },
-        {
-          provide: ToastService,
-          useValue: {},
-        },
-        {
-          provide: ConfirmationDialogService,
-          useValue: {},
-        },
-        { provide: MatDialogRef, useValue: mockDialogRef },
-        { provide: ConfirmationDialogService, useValue: {} },
-      ],
-      imports: [
-        HttpClientTestingModule,
-        MatDialogModule,
+    declarations: [InquiryDialogComponent, MomentPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule,
         MatSnackBarModule,
         FormsModule,
         MatMenuModule,
-        NgSelectModule,
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        NgSelectModule],
+    providers: [
+        {
+            provide: MAT_DIALOG_DATA,
+            useValue: {
+                statusDetails: {
+                    code: 'fake',
+                },
+            },
+        },
+        {
+            provide: UserService,
+            useValue: mockUserService,
+        },
+        {
+            provide: CardService,
+            useValue: {},
+        },
+        {
+            provide: BoardService,
+            useValue: mockBoardService,
+        },
+        {
+            provide: ToastService,
+            useValue: {},
+        },
+        {
+            provide: ConfirmationDialogService,
+            useValue: {},
+        },
+        { provide: MatDialogRef, useValue: mockDialogRef },
+        { provide: ConfirmationDialogService, useValue: {} },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(InquiryDialogComponent);
     component = fixture.componentInstance;

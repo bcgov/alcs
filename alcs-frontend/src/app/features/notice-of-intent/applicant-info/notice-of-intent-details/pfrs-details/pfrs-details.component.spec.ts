@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeepMocked } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NoiDocumentService } from '../../../../../services/notice-of-intent/noi-document/noi-document.service';
 
 import { PfrsDetailsComponent } from './pfrs-details.component';
@@ -11,6 +11,8 @@ describe('PfrsDetailsComponent', () => {
   let mockNoiDocumentService: DeepMocked<NoiDocumentService>;
 
   beforeEach(async () => {
+    mockNoiDocumentService = createMock();
+
     await TestBed.configureTestingModule({
       declarations: [PfrsDetailsComponent],
       providers: [

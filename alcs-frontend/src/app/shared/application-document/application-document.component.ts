@@ -7,9 +7,10 @@ import { ApplicationDocumentDto } from '../../services/application/application-d
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
 import { FILE_NAME_TRUNCATE_LENGTH } from '../constants';
 @Component({
-  selector: 'app-document[tableTitle][fileNumber][visibilityFlags]',
-  templateUrl: './application-document.component.html',
-  styleUrls: ['./application-document.component.scss'],
+    selector: 'app-document[tableTitle][fileNumber][visibilityFlags]',
+    templateUrl: './application-document.component.html',
+    styleUrls: ['./application-document.component.scss'],
+    standalone: false
 })
 export class ApplicationDocumentComponent implements OnChanges {
   @Input() tableTitle = '';

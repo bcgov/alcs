@@ -1,19 +1,27 @@
 <div class="inline-textarea-wrapper">
-  <span *ngIf="!isEditing">
-    <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
-    <span *ngIf="value">
-      {{ value }}
-      <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
-        <mat-icon class="edit-icon">edit</mat-icon>
-      </button>
+  @if (!isEditing) {
+    <span>
+      @if (!value) {
+        <a (click)="startEdit()" class="add"> Add text </a>
+      }
+      @if (value) {
+        <span>
+          {{ value }}
+          @if (value) {
+            <button class="edit-button" mat-icon-button (click)="startEdit()">
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </button>
+          }
+        </span>
+      }
     </span>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing,
     }"
-  >
+    >
     <textarea
       matInput
       class="editable"

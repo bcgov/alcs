@@ -19,9 +19,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 
 @Component({
-  selector: 'app-decision-v2',
-  templateUrl: './decision.component.html',
-  styleUrls: ['./decision.component.scss'],
+    selector: 'app-decision-v2',
+    templateUrl: './decision.component.html',
+    styleUrls: ['./decision.component.scss'],
+    standalone: false
 })
 export class DecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

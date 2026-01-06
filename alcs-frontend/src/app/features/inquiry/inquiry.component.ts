@@ -38,9 +38,10 @@ export const childRoutes = [
 ];
 
 @Component({
-  selector: 'app-inquiry',
-  templateUrl: './inquiry.component.html',
-  styleUrls: ['./inquiry.component.scss'],
+    selector: 'app-inquiry',
+    templateUrl: './inquiry.component.html',
+    styleUrls: ['./inquiry.component.scss'],
+    standalone: false
 })
 export class InquiryComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

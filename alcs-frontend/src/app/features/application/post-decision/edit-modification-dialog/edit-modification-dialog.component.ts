@@ -11,9 +11,10 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
 @Component({
-  selector: 'app-edit-reconsideration-dialog',
-  templateUrl: './edit-modification-dialog.component.html',
-  styleUrls: ['./edit-modification-dialog.component.scss'],
+    selector: 'app-edit-reconsideration-dialog',
+    templateUrl: './edit-modification-dialog.component.html',
+    styleUrls: ['./edit-modification-dialog.component.scss'],
+    standalone: false
 })
 export class EditModificationDialogComponent implements OnInit {
   decisions: { uuid: string; resolution: string }[] = [];

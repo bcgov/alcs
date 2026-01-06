@@ -16,9 +16,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-documents',
-  templateUrl: './documents.component.html',
-  styleUrls: ['./documents.component.scss'],
+    selector: 'app-compliance-and-enforcement-documents',
+    templateUrl: './documents.component.html',
+    styleUrls: ['./documents.component.scss'],
+    standalone: false
 })
 export class ComplianceAndEnforcementDocumentsComponent implements OnDestroy {
   $destroy = new Subject<void>();

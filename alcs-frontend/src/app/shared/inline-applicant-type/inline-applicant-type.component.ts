@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-inline-applicant-type',
-  templateUrl: './inline-applicant-type.component.html',
-  styleUrls: ['./inline-applicant-type.component.scss'],
+    selector: 'app-inline-applicant-type',
+    templateUrl: './inline-applicant-type.component.html',
+    styleUrls: ['./inline-applicant-type.component.scss'],
+    standalone: false
 })
 export class InlineApplicantTypeComponent implements OnInit {
   @Input() selectedValue?: string | null;

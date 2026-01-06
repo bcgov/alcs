@@ -5,9 +5,10 @@ import { ApplicationSubmissionService } from '../../../../services/application/a
 import { ApplicationSubmissionDto, ProposedLot } from '../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-proposal-subd',
-  templateUrl: './subd.component.html',
-  styleUrls: ['./sub.dcomponent.scss'],
+    selector: 'app-proposal-subd',
+    templateUrl: './subd.component.html',
+    styleUrls: ['./sub.dcomponent.scss'],
+    standalone: false
 })
 export class SubdProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

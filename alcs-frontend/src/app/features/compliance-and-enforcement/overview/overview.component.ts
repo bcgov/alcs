@@ -10,9 +10,10 @@ import moment, { Moment } from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
+    selector: 'app-compliance-and-enforcement-overview',
+    templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.scss'],
+    standalone: false
 })
 export class OverviewComponent implements OnDestroy {
   $destroy = new Subject<void>();

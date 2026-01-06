@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TagDto } from '../../../services/tag/tag.dto';
 
 @Component({
-  selector: 'app-tag-chip',
-  templateUrl: './tag-chip.component.html',
-  styleUrl: './tag-chip.component.scss',
+    selector: 'app-tag-chip',
+    templateUrl: './tag-chip.component.html',
+    styleUrl: './tag-chip.component.scss',
+    standalone: false
 })
 export class TagChipComponent {
   @Input() tag!: TagDto;

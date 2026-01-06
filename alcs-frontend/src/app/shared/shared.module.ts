@@ -31,7 +31,7 @@ import { RouterModule } from '@angular/router';
 import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { DatetimeAdapter, MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
-import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
+import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
@@ -159,6 +159,7 @@ import { DocumentFileLoader } from './document-file-loader/document-file-loader.
     MatDatepickerModule,
     MatDialogModule,
     NgSelectModule,
+    NgOptionHighlightDirective,
     MatSlideToggleModule,
     MatChipsModule,
     MatAutocompleteModule,
@@ -170,7 +171,7 @@ import { DocumentFileLoader } from './document-file-loader/document-file-loader.
     FormsModule,
     HttpClientModule,
     NgSelectModule,
-    NgOptionHighlightModule,
+    NgOptionHighlightDirective,
     MatButtonModule,
     ReactiveFormsModule,
     MatFormFieldModule,

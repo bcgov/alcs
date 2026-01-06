@@ -12,9 +12,10 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-intake',
-  templateUrl: './intake.component.html',
-  styleUrls: ['./intake.component.scss'],
+    selector: 'app-intake',
+    templateUrl: './intake.component.html',
+    styleUrls: ['./intake.component.scss'],
+    standalone: false
 })
 export class IntakeComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

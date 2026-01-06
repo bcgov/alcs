@@ -24,9 +24,10 @@ const DOCUMENT_UPLOAD_DIALOG_OPTIONS: DocumentUploadDialogOptions = {
 };
 
 @Component({
-  selector: 'app-notification-documents',
-  templateUrl: './documents.component.html',
-  styleUrls: ['./documents.component.scss'],
+    selector: 'app-notification-documents',
+    templateUrl: './documents.component.html',
+    styleUrls: ['./documents.component.scss'],
+    standalone: false
 })
 export class NotificationDocumentsComponent implements OnInit {
   displayedColumns: string[] = ['source', 'type', 'fileName', 'visibilityFlags', 'uploadedAt', 'actions'];

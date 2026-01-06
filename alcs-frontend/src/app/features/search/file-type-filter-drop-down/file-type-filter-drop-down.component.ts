@@ -12,9 +12,10 @@ import { PortalStatusDataSourceService } from '../../../services/search/portal-s
 import { DecisionOutcomeDataSourceService } from '../../../services/search/decision-outcome/decision-outcome-data-source.service';
 
 @Component({
-  selector: 'app-file-type-filter-drop-down[fileTypeData]',
-  templateUrl: './file-type-filter-drop-down.component.html',
-  styleUrls: ['./file-type-filter-drop-down.component.scss'],
+    selector: 'app-file-type-filter-drop-down[fileTypeData]',
+    templateUrl: './file-type-filter-drop-down.component.html',
+    styleUrls: ['./file-type-filter-drop-down.component.scss'],
+    standalone: false
 })
 export class FileTypeFilterDropDownComponent implements OnInit {
   hasItemsSelected = false;

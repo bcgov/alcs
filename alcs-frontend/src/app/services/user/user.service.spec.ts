@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AuthenticationService, ICurrentUser } from '../authentication/authentication.service';
 
 import { UserService } from './user.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('UserService', () => {
   let service: UserService;
@@ -16,14 +17,16 @@ describe('UserService', () => {
     mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      providers: [
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: AuthenticationService,
-          useValue: mockAuthService,
+            provide: AuthenticationService,
+            useValue: mockAuthService,
         },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(UserService);
   });
 

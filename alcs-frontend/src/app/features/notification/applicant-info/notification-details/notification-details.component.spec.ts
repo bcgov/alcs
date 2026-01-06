@@ -24,6 +24,7 @@ describe('NotificationDetailsComponent', () => {
   beforeEach(async () => {
     mockDocumentService = createMock();
     mockRouter = createMock();
+    mockToastService = createMock();
     mockSubmissionService = createMock();
 
     await TestBed.configureTestingModule({

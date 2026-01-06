@@ -15,9 +15,10 @@ export type ApplicationMeetingForm = {
 };
 
 @Component({
-  selector: 'app-application-meeting-dialog',
-  templateUrl: './application-meeting-dialog.component.html',
-  styleUrls: ['./application-meeting-dialog.component.scss'],
+    selector: 'app-application-meeting-dialog',
+    templateUrl: './application-meeting-dialog.component.html',
+    styleUrls: ['./application-meeting-dialog.component.scss'],
+    standalone: false
 })
 export class ApplicationMeetingDialogComponent {
   isLoading = false;

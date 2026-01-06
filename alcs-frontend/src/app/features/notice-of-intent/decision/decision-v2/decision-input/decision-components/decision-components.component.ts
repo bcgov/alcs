@@ -32,9 +32,10 @@ export type DecisionComponentTypeMenuItem = NoticeOfIntentDecisionComponentTypeD
 };
 
 @Component({
-  selector: 'app-decision-components',
-  templateUrl: './decision-components.component.html',
-  styleUrls: ['./decision-components.component.scss'],
+    selector: 'app-decision-components',
+    templateUrl: './decision-components.component.html',
+    styleUrls: ['./decision-components.component.scss'],
+    standalone: false
 })
 export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();

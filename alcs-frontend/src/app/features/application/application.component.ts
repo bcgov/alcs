@@ -174,16 +174,17 @@ export const appChildRoutes = [
 ];
 
 @Component({
-  selector: 'app-application',
-  templateUrl: './application.component.html',
-  styleUrls: ['./application.component.scss'],
-  providers: [
-    { provide: FileTagService, useClass: ApplicationTagService },
-    {
-      provide: DecisionConditionFinancialInstrumentService,
-      useClass: ApplicationDecisionConditionFinancialInstrumentService,
-    },
-  ],
+    selector: 'app-application',
+    templateUrl: './application.component.html',
+    styleUrls: ['./application.component.scss'],
+    providers: [
+        { provide: FileTagService, useClass: ApplicationTagService },
+        {
+            provide: DecisionConditionFinancialInstrumentService,
+            useClass: ApplicationDecisionConditionFinancialInstrumentService,
+        },
+    ],
+    standalone: false
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

@@ -7,9 +7,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { DecisionMakerDialogComponent } from './decision-maker-dialog/decision-maker-dialog.component';
 
 @Component({
-  selector: 'app-decision-maker',
-  templateUrl: './decision-maker.component.html',
-  styleUrls: ['./decision-maker.component.scss'],
+    selector: 'app-decision-maker',
+    templateUrl: './decision-maker.component.html',
+    styleUrls: ['./decision-maker.component.scss'],
+    standalone: false
 })
 export class DecisionMakerComponent implements OnInit {
   destroy = new Subject<void>();

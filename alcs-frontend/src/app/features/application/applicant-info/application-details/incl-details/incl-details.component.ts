@@ -5,9 +5,10 @@ import { ApplicationDocumentDto } from '../../../../../services/application/appl
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-incl-details',
-  templateUrl: './incl-details.component.html',
-  styleUrls: ['./incl-details.component.scss'],
+    selector: 'app-incl-details',
+    templateUrl: './incl-details.component.html',
+    styleUrls: ['./incl-details.component.scss'],
+    standalone: false
 })
 export class InclDetailsComponent {
   _applicationSubmission: ApplicationSubmissionDto | undefined;

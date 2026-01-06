@@ -13,7 +13,7 @@
           label: 'Info Request'
         })
       "
-    >
+      >
       + New Request
     </button>
   </div>
@@ -28,15 +28,17 @@
   <ng-container matColumnDef="endDate">
     <th mat-header-cell *matHeaderCellDef>Date Fulfilled</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.meetingEndDate">{{ element.meetingEndDate | momentFormat }}</ng-container>
-      <ng-container *ngIf="!element.meetingEndDate">
+      @if (element.meetingEndDate) {
+        {{ element.meetingEndDate | momentFormat }}
+      }
+      @if (!element.meetingEndDate) {
         <app-inline-datepicker
           class="date-picker"
           [value]="undefined"
           [min]="element.meetingStartDate | startOfDay"
           (save)="onSaveEndDate(element.uuid, $event)"
         ></app-inline-datepicker>
-      </ng-container>
+      }
     </td>
   </ng-container>
 

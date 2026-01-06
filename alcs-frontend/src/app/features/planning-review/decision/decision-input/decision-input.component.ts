@@ -16,9 +16,10 @@ import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
 @Component({
-  selector: 'app-decision-input',
-  templateUrl: './decision-input.component.html',
-  styleUrls: ['./decision-input.component.scss'],
+    selector: 'app-decision-input',
+    templateUrl: './decision-input.component.html',
+    styleUrls: ['./decision-input.component.scss'],
+    standalone: false
 })
 export class DecisionInputComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

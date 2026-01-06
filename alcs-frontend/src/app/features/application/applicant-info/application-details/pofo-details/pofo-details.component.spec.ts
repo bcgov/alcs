@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeepMocked } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 
 import { PofoDetailsComponent } from './pofo-details.component';
@@ -10,6 +10,8 @@ describe('RosoDetailsComponent', () => {
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
+    mockAppDocumentService = createMock();
+
     await TestBed.configureTestingModule({
       declarations: [PofoDetailsComponent],
       providers: [

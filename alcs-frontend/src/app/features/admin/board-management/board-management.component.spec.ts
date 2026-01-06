@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { BoardService, BoardWithFavourite } from '../../../services/board/board.
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { BoardManagementComponent } from './board-management.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('BoardManagementComponent', () => {
   let component: BoardManagementComponent;
@@ -29,28 +30,30 @@ describe('BoardManagementComponent', () => {
     mockBoardService.$boards = new BehaviorSubject<BoardWithFavourite[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [BoardManagementComponent],
-      providers: [
+    declarations: [BoardManagementComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: BoardService,
-          useValue: mockBoardService,
+            provide: BoardService,
+            useValue: mockBoardService,
         },
         {
-          provide: AdminBoardManagementService,
-          useValue: mockBoardAdminService,
+            provide: AdminBoardManagementService,
+            useValue: mockBoardAdminService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(BoardManagementComponent);
     component = fixture.componentInstance;

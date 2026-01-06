@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-inline-button-toggle[selectedValue][options]',
-  templateUrl: './inline-button-toggle.component.html',
-  styleUrls: ['./inline-button-toggle.component.scss'],
+    selector: 'app-inline-button-toggle[selectedValue][options]',
+    templateUrl: './inline-button-toggle.component.html',
+    styleUrls: ['./inline-button-toggle.component.scss'],
+    standalone: false
 })
 export class InlineButtonToggleComponent implements OnInit {
   @Input() selectedValue?: string | null;

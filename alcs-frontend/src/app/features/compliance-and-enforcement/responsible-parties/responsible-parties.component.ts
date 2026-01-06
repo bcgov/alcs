@@ -17,9 +17,10 @@ import { strictEmailValidator } from '../../../shared/validators/email-validator
 import { C_E_AUTOSAVE_DEBOUNCE_MS } from '../constants';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-responsible-parties',
-  templateUrl: './responsible-parties.component.html',
-  styleUrls: ['./responsible-parties.component.scss'],
+    selector: 'app-compliance-and-enforcement-responsible-parties',
+    templateUrl: './responsible-parties.component.html',
+    styleUrls: ['./responsible-parties.component.scss'],
+    standalone: false
 })
 export class ResponsiblePartiesComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

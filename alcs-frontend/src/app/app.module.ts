@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
@@ -41,14 +41,12 @@ import { SharedModule } from './shared/shared.module';
     { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedInterceptor, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
     provideEnvironmentNgxMask(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (service: TokenRefreshService) => () => {
+    provideAppInitializer(() => {
+        const initializerFn = ((service: TokenRefreshService) => () => {
         return service.init();
-      },
-      deps: [TokenRefreshService],
-      multi: true,
-    },
+      })(inject(TokenRefreshService));
+        return initializerFn();
+      }),
   ],
   bootstrap: [AppComponent],
 })

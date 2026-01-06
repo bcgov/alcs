@@ -25,9 +25,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-complaint-referral',
-  templateUrl: './complaint-referral.component.html',
-  styleUrls: ['./complaint-referral.component.scss'],
+    selector: 'app-complaint-referral',
+    templateUrl: './complaint-referral.component.html',
+    styleUrls: ['./complaint-referral.component.scss'],
+    standalone: false
 })
 export class ComplaintReferralComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

@@ -1,24 +1,34 @@
 <div class="assignee">
   <h4>{{ subtaskLabel }} Subtasks: {{ totalSubtaskCount }}</h4>
 
-  <section *ngIf="noticeOfIntentSubtasks.length && showNoi">
-    <div class="subheading2">Notices of Intent</div>
-    <app-subtask-table [subtasks]="noticeOfIntentSubtasks" [users]="users"></app-subtask-table>
-  </section>
-  <section *ngIf="applicationSubtasks.length && showAppAndNonApp">
-    <div class="subheading2">Applications</div>
-    <app-subtask-table [subtasks]="applicationSubtasks" [users]="users"></app-subtask-table>
-  </section>
-  <section *ngIf="planningReviewSubtasks.length && showAppAndNonApp">
-    <div class="subheading2">Planning Reviews</div>
-    <app-subtask-table [subtasks]="planningReviewSubtasks" [users]="users"></app-subtask-table>
-  </section>
-  <section *ngIf="inquirySubtasks.length">
-    <div class="subheading2">Inquiries</div>
-    <app-subtask-table [subtasks]="inquirySubtasks" [users]="users"></app-subtask-table>
-  </section>
-  <section *ngIf="notificationSubtasks.length">
-    <div class="subheading2">Notifications</div>
-    <app-subtask-table [subtasks]="notificationSubtasks" [users]="users"></app-subtask-table>
-  </section>
+  @if (noticeOfIntentSubtasks.length && showNoi) {
+    <section>
+      <div class="subheading2">Notices of Intent</div>
+      <app-subtask-table [subtasks]="noticeOfIntentSubtasks" [users]="users"></app-subtask-table>
+    </section>
+  }
+  @if (applicationSubtasks.length && showAppAndNonApp) {
+    <section>
+      <div class="subheading2">Applications</div>
+      <app-subtask-table [subtasks]="applicationSubtasks" [users]="users"></app-subtask-table>
+    </section>
+  }
+  @if (planningReviewSubtasks.length && showAppAndNonApp) {
+    <section>
+      <div class="subheading2">Planning Reviews</div>
+      <app-subtask-table [subtasks]="planningReviewSubtasks" [users]="users"></app-subtask-table>
+    </section>
+  }
+  @if (inquirySubtasks.length) {
+    <section>
+      <div class="subheading2">Inquiries</div>
+      <app-subtask-table [subtasks]="inquirySubtasks" [users]="users"></app-subtask-table>
+    </section>
+  }
+  @if (notificationSubtasks.length) {
+    <section>
+      <div class="subheading2">Notifications</div>
+      <app-subtask-table [subtasks]="notificationSubtasks" [users]="users"></app-subtask-table>
+    </section>
+  }
 </div>

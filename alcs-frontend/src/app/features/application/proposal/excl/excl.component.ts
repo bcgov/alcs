@@ -5,9 +5,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDto, UpdateApplicationDto } from '../../../../services/application/application.dto';
 
 @Component({
-  selector: 'app-proposal-excl',
-  templateUrl: './excl.component.html',
-  styleUrls: ['./excl.component.scss'],
+    selector: 'app-proposal-excl',
+    templateUrl: './excl.component.html',
+    styleUrls: ['./excl.component.scss'],
+    standalone: false
 })
 export class ExclProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

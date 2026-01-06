@@ -27,9 +27,10 @@ type LoadingModifications = ApplicationModificationDto & {
   canBeDeleted: boolean;
 };
 @Component({
-  selector: 'app-post-decision',
-  templateUrl: './post-decision.component.html',
-  styleUrls: ['./post-decision.component.scss'],
+    selector: 'app-post-decision',
+    templateUrl: './post-decision.component.html',
+    styleUrls: ['./post-decision.component.scss'],
+    standalone: false
 })
 export class PostDecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

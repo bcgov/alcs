@@ -11,9 +11,10 @@ import { strictEmailValidator } from '../../../../../shared/validators/email-val
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-release-dialog',
-  templateUrl: './release-dialog.component.html',
-  styleUrls: ['./release-dialog.component.scss'],
+    selector: 'app-release-dialog',
+    templateUrl: './release-dialog.component.html',
+    styleUrls: ['./release-dialog.component.scss'],
+    standalone: false
 })
 export class ReleaseDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

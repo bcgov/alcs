@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'booleanToString',
+    name: 'booleanToString',
+    standalone: false
 })
 export class BooleanToStringPipe implements PipeTransform {
   transform(value: boolean | undefined | null): string {

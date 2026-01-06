@@ -9,7 +9,8 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConditionCardDialogComponent', () => {
   let component: ConditionCardDialogComponent;
@@ -24,16 +25,18 @@ describe('ConditionCardDialogComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [ConditionCardDialogComponent],
-      imports: [MatDialogModule, BrowserAnimationsModule, MatTableModule, MatSortModule, HttpClientTestingModule],
-      providers: [
+    declarations: [ConditionCardDialogComponent],
+    imports: [MatDialogModule, BrowserAnimationsModule, MatTableModule, MatSortModule],
+    providers: [
         { provide: MAT_DIALOG_DATA, useValue: { conditions: [], decision: 'decision-uuid' } },
         { provide: MatDialogRef, useValue: {} },
         { provide: NoticeOfIntentDecisionConditionCardService, useValue: mockDecisionConditionCardService },
         { provide: BoardService, useValue: mockBoardService },
         { provide: ToastService, useValue: mockToastService },
-      ],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ConditionCardDialogComponent);
     component = fixture.componentInstance;

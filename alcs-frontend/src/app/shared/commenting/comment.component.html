@@ -1,25 +1,39 @@
-<div *ngIf="comment" class="comment">
-  <div class="body">
-    <div class="made-by button-text">{{ comment.author }}</div>
-    <div *ngIf="isEditing">
-      <app-mention-textarea
-        [comment]="comment"
-        (cancel)="onCancel()"
-        (save)="onSave($event)"
-        labelText="Edit comment"
-        [notificationTitle]='notificationTitle'
-      ></app-mention-textarea>
-    </div>
-    <div *ngIf="!isEditing" class="content body-text" [innerHtml]="highlightMentions(comment.body)"></div>
-    <div class="footer" *ngIf="!isEditing">
-      <div class="edited">
-        {{ commentDate }}
-        <span *ngIf="comment.edited">&nbsp;(edited)</span>
-      </div>
-      <div>
-        <button *ngIf="comment.isEditable" (click)="onDelete()" mat-button>Delete</button>
-        <button *ngIf="comment.isEditable" (click)="onEdit()" mat-button>Edit</button>
-      </div>
+@if (comment) {
+  <div class="comment">
+    <div class="body">
+      <div class="made-by button-text">{{ comment.author }}</div>
+      @if (isEditing) {
+        <div>
+          <app-mention-textarea
+            [comment]="comment"
+            (cancel)="onCancel()"
+            (save)="onSave($event)"
+            labelText="Edit comment"
+            [notificationTitle]='notificationTitle'
+          ></app-mention-textarea>
+        </div>
+      }
+      @if (!isEditing) {
+        <div class="content body-text" [innerHtml]="highlightMentions(comment.body)"></div>
+      }
+      @if (!isEditing) {
+        <div class="footer">
+          <div class="edited">
+            {{ commentDate }}
+            @if (comment.edited) {
+              <span>&nbsp;(edited)</span>
+            }
+          </div>
+          <div>
+            @if (comment.isEditable) {
+              <button (click)="onDelete()" mat-button>Delete</button>
+            }
+            @if (comment.isEditable) {
+              <button (click)="onEdit()" mat-button>Edit</button>
+            }
+          </div>
+        </div>
+      }
     </div>
   </div>
-</div>
+}

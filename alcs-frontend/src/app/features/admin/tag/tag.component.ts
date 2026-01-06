@@ -9,9 +9,10 @@ import { PageEvent } from '@angular/material/paginator';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-tag',
-  templateUrl: './tag.component.html',
-  styleUrls: ['./tag.component.scss'],
+    selector: 'app-tag',
+    templateUrl: './tag.component.html',
+    styleUrls: ['./tag.component.scss'],
+    standalone: false
 })
 export class TagComponent implements OnInit {
   destroy = new Subject<void>();

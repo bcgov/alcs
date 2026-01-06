@@ -7,9 +7,10 @@ import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice
 import { DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-noi-details',
-  templateUrl: './notice-of-intent-details.component.html',
-  styleUrls: ['./notice-of-intent-details.component.scss'],
+    selector: 'app-noi-details',
+    templateUrl: './notice-of-intent-details.component.html',
+    styleUrls: ['./notice-of-intent-details.component.scss'],
+    standalone: false
 })
 export class NoticeOfIntentDetailsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();

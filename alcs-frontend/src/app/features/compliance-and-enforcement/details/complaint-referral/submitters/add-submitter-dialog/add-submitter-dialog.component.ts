@@ -8,9 +8,10 @@ import { firstValueFrom } from 'rxjs';
 import { InitialSubmissionType } from '../../../../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 
 @Component({
-  selector: 'app-add-submitter-dialog',
-  templateUrl: './add-submitter-dialog.component.html',
-  styleUrls: ['./add-submitter-dialog.component.scss'],
+    selector: 'app-add-submitter-dialog',
+    templateUrl: './add-submitter-dialog.component.html',
+    styleUrls: ['./add-submitter-dialog.component.scss'],
+    standalone: false
 })
 export class AddSubmitterDialogComponent {
   isSaving = false;

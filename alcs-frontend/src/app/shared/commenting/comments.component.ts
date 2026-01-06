@@ -6,9 +6,10 @@ import { UserService } from '../../services/user/user.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-comments[cardUuid]',
-  templateUrl: './comments.component.html',
-  styleUrls: ['./comments.component.scss'],
+    selector: 'app-comments[cardUuid]',
+    templateUrl: './comments.component.html',
+    styleUrls: ['./comments.component.scss'],
+    standalone: false
 })
 export class CommentsComponent implements OnInit {
   @Input() cardUuid: string = '';

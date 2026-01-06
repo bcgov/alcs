@@ -29,9 +29,10 @@ export type TempApplicationDecisionConditionDto = UpdateApplicationDecisionCondi
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
 
 @Component({
-  selector: 'app-app-decision-conditions',
-  templateUrl: './decision-conditions.component.html',
-  styleUrls: ['./decision-conditions.component.scss'],
+    selector: 'app-app-decision-conditions',
+    templateUrl: './decision-conditions.component.html',
+    styleUrls: ['./decision-conditions.component.scss'],
+    standalone: false
 })
 export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();

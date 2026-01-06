@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { ApplicationDetailService } from '../../../../services/application/appli
 import { MomentPipe } from '../../../../shared/pipes/moment.pipe';
 
 import { DecisionMeetingDialogComponent } from './decision-meeting-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DecisionMeetingDialogComponent', () => {
   let component: DecisionMeetingDialogComponent;
@@ -16,22 +17,24 @@ describe('DecisionMeetingDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DecisionMeetingDialogComponent, MomentPipe],
-      providers: [
+    declarations: [DecisionMeetingDialogComponent, MomentPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule, MatSnackBarModule, FormsModule],
+    providers: [
         {
-          provide: ApplicationDecisionMeetingService,
-          useValue: {},
+            provide: ApplicationDecisionMeetingService,
+            useValue: {},
         },
         {
-          provide: ApplicationDetailService,
-          useValue: {},
+            provide: ApplicationDetailService,
+            useValue: {},
         },
         { provide: MAT_DIALOG_DATA, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
-      ],
-      imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DecisionMeetingDialogComponent);
     component = fixture.componentInstance;

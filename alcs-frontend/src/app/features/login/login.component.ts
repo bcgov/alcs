@@ -4,8 +4,9 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-login',
-  template: '<div></div>',
+    selector: 'app-login',
+    template: '<div></div>',
+    standalone: false
 })
 export class LoginComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService, private router: Router) {}

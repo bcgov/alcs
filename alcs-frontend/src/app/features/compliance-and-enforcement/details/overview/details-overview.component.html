@@ -2,26 +2,31 @@
   <h5>Status</h5>
 
   <div class="toggle-container">
-    <div *ngIf="!isEditingStatus" class="status-display">
-      <a *ngIf="!status.value" (click)="startEdit()" class="add">Set status</a>
-      <span>
-        {{ status.value }}
-      </span>
-      <button *ngIf="status.value" class="edit-button" mat-icon-button (click)="startEdit()">
-        <mat-icon class="edit-icon">edit</mat-icon>
-      </button>
-    </div>
+    @if (!isEditingStatus) {
+      <div class="status-display">
+        @if (!status.value) {
+          <a (click)="startEdit()" class="add">Set status</a>
+        }
+        <span>
+          {{ status.value }}
+        </span>
+        @if (status.value) {
+          <button class="edit-button" mat-icon-button (click)="startEdit()">
+            <mat-icon class="edit-icon">edit</mat-icon>
+          </button>
+        }
+      </div>
+    }
 
-    <ng-container *ngIf="isEditingStatus">
+    @if (isEditingStatus) {
       <mat-button-toggle-group [formControl]="status">
         <mat-button-toggle value="Open">Open</mat-button-toggle>
         <mat-button-toggle value="Closed">Closed</mat-button-toggle>
       </mat-button-toggle-group>
-
       <div class="button-container">
         <button mat-button (click)="endEdit()">Cancel</button>
         <button mat-button class="save" (click)="saveStatus()">Save</button>
       </div>
-    </ng-container>
+    }
   </div>
 </section>

@@ -41,9 +41,10 @@ export const ownershipDocumentOptions: DocumentUploadDialogData = {
 };
 
 @Component({
-  selector: 'app-responsible-parties-details',
-  templateUrl: './responsible-parties.component.html',
-  styleUrls: ['./responsible-parties.component.scss'],
+    selector: 'app-responsible-parties-details',
+    templateUrl: './responsible-parties.component.html',
+    styleUrls: ['./responsible-parties.component.scss'],
+    standalone: false
 })
 export class ResponsiblePartiesDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

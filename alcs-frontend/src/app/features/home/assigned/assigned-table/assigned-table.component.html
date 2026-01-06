@@ -2,7 +2,9 @@
   <ng-container matColumnDef="highPriority">
     <th class='high-priority-cell' mat-header-cell *matHeaderCellDef></th>
     <td class='high-priority-cell' mat-cell *matCellDef="let element">
-      <span class="high-priority" *ngIf="element.highPriority">!</span>
+      @if (element.highPriority) {
+        <span class="high-priority">!</span>
+      }
     </td>
   </ng-container>
 
@@ -16,11 +18,15 @@
   <ng-container matColumnDef="type">
     <th class='type-cell' mat-header-cell *matHeaderCellDef>Type</th>
     <td mat-cell class="type-cell" *matCellDef="let element">
-      <ng-container *ngIf="element.labels.length === 0" class="center">
-        -
-      </ng-container>
-      <app-application-type-pill *ngFor="let type of element.labels" [type]="type" [useShortLabel]="true">
-      </app-application-type-pill>
+      @if (element.labels.length === 0) {
+        <ng-container class="center">
+          -
+        </ng-container>
+      }
+      @for (type of element.labels; track type) {
+        <app-application-type-pill [type]="type" [useShortLabel]="true">
+        </app-application-type-pill>
+      }
     </td>
   </ng-container>
 

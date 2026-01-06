@@ -14,9 +14,10 @@ import { ApplicationMeetingDialogComponent } from './application-meeting-dialog/
 import { CreateApplicationMeetingDialogComponent } from './create-application-meeting-dialog/create-application-meeting-dialog.component';
 
 @Component({
-  selector: 'app-create-application-meeting',
-  templateUrl: './application-meeting.component.html',
-  styleUrls: ['./application-meeting.component.scss'],
+    selector: 'app-create-application-meeting',
+    templateUrl: './application-meeting.component.html',
+    styleUrls: ['./application-meeting.component.scss'],
+    standalone: false
 })
 export class ApplicationMeetingComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
