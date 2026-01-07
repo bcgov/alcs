@@ -1,5 +1,5 @@
 ###### Install dependencies only when needed ######
-FROM node:24 AS build
+FROM node:24-alpine AS build
 
 # Make /app as working directory
 WORKDIR /app
