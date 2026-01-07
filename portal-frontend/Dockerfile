@@ -41,7 +41,7 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 RUN chmod -R go+rwx /etc/nginx
 
 # Copy dist folder fro build stage to nginx public folder
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/browser /usr/share/nginx/html
 
 # Dynamically update environment values
 RUN chmod -R go+rwx /usr/share/nginx/html/assets
