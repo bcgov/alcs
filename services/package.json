@@ -79,6 +79,7 @@
   },
   "devDependencies": {
     "@golevelup/nestjs-testing": "^0.1.2",
+    "@nestjs/cli": "^11.0.14",
     "@nestjs/schematics": "^10.2.3",
     "@nestjs/testing": "^10.4.20",
     "@types/config": "^3.3.4",
