@@ -79,7 +79,6 @@
   },
   "devDependencies": {
     "@golevelup/nestjs-testing": "^0.1.2",
-    "@nestjs/cli": "^10.4.9",
     "@nestjs/schematics": "^10.2.3",
     "@nestjs/testing": "^10.4.20",
     "@types/config": "^3.3.4",
@@ -137,7 +136,9 @@
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
-    "coverageReporters": ["lcov"],
+    "coverageReporters": [
+      "lcov"
+    ],
     "roots": [
       "<rootDir>/apps/",
       "<rootDir>/libs/"
