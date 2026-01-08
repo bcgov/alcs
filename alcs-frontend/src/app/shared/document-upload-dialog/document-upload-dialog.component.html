@@ -136,7 +136,7 @@
         </mat-form-field>
       </div>
     }
-    @if (type.value !== DOCUMENT_TYPE.CERTIFICATE_OF_TITLE && type.value !== DOCUMENT_TYPE.SURVEY_PLAN && !data.fixedParcel && selectableParcels) {
+    @if (type.value !== DOCUMENT_TYPE.CERTIFICATE_OF_TITLE && type.value !== DOCUMENT_TYPE.SURVEY_PLAN && !data.fixedParcel && selectableParcels && selectableParcels.length > 0) {
       <div>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Associated Parcel</mat-label>
