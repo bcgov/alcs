@@ -25,8 +25,8 @@ export class PrimaryContactPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.yesButton = page.getByRole('button', { name: 'Yes', exact: true });
-    this.noButton = page.getByRole('button', { name: 'No', exact: true });
+    this.yesButton = page.getByRole('radio', { name: 'Yes', exact: true });
+    this.noButton = page.getByRole('radio', { name: 'No', exact: true });
     this.firstNameTextbox = page.getByPlaceholder('Enter First Name');
     this.lastNameTextbox = page.getByPlaceholder('Enter Last Name');
     this.organizationTextbox = page.getByPlaceholder('Enter Organization Name');
@@ -36,9 +36,9 @@ export class PrimaryContactPage {
 
   async setPrimaryContactType(type: PrimaryContactType) {
     if (type === PrimaryContactType.ThirdParty) {
-      await this.noButton.click();
+      await this.noButton.check();
     } else {
-      await this.yesButton.click();
+      await this.yesButton.check();
     }
   }
 

@@ -4,7 +4,8 @@
     matTooltip="Search by File ID or Advanced Search"
     type="button"
     (click)="toggleInput()"
-    >
+    data-testid="search-button"
+  >
     <mat-icon class="icon">search</mat-icon>
   </button>
 }
@@ -19,7 +20,7 @@
           [(ngModel)]="searchText"
           matInput
           placeholder="Search by File ID"
-          />
+        />
       </mat-form-field>
       <button mat-icon-button (click)="onSearch()">
         <mat-icon>search</mat-icon>

@@ -29,7 +29,7 @@ export class ALCSHomePage {
   }
 
   async search(fileId: string) {
-    await this.page.getByRole('button').filter({ hasText: 'search' }).click();
+    await this.page.locator('[data-testid="search-button"]').click();
     await this.page.getByPlaceholder('Search by File ID').fill(fileId);
     await this.page.keyboard.press('Enter');
   }

@@ -6,11 +6,11 @@ export class ALCSDocumentsPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.submissionOriginalPdfTableCells = page.getByRole('row', { name: 'SUBORIG' }).getByRole('cell');
+    this.submissionOriginalPdfTableCells = page.getByRole('row').filter({ hasText: 'SUBORIG' }).getByRole('cell');
   }
 
   async expectSubmissionOriginalPdfInTable(fileId: string) {
-    const cellTexts = ['SUBORIG', `${fileId}_APP_Submission.pdf`, 'Applicant - Portal', 'A, C*, G'];
+    const cellTexts = ['SUBORIG', `${fileId}_APP_Submission.pdf`, 'Applicant - Portal', 'A , C* , G'];
 
     for (const cellText of cellTexts) {
       await expect(this.submissionOriginalPdfTableCells.filter({ hasText: cellText })).toBeVisible();
