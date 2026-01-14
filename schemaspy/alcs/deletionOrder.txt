@@ -70,14 +70,15 @@ notice_of_intent_decision_condition
 application_decision_condition
 notice_of_intent_decision_condition_card
 application_decision_condition_card
-notice_of_intent_document
 compliance_and_enforcement_document
+notice_of_intent_document
 application_document
 notification
 notice_of_intent_submission
 application_submission
 application_decision_component
 planning_review
+compliance_and_enforcement_chronology_entry
 notice_of_intent_decision
 application_decision
 application_reconsideration
@@ -85,6 +86,7 @@ notice_of_intent_modification
 application_modification
 notice_of_intent
 application
+compliance_and_enforcement
 document
 card
 tag_category
@@ -123,7 +125,6 @@ application_reconsideration_outcome_type
 parcel_ownership_type
 card_type
 owner_type
-compliance_and_enforcement
 board
 document_code
 application_region
