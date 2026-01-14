@@ -15,18 +15,29 @@
   </div>
   <div class="right-column">
     <div>
-      <div>Unassigned</div>
+      <div class="assignee-wrapper">
+        @if (file?.assignee?.prettyName) {
+          <span>Assigned to</span>
+        }
+        <strong>{{ file?.assignee?.prettyName || 'Unassigned' }}</strong>
+        <button type="button" (click)="openAssignDialog()" mat-icon-button class="edit-assignee-button">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
       <div class="status-wrapper">
-        <div
-          *ngIf="status"
-          class="submission-status-pill"
+        @if (status) {
+          <div
+            class="submission-status-pill"
           [ngClass]="{
             open: status === Status.OPEN,
             closed: status === Status.CLOSED,
           }"
-        >
-          <ng-container *ngIf="status">{{ status }}</ng-container>
-        </div>
+            >
+            @if (status) {
+              {{ status }}
+            }
+          </div>
+        }
       </div>
       <div>
         <div class="body-text">{{ file?.property?.localGovernment?.name }}</div>

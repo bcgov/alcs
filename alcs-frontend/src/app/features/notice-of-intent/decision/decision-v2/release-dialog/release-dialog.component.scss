@@ -6,17 +6,17 @@
   margin-top: 24px;
 
   ::ng-deep .mat-mdc-slide-toggle.mat-accent {
-    --mdc-switch-selected-focus-state-layer-color: #{colors.$primary-color};
-    --mdc-switch-selected-handle-color: #{colors.$primary-color};
-    --mdc-switch-selected-hover-state-layer-color: #{colors.$primary-color};
-    --mdc-switch-selected-pressed-state-layer-color: #{colors.$primary-color};
-    --mdc-switch-selected-focus-handle-color: #{colors.$primary-color};
-    --mdc-switch-selected-hover-handle-color: #{colors.$primary-color};
-    --mdc-switch-selected-pressed-handle-color: #{colors.$primary-color};
-    --mdc-switch-selected-focus-track-color: #94c6ac61;
-    --mdc-switch-selected-hover-track-color: #94c6ac61;
-    --mdc-switch-selected-pressed-track-color: #94c6ac61;
-    --mdc-switch-selected-track-color: #94c6ac61;
+    --mat-slide-toggle-selected-focus-state-layer-color: #{colors.$primary-color};
+    --mat-slide-toggle-selected-handle-color: #{colors.$primary-color};
+    --mat-slide-toggle-selected-hover-state-layer-color: #{colors.$primary-color};
+    --mat-slide-toggle-selected-pressed-state-layer-color: #{colors.$primary-color};
+    --mat-slide-toggle-selected-focus-handle-color: #{colors.$primary-color};
+    --mat-slide-toggle-selected-hover-handle-color: #{colors.$primary-color};
+    --mat-slide-toggle-selected-pressed-handle-color: #{colors.$primary-color};
+    --mat-slide-toggle-selected-focus-track-color: #94c6ac61;
+    --mat-slide-toggle-selected-hover-track-color: #94c6ac61;
+    --mat-slide-toggle-selected-pressed-track-color: #94c6ac61;
+    --mat-slide-toggle-selected-track-color: #94c6ac61;
   }
 }
 

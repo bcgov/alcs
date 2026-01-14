@@ -12,9 +12,10 @@ export interface FlagDialogIO {
 }
 
 @Component({
-  selector: 'app-flag-dialog',
-  templateUrl: './flag-dialog.component.html',
-  styleUrls: ['./flag-dialog.component.scss'],
+    selector: 'app-flag-dialog',
+    templateUrl: './flag-dialog.component.html',
+    styleUrls: ['./flag-dialog.component.scss'],
+    standalone: false
 })
 export class FlagDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

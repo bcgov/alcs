@@ -21,15 +21,16 @@ export enum VisibilityGroup {
 }
 
 @Component({
-  selector: 'app-document-upload-dialog',
-  templateUrl: './document-upload-dialog.component.html',
-  styleUrls: ['./document-upload-dialog.component.scss'],
+    selector: 'app-document-upload-dialog',
+    templateUrl: './document-upload-dialog.component.html',
+    styleUrls: ['./document-upload-dialog.component.scss'],
+    standalone: false
 })
 export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   DOCUMENT_TYPE = DOCUMENT_TYPE;
 
-  title = 'Create';
+  title = 'Add';
   isDirty = false;
   isSaving = false;
   allowsFileEdit = true;
@@ -206,6 +207,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags,
       ownerUuid: this.ownerId.value ?? undefined,
       section: this.data.section ?? undefined,
+      chronologyEntryUuid: this.data.chronologyEntryUuid ?? undefined,
       parcelUuid: this.parcelId.value ?? undefined,
     };
 
@@ -261,18 +263,34 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   async prepareCertificateOfTitleUpload(uuid?: string) {
     this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
-    this.parcelId.setValidators([Validators.required]);
-    this.parcelId.updateValueAndValidity();
+
+    // If fixedParcel is provided, use it and don't require validation
+    if (this.data.fixedParcel) {
+      this.parcelId.setValue(this.data.fixedParcel.uuid);
+      this.parcelId.clearValidators();
+      this.parcelId.updateValueAndValidity();
+      return;
+    }
 
     if (!this.data.parcelService) {
+      // No parcel service, so no parcels, we will not require it
+      this.parcelId.clearValidators();
+      this.parcelId.updateValueAndValidity();
       return;
     }
 
     this.selectableParcels = await this.data.parcelService.fetchParcels(this.data.fileId);
 
     if (this.selectableParcels.length < 1) {
+      // No parcels available, we will not require it
+      this.parcelId.clearValidators();
+      this.parcelId.updateValueAndValidity();
       return;
     }
+
+    // We have parcels to select from now, so we will require it here
+    this.parcelId.setValidators([Validators.required]);
+    this.parcelId.updateValueAndValidity();
 
     const selectedParcel = this.selectableParcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
     if (selectedParcel) {
@@ -314,6 +332,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   async onDocTypeSelected($event?: DocumentTypeDto) {
     if (!$event) {
+      this.selectableParcels = [];
       return;
     }
 
@@ -335,6 +354,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.parcelId.setValue(null);
       this.parcelId.setValidators([]);
       this.parcelId.updateValueAndValidity();
+      this.selectableParcels = [];
     }
 
     if ($event.code === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
@@ -416,7 +436,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
       this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
 
-      if (this.documentTypes.length === 1) {
+      if (this.data.defaultDocumentType) {
+        this.type.setValue(this.data.defaultDocumentType);
+      } else if (this.documentTypes.length === 1) {
         this.type.setValue(this.documentTypes[0].code);
       }
     } else if (this.data.decisionService) {

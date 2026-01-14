@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-remove-file-confirmation-dialog',
-  templateUrl: './remove-file-confirmation-dialog.component.html',
-  styleUrls: ['./remove-file-confirmation-dialog.component.scss'],
+    selector: 'app-remove-file-confirmation-dialog',
+    templateUrl: './remove-file-confirmation-dialog.component.html',
+    styleUrls: ['./remove-file-confirmation-dialog.component.scss'],
+    standalone: false
 })
 export class RemoveFileConfirmationDialogComponent {
   constructor(private dialogRef: MatDialogRef<RemoveFileConfirmationDialogComponent>) {}

@@ -22,9 +22,10 @@ export const REASON_TYPE = {
 };
 
 @Component({
-  selector: 'app-noi-info-request-dialog',
-  templateUrl: './info-request-dialog.component.html',
-  styleUrls: ['./info-request-dialog.component.scss'],
+    selector: 'app-noi-info-request-dialog',
+    templateUrl: './info-request-dialog.component.html',
+    styleUrls: ['./info-request-dialog.component.scss'],
+    standalone: false
 })
 export class InfoRequestDialogComponent {
   model: NoticeOfIntentInfoRequestForm;

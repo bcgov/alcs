@@ -5,10 +5,11 @@
   <div class="grid">
     <p>
       The notification's portal status will revert back to:<br /><br />
-      <app-application-submission-status-type-pill
-        *ngIf="status"
-        [type]="status"
-      ></app-application-submission-status-type-pill>
+      @if (status) {
+        <app-application-submission-status-type-pill
+          [type]="status"
+        ></app-application-submission-status-type-pill>
+      }
     </p>
     <p>Are you sure you want to undo cancellation?</p>
   </div>

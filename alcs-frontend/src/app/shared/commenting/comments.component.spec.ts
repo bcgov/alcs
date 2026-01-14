@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -10,6 +10,7 @@ import { AssigneeDto, UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
 import { CommentsComponent } from './comments.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CommentsComponent', () => {
   let component: CommentsComponent;
@@ -23,28 +24,30 @@ describe('CommentsComponent', () => {
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
     await TestBed.configureTestingModule({
-      providers: [
+    declarations: [CommentsComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: CommentService,
-          useValue: mockCommentService,
+            provide: CommentService,
+            useValue: mockCommentService,
         },
         {
-          provide: UserService,
-          useValue: mockUserService,
+            provide: UserService,
+            useValue: mockUserService,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: {},
+            provide: ConfirmationDialogService,
+            useValue: {},
         },
         {
-          provide: ToastService,
-          useValue: {},
+            provide: ToastService,
+            useValue: {},
         },
-      ],
-      declarations: [CommentsComponent],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CommentsComponent);
     component = fixture.componentInstance;

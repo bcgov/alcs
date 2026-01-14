@@ -1,5 +1,5 @@
 ###### Install dependencies only when needed ######
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 
 # Make /app as working directory
 WORKDIR /app
@@ -41,7 +41,7 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 RUN chmod -R go+rwx /etc/nginx
 
 # Copy dist folder from build stage to nginx public folder
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/browser /usr/share/nginx/html
 
 # Dynamically update environment values
 RUN chmod -R go+rwx /usr/share/nginx/html/assets

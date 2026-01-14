@@ -1,16 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject, takeUntil, Observable, map, startWith } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange } from '@angular/material/select';
+import { BehaviorSubject, Observable, Subject, map, startWith, takeUntil } from 'rxjs';
+import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../services/application/application.service';
 import {
   ComplianceAndEnforcementPropertyDto,
   UpdateComplianceAndEnforcementPropertyDto,
 } from '../../../services/compliance-and-enforcement/property/property.dto';
-import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationService } from '../../../services/application/application.service';
-import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
 
 // Define ownership types locally for now
 const PARCEL_OWNERSHIP_TYPE = {
@@ -18,26 +18,79 @@ const PARCEL_OWNERSHIP_TYPE = {
   CROWN: 'CRWN',
 };
 
-// Custom validator for exactly 5 decimal places as per SO request
+// Custom validator for exactly 5 decimal places
+// Integers (e.g., 49) are accepted and will be formatted to 5 decimals (49.00000)
+// Values with decimals must have exactly 5 decimal places
+// Works with text inputs to preserve trailing zeros
 function decimalPlacesValidator(decimals: number) {
   return (control: any) => {
     if (control.value === null || control.value === undefined || control.value === '') {
       return null;
     }
 
-    const stringValue = control.value.toString();
-    const decimalPart = stringValue.split('.')[1];
+    const stringValue = control.value.toString().trim();
 
-    if (!decimalPart) {
-      return { decimalPlaces: { requiredDecimals: decimals, actualDecimals: 0 } };
+    // Check if it's a valid number first
+    const numValue = Number(stringValue);
+    if (Number.isNaN(numValue)) {
+      return null; // Let other validators handle invalid numbers
     }
 
+    const decimalPart = stringValue.split('.')[1];
+
+    // No decimal part is valid (integers will be formatted to 5 decimals)
+    if (!decimalPart) {
+      return null;
+    }
+
+    // If there are decimals, they must be exactly 5 decimal places
     if (decimalPart.length !== decimals) {
       return { decimalPlaces: { requiredDecimals: decimals, actualDecimals: decimalPart.length } };
     }
 
     return null;
   };
+}
+
+// Validator for numeric range (works with string inputs)
+function numericRangeValidator(min: number, max: number) {
+  return (control: any) => {
+    if (control.value === null || control.value === undefined || control.value === '') {
+      return null;
+    }
+
+    const numValue = Number(control.value);
+    if (Number.isNaN(numValue)) {
+      return null;
+    }
+
+
+    if (numValue < min) {
+      return { min: { min, actual: numValue } };
+    }
+
+    if (numValue > max) {
+      return { max: { max, actual: numValue } };
+    }
+
+    return null;
+  };
+}
+
+// Custom validator for PID to ensure exactly 9 digits
+function pidValidator(control: any) {
+  if (!control.value || control.value === '') {
+    return null;
+  }
+
+  // Remove any non-digit characters for validation
+  const digitsOnly = control.value.replace(/\D/g, '');
+
+  if (digitsOnly.length !== 9) {
+    return { pidLength: { requiredLength: 9, actualLength: digitsOnly.length } };
+  }
+
+  return null;
 }
 
 // Clean up the property update object to remove null, undefined, and empty strings, needed to save draft effectively
@@ -69,13 +122,31 @@ export function cleanPropertyUpdate(
 
 function toNumberOrUndefined(val: any) {
   const num = Number(val);
-  return isNaN(num) ? undefined : num;
+  return Number.isNaN(num) ? undefined : num;
+}
+
+// Format number to exactly 5 decimal places
+// Integers (e.g., 49) become 49.00000
+// Numbers with decimals are formatted to 5 decimal places
+function formatToFiveDecimals(value: number | null | undefined): number | null | undefined {
+  if (value === null || value === undefined) {
+    return value;
+  }
+
+  const num = Number(value);
+  if (Number.isNaN(num)) {
+    return value;
+  }
+
+  // Format to exactly 5 decimal places
+  return Number.parseFloat(num.toFixed(5));
 }
 
 @Component({
-  selector: 'app-compliance-and-enforcement-property',
-  templateUrl: './property.component.html',
-  styleUrls: ['./property.component.scss'],
+    selector: 'app-compliance-and-enforcement-property',
+    templateUrl: './property.component.html',
+    styleUrls: ['./property.component.scss'],
+    standalone: false
 })
 export class PropertyComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -97,26 +168,26 @@ export class PropertyComponent implements OnInit, OnDestroy {
     legalDescription: new FormControl<string>('', [Validators.required]),
     localGovernmentUuid: new FormControl<string>('', [Validators.required]),
     regionCode: new FormControl<string>('', [Validators.required]),
-    latitude: new FormControl<number | null>(null, [
+    latitude: new FormControl<string | null>(null, [
       Validators.required,
-      Validators.min(48),
-      Validators.max(61),
+      numericRangeValidator(48, 61),
       decimalPlacesValidator(5),
     ]),
-    longitude: new FormControl<number | null>(null, [
+    longitude: new FormControl<string | null>(null, [
       Validators.required,
-      Validators.min(-140),
-      Validators.max(-113),
+      numericRangeValidator(-140, -113),
       decimalPlacesValidator(5),
     ]),
     ownershipTypeCode: new FormControl<string>(PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE, [Validators.required]),
     pidOrPin: new FormControl<string>('PID'),
-    pid: new FormControl<string>(''),
+    pid: new FormControl<string>('', [pidValidator]),
     pin: new FormControl<string>(''),
     areaHectares: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
     alrPercentage: new FormControl<number | null>(null, [Validators.required, Validators.min(0), Validators.max(100)]),
     alcHistory: new FormControl<string>('', [Validators.required]),
   });
+
+  @Input() hideHeader = false;
 
   @Input() set parentForm(parentForm: FormGroup) {
     if (!parentForm || parentForm.contains('property')) {
@@ -129,40 +200,12 @@ export class PropertyComponent implements OnInit, OnDestroy {
   $changes: BehaviorSubject<UpdateComplianceAndEnforcementPropertyDto> =
     new BehaviorSubject<UpdateComplianceAndEnforcementPropertyDto>({});
 
+  private _property?: ComplianceAndEnforcementPropertyDto;
+
   @Input()
   set property(property: ComplianceAndEnforcementPropertyDto | undefined) {
-    if (property) {
-      this.isPatching = true;
-      this.form.disable();
-
-      // Default to PID if neither has been set as a value
-      const pidOrPin = property.pin && !property.pid ? 'PIN' : 'PID';
-
-      // Find the local government to display its name
-      const lg = this.localGovernments.find(g => g.uuid === property.localGovernmentUuid);
-      this.localGovernmentControl.setValue(lg?.name || '');
-
-      this.form.patchValue({
-        civicAddress: property.civicAddress,
-        legalDescription: property.legalDescription,
-        localGovernmentUuid: property.localGovernmentUuid,
-        regionCode: property.regionCode,
-        latitude: this.parseNumberOrNull(property.latitude),
-        longitude: this.parseNumberOrNull(property.longitude),
-        ownershipTypeCode: property.ownershipTypeCode,
-        pidOrPin: pidOrPin,
-        pid: property.pid || '',
-        pin: property.pin || '',
-        areaHectares: this.parseNumberOrNull(property.areaHectares),
-        alrPercentage: this.parseNumberOrNull(property.alrPercentage),
-        alcHistory: property.alcHistory,
-      });
-
-      this.setPidOrPin(pidOrPin);
-
-      this.form.enable();
-      this.isPatching = false;
-    }
+    this._property = property;
+    this.updateFormWithProperty();
 
     // Prevent resubscription
     if (!this.isSubscribed) {
@@ -178,8 +221,8 @@ export class PropertyComponent implements OnInit, OnDestroy {
             localGovernmentUuid:
               form.localGovernmentUuid && form.localGovernmentUuid.trim() !== '' ? form.localGovernmentUuid : undefined,
             regionCode: form.regionCode ?? '',
-            latitude: toNumberOrUndefined(form.latitude),
-            longitude: toNumberOrUndefined(form.longitude),
+            latitude: formatToFiveDecimals(toNumberOrUndefined(form.latitude)),
+            longitude: formatToFiveDecimals(toNumberOrUndefined(form.longitude)),
             ownershipTypeCode: form.ownershipTypeCode ?? PARCEL_OWNERSHIP_TYPE.FEE_SIMPLE,
             pid: form.pidOrPin === 'PID' ? form.pid || null : null,
             pin: form.pidOrPin === 'PIN' ? form.pin || null : null,
@@ -235,9 +278,50 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
       // Trigger the filter to update now that we have data
       this.localGovernmentControl.updateValueAndValidity();
+
+      // Update form with property data now that local governments are loaded
+      this.updateFormWithProperty();
     } catch (error) {
       console.error('Error loading local governments:', error);
     }
+  }
+
+  private updateFormWithProperty() {
+    if (!this._property) {
+      return;
+    }
+
+    const property = this._property;
+    this.isPatching = true;
+    this.form.disable();
+
+    // Default to PID if neither has been set as a value
+    const pidOrPin = property.pin && !property.pid ? 'PIN' : 'PID';
+
+    // Find the local government to display its name
+    const lg = this.localGovernments.find(g => g.uuid === property.localGovernmentUuid);
+    this.localGovernmentControl.setValue(lg?.name || '');
+
+    this.form.patchValue({
+      civicAddress: property.civicAddress,
+      legalDescription: property.legalDescription,
+      localGovernmentUuid: property.localGovernmentUuid,
+      regionCode: property.regionCode,
+      latitude: this.parseLatLongOrNull(property.latitude),
+      longitude: this.parseLatLongOrNull(property.longitude),
+      ownershipTypeCode: property.ownershipTypeCode,
+      pidOrPin: pidOrPin,
+      pid: property.pid || '',
+      pin: property.pin || '',
+      areaHectares: this.parseNumberOrNull(property.areaHectares),
+      alrPercentage: this.parseNumberOrNull(property.alrPercentage),
+      alcHistory: property.alcHistory,
+    });
+
+    this.setPidOrPin(pidOrPin);
+
+    this.form.enable();
+    this.isPatching = false;
   }
 
   private filterLocalGovernments(value: string): ApplicationLocalGovernmentDto[] {
@@ -251,6 +335,29 @@ export class PropertyComponent implements OnInit, OnDestroy {
     );
   }
 
+  private parseLatLongOrNull(value: any): string | null {
+    // If value is null or undefined, return null
+    if (value == null) {
+      return null;
+    }
+
+    // Convert to number
+    const numValue = Number(value);
+
+    // If it's not a valid number, return null
+    if (Number.isNaN(numValue)) {
+      return null;
+    }
+
+    // If the number is 0, treat it as null (empty)
+    if (numValue === 0) {
+      return null;
+    }
+
+    // Format to exactly 5 decimal places as string
+    return numValue.toFixed(5);
+  }
+
   private parseNumberOrNull(value: any): number | null {
     // If value is null or undefined, return null
     if (value == null) {
@@ -261,7 +368,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
     const numValue = Number(value);
 
     // If it's not a valid number, return null
-    if (isNaN(numValue)) {
+    if (Number.isNaN(numValue)) {
       return null;
     }
 
@@ -342,7 +449,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
     } else {
       // For other ownership types, set requirements based on selection
       if (pidOrPinValue === 'PID') {
-        pidControl?.setValidators([Validators.required]);
+        pidControl?.setValidators([Validators.required, pidValidator]);
         pinControl?.setValidators([]);
       } else {
         pinControl?.setValidators([Validators.required]);
@@ -366,7 +473,7 @@ export class PropertyComponent implements OnInit, OnDestroy {
     } else {
       // For other ownership types, set requirements based on selection
       if (type === 'PID') {
-        this.form.controls['pid'].setValidators([Validators.required]);
+        this.form.controls['pid'].setValidators([Validators.required, pidValidator]);
         this.form.controls['pin'].setValidators([]);
         this.form.controls['pin'].setValue('');
       } else {
@@ -384,6 +491,48 @@ export class PropertyComponent implements OnInit, OnDestroy {
 
   onPidOrPinChange(event: MatSelectChange) {
     this.setPidOrPin(event.value);
+  }
+
+  onLatitudeBlur() {
+    const latControl = this.form.get('latitude');
+    if (latControl?.value != null && latControl.value !== '') {
+      const stringValue = latControl.value.toString().trim();
+      const numValue = Number(stringValue);
+      if (!Number.isNaN(numValue)) {
+        const decimalPart = stringValue.split('.')[1];
+        const decimalPlaces = decimalPart?.length ?? 0;
+        
+        // Only format if it's an integer or has fewer than 5 decimals
+        // Don't format if it already has 5+ decimals - let validation show the error
+        if (decimalPlaces === 0 || decimalPlaces < 5) {
+          this.isPatching = true;
+          // Format as string with exactly 5 decimals
+          latControl.setValue(numValue.toFixed(5), { emitEvent: false });
+          this.isPatching = false;
+        }
+      }
+    }
+  }
+
+  onLongitudeBlur() {
+    const longControl = this.form.get('longitude');
+    if (longControl?.value != null && longControl.value !== '') {
+      const stringValue = longControl.value.toString().trim();
+      const numValue = Number(stringValue);
+      if (!Number.isNaN(numValue)) {
+        const decimalPart = stringValue.split('.')[1];
+        const decimalPlaces = decimalPart?.length ?? 0;
+        
+        // Only format if it's an integer or has fewer than 5 decimals
+        // Don't format if it already has 5+ decimals - let validation show the error
+        if (decimalPlaces === 0 || decimalPlaces < 5) {
+          this.isPatching = true;
+          // Format as string with exactly 5 decimals
+          longControl.setValue(numValue.toFixed(5), { emitEvent: false });
+          this.isPatching = false;
+        }
+      }
+    }
   }
 
   ngOnDestroy(): void {

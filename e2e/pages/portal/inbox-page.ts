@@ -48,6 +48,6 @@ export class InboxPage {
   }
 
   async setApplicationType(type: ApplicationType) {
-    await this.page.getByRole('radio', { name: type }).click();
+    await this.page.getByRole('radio', { name: type }).check();
   }
 }

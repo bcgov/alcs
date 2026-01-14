@@ -1,0 +1,16 @@
+<form [formGroup]="form">
+  <app-compliance-and-enforcement-submitter
+    #submitterComponent
+    title="Add Submitter"
+    [submitter]="undefined"
+    [initialSubmissionType]="data.initialSubmissionType"
+    (formReady)="registerFormGroup('submitter', $event)"
+  />
+
+  <div class="button-container">
+    <button type="button" mat-stroked-button color="warn" (click)="close()">Cancel</button>
+    <button type="button" mat-flat-button color="primary" (click)="addSubmitter()" [disabled]="form.invalid">
+      Save
+    </button>
+  </div>
+</form>

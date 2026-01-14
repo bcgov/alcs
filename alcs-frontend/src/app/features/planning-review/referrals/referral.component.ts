@@ -12,9 +12,10 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { CreatePlanningReferralDialogComponent } from './create/create-planning-referral-dialog.component';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './referral.component.html',
-  styleUrls: ['./referral.component.scss'],
+    selector: 'app-overview',
+    templateUrl: './referral.component.html',
+    styleUrls: ['./referral.component.scss'],
+    standalone: false
 })
 export class ReferralComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

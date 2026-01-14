@@ -19,21 +19,22 @@ type ProposedLot = {
 };
 
 @Component({
-  selector: 'app-lots-table',
-  templateUrl: './lots-table-form.component.html',
-  styleUrls: ['./lots-table-form.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: LotsTableFormComponent,
-    },
-    {
-      provide: NG_VALIDATORS,
-      multi: true,
-      useExisting: LotsTableFormComponent,
-    },
-  ],
+    selector: 'app-lots-table',
+    templateUrl: './lots-table-form.component.html',
+    styleUrls: ['./lots-table-form.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: LotsTableFormComponent,
+        },
+        {
+            provide: NG_VALIDATORS,
+            multi: true,
+            useExisting: LotsTableFormComponent,
+        },
+    ],
+    standalone: false
 })
 export class LotsTableFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['index', 'type', 'size', 'alrArea'];

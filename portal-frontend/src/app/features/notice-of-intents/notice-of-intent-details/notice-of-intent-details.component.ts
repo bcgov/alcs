@@ -15,9 +15,10 @@ import { DocumentService } from '../../../services/document/document.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-noi-details',
-  templateUrl: './notice-of-intent-details.component.html',
-  styleUrls: ['./notice-of-intent-details.component.scss'],
+    selector: 'app-noi-details',
+    templateUrl: './notice-of-intent-details.component.html',
+    styleUrls: ['./notice-of-intent-details.component.scss'],
+    standalone: false
 })
 export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

@@ -17,9 +17,10 @@ interface SearchResult {
 }
 
 @Component({
-  selector: 'app-planning-review-search-table',
-  templateUrl: './planning-review-search-table.component.html',
-  styleUrls: ['./planning-review-search-table.component.scss'],
+    selector: 'app-planning-review-search-table',
+    templateUrl: './planning-review-search-table.component.html',
+    styleUrls: ['./planning-review-search-table.component.scss'],
+    standalone: false
 })
 export class PlanningReviewSearchTableComponent {
   _planningReviews: PlanningReviewSearchResultDto[] = [];

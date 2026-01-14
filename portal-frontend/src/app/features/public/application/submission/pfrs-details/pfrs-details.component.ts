@@ -15,9 +15,10 @@ import { DocumentService } from '../../../../../services/document/document.servi
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-pfrs-details[applicationSubmission]',
-  templateUrl: './pfrs-details.component.html',
-  styleUrls: ['./pfrs-details.component.scss'],
+    selector: 'app-pfrs-details[applicationSubmission]',
+    templateUrl: './pfrs-details.component.html',
+    styleUrls: ['./pfrs-details.component.scss'],
+    standalone: false
 })
 export class PfrsDetailsComponent {
   isMobile = window.innerWidth <= MOBILE_BREAKPOINT;

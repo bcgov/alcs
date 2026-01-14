@@ -14,11 +14,11 @@
       <mat-icon
         class="icon"
         matTooltip='Portal status updated to "ALC Response Sent" when auto-email is successfully sent.'
-      >
+        >
         info_outline
       </mat-icon>
     </div>
-    <ng-container *ngIf="responseSent && responseDate">
+    @if (responseSent && responseDate) {
       <div class="left">
         <mat-icon class="sent-text">check</mat-icon>
         <span class="sent-text">
@@ -26,49 +26,57 @@
         </span>
         <span class="response-date">{{ responseDate | momentFormat }}</span>
       </div>
-    </ng-container>
-    <ng-container *ngIf="!responseSent">
+    }
+    @if (!responseSent) {
       <div class="failed-text">
         <mat-icon>warning</mat-icon>
         Failed
         <button mat-flat-button color="primary" (click)="resendResponse()">Resend</button>
       </div>
-    </ng-container>
+    }
   </div>
-  <div *ngIf="contactEmail">
-    <div class="subheading2 left">
-      Primary Contact Email
-      <mat-icon class="icon" matTooltip="Updating the email in this field will resend the ALC response.">
-        info_outline
-      </mat-icon>
+  @if (contactEmail) {
+    <div>
+      <div class="subheading2 left">
+        Primary Contact Email
+        <mat-icon class="icon" matTooltip="Updating the email in this field will resend the ALC response.">
+          info_outline
+        </mat-icon>
+      </div>
+      <app-inline-text
+        [updateOnSave]="false"
+        [value]="contactEmail"
+        [isEmail]="true"
+        [required]="true"
+        (save)="updateSubmissionEmail($event)"
+      ></app-inline-text>
     </div>
-    <app-inline-text
-      [updateOnSave]="false"
-      [value]="contactEmail"
-      [isEmail]="true"
-      [required]="true"
-      (save)="updateSubmissionEmail($event)"
-    ></app-inline-text>
-  </div>
+  }
 </div>
 <div class="header-row">
   <h5>L/FNG Information</h5>
 </div>
-<section *ngIf="notification" class="intake">
-  <div *ngIf="notification">
-    <div class="subheading2">Local/First Nation Government</div>
-    <app-inline-dropdown
-      [options]="localGovernments"
-      [value]="notification.localGovernment.uuid"
-      (save)="onSaveLocalGovernment($event)"
-    ></app-inline-dropdown>
-  </div>
-  <div *ngIf="notification">
-    <div class="subheading2">Region</div>
-    <app-inline-dropdown
-      [options]="regions"
-      [value]="notification.region.code"
-      (save)="updateRegion($event)"
-    ></app-inline-dropdown>
-  </div>
-</section>
+@if (notification) {
+  <section class="intake">
+    @if (notification) {
+      <div>
+        <div class="subheading2">Local/First Nation Government</div>
+        <app-inline-dropdown
+          [options]="localGovernments"
+          [value]="notification.localGovernment.uuid"
+          (save)="onSaveLocalGovernment($event)"
+        ></app-inline-dropdown>
+      </div>
+    }
+    @if (notification) {
+      <div>
+        <div class="subheading2">Region</div>
+        <app-inline-dropdown
+          [options]="regions"
+          [value]="notification.region.code"
+          (save)="updateRegion($event)"
+        ></app-inline-dropdown>
+      </div>
+    }
+  </section>
+}

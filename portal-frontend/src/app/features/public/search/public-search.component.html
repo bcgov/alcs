@@ -16,57 +16,77 @@
         <label for="fileNumber">ALC ID</label>
         <mat-form-field appearance="outline">
           <input mask="0*" id="fileNumber" matInput formControlName="fileNumber" />
-          <button class="clear-button" *ngIf="searchForm.controls.fileNumber.value" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="searchForm.controls.fileNumber.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (searchForm.controls.fileNumber.value) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="searchForm.controls.fileNumber.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
       </div>
       <div>
         <label for="pid">PID</label>
         <mat-form-field appearance="outline">
           <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
-          <button class="clear-button" *ngIf="pidControl.value" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="pidControl.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (pidControl.value) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="pidControl.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
-        <div *ngIf="pidInvalid" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
-        </div>
+        @if (pidInvalid) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (pidControl.errors?.['mask']) {
+              <div>PID must be 9 digits including leading zeroes</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="name">Name</label>
         <mat-form-field appearance="outline">
           <input id="name" matInput formControlName="name" minlength="3" />
-          <button class="clear-button" *ngIf="nameControl.value" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="nameControl.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (nameControl.value) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="nameControl.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
-        <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>
-        </div>
+        @if (nameControl.invalid && (nameControl.dirty || nameControl.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (nameControl.errors?.['minlength']) {
+              <div>Enter 3 or more characters to search by name</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="civicAddress">Civic Address</label>
         <mat-form-field appearance="outline">
           <input id="civicAddress" matInput formControlName="civicAddress" minlength="3" />
-          <button class="clear-button" *ngIf="civicAddressControl.value" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="civicAddressControl.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (civicAddressControl.value) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="civicAddressControl.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
-        <div *ngIf="civicAddressInvalid" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="civicAddressControl.errors?.['minlength']">Enter 3 or more characters to search</div>
-        </div>
+        @if (civicAddressInvalid) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (civicAddressControl.errors?.['minlength']) {
+              <div>Enter 3 or more characters to search</div>
+            }
+          </div>
+        }
       </div>
       <div>
         <label for="government">Local/First Nation Government</label>
@@ -78,16 +98,20 @@
             matInput
             formControlName="government"
             [matAutocomplete]="auto"
-          />
-          <button class="clear-button" *ngIf="localGovernmentControl.value" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="localGovernmentControl.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+            />
+          @if (localGovernmentControl.value) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="localGovernmentControl.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
           <mat-autocomplete (optionSelected)="onGovernmentChange($event)" #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
-              {{ option.name }}
-            </mat-option>
+            @for (option of filteredLocalGovernments | async; track option) {
+              <mat-option [value]="option.name">
+                {{ option.name }}
+              </mat-option>
+            }
           </mat-autocomplete>
         </mat-form-field>
       </div>
@@ -95,44 +119,56 @@
         <mat-label for="region">Region</mat-label>
         <mat-form-field appearance="outline">
           <mat-select multiple="true" id="region" formControlName="region">
-            <mat-option *ngFor="let region of regions" [value]="region.code">{{ region.label }}</mat-option>
+            @for (region of regions; track region) {
+              <mat-option [value]="region.code">{{ region.label }}</mat-option>
+            }
           </mat-select>
-          <button class="clear-button" *ngIf="searchForm.controls.region.value?.length" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="searchForm.controls.region.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (searchForm.controls.region.value?.length) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="searchForm.controls.region.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
       </div>
       <div>
         <label for="decisionOutcome">Decision Outcome</label>
         <mat-form-field appearance="outline">
           <mat-select multiple="true" id="decisionOutcome" [formControl]="portalDecisionOutcomeControl">
-            <mat-option *ngFor="let decision of DECISION_MAP" [value]="decision[1]">
-              {{ decision[0] }}
-            </mat-option>
+            @for (decision of DECISION_MAP; track decision) {
+              <mat-option [value]="decision[1]">
+                {{ decision[0] }}
+              </mat-option>
+            }
           </mat-select>
-          <button class="clear-button" *ngIf="portalDecisionOutcomeControl.value?.length" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="portalDecisionOutcomeControl.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (portalDecisionOutcomeControl.value?.length) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="portalDecisionOutcomeControl.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
       </div>
       <div>
         <mat-label for="decisionMaker">Decision Maker</mat-label>
         <mat-form-field appearance="outline">
           <mat-select id="decisionMaker" formControlName="decisionMaker">
-            <mat-option *ngFor="let decisionMaker of decisionMakers" [value]="decisionMaker.code">{{
+            @for (decisionMaker of decisionMakers; track decisionMaker) {
+              <mat-option [value]="decisionMaker.code">{{
                 decisionMaker.label
-              }}
-            </mat-option>
+                }}
+              </mat-option>
+            }
           </mat-select>
-          <button class="clear-button" *ngIf="searchForm.controls.decisionMaker.value" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="searchForm.controls.decisionMaker.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (searchForm.controls.decisionMaker.value) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="searchForm.controls.decisionMaker.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
       </div>
       <div>
@@ -141,21 +177,25 @@
           #fileTypeDropDown
           [setFileTypes]="previousFileTypes"
           (fileTypeChange)="onFileTypeChange($event)"
-        />
+          />
       </div>
       <div>
         <mat-label for="status">Status</mat-label>
         <mat-form-field appearance="outline">
           <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
-            <mat-option *ngFor="let status of STATUS_MAP" [value]="status[1]">
-              {{ status[0] }}
-            </mat-option>
+            @for (status of STATUS_MAP; track status) {
+              <mat-option [value]="status[1]">
+                {{ status[0] }}
+              </mat-option>
+            }
           </mat-select>
-          <button class="clear-button" *ngIf="portalStatusControl.value?.length" matSuffix mat-icon-button
-                  aria-label="Clear"
-                  (click)="portalStatusControl.reset()">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (portalStatusControl.value?.length) {
+            <button class="clear-button" matSuffix mat-icon-button
+              aria-label="Clear"
+              (click)="portalStatusControl.reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
       </div>
       <div>
@@ -169,19 +209,20 @@
             aria-label="date-decided-from"
             [min]="minDate"
             [max]="today"
-          />
+            />
           <mat-datepicker-toggle matIconSuffix [for]="dateDecidedFromPicker"></mat-datepicker-toggle>
           <mat-datepicker #dateDecidedFromPicker></mat-datepicker>
-          <button
-            class="clear-button"
-            *ngIf="searchForm.controls.dateDecidedFrom.value"
-            matSuffix
-            mat-icon-button
-            aria-label="Clear"
-            (click)="onClickFromClear($event)"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (searchForm.controls.dateDecidedFrom.value) {
+            <button
+              class="clear-button"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="onClickFromClear($event)"
+              >
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
       </div>
       <div>
@@ -195,19 +236,20 @@
             aria-label="date-decided-to"
             [min]="searchForm.controls.dateDecidedFrom.value"
             [max]="today"
-          />
+            />
           <mat-datepicker-toggle matIconSuffix [for]="dateDecidedToPicker"></mat-datepicker-toggle>
           <mat-datepicker #dateDecidedToPicker></mat-datepicker>
-          <button
-            class="clear-button"
-            *ngIf="searchForm.controls.dateDecidedTo.value"
-            matSuffix
-            mat-icon-button
-            aria-label="Clear"
-            (click)="onClickToClear($event)"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (searchForm.controls.dateDecidedTo.value) {
+            <button
+              class="clear-button"
+              matSuffix
+              mat-icon-button
+              aria-label="Clear"
+              (click)="onClickToClear($event)"
+              >
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </mat-form-field>
       </div>
     </div>
@@ -221,77 +263,87 @@
   </form>
 
   <div id="searchResultsWrapper" class="search-fields-wrapper search-result-wrapper">
-    <h3 *ngIf="!searchResultsHidden || isLoading" class="search-title">Search Results</h3>
-    <div *ngIf="isLoading" class="center">
-      <mat-spinner></mat-spinner>
-    </div>
-    <mat-tab-group *ngIf="!isLoading && !searchResultsHidden" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
-      <mat-tab>
-        <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
-        <app-search-list
-          *ngIf="isMobile"
-          type="applications"
-          [results]="applications"
-          [totalCount]="applicationTotal"
-          [statuses]="statuses"
-          [pageIndex]="pageIndex"
-          (loadMore)="onLoadMore('APP')"
-        >
-        </app-search-list>
-        <app-application-search-table
-          *ngIf="!isMobile"
-          [applications]="applications"
-          [totalCount]="applicationTotal"
-          [pageIndex]="pageIndex"
-          [statuses]="statuses"
-          (tableChange)="onTableChange($event)"
-        ></app-application-search-table>
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
-        <app-search-list
-          *ngIf="isMobile"
-          type="notices of intent"
-          [results]="noticeOfIntents"
-          [pageIndex]="pageIndex"
-          [totalCount]="noticeOfIntentTotal"
-          [statuses]="statuses"
-          (loadMore)="onLoadMore('NOI')"
-        >
-        </app-search-list>
-        <app-notice-of-intent-search-table
-          *ngIf="!isMobile"
-          [noticeOfIntents]="noticeOfIntents"
-          [totalCount]="noticeOfIntentTotal"
-          [pageIndex]="pageIndex"
-          [statuses]="statuses"
-          (tableChange)="onTableChange($event)"
-        ></app-notice-of-intent-search-table>
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label> Notifications: {{ notificationTotal }}</ng-template>
-        <app-search-list
-          *ngIf="isMobile"
-          type="notifications"
-          [results]="notifications"
-          [pageIndex]="pageIndex"
-          [totalCount]="notificationTotal"
-          [statuses]="statuses"
-          (loadMore)="onLoadMore('NOTI')"
-        >
-        </app-search-list>
-        <app-notification-search-table
-          *ngIf="!isMobile"
-          [statuses]="statuses"
-          [pageIndex]="pageIndex"
-          [notifications]="notifications"
-          [totalCount]="notificationTotal"
-          (tableChange)="onTableChange($event)"
-        >
-        </app-notification-search-table>
-      </mat-tab>
-    </mat-tab-group>
+    @if (!searchResultsHidden || isLoading) {
+      <h3 class="search-title">Search Results</h3>
+    }
+    @if (isLoading) {
+      <div class="center">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+    @if (!isLoading && !searchResultsHidden) {
+      <mat-tab-group mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
+        <mat-tab>
+          <ng-template mat-tab-label> Applications: {{ applicationTotal }}</ng-template>
+          @if (isMobile) {
+            <app-search-list
+              type="applications"
+              [results]="applications"
+              [totalCount]="applicationTotal"
+              [statuses]="statuses"
+              [pageIndex]="pageIndex"
+              (loadMore)="onLoadMore('APP')"
+              >
+            </app-search-list>
+          }
+          @if (!isMobile) {
+            <app-application-search-table
+              [applications]="applications"
+              [totalCount]="applicationTotal"
+              [pageIndex]="pageIndex"
+              [statuses]="statuses"
+              (tableChange)="onTableChange($event)"
+            ></app-application-search-table>
+          }
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }}</ng-template>
+          @if (isMobile) {
+            <app-search-list
+              type="notices of intent"
+              [results]="noticeOfIntents"
+              [pageIndex]="pageIndex"
+              [totalCount]="noticeOfIntentTotal"
+              [statuses]="statuses"
+              (loadMore)="onLoadMore('NOI')"
+              >
+            </app-search-list>
+          }
+          @if (!isMobile) {
+            <app-notice-of-intent-search-table
+              [noticeOfIntents]="noticeOfIntents"
+              [totalCount]="noticeOfIntentTotal"
+              [pageIndex]="pageIndex"
+              [statuses]="statuses"
+              (tableChange)="onTableChange($event)"
+            ></app-notice-of-intent-search-table>
+          }
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label> Notifications: {{ notificationTotal }}</ng-template>
+          @if (isMobile) {
+            <app-search-list
+              type="notifications"
+              [results]="notifications"
+              [pageIndex]="pageIndex"
+              [totalCount]="notificationTotal"
+              [statuses]="statuses"
+              (loadMore)="onLoadMore('NOTI')"
+              >
+            </app-search-list>
+          }
+          @if (!isMobile) {
+            <app-notification-search-table
+              [statuses]="statuses"
+              [pageIndex]="pageIndex"
+              [notifications]="notifications"
+              [totalCount]="notificationTotal"
+              (tableChange)="onTableChange($event)"
+              >
+            </app-notification-search-table>
+          }
+        </mat-tab>
+      </mat-tab-group>
+    }
   </div>
 </section>

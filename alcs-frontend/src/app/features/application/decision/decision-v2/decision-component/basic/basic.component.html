@@ -1,8 +1,12 @@
 <div>
   <div>
     <div class="subheading2">ALR Area Impacted
-      <ng-container *ngIf="component.applicationDecisionComponentTypeCode !== 'NARU'">(ha)</ng-container>
-      <ng-container *ngIf="component.applicationDecisionComponentTypeCode === 'NARU'">(m<sup>2</sup>)</ng-container>
+      @if (component.applicationDecisionComponentTypeCode !== 'NARU') {
+        (ha)
+      }
+      @if (component.applicationDecisionComponentTypeCode === 'NARU') {
+        (m<sup>2</sup>)
+      }
     </div>
   </div>
   <app-inline-number

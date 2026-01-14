@@ -1,22 +1,32 @@
 <div class="inline-number-wrapper" [ngClass]="{ 'fixed-height': isFixedHeight }">
-  <span class="left" *ngIf="!isEditing">
-    <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
-    <span *ngIf="value && !mask">
-      {{ value }}
+  @if (!isEditing) {
+    <span class="left">
+      @if (!value) {
+        <a (click)="startEdit()" class="add"> {{ addText }} </a>
+      }
+      @if (value && !mask) {
+        <span>
+          {{ value }}
+        </span>
+      }
+      @if (value && mask) {
+        <span>
+          {{ value | mask: mask }}
+        </span>
+      }
+      @if (value) {
+        <button class="edit-button" mat-icon-button (click)="startEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      }
     </span>
-    <span *ngIf="value && mask">
-      {{ value | mask: mask }}
-    </span>
-    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing
     }"
-  >
+    >
     <form>
       <mat-form-field [appearance]="isFixedHeight ? 'fill' : 'outline'">
         <input
@@ -32,23 +42,25 @@
           (keydown.escape)="cancelEdit()"
           [mask]="mask"
           [maxlength]="maxLength"
-        />
+          />
       </mat-form-field>
     </form>
     <div class="button-container">
-      <mat-hint *ngIf="maxLength" class="char-limit button-text"
-        >{{ editInput?.value?.length || 0 }}/{{ maxLength }}</mat-hint
-      >
-      <button mat-button (click)="cancelEdit()">CANCEL</button>
-      <button
-        mat-button
-        color="primary"
-        class="save"
-        [disabled]="(required && !pendingValue) || textInputControl.invalid"
-        (click)="confirmEdit()"
-      >
-        SAVE
-      </button>
+      @if (maxLength) {
+        <mat-hint class="char-limit button-text"
+          >{{ editInput?.value?.length || 0 }}/{{ maxLength }}</mat-hint
+          >
+        }
+        <button mat-button (click)="cancelEdit()">CANCEL</button>
+        <button
+          mat-button
+          color="primary"
+          class="save"
+          [disabled]="(required && !pendingValue) || textInputControl.invalid"
+          (click)="confirmEdit()"
+          >
+          SAVE
+        </button>
+      </div>
     </div>
   </div>
-</div>

@@ -1,4 +1,4 @@
-@import '../../../../styles/colors.scss';
+@use '../../../../styles/colors.scss';
 
 .responsible-parties-container {
   width: 100%;
@@ -114,12 +114,12 @@
 
     mat-button-toggle {
       &.mat-button-toggle-checked {
-        background-color: $primary-color-light !important;
-        color: $dark-contrast-text !important;
+        background-color: colors.$primary-color-light !important;
+        color: colors.$dark-contrast-text !important;
 
         .mat-button-toggle-button {
-          background-color: $primary-color-light !important;
-          color: $dark-contrast-text !important;
+          background-color: colors.$primary-color-light !important;
+          color: colors.$dark-contrast-text !important;
         }
       }
     }
@@ -305,13 +305,13 @@
   }
 
   .add-director-button {
-    border: 1px solid $primary-color;
-    color: $primary-color;
+    border: 1px solid colors.$primary-color;
+    color: colors.$primary-color;
     margin-top: 16px;
     background: transparent;
 
     &:hover {
-      background-color: rgba($primary-color, 0.1);
+      background-color: rgba(colors.$primary-color, 0.1);
     }
   }
 }
@@ -326,7 +326,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: $error-color;
+    color: colors.$error-color;
     font-size: 0.875rem;
     margin-top: 4px;
     margin-bottom: 16px;
@@ -335,7 +335,7 @@
       font-size: 18px;
       width: 18px;
       height: 18px;
-      color: $error-color;
+      color: colors.$error-color;
     }
   }
 }
@@ -344,7 +344,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: $error-color;
+  color: colors.$error-color;
   font-size: 0.875rem;
   margin-top: 2px;
   margin-bottom: 8px;
@@ -353,19 +353,19 @@
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: $error-color;
+    color: colors.$error-color;
   }
 }
 
 mat-form-field.mat-form-field-invalid {
   input,
   textarea {
-    color: $error-color !important;
+    color: colors.$error-color !important;
   }
 
   input::placeholder,
   textarea::placeholder {
-    color: $error-color !important;
+    color: colors.$error-color !important;
   }
 }
 

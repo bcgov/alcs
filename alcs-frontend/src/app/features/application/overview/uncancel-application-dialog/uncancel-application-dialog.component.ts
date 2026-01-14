@@ -9,9 +9,10 @@ import { SUBMISSION_STATUS } from '../../../../services/application/application.
 import { ApplicationSubmissionStatusPill } from '../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 
 @Component({
-  selector: 'app-uncancel-application-dialog',
-  templateUrl: './uncancel-application-dialog.component.html',
-  styleUrls: ['./uncancel-application-dialog.component.scss'],
+    selector: 'app-uncancel-application-dialog',
+    templateUrl: './uncancel-application-dialog.component.html',
+    styleUrls: ['./uncancel-application-dialog.component.scss'],
+    standalone: false
 })
 export class UncancelApplicationDialogComponent {
   status?: ApplicationSubmissionStatusPill;

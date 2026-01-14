@@ -10,7 +10,7 @@
       <a
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
         target="_blank"
-      >
+        >
         What the Commission Considers
       </a>
     </li>
@@ -18,7 +18,7 @@
       <a
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#nfu"
         target="_blank"
-      >
+        >
         Non-Farm Uses within the ALR
       </a>
     </li>
@@ -38,13 +38,17 @@
           matInput
           formControlName="hectares"
           placeholder="Type size in hectares"
-        />
+          />
         <span matTextSuffix>ha</span>
       </mat-form-field>
-      <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="hectares.errors?.['required']">This field is required</div>
-      </div>
+      @if (hectares.invalid && (hectares.dirty || hectares.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (hectares.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
     </div>
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
@@ -62,10 +66,14 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="purpose.errors?.['required']">This field is required</div>
-      </div>
+      @if (purpose.invalid && (purpose.dirty || purpose.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (purpose.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
     <div class="full-row">
@@ -81,10 +89,14 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <div *ngIf="outsideLands.invalid && (outsideLands.dirty || outsideLands.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="outsideLands.errors?.['required']">This field is required</div>
-      </div>
+      @if (outsideLands.invalid && (outsideLands.dirty || outsideLands.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (outsideLands.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
       <div class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</div>
     </div>
     <div class="full-row">
@@ -100,13 +112,16 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <div
-        *ngIf="agricultureSupport.invalid && (agricultureSupport.dirty || agricultureSupport.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="agricultureSupport.errors?.['required']">This field is required</div>
-      </div>
+      @if (agricultureSupport.invalid && (agricultureSupport.dirty || agricultureSupport.touched)) {
+        <div
+          class="field-error"
+          >
+          <mat-icon>warning</mat-icon>
+          @if (agricultureSupport.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
       <div class="subtext">Characters left: {{ 4000 - agricultureSupportText.textLength }}</div>
     </div>
     <div class="full-row">
@@ -133,76 +148,87 @@
         class="input"
         id="will-import-fill"
         formControlName="willImportFill"
-      >
+        >
         <mat-button-toggle
           [value]="true"
           [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
           >Yes</mat-button-toggle
-        >
-        <mat-button-toggle
-          [value]="false"
-          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
-          >No</mat-button-toggle
-        >
-      </mat-button-toggle-group>
-      <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
-      </div>
-    </div>
-  </div>
-  <section>
-    <h3>Soil & Fill Components</h3>
-    <div class="form-row">
-      <div class="full-row">
-        <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
-        <div class="subtext">
-          The Commission must approve any proposed fill. List all proposed types of fill.
-          <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/30_2019#section36" target="_blank"
-            >Prohibited fill</a
           >
-          cannot be placed in the ALR.
+          <mat-button-toggle
+            [value]="false"
+            [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+            >No</mat-button-toggle
+            >
+          </mat-button-toggle-group>
+          @if (willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)) {
+            <div class="field-error">
+              <mat-icon>warning</mat-icon>
+              @if (willImportFill.errors?.['required']) {
+                <div>This field is required</div>
+              }
+            </div>
+          }
         </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="fillTypeDescription"
-            #fillTypeToPlaceText
-            maxlength="4000"
-            id="fillType"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <div
-          *ngIf="fillTypeDescription.invalid && (fillTypeDescription.dirty || fillTypeDescription.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="fillTypeDescription.errors?.['required']">This field is required</div>
-        </div>
-        <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
-        <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
       </div>
-    </div>
+      <section>
+        <h3>Soil & Fill Components</h3>
+        <div class="form-row">
+          <div class="full-row">
+            <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
+            <div class="subtext">
+              The Commission must approve any proposed fill. List all proposed types of fill.
+              <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/30_2019#section36" target="_blank"
+                >Prohibited fill</a
+                >
+                cannot be placed in the ALR.
+              </div>
+              <mat-form-field appearance="outline">
+                <textarea
+                  formControlName="fillTypeDescription"
+                  #fillTypeToPlaceText
+                  maxlength="4000"
+                  id="fillType"
+                  matInput
+                ></textarea>
+              </mat-form-field>
+              @if (fillTypeDescription.invalid && (fillTypeDescription.dirty || fillTypeDescription.touched)) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (fillTypeDescription.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
+              <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
+              <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
+            </div>
+          </div>
 
-    <app-soil-table
-      tableHeader="Fill to be Placed"
-      [disabled]="fillTableDisabled"
-      [touchAll]="showErrors"
-      [(data)]="fillTableData"
-      (dataChange)="markDirty()"
-      [showVolumeField]="false"
-    ></app-soil-table>
-  </section>
-</form>
-<div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
-  <div>
-    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
-      Previous<span class="mobile-hidden"> Step</span>
-    </button>
-    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
-      Next<span class="mobile-hidden"> Step</span>
-    </button>
-  </div>
-</div>
+          <app-soil-table
+            tableHeader="Fill to be Placed"
+            [disabled]="fillTableDisabled"
+            [touchAll]="showErrors"
+            [(data)]="fillTableData"
+            (dataChange)="markDirty()"
+            [showVolumeField]="false"
+          ></app-soil-table>
+        </section>
+      </form>
+      <div class="button-container">
+        @if (!draftMode) {
+          <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+        }
+        @if (draftMode) {
+          <button (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+        }
+        <div>
+          <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+            Previous<span class="mobile-hidden"> Step</span>
+          </button>
+          <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+            Next<span class="mobile-hidden"> Step</span>
+          </button>
+        </div>
+      </div>

@@ -1,6 +1,6 @@
 <div class="header">
   <h3>{{ title }}</h3>
-  <button (click)="openUploadDialog()" mat-flat-button color="primary">+ Add Document</button>
+  <button (click)="openUploadDialog()" mat-flat-button color="primary">{{ addButtonText }}</button>
 </div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3 documents full-width">
@@ -12,7 +12,7 @@
   <ng-container matColumnDef="type">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by type">Type</th>
     <td mat-cell *matCellDef="let document" [matTooltip]="document.type.label">
-      {{ document.type.oatsCode }}
+      {{ document.type.label }}
     </td>
   </ng-container>
 

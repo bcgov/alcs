@@ -11,10 +11,11 @@ import { ApplicationTagService } from '../../../services/application/application
 import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
 
 @Component({
-  selector: 'app-commissioner-application',
-  templateUrl: './commissioner-application.component.html',
-  styleUrls: ['./commissioner-application.component.scss'],
-  providers: [{ provide: FileTagService, useClass: ApplicationTagService }],
+    selector: 'app-commissioner-application',
+    templateUrl: './commissioner-application.component.html',
+    styleUrls: ['./commissioner-application.component.scss'],
+    providers: [{ provide: FileTagService, useClass: ApplicationTagService }],
+    standalone: false
 })
 export class CommissionerApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { ApplicationDecisionConditionTypesService } from '../../../services/appl
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionConditionTypesComponent } from './decision-condition-types.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DecisionConditionTypesComponent', () => {
   let component: DecisionConditionTypesComponent;
@@ -21,24 +22,26 @@ describe('DecisionConditionTypesComponent', () => {
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [DecisionConditionTypesComponent],
-      providers: [
+    declarations: [DecisionConditionTypesComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ApplicationDecisionConditionTypesService,
-          useValue: mockDecTypesService,
+            provide: ApplicationDecisionConditionTypesService,
+            useValue: mockDecTypesService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DecisionConditionTypesComponent);
     component = fixture.componentInstance;

@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -10,6 +10,8 @@ import { HomeComponent } from './home.component';
 import { ComplianceAndEnforcementService } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { Router } from '@angular/router';
+import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -37,31 +39,33 @@ describe('HomeComponent', () => {
     mockRouter = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [HomeComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [
+    declarations: [HomeComponent],
+    imports: [RouterTestingModule],
+    providers: [
         {
-          provide: AuthenticationService,
-          useValue: mockAuthService,
+            provide: AuthenticationService,
+            useValue: mockAuthService,
         },
         {
-          provide: UserService,
-          useValue: mockUserService,
+            provide: UserService,
+            useValue: mockUserService,
         },
         {
-          provide: ComplianceAndEnforcementService,
-          useValue: mockComplianceAndEnforcementService,
+            provide: ComplianceAndEnforcementService,
+            useValue: mockComplianceAndEnforcementService,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: Router,
-          useValue: mockRouter,
+            provide: Router,
+            useValue: mockRouter,
         },
-      ],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
@@ -89,6 +93,19 @@ describe('HomeComponent', () => {
     });
 
     it('shows error toast if service create fails', async () => {
+      const mockUser: UserDto = {
+        uuid: '1234',
+        initials: 'JD',
+        name: 'John Doe',
+        identityProvider: 'IDIR',
+        clientRoles: [],
+        idirUserName: 'jd',
+        bceidUserName: 'jd',
+        prettyName: 'John Doe',
+        settings: {
+          favoriteBoards: [],
+        },
+      };
       mockComplianceAndEnforcementService.create.mockResolvedValue({
         uuid: '12345',
         fileNumber: '12345',
@@ -100,6 +117,9 @@ describe('HomeComponent', () => {
         allegedActivity: [],
         intakeNotes: '',
         submitters: [],
+        chronologyClosedAt: 0,
+        chronologyClosedBy: mockUser,
+        assignee: null,
       });
 
       await component.createComplianceAndEnforcementFile();
@@ -108,7 +128,20 @@ describe('HomeComponent', () => {
     });
 
     it('shows error toast if service create fails', async () => {
-      const responseDto = {
+      const mockUser: UserDto = {
+        uuid: '1234',
+        initials: 'JD',
+        name: 'John Doe',
+        identityProvider: 'IDIR',
+        clientRoles: [],
+        idirUserName: 'jd',
+        bceidUserName: 'jd',
+        prettyName: 'John Doe',
+        settings: {
+          favoriteBoards: [],
+        },
+      };
+      const responseDto: ComplianceAndEnforcementDto = {
         uuid: '12345',
         fileNumber: '12345',
         dateSubmitted: null,
@@ -119,6 +152,9 @@ describe('HomeComponent', () => {
         allegedActivity: [],
         intakeNotes: '',
         submitters: [],
+        chronologyClosedAt: 0,
+        chronologyClosedBy: mockUser,
+        assignee: null,
       };
 
       mockComplianceAndEnforcementService.create.mockResolvedValue(responseDto);

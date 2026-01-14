@@ -26,9 +26,10 @@ interface InclForm {
 }
 
 @Component({
-  selector: 'app-incl-proposal',
-  templateUrl: './incl-proposal.component.html',
-  styleUrls: ['./incl-proposal.component.scss'],
+    selector: 'app-incl-proposal',
+    templateUrl: './incl-proposal.component.html',
+    styleUrls: ['./incl-proposal.component.scss'],
+    standalone: false
 })
 export class InclProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   DOCUMENT = DOCUMENT_TYPE;

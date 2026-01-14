@@ -7,6 +7,7 @@ import {
 } from './submitter/submitter.dto';
 import { Type } from 'class-transformer';
 import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
+import { UserDto } from '../../user/user.dto';
 
 export class ComplianceAndEnforcementDto {
   @AutoMap()
@@ -41,6 +42,15 @@ export class ComplianceAndEnforcementDto {
 
   @AutoMap()
   property?: ComplianceAndEnforcementPropertyDto;
+
+  @AutoMap()
+  chronologyClosedAt: number | null;
+
+  @AutoMap()
+  chronologyClosedBy?: UserDto;
+
+  @AutoMap()
+  assignee?: UserDto;
 }
 
 export class UpdateComplianceAndEnforcementDto {
@@ -77,4 +87,16 @@ export class UpdateComplianceAndEnforcementDto {
   @ValidateNested({ each: true })
   @Type(() => UpdateComplianceAndEnforcementSubmitterDto)
   submitters?: UpdateComplianceAndEnforcementSubmitterDto[];
+
+  @IsOptional()
+  @IsNumber()
+  chronologyClosedAt?: number | null;
+
+  @IsOptional()
+  @IsString()
+  chronologyClosedByUuid?: string | null;
+
+  @IsOptional()
+  @IsString()
+  assigneeUuid?: string | null;
 }

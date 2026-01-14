@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
   ComplianceAndEnforcementSubmitterDto,
@@ -9,15 +9,23 @@ import { strictEmailValidator } from '../../../shared/validators/email-validator
 import { InitialSubmissionType } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-submitter',
-  templateUrl: './submitter.component.html',
-  styleUrls: ['./submitter.component.scss'],
+    selector: 'app-compliance-and-enforcement-submitter',
+    templateUrl: './submitter.component.html',
+    styleUrls: ['./submitter.component.scss'],
+    standalone: false
 })
 export class SubmitterComponent implements OnDestroy {
   $destroy = new Subject<void>();
 
   isPatching = false;
   isSubscribed = false;
+
+  uuid?: string;
+
+  @Input() title?: string;
+  @Input() showDeleteButton = false;
+
+  @Output() deleteButtonClicked = new EventEmitter<undefined>();
 
   form = new FormGroup({
     isAnonymous: new FormControl<boolean>(false),
@@ -28,16 +36,11 @@ export class SubmitterComponent implements OnDestroy {
     additionalContactInformation: new FormControl<string>(''),
   });
 
-  @Input() set parentForm(parentForm: FormGroup) {
-    if (!parentForm || parentForm.contains('overview')) {
-      return;
-    }
+  @Output() formReady = new EventEmitter<FormGroup>();
 
-    parentForm.addControl('overview', this.form);
-  }
-
-  $changes: BehaviorSubject<UpdateComplianceAndEnforcementSubmitterDto> =
-    new BehaviorSubject<UpdateComplianceAndEnforcementSubmitterDto>({});
+  $changes: BehaviorSubject<[string | undefined, UpdateComplianceAndEnforcementSubmitterDto]> = new BehaviorSubject<
+    [string | undefined, UpdateComplianceAndEnforcementSubmitterDto]
+  >([undefined, {}]);
 
   @Input()
   set submitter(submitter: ComplianceAndEnforcementSubmitterDto | undefined) {
@@ -55,6 +58,8 @@ export class SubmitterComponent implements OnDestroy {
 
       this.setAnonymity(submitter.isAnonymous);
 
+      this.uuid = submitter.uuid;
+
       this.isPatching = false;
     }
 
@@ -65,15 +70,20 @@ export class SubmitterComponent implements OnDestroy {
           return;
         }
 
-        this.$changes.next({
-          isAnonymous: form.isAnonymous ?? undefined,
-          name: form.name ?? '',
-          email: form.email ?? '',
-          telephoneNumber: form.telephoneNumber ?? '',
-          affiliation: form.affiliation ?? '',
-          additionalContactInformation: form.additionalContactInformation ?? '',
-        });
+        this.$changes.next([
+          this.uuid,
+          {
+            isAnonymous: form.isAnonymous ?? undefined,
+            name: form.name ?? '',
+            email: form.email ?? '',
+            telephoneNumber: form.telephoneNumber ?? '',
+            affiliation: form.affiliation ?? '',
+            additionalContactInformation: form.additionalContactInformation ?? '',
+          },
+        ]);
       });
+
+      this.formReady.emit(this.form);
 
       this.isSubscribed = true;
     }

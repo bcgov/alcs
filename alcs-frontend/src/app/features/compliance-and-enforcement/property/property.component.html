@@ -1,25 +1,31 @@
 <form [formGroup]="form">
-  <div class="header full-width">
-    <h3>Property</h3>
-  </div>
+  @if (!hideHeader) {
+    <div class="header full-width">
+      <h3>Property</h3>
+    </div>
+  }
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Civic Address</mat-label>
     <textarea matInput formControlName="civicAddress" rows="1"></textarea>
   </mat-form-field>
-  <div *ngIf="form.get('civicAddress')?.hasError('required') && form.get('civicAddress')?.touched" class="validation-error">
-    <mat-icon class="error-icon">warning</mat-icon>
-    <span>This field is required</span>
-  </div>
+  @if (form.get('civicAddress')?.hasError('required') && form.get('civicAddress')?.touched) {
+    <div class="validation-error">
+      <mat-icon class="error-icon">warning</mat-icon>
+      <span>This field is required</span>
+    </div>
+  }
 
   <mat-form-field class="full-width" appearance="outline">
     <mat-label>Legal Description</mat-label>
     <textarea matInput formControlName="legalDescription" rows="1"></textarea>
   </mat-form-field>
-  <div *ngIf="form.get('legalDescription')?.hasError('required') && form.get('legalDescription')?.touched" class="validation-error">
-    <mat-icon class="error-icon">warning</mat-icon>
-    <span>This field is required</span>
-  </div>
+  @if (form.get('legalDescription')?.hasError('required') && form.get('legalDescription')?.touched) {
+    <div class="validation-error">
+      <mat-icon class="error-icon">warning</mat-icon>
+      <span>This field is required</span>
+    </div>
+  }
 
   <div class="government-region-fields">
     <div class="government-field">
@@ -32,32 +38,40 @@
           [matAutocomplete]="auto"
           placeholder="Type government name"
           (blur)="onLocalGovernmentBlur()"
-        />
+          />
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocalGovernmentChange($event)">
-          <mat-option *ngFor="let lg of filteredLocalGovernments | async" [value]="lg.uuid">
-            {{ lg.name }}
-          </mat-option>
+          @for (lg of filteredLocalGovernments | async; track lg) {
+            <mat-option [value]="lg.uuid">
+              {{ lg.name }}
+            </mat-option>
+          }
         </mat-autocomplete>
       </mat-form-field>
-      <div *ngIf="localGovernmentControl.hasError('required') && localGovernmentControl.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>This field is required</span>
-      </div>
+      @if (localGovernmentControl.hasError('required') && localGovernmentControl.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>This field is required</span>
+        </div>
+      }
     </div>
 
     <div class="region-field">
       <mat-form-field appearance="outline">
         <mat-label>Region</mat-label>
         <mat-select formControlName="regionCode">
-          <mat-option *ngFor="let region of regions" [value]="region.code">
-            {{ region.label }}
-          </mat-option>
+          @for (region of regions; track region) {
+            <mat-option [value]="region.code">
+              {{ region.label }}
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
-      <div *ngIf="form.get('regionCode')?.hasError('required') && form.get('regionCode')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>This field is required</span>
-      </div>
+      @if (form.get('regionCode')?.hasError('required') && form.get('regionCode')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>This field is required</span>
+        </div>
+      }
     </div>
   </div>
 
@@ -65,49 +79,65 @@
     <div class="coordinate-field">
       <mat-form-field appearance="outline">
         <mat-label>Latitude</mat-label>
-        <input type="number" matInput formControlName="latitude" step="0.00001" placeholder="e.g. 49.55555" />
+        <input type="text" matInput formControlName="latitude" placeholder="e.g. 49.55555" (blur)="onLatitudeBlur()" />
       </mat-form-field>
-      <div *ngIf="form.get('latitude')?.hasError('required') && form.get('latitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>This field is required</span>
-      </div>
-      <div class="coordinate-help">Valid Range is 48 to 61. Example: 49.55555</div>
-      <div *ngIf="form.get('latitude')?.hasError('min') && form.get('latitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>Latitude must be at least 48</span>
-      </div>
-      <div *ngIf="form.get('latitude')?.hasError('max') && form.get('latitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>Latitude must be at most 61</span>
-      </div>
-      <div *ngIf="form.get('latitude')?.hasError('decimalPlaces') && form.get('latitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>Latitude must have exactly 5 decimal places (e.g. 49.55555)</span>
-      </div>
+      @if (form.get('latitude')?.hasError('required') && form.get('latitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>This field is required</span>
+        </div>
+      }
+      <div class="coordinate-help">Valid Range is 48 to 61. Must have exactly 5 decimal places (e.g. 49.55555). Integers like 49 will be formatted to 49.00000.</div>
+      @if (form.get('latitude')?.hasError('min') && form.get('latitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>Latitude must be at least 48</span>
+        </div>
+      }
+      @if (form.get('latitude')?.hasError('max') && form.get('latitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>Latitude must be at most 61</span>
+        </div>
+      }
+      @if (form.get('latitude')?.hasError('decimalPlaces') && form.get('latitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>Latitude must have exactly 5 decimal places (e.g. 49.55555)</span>
+        </div>
+      }
     </div>
 
     <div class="coordinate-field">
       <mat-form-field appearance="outline">
         <mat-label>Longitude</mat-label>
-        <input type="number" matInput formControlName="longitude" step="0.00001" placeholder="e.g. -130.55555" />
+        <input type="text" matInput formControlName="longitude" placeholder="e.g. -130.55555" (blur)="onLongitudeBlur()" />
       </mat-form-field>
-      <div *ngIf="form.get('longitude')?.hasError('required') && form.get('longitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>This field is required</span>
-      </div>
-      <div class="coordinate-help">Valid Range is -140 to -113. Example: -130.55555</div>
-      <div *ngIf="form.get('longitude')?.hasError('min') && form.get('longitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>Longitude must be at least -140</span>
-      </div>
-      <div *ngIf="form.get('longitude')?.hasError('max') && form.get('longitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>Longitude must be at most -113</span>
-      </div>
-      <div *ngIf="form.get('longitude')?.hasError('decimalPlaces') && form.get('longitude')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>Longitude must have exactly 5 decimal places (e.g. -130.55555)</span>
-      </div>
+      @if (form.get('longitude')?.hasError('required') && form.get('longitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>This field is required</span>
+        </div>
+      }
+      <div class="coordinate-help">Valid Range is -140 to -113. Must have exactly 5 decimal places (e.g. -130.55555). Integers like -130 will be formatted to -130.00000.</div>
+      @if (form.get('longitude')?.hasError('min') && form.get('longitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>Longitude must be at least -140</span>
+        </div>
+      }
+      @if (form.get('longitude')?.hasError('max') && form.get('longitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>Longitude must be at most -113</span>
+        </div>
+      }
+      @if (form.get('longitude')?.hasError('decimalPlaces') && form.get('longitude')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>Longitude must have exactly 5 decimal places (e.g. -130.55555)</span>
+        </div>
+      }
     </div>
   </div>
 
@@ -132,27 +162,41 @@
       </div>
 
       <div class="input-field-container">
-        <div class="pid-field" *ngIf="form.get('pidOrPin')?.value === 'PID'">
-          <mat-form-field appearance="outline">
-            <mat-label>Enter PID</mat-label>
-            <input matInput formControlName="pid" mask="000-000-000" placeholder="XXX-XXX-XXX" />
-          </mat-form-field>
-          <div *ngIf="form.get('pid')?.hasError('required') && form.get('pid')?.touched" class="validation-error">
-            <mat-icon class="error-icon">warning</mat-icon>
-            <span>This field is required</span>
+        @if (form.get('pidOrPin')?.value === 'PID') {
+          <div class="pid-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Enter PID</mat-label>
+              <input matInput formControlName="pid" mask="000-000-000" placeholder="XXX-XXX-XXX" />
+            </mat-form-field>
+            @if (form.get('pid')?.hasError('required') && form.get('pid')?.touched) {
+              <div class="validation-error">
+                <mat-icon class="error-icon">warning</mat-icon>
+                <span>This field is required</span>
+              </div>
+            }
+            @if (form.get('pid')?.hasError('pidLength') && form.get('pid')?.touched) {
+              <div class="validation-error">
+                <mat-icon class="error-icon">warning</mat-icon>
+                <span>PID must be exactly 9 digits</span>
+              </div>
+            }
           </div>
-        </div>
+        }
 
-        <div class="pin-field" *ngIf="form.get('pidOrPin')?.value === 'PIN'">
-          <mat-form-field appearance="outline">
-            <mat-label>Enter PIN</mat-label>
-            <input matInput formControlName="pin" />
-          </mat-form-field>
-          <div *ngIf="form.get('pin')?.hasError('required') && form.get('pin')?.touched" class="validation-error">
-            <mat-icon class="error-icon">warning</mat-icon>
-            <span>This field is required</span>
+        @if (form.get('pidOrPin')?.value === 'PIN') {
+          <div class="pin-field">
+            <mat-form-field appearance="outline">
+              <mat-label>Enter PIN</mat-label>
+              <input matInput formControlName="pin" />
+            </mat-form-field>
+            @if (form.get('pin')?.hasError('required') && form.get('pin')?.touched) {
+              <div class="validation-error">
+                <mat-icon class="error-icon">warning</mat-icon>
+                <span>This field is required</span>
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
   </div>
@@ -163,14 +207,18 @@
         <mat-label>Area (ha)</mat-label>
         <input type="number" matInput formControlName="areaHectares" step="0.01" min="0" placeholder="e.g. 10.50" />
       </mat-form-field>
-      <div *ngIf="form.get('areaHectares')?.hasError('required') && form.get('areaHectares')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>This field is required</span>
-      </div>
-      <div *ngIf="form.get('areaHectares')?.hasError('min') && form.get('areaHectares')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>Area must be at least 0</span>
-      </div>
+      @if (form.get('areaHectares')?.hasError('required') && form.get('areaHectares')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>This field is required</span>
+        </div>
+      }
+      @if (form.get('areaHectares')?.hasError('min') && form.get('areaHectares')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>Area must be at least 0</span>
+        </div>
+      }
     </div>
 
     <div class="alr-field">
@@ -179,18 +227,24 @@
         <input type="number" matInput formControlName="alrPercentage" step="0.1" min="0" max="100" placeholder="e.g. 75.5" />
         <span matTextSuffix>%</span>
       </mat-form-field>
-      <div *ngIf="form.get('alrPercentage')?.hasError('required') && form.get('alrPercentage')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>This field is required</span>
-      </div>
-      <div *ngIf="form.get('alrPercentage')?.hasError('min') && form.get('alrPercentage')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>% within ALR must be at least 0</span>
-      </div>
-      <div *ngIf="form.get('alrPercentage')?.hasError('max') && form.get('alrPercentage')?.touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>% within ALR must be at most 100</span>
-      </div>
+      @if (form.get('alrPercentage')?.hasError('required') && form.get('alrPercentage')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>This field is required</span>
+        </div>
+      }
+      @if (form.get('alrPercentage')?.hasError('min') && form.get('alrPercentage')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>% within ALR must be at least 0</span>
+        </div>
+      }
+      @if (form.get('alrPercentage')?.hasError('max') && form.get('alrPercentage')?.touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>% within ALR must be at most 100</span>
+        </div>
+      }
     </div>
   </div>
 
@@ -198,8 +252,10 @@
     <mat-label>ALC History</mat-label>
     <textarea matInput formControlName="alcHistory" rows="4" placeholder="Enter ALC history details..."></textarea>
   </mat-form-field>
-  <div *ngIf="form.get('alcHistory')?.hasError('required') && form.get('alcHistory')?.touched" class="validation-error">
-    <mat-icon class="error-icon">warning</mat-icon>
-    <span>This field is required</span>
-  </div>
+  @if (form.get('alcHistory')?.hasError('required') && form.get('alcHistory')?.touched) {
+    <div class="validation-error">
+      <mat-icon class="error-icon">warning</mat-icon>
+      <span>This field is required</span>
+    </div>
+  }
 </form>

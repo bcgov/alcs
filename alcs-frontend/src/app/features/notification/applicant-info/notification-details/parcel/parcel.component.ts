@@ -6,9 +6,10 @@ import { NotificationSubmissionDto } from '../../../../../services/notification/
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../../shared/dto/parcel-ownership.type.dto';
 
 @Component({
-  selector: 'app-parcel',
-  templateUrl: './parcel.component.html',
-  styleUrls: ['./parcel.component.scss'],
+    selector: 'app-parcel',
+    templateUrl: './parcel.component.html',
+    styleUrls: ['./parcel.component.scss'],
+    standalone: false
 })
 export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterContentChecked {
   $destroy = new Subject<void>();

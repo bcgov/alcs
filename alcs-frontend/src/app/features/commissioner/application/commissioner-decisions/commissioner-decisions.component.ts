@@ -5,9 +5,10 @@ import { ApplicationDecisionV2Service } from '../../../../services/application/d
 import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
 
 @Component({
-  selector: 'app-commissioner-decisions',
-  templateUrl: './commissioner-decisions.component.html',
-  styleUrl: './commissioner-decisions.component.scss',
+    selector: 'app-commissioner-decisions',
+    templateUrl: './commissioner-decisions.component.html',
+    styleUrl: './commissioner-decisions.component.scss',
+    standalone: false
 })
 export class CommissionerDecisionsComponent {
   @Input() applicationDecisions: CommissionerDecisionDto[] = [];

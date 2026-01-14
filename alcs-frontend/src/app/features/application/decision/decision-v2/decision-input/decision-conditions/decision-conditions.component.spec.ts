@@ -11,8 +11,9 @@ import { ApplicationDecisionV2Service } from '../../../../../../services/applica
 import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionConditionsComponent } from './decision-conditions.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ApplicationDecisionConditionService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('DecisionConditionComponent', () => {
   let component: DecisionConditionsComponent;
@@ -27,24 +28,26 @@ describe('DecisionConditionComponent', () => {
     mockDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatMenuModule],
-      providers: [
+    declarations: [DecisionConditionsComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatMenuModule],
+    providers: [
         {
-          provide: ApplicationDecisionV2Service,
-          useValue: mockDecisionService,
+            provide: ApplicationDecisionV2Service,
+            useValue: mockDecisionService,
         },
         {
-          provide: ApplicationDecisionConditionService,
-          useValue: mockConditionService,
+            provide: ApplicationDecisionConditionService,
+            useValue: mockConditionService,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: {},
+            provide: ConfirmationDialogService,
+            useValue: {},
         },
-      ],
-      declarations: [DecisionConditionsComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(DecisionConditionsComponent);
     component = fixture.componentInstance;

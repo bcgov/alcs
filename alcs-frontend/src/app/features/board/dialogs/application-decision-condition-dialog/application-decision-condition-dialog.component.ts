@@ -33,9 +33,10 @@ import {
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-application-decision-condition-dialog',
-  templateUrl: './application-decision-condition-dialog.component.html',
-  styleUrls: ['../card-dialog/card-dialog.component.scss', './application-decision-condition-dialog.component.scss'],
+    selector: 'app-application-decision-condition-dialog',
+    templateUrl: './application-decision-condition-dialog.component.html',
+    styleUrls: ['../card-dialog/card-dialog.component.scss', './application-decision-condition-dialog.component.scss'],
+    standalone: false
 })
 export class ApplicationDecisionConditionDialogComponent extends CardDialogComponent implements OnInit {
   cardTitle = '';

@@ -1,19 +1,27 @@
 <div class="inline-date-picker-wrapper">
-  <span class="left" *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="selectedValue === null"> Select Answer </a>
-    <span *ngIf="selectedValue !== null">
-      {{ formattedAnswer }}
+  @if (!isEditing) {
+    <span class="left">
+      @if (selectedValue === null) {
+        <a (click)="toggleEdit()" class="add-date"> Select Answer </a>
+      }
+      @if (selectedValue !== null) {
+        <span>
+          {{ formattedAnswer }}
+        </span>
+      }
+      @if (selectedValue !== null) {
+        <button class="edit-button" mat-icon-button (click)="toggleEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      }
     </span>
-    <button *ngIf="selectedValue !== null" class="edit-button" mat-icon-button (click)="toggleEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
-  </span>
+  }
   <div
     class="editing"
     [ngClass]="{
       hidden: !isEditing
     }"
-  >
+    >
     <mat-button-toggle-group class="button-group" [(ngModel)]="value">
       <mat-button-toggle value="Yes">Yes</mat-button-toggle>
       <mat-button-toggle value="No">No</mat-button-toggle>

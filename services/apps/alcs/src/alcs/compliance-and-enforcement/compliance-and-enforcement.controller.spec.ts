@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ComplianceAndEnforcementController } from './compliance-and-enforcement.controller';
-import { ComplianceAndEnforcementService } from './compliance-and-enforcement.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ClsService } from 'nestjs-cls';
-import { ComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
-import { AutomapperModule } from 'automapper-nestjs';
+import { Test, TestingModule } from '@nestjs/testing';
 import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
+import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ComplianceAndEnforcementController } from './compliance-and-enforcement.controller';
+import { ComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
+import { ComplianceAndEnforcementService } from './compliance-and-enforcement.service';
 
 describe('ComplianceAndEnforcementController', () => {
   let controller: ComplianceAndEnforcementController;
@@ -55,6 +55,7 @@ describe('ComplianceAndEnforcementController', () => {
           allegedContraventionNarrative: '',
           allegedActivity: [],
           intakeNotes: '',
+          chronologyClosedAt: 0,
         },
         {
           uuid: '2',
@@ -66,6 +67,7 @@ describe('ComplianceAndEnforcementController', () => {
           allegedContraventionNarrative: '',
           allegedActivity: [],
           intakeNotes: '',
+          chronologyClosedAt: 0,
         },
       ];
       mockComplianceAndEnforcementService.fetchAll.mockResolvedValue(result);
@@ -86,10 +88,11 @@ describe('ComplianceAndEnforcementController', () => {
         allegedContraventionNarrative: '',
         allegedActivity: [],
         intakeNotes: '',
+        chronologyClosedAt: 0,
       };
-      mockComplianceAndEnforcementService.fetchByFileNumber.mockResolvedValue(result);
+      mockComplianceAndEnforcementService.fetchById.mockResolvedValue(result);
       expect(await controller.fetchByFileNumber('1', true)).toEqual(result);
-      expect(mockComplianceAndEnforcementService.fetchByFileNumber).toHaveBeenCalledWith('1', true, false);
+      expect(mockComplianceAndEnforcementService.fetchById).toHaveBeenCalledWith('1', 'fileNumber', true, false, false);
     });
   });
 
@@ -106,6 +109,7 @@ describe('ComplianceAndEnforcementController', () => {
         allegedContraventionNarrative: '',
         allegedActivity: [],
         intakeNotes: '',
+        chronologyClosedAt: 0,
       };
       mockComplianceAndEnforcementService.create.mockResolvedValue(resultDto);
       expect(await controller.create(createDto, true)).toEqual(resultDto);
@@ -136,6 +140,7 @@ describe('ComplianceAndEnforcementController', () => {
         allegedContraventionNarrative: '',
         allegedActivity: [],
         intakeNotes: '',
+        chronologyClosedAt: 0,
       };
       mockComplianceAndEnforcementService.update.mockResolvedValue(resultDto);
       expect(await controller.update('1', updateDto)).toEqual(resultDto);

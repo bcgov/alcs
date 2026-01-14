@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { DeleteResult, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ComplianceAndEnforcementSubmitter } from './submitter.entity';
-import { ComplianceAndEnforcementSubmitterDto, UpdateComplianceAndEnforcementSubmitterDto } from './submitter.dto';
+import {
+  BulkUpdateComplianceAndEnforcementSubmitterItemDto,
+  ComplianceAndEnforcementSubmitterDto,
+  UpdateComplianceAndEnforcementSubmitterDto,
+} from './submitter.dto';
 import { InjectMapper } from 'automapper-nestjs';
 import { Mapper } from 'automapper-core';
 import {
@@ -14,8 +18,8 @@ import {
 export class ComplianceAndEnforcementSubmitterService {
   constructor(
     @InjectRepository(ComplianceAndEnforcementSubmitter)
-    private repository: Repository<ComplianceAndEnforcementSubmitter>,
-    @InjectMapper() private mapper: Mapper,
+    private readonly repository: Repository<ComplianceAndEnforcementSubmitter>,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async fetchAll(): Promise<ComplianceAndEnforcementSubmitterDto[]> {
@@ -88,6 +92,12 @@ export class ComplianceAndEnforcementSubmitterService {
     const savedEntity = await this.repository.save(updateEntity);
 
     return this.mapper.map(savedEntity, ComplianceAndEnforcementSubmitter, ComplianceAndEnforcementSubmitterDto);
+  }
+
+  async bulkUpdate(
+    submitters: BulkUpdateComplianceAndEnforcementSubmitterItemDto[],
+  ): Promise<ComplianceAndEnforcementSubmitterDto[]> {
+    return Promise.all(submitters.map((submitter) => this.update(submitter.uuid, submitter.dto)));
   }
 
   async delete(uuid: string): Promise<DeleteResult> {

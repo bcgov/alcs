@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NoticeOfIntentMeetingService } from '../../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
 
 import { NoticeOfIntentMeetingDialogComponent } from './notice-of-intent-meeting-dialog.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('NoticeOfIntentMeetingDialogComponent', () => {
   let component: NoticeOfIntentMeetingDialogComponent;
@@ -19,15 +20,17 @@ describe('NoticeOfIntentMeetingDialogComponent', () => {
     mockNoticeOfIntentMeetingService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [NoticeOfIntentMeetingDialogComponent],
-      providers: [
+    declarations: [NoticeOfIntentMeetingDialogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule, MatSnackBarModule, FormsModule, ReactiveFormsModule],
+    providers: [
         { provide: NoticeOfIntentMeetingService, useValue: mockNoticeOfIntentMeetingService },
         { provide: MAT_DIALOG_DATA, useValue: { meetingType: { code: 'fake', label: 'fake' } } },
         { provide: MatDialogRef, useValue: {} },
-      ],
-      imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, FormsModule, ReactiveFormsModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(NoticeOfIntentMeetingDialogComponent);
     component = fixture.componentInstance;

@@ -26,8 +26,9 @@ export class ComplianceAndEnforcementController {
     @Param('fileNumber') fileNumber: string,
     @Query('withSubmitters', ParseBoolPipe) withSubmitters: boolean = false,
     @Query('withProperty', ParseBoolPipe) withProperty: boolean = false,
+    @Query('withAssignee', ParseBoolPipe) withAssignee: boolean = false,
   ): Promise<ComplianceAndEnforcementDto> {
-    return await this.service.fetchByFileNumber(fileNumber, withSubmitters, withProperty);
+    return await this.service.fetchById(fileNumber, 'fileNumber', withSubmitters, withProperty, withAssignee);
   }
 
   @Post('')
@@ -70,5 +71,13 @@ export class ComplianceAndEnforcementController {
   @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
   async delete(@Param('uuid') uuid: string): Promise<DeleteResult> {
     return await this.service.delete(uuid);
+  }
+
+  @Get('/:fileNumber/uuid')
+  @UserRoles(AUTH_ROLE.ADMIN, AUTH_ROLE.C_AND_E)
+  async uuidByFileNumber(@Param('fileNumber') fileNumber: string): Promise<{ uuid: string }> {
+    const uuid = await this.service.uuidByFileNumber(fileNumber);
+
+    return { uuid };
   }
 }

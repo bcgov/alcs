@@ -7,10 +7,11 @@
     <div><strong>Visibility:</strong> ALC staff only (with full editing capabilities)</div>
     <div>
       <strong>Portal Status: </strong>
-      <app-application-submission-status-type-pill
-        *ngIf="mappedType"
-        [type]="mappedType"
-      ></app-application-submission-status-type-pill>
+      @if (mappedType) {
+        <app-application-submission-status-type-pill
+          [type]="mappedType"
+        ></app-application-submission-status-type-pill>
+      }
     </div>
     <div>
       <strong>Email (with decision document) sent to: </strong>

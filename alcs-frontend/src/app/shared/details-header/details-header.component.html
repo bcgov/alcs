@@ -2,111 +2,131 @@
   <div class="left-column">
     <div>
       <span class="subtext heading">{{ heading }}</span>
-      <div *ngIf="_application" class="first-row">
-        <div class="title">
-          <h5 class="detail-heading">
-            <div class="file-number">{{ _application.fileNumber }}</div>
-            <div class="open-paren">(</div>
-            <app-inline-text
-              *ngIf="applicationDetailService"
-              (save)="onSaveApplicant($event ?? undefined)"
-              [value]="_application.applicant"
-              [required]="true"
-              [isFixedHeight]="true"
-              class="applicant-inline-field"
-            /><ng-container *ngIf="!applicationDetailService">{{ _application.applicant }}</ng-container>
-            <div class="close-paren">)</div>
-          </h5>
-          <app-application-legacy-id [legacyId]="legacyId"></app-application-legacy-id>
-          <div class="labels">
-            <app-application-type-pill
-              *ngFor="let type of types"
-              [type]="type"
-              [isHeader]="true"
-            ></app-application-type-pill>
-            <app-application-type-pill
-              *ngIf="showReconLabel"
-              [type]="reconLabel"
-              [isHeader]="true"
-            ></app-application-type-pill>
-            <app-application-type-pill
-              *ngIf="showModificationLabel"
-              [type]="modificationLabel"
-              [isHeader]="true"
-            ></app-application-type-pill>
-            <app-application-type-pill
-              *ngIf="showRetroLabel"
-              [type]="retroactiveLabel"
-              [isHeader]="true"
-            ></app-application-type-pill>
+      @if (_application) {
+        <div class="first-row">
+          <div class="title">
+            <h5 class="detail-heading">
+              <div class="file-number">{{ _application.fileNumber }}</div>
+              <div class="open-paren">(</div>
+              @if (applicationDetailService) {
+                <app-inline-text
+                  (save)="onSaveApplicant($event ?? undefined)"
+                  [value]="_application.applicant"
+                  [required]="true"
+                  [isFixedHeight]="true"
+                  class="applicant-inline-field"
+                  />
+                }@if (!applicationDetailService) {
+                {{ _application.applicant }}
+              }
+              <div class="close-paren">)</div>
+            </h5>
+            <app-application-legacy-id [legacyId]="legacyId"></app-application-legacy-id>
+            <div class="labels">
+              @for (type of types; track type) {
+                <app-application-type-pill
+                  [type]="type"
+                  [isHeader]="true"
+                ></app-application-type-pill>
+              }
+              @if (showReconLabel) {
+                <app-application-type-pill
+                  [type]="reconLabel"
+                  [isHeader]="true"
+                ></app-application-type-pill>
+              }
+              @if (showModificationLabel) {
+                <app-application-type-pill
+                  [type]="modificationLabel"
+                  [isHeader]="true"
+                ></app-application-type-pill>
+              }
+              @if (showRetroLabel) {
+                <app-application-type-pill
+                  [type]="retroactiveLabel"
+                  [isHeader]="true"
+                ></app-application-type-pill>
+              }
+            </div>
           </div>
         </div>
-      </div>
+      }
       <div class="tag-container">
-        <app-tags-header [application]="_application" *ngIf="!isTagSectionHidden && !isCommissioner"></app-tags-header>
-        <app-commissioner-tags-header
-          [application]="_application"
-          *ngIf="!isTagSectionHidden && isCommissioner"
-        ></app-commissioner-tags-header>
+        @if (!isTagSectionHidden && !isCommissioner) {
+          <app-tags-header [application]="_application"></app-tags-header>
+        }
+        @if (!isTagSectionHidden && isCommissioner) {
+          <app-commissioner-tags-header
+            [application]="_application"
+          ></app-commissioner-tags-header>
+        }
       </div>
     </div>
   </div>
   <div class="right-column">
-    <div *ngIf="_application">
+    @if (_application) {
       <div>
-        <button
-          *ngIf="linkedCards.length === 1"
-          class="menu-item"
-          mat-flat-button
-          color="accent"
-          (click)="onGoToCard(linkedCards[0])"
-        >
-          <div class="center">
-            Go to card
-            <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
-          </div>
-        </button>
-        <button
-          *ngIf="isCommissioner && (hasMeetings || isIncoming)"
-          class="menu-item"
-          mat-flat-button
-          color="accent"
-          (click)="onGoToSchedule(_application.fileNumber)"
-        >
-          <div class="center">
-            Go to card
-            <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
-          </div>
-        </button>
-        <ng-container *ngIf="linkedCards.length > 1">
-          <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
-            Go to card ▾
-          </button>
-          <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
-            <button *ngFor="let card of linkedCards" mat-menu-item (click)="onGoToCard(card)">
-              {{ card.displayName }}
+        <div>
+          @if (linkedCards.length === 1) {
+            <button
+              class="menu-item"
+              mat-flat-button
+              color="accent"
+              (click)="onGoToCard(linkedCards[0])"
+              >
+              <div class="center">
+                Go to card
+                <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+              </div>
             </button>
-          </mat-menu>
-        </ng-container>
-      </div>
-      <div>
-        <ng-container *ngIf="timeTrackable && !_application.hasOwnProperty('decisionDate')">
-          <app-time-tracker [data]="timeTrackable" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
-        </ng-container>
-      </div>
-
-      <div class="status-wrapper">
-        <app-application-submission-status-type-pill
-          *ngIf="currentStatus"
-          [type]="currentStatus"
-        ></app-application-submission-status-type-pill>
-      </div>
-      <div>
-        <div class="body-text">
-          {{ _application.localGovernment?.name }}
-          <app-no-data *ngIf="!_application.localGovernment"></app-no-data>
+          }
+          @if (isCommissioner && (hasMeetings || isIncoming)) {
+            <button
+              class="menu-item"
+              mat-flat-button
+              color="accent"
+              (click)="onGoToSchedule(_application.fileNumber)"
+              >
+              <div class="center">
+                Go to card
+                <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+              </div>
+            </button>
+          }
+          @if (linkedCards.length > 1) {
+            <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
+              Go to card ▾
+            </button>
+            <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
+              @for (card of linkedCards; track card) {
+                <button mat-menu-item (click)="onGoToCard(card)">
+                  {{ card.displayName }}
+                </button>
+              }
+            </mat-menu>
+          }
+        </div>
+        <div>
+          @if (timeTrackable && !_application.hasOwnProperty('decisionDate')) {
+            <app-time-tracker [data]="timeTrackable" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
+          }
+        </div>
+        <div class="status-wrapper">
+          @if (currentStatus) {
+            <app-application-submission-status-type-pill
+              [type]="currentStatus"
+            ></app-application-submission-status-type-pill>
+          }
+        </div>
+        <div>
+          <div class="body-text">
+            {{ _application.localGovernment?.name }}
+            @if (!_application.localGovernment) {
+              <app-no-data></app-no-data>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
 </div>

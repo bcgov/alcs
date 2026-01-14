@@ -11,9 +11,10 @@ import { downloadFile } from '../../../../shared/utils/file';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-cove-details',
-  templateUrl: './cove-details.component.html',
-  styleUrls: ['./cove-details.component.scss'],
+    selector: 'app-cove-details',
+    templateUrl: './cove-details.component.html',
+    styleUrls: ['./cove-details.component.scss'],
+    standalone: false
 })
 export class CoveDetailsComponent {
   @Input() showErrors = true;

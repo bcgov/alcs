@@ -13,9 +13,10 @@ import { TransfereeDialogComponent } from '../../../../../notifications/edit-sub
 import { strictEmailValidator } from '../../../../../../shared/validators/email-validator';
 
 @Component({
-  selector: 'app-transferee-dialog',
-  templateUrl: './transferee-dialog.component.html',
-  styleUrls: ['./transferee-dialog.component.scss'],
+    selector: 'app-transferee-dialog',
+    templateUrl: './transferee-dialog.component.html',
+    styleUrls: ['./transferee-dialog.component.scss'],
+    standalone: false
 })
 export class CovenantTransfereeDialogComponent {
   OWNER_TYPE = OWNER_TYPE;

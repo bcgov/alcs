@@ -7,9 +7,10 @@ import { ApplicationSubmissionDto } from '../../../../services/application/appli
 import { DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-application-details',
-  templateUrl: './application-details.component.html',
-  styleUrls: ['./application-details.component.scss'],
+    selector: 'app-application-details',
+    templateUrl: './application-details.component.html',
+    styleUrls: ['./application-details.component.scss'],
+    standalone: false
 })
 export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();

@@ -1,58 +1,77 @@
 <h3>Application Prep</h3>
-<section *ngIf="application && application.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS">
-  <h5>Proposal Components - {{ application.type.label }}</h5>
-  <div class="input-table">
-    <div>
-      <div class="subheading2">
-        Proposal ALR Area Impacted
-        <ng-container *ngIf="application.type.code !== 'NARU'">(ha)</ng-container>
-        <ng-container *ngIf="application.type.code === 'NARU'">(m<sup>2</sup>)</ng-container>
+@if (application && application.source !== APPLICATION_SYSTEM_SOURCE_TYPES.ALCS) {
+  <section>
+    <h5>Proposal Components - {{ application.type.label }}</h5>
+    <div class="input-table">
+      <div>
+        <div class="subheading2">
+          Proposal ALR Area Impacted
+          @if (application.type.code !== 'NARU') {
+            (ha)
+          }
+          @if (application.type.code === 'NARU') {
+            (m<sup>2</sup>)
+          }
+        </div>
+        <app-inline-number [value]="alrArea ?? null" (save)="onSaveAlrArea($event)" [decimals]="5"></app-inline-number>
       </div>
-      <app-inline-number [value]="alrArea ?? null" (save)="onSaveAlrArea($event)" [decimals]="5"></app-inline-number>
+      <div>
+        <div class="subheading2">Agricultural Capability</div>
+        <app-inline-dropdown
+          [options]="agCapOptions"
+          [value]="application.agCap"
+          (save)="updateApplicationValue('agCap', $event)"
+        ></app-inline-dropdown>
+      </div>
+      <div>
+        <div class="subheading2">Agricultural Capability Source</div>
+        <app-inline-dropdown
+          [options]="agCapSourceOptions"
+          [value]="application.agCapSource"
+          (save)="updateApplicationValue('agCapSource', $event)"
+        ></app-inline-dropdown>
+      </div>
+      <div>
+        <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
+        <app-inline-text
+          [value]="application.agCapMap"
+          (save)="updateApplicationValue('agCapMap', $event)"
+        ></app-inline-text>
+      </div>
+      <div>
+        <div class="subheading2">Agricultural Capability Consultant</div>
+        <app-inline-text
+          [value]="application.agCapConsultant"
+          (save)="updateApplicationValue('agCapConsultant', $event)"
+        ></app-inline-text>
+      </div>
+      @if (application && application.type.code === 'EXCL') {
+        <app-proposal-excl></app-proposal-excl>
+      }
+      @if (application && application.type.code === 'INCL') {
+        <app-proposal-incl></app-proposal-incl>
+      }
     </div>
-    <div>
-      <div class="subheading2">Agricultural Capability</div>
-      <app-inline-dropdown
-        [options]="agCapOptions"
-        [value]="application.agCap"
-        (save)="updateApplicationValue('agCap', $event)"
-      ></app-inline-dropdown>
-    </div>
-    <div>
-      <div class="subheading2">Agricultural Capability Source</div>
-      <app-inline-dropdown
-        [options]="agCapSourceOptions"
-        [value]="application.agCapSource"
-        (save)="updateApplicationValue('agCapSource', $event)"
-      ></app-inline-dropdown>
-    </div>
-    <div>
-      <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
-      <app-inline-text
-        [value]="application.agCapMap"
-        (save)="updateApplicationValue('agCapMap', $event)"
-      ></app-inline-text>
-    </div>
-    <div>
-      <div class="subheading2">Agricultural Capability Consultant</div>
-      <app-inline-text
-        [value]="application.agCapConsultant"
-        (save)="updateApplicationValue('agCapConsultant', $event)"
-      ></app-inline-text>
-    </div>
-    <app-proposal-excl *ngIf="application && application.type.code === 'EXCL'"></app-proposal-excl>
-    <app-proposal-incl *ngIf="application && application.type.code === 'INCL'"></app-proposal-incl>
-  </div>
-  <app-proposal-nfu *ngIf="application && application.type.code === 'NFUP'"></app-proposal-nfu>
-  <app-proposal-subd *ngIf="application && application.type.code === 'SUBD'"></app-proposal-subd>
-  <app-proposal-soil
-    *ngIf="application && ['POFO', 'ROSO', 'PFRS'].includes(application.type.code)"
-  ></app-proposal-soil>
-  <app-proposal-naru *ngIf="application && application.type.code === 'NARU'"></app-proposal-naru>
-</section>
+    @if (application && application.type.code === 'NFUP') {
+      <app-proposal-nfu></app-proposal-nfu>
+    }
+    @if (application && application.type.code === 'SUBD') {
+      <app-proposal-subd></app-proposal-subd>
+    }
+    @if (application && ['POFO', 'ROSO', 'PFRS'].includes(application.type.code)) {
+      <app-proposal-soil
+      ></app-proposal-soil>
+    }
+    @if (application && application.type.code === 'NARU') {
+      <app-proposal-naru></app-proposal-naru>
+    }
+  </section>
+}
 <section>
   <h5>Parcels</h5>
-  <app-parcel-prep *ngIf="application" [fileNumber]="application.fileNumber"></app-parcel-prep>
+  @if (application) {
+    <app-parcel-prep [fileNumber]="application.fileNumber"></app-parcel-prep>
+  }
 </section>
 <section>
   <h5 class="staff-comments">Staff Comments and Observations</h5>

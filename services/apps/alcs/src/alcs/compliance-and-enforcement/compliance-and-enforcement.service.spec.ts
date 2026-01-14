@@ -1,20 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ComplianceAndEnforcementService } from './compliance-and-enforcement.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from './compliance-and-enforcement.entity';
-import { AutomapperModule } from 'automapper-nestjs';
-import { classes } from 'automapper-classes';
-import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import * as config from 'config';
-import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
-import { ComplianceAndEnforcementProfile } from './compliance-and-enforcement.automapper.profile';
+import { Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../../../../libs/common/src/exceptions/base.exception';
-import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
-import { ComplianceAndEnforcementSubmitterProfile } from './submitter/submitter.automapper.profile';
-import { ComplianceAndEnforcementPropertyService } from './property/property.service';
+import { UserService } from '../../user/user.service';
 import { ComplianceAndEnforcementValidatorService } from './compliance-and-enforcement-validator.service';
+import { ComplianceAndEnforcementProfile } from './compliance-and-enforcement.automapper.profile';
+import { ComplianceAndEnforcementDto, UpdateComplianceAndEnforcementDto } from './compliance-and-enforcement.dto';
+import { AllegedActivity, ComplianceAndEnforcement, InitialSubmissionType } from './compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementService } from './compliance-and-enforcement.service';
+import { ComplianceAndEnforcementPropertyService } from './property/property.service';
+import { ComplianceAndEnforcementSubmitterProfile } from './submitter/submitter.automapper.profile';
+import { ComplianceAndEnforcementSubmitterService } from './submitter/submitter.service';
 
 const mockComplianceAndEnforcement = new ComplianceAndEnforcement({
   uuid: '1',
@@ -33,14 +34,18 @@ describe('ComplianceAndEnforcementService', () => {
   let service: ComplianceAndEnforcementService;
   let mockComplianceAndEnforcementRepository: DeepMocked<Repository<ComplianceAndEnforcement>>;
   let mockComplianceAndEnforcementSubmitterService: DeepMocked<ComplianceAndEnforcementSubmitterService>;
+  let mockComplianceAndEnforcementSubmitterProfile: DeepMocked<ComplianceAndEnforcementSubmitterProfile>;
   let mockComplianceAndEnforcementPropertyService: DeepMocked<ComplianceAndEnforcementPropertyService>;
   let mockComplianceAndEnforcementValidatorService: DeepMocked<ComplianceAndEnforcementValidatorService>;
+  let mockUserService: DeepMocked<UserService>;
 
   beforeEach(async () => {
     mockComplianceAndEnforcementRepository = createMock<Repository<ComplianceAndEnforcement>>();
     mockComplianceAndEnforcementSubmitterService = createMock<ComplianceAndEnforcementSubmitterService>();
+    mockComplianceAndEnforcementSubmitterProfile = createMock<ComplianceAndEnforcementSubmitterProfile>();
     mockComplianceAndEnforcementPropertyService = createMock<ComplianceAndEnforcementPropertyService>();
     mockComplianceAndEnforcementValidatorService = createMock<ComplianceAndEnforcementValidatorService>();
+    mockUserService = createMock<UserService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -68,6 +73,10 @@ describe('ComplianceAndEnforcementService', () => {
           useValue: mockComplianceAndEnforcementRepository,
         },
         {
+          provide: UserService,
+          useValue: mockUserService,
+        },
+        {
           provide: CONFIG_TOKEN,
           useValue: config,
         },
@@ -88,6 +97,10 @@ describe('ComplianceAndEnforcementService', () => {
       dateOpened: 0,
       dateClosed: 0,
       submitters: [],
+      assignee: undefined,
+      chronologyClosedAt: undefined as any,
+      chronologyClosedBy: undefined,
+      property: undefined,
     };
     it('should return all records', async () => {
       mockComplianceAndEnforcementRepository.find.mockResolvedValue([mockComplianceAndEnforcement]);
@@ -103,9 +116,13 @@ describe('ComplianceAndEnforcementService', () => {
         dateOpened: 0,
         dateClosed: 0,
         submitters: [],
+        assignee: undefined,
+        chronologyClosedAt: undefined as any,
+        chronologyClosedBy: undefined,
+        property: undefined,
       };
       mockComplianceAndEnforcementRepository.findOne.mockResolvedValue(mockComplianceAndEnforcement);
-      expect(await service.fetchByFileNumber('1')).toEqual(resultDto);
+      expect(await service.fetchById('1', 'fileNumber')).toEqual(resultDto);
     });
   });
 
@@ -119,6 +136,10 @@ describe('ComplianceAndEnforcementService', () => {
         dateOpened: 0,
         dateClosed: 0,
         submitters: [],
+        assignee: undefined,
+        chronologyClosedAt: undefined as any,
+        chronologyClosedBy: undefined,
+        property: undefined,
       };
       mockComplianceAndEnforcementRepository.save.mockResolvedValue(mockComplianceAndEnforcement);
       expect(await service.create(createDto)).toEqual(resultDto);
@@ -139,6 +160,10 @@ describe('ComplianceAndEnforcementService', () => {
         dateOpened: 0,
         dateClosed: 0,
         submitters: [],
+        assignee: undefined,
+        chronologyClosedAt: undefined as any,
+        chronologyClosedBy: undefined,
+        property: undefined,
       };
       mockComplianceAndEnforcementRepository.save.mockResolvedValue(mockComplianceAndEnforcement);
       mockComplianceAndEnforcementRepository.findOneBy.mockResolvedValue(mockComplianceAndEnforcement);

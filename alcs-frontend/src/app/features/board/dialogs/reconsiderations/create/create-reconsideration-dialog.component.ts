@@ -20,9 +20,10 @@ import { BoardService } from '../../../../../services/board/board.service';
 import { CardType } from '../../../../../shared/card/card.component';
 
 @Component({
-  selector: 'app-create',
-  templateUrl: './create-reconsideration-dialog.html',
-  styleUrls: ['./create-reconsideration-dialog.component.scss'],
+    selector: 'app-create',
+    templateUrl: './create-reconsideration-dialog.html',
+    styleUrls: ['./create-reconsideration-dialog.component.scss'],
+    standalone: false
 })
 export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

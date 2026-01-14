@@ -11,6 +11,7 @@ export interface UpdateDocumentDto {
   visibilityFlags?: ('A' | 'C' | 'G' | 'P')[];
   file?: File;
   section?: Section;
+  chronologyEntryUuid?: string;
 }
 
 export interface CreateDocumentDto extends UpdateDocumentDto {
@@ -34,7 +35,7 @@ export interface DocumentDto {
 
 export interface SelectableParcelDto {
   uuid: string;
-  pid?: string;
+  pid?: string | null;
   certificateOfTitleUuid?: string;
 }
 

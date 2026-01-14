@@ -1,0 +1,204 @@
+<!-- Header Section when editing -->
+@if (editing === 'parties') {
+  <div class="header-section">
+    <h2>Owner & Contacts > Edit {{ getHeaderPartyType() }}</h2>
+  </div>
+}
+
+@if (editing === null) {
+  <!-- Responsible Parties View -->
+  <section class="file-section">
+    <h3>Allegedly Responsible Parties</h3>
+    <!-- Crown Party (if property is Crown) -->
+    @if (isPropertyCrown) {
+      <div class="party-card">
+        <div class="party-header">
+          <h4>Crown</h4>
+          <div class="party-type-badge">Crown</div>
+        </div>
+        <div class="party-details">
+          <div class="field">
+            <div class="field-heading">Notes</div>
+            <app-inline-text
+              [value]="crownNotes"
+              addText="Add Notes"
+              placeholder="Add Notes"
+              (save)="saveInlineEdit(crownParty, 'notes', $event)"
+            ></app-inline-text>
+          </div>
+        </div>
+      </div>
+    }
+    <!-- Regular Responsible Parties -->
+    @for (party of responsibleParties; track party) {
+      <div
+        class="party-card"
+        [class.previous-party]="party.isPrevious">
+        <div class="party-header">
+          <h4>{{ getPartyDisplayName(party) }}</h4>
+          <div class="party-type-badge" [class.previous]="party.isPrevious">
+            @if (party.partyType === ResponsiblePartyType.PROPERTY_OWNER && party.ownerSince && !party.isPrevious) {
+              <span class="owner-since-label">Owner Since: </span>
+            }
+            @if (party.partyType === ResponsiblePartyType.PROPERTY_OWNER && party.ownerSince && !party.isPrevious) {
+              <span>{{ formatOwnerSince(party.ownerSince) }}</span>
+            }
+            @if (!(party.partyType === ResponsiblePartyType.PROPERTY_OWNER && party.ownerSince && !party.isPrevious)) {
+              <span>{{ getPartyTypeDisplay(party) }}</span>
+            }
+          </div>
+        </div>
+        <div class="party-details">
+          <!-- Contact Information Row (3-column layout) - Only for individuals -->
+          @if (party.foippaCategory === FOIPPACategory.INDIVIDUAL) {
+            <div class="contact-row">
+              <!-- Address (if individual) -->
+              @if (getPartyAddress(party)) {
+                <div class="field">
+                  <div class="field-heading">Mailing Address</div>
+                  <div>{{ getPartyAddress(party) }}</div>
+                </div>
+              }
+              <!-- Empty div for spacing if no address -->
+              @if (!getPartyAddress(party)) {
+                <div class="field">
+                </div>
+              }
+              <!-- Email -->
+              <div class="field">
+                <div class="field-heading">Email</div>
+                <app-inline-text
+                  [value]="getPartyEmail(party)"
+                  [isEmail]="true"
+                  addText="Add Email"
+                  placeholder="Add Email"
+                  (save)="saveInlineEdit(party, 'email', $event)"
+                ></app-inline-text>
+              </div>
+              <!-- Telephone -->
+              <div class="field">
+                <div class="field-heading">Telephone</div>
+                <app-inline-text
+                  [value]="getPartyPhone(party)"
+                  [mask]="'(000) 000-0000'"
+                  addText="Add Telephone"
+                  placeholder="Add Telephone"
+                  (save)="saveInlineEdit(party, 'phone', $event)"
+                ></app-inline-text>
+              </div>
+            </div>
+          }
+          <!-- Notes (for organizations, show under org name) -->
+          @if (party.foippaCategory === FOIPPACategory.ORGANIZATION) {
+            <div class="field">
+              <div class="field-heading">Note</div>
+              <app-inline-text
+                [value]="getPartyNotes(party)"
+                addText="Add Notes"
+                placeholder="Add Notes"
+                (save)="saveInlineEdit(party, 'notes', $event)"
+              ></app-inline-text>
+            </div>
+          }
+          <!-- Directors (if organization) -->
+          @if (party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length) {
+            <hr class="notes-directors-separator">
+          }
+          @if (party.foippaCategory === FOIPPACategory.ORGANIZATION && party.directors?.length) {
+            <div class="directors-section">
+              @for (director of party.directors; track director; let i = $index) {
+                <div class="director-container">
+                  <!-- Director Name Row -->
+                  <div class="director-name-row">
+                    <strong>Director: {{ director.directorName }}</strong>
+                  </div>
+                  <!-- Director Contact Row (3-column layout) -->
+                  <div class="contact-row">
+                    <div class="field">
+                      <div class="field-heading">Mailing Address</div>
+                      @if (director.directorMailingAddress) {
+                        <div>{{ director.directorMailingAddress }}</div>
+                      } @else {
+                        -
+                      }
+                    </div>
+                    <div class="field">
+                      <div class="field-heading">Email</div>
+                      <app-inline-text
+                        [value]="director.directorEmail || ''"
+                        [isEmail]="true"
+                        addText="Add Email"
+                        placeholder="Add Email"
+                        (save)="saveDirectorInlineEdit(party, director, 'email', $event)"
+                      ></app-inline-text>
+                    </div>
+                    <div class="field">
+                      <div class="field-heading">Telephone</div>
+                      <app-inline-text
+                        [value]="director.directorTelephone || ''"
+                        [mask]="'(000) 000-0000'"
+                        addText="Add Telephone"
+                        placeholder="Add Telephone"
+                        (save)="saveDirectorInlineEdit(party, director, 'phone', $event)"
+                      ></app-inline-text>
+                    </div>
+                  </div>
+                  @if (i < (party.directors?.length || 0) - 1) {
+                    <hr class="director-separator">
+                  }
+                </div>
+              }
+            </div>
+          }
+          <!-- Notes (for individuals only, since organizations have it above) -->
+          @if (party.foippaCategory === FOIPPACategory.INDIVIDUAL) {
+            <div class="field">
+              <div class="field-heading">Notes</div>
+              <app-inline-text
+                [value]="getPartyNotes(party)"
+                addText="Add Notes"
+                placeholder="Add Notes"
+                (save)="saveInlineEdit(party, 'notes', $event)"
+              ></app-inline-text>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    <div class="edit-section-button-container">
+      <a mat-flat-button color="accent" [routerLink]="'edit'" class="edit-section-button">Edit Section</a>
+    </div>
+  </section>
+  <!-- Property Ownership Documents -->
+  <section class="file-section">
+    <app-compliance-and-enforcement-documents
+      #ownershipDocumentsComponent
+      [title]="'Property Ownership Documents'"
+      [noDocumentsText]="'No ownership documents'"
+      [fileNumber]="fileNumber"
+      [options]="ownershipDocumentOptions"
+      [section]="Section.OWNERSHIP"
+      [addButtonText]="'+ Add Documents'"
+      />
+  </section>
+}
+
+@if (editing === 'parties') {
+  <form [formGroup]="form">
+    <section class="form-section">
+      <app-compliance-and-enforcement-responsible-parties
+        #responsiblePartiesComponent
+        [fileUuid]="file?.uuid"
+        [isPropertyCrown]="isPropertyCrown"
+        />
+    </section>
+    <div class="button-container">
+      <a mat-stroked-button color="warn" [routerLink]="['..']">Cancel</a>
+      <button mat-flat-button color="primary" (click)="saveResponsibleParties()">Save</button>
+    </div>
+  </form>
+}
+
+<ng-template #noData>
+  <div class="no-data">No Data</div>
+</ng-template>

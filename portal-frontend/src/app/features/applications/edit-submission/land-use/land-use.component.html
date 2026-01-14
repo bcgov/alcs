@@ -23,16 +23,19 @@
             maxlength="4000"
           ></textarea>
         </mat-form-field>
-        <div
-          *ngIf="
-            parcelsAgricultureDescription.invalid &&
-            (parcelsAgricultureDescription.dirty || parcelsAgricultureDescription.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="parcelsAgricultureDescription.errors?.['required']">This field is required</div>
-        </div>
+        @if (
+          parcelsAgricultureDescription.invalid &&
+          (parcelsAgricultureDescription.dirty || parcelsAgricultureDescription.touched)
+          ) {
+          <div
+            class="field-error"
+            >
+            <mat-icon>warning</mat-icon>
+            @if (parcelsAgricultureDescription.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
         <mat-hint class="subtext"
           >Example 1: PID 001-002-003: 60 ha hay crop, 40 ha grazing, 200 sheep. Example 2: Parcel 1: 10% blueberry
           crop, 30% vegetables, 60% hay. Parcel 2: 100% hay.
@@ -61,16 +64,19 @@
             maxlength="4000"
           ></textarea>
         </mat-form-field>
-        <div
-          *ngIf="
-            parcelsAgricultureImprovementDescription.invalid &&
-            (parcelsAgricultureImprovementDescription.dirty || parcelsAgricultureImprovementDescription.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="parcelsAgricultureImprovementDescription.errors?.['required']">This field is required</div>
-        </div>
+        @if (
+          parcelsAgricultureImprovementDescription.invalid &&
+          (parcelsAgricultureImprovementDescription.dirty || parcelsAgricultureImprovementDescription.touched)
+          ) {
+          <div
+            class="field-error"
+            >
+            <mat-icon>warning</mat-icon>
+            @if (parcelsAgricultureImprovementDescription.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
         <mat-hint class="subtext">Example: 40 ha of grazing land fenced in 2010.</mat-hint>
         <div class="subtext">Characters left: {{ 4000 - parcelsAgricultureImprovementDescriptionText.textLength }}</div>
       </div>
@@ -93,241 +99,280 @@
             maxlength="4000"
           ></textarea>
         </mat-form-field>
-        <div
-          *ngIf="
-            parcelsNonAgricultureUseDescription.invalid &&
-            (parcelsNonAgricultureUseDescription.dirty || parcelsNonAgricultureUseDescription.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="parcelsNonAgricultureUseDescription.errors?.['required']">This field is required</div>
-        </div>
+        @if (
+          parcelsNonAgricultureUseDescription.invalid &&
+          (parcelsNonAgricultureUseDescription.dirty || parcelsNonAgricultureUseDescription.touched)
+          ) {
+          <div
+            class="field-error"
+            >
+            <mat-icon>warning</mat-icon>
+            @if (parcelsNonAgricultureUseDescription.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
         <mat-hint class="subtext"
           >Example: 100m<sup>2</sup> house and 50m<sup>2</sup> detached auto repair shop</mat-hint
-        >
-        <div class="subtext">Characters left: {{ 4000 - parcelsNonAgricultureUseDescriptionText.textLength }}</div>
+          >
+          <div class="subtext">Characters left: {{ 4000 - parcelsNonAgricultureUseDescriptionText.textLength }}</div>
+        </div>
       </div>
-    </div>
-    <h5>Choose and describe neighbouring land uses.</h5>
-    <div class="subtext">Choose the main land use type from the drop-down and describe the specific activities.</div>
-    <div class="form-row">
-      <div class="full-row">
-        <mat-label for="northLandUseType">North</mat-label>
-        <div class="land-use-type-wrapper">
-          <div class="land-use-type">
-            <mat-form-field appearance="outline">
-              <mat-select
-                id="northLandUseType"
-                placeholder="Main Land Use Type"
-                formControlName="northLandUseType"
-                data-testid="north-type-combobox"
-              >
-                <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
-                  enum.value
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div
-              *ngIf="northLandUseType.invalid && (northLandUseType.dirty || northLandUseType.touched)"
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="northLandUseType.errors?.['required']">This field is required</div>
+      <h5>Choose and describe neighbouring land uses.</h5>
+      <div class="subtext">Choose the main land use type from the drop-down and describe the specific activities.</div>
+      <div class="form-row">
+        <div class="full-row">
+          <mat-label for="northLandUseType">North</mat-label>
+          <div class="land-use-type-wrapper">
+            <div class="land-use-type">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  id="northLandUseType"
+                  placeholder="Main Land Use Type"
+                  formControlName="northLandUseType"
+                  data-testid="north-type-combobox"
+                  >
+                  @for (enum of MainLandUseTypeOptions | keyvalue; track enum) {
+                    <mat-option [value]="enum.value">{{
+                      enum.value
+                    }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              @if (northLandUseType.invalid && (northLandUseType.dirty || northLandUseType.touched)) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (northLandUseType.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
             </div>
-          </div>
-          <div class="full-width-input">
-            <mat-form-field appearance="outline">
-              <input
-                id="northLandUseTypeDescription"
-                placeholder="Specific Activity"
-                matInput
-                maxlength="500"
-                [formControl]="northLandUseTypeDescription"
-                aria-label="North land use type description"
-                data-testid="north-activity-textbox"
-              />
-            </mat-form-field>
-            <div
-              *ngIf="
+            <div class="full-width-input">
+              <mat-form-field appearance="outline">
+                <input
+                  id="northLandUseTypeDescription"
+                  placeholder="Specific Activity"
+                  matInput
+                  maxlength="500"
+                  [formControl]="northLandUseTypeDescription"
+                  aria-label="North land use type description"
+                  data-testid="north-activity-textbox"
+                  />
+              </mat-form-field>
+              @if (
                 northLandUseTypeDescription.invalid &&
                 (northLandUseTypeDescription.dirty || northLandUseTypeDescription.touched)
-              "
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="northLandUseTypeDescription.errors?.['required']">This field is required</div>
+                ) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (northLandUseTypeDescription.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
+              <div class="subtext">Characters left: {{ 500 - (northLandUseTypeDescription.value || '').length }}</div>
             </div>
-            <div class="subtext">Characters left: {{ 500 - (northLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
-      </div>
 
-      <div class="full-row">
-        <mat-label for="eastLandUseType">East</mat-label>
-        <div class="land-use-type-wrapper">
-          <div class="land-use-type">
-            <mat-form-field appearance="outline">
-              <mat-select
-                id="eastLandUseType"
-                placeholder="Main Land Use Type"
-                formControlName="eastLandUseType"
-                data-testid="east-type-combobox"
-              >
-                <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
-                  enum.value
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div
-              *ngIf="eastLandUseType.invalid && (eastLandUseType.dirty || eastLandUseType.touched)"
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="eastLandUseType.errors?.['required']">This field is required</div>
+        <div class="full-row">
+          <mat-label for="eastLandUseType">East</mat-label>
+          <div class="land-use-type-wrapper">
+            <div class="land-use-type">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  id="eastLandUseType"
+                  placeholder="Main Land Use Type"
+                  formControlName="eastLandUseType"
+                  data-testid="east-type-combobox"
+                  >
+                  @for (enum of MainLandUseTypeOptions | keyvalue; track enum) {
+                    <mat-option [value]="enum.value">{{
+                      enum.value
+                    }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              @if (eastLandUseType.invalid && (eastLandUseType.dirty || eastLandUseType.touched)) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (eastLandUseType.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
             </div>
-          </div>
-          <div class="full-width-input">
-            <mat-form-field appearance="outline">
-              <input
-                id="eastLandUseTypeDescription"
-                placeholder="Specific Activity"
-                [formControl]="eastLandUseTypeDescription"
-                matInput
-                maxlength="500"
-                aria-label="East land use type description"
-                data-testid="east-activity-textbox"
-              />
-            </mat-form-field>
-            <div
-              *ngIf="
+            <div class="full-width-input">
+              <mat-form-field appearance="outline">
+                <input
+                  id="eastLandUseTypeDescription"
+                  placeholder="Specific Activity"
+                  [formControl]="eastLandUseTypeDescription"
+                  matInput
+                  maxlength="500"
+                  aria-label="East land use type description"
+                  data-testid="east-activity-textbox"
+                  />
+              </mat-form-field>
+              @if (
                 eastLandUseTypeDescription.invalid &&
                 (eastLandUseTypeDescription.dirty || eastLandUseTypeDescription.touched)
-              "
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="eastLandUseTypeDescription.errors?.['required']">This field is required</div>
+                ) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (eastLandUseTypeDescription.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
+              <div class="subtext">Characters left: {{ 500 - (eastLandUseTypeDescription.value || '').length }}</div>
             </div>
-            <div class="subtext">Characters left: {{ 500 - (eastLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
-      </div>
 
-      <div class="full-row">
-        <mat-label for="southLandUseType">South</mat-label>
-        <div class="land-use-type-wrapper">
-          <div class="land-use-type">
-            <mat-form-field appearance="outline">
-              <mat-select
-                id="southLandUseType"
-                placeholder="Main Land Use Type"
-                formControlName="southLandUseType"
-                data-testid="south-type-combobox"
-              >
-                <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
-                  enum.value
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div
-              *ngIf="southLandUseType.invalid && (southLandUseType.dirty || southLandUseType.touched)"
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="southLandUseType.errors?.['required']">This field is required</div>
+        <div class="full-row">
+          <mat-label for="southLandUseType">South</mat-label>
+          <div class="land-use-type-wrapper">
+            <div class="land-use-type">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  id="southLandUseType"
+                  placeholder="Main Land Use Type"
+                  formControlName="southLandUseType"
+                  data-testid="south-type-combobox"
+                  >
+                  @for (enum of MainLandUseTypeOptions | keyvalue; track enum) {
+                    <mat-option [value]="enum.value">{{
+                      enum.value
+                    }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              @if (southLandUseType.invalid && (southLandUseType.dirty || southLandUseType.touched)) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (southLandUseType.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
             </div>
-          </div>
-          <div class="full-width-input">
-            <mat-form-field appearance="outline">
-              <input
-                id="southLandUseTypeDescription"
-                placeholder="Specific Activity"
-                maxlength="500"
-                matInput
-                [formControl]="southLandUseTypeDescription"
-                aria-label="South land use type description"
-                data-testid="south-activity-textbox"
-              />
-            </mat-form-field>
-            <div
-              *ngIf="
+            <div class="full-width-input">
+              <mat-form-field appearance="outline">
+                <input
+                  id="southLandUseTypeDescription"
+                  placeholder="Specific Activity"
+                  maxlength="500"
+                  matInput
+                  [formControl]="southLandUseTypeDescription"
+                  aria-label="South land use type description"
+                  data-testid="south-activity-textbox"
+                  />
+              </mat-form-field>
+              @if (
                 southLandUseTypeDescription.invalid &&
                 (southLandUseTypeDescription.dirty || southLandUseTypeDescription.touched)
-              "
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="southLandUseTypeDescription.errors?.['required']">This field is required</div>
+                ) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (southLandUseTypeDescription.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
+              <div class="subtext">Characters left: {{ 500 - (southLandUseTypeDescription.value || '').length }}</div>
             </div>
-            <div class="subtext">Characters left: {{ 500 - (southLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
-      </div>
 
-      <div class="full-row">
-        <mat-label for="westLandUseType">West</mat-label>
-        <div class="land-use-type-wrapper">
-          <div class="land-use-type">
-            <mat-form-field appearance="outline">
-              <mat-select
-                id="westLandUseType"
-                placeholder="Main Land Use Type"
-                formControlName="westLandUseType"
-                data-testid="west-type-combobox"
-              >
-                <mat-option *ngFor="let enum of MainLandUseTypeOptions | keyvalue" [value]="enum.value">{{
-                  enum.value
-                }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div
-              *ngIf="westLandUseType.invalid && (westLandUseType.dirty || westLandUseType.touched)"
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="westLandUseType.errors?.['required']">This field is required</div>
+        <div class="full-row">
+          <mat-label for="westLandUseType">West</mat-label>
+          <div class="land-use-type-wrapper">
+            <div class="land-use-type">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  id="westLandUseType"
+                  placeholder="Main Land Use Type"
+                  formControlName="westLandUseType"
+                  data-testid="west-type-combobox"
+                  >
+                  @for (enum of MainLandUseTypeOptions | keyvalue; track enum) {
+                    <mat-option [value]="enum.value">{{
+                      enum.value
+                    }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              @if (westLandUseType.invalid && (westLandUseType.dirty || westLandUseType.touched)) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (westLandUseType.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
             </div>
-          </div>
-          <div class="full-width-input">
-            <mat-form-field appearance="outline">
-              <input
-                id="westLandUseTypeDescription"
-                placeholder="Specific Activity"
-                maxlength="500"
-                matInput
-                [formControl]="westLandUseTypeDescription"
-                aria-label="West land use type description"
-                data-testid="west-activity-textbox"
-              />
-            </mat-form-field>
-            <div
-              *ngIf="
+            <div class="full-width-input">
+              <mat-form-field appearance="outline">
+                <input
+                  id="westLandUseTypeDescription"
+                  placeholder="Specific Activity"
+                  maxlength="500"
+                  matInput
+                  [formControl]="westLandUseTypeDescription"
+                  aria-label="West land use type description"
+                  data-testid="west-activity-textbox"
+                  />
+              </mat-form-field>
+              @if (
                 westLandUseTypeDescription.invalid &&
                 (westLandUseTypeDescription.dirty || westLandUseTypeDescription.touched)
-              "
-              class="field-error"
-            >
-              <mat-icon>warning</mat-icon>
-              <div *ngIf="westLandUseTypeDescription.errors?.['required']">This field is required</div>
+                ) {
+                <div
+                  class="field-error"
+                  >
+                  <mat-icon>warning</mat-icon>
+                  @if (westLandUseTypeDescription.errors?.['required']) {
+                    <div>This field is required</div>
+                  }
+                </div>
+              }
+              <div class="subtext">Characters left: {{ 500 - (westLandUseTypeDescription.value || '').length }}</div>
             </div>
-            <div class="subtext">Characters left: {{ 500 - (westLandUseTypeDescription.value || '').length }}</div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
+    </form>
 
-  <div class="button-container">
-    <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
-    <div>
-      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
-        Next<span class="mobile-hidden"> Step</span>
-      </button>
+    <div class="button-container">
+      @if (!draftMode) {
+        <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+      }
+      @if (draftMode) {
+        <button (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+      }
+      <div>
+        <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+          Previous<span class="mobile-hidden"> Step</span>
+        </button>
+        <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+          Next<span class="mobile-hidden"> Step</span>
+        </button>
+      </div>
     </div>
-  </div>
-</section>
+  </section>

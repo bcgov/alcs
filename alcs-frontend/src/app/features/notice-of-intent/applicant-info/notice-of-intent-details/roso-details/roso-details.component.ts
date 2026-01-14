@@ -5,9 +5,10 @@ import { NoticeOfIntentSubmissionDetailedDto } from '../../../../../services/not
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-roso-details[noiSubmission]',
-  templateUrl: './roso-details.component.html',
-  styleUrls: ['./roso-details.component.scss'],
+    selector: 'app-roso-details[noiSubmission]',
+    templateUrl: './roso-details.component.html',
+    styleUrls: ['./roso-details.component.scss'],
+    standalone: false
 })
 export class RosoDetailsComponent {
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;

@@ -5,7 +5,7 @@
       {{ owner.crownLandOwnerType === 'provincial' ? ' (Provincial Crown)' : '' }}
       {{ owner.crownLandOwnerType === 'federal' ? ' (Federal Crown)' : '' }}
     </mat-card-title>
-    <ng-container *ngIf="!isReviewStep">
+    @if (!isReviewStep) {
       <button mat-icon-button [mat-menu-trigger-for]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -13,23 +13,31 @@
         <button mat-menu-item (click)="onEdit()">
           <span>Edit</span>
         </button>
-        <button *ngIf="!isCrown" mat-menu-item (click)="onRemove()">
-          <span>Remove</span>
-        </button>
+        @if (!isCrown) {
+          <button mat-menu-item (click)="onRemove()">
+            <span>Remove</span>
+          </button>
+        }
       </mat-menu>
-    </ng-container>
+    }
   </mat-card-header>
   <mat-card-content>
-    <span *ngIf="owner.organizationName">{{ owner.organizationName }}</span>
-    <span *ngIf="owner.phoneNumber">Phone: {{ owner.phoneNumber | mask: '(000) 000-0000' }}</span>
-    <span *ngIf="owner.email">Email: {{ owner.email }}</span>
-    <ng-container *ngIf="owner.corporateSummary">
+    @if (owner.organizationName) {
+      <span>{{ owner.organizationName }}</span>
+    }
+    @if (owner.phoneNumber) {
+      <span>Phone: {{ owner.phoneNumber | mask: '(000) 000-0000' }}</span>
+    }
+    @if (owner.email) {
+      <span>Email: {{ owner.email }}</span>
+    }
+    @if (owner.corporateSummary) {
       <a class="mobile" (click)="downloadFile(owner.corporateSummary.documentUuid)">{{
         owner.corporateSummary.fileName
       }}</a>
       <a class="desktop" routerLink="/document/{{ owner.corporateSummary.documentUuid }}" target="_blank">{{
         owner.corporateSummary.fileName
       }}</a>
-    </ng-container>
+    }
   </mat-card-content>
 </mat-card>

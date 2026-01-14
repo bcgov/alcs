@@ -5,9 +5,10 @@ import { ApplicationSubmissionDto } from '../../../../../services/application/ap
 import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-nfu-details[applicationSubmission]',
-  templateUrl: './nfu-details.component.html',
-  styleUrls: ['./nfu-details.component.scss'],
+    selector: 'app-nfu-details[applicationSubmission]',
+    templateUrl: './nfu-details.component.html',
+    styleUrls: ['./nfu-details.component.scss'],
+    standalone: false
 })
 export class NfuDetailsComponent {
   @Input() applicationSubmission!: ApplicationSubmissionDto;

@@ -1,195 +1,223 @@
 <div class="dialog-container">
   <div mat-dialog-title>
-    <h4 *ngIf="currentStep !== steps.prescribedBody">Create New</h4>
-    <h4 *ngIf="currentStep === steps.prescribedBody">
-      The governmental or prescribed public body that is applying to exclude land:
-    </h4>
+    @if (currentStep !== steps.prescribedBody) {
+      <h4>Create New</h4>
+    }
+    @if (currentStep === steps.prescribedBody) {
+      <h4>
+        The governmental or prescribed public body that is applying to exclude land:
+      </h4>
+    }
   </div>
 
   <div [ngClass]="{ 'app-type-dialog': currentStep === steps.applicationType }" class="steps" mat-dialog-content>
-    <ng-container *ngIf="currentStep === steps.submissionType">
+    @if (currentStep === steps.submissionType) {
       <div class="subheading2 step-description">Select an option to learn more about the submission type.</div>
       <div class="step-submission-type">
         <mat-radio-group
           (change)="onSubmissionTypeSelected($event)"
           [value]="selectedSubmissionType?.code"
           color="primary"
-        >
-          <mat-radio-button
-            *ngFor="let subType of submissionTypes"
-            [value]="subType.code"
-            class="radio-option"
-            required
           >
-            {{ subType.label }}
-          </mat-radio-button>
+          @for (subType of submissionTypes; track subType) {
+            <mat-radio-button
+              [value]="subType.code"
+              class="radio-option"
+              required
+              >
+              {{ subType.label }}
+            </mat-radio-button>
+          }
         </mat-radio-group>
       </div>
-      <div *ngIf="selectedSubmissionType" class="warning-banner">
-        <div>
-          <b class="sub-type-label">{{ selectedSubmissionType.label }}</b>
-          <div
-            [innerHtml]="selectedSubmissionType.portalHtmlDescription"
-            [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
-            class="typeDescription"
-          ></div>
+      @if (selectedSubmissionType) {
+        <div class="warning-banner">
+          <div>
+            <b class="sub-type-label">{{ selectedSubmissionType.label }}</b>
+            <div
+              [innerHtml]="selectedSubmissionType.portalHtmlDescription"
+              [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+              class="typeDescription"
+            ></div>
+          </div>
+          @if (selectedSubmissionType) {
+            <span
+              (click)="onReadMoreClicked()"
+              [ngClass]="{ 'display-none': !isReadMoreVisible }"
+              class="read-more-btn"
+              ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+              >
+            }
+          </div>
+        }
+      }
+      @if (currentStep === steps.applicationType) {
+        <div class="subheading2 step-description">Select an option to learn more about the application type.</div>
+        <div class="step-application-type">
+          <mat-radio-group
+            (change)="onAppTypeSelected($event)"
+            [value]="selectedAppType?.code"
+            class="app-type-radio-group"
+            color="primary"
+            required
+            >
+            @for (appType of applicationTypes; track appType) {
+              <mat-radio-button [value]="appType.code" class="radio-option">
+                {{ appType.portalLabel }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
         </div>
-        <span
-          (click)="onReadMoreClicked()"
-          *ngIf="selectedSubmissionType"
-          [ngClass]="{ 'display-none': !isReadMoreVisible }"
-          class="read-more-btn"
-          ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
-        >
-      </div>
-    </ng-container>
-    <ng-container *ngIf="currentStep === steps.applicationType">
-      <div class="subheading2 step-description">Select an option to learn more about the application type.</div>
-      <div class="step-application-type">
-        <mat-radio-group
-          (change)="onAppTypeSelected($event)"
-          [value]="selectedAppType?.code"
-          class="app-type-radio-group"
-          color="primary"
-          required
-        >
-          <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
-            {{ appType.portalLabel }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
+        @if (selectedAppType) {
+          <div class="warning-banner" id="warningBanner">
+            <div>
+              <b class="app-type-label radio-option">{{ selectedAppType.portalLabel }}</b>
+            </div>
+            <div
+              [innerHtml]="selectedAppType.htmlDescription"
+              [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+              class="typeDescription"
+            ></div>
+            <span (click)="onReadMoreClicked()" [ngClass]="{ 'display-none': !isReadMoreVisible }" class="read-more-btn"
+              ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+              >
+            </div>
+          }
+        }
+        @if (currentStep === steps.noticeOfIntentType) {
+          <div class="subheading2 step-description">Select an option to learn more about the notice of intent type.</div>
+          <div class="step-noi-type">
+            <mat-radio-group (change)="onNoiTypeSelected($event)" class="app-type-radio-group" color="primary" required>
+              @for (type of noticeOfIntentTypes; track type) {
+                <mat-radio-button [value]="type.code" class="radio-option">
+                  {{ type.portalLabel }}
+                </mat-radio-button>
+              }
+            </mat-radio-group>
+          </div>
+          @if (selectedNoiType) {
+            <div class="warning-banner" id="warningBanner">
+              <div>
+                <b class="app-type-label radio-option">{{ selectedNoiType.portalLabel }}</b>
+              </div>
+              <div
+                [innerHtml]="selectedNoiType.htmlDescription"
+                [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+                class="typeDescription"
+              ></div>
+              <span (click)="onReadMoreClicked()" [ngClass]="{ 'display-none': !isReadMoreVisible }" class="read-more-btn"
+                ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+                >
+              </div>
+            }
+          }
+          @if (currentStep === steps.prescribedBody) {
+            <app-prescribed-body (select)="onSelectPrescribedBody($event)"></app-prescribed-body>
+          }
+          @if (currentStep === steps.srwType) {
+            <div class="step-description">
+              Submitting a notification of Statutory Right of Way (SRW) only applies to a SRW described in
+              <a
+                href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96250_00_multi#section218"
+                target="_blank"
+                >s. 218 of the Land Title Act.</a
+                >
+              </div>
+              <div class="warning-banner">
+                <div>
+                  <b class="app-type-label radio-option">Before you create a notification of SRW:</b>
+                </div>
+                <div [ngClass]="{ 'ellipsis-3': !readMoreClicked }" class="typeDescription">
+                  <ol class="srw-list">
+                    <li>
+                      Permitted Uses: If you intend to use, construct works, or remove soil or place fill (including gravel)
+                      within the SRW beyond what is permitted in the ALR Use Regulation, application or notice of intent to the
+                      ALC is required. Creating a notification of SRW in no way constitutes such an approval.
+                    </li>
+                    <li>
+                      ALC Decision Condition Compliance: This notification of SRW is not meant to submit or confirm ALC decision
+                      condition compliance (e.g. subdivision plan), please refer back to the ALC decision letter for
+                      instructions.
+                    </li>
+                    <li>
+                      Submitting a Notification of SRW: Ensure that you are ready to submit your SRW package to the Land Title
+                      Survey Authority and all necessary documents including the ‘Terms of SRW’ and survey plan (if any) have
+                      been signed and finalized. You will not be able to submit this notification of SRW to the ALC without
+                      attaching the finalized Terms of SRW.
+                    </li>
+                  </ol>
+                  The ALC's automatically generated notification response will need to be attached as a supporting document to
+                  your Land Title Survey Authority SRW package.
+                  <br /><br />
+                  If you have any questions, please contact the ALC.<br />
+                  Email: <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a> <br />
+                  Phone: <a href="tel:236-468-3342">236-468-3342</a> or <a href="tel:1-800-663-7867">1-800-663-7867</a>
+                </div>
+                <span (click)="onReadMoreClicked()" [ngClass]="{ 'display-none': !isReadMoreVisible }" class="read-more-btn"
+                  ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+                  >
+                </div>
+              }
+            </div>
+          </div>
 
-      <div *ngIf="selectedAppType" class="warning-banner" id="warningBanner">
-        <div>
-          <b class="app-type-label radio-option">{{ selectedAppType.portalLabel }}</b>
-        </div>
-        <div
-          [innerHtml]="selectedAppType.htmlDescription"
-          [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
-          class="typeDescription"
-        ></div>
-        <span (click)="onReadMoreClicked()" [ngClass]="{ 'display-none': !isReadMoreVisible }" class="read-more-btn"
-          ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
-        >
-      </div>
-    </ng-container>
-    <ng-container *ngIf="currentStep === steps.noticeOfIntentType">
-      <div class="subheading2 step-description">Select an option to learn more about the notice of intent type.</div>
-      <div class="step-noi-type">
-        <mat-radio-group (change)="onNoiTypeSelected($event)" class="app-type-radio-group" color="primary" required>
-          <mat-radio-button *ngFor="let type of noticeOfIntentTypes" [value]="type.code" class="radio-option">
-            {{ type.portalLabel }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-
-      <div *ngIf="selectedNoiType" class="warning-banner" id="warningBanner">
-        <div>
-          <b class="app-type-label radio-option">{{ selectedNoiType.portalLabel }}</b>
-        </div>
-        <div
-          [innerHtml]="selectedNoiType.htmlDescription"
-          [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
-          class="typeDescription"
-        ></div>
-        <span (click)="onReadMoreClicked()" [ngClass]="{ 'display-none': !isReadMoreVisible }" class="read-more-btn"
-          ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
-        >
-      </div>
-    </ng-container>
-    <ng-container *ngIf="currentStep === steps.prescribedBody">
-      <app-prescribed-body (select)="onSelectPrescribedBody($event)"></app-prescribed-body>
-    </ng-container>
-    <ng-container *ngIf="currentStep === steps.srwType">
-      <div class="step-description">
-        Submitting a notification of Statutory Right of Way (SRW) only applies to a SRW described in
-        <a
-          href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96250_00_multi#section218"
-          target="_blank"
-          >s. 218 of the Land Title Act.</a
-        >
-      </div>
-      <div class="warning-banner">
-        <div>
-          <b class="app-type-label radio-option">Before you create a notification of SRW:</b>
-        </div>
-        <div [ngClass]="{ 'ellipsis-3': !readMoreClicked }" class="typeDescription">
-          <ol class="srw-list">
-            <li>
-              Permitted Uses: If you intend to use, construct works, or remove soil or place fill (including gravel)
-              within the SRW beyond what is permitted in the ALR Use Regulation, application or notice of intent to the
-              ALC is required. Creating a notification of SRW in no way constitutes such an approval.
-            </li>
-            <li>
-              ALC Decision Condition Compliance: This notification of SRW is not meant to submit or confirm ALC decision
-              condition compliance (e.g. subdivision plan), please refer back to the ALC decision letter for
-              instructions.
-            </li>
-            <li>
-              Submitting a Notification of SRW: Ensure that you are ready to submit your SRW package to the Land Title
-              Survey Authority and all necessary documents including the ‘Terms of SRW’ and survey plan (if any) have
-              been signed and finalized. You will not be able to submit this notification of SRW to the ALC without
-              attaching the finalized Terms of SRW.
-            </li>
-          </ol>
-          The ALC's automatically generated notification response will need to be attached as a supporting document to
-          your Land Title Survey Authority SRW package.
-          <br /><br />
-          If you have any questions, please contact the ALC.<br />
-          Email: <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a> <br />
-          Phone: <a href="tel:236-468-3342">236-468-3342</a> or <a href="tel:1-800-663-7867">1-800-663-7867</a>
-        </div>
-        <span (click)="onReadMoreClicked()" [ngClass]="{ 'display-none': !isReadMoreVisible }" class="read-more-btn"
-          ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
-        >
-      </div>
-    </ng-container>
-  </div>
-</div>
-
-<div class="dialog-action-container" mat-dialog-action>
-  <div *ngIf="currentStep === steps.submissionType" class="dialog-controls-wrapper">
-    <button (click)="onCancel()" color="primary" mat-stroked-button>Cancel</button>
-    <button (click)="onConfirmSubmissionType()" [disabled]="!selectedSubmissionType" color="primary" mat-flat-button>
-      Next
-    </button>
-  </div>
-  <div *ngIf="currentStep === steps.applicationType" class="dialog-controls-wrapper">
-    <button (click)="onStepChange(steps.submissionType)" color="primary" mat-stroked-button>Back</button>
-    <button
-      (click)="onSubmitApplication()"
-      [disabled]="!selectedAppType || !selectedSubmissionType"
-      color="primary"
-      mat-flat-button
-    >
-      <ng-container *ngIf="selectedAppType?.code === 'EXCL'">next</ng-container>
-      <ng-container *ngIf="selectedAppType?.code !== 'EXCL'">create</ng-container>
-    </button>
-  </div>
-  <div *ngIf="currentStep === steps.srwType" class="dialog-controls-wrapper">
-    <button (click)="onStepChange(steps.submissionType)" color="primary" mat-stroked-button>Back</button>
-    <button (click)="onSubmitSrw()" [disabled]="!selectedSubmissionType" color="primary" mat-flat-button>create</button>
-  </div>
-  <div *ngIf="currentStep === steps.noticeOfIntentType" class="dialog-controls-wrapper">
-    <button (click)="onStepChange(steps.submissionType)" color="primary" mat-stroked-button>Back</button>
-    <button
-      (click)="onSubmitNoi()"
-      [disabled]="!selectedNoiType || !selectedSubmissionType"
-      color="primary"
-      mat-flat-button
-    >
-      create
-    </button>
-  </div>
-  <div *ngIf="currentStep === steps.prescribedBody" class="dialog-controls-wrapper">
-    <button (click)="onStepChange(steps.applicationType)" color="primary" mat-stroked-button>Back</button>
-    <button
-      (click)="onSubmitInclExcl()"
-      [disabled]="!selectedAppType || !selectedSubmissionType || !prescribedBody"
-      color="primary"
-      mat-flat-button
-    >
-      <ng-container>create</ng-container>
-    </button>
-  </div>
-</div>
+          <div class="dialog-action-container" mat-dialog-action>
+            @if (currentStep === steps.submissionType) {
+              <div class="dialog-controls-wrapper">
+                <button (click)="onCancel()" color="primary" mat-stroked-button>Cancel</button>
+                <button (click)="onConfirmSubmissionType()" [disabled]="!selectedSubmissionType" color="primary" mat-flat-button>
+                  Next
+                </button>
+              </div>
+            }
+            @if (currentStep === steps.applicationType) {
+              <div class="dialog-controls-wrapper">
+                <button (click)="onStepChange(steps.submissionType)" color="primary" mat-stroked-button>Back</button>
+                <button
+                  (click)="onSubmitApplication()"
+                  [disabled]="!selectedAppType || !selectedSubmissionType"
+                  color="primary"
+                  mat-flat-button
+                  >
+                  @if (selectedAppType?.code === 'EXCL') {
+                    next
+                  }
+                  @if (selectedAppType?.code !== 'EXCL') {
+                    create
+                  }
+                </button>
+              </div>
+            }
+            @if (currentStep === steps.srwType) {
+              <div class="dialog-controls-wrapper">
+                <button (click)="onStepChange(steps.submissionType)" color="primary" mat-stroked-button>Back</button>
+                <button (click)="onSubmitSrw()" [disabled]="!selectedSubmissionType" color="primary" mat-flat-button>create</button>
+              </div>
+            }
+            @if (currentStep === steps.noticeOfIntentType) {
+              <div class="dialog-controls-wrapper">
+                <button (click)="onStepChange(steps.submissionType)" color="primary" mat-stroked-button>Back</button>
+                <button
+                  (click)="onSubmitNoi()"
+                  [disabled]="!selectedNoiType || !selectedSubmissionType"
+                  color="primary"
+                  mat-flat-button
+                  >
+                  create
+                </button>
+              </div>
+            }
+            @if (currentStep === steps.prescribedBody) {
+              <div class="dialog-controls-wrapper">
+                <button (click)="onStepChange(steps.applicationType)" color="primary" mat-stroked-button>Back</button>
+                <button
+                  (click)="onSubmitInclExcl()"
+                  [disabled]="!selectedAppType || !selectedSubmissionType || !prescribedBody"
+                  color="primary"
+                  mat-flat-button
+                  >
+                  <ng-container>create</ng-container>
+                </button>
+              </div>
+            }
+          </div>

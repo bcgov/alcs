@@ -12,14 +12,16 @@ import { FormControl } from '@angular/forms';
 import { strictEmailValidator } from '../../validators/email-validator';
 
 @Component({
-  selector: 'app-inline-text[value]',
-  templateUrl: './inline-text.component.html',
-  styleUrls: ['./inline-text.component.scss'],
+    selector: 'app-inline-text[value]',
+    templateUrl: './inline-text.component.html',
+    styleUrls: ['./inline-text.component.scss'],
+    standalone: false
 })
 export class InlineTextComponent implements AfterContentChecked, OnInit {
   @Input() updateOnSave: boolean = true;
   @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
+  @Input() addText: string = 'Add text';
   @Input() required = false;
   @Input() isEmail = false;
   @Input() isFixedHeight = false;

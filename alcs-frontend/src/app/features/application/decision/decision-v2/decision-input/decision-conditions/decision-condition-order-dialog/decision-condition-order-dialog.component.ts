@@ -17,9 +17,10 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-decision-condition-order-dialog',
-  templateUrl: './decision-condition-order-dialog.component.html',
-  styleUrl: './decision-condition-order-dialog.component.scss',
+    selector: 'app-decision-condition-order-dialog',
+    templateUrl: './decision-condition-order-dialog.component.html',
+    styleUrl: './decision-condition-order-dialog.component.scss',
+    standalone: false
 })
 export class DecisionConditionOrderDialogComponent implements OnInit {
   displayedColumns = ['index', 'type', 'description', 'actions'];

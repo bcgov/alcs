@@ -1,13 +1,21 @@
 <div class="inline-applicant-type-wrapper">
-  <span class="left" *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="!value"> Select an option </a>
-    <span *ngIf="value">
-      {{ value }}
+  @if (!isEditing) {
+    <span class="left">
+      @if (!value) {
+        <a (click)="toggleEdit()" class="add-date"> Select an option </a>
+      }
+      @if (value) {
+        <span>
+          {{ value }}
+        </span>
+      }
+      @if (value) {
+        <button class="edit-button" mat-icon-button (click)="toggleEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      }
     </span>
-    <button *ngIf="value" class="edit-button" mat-icon-button (click)="toggleEdit()">
-      <mat-icon class="edit-icon">edit</mat-icon>
-    </button>
-  </span>
+  }
   <div class="editing" [ngClass]="{ hidden: !isEditing }">
     <form [formGroup]="form">
       <mat-button-toggle-group id="applicantType" formControlName="applicantType" name="applicantType">

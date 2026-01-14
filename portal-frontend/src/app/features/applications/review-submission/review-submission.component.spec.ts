@@ -39,6 +39,8 @@ describe('ReviewSubmissionComponent', () => {
     mockRoute = createMock();
     mockPdfGenerationService = createMock();
     mockAuthenticationService = createMock();
+    mockAppDocService = createMock();
+    mockDialog = createMock();
     mockAuthenticationService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     routeParamMap = new BehaviorSubject(new Map());

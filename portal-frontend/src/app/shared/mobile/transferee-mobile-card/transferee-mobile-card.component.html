@@ -3,7 +3,7 @@
     <mat-card-title>
       {{ transferee.displayName }}
     </mat-card-title>
-    <ng-container *ngIf="!isReviewStep">
+    @if (!isReviewStep) {
       <button mat-icon-button [mat-menu-trigger-for]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -15,11 +15,17 @@
           <span>Remove</span>
         </button>
       </mat-menu>
-    </ng-container>
+    }
   </mat-card-header>
   <mat-card-content>
-    <span *ngIf="transferee.organizationName">{{ transferee.organizationName }}</span>
-    <span *ngIf="transferee.phoneNumber">Phone: {{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
-    <span *ngIf="transferee.email">Email: {{ transferee.email }}</span>
+    @if (transferee.organizationName) {
+      <span>{{ transferee.organizationName }}</span>
+    }
+    @if (transferee.phoneNumber) {
+      <span>Phone: {{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
+    }
+    @if (transferee.email) {
+      <span>Email: {{ transferee.email }}</span>
+    }
   </mat-card-content>
 </mat-card>

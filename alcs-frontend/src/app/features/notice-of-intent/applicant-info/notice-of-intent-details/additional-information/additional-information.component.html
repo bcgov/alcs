@@ -1,96 +1,133 @@
-<div *ngIf="_noiSubmission" class="review-table">
-  <div class="subheading2 grid-1">{{ firstQuestion }}</div>
-  <div class="grid-double">
-    <span *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure !== null">
-      {{ _noiSubmission.soilIsRemovingSoilForNewStructure ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure === null"></app-no-data>
-  </div>
-
-  <ng-container *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure">
-    <div class="full-width subheading2">The total floor area (m<sup>2</sup>) for each of the proposed structure(s)</div>
-    <div class="full-width structure-table">
-      <div class="grid-1 subheading2">#</div>
-      <div class="grid-2 subheading2">Type</div>
-      <div class="grid-3 subheading2">Area</div>
-      <ng-container *ngFor="let structure of _noiSubmission.soilProposedStructures; let i = index">
-        <div class="grid-1">
-          {{ i + 1 }}
-        </div>
-        <div class="grid-2">
-          {{ mapStructureTypeValueToLabel(structure.type) }}
-          <app-no-data *ngIf="!structure.type"></app-no-data>
-        </div>
-        <div class="grid-3">
-          {{ structure.area }} <ng-container *ngIf="structure.area">m<sup>2</sup></ng-container>
-          <app-no-data *ngIf="!structure.area"></app-no-data>
-        </div>
-      </ng-container>
-      <div *ngIf="_noiSubmission.soilProposedStructures.length === 0" class="full-width">
+@if (_noiSubmission) {
+  <div class="review-table">
+    <div class="subheading2 grid-1">{{ firstQuestion }}</div>
+    <div class="grid-double">
+      @if (_noiSubmission.soilIsRemovingSoilForNewStructure !== null) {
+        <span>
+          {{ _noiSubmission.soilIsRemovingSoilForNewStructure ? 'Yes' : 'No' }}
+        </span>
+      }
+      @if (_noiSubmission.soilIsRemovingSoilForNewStructure === null) {
         <app-no-data></app-no-data>
-      </div>
+      }
     </div>
-
-    <ng-container *ngIf="isSoilStructureFarmUseReasonVisible">
+    @if (_noiSubmission.soilIsRemovingSoilForNewStructure) {
+      <div class="full-width subheading2">The total floor area (m<sup>2</sup>) for each of the proposed structure(s)</div>
+      <div class="full-width structure-table">
+        <div class="grid-1 subheading2">#</div>
+        <div class="grid-2 subheading2">Type</div>
+        <div class="grid-3 subheading2">Area</div>
+        @for (structure of _noiSubmission.soilProposedStructures; track structure; let i = $index) {
+          <div class="grid-1">
+            {{ i + 1 }}
+          </div>
+          <div class="grid-2">
+            {{ mapStructureTypeValueToLabel(structure.type) }}
+            @if (!structure.type) {
+              <app-no-data></app-no-data>
+            }
+          </div>
+          <div class="grid-3">
+            {{ structure.area }} @if (structure.area) {
+            m<sup>2</sup>
+          }
+          @if (!structure.area) {
+            <app-no-data></app-no-data>
+          }
+        </div>
+      }
+      @if (_noiSubmission.soilProposedStructures.length === 0) {
+        <div class="full-width">
+          <app-no-data></app-no-data>
+        </div>
+      }
+    </div>
+    @if (isSoilStructureFarmUseReasonVisible) {
       <div class="subheading2 grid-1">Describe how the structure is necessary for farm use</div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureFarmUseReason }}
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilStructureResidentialUseReasonVisible">
+    }
+    @if (isSoilStructureResidentialUseReasonVisible) {
       <div class="subheading2 grid-1">
-        Describe why <ng-container *ngIf="_noiSubmission.typeCode === 'POFO'">placing fill</ng-container>
-        <ng-container *ngIf="_noiSubmission.typeCode === 'ROSO'">removing soil</ng-container>
-        <ng-container *ngIf="_noiSubmission.typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
+        Describe why @if (_noiSubmission.typeCode === 'POFO') {
+        placing fill
+      }
+      @if (_noiSubmission.typeCode === 'ROSO') {
+        removing soil
+      }
+      @if (_noiSubmission.typeCode === 'PFRS') {
+        placing fill/removing soil
+        } is required
         for the residential structure(s)
       </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureResidentialUseReason }}
-        <app-no-data *ngIf="!_noiSubmission.soilStructureResidentialUseReason"></app-no-data>
+        @if (!_noiSubmission.soilStructureResidentialUseReason) {
+          <app-no-data></app-no-data>
+        }
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilAgriParcelActivityVisible">
+    }
+    @if (isSoilAgriParcelActivityVisible) {
       <div class="subheading2 grid-1">Describe the current or proposed agricultural activity on the parcel(s)</div>
       <div class="grid-double">
         {{ _noiSubmission.soilAgriParcelActivity }}
-        <app-no-data *ngIf="!_noiSubmission.soilAgriParcelActivity"></app-no-data>
+        @if (!_noiSubmission.soilAgriParcelActivity) {
+          <app-no-data></app-no-data>
+        }
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
+    }
+    @if (isSoilStructureResidentialAccessoryUseReasonVisible) {
       <div class="subheading2 grid-1">
         Describe the intended use of the residential accessory structure(s) and why
-        <ng-container *ngIf="_noiSubmission.typeCode === 'POFO'">placing fill</ng-container>
-        <ng-container *ngIf="_noiSubmission.typeCode === 'ROSO'">removing soil</ng-container>
-        <ng-container *ngIf="_noiSubmission.typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
-      </div>
-      <div class="grid-double">
-        {{ _noiSubmission.soilStructureResidentialAccessoryUseReason }}
-        <app-no-data *ngIf="!_noiSubmission.soilStructureResidentialAccessoryUseReason"></app-no-data>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="isSoilOtherStructureUseReasonVisible">
-      <div class="subheading2 grid-1">
-        Describe the intended use of the 'Other' structure(s) and why
-        <ng-container *ngIf="_noiSubmission.typeCode === 'POFO'">placing fill</ng-container>
-        <ng-container *ngIf="_noiSubmission.typeCode === 'ROSO'">removing soil</ng-container>
-        <ng-container *ngIf="_noiSubmission.typeCode === 'PFRS'">placing fill/removing soil</ng-container> is required
-      </div>
-      <div class="grid-double">
-        {{ _noiSubmission.soilStructureOtherUseReason }}
-        <app-no-data *ngIf="!_noiSubmission.soilStructureOtherUseReason"></app-no-data>
-      </div>
-    </ng-container>
-
-    <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
-    <div class="grid-double multiple-documents">
-      <a *ngFor="let file of buildingPlans" routerLink="/document/{{ file.documentUuid }}" target="_blank">
-        {{ file.fileName }}
-      </a>
-      <app-no-data *ngIf="buildingPlans.length === 0"></app-no-data>
+        @if (_noiSubmission.typeCode === 'POFO') {
+          placing fill
+        }
+        @if (_noiSubmission.typeCode === 'ROSO') {
+          removing soil
+        }
+        @if (_noiSubmission.typeCode === 'PFRS') {
+          placing fill/removing soil
+          } is required
+        </div>
+        <div class="grid-double">
+          {{ _noiSubmission.soilStructureResidentialAccessoryUseReason }}
+          @if (!_noiSubmission.soilStructureResidentialAccessoryUseReason) {
+            <app-no-data></app-no-data>
+          }
+        </div>
+      }
+      @if (isSoilOtherStructureUseReasonVisible) {
+        <div class="subheading2 grid-1">
+          Describe the intended use of the 'Other' structure(s) and why
+          @if (_noiSubmission.typeCode === 'POFO') {
+            placing fill
+          }
+          @if (_noiSubmission.typeCode === 'ROSO') {
+            removing soil
+          }
+          @if (_noiSubmission.typeCode === 'PFRS') {
+            placing fill/removing soil
+            } is required
+          </div>
+          <div class="grid-double">
+            {{ _noiSubmission.soilStructureOtherUseReason }}
+            @if (!_noiSubmission.soilStructureOtherUseReason) {
+              <app-no-data></app-no-data>
+            }
+          </div>
+        }
+        <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
+        <div class="grid-double multiple-documents">
+          @for (file of buildingPlans; track file) {
+            <a routerLink="/document/{{ file.documentUuid }}" target="_blank">
+              {{ file.fileName }}
+            </a>
+          }
+          @if (buildingPlans.length === 0) {
+            <app-no-data></app-no-data>
+          }
+        </div>
+      }
     </div>
-  </ng-container>
-</div>
+  }

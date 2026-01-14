@@ -1,48 +1,51 @@
-<div *ngFor="let decision of applicationDecisions; let index = index">
-  <h4>Decision #{{ applicationDecisions.length - index }}</h4>
-  <div class="decision-table">
-    <div>
-      <div class="subheading2">Decision Date</div>
-      {{ decision.date | momentFormat }}
-    </div>
-
-    <div>
-      <div class="subheading2">Resolution Number</div>
-      #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
-    </div>
-
-    <div class="full-width">
-      <div class="subheading2">Decision Summary</div>
-      {{ decision.decisionDescription }}
-    </div>
-
-    <div class="full-width">
-      <div class="subheading2">Decision Document</div>
-      <div class="document split" *ngFor="let document of decision.documents">
-        <div>
-          <a class="mobile" (click)="downloadFile(document.documentUuid)">{{ document.fileName }}</a>
-          <a class="desktop" routerLink="/document/{{ document.documentUuid }}" target="_blank">{{
-            document.fileName
-          }}</a>
-          &nbsp;({{ document.fileSize | filesize }})
-        </div>
-        <button class="center" mat-button (click)="downloadFile(document.documentUuid)">
-          <mat-icon>file_download</mat-icon>
-          Download
-        </button>
+@for (decision of applicationDecisions; track decision; let index = $index) {
+  <div>
+    <h4>Decision #{{ applicationDecisions.length - index }}</h4>
+    <div class="decision-table">
+      <div>
+        <div class="subheading2">Decision Date</div>
+        {{ decision.date | momentFormat }}
       </div>
-      <div class="document responsive left" *ngFor="let document of decision.documents">
-        <div class="document-name">
-          <a (click)="downloadFile(document.documentUuid)">{{ document.fileName }}</a>
-        </div>
-        <div class="split">
-          <div>{{ document.fileSize | filesize }}</div>
-          <button class="center" mat-button (click)="downloadFile(document.documentUuid)">
-            <mat-icon>file_download</mat-icon>
-            Download
-          </button>
-        </div>
+      <div>
+        <div class="subheading2">Resolution Number</div>
+        #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+      </div>
+      <div class="full-width">
+        <div class="subheading2">Decision Summary</div>
+        {{ decision.decisionDescription }}
+      </div>
+      <div class="full-width">
+        <div class="subheading2">Decision Document</div>
+        @for (document of decision.documents; track document) {
+          <div class="document split">
+            <div>
+              <a class="mobile" (click)="downloadFile(document.documentUuid)">{{ document.fileName }}</a>
+              <a class="desktop" routerLink="/document/{{ document.documentUuid }}" target="_blank">{{
+                document.fileName
+              }}</a>
+              &nbsp;({{ document.fileSize | filesize }})
+            </div>
+            <button class="center" mat-button (click)="downloadFile(document.documentUuid)">
+              <mat-icon>file_download</mat-icon>
+              Download
+            </button>
+          </div>
+        }
+        @for (document of decision.documents; track document) {
+          <div class="document responsive left">
+            <div class="document-name">
+              <a (click)="downloadFile(document.documentUuid)">{{ document.fileName }}</a>
+            </div>
+            <div class="split">
+              <div>{{ document.fileSize | filesize }}</div>
+              <button class="center" mat-button (click)="downloadFile(document.documentUuid)">
+                <mat-icon>file_download</mat-icon>
+                Download
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
   </div>
-</div>
+}

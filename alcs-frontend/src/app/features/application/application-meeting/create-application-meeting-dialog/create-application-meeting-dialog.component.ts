@@ -4,9 +4,10 @@ import { ApplicationMeetingTypeDto } from '../../../../services/application/appl
 import { ApplicationMeetingService } from '../../../../services/application/application-meeting/application-meeting.service';
 
 @Component({
-  selector: 'app-application-meeting-dialog',
-  templateUrl: './create-application-meeting-dialog.component.html',
-  styleUrls: ['./create-application-meeting-dialog.component.scss'],
+    selector: 'app-application-meeting-dialog',
+    templateUrl: './create-application-meeting-dialog.component.html',
+    styleUrls: ['./create-application-meeting-dialog.component.scss'],
+    standalone: false
 })
 export class CreateApplicationMeetingDialogComponent {
   isLoading = false;

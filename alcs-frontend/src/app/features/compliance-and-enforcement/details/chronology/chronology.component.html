@@ -1,0 +1,75 @@
+<div class="actions">
+  @if (!file?.chronologyClosedAt) {
+    @if (entries.length > 0) {
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="confirmCloseChronology()"
+        [disabled]="hasDraftEntries()"
+        >
+        Close Chronology
+      </button>
+    }
+  } @else {
+    <button
+      mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="confirmReopenChronology()"
+      [disabled]="hasDraftEntries()"
+      >
+      Re-open Chronology
+    </button>
+  }
+
+
+  @if (!file?.chronologyClosedAt) {
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="createDraftEntry()"
+      [disabled]="hasDraftEntries()"
+      >
+      + Chronology Entry
+    </button>
+  }
+</div>
+
+@if (entries.length > 0) {
+  <div class="entries">
+    @if (file?.chronologyClosedAt) {
+      <div class="final-entry">
+        <div class="final-entry-date">{{ file?.chronologyClosedAt | date: 'yyyy-MMM-dd' }}</div>
+        <div class="final-entry-main">
+          <strong>Chronology Closed by {{ file?.chronologyClosedBy?.prettyName }}</strong>
+        </div>
+      </div>
+    }
+    @for (entry of entries; track entry) {
+      <app-compliance-and-enforcement-chronology-entry
+        [entry]="entry"
+        [authors]="authors"
+        [datesInUse]="datesInUse(entry.uuid)"
+        [editDisabled]="hasDraftEntries() || !!file?.chronologyClosedAt"
+        (edit)="setDraft($event)"
+        (complete)="completeDraftEntry($event)"
+        (delete)="confirmEntryDelete($event)"
+        (addCorrespondence)="openAddCorrespondenceDialog($event)"
+        >
+        @if (entry.isDraft || entry?.documents?.length) {
+          <app-compliance-and-enforcement-chronology-entry-documents
+            [isDraft]="entry.isDraft"
+            [documents]="entry.documents"
+            (edit)="openEditDocumentDialog($event)"
+            (delete)="confirmDocumentDelete($event)"
+            />
+        }
+      </app-compliance-and-enforcement-chronology-entry>
+    }
+  </div>
+} @else {
+  <div class="no-entries">No chronology entries</div>
+}
+

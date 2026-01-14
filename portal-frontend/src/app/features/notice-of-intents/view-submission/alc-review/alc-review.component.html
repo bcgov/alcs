@@ -1,12 +1,18 @@
-<div *ngIf="noiSubmission">
-  <div class="header">
-    <h2>ALC Review and Decision</h2>
+@if (noiSubmission) {
+  <div>
+    <div class="header">
+      <h2>ALC Review and Decision</h2>
+    </div>
+    @if (noiSubmission.status.code === NOI_SUBMISSION_STATUS.IN_PROGRESS) {
+      <app-warning-banner>
+        This section will update after the Notice of Intent is submitted to the ALC.
+      </app-warning-banner>
+    }
+    @if (noiSubmission.status.code !== NOI_SUBMISSION_STATUS.IN_PROGRESS) {
+      <div>
+        <app-decisions [fileNumber]="noiSubmission.fileNumber"></app-decisions>
+        <app-submission-documents [$noiDocuments]="$noiDocuments"></app-submission-documents>
+      </div>
+    }
   </div>
-  <app-warning-banner *ngIf="noiSubmission.status.code === NOI_SUBMISSION_STATUS.IN_PROGRESS">
-    This section will update after the Notice of Intent is submitted to the ALC.
-  </app-warning-banner>
-  <div *ngIf="noiSubmission.status.code !== NOI_SUBMISSION_STATUS.IN_PROGRESS">
-    <app-decisions [fileNumber]="noiSubmission.fileNumber"></app-decisions>
-    <app-submission-documents [$noiDocuments]="$noiDocuments"></app-submission-documents>
-  </div>
-</div>
+}

@@ -42,9 +42,10 @@ type LoadingDecision = NoticeOfIntentDecisionDto & {
 export const OUTCOMES_WITH_COMPONENTS = ['APPR', 'APPA', 'RESC'];
 
 @Component({
-  selector: 'app-noi-decision-v2',
-  templateUrl: './decision-v2.component.html',
-  styleUrls: ['./decision-v2.component.scss'],
+    selector: 'app-noi-decision-v2',
+    templateUrl: './decision-v2.component.html',
+    styleUrls: ['./decision-v2.component.scss'],
+    standalone: false
 })
 export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

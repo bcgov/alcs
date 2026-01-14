@@ -9,9 +9,10 @@ import {
 } from '../../../../services/application-submission/application-submission.dto';
 
 @Component({
-  selector: 'app-alc-review',
-  templateUrl: './alc-review.component.html',
-  styleUrls: ['./alc-review.component.scss'],
+    selector: 'app-alc-review',
+    templateUrl: './alc-review.component.html',
+    styleUrls: ['./alc-review.component.scss'],
+    standalone: false
 })
 export class AlcReviewComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();

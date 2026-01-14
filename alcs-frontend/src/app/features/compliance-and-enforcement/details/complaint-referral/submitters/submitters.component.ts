@@ -5,9 +5,10 @@ import moment from 'moment';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../../../services/compliance-and-enforcement/submitter/submitter.dto';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-complaint-referral-submitters',
-  templateUrl: './submitters.component.html',
-  styleUrls: ['./submitters.component.scss'],
+    selector: 'app-compliance-and-enforcement-complaint-referral-submitters',
+    templateUrl: './submitters.component.html',
+    styleUrls: ['./submitters.component.scss'],
+    standalone: false
 })
 export class ComplaintReferralSubmittersComponent implements OnDestroy {
   $destroy = new Subject<void>();

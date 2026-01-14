@@ -3,52 +3,64 @@
 </section>
 <section>
   <h3>Identify Transferee(s)</h3>
-  <div *ngIf="submission" class="review-table">
-    <div class="full-width transferee-table">
-      <div class="subheading2">Name</div>
-      <div class="subheading2">Organization Name</div>
-      <ng-container *ngFor="let transferee of submission.transferees">
-        <div>{{ transferee.displayName }}</div>
-        <div>
-          {{ transferee.organizationName }}
-          <div class="no-data" *ngIf="!transferee.organizationName">
-            <div class="no-data-text">Not Applicable</div>
+  @if (submission) {
+    <div class="review-table">
+      <div class="full-width transferee-table">
+        <div class="subheading2">Name</div>
+        <div class="subheading2">Organization Name</div>
+        @for (transferee of submission.transferees; track transferee) {
+          <div>{{ transferee.displayName }}</div>
+          <div>
+            {{ transferee.organizationName }}
+            @if (!transferee.organizationName) {
+              <div class="no-data">
+                <div class="no-data-text">Not Applicable</div>
+              </div>
+            }
           </div>
-        </div>
-      </ng-container>
+        }
+      </div>
     </div>
-  </div>
+  }
 </section>
 <section>
   <h3>Primary Contact</h3>
-  <div *ngIf="submission" class="review-table">
-    <div class="subheading2 grid-1">First Name</div>
-    <div class="grid-double">
-      {{ submission.contactFirstName }}
+  @if (submission) {
+    <div class="review-table">
+      <div class="subheading2 grid-1">First Name</div>
+      <div class="grid-double">
+        {{ submission.contactFirstName }}
+      </div>
+      <div class="subheading2 grid-1">Last Name</div>
+      <div class="grid-double">
+        {{ submission.contactLastName }}
+      </div>
+      <div class="subheading2 grid-1">
+        <span>Organization (optional)</span>
+      </div>
+      <div class="grid-double">
+        {{ submission.contactOrganization }}
+        @if (!submission.contactOrganization) {
+          <app-no-data></app-no-data>
+        }
+      </div>
     </div>
-    <div class="subheading2 grid-1">Last Name</div>
-    <div class="grid-double">
-      {{ submission.contactLastName }}
-    </div>
-    <div class="subheading2 grid-1">
-      <span>Organization (optional)</span>
-    </div>
-    <div class="grid-double">
-      {{ submission.contactOrganization }}
-      <app-no-data *ngIf="!submission.contactOrganization"></app-no-data>
-    </div>
-  </div>
+  }
 </section>
 <section>
   <h3>Government</h3>
-  <div *ngIf="submission" class="review-table">
-    <div class="subheading2 grid-1">Local or First Nation Government</div>
-    <div class="grid-double">
-      {{ localGovernment?.name }}
+  @if (submission) {
+    <div class="review-table">
+      <div class="subheading2 grid-1">Local or First Nation Government</div>
+      <div class="grid-double">
+        {{ localGovernment?.name }}
+      </div>
     </div>
-  </div>
+  }
 </section>
-<section *ngIf="submission">
-  <h3>Purpose of SRW</h3>
-  <app-proposal-details [submission]="submission"></app-proposal-details>
-</section>
+@if (submission) {
+  <section>
+    <h3>Purpose of SRW</h3>
+    <app-proposal-details [submission]="submission"></app-proposal-details>
+  </section>
+}

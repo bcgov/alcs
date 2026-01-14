@@ -9,9 +9,10 @@ export enum ReturnApplicationStepEnum {
 }
 
 @Component({
-  selector: 'app-return-application-dialog',
-  templateUrl: './return-application-dialog.component.html',
-  styleUrls: ['./return-application-dialog.component.scss'],
+    selector: 'app-return-application-dialog',
+    templateUrl: './return-application-dialog.component.html',
+    styleUrls: ['./return-application-dialog.component.scss'],
+    standalone: false
 })
 export class ReturnApplicationDialogComponent implements OnInit {
   fileId: string;

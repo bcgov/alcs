@@ -7,8 +7,8 @@ export class OtherParcelsPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.yesButton = page.getByRole('button', { name: 'Yes' });
-    this.noButton = page.getByRole('button', { name: 'No' });
+    this.yesButton = page.getByRole('radio', { name: 'Yes' });
+    this.noButton = page.getByRole('radio', { name: 'No' });
   }
 
   async setHasOtherParcels(hasOtherParcels: boolean) {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="form">
+@if (form) {
   <form [formGroup]="form">
     <mat-form-field appearance="outline" class="row">
       <mat-label>ALR Area Impacted (ha)</mat-label>
@@ -10,9 +10,8 @@
         separatorLimit="9999999999"
         formControlName="alrArea"
         required
-      />
+        />
     </mat-form-field>
-
     <div class="full-width">
       <mat-label class="toggle-label">Applicant Type*</mat-label>
       <mat-button-toggle-group
@@ -23,10 +22,10 @@
         [ngClass]="{
           'error-field-outlined': !form.controls['applicantType'].valid && form.controls['applicantType'].touched
         }"
-      >
+        >
         <mat-button-toggle value="Land Owner">Land Owner</mat-button-toggle>
         <mat-button-toggle value="L/FNG Initiated">L/FNG Initiated</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </form>
-</ng-container>
+}

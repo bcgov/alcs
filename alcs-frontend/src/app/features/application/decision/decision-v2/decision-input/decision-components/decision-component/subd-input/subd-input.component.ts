@@ -3,9 +3,10 @@ import { FormGroup } from '@angular/forms';
 import { LotsTableFormComponent } from '../../../../../../../../shared/lots-table/lots-table-form.component';
 
 @Component({
-  selector: 'app-subd-input',
-  templateUrl: './subd-input.component.html',
-  styleUrls: ['./subd-input.component.scss'],
+    selector: 'app-subd-input',
+    templateUrl: './subd-input.component.html',
+    styleUrls: ['./subd-input.component.scss'],
+    standalone: false
 })
 export class SubdInputComponent {
   @Input() form!: FormGroup;

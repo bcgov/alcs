@@ -13,6 +13,8 @@ import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file'
 export enum Section {
   SUBMISSION = 'Submission',
   OWNERSHIP = 'Ownership',
+  MAPS = 'Maps',
+  CHRONOLOGY_ENTRY = 'Chronology Entry',
 }
 
 @Injectable({
@@ -23,7 +25,11 @@ export class ComplianceAndEnforcementDocumentService {
 
   constructor(private readonly http: HttpClient) {}
 
-  list(fileNumber?: string, section?: Section): Promise<ComplianceAndEnforcementDocumentDto[]> {
+  list(
+    fileNumber?: string,
+    section?: Section,
+    chronologyEntryUuid?: string,
+  ): Promise<ComplianceAndEnforcementDocumentDto[]> {
     let params = new HttpParams();
 
     if (fileNumber) {
@@ -31,6 +37,9 @@ export class ComplianceAndEnforcementDocumentService {
     }
     if (section) {
       params = params.append('section', section);
+    }
+    if (chronologyEntryUuid) {
+      params = params.append('chronologyEntryUuid', chronologyEntryUuid);
     }
 
     return firstValueFrom(this.http.get<ComplianceAndEnforcementDocumentDto[]>(this.url, { params }));
@@ -83,25 +92,28 @@ export class ComplianceAndEnforcementDocumentService {
     let formData: FormData = new FormData();
 
     if (dto.typeCode) {
-      formData.append('documentType', dto.typeCode);
+      formData.set('documentType', dto.typeCode);
     }
     if (dto.source) {
-      formData.append('source', dto.source);
+      formData.set('source', dto.source);
     }
     if (dto.fileName) {
-      formData.append('fileName', dto.fileName);
+      formData.set('fileName', dto.fileName);
     }
     if (dto.file) {
-      formData.append('file', dto.file, dto.file.name);
+      formData.set('file', dto.file, dto.file.name);
     }
     if (dto.section) {
-      formData.append('section', dto.section);
+      formData.set('section', dto.section);
+    }
+    if (dto.chronologyEntryUuid) {
+      formData.set('chronologyEntryUuid', dto.chronologyEntryUuid);
     }
     if (dto.parcelUuid) {
-      formData.append('parcelUuid', dto.parcelUuid);
+      formData.set('parcelUuid', dto.parcelUuid);
     }
     if (dto.ownerUuid) {
-      formData.append('ownerUuid', dto.ownerUuid);
+      formData.set('ownerUuid', dto.ownerUuid);
     }
 
     return formData;

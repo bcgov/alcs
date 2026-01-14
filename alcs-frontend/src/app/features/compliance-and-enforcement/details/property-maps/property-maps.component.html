@@ -1,0 +1,134 @@
+@if (editing === null) {
+  <section class="file-section">
+    <h3>Property</h3>
+    <div class="property-overview">
+      <div class="inset">
+        <div class="field">
+          <div class="field-heading">Civic Address</div>
+          @if (file?.property?.civicAddress) {
+            {{ file?.property?.civicAddress }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field">
+          <div class="field-heading">Legal Description</div>
+          @if (file?.property?.legalDescription) {
+            {{ file?.property?.legalDescription }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field">
+          <div class="field-heading">Local or First Nation Government</div>
+          @if (getLocalGovernmentName(file?.property?.localGovernmentUuid)) {
+            {{ getLocalGovernmentName(file?.property?.localGovernmentUuid) }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field">
+          <div class="field-heading">Region</div>
+          @if (getRegionName(file?.property?.regionCode)) {
+            {{ getRegionName(file?.property?.regionCode) }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field">
+          <div class="field-heading">Latitude</div>
+          @if (file?.property?.latitude !== undefined && file?.property?.latitude !== null) {
+            {{ file?.property?.latitude | number:'1.5-5' }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field">
+          <div class="field-heading">Longitude</div>
+          @if (file?.property?.longitude !== undefined && file?.property?.longitude !== null) {
+            {{ file?.property?.longitude | number:'1.5-5' }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field">
+          <div class="field-heading">Ownership Type</div>
+          @if (file?.property?.ownershipTypeCode) {
+            {{ file?.property?.ownershipTypeCode === 'SMPL' ? 'Fee Simple' : 'Crown' }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        @if (file?.property?.pid) {
+          <div class="field">
+            <div class="field-heading">PID</div>
+            {{ (file?.property?.pid || '') | mask: '000-000-000' }}
+          </div>
+        }
+        @if (file?.property?.pin) {
+          <div class="field">
+            <div class="field-heading">PIN</div>
+            {{ file?.property?.pin }}
+          </div>
+        }
+        <div class="field">
+          <div class="field-heading">Area (ha)</div>
+          @if (file?.property?.areaHectares !== undefined && file?.property?.areaHectares !== null) {
+            {{ file?.property?.areaHectares }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field">
+          <div class="field-heading">% within ALR</div>
+          @if (file?.property?.alrPercentage !== undefined && file?.property?.alrPercentage !== null) {
+            {{ file?.property?.alrPercentage }}%
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+        <div class="field full-width">
+          <div class="field-heading">ALC History</div>
+          @if (file?.property?.alcHistory) {
+            {{ file?.property?.alcHistory }}
+          } @else {
+            <div class="no-data">No Data</div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="edit-section-button-container">
+      <a mat-flat-button color="accent" [routerLink]="'edit'" class="edit-section-button">Edit Section</a>
+    </div>
+  </section>
+  <section class="file-section">
+    <app-compliance-and-enforcement-documents
+      #mapsDocumentsComponent
+      [title]="'Maps'"
+      [noDocumentsText]="'No maps'"
+      [fileNumber]="fileNumber"
+      [options]="mapsDocumentOptions"
+      [section]="Section.MAPS"
+      [addButtonText]="'+ Add Maps'"
+      />
+  </section>
+}
+
+@if (editing === 'property') {
+  <form [formGroup]="form">
+    <section class="form-section">
+      <h3>Property & Maps > Edit Property</h3>
+      <app-compliance-and-enforcement-property
+        #propertyComponent
+        [property]="file?.property"
+        [parentForm]="form"
+        [hideHeader]="true"
+        />
+    </section>
+    <div class="button-container">
+      <a mat-stroked-button color="warn" [routerLink]="'..'">Cancel</a>
+      <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="saveProperty()">Save</button>
+    </div>
+  </form>
+}
+

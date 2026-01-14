@@ -7,9 +7,10 @@ import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../../
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
-  selector: 'app-public-noi-submission-details',
-  templateUrl: './submission-details.component.html',
-  styleUrls: ['./submission-details.component.scss'],
+    selector: 'app-public-noi-submission-details',
+    templateUrl: './submission-details.component.html',
+    styleUrls: ['./submission-details.component.scss'],
+    standalone: false
 })
 export class SubmissionDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

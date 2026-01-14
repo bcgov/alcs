@@ -1,87 +1,122 @@
-<div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 full-width">Provide the name and contact information for all transferees</div>
-  <div class="full-width transferee-table" *ngIf="!isMobile">
-    <div class="subheading2">Type</div>
-    <div class="subheading2">Full Name</div>
-    <div class="subheading2">Organization Name</div>
-    <div class="subheading2">Phone</div>
-    <div class="subheading2">Email</div>
-    <ng-container *ngFor="let transferee of transferees">
-      <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
-      <div>{{ transferee.displayName }}</div>
-      <div>
-        {{ transferee.organizationName }}
-        <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
+@if (_applicationSubmission) {
+  <div class="review-table">
+    <div class="subheading2 full-width">Provide the name and contact information for all transferees</div>
+    @if (!isMobile) {
+      <div class="full-width transferee-table">
+        <div class="subheading2">Type</div>
+        <div class="subheading2">Full Name</div>
+        <div class="subheading2">Organization Name</div>
+        <div class="subheading2">Phone</div>
+        <div class="subheading2">Email</div>
+        @for (transferee of transferees; track transferee) {
+          <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
+          <div>{{ transferee.displayName }}</div>
+          <div>
+            {{ transferee.organizationName }}
+            @if (!transferee.organizationName) {
+              <app-no-data [showRequired]="false"></app-no-data>
+            }
+          </div>
+          <div>
+            @if (transferee.phoneNumber) {
+              <span>{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
+            }
+          </div>
+          <div>{{ transferee.email }}</div>
+        }
       </div>
-      <div>
-        <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
+    }
+    @if (isMobile) {
+      <div class="transferee-mobile-list">
+        @for (transferee of transferees; track transferee; let last = $last) {
+          <app-transferee-mobile-card
+            [transferee]="transferee"
+            [isLast]="last"
+            [isReviewStep]="true"
+            >
+          </app-transferee-mobile-card>
+        }
       </div>
-      <div>{{ transferee.email }}</div>
-    </ng-container>
+    }
+    @if (transferees.length === 0) {
+      <app-no-data class="full-width" [showRequired]="showErrors"></app-no-data>
+    }
+    <div class="subheading2 grid-1">How many hectares will the covenant impact?</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.coveAreaImpacted }}@if (_applicationSubmission.coveAreaImpacted) {
+      <span> ha</span>
+    }
+    @if (!_applicationSubmission.coveAreaImpacted) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-  <div class="transferee-mobile-list" *ngIf="isMobile">
-    <app-transferee-mobile-card
-      *ngFor="let transferee of transferees; let last = last"
-      [transferee]="transferee"
-      [isLast]="last"
-      [isReviewStep]="true"
-    >
-    </app-transferee-mobile-card>
-  </div>
-  <app-no-data class="full-width" [showRequired]="showErrors" *ngIf="transferees.length === 0"></app-no-data>
-
-  <div class="subheading2 grid-1">How many hectares will the covenant impact?</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.coveAreaImpacted }}<span *ngIf="_applicationSubmission.coveAreaImpacted"> ha</span>
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.coveAreaImpacted"></app-no-data>
-  </div>
-
   <div class="subheading2 grid-1">What is the purpose of this covenant?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+    @if (!_applicationSubmission.purpose) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Explain how the covenant impacts the use of agricultural land for farm purposes.</div>
   <div class="grid-double">
-    <span *ngIf="_applicationSubmission.coveFarmImpact !== null">
-      {{ _applicationSubmission.coveFarmImpact }}
-    </span>
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.coveFarmImpact"></app-no-data>
+    @if (_applicationSubmission.coveFarmImpact !== null) {
+      <span>
+        {{ _applicationSubmission.coveFarmImpact }}
+      </span>
+    }
+    @if (!_applicationSubmission.coveFarmImpact) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <ng-container *ngFor="let map of proposalMap">
-      <a *ngIf="isMobile" (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
-      <a *ngIf="!isMobile" routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
-    </ng-container>
-    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+    @for (map of proposalMap; track map) {
+      @if (isMobile) {
+        <a (click)="downloadFile(map.documentUuid)">{{ map.fileName }}</a>
+      }
+      @if (!isMobile) {
+        <a routerLink="/document/{{ map.documentUuid }}" target="_blank">{{ map.fileName }}</a>
+      }
+    }
+    @if (proposalMap.length === 0) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
   <div class="subheading2 grid-1">Do you have a draft copy of the covenant?</div>
   <div class="grid-double">
-    <span *ngIf="_applicationSubmission.coveHasDraft !== null">
-      {{ _applicationSubmission.coveHasDraft ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.coveHasDraft === null"></app-no-data>
+    @if (_applicationSubmission.coveHasDraft !== null) {
+      <span>
+        {{ _applicationSubmission.coveHasDraft ? 'Yes' : 'No' }}
+      </span>
+    }
+    @if (_applicationSubmission.coveHasDraft === null) {
+      <app-no-data [showRequired]="showErrors"></app-no-data>
+    }
   </div>
-
-  <ng-container *ngIf="_applicationSubmission.coveHasDraft">
+  @if (_applicationSubmission.coveHasDraft) {
     <div class="subheading2 grid-1">Draft Covenant</div>
     <div class="grid-double">
-      <div *ngFor="let file of srwTerms">
-        <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-        <a *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
-      </div>
-      <app-no-data
-        [showRequired]="showErrors && !!_applicationSubmission.coveHasDraft"
-        *ngIf="srwTerms.length === 0"
-      ></app-no-data>
+      @for (file of srwTerms; track file) {
+        <div>
+          @if (isMobile) {
+            <a (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+          }
+          @if (!isMobile) {
+            <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+          }
+        </div>
+      }
+      @if (srwTerms.length === 0) {
+        <app-no-data
+          [showRequired]="showErrors && !!_applicationSubmission.coveHasDraft"
+        ></app-no-data>
+      }
     </div>
-  </ng-container>
-
-  <div *ngIf="showEdit" class="edit-button">
-    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
-  </div>
+  }
+  @if (showEdit) {
+    <div class="edit-button">
+      <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+    </div>
+  }
 </div>
+}

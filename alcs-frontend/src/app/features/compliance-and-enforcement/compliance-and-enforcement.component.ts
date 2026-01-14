@@ -1,20 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { detailsRoutes } from './compliance-and-enforcement.module';
+import { environment } from '../../../environments/environment';
 import { ComplianceAndEnforcementDto } from '../../services/compliance-and-enforcement/compliance-and-enforcement.dto';
 import {
   ComplianceAndEnforcementService,
+  DEFAULT_C_AND_E_FETCH_OPTIONS,
   FetchOptions,
 } from '../../services/compliance-and-enforcement/compliance-and-enforcement.service';
-import { ToastService } from '../../services/toast/toast.service';
-import { ResponsiblePartiesService } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
 import { ResponsiblePartyType } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.dto';
+import { ResponsiblePartiesService } from '../../services/compliance-and-enforcement/responsible-parties/responsible-parties.service';
+import { ToastService } from '../../services/toast/toast.service';
+import { detailsRoutes } from './compliance-and-enforcement.module';
 
 @Component({
-  selector: 'app-compliance-and-enforcement',
-  templateUrl: './compliance-and-enforcement.component.html',
-  styleUrls: ['./compliance-and-enforcement.component.scss'],
+    selector: 'app-compliance-and-enforcement',
+    templateUrl: './compliance-and-enforcement.component.html',
+    styleUrls: ['./compliance-and-enforcement.component.scss'],
+    standalone: false
 })
 export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -31,6 +35,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
     private readonly service: ComplianceAndEnforcementService,
     private readonly responsiblePartyService: ResponsiblePartiesService,
     private readonly toastService: ToastService,
+    private readonly titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +45,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe((event) => {
       if (event instanceof NavigationEnd && this.fileNumber) {
-        this.loadFile(this.fileNumber, { withSubmitters: true, withProperty: true });
+        this.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
       }
     });
 
@@ -49,7 +54,7 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
 
       if (fileNumber) {
         this.fileNumber = fileNumber;
-        this.loadFile(fileNumber, { withSubmitters: true, withProperty: true });
+        this.loadFile(fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
       }
     });
   }
@@ -68,9 +73,26 @@ export class ComplianceAndEnforcementComponent implements OnInit, OnDestroy {
           fileNumber,
           ResponsiblePartyType.PROPERTY_OWNER,
         );
+        
+        const isCrown = this.file?.property?.ownershipTypeCode === 'CRWN';
 
-        this.propertyOwnerName =
-          (owners?.[0].organizationName || owners?.[0].individualName) + (owners.length > 1 ? ' et al.' : '');
+        if (isCrown) {
+
+          if (owners && owners.length > 0) {
+            this.propertyOwnerName = 'Crown et al.';
+          } else {
+            this.propertyOwnerName = 'Crown';
+          }
+        } else {
+          this.propertyOwnerName =
+            owners && owners.length > 0
+              ? (owners[0].organizationName || owners[0].individualName) + (owners.length > 1 ? ' et al.' : '')
+              : '';
+        }
+
+        this.titleService.setTitle(
+          `${environment.siteName} | ${this.file.fileNumber} (${this.propertyOwnerName || 'Unknown'})`,
+        );
       }
     } catch (error) {
       console.error('Error loading file:', error);

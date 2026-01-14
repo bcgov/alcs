@@ -7,9 +7,10 @@ import {
 } from '../../../services/application/application-staff-journal/staff-journal.dto';
 
 @Component({
-  selector: 'app-staff-journal-note',
-  templateUrl: './staff-journal-note.component.html',
-  styleUrls: ['./staff-journal-note.component.scss'],
+    selector: 'app-staff-journal-note',
+    templateUrl: './staff-journal-note.component.html',
+    styleUrls: ['./staff-journal-note.component.scss'],
+    standalone: false
 })
 export class StaffJournalNoteComponent implements OnInit {
   @Input() note!: StaffJournalDto;

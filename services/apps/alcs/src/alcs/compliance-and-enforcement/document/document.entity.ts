@@ -3,10 +3,13 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGen
 import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
 import { ComplianceAndEnforcement } from '../compliance-and-enforcement.entity';
+import { ComplianceAndEnforcementChronologyEntry } from '../chronology/chronology.entity';
 
 export enum Section {
   SUBMISSION = 'Submission',
   OWNERSHIP = 'Ownership',
+  MAPS = 'Maps',
+  CHRONOLOGY_ENTRY = 'Chronology Entry',
 }
 
 @Entity({
@@ -29,6 +32,9 @@ export class ComplianceAndEnforcementDocument extends BaseEntity {
 
   @ManyToOne(() => ComplianceAndEnforcement, { nullable: false })
   file: ComplianceAndEnforcement;
+
+  @ManyToOne(() => ComplianceAndEnforcementChronologyEntry, { nullable: true, onDelete: 'CASCADE' })
+  chronologyEntry: ComplianceAndEnforcementChronologyEntry | null;
 
   @OneToOne(() => Document, { cascade: true })
   @JoinColumn()

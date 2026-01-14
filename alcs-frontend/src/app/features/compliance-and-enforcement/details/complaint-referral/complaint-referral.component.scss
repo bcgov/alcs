@@ -8,6 +8,12 @@ section {
   margin: 32px 0;
 }
 
+.submitter-container {
+  padding: 24px;
+  border: 1px solid colors.$grey;
+  border-radius: 5px;
+}
+
 section.file-section {
   display: flex;
   flex-direction: column;
@@ -16,6 +22,12 @@ section.file-section {
   border-radius: 4px;
   box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
   margin: 32px 0;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .button-container {
@@ -39,4 +51,10 @@ a[mat-stroked-button] {
   font-size: 14px !important;
   font-weight: 700 !important;
   text-transform: uppercase;
+}
+
+.submitters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

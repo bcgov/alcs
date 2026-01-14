@@ -1,4 +1,4 @@
-@import '../../../../styles/colors.scss';
+@use '../../../../styles/colors.scss';
 
 .header {
   display: flex;
@@ -17,7 +17,7 @@
   width: 100%;
   align-self: flex-start;
   margin-bottom: 16px;
-  
+
   .government-field,
   .region-field {
     flex: 1;
@@ -25,7 +25,7 @@
     flex-direction: column;
     align-self: flex-start;
   }
-  
+
   mat-form-field {
     flex: 1;
   }
@@ -35,24 +35,24 @@
   display: flex;
   gap: 16px;
   width: 100%;
-  
+
   .coordinate-field {
     flex: 1;
     display: flex;
     flex-direction: column;
     min-width: 0;
     align-self: flex-start;
-    
+
     mat-form-field {
       width: 100% !important;
       max-width: none !important;
       flex: 1;
-      
+
       input[type="number"] {
         width: 100% !important;
       }
     }
-    
+
     .coordinate-help {
       font-size: 12px;
       color: #666;
@@ -67,14 +67,14 @@
   gap: 16px;
   width: 100%;
   align-items: flex-start;
-  
+
   .area-field,
   .alr-field {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
-  
+
   mat-form-field {
     flex: 1;
   }
@@ -82,28 +82,26 @@
 
 .ownership-type-section {
   margin-bottom: 16px;
-  
+
   .ownership-type-label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
     color: rgba(0, 0, 0, 0.6);
   }
-  
+
   .ownership-toggle-group {
     width: 100%;
-    
+
     mat-button-toggle {
       &.mat-button-toggle-checked {
-        background-color: $primary-color-light !important;
-        color: $dark-contrast-text !important;
-        
-        .mat-button-toggle-button {
-          background-color: $primary-color-light !important;
-          color: $dark-contrast-text !important;
-        }
-        
+        background-color: colors.$primary-color-light !important;
+        color: colors.$dark-contrast-text !important;
 
+        .mat-button-toggle-button {
+          background-color: colors.$primary-color-light !important;
+          color: colors.$dark-contrast-text !important;
+        }
       }
     }
   }
@@ -111,24 +109,24 @@
 
 .pid-pin-section {
   margin-bottom: 16px;
-  
+
   .pid-pin-fields {
     display: flex;
     gap: 16px;
     width: 100%;
     align-items: flex-start;
-    
+
     .pid-pin-selector {
       flex: 1;
-      
+
       mat-form-field {
         width: 100%;
       }
     }
-    
+
     .input-field-container {
       flex: 1;
-      
+
       .pid-field,
       .pin-field {
         display: flex;
@@ -136,7 +134,7 @@
         width: 100%;
       }
     }
-    
+
     mat-form-field {
       width: 100%;
     }
@@ -155,7 +153,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: $error-color;
+  color: colors.$error-color;
   font-size: 0.875rem;
   margin-top: 0px;
   margin-bottom: 16px;
@@ -164,7 +162,7 @@ h3 {
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: $error-color;
+    color: colors.$error-color;
   }
 }
 
@@ -174,7 +172,7 @@ h3 {
       .mat-pseudo-checkbox {
         display: none !important;
       }
-      
+
       mat-pseudo-checkbox {
         display: none !important;
       }

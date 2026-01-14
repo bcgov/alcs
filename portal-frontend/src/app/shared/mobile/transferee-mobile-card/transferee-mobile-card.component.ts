@@ -4,9 +4,10 @@ import { NotificationTransfereeDto } from '../../../services/notification-transf
 import { CovenantTransfereeDto } from '../../../services/covenant-transferee/covenant-transferee.dto';
 
 @Component({
-  selector: 'app-transferee-mobile-card',
-  templateUrl: './transferee-mobile-card.component.html',
-  styleUrl: './transferee-mobile-card.component.scss',
+    selector: 'app-transferee-mobile-card',
+    templateUrl: './transferee-mobile-card.component.html',
+    styleUrl: './transferee-mobile-card.component.scss',
+    standalone: false
 })
 export class TransfereeMobileCardComponent implements OnInit {
   @Input() transferee!: NotificationTransfereeDto | CovenantTransfereeDto;

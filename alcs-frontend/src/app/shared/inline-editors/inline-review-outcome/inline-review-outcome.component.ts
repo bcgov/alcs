@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-inline-review-outcome',
-  templateUrl: './inline-review-outcome.component.html',
-  styleUrls: ['./inline-review-outcome.component.scss'],
+    selector: 'app-inline-review-outcome',
+    templateUrl: './inline-review-outcome.component.html',
+    styleUrls: ['./inline-review-outcome.component.scss'],
+    standalone: false
 })
 export class InlineReviewOutcomeComponent implements OnInit {
   @Input() selectedValue?: string | null;

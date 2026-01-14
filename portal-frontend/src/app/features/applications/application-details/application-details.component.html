@@ -1,4 +1,6 @@
-<h2 *ngIf="showEdit" class="page-title">Review & Submit</h2>
+@if (showEdit) {
+  <h2 class="page-title">Review & Submit</h2>
+}
 <section>
   <app-parcel
     [$applicationSubmission]="$application"
@@ -9,354 +11,455 @@
 </section>
 <section>
   <h3>2. Other Owned Parcels</h3>
-  <div *ngIf="applicationSubmission" class="review-table">
-    <div class="subheading2 grid-1">
-      Do any of the land owners added previously own or lease other parcels that might inform this application process?
-    </div>
-    <div class="grid-double" data-testid="has-other-parcels">
-      <span *ngIf="applicationSubmission.hasOtherParcelsInCommunity !== null">{{
-        applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
-      }}</span>
-      <app-no-data
-        *ngIf="applicationSubmission.hasOtherParcelsInCommunity === null"
-        [showRequired]="showErrors"
-      ></app-no-data>
-    </div>
-    <ng-container *ngIf="applicationSubmission.hasOtherParcelsInCommunity">
+  @if (applicationSubmission) {
+    <div class="review-table">
       <div class="subheading2 grid-1">
-        Describe the other parcels including their location, who owns or leases them, and their use.
+        Do any of the land owners added previously own or lease other parcels that might inform this application process?
       </div>
-      <div class="grid-double" data-testid="other-parcels-description">
-        {{ applicationSubmission.otherParcelsDescription }}
-        <app-no-data *ngIf="!applicationSubmission.otherParcelsDescription" [showRequired]="showErrors"></app-no-data>
+      <div class="grid-double" data-testid="has-other-parcels">
+        @if (applicationSubmission.hasOtherParcelsInCommunity !== null) {
+          <span>{{
+            applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+          }}</span>
+        }
+        @if (applicationSubmission.hasOtherParcelsInCommunity === null) {
+          <app-no-data
+            [showRequired]="showErrors"
+          ></app-no-data>
+        }
       </div>
-    </ng-container>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(1)" color="accent" mat-flat-button>Edit Section</button>
+      @if (applicationSubmission.hasOtherParcelsInCommunity) {
+        <div class="subheading2 grid-1">
+          Describe the other parcels including their location, who owns or leases them, and their use.
+        </div>
+        <div class="grid-double" data-testid="other-parcels-description">
+          {{ applicationSubmission.otherParcelsDescription }}
+          @if (!applicationSubmission.otherParcelsDescription) {
+            <app-no-data [showRequired]="showErrors"></app-no-data>
+          }
+        </div>
+      }
+      @if (showEdit) {
+        <div class="edit-button">
+          <button (click)="onNavigateToStep(1)" color="accent" mat-flat-button>Edit Section</button>
+        </div>
+      }
     </div>
-  </div>
+  }
 </section>
 <section>
   <h3>3. Primary Contact</h3>
-  <div *ngIf="applicationSubmission" class="review-table">
-    <div class="subheading2 grid-1">Type</div>
-    <div class="grid-double" data-testid="primary-contact-type">
-      {{ primaryContact?.type?.label }}
-      <app-no-data *ngIf="!primaryContact?.type?.label" [showRequired]="showErrors"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">First Name</div>
-    <div class="grid-double" data-testid="primary-contact-first-name">
-      {{ primaryContact?.firstName }}
-      <app-no-data *ngIf="!primaryContact?.firstName" [showRequired]="showErrors"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Last Name</div>
-    <div class="grid-double" data-testid="primary-contact-last-name">
-      {{ primaryContact?.lastName }}
-      <app-no-data *ngIf="!primaryContact?.lastName" [showRequired]="showErrors"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
-      <span
-        *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
-        >Organization (optional)</span
-      >
-      <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
-      <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
-    </div>
-    <div class="grid-double" data-testid="primary-contact-organization">
-      {{ primaryContact?.organizationName }}
-      <app-no-data
-        *ngIf="!primaryContact?.organizationName"
-        [showRequired]="showErrors && primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT"
-      ></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Phone</div>
-    <div class="grid-double" data-testid="primary-contact-phone-number">
-      {{ primaryContact?.phoneNumber ?? '' | mask: '(000) 000-0000' }}
-      <app-no-data *ngIf="!primaryContact?.phoneNumber" [showRequired]="showErrors"></app-no-data>
-      <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
-        >Invalid Format
-      </app-validation-error>
-    </div>
-    <div class="subheading2 grid-1">Email</div>
-    <div class="grid-double" data-testid="primary-contact-email">
-      {{ primaryContact?.email }}
-      <app-no-data *ngIf="!primaryContact?.email" [showRequired]="showErrors"></app-no-data>
-      <app-validation-error *ngIf="!(primaryContact?.email || '' | emailValid)">Invalid Format</app-validation-error>
-    </div>
-    <ng-container *ngIf="needsAuthorizationLetter || authorizationLetters.length > 0">
-      <div class="subheading2 grid-1">Authorization Letter(s)</div>
-      <div class="grid-double">
-        <app-no-data
-          *ngIf="authorizationLetters.length === 0"
-          [showRequired]="showErrors && needsAuthorizationLetter"
-        ></app-no-data>
-        <div *ngFor="let file of authorizationLetters">
-          <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)" data-testid="authorization-letter">{{
-            file.fileName
-          }}</a>
-          <a
-            *ngIf="!isMobile"
-            routerLink="/document/{{ file.documentUuid }}"
-            target="_blank"
-            data-testid="authorization-letter"
-            >{{ file.fileName }}</a
-          >
+  @if (applicationSubmission) {
+    <div class="review-table">
+      <div class="subheading2 grid-1">Type</div>
+      <div class="grid-double" data-testid="primary-contact-type">
+        {{ primaryContact?.type?.label }}
+        @if (!primaryContact?.type?.label) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">First Name</div>
+      <div class="grid-double" data-testid="primary-contact-first-name">
+        {{ primaryContact?.firstName }}
+        @if (!primaryContact?.firstName) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">Last Name</div>
+      <div class="grid-double" data-testid="primary-contact-last-name">
+        {{ primaryContact?.lastName }}
+        @if (!primaryContact?.lastName) {
+          <app-no-data [showRequired]="showErrors"></app-no-data>
+        }
+      </div>
+      <div class="subheading2 grid-1">
+        @if (primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT) {
+          <span
+            >Organization (optional)</span
+            >
+          }
+          @if (primaryContact?.type?.code === OWNER_TYPE.CROWN) {
+            <span>Ministry/Department Responsible</span>
+          }
+          @if (primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT) {
+            <span>Department</span>
+          }
         </div>
-        <app-validation-error *ngIf="!needsAuthorizationLetter && authorizationLetters.length > 0">
-          Authorization letters are not required, please remove them
-        </app-validation-error>
-      </div>
-    </ng-container>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(2)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
-</section>
-<section>
-  <h3>4. Government</h3>
-  <div *ngIf="applicationSubmission" class="review-table">
-    <div class="subheading2 grid-1">Local or First Nation Government</div>
-    <div class="grid-double" data-testid="government-name">
-      {{ localGovernment?.name }}
-      <app-no-data *ngIf="!localGovernment" [showRequired]="showErrors"></app-no-data>
-      <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
-        This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
-        fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
-        &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
-          >236-468-3342</a
-        >
-      </app-warning-banner>
-      <app-warning-banner
-        *ngIf="
-          showErrors &&
-          localGovernment &&
-          localGovernment.matchesUserGuid &&
-          applicationSubmission.requiresGovernmentReview
-        "
-        class="full-row"
-      >
-        You're logged in with a Business BCeID that is associated with the government selected above. You will have the
-        opportunity to complete the local or first nation government review form immediately after this application is
-        submitted.
-      </app-warning-banner>
-    </div>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(3)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
-</section>
-<section>
-  <h3>5. Land Use</h3>
-  <div *ngIf="applicationSubmission" class="review-table">
-    <div class="full-width">
-      <h4>Land Use of Parcel(s) under Application</h4>
-    </div>
-    <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
-    <div class="grid-double" data-testid="parcels-agriculture-description">
-      {{ applicationSubmission.parcelsAgricultureDescription }}
-      <app-no-data
-        *ngIf="!applicationSubmission.parcelsAgricultureDescription"
-        [showRequired]="showErrors"
-      ></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
-    <div class="grid-double" data-testid="parcels-agriculture-improvement-description">
-      {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
-      <app-no-data
-        *ngIf="!applicationSubmission.parcelsAgricultureImprovementDescription"
-        [showRequired]="showErrors"
-      ></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
-    <div class="grid-double" data-testid="parcels-non-agriculture-description">
-      {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
-      <app-no-data
-        *ngIf="!applicationSubmission.parcelsNonAgricultureUseDescription"
-        [showRequired]="showErrors"
-      ></app-no-data>
-    </div>
-    <div class="full-width">
-      <h4>Land Use of Adjacent Parcels</h4>
-    </div>
-    <div class="adjacent-parcels full-width">
-      <div class="grid-1 subheading2"></div>
-      <div class="grid-2 subheading2">Main Land Use Type</div>
-      <div class="grid-3 subheading2">Specific Activity</div>
-      <div class="grid-1 subheading2">North</div>
-      <div class="grid-2" data-testid="north-land-use-type">
-        {{ applicationSubmission.northLandUseType }}
-        <app-no-data *ngIf="!applicationSubmission.northLandUseType" [showRequired]="showErrors"></app-no-data>
-      </div>
-      <div class="grid-3" data-testid="north-land-use-description">
-        {{ applicationSubmission.northLandUseTypeDescription }}
-        <app-no-data
-          *ngIf="!applicationSubmission.northLandUseTypeDescription"
-          [showRequired]="showErrors"
-        ></app-no-data>
-      </div>
-      <div class="grid-1 subheading2">East</div>
-      <div class="grid-2" data-testid="east-land-use-type">
-        {{ applicationSubmission.eastLandUseType }}
-        <app-no-data *ngIf="!applicationSubmission.eastLandUseType" [showRequired]="showErrors"></app-no-data>
-      </div>
-      <div class="grid-3" data-testid="east-land-use-description">
-        {{ applicationSubmission.eastLandUseTypeDescription }}
-        <app-no-data
-          *ngIf="!applicationSubmission.eastLandUseTypeDescription"
-          [showRequired]="showErrors"
-        ></app-no-data>
-      </div>
-      <div class="grid-1 subheading2">South</div>
-      <div class="grid-2" data-testid="south-land-use-type">
-        {{ applicationSubmission.southLandUseType }}
-        <app-no-data *ngIf="!applicationSubmission.southLandUseType" [showRequired]="showErrors"></app-no-data>
-      </div>
-      <div class="grid-3" data-testid="south-land-use-description">
-        {{ applicationSubmission.southLandUseTypeDescription }}
-        <app-no-data
-          *ngIf="!applicationSubmission.southLandUseTypeDescription"
-          [showRequired]="showErrors"
-        ></app-no-data>
-      </div>
-      <div class="grid-1 subheading2">West</div>
-      <div class="grid-2" data-testid="west-land-use-type">
-        {{ applicationSubmission.westLandUseType }}
-        <app-no-data *ngIf="!applicationSubmission.westLandUseType" [showRequired]="showErrors"></app-no-data>
-      </div>
-      <div class="grid-3" data-testid="west-land-use-description">
-        {{ applicationSubmission.westLandUseTypeDescription }}
-        <app-no-data
-          *ngIf="!applicationSubmission.westLandUseTypeDescription"
-          [showRequired]="showErrors"
-        ></app-no-data>
-      </div>
-    </div>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(4)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
-</section>
-<section *ngIf="applicationSubmission">
-  <h3>6. Proposal</h3>
-  <app-nfu-details
-    *ngIf="applicationSubmission.typeCode === 'NFUP'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-nfu-details>
-  <app-tur-details
-    *ngIf="applicationSubmission.typeCode === 'TURP'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-tur-details>
-  <app-subd-details
-    *ngIf="applicationSubmission.typeCode === 'SUBD'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-subd-details>
-  <app-roso-details
-    *ngIf="applicationSubmission.typeCode === 'ROSO'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-roso-details>
-  <app-pofo-details
-    *ngIf="applicationSubmission.typeCode === 'POFO'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-pofo-details>
-  <app-pfrs-details
-    *ngIf="applicationSubmission.typeCode === 'PFRS'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-pfrs-details>
-  <app-naru-details
-    *ngIf="applicationSubmission.typeCode === 'NARU'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-naru-details>
-  <app-excl-details
-    *ngIf="applicationSubmission.typeCode === 'EXCL'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-excl-details>
-  <app-incl-details
-    *ngIf="applicationSubmission.typeCode === 'INCL'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-incl-details>
-  <app-cove-details
-    *ngIf="applicationSubmission.typeCode === 'COVE'"
-    [applicationDocuments]="appDocuments"
-    [applicationSubmission]="applicationSubmission"
-    [draftMode]="draftMode"
-    [showEdit]="showEdit"
-    [showErrors]="showErrors"
-  ></app-cove-details>
-</section>
-<section>
-  <h3>7. Optional Documents</h3>
-  <div *ngIf="applicationSubmission" [ngClass]="{ 'review-table': !isMobile, 'review-list': isMobile }">
-    <div *ngIf="!isMobile" class="other-attachments full-width">
-      <div class="grid-1 subheading2">File Name</div>
-      <div class="grid-2 subheading2">Type</div>
-      <div class="grid-3 subheading2">Description</div>
-
-      <ng-container *ngFor="let file of otherFiles">
-        <div class="grid-1" data-testid="optional-document-file-name">
-          <a *ngIf="isMobile" (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
-          <a *ngIf="!isMobile" routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+        <div class="grid-double" data-testid="primary-contact-organization">
+          {{ primaryContact?.organizationName }}
+          @if (!primaryContact?.organizationName) {
+            <app-no-data
+              [showRequired]="showErrors && primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT"
+            ></app-no-data>
+          }
         </div>
-        <div class="grid-2" data-testid="optional-document-type">
-          {{ file.type?.label }}
-          <app-no-data *ngIf="!file.type" [showRequired]="showErrors"></app-no-data>
+        <div class="subheading2 grid-1">Phone</div>
+        <div class="grid-double" data-testid="primary-contact-phone-number">
+          {{ primaryContact?.phoneNumber ?? '' | mask: '(000) 000-0000' }}
+          @if (!primaryContact?.phoneNumber) {
+            <app-no-data [showRequired]="showErrors"></app-no-data>
+          }
+          @if (!(primaryContact?.phoneNumber || '' | phoneValid)) {
+            <app-validation-error
+              >Invalid Format
+            </app-validation-error>
+          }
         </div>
-        <div class="grid-3" data-testid="optional-document-description">
-          {{ file.description }}
-          <app-no-data *ngIf="!file.description" [showRequired]="showErrors"></app-no-data>
+        <div class="subheading2 grid-1">Email</div>
+        <div class="grid-double" data-testid="primary-contact-email">
+          {{ primaryContact?.email }}
+          @if (!primaryContact?.email) {
+            <app-no-data [showRequired]="showErrors"></app-no-data>
+          }
+          @if (!(primaryContact?.email || '' | emailValid)) {
+            <app-validation-error>Invalid Format</app-validation-error>
+          }
         </div>
-      </ng-container>
-      <div class="full-width">
-        <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
-      </div>
-    </div>
-    <div *ngIf="isMobile">
-      <app-optional-attachments-mobile-card
-        *ngFor="let file of otherFiles; let last = last"
-        [file]="file"
-        [isLast]="last"
-        (fileClicked)="downloadFile(file.documentUuid)"
-      >
-      </app-optional-attachments-mobile-card>
-      <app-no-data *ngIf="otherFiles.length === 0" [showRequired]="false"></app-no-data>
-    </div>
-    <div *ngIf="showEdit" class="edit-button">
-      <button (click)="onNavigateToStep(6)" color="accent" mat-flat-button>Edit Section</button>
-    </div>
-  </div>
-</section>
+        @if (needsAuthorizationLetter || authorizationLetters.length > 0) {
+          <div class="subheading2 grid-1">Authorization Letter(s)</div>
+          <div class="grid-double">
+            @if (authorizationLetters.length === 0) {
+              <app-no-data
+                [showRequired]="showErrors && needsAuthorizationLetter"
+              ></app-no-data>
+            }
+            @for (file of authorizationLetters; track file) {
+              <div>
+                @if (isMobile) {
+                  <a (click)="downloadFile(file.documentUuid)" data-testid="authorization-letter">{{
+                    file.fileName
+                  }}</a>
+                }
+                @if (!isMobile) {
+                  <a
+                    routerLink="/document/{{ file.documentUuid }}"
+                    target="_blank"
+                    data-testid="authorization-letter"
+                    >{{ file.fileName }}</a
+                    >
+                  }
+                </div>
+              }
+              @if (!needsAuthorizationLetter && authorizationLetters.length > 0) {
+                <app-validation-error>
+                  Authorization letters are not required, please remove them
+                </app-validation-error>
+              }
+            </div>
+          }
+          @if (showEdit) {
+            <div class="edit-button">
+              <button (click)="onNavigateToStep(2)" color="accent" mat-flat-button>Edit Section</button>
+            </div>
+          }
+        </div>
+      }
+    </section>
+    <section>
+      <h3>4. Government</h3>
+      @if (applicationSubmission) {
+        <div class="review-table">
+          <div class="subheading2 grid-1">Local or First Nation Government</div>
+          <div class="grid-double" data-testid="government-name">
+            {{ localGovernment?.name }}
+            @if (!localGovernment) {
+              <app-no-data [showRequired]="showErrors"></app-no-data>
+            }
+            @if (showErrors && localGovernment && !localGovernment.hasGuid) {
+              <app-warning-banner class="full-row error">
+                This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
+                fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
+                &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal&#64;gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
+                >236-468-3342</a
+                >
+              </app-warning-banner>
+            }
+            @if (
+              showErrors &&
+              localGovernment &&
+              localGovernment.matchesUserGuid &&
+              applicationSubmission.requiresGovernmentReview
+              ) {
+              <app-warning-banner
+                class="full-row"
+                >
+                You're logged in with a Business BCeID that is associated with the government selected above. You will have the
+                opportunity to complete the local or first nation government review form immediately after this application is
+                submitted.
+              </app-warning-banner>
+            }
+          </div>
+          @if (showEdit) {
+            <div class="edit-button">
+              <button (click)="onNavigateToStep(3)" color="accent" mat-flat-button>Edit Section</button>
+            </div>
+          }
+        </div>
+      }
+    </section>
+    <section>
+      <h3>5. Land Use</h3>
+      @if (applicationSubmission) {
+        <div class="review-table">
+          <div class="full-width">
+            <h4>Land Use of Parcel(s) under Application</h4>
+          </div>
+          <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
+          <div class="grid-double" data-testid="parcels-agriculture-description">
+            {{ applicationSubmission.parcelsAgricultureDescription }}
+            @if (!applicationSubmission.parcelsAgricultureDescription) {
+              <app-no-data
+                [showRequired]="showErrors"
+              ></app-no-data>
+            }
+          </div>
+          <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
+          <div class="grid-double" data-testid="parcels-agriculture-improvement-description">
+            {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
+            @if (!applicationSubmission.parcelsAgricultureImprovementDescription) {
+              <app-no-data
+                [showRequired]="showErrors"
+              ></app-no-data>
+            }
+          </div>
+          <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
+          <div class="grid-double" data-testid="parcels-non-agriculture-description">
+            {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
+            @if (!applicationSubmission.parcelsNonAgricultureUseDescription) {
+              <app-no-data
+                [showRequired]="showErrors"
+              ></app-no-data>
+            }
+          </div>
+          <div class="full-width">
+            <h4>Land Use of Adjacent Parcels</h4>
+          </div>
+          <div class="adjacent-parcels full-width">
+            <div class="grid-1 subheading2"></div>
+            <div class="grid-2 subheading2">Main Land Use Type</div>
+            <div class="grid-3 subheading2">Specific Activity</div>
+            <div class="grid-1 subheading2">North</div>
+            <div class="grid-2" data-testid="north-land-use-type">
+              {{ applicationSubmission.northLandUseType }}
+              @if (!applicationSubmission.northLandUseType) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+            <div class="grid-3" data-testid="north-land-use-description">
+              {{ applicationSubmission.northLandUseTypeDescription }}
+              @if (!applicationSubmission.northLandUseTypeDescription) {
+                <app-no-data
+                  [showRequired]="showErrors"
+                ></app-no-data>
+              }
+            </div>
+            <div class="grid-1 subheading2">East</div>
+            <div class="grid-2" data-testid="east-land-use-type">
+              {{ applicationSubmission.eastLandUseType }}
+              @if (!applicationSubmission.eastLandUseType) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+            <div class="grid-3" data-testid="east-land-use-description">
+              {{ applicationSubmission.eastLandUseTypeDescription }}
+              @if (!applicationSubmission.eastLandUseTypeDescription) {
+                <app-no-data
+                  [showRequired]="showErrors"
+                ></app-no-data>
+              }
+            </div>
+            <div class="grid-1 subheading2">South</div>
+            <div class="grid-2" data-testid="south-land-use-type">
+              {{ applicationSubmission.southLandUseType }}
+              @if (!applicationSubmission.southLandUseType) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+            <div class="grid-3" data-testid="south-land-use-description">
+              {{ applicationSubmission.southLandUseTypeDescription }}
+              @if (!applicationSubmission.southLandUseTypeDescription) {
+                <app-no-data
+                  [showRequired]="showErrors"
+                ></app-no-data>
+              }
+            </div>
+            <div class="grid-1 subheading2">West</div>
+            <div class="grid-2" data-testid="west-land-use-type">
+              {{ applicationSubmission.westLandUseType }}
+              @if (!applicationSubmission.westLandUseType) {
+                <app-no-data [showRequired]="showErrors"></app-no-data>
+              }
+            </div>
+            <div class="grid-3" data-testid="west-land-use-description">
+              {{ applicationSubmission.westLandUseTypeDescription }}
+              @if (!applicationSubmission.westLandUseTypeDescription) {
+                <app-no-data
+                  [showRequired]="showErrors"
+                ></app-no-data>
+              }
+            </div>
+          </div>
+          @if (showEdit) {
+            <div class="edit-button">
+              <button (click)="onNavigateToStep(4)" color="accent" mat-flat-button>Edit Section</button>
+            </div>
+          }
+        </div>
+      }
+    </section>
+    @if (applicationSubmission) {
+      <section>
+        <h3>6. Proposal</h3>
+        @if (applicationSubmission.typeCode === 'NFUP') {
+          <app-nfu-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-nfu-details>
+        }
+        @if (applicationSubmission.typeCode === 'TURP') {
+          <app-tur-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-tur-details>
+        }
+        @if (applicationSubmission.typeCode === 'SUBD') {
+          <app-subd-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-subd-details>
+        }
+        @if (applicationSubmission.typeCode === 'ROSO') {
+          <app-roso-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-roso-details>
+        }
+        @if (applicationSubmission.typeCode === 'POFO') {
+          <app-pofo-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-pofo-details>
+        }
+        @if (applicationSubmission.typeCode === 'PFRS') {
+          <app-pfrs-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-pfrs-details>
+        }
+        @if (applicationSubmission.typeCode === 'NARU') {
+          <app-naru-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-naru-details>
+        }
+        @if (applicationSubmission.typeCode === 'EXCL') {
+          <app-excl-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-excl-details>
+        }
+        @if (applicationSubmission.typeCode === 'INCL') {
+          <app-incl-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-incl-details>
+        }
+        @if (applicationSubmission.typeCode === 'COVE') {
+          <app-cove-details
+            [applicationDocuments]="appDocuments"
+            [applicationSubmission]="applicationSubmission"
+            [draftMode]="draftMode"
+            [showEdit]="showEdit"
+            [showErrors]="showErrors"
+          ></app-cove-details>
+        }
+      </section>
+    }
+    <section>
+      <h3>7. Optional Documents</h3>
+      @if (applicationSubmission) {
+        <div [ngClass]="{ 'review-table': !isMobile, 'review-list': isMobile }">
+          @if (!isMobile) {
+            <div class="other-attachments full-width">
+              <div class="grid-1 subheading2">File Name</div>
+              <div class="grid-2 subheading2">Type</div>
+              <div class="grid-3 subheading2">Description</div>
+              @for (file of otherFiles; track file) {
+                <div class="grid-1" data-testid="optional-document-file-name">
+                  @if (isMobile) {
+                    <a (click)="downloadFile(file.documentUuid)">{{ file.fileName }}</a>
+                  }
+                  @if (!isMobile) {
+                    <a routerLink="/document/{{ file.documentUuid }}" target="_blank">{{ file.fileName }}</a>
+                  }
+                </div>
+                <div class="grid-2" data-testid="optional-document-type">
+                  {{ file.type?.label }}
+                  @if (!file.type) {
+                    <app-no-data [showRequired]="showErrors"></app-no-data>
+                  }
+                </div>
+                <div class="grid-3" data-testid="optional-document-description">
+                  {{ file.description }}
+                  @if (!file.description) {
+                    <app-no-data [showRequired]="showErrors"></app-no-data>
+                  }
+                </div>
+              }
+              <div class="full-width">
+                @if (otherFiles.length === 0) {
+                  <app-no-data [showRequired]="false"></app-no-data>
+                }
+              </div>
+            </div>
+          }
+          @if (isMobile) {
+            <div>
+              @for (file of otherFiles; track file; let last = $last) {
+                <app-optional-attachments-mobile-card
+                  [file]="file"
+                  [isLast]="last"
+                  (fileClicked)="downloadFile(file.documentUuid)"
+                  >
+                </app-optional-attachments-mobile-card>
+              }
+              @if (otherFiles.length === 0) {
+                <app-no-data [showRequired]="false"></app-no-data>
+              }
+            </div>
+          }
+          @if (showEdit) {
+            <div class="edit-button">
+              <button (click)="onNavigateToStep(6)" color="accent" mat-flat-button>Edit Section</button>
+            </div>
+          }
+        </div>
+      }
+    </section>

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-tag-container',
-  templateUrl: './tag-container.component.html',
-  styleUrls: ['./tag-container.component.scss'],
+    selector: 'app-tag-container',
+    templateUrl: './tag-container.component.html',
+    styleUrls: ['./tag-container.component.scss'],
+    standalone: false
 })
 export class TagContainerComponent {}

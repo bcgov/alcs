@@ -1,147 +1,149 @@
 <div class="header">
-  <h4 *ngIf="condition.type">{{ condition.type.label }}</h4>
+  @if (condition.type) {
+    <h4>{{ condition.type.label }}</h4>
+  }
   <app-application-type-pill [type]="statusLabel"></app-application-type-pill>
 </div>
 <div [ngClass]="isThreeColumn ? 'grid-3' : 'grid-2'">
   <div>
     <div class="subheading2">Component to Condition</div>
     <span class="component-labels">{{ condition.componentLabelsStr }}</span>
-    <app-no-data *ngIf="!condition.componentLabelsStr"></app-no-data>
+    @if (!condition.componentLabelsStr) {
+      <app-no-data></app-no-data>
+    }
   </div>
 
-  <div *ngIf="showAdmFeeField">
-    <div class="subheading2">Administrative Fee Amount</div>
-    {{ condition.administrativeFee }}
-    <app-no-data
-      *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
-    ></app-no-data>
-  </div>
+  @if (showAdmFeeField) {
+    <div>
+      <div class="subheading2">Administrative Fee Amount</div>
+      {{ condition.administrativeFee }}
+      @if (condition.administrativeFee === null || condition.administrativeFee === undefined) {
+        <app-no-data
+        ></app-no-data>
+      }
+    </div>
+  }
 
-  <div *ngIf="showSecurityAmountField">
-    <div class="subheading2">Security Amount</div>
-    {{ condition.securityAmount | number }}
-    <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
-  </div>
+  @if (showSecurityAmountField) {
+    <div>
+      <div class="subheading2">Security Amount</div>
+      {{ condition.securityAmount | number }}
+      @if (condition.securityAmount === null || condition.securityAmount === undefined) {
+        <app-no-data></app-no-data>
+      }
+    </div>
+  }
 </div>
-<div class="dates-container" *ngIf="dates !== undefined && condition.type?.isDateChecked">
-  <ng-container *ngIf="showSingleDateField; else showMultipleDateTable">
-    <ng-container *ngIf="singleDateLabel === 'Due Date'; else showEndDateContainer">
-      <div class="single-table">
-        <div class="single-table-header">
-          <div class="single-column single-due">
-            <div class="subheading2">Due</div>
+@if (dates !== undefined && condition.type.isDateChecked) {
+  <div class="dates-container">
+    @if (showSingleDateField) {
+      @if (singleDateLabel === 'Due Date') {
+        <div class="single-table">
+          <div class="single-table-header">
+            <div class="single-column single-due">
+              <div class="subheading2">Due</div>
+            </div>
+            <div class="single-column single-completed">
+              <div class="subheading2">Completed</div>
+            </div>
+            <div class="single-column single-comment">
+              <div class="subheading2">Comment</div>
+            </div>
           </div>
-          <div class="single-column single-completed">
-            <div class="subheading2">Completed</div>
+          <hr class="divider" />
+          <div class="single-table-row">
+            <div class="single-column single-due">
+              <app-inline-datepicker
+                [value]="dates[0].date ?? undefined"
+                (save)="updateDate(dates[0].uuid, 'date', $event)"
+              ></app-inline-datepicker>
+            </div>
+            <div class="single-column single-completed">
+              <app-inline-datepicker
+                [value]="dates[0].completedDate ?? undefined"
+                (save)="updateDate(dates[0].uuid, 'completedDate', $event)"
+              ></app-inline-datepicker>
+            </div>
+            <div class="single-column single-comment">
+              <app-inline-textarea
+                [value]="dates[0].comment ?? undefined"
+                (save)="updateDate(dates[0].uuid, 'comment', $event)"
+              ></app-inline-textarea>
+            </div>
           </div>
-          <div class="single-column single-comment">
-            <div class="subheading2">Comment</div>
-          </div>
+          <hr class="divider" />
         </div>
-
-        <hr class="divider" />
-
-        <div class="single-table-row">
-          <div class="single-column single-due">
-            <app-inline-datepicker
-              [value]="dates[0].date ?? undefined"
-              (save)="updateDate(dates[0].uuid, 'date', $event)"
-            ></app-inline-datepicker>
+      } @else {
+        <div class="single-table">
+          <div class="single-table-header">
+            <div class="single-column single-end">
+              <div class="subheading2">End Date</div>
+            </div>
           </div>
-          <div class="single-column single-completed">
-            <app-inline-datepicker
-              [value]="dates[0].completedDate ?? undefined"
-              (save)="updateDate(dates[0].uuid, 'completedDate', $event)"
-            ></app-inline-datepicker>
+          <hr class="divider" />
+          <div class="single-table-row">
+            <div class="single-column single-end">
+              <app-inline-datepicker
+                [value]="dates[0].date ?? undefined"
+                (save)="updateDate(dates[0].uuid, 'date', $event)"
+              ></app-inline-datepicker>
+            </div>
           </div>
-          <div class="single-column single-comment">
+          <hr class="divider" />
+        </div>
+      }
+    } @else {
+      <table mat-table [dataSource]="dataSource" matSort class="multiple-table" style="width: 100%">
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef class="multiple-index">#</th>
+          <td mat-cell *matCellDef="let element">{{ element.index }}</td>
+        </ng-container>
+        <ng-container matColumnDef="due">
+          <th mat-header-cell *matHeaderCellDef class="multiple-due">Due</th>
+          <td mat-cell *matCellDef="let element">
+            <app-inline-datepicker
+              [value]="dates[element.index - 1].date ?? undefined"
+              (save)="updateDate(dates[element.index - 1].uuid, 'date', $event)"
+            ></app-inline-datepicker>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="completed">
+          <th mat-header-cell *matHeaderCellDef class="multiple-completed">Completed</th>
+          <td mat-cell *matCellDef="let element">
+            <app-inline-datepicker
+              [value]="dates[element.index - 1].completedDate ?? undefined"
+              (save)="updateDate(dates[element.index - 1].uuid, 'completedDate', $event)"
+            ></app-inline-datepicker>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="comment">
+          <th mat-header-cell *matHeaderCellDef class="multiple-comment">Comment</th>
+          <td mat-cell *matCellDef="let element" class="wrap-text">
             <app-inline-textarea
-              [value]="dates[0].comment ?? undefined"
-              (save)="updateDate(dates[0].uuid, 'comment', $event)"
+              [value]="dates[element.index - 1].comment ?? undefined"
+              (save)="updateDate(dates[element.index - 1].uuid, 'comment', $event)"
             ></app-inline-textarea>
-          </div>
-        </div>
-        <hr class="divider" />
-      </div>
-    </ng-container>
-    <ng-template #showEndDateContainer>
-      <div class="single-table">
-        <div class="single-table-header">
-          <div class="single-column single-end">
-            <div class="subheading2">End Date</div>
-          </div>
-        </div>
-
-        <hr class="divider" />
-
-        <div class="single-table-row">
-          <div class="single-column single-end">
-            <app-inline-datepicker
-              [value]="dates[0].date ?? undefined"
-              (save)="updateDate(dates[0].uuid, 'date', $event)"
-            ></app-inline-datepicker>
-          </div>
-        </div>
-        <hr class="divider" />
-      </div>
-    </ng-template>
-  </ng-container>
-
-  <ng-template #showMultipleDateTable>
-    <table mat-table [dataSource]="dataSource" matSort class="multiple-table" style="width: 100%">
-      <ng-container matColumnDef="index">
-        <th mat-header-cell *matHeaderCellDef class="multiple-index">#</th>
-        <td mat-cell *matCellDef="let element">{{ element.index }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="due">
-        <th mat-header-cell *matHeaderCellDef class="multiple-due">Due</th>
-        <td mat-cell *matCellDef="let element">
-          <app-inline-datepicker
-            [value]="dates[element.index - 1].date ?? undefined"
-            (save)="updateDate(dates[element.index - 1].uuid, 'date', $event)"
-          ></app-inline-datepicker>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="completed">
-        <th mat-header-cell *matHeaderCellDef class="multiple-completed">Completed</th>
-        <td mat-cell *matCellDef="let element">
-          <app-inline-datepicker
-            [value]="dates[element.index - 1].completedDate ?? undefined"
-            (save)="updateDate(dates[element.index - 1].uuid, 'completedDate', $event)"
-          ></app-inline-datepicker>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="comment">
-        <th mat-header-cell *matHeaderCellDef class="multiple-comment">Comment</th>
-        <td mat-cell *matCellDef="let element" class="wrap-text">
-          <app-inline-textarea
-            [value]="dates[element.index - 1].comment ?? undefined"
-            (save)="updateDate(dates[element.index - 1].uuid, 'comment', $event)"
-          ></app-inline-textarea>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef class="multiple-action">Action</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="warn" (click)="onDeleteDate(element.uuid)" *ngIf="dates.length > 1">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
-    </table>
-
-    <button type="button" mat-stroked-button color="primary" class="add-date-btn" (click)="addNewDate()">
-      + DUE DATE
-    </button>
-  </ng-template>
-</div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef class="multiple-action">Action</th>
+          <td mat-cell *matCellDef="let element">
+            @if (dates.length > 1) {
+              <button mat-icon-button color="warn" (click)="onDeleteDate(element.uuid)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+      </table>
+      <button type="button" mat-stroked-button color="primary" class="add-date-btn" (click)="addNewDate()">
+        + DUE DATE
+      </button>
+    }
+  </div>
+}
 
 <div
   class="full-width"
@@ -152,27 +154,31 @@
       condition.type.isDateChecked
     ),
   }"
->
+  >
   <div class="subheading2">Description</div>
   <span
     class="decision-condition-description"
     [id]="condition.uuid + 'Description'"
     [ngClass]="{ 'ellipsis-3': !isReadMoreClicked }"
     >{{ condition.description }}</span
-  >
-  <app-no-data *ngIf="condition.description === null || condition.description === undefined"></app-no-data>
-  <div class="read-more">
-    <a
-      (click)="onToggleReadMore()"
-      (keypress)="onToggleReadMore()"
-      [ngClass]="{ 'display-none': !isReadMoreVisible || !condition.description }"
-      >{{ isReadMoreClicked ? 'Read Less' : 'Read More' }}</a
     >
-  </div>
-</div>
+    @if (condition.description === null || condition.description === undefined) {
+      <app-no-data></app-no-data>
+    }
+    <div class="read-more">
+      <a
+        (click)="onToggleReadMore()"
+        (keypress)="onToggleReadMore()"
+        [ngClass]="{ 'display-none': !isReadMoreVisible || !condition.description }"
+        >{{ isReadMoreClicked ? 'Read Less' : 'Read More' }}</a
+        >
+      </div>
+    </div>
 
-<div class="condition-instrument" *ngIf="isFinancialSecurity">
-  <app-decision-condition-financial-instrument
-    [conditionUuid]="condition.uuid"
-  ></app-decision-condition-financial-instrument>
-</div>
+    @if (isFinancialSecurity) {
+      <div class="condition-instrument">
+        <app-decision-condition-financial-instrument
+          [conditionUuid]="condition.uuid"
+        ></app-decision-condition-financial-instrument>
+      </div>
+    }

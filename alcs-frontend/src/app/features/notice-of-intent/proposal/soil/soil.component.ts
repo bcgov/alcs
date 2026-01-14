@@ -6,9 +6,10 @@ import { NoticeOfIntentDto, NoticeOfIntentSubmissionDto, UpdateNoticeOfIntentDto
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-proposal-soil',
-  templateUrl: './soil.component.html',
-  styleUrls: ['./soil.component.scss'],
+    selector: 'app-proposal-soil',
+    templateUrl: './soil.component.html',
+    styleUrls: ['./soil.component.scss'],
+    standalone: false
 })
 export class SoilProposalComponent implements OnDestroy, OnInit {
   $destroy = new Subject<void>();

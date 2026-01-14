@@ -4,10 +4,12 @@
   cdkDrag
   [cdkDragData]="cardData"
   (click)="onClick(cardData.id, cardData.cardType)"
->
-  <div *ngIf="cardData.latestDecisionDate" class="decision-date-info" [ngClass]="{ paused: cardData.paused }">
-    {{ cardData.latestDecisionDate | momentFormat }}
-  </div>
+  >
+  @if (cardData.latestDecisionDate) {
+    <div class="decision-date-info" [ngClass]="{ paused: cardData.paused }">
+      {{ cardData.latestDecisionDate | momentFormat }}
+    </div>
+  }
   <div class="card-content">
     <div class="upper-card">
       <div class="row">
@@ -24,95 +26,123 @@
           (focus)="onMouseHover(cardData.id)"
           [matTooltipDisabled]="!cardData.verticalOutBound"
           >{{ cardData.title }}</span
-        >
-        <span class="high-priority" *ngIf="cardData.highPriority">!</span>
-      </div>
-      <div class="row">
-        <div class="labels">
-          <app-application-type-pill
-            *ngFor="let type of cardData.labels"
-            [type]="type"
-            [useShortLabel]="true"
-          ></app-application-type-pill>
-          <ng-container *ngIf="isConditionCard && !isInConditionBoard">
-            <app-application-type-pill
-              [type]="getStatusPill('CONDITION')"
-              [useShortLabel]="true"
-            ></app-application-type-pill>
-            <app-application-type-pill
-              *ngIf="isModification"
-              [type]="getStatusPill('MODIFICATION')"
-              [useShortLabel]="true"
-            ></app-application-type-pill>
-            <app-application-type-pill
-              *ngIf="isReconsideration"
-              [type]="getStatusPill('RECONSIDERATION')"
-              [useShortLabel]="true"
-            ></app-application-type-pill>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-    <div class="lower-card">
-      <div class="left-card">
-        <div *ngIf="!isConditionCard">
-          <div
-            *ngIf="cardData.activeDays !== undefined"
-            class="day-count active-days center"
-            matTooltip="Active days: {{ cardData.activeDays }} "
           >
-            <mat-icon>calendar_month</mat-icon>
-            <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center">
-              {{ cardData.activeDays }}
-            </span>
-            <span *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays" class="center">
-              {{ cardData.maxActiveDays }}+
-            </span>
-          </div>
-          <div
-            *ngIf="cardData.pausedDays !== undefined"
-            class="day-count center"
-            matTooltip="Paused days: {{ cardData.pausedDays }} "
-          >
-            <mat-icon>pause</mat-icon>
-            <span class="center">{{ cardData.pausedDays }}</span>
-          </div>
-          <div *ngIf="cardData.showDueDate && cardData.dueDate" class="due-date center">
-            <span class="center">Due: {{ cardData.dueDate | momentFormat }}</span>
-          </div>
-          <div *ngIf="cardData.activeDays && cardData.dueDate !== undefined" class="due-date center">
-            <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center"
-              >Due: {{ cardData.dueDate | momentFormat }}</span
-            >
-            <span
-              *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays"
-              class="center red-text"
-              >Overdue</span
-            >
-          </div>
+          @if (cardData.highPriority) {
+            <span class="high-priority">!</span>
+          }
         </div>
-
-        <div class="condition-status-pill-container" *ngIf="isConditionCard && isInConditionBoard">
-          <app-application-type-pill *ngIf="isExpired" [type]="getStatusPill('EXPIRED')"></app-application-type-pill>
-          <app-application-type-pill *ngIf="isPastDue" [type]="getStatusPill('PASTDUE')"></app-application-type-pill>
+        <div class="row">
+          <div class="labels">
+            @for (type of cardData.labels; track type) {
+              <app-application-type-pill
+                [type]="type"
+                [useShortLabel]="true"
+              ></app-application-type-pill>
+            }
+            @if (isConditionCard && !isInConditionBoard) {
+              <app-application-type-pill
+                [type]="getStatusPill('CONDITION')"
+                [useShortLabel]="true"
+              ></app-application-type-pill>
+              @if (isModification) {
+                <app-application-type-pill
+                  [type]="getStatusPill('MODIFICATION')"
+                  [useShortLabel]="true"
+                ></app-application-type-pill>
+              }
+              @if (isReconsideration) {
+                <app-application-type-pill
+                  [type]="getStatusPill('RECONSIDERATION')"
+                  [useShortLabel]="true"
+                ></app-application-type-pill>
+              }
+            }
+          </div>
         </div>
       </div>
+      <div class="lower-card">
+        <div class="left-card">
+          @if (!isConditionCard) {
+            <div>
+              @if (cardData.activeDays !== undefined) {
+                <div
+                  class="day-count active-days center"
+                  matTooltip="Active days: {{ cardData.activeDays }} "
+                  >
+                  <mat-icon>calendar_month</mat-icon>
+                  @if (!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays) {
+                    <span class="center">
+                      {{ cardData.activeDays }}
+                    </span>
+                  }
+                  @if (cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays) {
+                    <span class="center">
+                      {{ cardData.maxActiveDays }}+
+                    </span>
+                  }
+                </div>
+              }
+              @if (cardData.pausedDays !== undefined) {
+                <div
+                  class="day-count center"
+                  matTooltip="Paused days: {{ cardData.pausedDays }} "
+                  >
+                  <mat-icon>pause</mat-icon>
+                  <span class="center">{{ cardData.pausedDays }}</span>
+                </div>
+              }
+              @if (cardData.showDueDate && cardData.dueDate) {
+                <div class="due-date center">
+                  <span class="center">Due: {{ cardData.dueDate | momentFormat }}</span>
+                </div>
+              }
+              @if (cardData.activeDays && cardData.dueDate !== undefined) {
+                <div class="due-date center">
+                  @if (!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays) {
+                    <span class="center"
+                      >Due: {{ cardData.dueDate | momentFormat }}</span
+                      >
+                    }
+                    @if (cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays) {
+                      <span
+                        class="center red-text"
+                        >Overdue</span
+                        >
+                      }
+                    </div>
+                  }
+                </div>
+              }
 
-      <div class="right-card">
-        <div class="flag-avatar-container">
-          <mat-icon
-            *ngIf="cardData.cardType === CardType.APP_CON && cardData.decisionIsFlagged"
-            svgIcon="personal_places"
-            class="flag-icon"
-          ></mat-icon>
+              @if (isConditionCard && isInConditionBoard) {
+                <div class="condition-status-pill-container">
+                  @if (isExpired) {
+                    <app-application-type-pill [type]="getStatusPill('EXPIRED')"></app-application-type-pill>
+                  }
+                  @if (isPastDue) {
+                    <app-application-type-pill [type]="getStatusPill('PASTDUE')"></app-application-type-pill>
+                  }
+                </div>
+              }
+            </div>
 
-          <app-avatar-circle
-            *ngIf="cardData.assignee"
-            [initials]="cardData.assignee.initials || ''"
-            [name]="cardData.assignee.prettyName"
-          ></app-avatar-circle>
+            <div class="right-card">
+              <div class="flag-avatar-container">
+                @if (cardData.cardType === CardType.APP_CON && cardData.decisionIsFlagged) {
+                  <mat-icon
+                    svgIcon="personal_places"
+                    class="flag-icon"
+                  ></mat-icon>
+                }
+
+                @if (cardData.assignee) {
+                  <app-avatar-circle
+                    [initials]="cardData.assignee.initials || ''"
+                    [name]="cardData.assignee.prettyName"
+                  ></app-avatar-circle>
+                }
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</mat-card>
+      </mat-card>

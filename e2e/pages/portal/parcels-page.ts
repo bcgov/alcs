@@ -60,7 +60,7 @@ export class ParcelsPage {
     this.ownerLastNameTexbox = page.getByPlaceholder('Enter Last Name');
     this.ownerPhoneNumberTexbox = page.getByPlaceholder('(555) 555-5555');
     this.ownerEmailTexbox = page.getByPlaceholder('Enter Email');
-    this.ownerSaveButton = page.getByRole('button', { name: 'Add' });
+    this.ownerSaveButton = this.ownerAddDialog.getByRole('button', { name: 'Add' });
   }
 
   // Scenarios
@@ -179,7 +179,7 @@ export class ParcelsPage {
   }
 
   async setParcelType(parcelNumber: number, parcelType: ParcelType) {
-    await this.parcelBody(parcelNumber).getByRole('button', { name: parcelType }).click();
+    await this.parcelBody(parcelNumber).getByRole('radio', { name: parcelType }).check();
   }
 
   // Month uses 3-letter abbreviation (e.g., 'Apr')
@@ -199,8 +199,8 @@ export class ParcelsPage {
 
   async setIsFarm(parcelNumber: number, isFarm: boolean) {
     await this.parcelBody(parcelNumber)
-      .getByRole('button', { name: isFarm ? 'Yes' : 'Else' })
-      .click();
+      .getByRole('radio', { name: isFarm ? 'Yes' : 'Else' })
+      .check();
   }
 
   async uploadCertificateOfTitle(parcelNumber: number, path: string) {
@@ -211,7 +211,7 @@ export class ParcelsPage {
   }
 
   async setOwnerType(type: OwnerType) {
-    await this.page.getByRole('button', { name: type }).click();
+    await this.page.getByRole('radio', { name: type }).check();
   }
 
   async uploadCorporateSummary(path: string) {
@@ -280,15 +280,21 @@ export class ParcelsPage {
         (type) =>
           new Promise<[ParcelType, boolean]>((resolve) => {
             this.parcelBody(parcelNumber)
-              .getByRole('button', { name: type })
-              .getAttribute('aria-pressed')
+              .getByRole('radio', { name: type })
+              .isChecked()
               .then((isPressed) => {
-                resolve([type, isPressed === 'true']);
+                resolve([type, isPressed]);
               });
           }),
       ),
     );
-    const [type, _] = results.filter(([_, isPressed]) => isPressed)[0];
+    const selected = results.filter(([_, isPressed]) => isPressed);
+
+    if (selected.length !== 1) {
+      throw new Error(`Expected exactly one parcel type to be selected, but found ${selected.length}`);
+    }
+
+    const [type, _] = selected[0];
 
     return type;
   }

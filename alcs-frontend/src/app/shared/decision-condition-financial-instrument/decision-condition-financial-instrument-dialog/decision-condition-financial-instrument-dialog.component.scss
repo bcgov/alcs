@@ -49,15 +49,15 @@ mat-radio-button {
 }
 
 ::ng-deep .mat-mdc-radio-button.mat-accent {
-  --mdc-radio-disabled-selected-icon-color: black;
-  --mdc-radio-disabled-unselected-icon-color: black;
-  --mdc-radio-unselected-hover-icon-color: #212121;
-  --mdc-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
-  --mdc-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
-  --mdc-radio-selected-focus-icon-color: #{colors.$primary-color};
-  --mdc-radio-selected-hover-icon-color: #{colors.$primary-color};
-  --mdc-radio-selected-icon-color: #{colors.$primary-color};
-  --mdc-radio-selected-pressed-icon-color: #{colors.$primary-color};
+  --mat-radio-disabled-selected-icon-color: black;
+  --mat-radio-disabled-unselected-icon-color: black;
+  --mat-radio-unselected-hover-icon-color: #212121;
+  --mat-radio-unselected-icon-color: rgba(0, 0, 0, 0.54);
+  --mat-radio-unselected-pressed-icon-color: rgba(0, 0, 0, 0.54);
+  --mat-radio-selected-focus-icon-color: #{colors.$primary-color};
+  --mat-radio-selected-hover-icon-color: #{colors.$primary-color};
+  --mat-radio-selected-icon-color: #{colors.$primary-color};
+  --mat-radio-selected-pressed-icon-color: #{colors.$primary-color};
   --mat-radio-ripple-color: black;
   --mat-radio-checked-ripple-color: #{colors.$primary-color};
   --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);

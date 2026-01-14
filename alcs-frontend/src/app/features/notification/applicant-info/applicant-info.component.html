@@ -1,8 +1,10 @@
-<div *ngIf="notification && submission">
-  <app-notification-details
-    [submission]="submission"
-    [fileNumber]="fileNumber"
-    [isSubmittedToAlc]="isSubmittedToAlc"
-    [showEdit]="true"
-  ></app-notification-details>
-</div>
+@if (notification && submission) {
+  <div>
+    <app-notification-details
+      [submission]="submission"
+      [fileNumber]="fileNumber"
+      [isSubmittedToAlc]="isSubmittedToAlc"
+      [showEdit]="true"
+    ></app-notification-details>
+  </div>
+}

@@ -1,10 +1,12 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
 import { ComplianceAndEnforcementSubmitter } from './submitter/submitter.entity';
 import { ComplianceAndEnforcementProperty } from './property/property.entity';
 import { ComplianceAndEnforcementResponsibleParty } from './responsible-parties/responsible-party.entity';
+import { User } from '../../user/user.entity';
+import { ComplianceAndEnforcementChronologyEntry } from './chronology/chronology.entity';
 
 export enum InitialSubmissionType {
   COMPLAINT = 'Complaint',
@@ -75,6 +77,26 @@ export class ComplianceAndEnforcement extends Base {
   properties: ComplianceAndEnforcementProperty[];
 
   @AutoMap()
-  @OneToMany(() => ComplianceAndEnforcementResponsibleParty, (responsibleParty) => responsibleParty.file, { cascade: true })
+  @OneToMany(() => ComplianceAndEnforcementResponsibleParty, (responsibleParty) => responsibleParty.file, {
+    cascade: true,
+  })
   responsibleParties: ComplianceAndEnforcementResponsibleParty[];
+
+  @AutoMap()
+  @OneToMany(() => ComplianceAndEnforcementChronologyEntry, (chronologyEntry) => chronologyEntry.file, {
+    cascade: true,
+  })
+  chronologyEntries: ComplianceAndEnforcementChronologyEntry[];
+
+  @AutoMap()
+  @Column({ type: 'timestamptz', nullable: true })
+  chronologyClosedAt: Date | null;
+
+  @AutoMap()
+  @ManyToOne(() => User, { nullable: true })
+  chronologyClosedBy: User | null;
+
+  @AutoMap()
+  @ManyToOne(() => User, { nullable: true })
+  assignee: User | null;
 }

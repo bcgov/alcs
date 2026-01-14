@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-inline-decision-outcome',
-  templateUrl: './inline-decision-outcome.component.html',
-  styleUrls: ['./inline-decision-outcome.component.scss'],
+    selector: 'app-inline-decision-outcome',
+    templateUrl: './inline-decision-outcome.component.html',
+    styleUrls: ['./inline-decision-outcome.component.scss'],
+    standalone: false
 })
 export class InlineDecisionOutcomeComponent implements OnInit {
   @Input() selectedValue?: string | null;

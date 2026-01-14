@@ -12,9 +12,10 @@ import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
-  selector: 'app-card-dialog',
-  template: '<p></p>',
-  styleUrls: [],
+    selector: 'app-card-dialog',
+    template: '<p></p>',
+    styleUrls: [],
+    standalone: false
 })
 export class CardDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

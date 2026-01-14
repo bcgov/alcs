@@ -30,9 +30,10 @@ type BoardWithDecisionMeetings = {
 };
 
 @Component({
-  selector: 'app-meeting-overview',
-  templateUrl: './meeting-overview.component.html',
-  styleUrls: ['./meeting-overview.component.scss'],
+    selector: 'app-meeting-overview',
+    templateUrl: './meeting-overview.component.html',
+    styleUrls: ['./meeting-overview.component.scss'],
+    standalone: false
 })
 export class MeetingOverviewComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();

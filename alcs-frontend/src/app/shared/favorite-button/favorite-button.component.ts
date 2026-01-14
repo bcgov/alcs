@@ -4,9 +4,10 @@ import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
 
 @Component({
-  selector: 'app-favorite-button',
-  templateUrl: './favorite-button.component.html',
-  styleUrls: ['./favorite-button.component.scss'],
+    selector: 'app-favorite-button',
+    templateUrl: './favorite-button.component.html',
+    styleUrls: ['./favorite-button.component.scss'],
+    standalone: false
 })
 export class FavoriteButtonComponent implements OnInit {
   @Input() currentUserProfile?: UserDto;

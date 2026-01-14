@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { HolidayService, PaginatedHolidayResponse } from '../../../services/stat
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { HolidayComponent } from './holiday.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('HolidayComponent', () => {
   let component: HolidayComponent;
@@ -23,24 +24,26 @@ describe('HolidayComponent', () => {
     mockHolidayService.$statHolidays = new BehaviorSubject<PaginatedHolidayResponse>({ data: [], total: 0 });
 
     await TestBed.configureTestingModule({
-      declarations: [HolidayComponent],
-      providers: [
+    declarations: [HolidayComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: HolidayService,
-          useValue: mockHolidayService,
+            provide: HolidayService,
+            useValue: mockHolidayService,
         },
         {
-          provide: MatDialog,
-          useValue: mockDialog,
+            provide: MatDialog,
+            useValue: mockDialog,
         },
         {
-          provide: ConfirmationDialogService,
-          useValue: mockConfirmationDialogService,
+            provide: ConfirmationDialogService,
+            useValue: mockConfirmationDialogService,
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [HttpClientTestingModule],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(HolidayComponent);
     component = fixture.componentInstance;

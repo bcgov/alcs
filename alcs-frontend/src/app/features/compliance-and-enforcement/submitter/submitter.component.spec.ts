@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
@@ -10,6 +10,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { ComplianceAndEnforcementSubmitterDto } from '../../../services/compliance-and-enforcement/submitter/submitter.dto';
 import { ComplianceAndEnforcementSubmitterService } from '../../../services/compliance-and-enforcement/submitter/submitter.service';
 import { SubmitterComponent } from './submitter.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SubmitterComponent', () => {
   let component: SubmitterComponent;
@@ -32,28 +33,30 @@ describe('SubmitterComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [OverviewComponent, StartOfDayPipe],
-      providers: [
+    declarations: [OverviewComponent, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ComplianceAndEnforcementSubmitterService,
-          useValue: mockComplianceAndEnforcementSubmitterService,
+            provide: ComplianceAndEnforcementSubmitterService,
+            useValue: mockComplianceAndEnforcementSubmitterService,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ fileNumber: '12345' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ fileNumber: '12345' }),
+                },
             },
-          },
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(SubmitterComponent);
     component = fixture.componentInstance;
@@ -62,13 +65,6 @@ describe('SubmitterComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should add overview control to parent form', () => {
-    const parentForm = new FormGroup({ overview: new FormGroup({}) });
-    component.parentForm = parentForm;
-
-    expect(parentForm.contains('overview')).toBe(true);
   });
 
   it('should patch form values when file input is set', () => {
@@ -93,7 +89,7 @@ describe('SubmitterComponent', () => {
   it('should emit changes when form values change', (done) => {
     component.submitter = mockSubmitter;
 
-    component.$changes.subscribe((val) => {
+    component.$changes.subscribe(([_, val]) => {
       if (val.additionalContactInformation === 'Updated notes') {
         expect(val.additionalContactInformation).toBe('Updated notes');
         done();
@@ -132,7 +128,7 @@ describe('SubmitterComponent', () => {
   it('should emit changes with correct types when form changes', (done) => {
     component.submitter = mockSubmitter;
 
-    component.$changes.subscribe((val) => {
+    component.$changes.subscribe(([_, val]) => {
       expect(typeof val.name).toBe('string');
       done();
     });

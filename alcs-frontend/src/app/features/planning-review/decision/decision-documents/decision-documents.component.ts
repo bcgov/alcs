@@ -14,9 +14,10 @@ import { FILE_NAME_TRUNCATE_LENGTH } from '../../../../shared/constants';
 import { DocumentUploadDialogComponent } from '../../../../shared/document-upload-dialog/document-upload-dialog.component';
 
 @Component({
-  selector: 'app-decision-documents',
-  templateUrl: './decision-documents.component.html',
-  styleUrls: ['./decision-documents.component.scss'],
+    selector: 'app-decision-documents',
+    templateUrl: './decision-documents.component.html',
+    styleUrls: ['./decision-documents.component.scss'],
+    standalone: false
 })
 export class DecisionDocumentsComponent implements OnDestroy, OnChanges {
   $destroy = new Subject<void>();

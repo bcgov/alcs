@@ -3,9 +3,10 @@ import { CommentDto, MentionDto, UpdateCommentDto } from '../../services/comment
 import { UserService } from '../../services/user/user.service';
 
 @Component({
-  selector: 'app-mention-textarea',
-  templateUrl: './mention-textarea.component.html',
-  styleUrls: ['./mention-textarea.component.scss'],
+    selector: 'app-mention-textarea',
+    templateUrl: './mention-textarea.component.html',
+    styleUrls: ['./mention-textarea.component.scss'],
+    standalone: false
 })
 export class MentionTextareaComponent implements OnInit {
   @Input() isNewComment = false;

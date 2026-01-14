@@ -1,0 +1,46 @@
+@use '../../../../../styles/colors';
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.final-entry {
+  display: flex;
+
+  background-color: colors.$grey-light;
+}
+
+.final-entry-date,
+.final-entry-main {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+}
+
+.final-entry-date {
+  color: colors.$grey-dark;
+  width: 210px;
+  flex-shrink: 0;
+  border-right: 1px solid colors.$grey;
+}
+
+.final-entry-main {
+  flex-grow: 1;
+  gap: 24px;
+  position: relative;
+}
+
+.entries {
+  border: 1px solid colors.$grey;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.no-entries {
+  text-align: center;
+}

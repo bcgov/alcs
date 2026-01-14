@@ -7,9 +7,10 @@ import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-
 import { NotificationDto } from '../../../services/notification/notification.dto';
 
 @Component({
-  selector: 'app-commissioner-tags-header',
-  templateUrl: './commissioner-tags-header.component.html',
-  styleUrl: './commissioner-tags-header.component.scss',
+    selector: 'app-commissioner-tags-header',
+    templateUrl: './commissioner-tags-header.component.html',
+    styleUrl: './commissioner-tags-header.component.scss',
+    standalone: false
 })
 export class CommissionerTagsHeaderComponent implements OnInit, OnChanges {
   tags: TagDto[] = [];

@@ -1,3 +1,4 @@
+import { UserDto } from '../user/user.dto';
 import { ComplianceAndEnforcementPropertyDto } from './property/property.dto';
 import {
   ComplianceAndEnforcementSubmitterDto,
@@ -30,6 +31,9 @@ export interface ComplianceAndEnforcementDto {
   intakeNotes: string;
   submitters: ComplianceAndEnforcementSubmitterDto[];
   property?: ComplianceAndEnforcementPropertyDto;
+  chronologyClosedAt: number | null;
+  chronologyClosedBy: UserDto | null;
+  assignee: UserDto | null;
 }
 
 export interface UpdateComplianceAndEnforcementDto {
@@ -41,4 +45,7 @@ export interface UpdateComplianceAndEnforcementDto {
   allegedActivity?: AllegedActivity[];
   intakeNotes?: string;
   submitters?: UpdateComplianceAndEnforcementSubmitterDto[];
+  chronologyClosedAt?: number | null;
+  chronologyClosedByUuid?: string | null;
+  assigneeUuid?: string | null;
 }

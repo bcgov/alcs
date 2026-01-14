@@ -15,10 +15,14 @@
           <input type="text" [formControl]="fileNumber" id="fileNumber" placeholder="Enter file number" matInput />
         </mat-form-field>
 
-        <div *ngIf="fileNumber.invalid && (fileNumber.dirty || fileNumber.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="fileNumber.errors?.['required']">This field is required</div>
-        </div>
+        @if (fileNumber.invalid && (fileNumber.dirty || fileNumber.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (fileNumber.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
       </div>
     </div>
     <div class="full-row">
@@ -37,10 +41,14 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="purpose.errors?.['required']">This field is required</div>
-      </div>
+      @if (purpose.invalid && (purpose.dirty || purpose.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (purpose.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
 
@@ -57,13 +65,17 @@
           id="total-area"
           matInput
           placeholder="Type area in hectares"
-        />
+          />
         <span matTextSuffix>ha</span>
       </mat-form-field>
-      <div *ngIf="totalArea.invalid && (totalArea.dirty || totalArea.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="totalArea.errors?.['required']">This field is required</div>
-      </div>
+      @if (totalArea.invalid && (totalArea.dirty || totalArea.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (totalArea.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
     </div>
 
     <div class="full-row">
@@ -89,7 +101,7 @@
           (change)="onChangeHasSurveyPlan($event.value)"
           id="hasSurveyPlan"
           [formControl]="hasSurveyPlan"
-        >
+          >
           <mat-button-toggle
             class="toggle-button"
             [ngClass]="{
@@ -152,21 +164,24 @@
               type="text"
               matInput
               placeholder="Type description"
-            />
+              />
           </mat-form-field>
-          <div
-            *ngIf="
-              surveyForm.controls[element.uuid + '-surveyPlan']!.invalid &&
-              (surveyForm.controls[element.uuid + '-surveyPlan']!.dirty ||
-                surveyForm.controls[element.uuid + '-surveyPlan']!.touched)
-            "
-            class="field-error"
-          >
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="surveyForm.controls[element.uuid + '-surveyPlan']!.errors?.['required']">
-              This field is required
+          @if (
+            surveyForm.controls[element.uuid + '-surveyPlan']!.invalid &&
+            (surveyForm.controls[element.uuid + '-surveyPlan']!.dirty ||
+            surveyForm.controls[element.uuid + '-surveyPlan']!.touched)
+            ) {
+            <div
+              class="field-error"
+              >
+              <mat-icon>warning</mat-icon>
+              @if (surveyForm.controls[element.uuid + '-surveyPlan']!.errors?.['required']) {
+                <div>
+                  This field is required
+                </div>
+              }
             </div>
-          </div>
+          }
         </td>
       </ng-container>
 
@@ -185,21 +200,24 @@
               type="text"
               matInput
               placeholder="Type description"
-            />
+              />
           </mat-form-field>
-          <div
-            *ngIf="
-              surveyForm.controls[element.uuid + '-control']!.invalid &&
-              (surveyForm.controls[element.uuid + '-control']!.dirty ||
-                surveyForm.controls[element.uuid + '-control']!.touched)
-            "
-            class="field-error"
-          >
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="surveyForm.controls[element.uuid + '-control']!.errors?.['required']">
-              This field is required
+          @if (
+            surveyForm.controls[element.uuid + '-control']!.invalid &&
+            (surveyForm.controls[element.uuid + '-control']!.dirty ||
+            surveyForm.controls[element.uuid + '-control']!.touched)
+            ) {
+            <div
+              class="field-error"
+              >
+              <mat-icon>warning</mat-icon>
+              @if (surveyForm.controls[element.uuid + '-control']!.errors?.['required']) {
+                <div>
+                  This field is required
+                </div>
+              }
             </div>
-          </div>
+          }
         </td>
       </ng-container>
 

@@ -4,9 +4,10 @@ import { ComplianceAndEnforcementDto } from '../../../../../services/compliance-
 import moment from 'moment';
 
 @Component({
-  selector: 'app-compliance-and-enforcement-complaint-referral-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
+    selector: 'app-compliance-and-enforcement-complaint-referral-overview',
+    templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.scss'],
+    standalone: false
 })
 export class ComplaintReferralOverviewComponent implements OnDestroy {
   $destroy = new Subject<void>();

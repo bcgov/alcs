@@ -17,9 +17,10 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 
 @Component({
-  selector: 'app-inquiry-detail-dialog',
-  templateUrl: './inquiry-dialog.component.html',
-  styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    selector: 'app-inquiry-detail-dialog',
+    templateUrl: './inquiry-dialog.component.html',
+    styleUrls: ['../card-dialog/card-dialog.component.scss'],
+    standalone: false
 })
 export class InquiryDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

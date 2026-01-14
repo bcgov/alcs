@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
@@ -16,18 +15,18 @@ describe('ApplicationDecisionService', () => {
     mockHttpClient = createMock();
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: HttpClient,
-          useValue: mockHttpClient,
+            provide: HttpClient,
+            useValue: mockHttpClient,
         },
-      ],
-    });
+    ]
+});
     service = TestBed.inject(ApplicationDecisionService);
   });
 

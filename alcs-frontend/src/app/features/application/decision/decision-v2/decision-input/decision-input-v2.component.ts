@@ -59,9 +59,10 @@ type MappedPostDecision = {
 };
 
 @Component({
-  selector: 'app-decision-input',
-  templateUrl: './decision-input-v2.component.html',
-  styleUrls: ['./decision-input-v2.component.scss'],
+    selector: 'app-decision-input',
+    templateUrl: './decision-input-v2.component.html',
+    styleUrls: ['./decision-input-v2.component.scss'],
+    standalone: false
 })
 export class DecisionInputV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();

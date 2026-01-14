@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { ApplicationDetailService } from '../../../services/application/applicat
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ApplicationMeetingComponent } from './application-meeting.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ApplicationMeetingComponent', () => {
   let component: ApplicationMeetingComponent;
@@ -20,22 +21,24 @@ describe('ApplicationMeetingComponent', () => {
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-      declarations: [ApplicationMeetingComponent],
-      providers: [
+    declarations: [ApplicationMeetingComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule],
+    providers: [
         {
-          provide: MatDialogRef,
-          useValue: {},
+            provide: MatDialogRef,
+            useValue: {},
         },
         {
-          provide: MatDialog,
-          useValue: {},
+            provide: MatDialog,
+            useValue: {},
         },
         { provide: ApplicationDetailService, useValue: mockAppDetailService },
         { provide: ConfirmationDialogService, useValue: {} },
-      ],
-      imports: [HttpClientTestingModule, MatSnackBarModule],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(ApplicationMeetingComponent);
     component = fixture.componentInstance;

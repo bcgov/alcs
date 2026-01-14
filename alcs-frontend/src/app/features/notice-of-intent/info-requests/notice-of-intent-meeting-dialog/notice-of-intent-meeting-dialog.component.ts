@@ -15,9 +15,10 @@ export type NoticeOfIntentMeetingForm = {
 };
 
 @Component({
-  selector: 'app-notice-of-intent-meeting-dialog',
-  templateUrl: './notice-of-intent-meeting-dialog.component.html',
-  styleUrls: ['./notice-of-intent-meeting-dialog.component.scss'],
+    selector: 'app-notice-of-intent-meeting-dialog',
+    templateUrl: './notice-of-intent-meeting-dialog.component.html',
+    styleUrls: ['./notice-of-intent-meeting-dialog.component.scss'],
+    standalone: false
 })
 export class NoticeOfIntentMeetingDialogComponent {
   isLoading = false;

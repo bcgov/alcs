@@ -8,9 +8,10 @@ export class HolidayForm {
 }
 
 @Component({
-  selector: 'app-holiday-dialog',
-  templateUrl: './holiday-dialog.component.html',
-  styleUrls: ['./holiday-dialog.component.scss'],
+    selector: 'app-holiday-dialog',
+    templateUrl: './holiday-dialog.component.html',
+    styleUrls: ['./holiday-dialog.component.scss'],
+    standalone: false
 })
 export class HolidayDialogComponent {
   title: string = 'Create';

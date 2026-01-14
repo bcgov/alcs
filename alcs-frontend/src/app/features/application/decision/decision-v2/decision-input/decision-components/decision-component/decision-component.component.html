@@ -4,59 +4,73 @@
 </div>
 
 <form [formGroup]="form" class="decision-component-form">
-  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP" class="row-no-flex">
-    <app-nfu-input [form]="form"></app-nfu-input>
-  </div>
-
-  <div
-    *ngIf="
-      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
-      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE ||
-      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD
-    "
-    class="row-no-flex"
-  >
-    <div class="full-width">
-      <mat-form-field appearance="outline" class="row">
-        <mat-label>ALR Area Impacted (ha)</mat-label>
-        <input
-          matInput
-          min="0.01"
-          mask="separator.5"
-          thousandSeparator=","
-          separatorLimit="9999999999"
-          formControlName="alrArea"
-          required
-        />
-      </mat-form-field>
+  @if (data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP) {
+    <div class="row-no-flex">
+      <app-nfu-input [form]="form"></app-nfu-input>
     </div>
-  </div>
+  }
 
-  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO" class="row-no-flex">
-    <app-app-pofo-input [form]="form"></app-app-pofo-input>
-  </div>
+  @if (
+    data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
+    data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE ||
+    data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD
+    ) {
+    <div
+      class="row-no-flex"
+      >
+      <div class="full-width">
+        <mat-form-field appearance="outline" class="row">
+          <mat-label>ALR Area Impacted (ha)</mat-label>
+          <input
+            matInput
+            min="0.01"
+            mask="separator.5"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            formControlName="alrArea"
+            required
+            />
+        </mat-form-field>
+      </div>
+    </div>
+  }
 
-  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO" class="row-no-flex">
-    <app-roso-input [form]="form"></app-roso-input>
-  </div>
-  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS" class="row-no-flex">
-    <app-pfrs-input [form]="form"></app-pfrs-input>
-  </div>
-  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU" class="row-no-flex">
-    <app-naru-input [form]="form" [codes]="codes"></app-naru-input>
-  </div>
-  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD" class="row-no-flex">
-    <app-subd-input [form]="form"></app-subd-input>
-  </div>
-  <div
-    *ngIf="
-      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL ||
-      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL
-    "
-    class="row-no-flex"
-  >
-    <app-incl-excl-input [form]="form"></app-incl-excl-input>
-  </div>
+  @if (data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO) {
+    <div class="row-no-flex">
+      <app-app-pofo-input [form]="form"></app-app-pofo-input>
+    </div>
+  }
+
+  @if (data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO) {
+    <div class="row-no-flex">
+      <app-roso-input [form]="form"></app-roso-input>
+    </div>
+  }
+  @if (data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS) {
+    <div class="row-no-flex">
+      <app-pfrs-input [form]="form"></app-pfrs-input>
+    </div>
+  }
+  @if (data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU) {
+    <div class="row-no-flex">
+      <app-naru-input [form]="form" [codes]="codes"></app-naru-input>
+    </div>
+  }
+  @if (data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD) {
+    <div class="row-no-flex">
+      <app-subd-input [form]="form"></app-subd-input>
+    </div>
+  }
+  @if (
+    data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL ||
+    data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL
+    ) {
+    <div
+      class="row-no-flex"
+      >
+      <app-incl-excl-input [form]="form"></app-incl-excl-input>
+    </div>
+  }
   <div class="grid-2">
     <div>
       <ng-select

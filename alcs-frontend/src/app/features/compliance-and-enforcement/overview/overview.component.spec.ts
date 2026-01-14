@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
@@ -14,8 +14,23 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ComplianceAndEnforcementService } from '../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { UserDto } from '../../../services/user/user.dto';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('OverviewComponent', () => {
+  const mockUser: UserDto = {
+    uuid: '1234',
+    initials: 'JD',
+    name: 'John Doe',
+    identityProvider: 'IDIR',
+    clientRoles: [],
+    idirUserName: 'jd',
+    bceidUserName: 'jd',
+    prettyName: 'John Doe',
+    settings: {
+      favoriteBoards: [],
+    },
+  };
   let component: OverviewComponent;
   let fixture: ComponentFixture<OverviewComponent>;
   let mockFile: ComplianceAndEnforcementDto = {
@@ -29,6 +44,9 @@ describe('OverviewComponent', () => {
     allegedActivity: [AllegedActivity.OTHER],
     intakeNotes: 'Some notes',
     submitters: [],
+    chronologyClosedAt: 0,
+    chronologyClosedBy: mockUser,
+    assignee: null,
   };
   let mockComplianceAndEnforcementService: DeepMocked<ComplianceAndEnforcementService>;
   let mockToastService: DeepMocked<ToastService>;
@@ -38,28 +56,30 @@ describe('OverviewComponent', () => {
     mockToastService = createMock();
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [OverviewComponent, StartOfDayPipe],
-      providers: [
+    declarations: [OverviewComponent, StartOfDayPipe],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         {
-          provide: ComplianceAndEnforcementService,
-          useValue: mockComplianceAndEnforcementService,
+            provide: ComplianceAndEnforcementService,
+            useValue: mockComplianceAndEnforcementService,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: convertToParamMap({ fileNumber: '12345' }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({ fileNumber: '12345' }),
+                },
             },
-          },
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(OverviewComponent);
     component = fixture.componentInstance;
@@ -68,13 +88,6 @@ describe('OverviewComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should add overview control to parent form', () => {
-    const parentForm = new FormGroup({ overview: new FormGroup({}) });
-    component.parentForm = parentForm;
-
-    expect(parentForm.contains('overview')).toBe(true);
   });
 
   it('should patch form values and enable form when file input is set', () => {
@@ -149,6 +162,19 @@ describe('OverviewComponent', () => {
   });
 
   it('should patch null dateSubmitted if file.dateSubmitted is missing', () => {
+    const mockUser: UserDto = {
+      uuid: '1234',
+      initials: 'JD',
+      name: 'John Doe',
+      identityProvider: 'IDIR',
+      clientRoles: [],
+      idirUserName: 'jd',
+      bceidUserName: 'jd',
+      prettyName: 'John Doe',
+      settings: {
+        favoriteBoards: [],
+      },
+    };
     component.file = {
       uuid: '12345',
       fileNumber: '12345',
@@ -160,6 +186,9 @@ describe('OverviewComponent', () => {
       allegedActivity: [],
       intakeNotes: '',
       submitters: [],
+      chronologyClosedAt: 0,
+      chronologyClosedBy: mockUser,
+      assignee: null,
     };
 
     expect(component.form.value.dateSubmitted).toBeNull();

@@ -4,9 +4,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormExisingResidence, FormProposedResidence } from '../naru-proposal.component';
 
 @Component({
-  selector: 'app-residence-dialog',
-  templateUrl: './residence-dialog.component.html',
-  styleUrl: './residence-dialog.component.scss',
+    selector: 'app-residence-dialog',
+    templateUrl: './residence-dialog.component.html',
+    styleUrl: './residence-dialog.component.scss',
+    standalone: false
 })
 export class ResidenceDialogComponent implements OnInit {
   floorArea = new FormControl<string | null>(null, [

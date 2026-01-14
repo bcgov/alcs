@@ -14,9 +14,10 @@ export enum ApplicationChangeTypeStepsEnum {
 }
 
 @Component({
-  selector: 'app-change-application-type-dialog',
-  templateUrl: './change-application-type-dialog.component.html',
-  styleUrls: ['./change-application-type-dialog.component.scss'],
+    selector: 'app-change-application-type-dialog',
+    templateUrl: './change-application-type-dialog.component.html',
+    styleUrls: ['./change-application-type-dialog.component.scss'],
+    standalone: false
 })
 export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewChecked {
   submissionUuid: string;

@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-inline-chair-review-outcome',
-  templateUrl: './inline-chair-review-outcome.component.html',
-  styleUrls: ['./inline-chair-review-outcome.component.scss']
+    selector: 'app-inline-chair-review-outcome',
+    templateUrl: './inline-chair-review-outcome.component.html',
+    styleUrls: ['./inline-chair-review-outcome.component.scss'],
+    standalone: false
 })
 export class InlineChairReviewOutcomeComponent  implements OnInit {
   @Input() selectedValue?: string | null;

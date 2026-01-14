@@ -3,14 +3,16 @@ import { FormControl } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import {
   ComplianceAndEnforcementService,
+  DEFAULT_C_AND_E_FETCH_OPTIONS,
   Status,
   statusFromFile,
 } from '../../../../services/compliance-and-enforcement/compliance-and-enforcement.service';
 
 @Component({
-  selector: 'app-details-overview',
-  templateUrl: './details-overview.component.html',
-  styleUrls: ['./details-overview.component.scss'],
+    selector: 'app-details-overview',
+    templateUrl: './details-overview.component.html',
+    styleUrls: ['./details-overview.component.scss'],
+    standalone: false
 })
 export class DetailsOverviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
@@ -46,7 +48,7 @@ export class DetailsOverviewComponent implements OnInit, OnDestroy {
     }
 
     await this.service.setStatus(this.fileNumber, this.status.value, { idType: 'fileNumber' });
-    this.service.loadFile(this.fileNumber, { withProperty: true });
+    this.service.loadFile(this.fileNumber, DEFAULT_C_AND_E_FETCH_OPTIONS);
 
     this.endEdit();
   }

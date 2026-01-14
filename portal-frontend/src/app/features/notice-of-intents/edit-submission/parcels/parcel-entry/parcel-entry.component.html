@@ -22,24 +22,34 @@
         >Crown</mat-button-toggle
       >
     </mat-button-toggle-group>
-    <div *ngIf="parcelType.invalid && (parcelType.dirty || parcelType.touched)" class="field-error">
-      <mat-icon>warning</mat-icon>
-      <div *ngIf="parcelType.errors?.['required']">This field is required</div>
-    </div>
+    @if (parcelType.invalid && (parcelType.dirty || parcelType.touched)) {
+      <div class="field-error">
+        <mat-icon>warning</mat-icon>
+        @if (parcelType.errors?.['required']) {
+          <div>This field is required</div>
+        }
+      </div>
+    }
   </div>
   <div class="form-row">
     <div class="full-row pmbc-search">
-      <label *ngIf="!isCrownLand" for="lookup-pid">Enter PID to auto-fill parcel details</label>
-      <label *ngIf="isCrownLand" for="lookup-pid">Enter PID or PIN to auto-fill parcel details</label>
+      @if (!isCrownLand) {
+        <label for="lookup-pid">Enter PID to auto-fill parcel details</label>
+      }
+      @if (isCrownLand) {
+        <label for="lookup-pid">Enter PID or PIN to auto-fill parcel details</label>
+      }
       <div class="subtext">Please ensure the auto-filled information is accurate by comparing with your records</div>
       <div>
         <div class="lookup-pid-fields">
-          <mat-form-field class="lookup-search-by" *ngIf="isCrownLand" appearance="outline">
-            <mat-select [formControl]="searchBy" (valueChange)="onChangeSearchBy($event)" placeholder="Search by ...">
-              <mat-option value="pid">Search by PID</mat-option>
-              <mat-option value="pin">Search by PIN</mat-option>
-            </mat-select>
-          </mat-form-field>
+          @if (isCrownLand) {
+            <mat-form-field class="lookup-search-by" appearance="outline">
+              <mat-select [formControl]="searchBy" (valueChange)="onChangeSearchBy($event)" placeholder="Search by ...">
+                <mat-option value="pid">Search by PID</mat-option>
+                <mat-option value="pin">Search by PIN</mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
           <mat-form-field class="lookup-input" appearance="outline">
             <input
               id="lookup-pid"
@@ -61,17 +71,18 @@
             Search
           </button>
         </div>
-        <div
-          *ngIf="
-            ((searchBy.value === 'pid' && isCrownLand) || !isCrownLand) &&
-            pidPin.invalid &&
-            (pidPin.dirty || pidPin.touched)
-          "
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="pidPin.errors?.['mask']">Please provide all 9 numbers, including leading zeros</div>
-        </div>
+        @if (
+          ((searchBy.value === 'pid' && isCrownLand) || !isCrownLand) &&
+          pidPin.invalid &&
+          (pidPin.dirty || pidPin.touched)
+        ) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (pidPin.errors?.['mask']) {
+              <div>Please provide all 9 numbers, including leading zeros</div>
+            }
+          </div>
+        }
         <div class="lookup-bottom-row">
           <button type="button" class="reset-button" mat-stroked-button color="accent" (click)="onReset()">
             Reset
@@ -96,10 +107,14 @@
           formControlName="legalDescription"
         />
       </mat-form-field>
-      <div *ngIf="legalDescription.invalid && (legalDescription.dirty || legalDescription.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="legalDescription.errors?.['required']">This field is required</div>
-      </div>
+      @if (legalDescription.invalid && (legalDescription.dirty || legalDescription.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (legalDescription.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
     </div>
 
     <div>
@@ -117,59 +132,82 @@
         />
         <span matTextSuffix>ha</span>
       </mat-form-field>
-      <div *ngIf="mapArea.invalid && (mapArea.dirty || mapArea.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="mapArea.errors?.['required']">This field is required</div>
-      </div>
+      @if (mapArea.invalid && (mapArea.dirty || mapArea.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (mapArea.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
       <div>
         <mat-hint class="subtext"> Example: 1.12345 (can be up to 5 decimal places) </mat-hint>
       </div>
     </div>
 
     <div>
-      <label for="pid">PID <span *ngIf="isCrownLand">(optional)</span></label>
+      <label for="pid"
+        >PID
+        @if (isCrownLand) {
+          <span>(optional)</span>
+        }
+      </label>
       <div class="subtext">A unique nine-digit number found on the parcel's Certificate of Title</div>
       <mat-form-field appearance="outline">
         <input id="pid" matInput placeholder="Type PID" formControlName="pid" maxlength="11" mask="000-000-000" />
       </mat-form-field>
-      <div *ngIf="pid.invalid && (pid.dirty || pid.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="pid.errors?.['required']">This field is required</div>
-        <div *ngIf="pid.errors?.['mask']">Invalid format</div>
-      </div>
+      @if (pid.invalid && (pid.dirty || pid.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (pid.errors?.['required']) {
+            <div>This field is required</div>
+          }
+          @if (pid.errors?.['mask']) {
+            <div>Invalid format</div>
+          }
+        </div>
+      }
     </div>
 
-    <div *ngIf="isCrownLand">
-      <label for="pin">PIN (optional)</label>
-      <div class="subtext">Unique numeric identifier for Crown land parcels</div>
-      <mat-form-field appearance="outline">
-        <input id="pin" matInput placeholder="Type PIN" formControlName="pin" />
-      </mat-form-field>
-    </div>
-
-    <div *ngIf="!isCrownLand">
-      <label for="purchase-date">Parcel Purchase Date</label>
-      <div class="subtext">Estimated date of the original registered purchase of the parcel.</div>
-      <mat-form-field (click)="purchaseDatePicker.open()" class="date-picker" appearance="outline">
-        <input
-          id="purchase-date"
-          matInput
-          [matDatepicker]="purchaseDatePicker"
-          formControlName="purchaseDate"
-          [max]="maxPurchasedDate"
-          [placeholder]="isCrownLand ? 'Fee Simple Only' : 'YYYY-MMM-DD'"
-        />
-        <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #purchaseDatePicker startView="multi-year"></mat-datepicker>
-      </mat-form-field>
-      <div *ngIf="purchaseDate.invalid && (purchaseDate.dirty || purchaseDate.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="purchaseDate.errors?.['required']">This field is required</div>
-      </div>
+    @if (isCrownLand) {
       <div>
-        <mat-hint class="subtext"> Example: 2020-Mar-01 </mat-hint>
+        <label for="pin">PIN (optional)</label>
+        <div class="subtext">Unique numeric identifier for Crown land parcels</div>
+        <mat-form-field appearance="outline">
+          <input id="pin" matInput placeholder="Type PIN" formControlName="pin" />
+        </mat-form-field>
       </div>
-    </div>
+    }
+
+    @if (!isCrownLand) {
+      <div>
+        <label for="purchase-date">Parcel Purchase Date</label>
+        <div class="subtext">Estimated date of the original registered purchase of the parcel.</div>
+        <mat-form-field (click)="purchaseDatePicker.open()" class="date-picker" appearance="outline">
+          <input
+            id="purchase-date"
+            matInput
+            [matDatepicker]="purchaseDatePicker"
+            formControlName="purchaseDate"
+            [max]="maxPurchasedDate"
+            [placeholder]="isCrownLand ? 'Fee Simple Only' : 'YYYY-MMM-DD'"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #purchaseDatePicker startView="multi-year"></mat-datepicker>
+        </mat-form-field>
+        @if (purchaseDate.invalid && (purchaseDate.dirty || purchaseDate.touched)) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (purchaseDate.errors?.['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
+        <div>
+          <mat-hint class="subtext"> Example: 2020-Mar-01 </mat-hint>
+        </div>
+      </div>
+    }
 
     <div>
       <mat-label for="isFarm">Farm Classification</mat-label>
@@ -195,10 +233,14 @@
           >No</mat-button-toggle
         >
       </mat-button-toggle-group>
-      <div *ngIf="showErrors && isFarm.invalid && (isFarm.dirty || isFarm.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="isFarm.errors?.['required']">This field is required</div>
-      </div>
+      @if (showErrors && isFarm.invalid && (isFarm.dirty || isFarm.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (isFarm.errors?.['required']) {
+            <div>This field is required</div>
+          }
+        </div>
+      }
     </div>
 
     <div class="full-row">
@@ -206,225 +248,274 @@
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="civicAddress" matInput placeholder="Type Address" formControlName="civicAddress" />
       </mat-form-field>
-      <div *ngIf="civicAddress.invalid && (civicAddress.dirty || civicAddress.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="civicAddress.errors?.['required']">This field is required</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section" *ngIf="enableCertificateOfTitleUpload">
-    <mat-label for="certificate-of-title-upload">Upload Certificate of Title</mat-label>
-    <div class="subtext" *ngIf="!isCrownLand">
-      Visit
-      <a class="subtext" href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank"
-        >BC Land Title & Survey</a
-      >
-      to obtain a recent copy (not older than 1 year) of the Certificate of Title
-    </div>
-    <div class="subtext" *ngIf="isCrownLand">
-      Only required for surveyed Crown land with a PID. Visit
-      <a class="subtext" href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank"
-        >BC Land Title & Survey</a
-      >
-      to obtain a recent copy (not older than 1 year) of the Certificate of Title
-    </div>
-    <app-file-drag-drop
-      id="certificate-of-title-upload"
-      [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
-      (uploadFiles)="attachFile($event, parcel.uuid)"
-      (deleteFile)="deleteFile($event)"
-      (beforeFileUploadOpened)="saveParcelProgress()"
-      [showErrors]="showErrors"
-      [isRequired]="isCertificateOfTitleRequired"
-      [showHasVirusError]="showHasVirusError"
-      [showVirusScanFailedError]="showVirusScanFailedError"
-      [disabled]="parcelForm.controls.pid.disabled"
-    ></app-file-drag-drop>
-  </div>
-
-  <section *ngIf="enableOwners" class="container">
-    <h6 *ngIf="!isCrownLand">Parcel Owners</h6>
-    <h6 *ngIf="isCrownLand">Government Parcel Contact</h6>
-    <ng-container *ngIf="!isCrownLand">
-      <p>Add an owner for every organization or individual listed on the parcel's Certificate of Title</p>
-      <div>
-        <app-parcel-owners
-          [isDraft]="isDraft"
-          [fileId]="fileId"
-          [submissionUuid]="submissionUuid"
-          [parcelUuid]="parcel.uuid"
-          [owners]="parcel.owners"
-          (saveParcel)="saveParcelProgress()"
-          (onOwnersUpdated)="onOwnerEdited()"
-          (onOwnerRemoved)="onOwnerRemoved($event)"
-          (onOwnersDeleted)="onDeleteOwner()"
-          [ownerService]="noticeOfIntentOwnerService"
-          [documentService]="noticeOfIntentDocumentService"
-        ></app-parcel-owners>
-      </div>
-      <button
-        type="button"
-        class="new-owner"
-        *ngIf="enableAddNewOwner"
-        (click)="onAddNewOwner()"
-        mat-flat-button
-        color="primary"
-        [disabled]="!parcelType.getRawValue()"
-      >
-        Add new owner
-      </button>
-      <h6 class="owner-search-option">OR</h6>
-      <label for="owner-search">Select from Existing Owners</label>
-      <mat-form-field class="full-width-input" appearance="outline">
-        <input
-          [ngClass]="{ 'error-outline': ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled }"
-          id="owner-search"
-          type="text"
-          aria-label="Text"
-          matInput
-          placeholder="Type owner name"
-          [matAutocomplete]="auto"
-          (input)="onTypeOwner($event)"
-          [formControl]="ownerInput"
-        />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option (click)="onSelectOwner($event, option, option.isSelected)" *ngFor="let option of filteredOwners">
-            <mat-checkbox [checked]="option.isSelected" color="primary">
-              <div class="owner-option">
-                <div>{{ option.displayName }}</div>
-              </div>
-            </mat-checkbox>
-          </mat-option>
-          <mat-option class="option" *ngIf="filteredOwners.length === 0 && enableAddNewOwner" (click)="onAddNewOwner()">
-            <div class="owner-option">
-              <div *ngIf="owners.length != 0">No owner matching search</div>
-              <div *ngIf="owners.length === 0">No owners added</div>
-              <button type="button" mat-flat-button color="primary">Add new owner</button>
-            </div>
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-      <div *ngIf="ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="ownerInput.errors?.['required']">This field is required</div>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="isCrownLand">
-      <p>Add the contact information of an employee who works in the department or ministry for the Crown parcel</p>
-      <div id="owner-info" class="warning-banner" *ngIf="selectedOwner">
-        <div class="owner-details" *ngIf="!isMobile">
-          <div class="row">
-            <div class="key"><strong>First Name:</strong></div>
-            <div class="value">{{ selectedOwner.firstName }}</div>
-          </div>
-          <div class="row">
-            <div class="key"><strong>Last Name:</strong></div>
-            <div class="value">{{ selectedOwner.lastName }}</div>
-          </div>
-          <div class="row">
-            <div class="key"><strong>Ministry or Department:</strong></div>
-            <div class="value">{{ selectedOwner.organizationName }}</div>
-          </div>
-          <div class="row">
-            <div class="key"><strong>Phone Number:</strong></div>
-            <div class="value">{{ selectedOwner.phoneNumber ?? '' | mask: '(000) 000-0000' }}</div>
-          </div>
-          <div class="row">
-            <div class="key"><strong>Email:</strong></div>
-            <div class="value">{{ selectedOwner.email }}</div>
-          </div>
-          <div class="row">
-            <div class="key"><strong>Crown Type:</strong></div>
-            <div class="value">
-              {{ selectedOwner.crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
-              {{ selectedOwner.crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
-            </div>
-          </div>
-          <div class="row">
-            <button type="button" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
-          </div>
+      @if (civicAddress.invalid && (civicAddress.dirty || civicAddress.touched)) {
+        <div class="field-error">
+          <mat-icon>warning</mat-icon>
+          @if (civicAddress.errors?.['required']) {
+            <div>This field is required</div>
+          }
         </div>
-        <div class="owner-details-mobile" *ngIf="isMobile">
-          <app-parcel-owner-mobile-card
-            [owner]="selectedOwner"
-            [isLast]="true"
-            [isReviewStep]="false"
-            [isCrown]="true"
-            (editClicked)="onEditCrownOwner(selectedOwner)"
+      }
+    </div>
+  </div>
+
+  @if (enableCertificateOfTitleUpload) {
+    <div class="section">
+      <mat-label for="certificate-of-title-upload">Upload Certificate of Title</mat-label>
+      @if (!isCrownLand) {
+        <div class="subtext">
+          Visit
+          <a class="subtext" href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank"
+            >BC Land Title & Survey</a
           >
-          </app-parcel-owner-mobile-card>
+          to obtain a recent copy (not older than 1 year) of the Certificate of Title
         </div>
-      </div>
-      <button
-        type="button"
-        class="new-owner"
-        *ngIf="enableAddNewOwner"
-        (click)="onAddNewGovernmentContact()"
-        mat-flat-button
-        color="primary"
-        [ngClass]="{ 'mat-error': ownerInput.errors && ownerInput.errors['required'] }"
-      >
-        Add new gov contact
-      </button>
-      <h6 class="owner-search-option" *ngIf="filteredOwners.length">OR</h6>
-      <label for="owner-search" *ngIf="filteredOwners.length">Select from Existing Government Contacts</label>
-      <ng-container *ngIf="filteredOwners.length">
+      }
+      @if (isCrownLand) {
+        <div class="subtext">
+          Only required for surveyed Crown land with a PID. Visit
+          <a class="subtext" href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank"
+            >BC Land Title & Survey</a
+          >
+          to obtain a recent copy (not older than 1 year) of the Certificate of Title
+        </div>
+      }
+      <app-file-drag-drop
+        id="certificate-of-title-upload"
+        [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
+        (uploadFiles)="attachFile($event, parcel.uuid)"
+        (deleteFile)="deleteFile($event)"
+        (beforeFileUploadOpened)="saveParcelProgress()"
+        [showErrors]="showErrors"
+        [isRequired]="isCertificateOfTitleRequired"
+        [showHasVirusError]="showHasVirusError"
+        [showVirusScanFailedError]="showVirusScanFailedError"
+        [disabled]="parcelForm.controls.pid.disabled"
+      ></app-file-drag-drop>
+    </div>
+  }
+
+  @if (enableOwners) {
+    <section class="container">
+      @if (!isCrownLand) {
+        <h6>Parcel Owners</h6>
+      }
+      @if (isCrownLand) {
+        <h6>Government Parcel Contact</h6>
+      }
+      @if (!isCrownLand) {
+        <p>Add an owner for every organization or individual listed on the parcel's Certificate of Title</p>
+        <div>
+          <app-parcel-owners
+            [isDraft]="isDraft"
+            [fileId]="fileId"
+            [submissionUuid]="submissionUuid"
+            [parcelUuid]="parcel.uuid"
+            [owners]="parcel.owners"
+            (saveParcel)="saveParcelProgress()"
+            (onOwnersUpdated)="onOwnerEdited()"
+            (onOwnerRemoved)="onOwnerRemoved($event)"
+            (onOwnersDeleted)="onDeleteOwner()"
+            [ownerService]="noticeOfIntentOwnerService"
+            [documentService]="noticeOfIntentDocumentService"
+          ></app-parcel-owners>
+        </div>
+        @if (enableAddNewOwner) {
+          <button
+            type="button"
+            class="new-owner"
+            (click)="onAddNewOwner()"
+            mat-flat-button
+            color="primary"
+            [disabled]="!parcelType.getRawValue()"
+          >
+            Add new owner
+          </button>
+        }
+        <h6 class="owner-search-option">OR</h6>
+        <label for="owner-search">Select from Existing Owners</label>
         <mat-form-field class="full-width-input" appearance="outline">
-          <mat-select
-            [value]="selectedOwner?.uuid"
-            [required]="true"
-            [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
-          >
-            <mat-option
-              *ngFor="let owner of filteredOwners"
-              [value]="owner.uuid"
-              (click)="onCrownOwnerSelected($event, owner, owner.isSelected)"
-              class="option"
-              required
-            >
-              <div class="owner-option">
-                {{ owner.firstName + ' ' + owner.lastName }}
-              </div>
-            </mat-option>
-          </mat-select>
+          <input
+            [ngClass]="{ 'error-outline': ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled }"
+            id="owner-search"
+            type="text"
+            aria-label="Text"
+            matInput
+            placeholder="Type owner name"
+            [matAutocomplete]="auto"
+            (input)="onTypeOwner($event)"
+            [formControl]="ownerInput"
+          />
+          <mat-autocomplete #auto="matAutocomplete">
+            @for (option of filteredOwners; track option) {
+              <mat-option (click)="onSelectOwner($event, option, option.isSelected)">
+                <mat-checkbox [checked]="option.isSelected" color="primary">
+                  <div class="owner-option">
+                    <div>{{ option.displayName }}</div>
+                  </div>
+                </mat-checkbox>
+              </mat-option>
+            }
+            @if (filteredOwners.length === 0 && enableAddNewOwner) {
+              <mat-option class="option" (click)="onAddNewOwner()">
+                <div class="owner-option">
+                  @if (owners.length != 0) {
+                    <div>No owner matching search</div>
+                  }
+                  @if (owners.length === 0) {
+                    <div>No owners added</div>
+                  }
+                  <button type="button" mat-flat-button color="primary">Add new owner</button>
+                </div>
+              </mat-option>
+            }
+          </mat-autocomplete>
         </mat-form-field>
-      </ng-container>
-      <div *ngIf="ownerInput.errors && ownerInput.errors['required']" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="ownerInput.errors?.['required']">This field is required</div>
-      </div>
-    </ng-container>
-  </section>
-  <mat-checkbox
-    *ngIf="enableUserSignOff"
-    formControlName="isConfirmedByApplicant"
-    [ngClass]="{
-      'parcel-checkbox': true,
-      'error-outline':
-        enableUserSignOff &&
-        isConfirmedByApplicant.invalid &&
-        (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched),
-    }"
-  >
-    <ng-container *ngIf="!isCrownLand">
-      I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
-      information can cause significant delays to processing time.
-    </ng-container>
-    <ng-container *ngIf="isCrownLand">
-      I confirm that I have provided the ministry or department responsible for this Crown land parcel to the best of my
-      ability in order to avoid processing delays.
-    </ng-container>
-  </mat-checkbox>
-  <div
-    *ngIf="
-      enableUserSignOff &&
-      isConfirmedByApplicant.invalid &&
-      (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched)
-    "
-    class="field-error"
-  >
-    <mat-icon>warning</mat-icon>
-    <div *ngIf="isConfirmedByApplicant.errors?.['required']">This field is required</div>
-  </div>
+        @if (ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (ownerInput.errors['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
+      }
+      @if (isCrownLand) {
+        <p>Add the contact information of an employee who works in the department or ministry for the Crown parcel</p>
+        @if (selectedOwner) {
+          <div id="owner-info" class="warning-banner">
+            @if (!isMobile) {
+              <div class="owner-details">
+                <div class="row">
+                  <div class="key"><strong>First Name:</strong></div>
+                  <div class="value">{{ selectedOwner.firstName }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Last Name:</strong></div>
+                  <div class="value">{{ selectedOwner.lastName }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Ministry or Department:</strong></div>
+                  <div class="value">{{ selectedOwner.organizationName }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Phone Number:</strong></div>
+                  <div class="value">{{ selectedOwner.phoneNumber ?? '' | mask: '(000) 000-0000' }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Email:</strong></div>
+                  <div class="value">{{ selectedOwner.email }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Crown Type:</strong></div>
+                  <div class="value">
+                    {{ selectedOwner.crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
+                    {{ selectedOwner.crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
+                  </div>
+                </div>
+                <div class="row">
+                  <button type="button" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>
+                    Edit information
+                  </button>
+                </div>
+              </div>
+            }
+            @if (isMobile) {
+              <div class="owner-details-mobile">
+                <app-parcel-owner-mobile-card
+                  [owner]="selectedOwner"
+                  [isLast]="true"
+                  [isReviewStep]="false"
+                  [isCrown]="true"
+                  (editClicked)="onEditCrownOwner(selectedOwner)"
+                >
+                </app-parcel-owner-mobile-card>
+              </div>
+            }
+          </div>
+        }
+        @if (enableAddNewOwner) {
+          <button
+            type="button"
+            class="new-owner"
+            (click)="onAddNewGovernmentContact()"
+            mat-flat-button
+            color="primary"
+            [ngClass]="{ 'mat-error': ownerInput.errors && ownerInput.errors['required'] }"
+          >
+            Add new gov contact
+          </button>
+        }
+        @if (filteredOwners.length) {
+          <h6 class="owner-search-option">OR</h6>
+        }
+        @if (filteredOwners.length) {
+          <label for="owner-search">Select from Existing Government Contacts</label>
+        }
+        @if (filteredOwners.length) {
+          <mat-form-field class="full-width-input" appearance="outline">
+            <mat-select
+              [value]="selectedOwner?.uuid"
+              [required]="true"
+              [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
+            >
+              @for (owner of filteredOwners; track owner) {
+                <mat-option
+                  [value]="owner.uuid"
+                  (click)="onCrownOwnerSelected($event, owner, owner.isSelected)"
+                  class="option"
+                  required
+                >
+                  <div class="owner-option">
+                    {{ owner.firstName + ' ' + owner.lastName }}
+                  </div>
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+        @if (ownerInput.errors && ownerInput.errors['required']) {
+          <div class="field-error">
+            <mat-icon>warning</mat-icon>
+            @if (ownerInput.errors['required']) {
+              <div>This field is required</div>
+            }
+          </div>
+        }
+      }
+    </section>
+  }
+  @if (enableUserSignOff) {
+    <mat-checkbox
+      formControlName="isConfirmedByApplicant"
+      [ngClass]="{
+        'parcel-checkbox': true,
+        'error-outline':
+          enableUserSignOff &&
+          isConfirmedByApplicant.invalid &&
+          (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched),
+      }"
+    >
+      @if (!isCrownLand) {
+        I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
+        information can cause significant delays to processing time.
+      }
+      @if (isCrownLand) {
+        I confirm that I have provided the ministry or department responsible for this Crown land parcel to the best of
+        my ability in order to avoid processing delays.
+      }
+    </mat-checkbox>
+  }
+  @if (
+    enableUserSignOff &&
+    isConfirmedByApplicant.invalid &&
+    (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched)
+  ) {
+    <div class="field-error">
+      <mat-icon>warning</mat-icon>
+      @if (isConfirmedByApplicant.errors?.['required']) {
+        <div>This field is required</div>
+      }
+    </div>
+  }
 </form>

@@ -13,9 +13,10 @@ import { DocumentService } from '../../../../services/document/document.service'
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-roso-details[applicationSubmission]',
-  templateUrl: './roso-details.component.html',
-  styleUrls: ['./roso-details.component.scss'],
+    selector: 'app-roso-details[applicationSubmission]',
+    templateUrl: './roso-details.component.html',
+    styleUrls: ['./roso-details.component.scss'],
+    standalone: false
 })
 export class RosoDetailsComponent {
   @Input() showErrors = true;

@@ -1,0 +1,32 @@
+<form [formGroup]="form">
+  <h6>Assign Officer</h6>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Select Officer</mat-label>
+    <mat-select panelClass="officer-list-panel" [formControl]="officerList">
+      @for (officer of officers; track officer) {
+        <mat-option [value]="officer.uuid">
+          {{ officer.prettyName }}
+        </mat-option>
+      }
+    </mat-select>
+
+    @if (officerList.value !== null) {
+      <button
+        class="clear-button"
+        mat-icon-button
+        aria-label="Clear"
+        (click)="onClearClick($event)"
+        >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+
+  <div class="button-container">
+    <button type="button" mat-stroked-button color="warn" (click)="close()">Cancel</button>
+    <button type="button" mat-flat-button color="primary" (click)="addSubmitter()" [disabled]="form.invalid">
+      Save
+    </button>
+  </div>
+</form>

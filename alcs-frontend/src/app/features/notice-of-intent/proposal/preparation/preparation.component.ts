@@ -12,9 +12,10 @@ import { NoticeOfIntentService } from '../../../../services/notice-of-intent/not
 import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-preparation',
-  templateUrl: './preparation.component.html',
-  styleUrls: ['./preparation.component.scss'],
+    selector: 'app-preparation',
+    templateUrl: './preparation.component.html',
+    styleUrls: ['./preparation.component.scss'],
+    standalone: false
 })
 export class PreparationComponent implements OnInit {
   dateSubmittedToAlc?: string;

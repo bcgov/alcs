@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
+import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ToastService } from '../toast/toast.service';
 import { NoticeOfIntentSubmissionDraftService } from './notice-of-intent-submission-draft.service';
 
@@ -10,24 +10,30 @@ describe('ApplicationSubmissionDraftService', () => {
   let service: NoticeOfIntentSubmissionDraftService;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
+  let mockOverlayService: DeepMocked<OverlaySpinnerService>;
 
   beforeEach(() => {
     mockToastService = createMock();
     mockHttpClient = createMock();
+    mockOverlayService = createMock();
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         {
-          provide: ToastService,
-          useValue: mockToastService,
+            provide: ToastService,
+            useValue: mockToastService,
         },
         {
-          provide: HttpClient,
-          useValue: mockHttpClient,
+            provide: HttpClient,
+            useValue: mockHttpClient,
         },
-      ],
-    });
+        {
+            provide: OverlaySpinnerService,
+            useValue: mockOverlayService,
+        },
+    ]
+});
     service = TestBed.inject(NoticeOfIntentSubmissionDraftService);
   });
 

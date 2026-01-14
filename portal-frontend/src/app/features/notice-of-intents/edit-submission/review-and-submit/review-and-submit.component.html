@@ -5,19 +5,24 @@
     [draftMode]="draftMode"
   ></app-noi-details>
   <div class="button-container">
-    <button
-      *ngIf="noiSubmission?.fileNumber && !draftMode"
-      mat-flat-button
-      color="primary"
-      (click)="onDownloadPdf(noiSubmission?.fileNumber)"
-    >
-      Download PDF
-    </button>
+    @if (noiSubmission?.fileNumber && !draftMode) {
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onDownloadPdf(noiSubmission?.fileNumber)"
+        >
+        Download PDF
+      </button>
+    }
   </div>
 
   <div class="button-container">
-    <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+    @if (!draftMode) {
+      <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    }
+    @if (draftMode) {
+      <button (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+    }
 
     <div>
       <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">

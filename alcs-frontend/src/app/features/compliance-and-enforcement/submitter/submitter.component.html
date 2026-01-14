@@ -1,10 +1,22 @@
 <form [formGroup]="form">
   <div class="header full-width">
-    <h3>Submitter</h3>
+    <h3>{{ title }}</h3>
 
-    <mat-slide-toggle formControlName="isAnonymous" (change)="setAnonymity($event.checked)">
+    <mat-slide-toggle class="anonymous-toggle" formControlName="isAnonymous" (change)="setAnonymity($event.checked)">
       &nbsp;Mark as Anonymous
     </mat-slide-toggle>
+
+    @if (showDeleteButton) {
+      <button
+        class="delete-button"
+        mat-stroked-button
+        color="warn"
+        type="button"
+        (click)="deleteButtonClicked.emit()"
+        >
+        Delete
+      </button>
+    }
   </div>
 
   <mat-form-field class="full-width" appearance="outline">
@@ -17,10 +29,12 @@
       <mat-label>Email</mat-label>
       <input type="text" matInput formControlName="email" />
     </mat-form-field>
-    <div *ngIf="form.controls['email'].invalid && form.controls['email'].touched" class="validation-error">
-      <mat-icon class="error-icon">warning</mat-icon>
-      <span>Please type a valid email address</span>
-    </div>
+    @if (form.controls['email'].invalid && form.controls['email'].touched) {
+      <div class="validation-error">
+        <mat-icon class="error-icon">warning</mat-icon>
+        <span>Please type a valid email address</span>
+      </div>
+    }
   </div>
 
   <div>
@@ -28,10 +42,12 @@
       <mat-label>Telephone</mat-label>
       <input mask="(000) 000-0000" maxlength="14" type="text" matInput formControlName="telephoneNumber" />
     </mat-form-field>
-    <div *ngIf="form.controls['telephoneNumber'].invalid && form.controls['telephoneNumber'].touched" class="validation-error">
-      <mat-icon class="error-icon">warning</mat-icon>
-      <span>Please type a valid telephone number</span>
-    </div>
+    @if (form.controls['telephoneNumber'].invalid && form.controls['telephoneNumber'].touched) {
+      <div class="validation-error">
+        <mat-icon class="error-icon">warning</mat-icon>
+        <span>Please type a valid telephone number</span>
+      </div>
+    }
   </div>
 
   <div class="form-field-container">
@@ -40,10 +56,12 @@
         <mat-label>Affiliation</mat-label>
         <input type="text" matInput formControlName="affiliation" />
       </mat-form-field>
-      <div *ngIf="form.controls['affiliation'].hasError('required') && form.controls['affiliation'].touched" class="validation-error">
-        <mat-icon class="error-icon">warning</mat-icon>
-        <span>This field is required</span>
-      </div>
+      @if (form.controls['affiliation'].hasError('required') && form.controls['affiliation'].touched) {
+        <div class="validation-error">
+          <mat-icon class="error-icon">warning</mat-icon>
+          <span>This field is required</span>
+        </div>
+      }
     </div>
 
     <div class="additional-info-field">

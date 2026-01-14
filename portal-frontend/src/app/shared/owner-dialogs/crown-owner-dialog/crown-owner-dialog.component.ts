@@ -18,9 +18,10 @@ import { ConfirmationDialogService } from '../../confirmation-dialog/confirmatio
 import { strictEmailValidator } from '../../validators/email-validator';
 
 @Component({
-  selector: 'app-crown-owner-dialog',
-  templateUrl: './crown-owner-dialog.component.html',
-  styleUrls: ['./crown-owner-dialog.component.scss'],
+    selector: 'app-crown-owner-dialog',
+    templateUrl: './crown-owner-dialog.component.html',
+    styleUrls: ['./crown-owner-dialog.component.scss'],
+    standalone: false
 })
 export class CrownOwnerDialogComponent {
   ministryName = new FormControl<string | null>('', [Validators.required]);

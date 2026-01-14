@@ -47,9 +47,10 @@ export const CONDITION_STATUS = {
 };
 
 @Component({
-  selector: 'app-app-conditions',
-  templateUrl: './conditions.component.html',
-  styleUrls: ['./conditions.component.scss'],
+    selector: 'app-app-conditions',
+    templateUrl: './conditions.component.html',
+    styleUrls: ['./conditions.component.scss'],
+    standalone: false
 })
 export class ConditionsComponent implements OnInit {
   conditionLabelsByStatus: Record<keyof typeof CONDITION_STATUS, string> = {

@@ -25,9 +25,10 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { FileTagService } from '../../../services/common/file-tag.service';
 
 @Component({
-  selector: 'app-tags-header',
-  templateUrl: './tags-header.component.html',
-  styleUrl: './tags-header.component.scss',
+    selector: 'app-tags-header',
+    templateUrl: './tags-header.component.html',
+    styleUrl: './tags-header.component.scss',
+    standalone: false
 })
 export class TagsHeaderComponent implements OnInit, OnChanges {
   destroy = new Subject<void>();
