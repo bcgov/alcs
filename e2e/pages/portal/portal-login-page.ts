@@ -12,8 +12,7 @@ export class PortalLoginPage {
     this.page = page;
     this.baseUrl = baseUrl;
     this.loginButton = page.getByRole('button', { name: 'Portal Login' });
-    // There is an error with the username label on BCeID page
-    this.userIdTextbox = page.getByRole('textbox').nth(0);
+    this.userIdTextbox = page.locator('#user');
     this.passwordTextbox = page.getByLabel('Password');
     this.continueButton = page.getByRole('button', { name: 'Continue' });
   }
