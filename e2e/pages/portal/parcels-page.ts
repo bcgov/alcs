@@ -168,7 +168,7 @@ export class ParcelsPage {
     await this.ownerSaveButton.click();
 
     // Wait for dialog to disappear
-    await this.ownerAddDialog.waitFor({ state: 'hidden', timeout: 15000 });
+    await this.ownerAddDialog.waitFor({ state: 'hidden', timeout: 5000 });
   }
 
   // Actions

@@ -25,13 +25,13 @@ export class PortalLoginPage {
     // Click login and wait for navigation to external auth service
     // Use domcontentloaded since external auth services can be slow
     await Promise.all([
-      this.page.waitForURL('**/auth/**', { timeout: 60000, waitUntil: 'domcontentloaded' }),
+      this.page.waitForURL('**/auth/**', { timeout: 30000, waitUntil: 'domcontentloaded' }),
       this.loginButton.click(),
     ]);
-    
+
     // Wait for login form to be ready
     await this.userIdTextbox.waitFor({ state: 'visible', timeout: 30000 });
-    
+
     await this.userIdTextbox.fill(username);
     await this.passwordTextbox.fill(password);
     await this.continueButton.click();
