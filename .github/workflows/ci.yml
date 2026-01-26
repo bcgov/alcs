@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["20"]
+        node: ["24"]
     name: ALCS Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["20"]
+        node: ["24"]
     name: Portal Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -48,7 +48,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["20"]
+        node: ["24"]
     name: API Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:

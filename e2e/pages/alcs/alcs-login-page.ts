@@ -12,8 +12,7 @@ export class ALCSLoginPage {
     this.page = page;
     this.baseUrl = baseUrl;
     this.idirLink = page.getByRole('link', { name: 'Basic or Business BCeID' });
-    // There is an error with the username label on BCeID page
-    this.userIdTextbox = page.getByRole('textbox').nth(0);
+    this.userIdTextbox = page.locator('#user');
     this.passwordTextbox = page.getByLabel('Password');
     this.continueButton = page.getByRole('button', { name: 'Continue' });
   }
@@ -23,7 +22,16 @@ export class ALCSLoginPage {
   }
 
   async login(username: string, password: string) {
-    await this.idirLink.click();
+    // Click IDIR link and wait for navigation to external auth service
+    // Use domcontentloaded since external auth services can be slow
+    await Promise.all([
+      this.page.waitForURL('**/auth/**', { timeout: 30000, waitUntil: 'domcontentloaded' }),
+      this.idirLink.click(),
+    ]);
+
+    // Wait for login form to be ready
+    await this.userIdTextbox.waitFor({ state: 'visible', timeout: 30000 });
+
     await this.userIdTextbox.fill(username);
     await this.passwordTextbox.fill(password);
     await this.continueButton.click();

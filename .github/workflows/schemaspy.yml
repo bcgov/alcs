@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: 20
+          node-version: 24
       - run: |
           sudo apt-get install --yes --no-install-recommends postgresql-client
       - run: |
