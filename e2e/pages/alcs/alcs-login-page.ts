@@ -22,13 +22,13 @@ export class ALCSLoginPage {
   }
 
   async login(username: string, password: string) {
-    // Click IDIR link - navigation will happen through SAML redirects
+    // Click IDIR link - Playwright auto-waits for navigation
     await this.idirLink.click();
     
-    // Wait for the login form to appear (more reliable than URL matching for SAML redirects)
-    // The form appears after all SAML redirects complete
-    await this.userIdTextbox.waitFor({ state: 'visible', timeout: 60000 });
-
+    // Fill username - Playwright automatically waits for:
+    // - Element to appear after SAML redirects
+    // - Element to be visible, enabled, and stable
+    // - Navigation to complete
     await this.userIdTextbox.fill(username);
     await this.passwordTextbox.fill(password);
     await this.continueButton.click();

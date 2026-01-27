@@ -33,7 +33,7 @@ export default defineConfig({
 
     /* Increase timeouts for external auth services which can be slow */
     navigationTimeout: 60000,
-    actionTimeout: 30000,
+    actionTimeout: 60000,
   },
 
   /* Configure projects for major browsers */
