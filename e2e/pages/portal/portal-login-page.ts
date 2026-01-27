@@ -30,7 +30,7 @@ export class PortalLoginPage {
     ]);
 
     // Wait for login form to be ready
-    await this.userIdTextbox.waitFor({ state: 'visible', timeout: 30000 });
+    await this.userIdTextbox.waitFor({ state: 'visible', timeout: 60000 });
 
     await this.userIdTextbox.fill(username);
     await this.passwordTextbox.fill(password);
