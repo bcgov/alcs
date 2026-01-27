@@ -22,15 +22,12 @@ export class ALCSLoginPage {
   }
 
   async login(username: string, password: string) {
-    // Click IDIR link and wait for navigation to external auth service
-    // Use domcontentloaded since external auth services can be slow
-    await Promise.all([
-      this.page.waitForURL('**/auth/**', { timeout: 30000, waitUntil: 'domcontentloaded' }),
-      this.idirLink.click(),
-    ]);
-
-    // Wait for login form to be ready
-    await this.userIdTextbox.waitFor({ state: 'visible', timeout: 30000 });
+    // Click IDIR link - navigation will happen through SAML redirects
+    await this.idirLink.click();
+    
+    // Wait for the login form to appear (more reliable than URL matching for SAML redirects)
+    // The form appears after all SAML redirects complete
+    await this.userIdTextbox.waitFor({ state: 'visible', timeout: 60000 });
 
     await this.userIdTextbox.fill(username);
     await this.passwordTextbox.fill(password);
