@@ -32,8 +32,8 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     /* Increase timeouts for external auth services which can be slow */
-    navigationTimeout: 30000,
-    actionTimeout: 30000,
+    navigationTimeout: 60000,
+    actionTimeout: 60000,
   },
 
   /* Configure projects for major browsers */
