@@ -22,16 +22,13 @@ export class ALCSLoginPage {
   }
 
   async login(username: string, password: string) {
-    // Click IDIR link and wait for navigation to external auth service
-    // Use domcontentloaded since external auth services can be slow
-    await Promise.all([
-      this.page.waitForURL('**/auth/**', { timeout: 30000, waitUntil: 'domcontentloaded' }),
-      this.idirLink.click(),
-    ]);
-
-    // Wait for login form to be ready
-    await this.userIdTextbox.waitFor({ state: 'visible', timeout: 30000 });
-
+    // Click IDIR link - Playwright auto-waits for navigation
+    await this.idirLink.click();
+    
+    // Fill username - Playwright automatically waits for:
+    // - Element to appear after SAML redirects
+    // - Element to be visible, enabled, and stable
+    // - Navigation to complete
     await this.userIdTextbox.fill(username);
     await this.passwordTextbox.fill(password);
     await this.continueButton.click();
