@@ -28,8 +28,8 @@
     "alcs:migration:run": "npm run alcs:typeorm migration:run"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.981.0",
-    "@aws-sdk/s3-request-presigner": "^3.981.0",
+    "@aws-sdk/client-s3": "^3.975.0",
+    "@aws-sdk/s3-request-presigner": "^3.975.0",
     "@fastify/cors": "^9.0.1",
     "@fastify/helmet": "^11.1.1",
     "@fastify/multipart": "^8.3.1",
@@ -64,7 +64,7 @@
     "nestjs-spelunker": "^1.3.2",
     "node-jose": "^2.2.0",
     "object-hash": "^3.0.0",
-    "pg": "^8.18.0",
+    "pg": "^8.17.2",
     "redis": "^4.7.1",
     "reflect-metadata": "^0.1.14",
     "rimraf": "^5.0.5",
