@@ -48,7 +48,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["24"]
+        node: ["20"]
     name: API Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
