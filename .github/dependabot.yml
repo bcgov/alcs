@@ -6,6 +6,8 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
+    npm:
+      version: 11.x
     directory: "/alcs-frontend"
     schedule:
       interval: "daily"
@@ -40,6 +42,8 @@ updates:
           - "minor"
           - "patch"
   - package-ecosystem: "npm"
+    npm:
+      version: 11.x
     directory: "/portal-frontend"
     schedule:
       interval: "daily"
