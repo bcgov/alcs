@@ -11,7 +11,6 @@ import { Keycloak } from 'keycloak-connect';
 import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
-  KEYCLOAK_LOGGER,
   KeycloakConnectConfig,
   RoleGuard as KeyCloakRoleGuard,
 } from 'nest-keycloak-connect';
@@ -23,14 +22,13 @@ import { AUTH_ROLE } from './roles';
 @Injectable()
 export class RolesGuard implements CanActivate {
   public keyCloakGuard: KeyCloakRoleGuard;
+  private readonly logger = new Logger(RolesGuard.name);
 
   constructor(
     @Inject(KEYCLOAK_INSTANCE)
     singleTenant: Keycloak,
     @Inject(KEYCLOAK_CONNECT_OPTIONS)
     private keycloakOpts: KeycloakConnectConfig,
-    @Inject(KEYCLOAK_LOGGER)
-    private logger: Logger,
     private reflector: Reflector,
     private cls: ClsService,
     private userService: UserService,
@@ -39,9 +37,7 @@ export class RolesGuard implements CanActivate {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,
       keycloakOpts,
-      logger,
       null!,
-      reflector,
     );
   }
 
