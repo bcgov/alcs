@@ -2,11 +2,9 @@ import { RedisService } from '@app/common/redis/redis.service';
 import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
-  KEYCLOAK_LOGGER,
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { UserService } from '../../src/user/user.service';
-import { mockAppLoggerService } from './mockLogger';
 
 export type MockType<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -24,10 +22,6 @@ export const mockKeyCloakProviders = [
   {
     provide: KEYCLOAK_CONNECT_OPTIONS,
     useValue: {},
-  },
-  {
-    provide: KEYCLOAK_LOGGER,
-    useValue: mockAppLoggerService,
   },
   KeycloakMultiTenantService,
   {

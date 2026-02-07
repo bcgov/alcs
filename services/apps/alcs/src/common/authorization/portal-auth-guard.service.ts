@@ -3,14 +3,12 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
-  Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Keycloak } from 'keycloak-connect';
 import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
-  KEYCLOAK_LOGGER,
   RoleGuard as KeyCloakRoleGuard,
 } from 'nest-keycloak-connect';
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
@@ -27,18 +25,13 @@ export class PortalAuthGuard implements CanActivate {
     singleTenant: Keycloak,
     @Inject(KEYCLOAK_CONNECT_OPTIONS)
     private keycloakOpts: KeycloakConnectConfig,
-    @Inject(KEYCLOAK_LOGGER)
-    logger: Logger,
-    reflector: Reflector,
     private clsService: ClsService,
     private userService: UserService,
   ) {
     this.keyCloakGuard = new KeyCloakRoleGuard(
       singleTenant,
       keycloakOpts,
-      logger,
       null!,
-      reflector,
     );
   }
 

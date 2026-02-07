@@ -1,4 +1,5 @@
 import { HttpExceptionFilter } from '@app/common/exceptions/exception.filter';
+import cors from '@fastify/cors';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyMultipart from '@fastify/multipart';
 import { Logger, ValidationPipe } from '@nestjs/common';
@@ -62,8 +63,8 @@ const registerGlobalFilters = (app: NestFastifyApplication) => {
   app.useGlobalFilters(new HttpExceptionFilter(app.get(Logger)));
 };
 
-const registerCors = (app: NestFastifyApplication) => {
-  app.enableCors({
+const registerCors = async (app: NestFastifyApplication) => {
+  await app.register(cors, {
     maxAge: 3600,
     origin: [
       config.get<string>('ALCS.BASE_URL'),
@@ -71,6 +72,8 @@ const registerCors = (app: NestFastifyApplication) => {
       config.get<string>('ALCS.FRONTEND_ROOT'),
       config.get<string>('PORTAL.FRONTEND_ROOT'),
     ],
+    credentials: true,
+    methods: ['POST', 'GET', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 };
 
@@ -169,7 +172,7 @@ async function bootstrap() {
     },
   );
   app.useLogger(logger);
-  app.use(new ClsMiddleware().use);
+  app.use(new ClsMiddleware({}).use);
 
   const extraArg = process.argv[2];
   if (extraArg === 'graph') {
@@ -185,7 +188,7 @@ async function bootstrap() {
     });
   }
 
-  registerCors(app);
+  await registerCors(app);
   registerSwagger(app);
   await registerHelmet(app);
   registerGlobalFilters(app);

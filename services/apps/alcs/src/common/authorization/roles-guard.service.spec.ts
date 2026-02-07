@@ -5,12 +5,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
-  KEYCLOAK_LOGGER,
   RoleGuard as KeyCloakRoleGuard,
 } from 'nest-keycloak-connect';
 import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
-import { mockAppLoggerService } from '../../../test/mocks/mockLogger';
 import { User } from '../../user/user.entity';
 import { UserService } from '../../user/user.service';
 import { AUTH_ROLE } from './roles';
@@ -61,10 +59,6 @@ describe('RolesGuard', () => {
         {
           provide: KEYCLOAK_CONNECT_OPTIONS,
           useValue: {},
-        },
-        {
-          provide: KEYCLOAK_LOGGER,
-          useValue: mockAppLoggerService,
         },
         KeycloakMultiTenantService,
         {
