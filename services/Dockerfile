@@ -9,6 +9,7 @@ WORKDIR /opt/app-root/
 
 COPY --chown=node:node package*.json ./
 
+RUN npm install -g npm@11
 RUN npm ci --ignore-scripts
 
 COPY --chown=node:node . .
@@ -25,13 +26,11 @@ ARG NEST_APP=alcs
 WORKDIR /opt/app-root/
 
 COPY --chown=node:node package*.json ./
-
 COPY --chown=node:node --from=development /opt/app-root/node_modules ./node_modules
-
 COPY --chown=node:node . .
 
+RUN npm install -g npm@11
 RUN npm run build ${NEST_APP}
-
 RUN npm ci --ignore-scripts --only=production && npm cache clean --force
 
 USER node
@@ -59,6 +58,8 @@ COPY --from=build /opt/app-root/dist/apps/${NEST_APP} ./dist
 COPY ./config/ /opt/app-root/config/
 COPY ./local-certificates /opt/app-root/local-certificates
 COPY ./templates/ /opt/app-root/templates/
+
+RUN npm install -g npm@11
 
 # Create Empty Config File if not Exists
 RUN mkdir -p /vault/secrets
