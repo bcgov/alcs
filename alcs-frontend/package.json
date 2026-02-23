@@ -50,7 +50,7 @@
     "@angular-eslint/eslint-plugin-template": "18.4.3",
     "@angular-eslint/schematics": "18.4.3",
     "@angular-eslint/template-parser": "18.4.3",
-    "@angular/build": "^20.3.14",
+    "@angular/build": "^20.3.16",
     "@angular/cli": "^20.3.14",
     "@angular/compiler-cli": "^20.3.16",
     "@golevelup/ts-jest": "^0.7.0",
