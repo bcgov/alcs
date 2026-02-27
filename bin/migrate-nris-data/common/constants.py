@@ -1,0 +1,4 @@
+NRIS_ETL_USER = "nris_etl"
+BATCH_UPLOAD_SIZE = 1000
+NO_DATA_IN_NRIS = "No data found in NRIS"
+DEFAULT_ETL_USER_UUID = "efae0ae2-8f0a-4222-8e24-93c32ac54b99"
