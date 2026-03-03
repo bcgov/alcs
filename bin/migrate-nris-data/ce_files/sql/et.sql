@@ -33,7 +33,7 @@ select distinct
                     regexp_split_to_table(nc.activity, '\s*,\s*') as nc (activity)
             ) activities
     )::alcs._compliance_and_enforcement_alleged_activity_enum as alleged_activity,
-    coalesce(nc.internal_notes || '; ' || nc.description_and_comments, '') as intake_notes,
+    coalesce(concat_ws('; ', nc.internal_notes, nc.description_and_comments), '') as intake_notes,
     au.uuid as assignee_uuid
 from
     nris.complaint nc
