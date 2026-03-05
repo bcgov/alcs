@@ -3,7 +3,7 @@ from rich.console import Console
 
 from common.constants import BATCH_UPLOAD_SIZE
 from ce_files import ce_file_etl
-from db import ensure_ce_users
+from submitters import submitter_etl
 
 console = Console()
 
@@ -25,7 +25,9 @@ def import_data(ctx, batch_size):
     console.log(f"Start import in batches of {batch_size}...")
 
     if ctx.invoked_subcommand is None:
+        # Order matters
         ctx.invoke(import_ce_files)
+        ctx.invoke(import_submitters)
 
 
 @import_data.command("ce-files")
@@ -34,6 +36,14 @@ def import_ce_files(ctx):
     console.log("Start importing C&E files...")
     ce_file_etl(batch_size=ctx.parent.params["batch_size"])
     console.log("C&E file import complete.")
+
+
+@import_data.command("submitters")
+@click.pass_context
+def import_submitters(ctx):
+    console.log("Start importing submitters...")
+    submitter_etl(batch_size=ctx.parent.params["batch_size"])
+    console.log("Submitter import complete.")
 
 
 @import_data.result_callback()
