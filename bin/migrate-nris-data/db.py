@@ -109,8 +109,7 @@ def batch_etl(
                 except Exception as err:
                     logger.exception(err)
                     write_conn.rollback()
-                    num_failed = count_total - num_successful
-                    logger.info(f"Failed to insert batch of {num_failed}.")
+                    logger.info(f"Failed to insert batch of {num_to_insert}.")
 
         logger.info(f"Successfully inserted {num_successful} of {count_total} records.")
 
