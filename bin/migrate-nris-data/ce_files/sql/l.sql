@@ -9,5 +9,4 @@ insert into
         intake_notes,
         assignee_uuid
     )
-values %s
-on conflict do nothing;
+values %s;
