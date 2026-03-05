@@ -1,12 +1,11 @@
 from common.etl_logger import setup_and_get_logger
 from config import ABS_PATH
-from db import batch_etl, ensure_ce_users
+from db import batch_etl
 
 
 def ce_file_etl(batch_size):
     logger = setup_and_get_logger("ce-files")
 
-    ensure_ce_users(logger)
     batch_etl(
         logger,
         batch_size,
