@@ -13,7 +13,7 @@ def cli():
     pass
 
 
-@cli.group(chain=True, invoke_without_command=True)
+@cli.group(chain=True, invoke_without_command=True, help="Runs all imports in sequence if no subcommand is specified.")
 @click.option(
     "--batch-size",
     default=BATCH_UPLOAD_SIZE,
