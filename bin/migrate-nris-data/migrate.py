@@ -78,6 +78,14 @@ def obfuscate_ce_files(ctx):
     console.log("C&E file obfuscation complete.")
 
 
+@obfuscate.command("submitters")
+@click.pass_context
+def obfuscate_submitters(ctx):
+    console.log("Start obfuscating submitters...")
+    submitters.obfuscate_submitters(batch_size=ctx.parent.params["batch_size"])
+    console.log("Submitter obfuscation complete.")
+
+
 @obfuscate.result_callback()
 def obfuscation_cleanup(results, batch_size):
     console.log("All obfuscation complete. Cleaning up...")
