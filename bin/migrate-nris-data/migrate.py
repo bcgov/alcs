@@ -67,7 +67,7 @@ def obfuscate(ctx, batch_size):
     if ctx.invoked_subcommand is None:
         # Order matters
         ctx.invoke(obfuscate_ce_files)
-        # ctx.invoke(obfuscate_submitters)
+        ctx.invoke(obfuscate_submitters)
 
 
 @obfuscate.command("ce-files")
