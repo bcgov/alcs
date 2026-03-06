@@ -58,18 +58,19 @@ def ensure_ce_users(conn, logger):
 
 @inject_conn_from_pool
 @inject_conn_from_pool
-def batch_etl(
+def batch_read_write(
     read_conn,
     write_conn,
     logger,
     batch_size,
     count_file_path,
-    et_file_path,
-    l_file_path,
+    read_file_path,
+    write_file_path,
+    row_processor=None,
 ):
     count_sql = load_sql(count_file_path)
-    et_sql = load_sql(et_file_path)
-    l_sql = load_sql(l_file_path)
+    read_sql = load_sql(read_file_path)
+    write_sql = load_sql(write_file_path)
 
     with read_conn.cursor() as count_cursor:
         count_cursor.execute(count_sql)
@@ -77,13 +78,13 @@ def batch_etl(
 
     logger.info(f"Total records to insert: {count_total}")
 
-    num_failed = 0
     num_successful = 0
 
     with read_conn.cursor(
-        name="read_cursor"
+        name="read_cursor",
+        cursor_factory=RealDictCursor
     ) as read_cursor, write_conn.cursor() as write_cursor:
-        read_cursor.execute(et_sql)
+        read_cursor.execute(read_sql)
 
         with Progress(SpinnerColumn(), BarColumn(), transient=True) as progress:
             task = progress.add_task("Progress:", total=count_total)
@@ -91,11 +92,14 @@ def batch_etl(
             while rows := read_cursor.fetchmany(batch_size):
                 num_to_insert = len(rows)
 
+                if row_processor:
+                    rows = map(row_processor, rows)
+
                 try:
                     execute_values(
                         write_cursor,
-                        l_sql,
-                        rows,
+                        write_sql,
+                        (list(row.values()) for row in rows),
                     )
                     write_conn.commit()
 

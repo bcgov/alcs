@@ -2,8 +2,8 @@ import click
 from rich.console import Console
 
 from common.constants import BATCH_UPLOAD_SIZE
-from ce_files import ce_file_etl
-from submitters import submitter_etl
+import ce_files
+import submitters
 
 console = Console()
 
@@ -34,7 +34,7 @@ def import_data(ctx, batch_size):
 @click.pass_context
 def import_ce_files(ctx):
     console.log("Start importing C&E files...")
-    ce_file_etl(batch_size=ctx.parent.params["batch_size"])
+    ce_files.etl(batch_size=ctx.parent.params["batch_size"])
     console.log("C&E file import complete.")
 
 
@@ -42,7 +42,7 @@ def import_ce_files(ctx):
 @click.pass_context
 def import_submitters(ctx):
     console.log("Start importing submitters...")
-    submitter_etl(batch_size=ctx.parent.params["batch_size"])
+    submitters.etl(batch_size=ctx.parent.params["batch_size"])
     console.log("Submitter import complete.")
 
 
