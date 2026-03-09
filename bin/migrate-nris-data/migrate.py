@@ -82,7 +82,7 @@ def obfuscate_ce_files(ctx):
 @click.pass_context
 def obfuscate_submitters(ctx):
     console.log("Start obfuscating submitters...")
-    submitters.obfuscate_submitters(batch_size=ctx.parent.params["batch_size"])
+    submitters.obfuscate(batch_size=ctx.parent.params["batch_size"])
     console.log("Submitter obfuscation complete.")
 
 
