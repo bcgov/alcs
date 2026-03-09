@@ -5,7 +5,7 @@ from faker import Faker
 
 
 def etl(batch_size):
-    logger = setup_and_get_logger("ce-files-etl")
+    logger = setup_and_get_logger("ce-file-etl")
 
     batch_read_write(
         logger,

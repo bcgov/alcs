@@ -5,7 +5,7 @@ from faker import Faker
 
 
 def etl(batch_size):
-    logger = setup_and_get_logger("submitters-etl")
+    logger = setup_and_get_logger("submitter-etl")
 
     batch_read_write(
         logger,
@@ -17,7 +17,7 @@ def etl(batch_size):
 
 
 def obfuscate(batch_size):
-    logger = setup_and_get_logger("ce-file-obfuscation")
+    logger = setup_and_get_logger("submitter-obfuscation")
 
     batch_read_write(
         logger,
