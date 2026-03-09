@@ -16,4 +16,9 @@ from
         additional_contact_information
     )
 where
-    aces.uuid::text = v.uuid::text;
+    aces.uuid::text = v.uuid::text
+    and aces.name <> ''
+    and aces.email <> ''
+    and aces.telephone_number <> ''
+    and aces.affiliation <> ''
+    and aces.additional_contact_information <> '';
