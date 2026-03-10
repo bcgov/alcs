@@ -22,11 +22,12 @@ def obfuscate(batch_size):
     batch_read_write(
         logger,
         batch_size,
-        ABS_PATH / "submitters/sql/count.sql",
+        ABS_PATH / "submitters/sql/obfuscate_count.sql",
         ABS_PATH / "submitters/sql/obfuscate_get_rows.sql",
         ABS_PATH / "submitters/sql/obfuscate_update.sql",
         row_processor=row_obfuscator(),
     )
+
 
 def row_obfuscator():
     faker = Faker("la")

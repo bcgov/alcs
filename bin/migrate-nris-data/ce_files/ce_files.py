@@ -22,7 +22,7 @@ def obfuscate(batch_size):
     batch_read_write(
         logger,
         batch_size,
-        ABS_PATH / "ce_files/sql/count.sql",
+        ABS_PATH / "ce_files/sql/obfuscate_count.sql",
         ABS_PATH / "ce_files/sql/obfuscate_get_rows.sql",
         ABS_PATH / "ce_files/sql/obfuscate_update.sql",
         row_processor=row_obfuscator(),
