@@ -3,6 +3,7 @@ from rich.console import Console
 
 from common.constants import BATCH_UPLOAD_SIZE
 import ce_files
+import responsible_parties
 import submitters
 
 console = Console()
@@ -28,6 +29,7 @@ def import_data(ctx, batch_size):
         # Order matters
         ctx.invoke(import_ce_files)
         ctx.invoke(import_submitters)
+        ctx.invoke(import_responsible_parties)
 
 
 @import_data.command("ce-files")
@@ -44,6 +46,14 @@ def import_submitters(ctx):
     console.log("Start importing submitters...")
     submitters.etl(batch_size=ctx.parent.params["batch_size"])
     console.log("Submitter import complete.")
+
+
+@import_data.command("responsible-parties")
+@click.pass_context
+def import_responsible_parties(ctx):
+    console.log("Start importing responsible parties...")
+    responsible_parties.etl(batch_size=ctx.parent.params["batch_size"])
+    console.log("Responsible party import complete.")
 
 
 @import_data.result_callback()
@@ -68,6 +78,7 @@ def obfuscate(ctx, batch_size):
         # Order matters
         ctx.invoke(obfuscate_ce_files)
         ctx.invoke(obfuscate_submitters)
+        ctx.invoke(obfuscate_responsible_parties)
 
 
 @obfuscate.command("ce-files")
@@ -82,8 +93,16 @@ def obfuscate_ce_files(ctx):
 @click.pass_context
 def obfuscate_submitters(ctx):
     console.log("Start obfuscating submitters...")
-    submitters.obfuscate_submitters(batch_size=ctx.parent.params["batch_size"])
+    submitters.obfuscate(batch_size=ctx.parent.params["batch_size"])
     console.log("Submitter obfuscation complete.")
+
+
+@obfuscate.command("responsible-parties")
+@click.pass_context
+def obfuscate_responsible_parties(ctx):
+    console.log("Start obfuscating responsible parties...")
+    responsible_parties.obfuscate(batch_size=ctx.parent.params["batch_size"])
+    console.log("Responsible party obfuscation complete.")
 
 
 @obfuscate.result_callback()

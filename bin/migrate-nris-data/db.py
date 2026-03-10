@@ -76,13 +76,12 @@ def batch_read_write(
         count_cursor.execute(count_sql)
         count_total = count_cursor.fetchone()[0]
 
-    logger.info(f"Total records to insert: {count_total}")
+    logger.info(f"Total records to write: {count_total}")
 
     num_successful = 0
 
     with read_conn.cursor(
-        name="read_cursor",
-        cursor_factory=RealDictCursor
+        name="read_cursor", cursor_factory=RealDictCursor
     ) as read_cursor, write_conn.cursor() as write_cursor:
         read_cursor.execute(read_sql)
 
@@ -90,7 +89,7 @@ def batch_read_write(
             task = progress.add_task("Progress:", total=count_total)
 
             while rows := read_cursor.fetchmany(batch_size):
-                num_to_insert = len(rows)
+                curr_batch_size = len(rows)
 
                 if row_processor:
                     rows = map(row_processor, rows)
@@ -103,19 +102,19 @@ def batch_read_write(
                     )
                     write_conn.commit()
 
-                    num_successful += num_to_insert
+                    num_successful += curr_batch_size
 
-                    progress.update(task, advance=num_to_insert)
+                    progress.update(task, advance=curr_batch_size)
                     logger.debug(
-                        f"{num_to_insert} records inserted successfully; {num_successful} of {count_total} records inserted so far."
+                        f"{curr_batch_size} records ran successfully; {num_successful} of {count_total} records run so far."
                     )
 
                 except Exception as err:
                     logger.exception(err)
                     write_conn.rollback()
-                    logger.info(f"Failed to insert batch of {num_to_insert}.")
+                    logger.info(f"Failed to run batch of {curr_batch_size}.")
 
-        logger.info(f"Successfully inserted {num_successful} of {count_total} records.")
+        logger.info(f"Successfully ran {num_successful} of {count_total} records.")
 
 
 def load_sql(file_path):

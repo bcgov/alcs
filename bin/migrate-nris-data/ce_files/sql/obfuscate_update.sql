@@ -8,4 +8,5 @@ set
 from
     (values %s) as v(uuid, intake_notes)
 where
-    ace.uuid::text = v.uuid::text;
+    ace.uuid::text = v.uuid::text
+    and ace.intake_notes <> '';
