@@ -3,6 +3,7 @@ from rich.console import Console
 
 from common.constants import BATCH_UPLOAD_SIZE
 import ce_files
+import properties
 import responsible_parties
 import submitters
 
@@ -14,7 +15,11 @@ def cli():
     pass
 
 
-@cli.group(chain=True, invoke_without_command=True, help="Runs all imports in sequence if no subcommand is specified.")
+@cli.group(
+    chain=True,
+    invoke_without_command=True,
+    help="Runs all imports in sequence if no subcommand is specified.",
+)
 @click.option(
     "--batch-size",
     default=BATCH_UPLOAD_SIZE,
@@ -30,6 +35,7 @@ def import_data(ctx, batch_size):
         ctx.invoke(import_ce_files)
         ctx.invoke(import_submitters)
         ctx.invoke(import_responsible_parties)
+        ctx.invoke(import_properties)
 
 
 @import_data.command("ce-files")
@@ -56,6 +62,14 @@ def import_responsible_parties(ctx):
     console.log("Responsible party import complete.")
 
 
+@import_data.command("properties")
+@click.pass_context
+def import_properties(ctx):
+    console.log("Start importing properties...")
+    properties.etl(batch_size=ctx.parent.params["batch_size"])
+    console.log("Property import complete.")
+
+
 @import_data.result_callback()
 def import_cleanup(results, batch_size):
     console.log("All imports complete. Cleaning up...")
@@ -63,7 +77,11 @@ def import_cleanup(results, batch_size):
     console.log("Cleanup complete.")
 
 
-@cli.group(chain=True, invoke_without_command=True, help="Obfuscates all data in sequence if no subcommand is specified.")
+@cli.group(
+    chain=True,
+    invoke_without_command=True,
+    help="Obfuscates all data in sequence if no subcommand is specified.",
+)
 @click.option(
     "--batch-size",
     default=BATCH_UPLOAD_SIZE,
@@ -79,6 +97,7 @@ def obfuscate(ctx, batch_size):
         ctx.invoke(obfuscate_ce_files)
         ctx.invoke(obfuscate_submitters)
         ctx.invoke(obfuscate_responsible_parties)
+        ctx.invoke(obfuscate_properties)
 
 
 @obfuscate.command("ce-files")
@@ -103,6 +122,14 @@ def obfuscate_responsible_parties(ctx):
     console.log("Start obfuscating responsible parties...")
     responsible_parties.obfuscate(batch_size=ctx.parent.params["batch_size"])
     console.log("Responsible party obfuscation complete.")
+
+
+@obfuscate.command("properties")
+@click.pass_context
+def obfuscate_properties(ctx):
+    console.log("Start obfuscating properties...")
+    properties.obfuscate(batch_size=ctx.parent.params["batch_size"])
+    console.log("Property obfuscation complete.")
 
 
 @obfuscate.result_callback()
