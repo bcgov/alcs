@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@angular-builders/jest": "^20.0.0",
-    "@angular/build": "^20.3.19",
-    "@angular/cli": "~20.3.19",
+    "@angular/build": "^20.3.20",
+    "@angular/cli": "~20.3.20",
     "@angular/compiler-cli": "^20.3.17",
     "@golevelup/ts-jest": "^0.7.0",
     "@types/jest": "^29.5.14",
