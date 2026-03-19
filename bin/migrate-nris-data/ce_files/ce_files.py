@@ -7,6 +7,7 @@ from faker import Faker
 def etl(batch_size):
     logger = setup_and_get_logger("ce-file-etl")
 
+    logger.info("Inserting C&E files...")
     batch_read_write(
         logger,
         batch_size,
@@ -14,6 +15,17 @@ def etl(batch_size):
         ABS_PATH / "ce_files/sql/et.sql",
         ABS_PATH / "ce_files/sql/l.sql",
     )
+    logger.info("C&E file insert complete.")
+
+    logger.info("Closing C&E files...")
+    batch_read_write(
+        logger,
+        batch_size,
+        ABS_PATH / "ce_files/sql/close_count.sql",
+        ABS_PATH / "ce_files/sql/close_et.sql",
+        ABS_PATH / "ce_files/sql/close_l.sql",
+    )
+    logger.info("C&E file closure complete.")
 
 
 def obfuscate(batch_size):
