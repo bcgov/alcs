@@ -1,12 +1,10 @@
 import os
 
 from dotenv import load_dotenv
+import psycopg2
 from psycopg2.extras import RealDictCursor, execute_values
 import psycopg2.pool
 from rich.progress import BarColumn, Progress, SpinnerColumn
-
-from common.constants import DEFAULT_ETL_USER_UUID
-from config import ABS_PATH
 
 load_dotenv()
 
@@ -35,25 +33,58 @@ def inject_conn_from_pool(func):
 
 
 @inject_conn_from_pool
-def ensure_ce_users(conn, logger):
-    with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-        sql = load_sql(
-            ABS_PATH / "common/sql/ensure_ce_users.sql",
-        )
+def run_script(
+    conn,
+    logger,
+    sql_file,
+):
+    sql = load_sql(sql_file)
 
-        try:
-            cursor.execute(
-                sql,
-                {
-                    "user_uuid": DEFAULT_ETL_USER_UUID,
-                    "creator_uuid": DEFAULT_ETL_USER_UUID,
-                },
-            )
-        except Exception as err:
-            logger.exception(err)
-            conn.rollback()
+    with conn:
+        with conn.cursor() as cursor:
+            try:
+                cursor.execute(sql)
 
-        conn.commit()
+            except Exception as err:
+                logger.exception(err)
+                conn.rollback()
+                logger.info("fail")
+
+            else:
+                try:
+                    num_successful = len(cursor.fetchall())
+
+                    logger.info(f"{num_successful} rows successful")
+
+                except psycopg2.ProgrammingError:
+                    pass
+
+
+@inject_conn_from_pool
+def copy_from_csv(conn, logger, table_name, csv_file):
+    logger.info("Importing CSV data...")
+
+    with conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            try:
+                cursor.execute(
+                    f"create temp table csv_temp (like {table_name} including all);"
+                )
+                cursor.copy_expert(
+                    f"copy csv_temp from stdin with csv header;", csv_file
+                )
+                cursor.execute(
+                    f"insert into {table_name} select * from csv_temp returning 1"
+                )
+
+                num_inserted = len(cursor.fetchall())
+
+                logger.info(f"Successfully imported {num_inserted} records.")
+
+            except Exception as err:
+                logger.exception(err)
+                conn.rollback()
+                logger.info(f"Failed to import CSV file.")
 
 
 @inject_conn_from_pool
