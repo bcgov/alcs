@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from common.etl_logger import setup_and_get_logger
-from config import ABS_PATH
 import db
+
+REL_PATH = Path(__file__).parent
 
 
 def create_table():
@@ -10,7 +13,7 @@ def create_table():
 
     db.run_script(
         logger,
-        ABS_PATH / "inspection/sql/create_table.sql",
+        REL_PATH / "sql/create_table.sql",
     )
 
     logger.info("Inspection table created.")
@@ -29,7 +32,7 @@ def reduce_related_records():
 
     db.run_script(
         logger,
-        ABS_PATH / "inspection/sql/reduce_related_records.sql",
+        REL_PATH / "sql/reduce_related_records.sql",
     )
 
     logger.info("Related records reduced.")
@@ -42,7 +45,7 @@ def relate_inspections_to_complaints():
 
     db.run_script(
         logger,
-        ABS_PATH / "inspection/sql/relate_inspections_to_complaints.sql",
+        REL_PATH / "sql/relate_inspections_to_complaints.sql",
     )
 
     logger.info("Inspections related to complaints.")

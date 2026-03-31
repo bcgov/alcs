@@ -1,26 +1,11 @@
 update
     alcs.compliance_and_enforcement_submitter as aces
 set 
-    name = case
-        when aces.name <> '' then v.name
-        else aces.name
-    end,
-    email = case
-        when aces.email <> '' then v.email
-        else aces.email
-    end,
-    telephone_number = case
-        when aces.telephone_number <> '' then v.telephone_number
-        else aces.telephone_number
-    end,
-    affiliation = case
-        when aces.affiliation <> '' then v.affiliation
-        else aces.affiliation
-    end,
-    additional_contact_information = case
-        when aces.additional_contact_information <> '' then v.additional_contact_information
-        else aces.additional_contact_information
-    end
+    name = v.name,
+    email = v.email,
+    telephone_number = v.telephone_number,
+    affiliation = v.affiliation,
+    additional_contact_information = v.additional_contact_information
 from
     (values %s) as v(
         uuid,

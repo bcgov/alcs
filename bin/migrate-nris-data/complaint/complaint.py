@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from common.etl_logger import setup_and_get_logger
-from config import ABS_PATH
 import db
+
+REL_PATH = Path(__file__).parent
 
 
 def create_table():
@@ -10,7 +13,7 @@ def create_table():
 
     db.run_script(
         logger,
-        ABS_PATH / "complaint/sql/create_table.sql",
+        REL_PATH / "sql/create_table.sql",
     )
 
     logger.info("Complaint table created.")
