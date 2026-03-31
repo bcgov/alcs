@@ -1,8 +1,8 @@
 update
     alcs.compliance_and_enforcement as ace
 set 
-    intake_notes = v.intake_notes
+    chronology_closed_at = v.chronology_closed_at
 from
-    (values %s) as v(uuid, intake_notes)
+    (values %s) as v(uuid, chronology_closed_at)
 where
     ace.uuid::text = v.uuid::text;

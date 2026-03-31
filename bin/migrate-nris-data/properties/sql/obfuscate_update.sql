@@ -1,10 +1,7 @@
 update
     alcs.compliance_and_enforcement_property as acep
 set 
-    alc_history = case
-        when acep.alc_history <> '' then v.alc_history
-        else acep.alc_history
-    end
+    alc_history = v.alc_history
 from
     (values %s) as v(
         uuid,

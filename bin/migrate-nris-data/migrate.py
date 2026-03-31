@@ -3,6 +3,7 @@ from rich.console import Console
 
 from common.constants import BATCH_UPLOAD_SIZE
 import ce_files
+import chronology
 import complaint
 import inspection
 import properties
@@ -63,6 +64,7 @@ def etl(ctx, batch_size):
         ctx.invoke(etl_submitters)
         ctx.invoke(etl_responsible_parties)
         ctx.invoke(etl_properties)
+        ctx.invoke(etl_chronology)
 
 
 @etl.command("ce-files")
@@ -97,6 +99,14 @@ def etl_properties(ctx):
     console.log("Property ETL complete.")
 
 
+@etl.command("chronology")
+@click.pass_context
+def etl_chronology(ctx):
+    console.log("Start chronology ETL...")
+    chronology.etl(batch_size=ctx.parent.params["batch_size"])
+    console.log("Chronology ETL complete.")
+
+
 @etl.result_callback()
 def etl_cleanup(results, batch_size):
     console.log("ETL complete. Cleaning up...")
@@ -125,6 +135,7 @@ def obfuscate(ctx, batch_size):
         ctx.invoke(obfuscate_submitters)
         ctx.invoke(obfuscate_responsible_parties)
         ctx.invoke(obfuscate_properties)
+        ctx.invoke(obfuscate_chronology)
 
 
 @obfuscate.command("ce-files")
@@ -157,6 +168,14 @@ def obfuscate_properties(ctx):
     console.log("Start obfuscating properties...")
     properties.obfuscate(batch_size=ctx.parent.params["batch_size"])
     console.log("Property obfuscation complete.")
+
+
+@obfuscate.command("chronology")
+@click.pass_context
+def obfuscate_chronology(ctx):
+    console.log("Start obfuscating chronology...")
+    chronology.obfuscate(batch_size=ctx.parent.params["batch_size"])
+    console.log("Chronology obfuscation complete.")
 
 
 @obfuscate.result_callback()

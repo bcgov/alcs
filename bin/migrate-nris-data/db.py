@@ -37,13 +37,14 @@ def run_script(
     conn,
     logger,
     sql_file,
+    values=None,
 ):
     sql = load_sql(sql_file)
 
     with conn:
         with conn.cursor() as cursor:
             try:
-                cursor.execute(sql)
+                cursor.execute(sql, values)
 
             except Exception as err:
                 logger.exception(err)

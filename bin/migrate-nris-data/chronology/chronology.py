@@ -1,24 +1,34 @@
 from pathlib import Path
 
 from common.etl_logger import setup_and_get_logger
-from db import batch_read_write
+import config
+from db import batch_read_write, run_script
 from faker import Faker
 
 REL_PATH = Path(__file__).parent
 
 
 def etl(batch_size):
-    logger = setup_and_get_logger("ce-file-etl")
+    logger = setup_and_get_logger("chronology-etl")
 
-    logger.info("Inserting C&E files...")
+    logger.info("Create chronology author...")
+    run_script(
+        logger,
+        REL_PATH / "sql/create_author.sql",
+        values=(config.AUTHOR_UUID,),
+    )
+    logger.info("Chronology author created.")
+
+    logger.info("Inserting chronology entries...")
     batch_read_write(
         logger,
         batch_size,
         REL_PATH / "sql/count.sql",
         REL_PATH / "sql/et.sql",
         REL_PATH / "sql/l.sql",
+        row_processor=set_author_uuid,
     )
-    logger.info("C&E file insert complete.")
+    logger.info("Chronology entry insert complete.")
 
     logger.info("Closing C&E files...")
     batch_read_write(
@@ -31,8 +41,15 @@ def etl(batch_size):
     logger.info("C&E file closure complete.")
 
 
+def set_author_uuid(row):
+    if row["author_uuid"] is None:
+        row["author_uuid"] = config.AUTHOR_UUID
+
+    return row
+
+
 def obfuscate(batch_size):
-    logger = setup_and_get_logger("ce-file-obfuscation")
+    logger = setup_and_get_logger("chronology-obfuscation")
 
     batch_read_write(
         logger,
@@ -48,8 +65,8 @@ def row_obfuscator():
     faker = Faker("la")
 
     def obfuscate_row(row):
-        if row["intake_notes"] != "":
-            row["intake_notes"] = "\n\n".join(faker.paragraphs())
+        if row["description"] is not None:
+            row["description"] = "\n\n".join(faker.paragraphs())
 
         return row
 
