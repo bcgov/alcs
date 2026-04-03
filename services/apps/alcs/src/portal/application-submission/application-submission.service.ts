@@ -273,7 +273,7 @@ export class ApplicationSubmissionService {
         await this.generateReviewDocumentService.generateAndAttach(fileNumber, user);
       }
     } catch (e) {
-      this.logger.error(`Error generating the document on submission${e}`);
+      this.logger.error('Error generating the document on submission', e);
     }
   }
 
@@ -1100,7 +1100,7 @@ export class ApplicationSubmissionService {
       await this.conditionallyApplyTag(applicationSubmission.fileNumber, addRetroactive, 'Retroactive');
     } catch (e) {
       this.logger.error(
-        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber}`, e
       );
     }
   }
@@ -1118,7 +1118,7 @@ export class ApplicationSubmissionService {
       await this.conditionallyApplyTag(applicationSubmission.fileNumber, addRetroactive, 'Retroactive');
     } catch (e) {
       this.logger.error(
-        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber}`, e
       );
     }
   }
@@ -1146,7 +1146,7 @@ export class ApplicationSubmissionService {
       );
     } catch (e) {
       this.logger.error(
-        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+        `Could not add tag Retroactive to application number ${applicationSubmission.fileNumber}`, e
       );
     }
   }
@@ -1177,7 +1177,7 @@ export class ApplicationSubmissionService {
         );
       } catch (e) {
         this.logger.error(
-          `Could not conditionally add tag ${structureTag} to application number ${applicationSubmission.fileNumber} with error: ${e.error}`,
+          `Could not conditionally add tag ${structureTag} to application number ${applicationSubmission.fileNumber}`, e
         );
       }
     }
