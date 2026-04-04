@@ -19,16 +19,27 @@ def etl(batch_size):
     )
     logger.info("Chronology author created.")
 
-    logger.info("Inserting chronology entries...")
+    logger.info("Inserting inspection chronology entries...")
     batch_read_write(
         logger,
         batch_size,
-        REL_PATH / "sql/count.sql",
-        REL_PATH / "sql/et.sql",
-        REL_PATH / "sql/l.sql",
+        REL_PATH / "sql/inspection_count.sql",
+        REL_PATH / "sql/inspection_et.sql",
+        REL_PATH / "sql/inspection_l.sql",
         row_processor=set_author_uuid,
     )
-    logger.info("Chronology entry insert complete.")
+    logger.info("Inspection chronology entry insert complete.")
+
+    logger.info("Inserting C&E file chronology entries...")
+    batch_read_write(
+        logger,
+        batch_size,
+        REL_PATH / "sql/ce_file_count.sql",
+        REL_PATH / "sql/ce_file_et.sql",
+        REL_PATH / "sql/ce_file_l.sql",
+        row_processor=set_author_uuid,
+    )
+    logger.info("C&E file chronology entry insert complete.")
 
     logger.info("Closing C&E files...")
     batch_read_write(
