@@ -243,8 +243,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.applicationService.setup();
     this.loadStatuses();
 
-    this.tagCategoryService.fetch(0, 0);
-    this.tagService.fetch(0, 0);
+    this.tagCategoryService.fetch();
+    this.tagService.fetch();
 
     this.filteredLocalGovernments = this.localGovernmentControl.valueChanges.pipe(
       startWith(''),
