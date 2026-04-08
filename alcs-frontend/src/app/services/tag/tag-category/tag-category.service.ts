@@ -23,16 +23,16 @@ export class TagCategoryService {
 
   public $categories = new BehaviorSubject<PaginatedTagCategoryResponse>({ data: [], total: 0 });
 
-  async fetch(pageIndex: number, itemsPerPage: number, search?: string) {
+  async fetch(pageIndex?: number, itemsPerPage?: number, search?: string) {
     const result = await this.search(pageIndex, itemsPerPage, search);
     if (result) {
       this.$categories.next(result);
     }
   }
 
-  async search(pageIndex: number, itemsPerPage: number, search?: string) {
-    const pageQuery = `?pageIndex=${pageIndex}`;
-    const itemsQuery = `&itemsPerPage=${itemsPerPage}`;
+  async search(pageIndex?: number, itemsPerPage?: number, search?: string) {
+    const pageQuery = pageIndex !== undefined ? `?pageIndex=${pageIndex}` : '';
+    const itemsQuery = itemsPerPage !== undefined ? `&itemsPerPage=${itemsPerPage}` : '';
     const searchQuery = search ? `&search=${search}` : '';
     try {
       return await firstValueFrom(
