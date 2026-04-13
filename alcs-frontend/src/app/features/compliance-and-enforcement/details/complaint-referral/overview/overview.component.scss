@@ -19,6 +19,10 @@
   &.full-width {
     grid-column: span 2;
   }
+
+  &.multiline {
+    white-space: pre-line;
+  }
 }
 
 .field-heading {
