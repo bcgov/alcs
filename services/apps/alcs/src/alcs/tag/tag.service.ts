@@ -15,7 +15,7 @@ export class TagService {
     private categoryRepository: Repository<TagCategory>,
   ) {}
 
-  async fetch(pageIndex: number, itemsPerPage: number, search?: string) {
+  async fetch(pageIndex?: number, itemsPerPage?: number, search?: string) {
     let searchExpression: FindOptionsWhere<Tag> | undefined = undefined;
 
     if (search) {
@@ -32,7 +32,7 @@ export class TagService {
         },
         order: { name: 'ASC' },
         take: itemsPerPage,
-        skip: pageIndex * itemsPerPage,
+        skip: pageIndex && itemsPerPage ? pageIndex * itemsPerPage : 0,
       })) || [[], 0]
     );
   }

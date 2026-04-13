@@ -16,8 +16,8 @@ export class TagController {
   @Get('')
   @UserRoles(...ANY_AUTH_ROLE)
   async fetch(
-    @Query('pageIndex') pageIndex: number,
-    @Query('itemsPerPage') itemsPerPage: number,
+    @Query('pageIndex') pageIndex?: number,
+    @Query('itemsPerPage') itemsPerPage?: number,
     @Query('search') search?: string,
   ) {
     const result = await this.service.fetch(pageIndex, itemsPerPage, search);
