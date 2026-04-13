@@ -40,7 +40,7 @@ describe('TagController', () => {
   it('should get a tag', async () => {
     tagService.fetch.mockResolvedValue([[mockTag], 1]);
 
-    const result = await controller.fetch(0, 0);
+    const result = await controller.fetch();
     expect(tagService.fetch).toHaveBeenCalledTimes(1);
     expect(result.data).toEqual([mockTag]);
     expect(result.total).toEqual(1);
