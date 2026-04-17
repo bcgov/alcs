@@ -131,15 +131,15 @@ describe('NoticeOfIntentModificationService', () => {
 
     await service.getByBoard(fakeBoardUuid);
 
-    expect(modificationRepoMock.find).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.find).toHaveBeenCalledWith(findOptions);
   });
 
   it('should successfully create modification and link to existing application', async () => {
     await service.create(mockModificationCreateDto, {} as Board);
 
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(CARD_TYPE.NOI_MODI, {} as Board, false);
-    expect(noticeOfIntentServiceMock.create).toBeCalledTimes(0);
+    expect(cardServiceMock.create).toHaveBeenCalledWith(CARD_TYPE.NOI_MODI, {} as Board, false);
+    expect(noticeOfIntentServiceMock.create).toHaveBeenCalledTimes(0);
   });
 
   it('should successfully create modification and link to decisions', async () => {
@@ -160,8 +160,8 @@ describe('NoticeOfIntentModificationService', () => {
     );
 
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith(CARD_TYPE.NOI_MODI, {} as Board, false);
-    expect(noticeOfIntentServiceMock.create).toBeCalledTimes(0);
+    expect(cardServiceMock.create).toHaveBeenCalledWith(CARD_TYPE.NOI_MODI, {} as Board, false);
+    expect(noticeOfIntentServiceMock.create).toHaveBeenCalledTimes(0);
     expect(decisionServiceMock.getMany).toHaveBeenCalledTimes(1);
     expect(decisionServiceMock.getMany).toHaveBeenCalledWith([decisionUuid]);
     expect(modificationRepoMock.save.mock.calls[0][0].modifiesDecisions).toEqual([mockDecision]);
@@ -176,7 +176,7 @@ describe('NoticeOfIntentModificationService', () => {
       description: '',
     });
 
-    expect(modificationRepoMock.findOne).toBeCalledWith({
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
       where: { uuid },
     });
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(1);
@@ -190,7 +190,7 @@ describe('NoticeOfIntentModificationService', () => {
     await expect(service.update(uuid, {} as NoticeOfIntentModificationUpdateDto)).rejects.toMatchObject(
       new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(modificationRepoMock.findOne).toBeCalledWith({
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
       where: { uuid },
     });
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(0);
@@ -239,7 +239,7 @@ describe('NoticeOfIntentModificationService', () => {
     await expect(service.delete(uuid)).rejects.toMatchObject(
       new ServiceNotFoundException(`Modification with uuid ${uuid} not found`),
     );
-    expect(modificationRepoMock.findOne).toBeCalledWith({
+    expect(modificationRepoMock.findOne).toHaveBeenCalledWith({
       where: {
         uuid,
       },
@@ -259,7 +259,7 @@ describe('NoticeOfIntentModificationService', () => {
 
     await service.getByCardUuid(cardUuid);
 
-    expect(modificationRepoMock.findOneOrFail).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.findOneOrFail).toHaveBeenCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getByUuid', async () => {
@@ -271,7 +271,7 @@ describe('NoticeOfIntentModificationService', () => {
 
     await service.getByUuid(uuid);
 
-    expect(modificationRepoMock.findOneOrFail).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.findOneOrFail).toHaveBeenCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getSubtasks', async () => {
@@ -301,7 +301,7 @@ describe('NoticeOfIntentModificationService', () => {
     };
     await service.getWithIncompleteSubtaskByType(subtaskType);
 
-    expect(modificationRepoMock.find).toBeCalledWith(findOptions);
+    expect(modificationRepoMock.find).toHaveBeenCalledWith(findOptions);
   });
 
   it('should load deleted cards', async () => {

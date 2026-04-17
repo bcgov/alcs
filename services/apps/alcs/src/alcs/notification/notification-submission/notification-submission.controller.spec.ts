@@ -39,9 +39,7 @@ describe('NotificationSubmissionController', () => {
       ],
     }).compile();
 
-    controller = module.get<NotificationSubmissionController>(
-      NotificationSubmissionController,
-    );
+    controller = module.get<NotificationSubmissionController>(NotificationSubmissionController);
   });
 
   it('should be defined', () => {
@@ -66,12 +64,8 @@ describe('NotificationSubmissionController', () => {
       },
     });
 
-    expect(mockNotificationSubmissionService.getByFileNumber).toBeCalledTimes(
-      1,
-    );
-    expect(mockNotificationSubmissionService.mapToDetailedDTO).toBeCalledTimes(
-      1,
-    );
+    expect(mockNotificationSubmissionService.getByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 
@@ -84,21 +78,16 @@ describe('NotificationSubmissionController', () => {
 
     const result = await controller.downloadFile(fakeUuid);
 
-    expect(mockDocumentService.getDocument).toBeCalledTimes(1);
-    expect(mockDocumentService.getDownloadUrl).toBeCalledTimes(1);
-    expect(mockDocumentService.getDocument).toBeCalledWith(fakeUuid);
-    expect(mockDocumentService.getDownloadUrl).toBeCalledWith(
-      {} as Document,
-      true,
-    );
+    expect(mockDocumentService.getDocument).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
+    expect(mockDocumentService.getDocument).toHaveBeenCalledWith(fakeUuid);
+    expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledWith({} as Document, true);
     expect(result).toEqual({ url: fakeDownloadUrl });
   });
 
   it('should call through to service for updating email', async () => {
     mockNotificationSubmissionService.getUuid.mockResolvedValue('uuid');
-    mockNotificationSubmissionService.update.mockResolvedValue(
-      new NotificationSubmission(),
-    );
+    mockNotificationSubmissionService.update.mockResolvedValue(new NotificationSubmission());
     mockNotificationSubmissionService.getByFileNumber.mockResolvedValue(
       new NotificationSubmission({
         fileNumber: 'fileNumber',
@@ -114,7 +103,7 @@ describe('NotificationSubmissionController', () => {
       },
     });
 
-    expect(mockNotificationSubmissionService.getUuid).toBeCalledTimes(1);
-    expect(mockNotificationSubmissionService.update).toBeCalledTimes(1);
+    expect(mockNotificationSubmissionService.getUuid).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.update).toHaveBeenCalledTimes(1);
   });
 });

@@ -29,9 +29,7 @@ describe('ApplicationSubmissionReviewController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationSubmissionReviewController>(
-      ApplicationSubmissionReviewController,
-    );
+    controller = module.get<ApplicationSubmissionReviewController>(ApplicationSubmissionReviewController);
   });
 
   it('should be defined', () => {
@@ -41,17 +39,13 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should call applicationSubmissionService to get Application Submission', async () => {
     const fakeFileNumber = 'fake';
 
-    mockApplicationSubmissionReviewService.get.mockResolvedValue(
-      {} as ApplicationSubmissionReview,
-    );
-    mockApplicationSubmissionReviewService.mapToDto.mockResolvedValue(
-      createMock<ApplicationSubmissionReviewDto>(),
-    );
+    mockApplicationSubmissionReviewService.get.mockResolvedValue({} as ApplicationSubmissionReview);
+    mockApplicationSubmissionReviewService.mapToDto.mockResolvedValue(createMock<ApplicationSubmissionReviewDto>());
 
     const result = await controller.get(fakeFileNumber);
 
-    expect(mockApplicationSubmissionReviewService.get).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionReviewService.mapToDto).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionReviewService.get).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionReviewService.mapToDto).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 });

@@ -3,10 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  initCommentMentionMock,
-  initCommentMock,
-} from '../../../../test/mocks/mockEntities';
+import { initCommentMentionMock, initCommentMock } from '../../../../test/mocks/mockEntities';
 import { Comment } from '../comment.entity';
 import { CommentMention } from './comment-mention.entity';
 import { CommentMentionService } from './comment-mention.service';
@@ -44,10 +41,8 @@ describe('CommentMentionService', () => {
     mockCommentMentionRepository.softRemove.mockResolvedValue({} as any);
 
     await service.removeMentions(comment.uuid);
-    expect(mockCommentMentionRepository.softRemove).toBeCalledTimes(1);
-    expect(mockCommentMentionRepository.softRemove).toBeCalledWith(
-      comment.mentions,
-    );
+    expect(mockCommentMentionRepository.softRemove).toHaveBeenCalledTimes(1);
+    expect(mockCommentMentionRepository.softRemove).toHaveBeenCalledWith(comment.mentions);
   });
 
   it('should return mentions on comment', async () => {
@@ -73,11 +68,9 @@ describe('CommentMentionService', () => {
     const mentions = [];
     await service.updateMentions(comment.uuid, mentions);
 
-    expect(mockCommentMentionRepository.save).toBeCalledTimes(0);
-    expect(mockCommentMentionRepository.remove).toBeCalledTimes(1);
-    expect(mockCommentMentionRepository.remove).toBeCalledWith(
-      comment.mentions,
-    );
+    expect(mockCommentMentionRepository.save).toHaveBeenCalledTimes(0);
+    expect(mockCommentMentionRepository.remove).toHaveBeenCalledTimes(1);
+    expect(mockCommentMentionRepository.remove).toHaveBeenCalledWith(comment.mentions);
   });
 
   it('should keep existing mentions if nothing changed', async () => {
@@ -86,8 +79,8 @@ describe('CommentMentionService', () => {
 
     await service.updateMentions(comment.uuid, mentions);
 
-    expect(mockCommentMentionRepository.save).toBeCalledTimes(1);
-    expect(mockCommentMentionRepository.remove).toBeCalledTimes(0);
+    expect(mockCommentMentionRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockCommentMentionRepository.remove).toHaveBeenCalledTimes(0);
   });
 
   it('should remove old mentions and attach new', async () => {
@@ -103,7 +96,7 @@ describe('CommentMentionService', () => {
 
     await service.updateMentions(comment.uuid, mentions);
 
-    expect(mockCommentMentionRepository.save).toBeCalledTimes(1);
-    expect(mockCommentMentionRepository.remove).toBeCalledTimes(1);
+    expect(mockCommentMentionRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockCommentMentionRepository.remove).toHaveBeenCalledTimes(1);
   });
 });

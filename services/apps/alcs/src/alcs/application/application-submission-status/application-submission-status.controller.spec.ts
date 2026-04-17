@@ -37,9 +37,7 @@ describe('ApplicationSubmissionStatusController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationSubmissionStatusController>(
-      ApplicationSubmissionStatusController,
-    );
+    controller = module.get<ApplicationSubmissionStatusController>(ApplicationSubmissionStatusController);
   });
 
   it('should be defined', () => {
@@ -49,18 +47,14 @@ describe('ApplicationSubmissionStatusController', () => {
   it('should call service to get statuses by file number', async () => {
     const fakeFileNumber = 'fake';
 
-    mockApplicationSubmissionStatusService.getStatusesByFileNumber.mockResolvedValue(
-      [new ApplicationSubmissionToSubmissionStatus()],
-    );
+    mockApplicationSubmissionStatusService.getStatusesByFileNumber.mockResolvedValue([
+      new ApplicationSubmissionToSubmissionStatus(),
+    ]);
 
     const result = await controller.getStatusesByFileNumber(fakeFileNumber);
 
-    expect(
-      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
-    ).toBeCalledWith(fakeFileNumber);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getStatusesByFileNumber).toHaveBeenCalledWith(fakeFileNumber);
     expect(result.length).toEqual(1);
     expect(result).toBeDefined();
   });
@@ -72,15 +66,10 @@ describe('ApplicationSubmissionStatusController', () => {
       new ApplicationSubmissionToSubmissionStatus(),
     );
 
-    const result =
-      await controller.getCurrentStatusByFileNumber(fakeFileNumber);
+    const result = await controller.getCurrentStatusByFileNumber(fakeFileNumber);
 
-    expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber,
-    ).toBeCalledWith(fakeFileNumber);
+    expect(mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber).toHaveBeenCalledWith(fakeFileNumber);
     expect(result).toBeDefined();
   });
 });

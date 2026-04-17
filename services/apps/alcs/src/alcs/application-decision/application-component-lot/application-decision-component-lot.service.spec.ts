@@ -8,9 +8,7 @@ import { ApplicationDecisionComponentLotService } from './application-decision-c
 
 describe('ApplicationDecisionComponentLotService', () => {
   let service: ApplicationDecisionComponentLotService;
-  let mockApplicationDecisionComponentLotRepository: DeepMocked<
-    Repository<ApplicationDecisionComponentLot>
-  >;
+  let mockApplicationDecisionComponentLotRepository: DeepMocked<Repository<ApplicationDecisionComponentLot>>;
 
   beforeEach(async () => {
     mockApplicationDecisionComponentLotRepository = createMock();
@@ -25,9 +23,7 @@ describe('ApplicationDecisionComponentLotService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationDecisionComponentLotService>(
-      ApplicationDecisionComponentLotService,
-    );
+    service = module.get<ApplicationDecisionComponentLotService>(ApplicationDecisionComponentLotService);
   });
 
   it('should be defined', () => {
@@ -41,83 +37,41 @@ describe('ApplicationDecisionComponentLotService', () => {
     } as UpdateApplicationDecisionComponentLotDto;
 
     const lot = new ApplicationDecisionComponentLot();
-    mockApplicationDecisionComponentLotRepository.findOneByOrFail.mockResolvedValue(
-      lot,
-    );
+    mockApplicationDecisionComponentLotRepository.findOneByOrFail.mockResolvedValue(lot);
     const updatedLot = new ApplicationDecisionComponentLot({
       alrArea: dto.alrArea,
     });
-    mockApplicationDecisionComponentLotRepository.save.mockResolvedValue(
-      updatedLot,
-    );
+    mockApplicationDecisionComponentLotRepository.save.mockResolvedValue(updatedLot);
 
     const result = await service.update('1', dto);
 
     expect(result).toEqual(updatedLot);
-    expect(mockApplicationDecisionComponentLotRepository.save).toBeCalledWith(
-      updatedLot,
-    );
-    expect(mockApplicationDecisionComponentLotRepository.save).toBeCalledTimes(
-      1,
-    );
-    expect(
-      mockApplicationDecisionComponentLotRepository.findOneByOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentLotRepository.findOneByOrFail,
-    ).toBeCalledWith({ uuid: dto.uuid });
+    expect(mockApplicationDecisionComponentLotRepository.save).toHaveBeenCalledWith(updatedLot);
+    expect(mockApplicationDecisionComponentLotRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotRepository.findOneByOrFail).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotRepository.findOneByOrFail).toHaveBeenCalledWith({ uuid: dto.uuid });
   });
 
   it('should soft remove by componentUuid', async () => {
-    const lots = [
-      new ApplicationDecisionComponentLot(),
-      new ApplicationDecisionComponentLot(),
-    ];
-    mockApplicationDecisionComponentLotRepository.findBy.mockResolvedValue(
-      lots,
-    );
-    mockApplicationDecisionComponentLotRepository.softRemove.mockResolvedValue(
-      [] as any,
-    );
+    const lots = [new ApplicationDecisionComponentLot(), new ApplicationDecisionComponentLot()];
+    mockApplicationDecisionComponentLotRepository.findBy.mockResolvedValue(lots);
+    mockApplicationDecisionComponentLotRepository.softRemove.mockResolvedValue([] as any);
     await service.softRemoveBy('1');
-    expect(mockApplicationDecisionComponentLotRepository.findBy).toBeCalledWith(
-      { componentUuid: '1' },
-    );
-    expect(
-      mockApplicationDecisionComponentLotRepository.findBy,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentLotRepository.softRemove,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentLotRepository.softRemove,
-    ).toBeCalledWith(lots);
+    expect(mockApplicationDecisionComponentLotRepository.findBy).toHaveBeenCalledWith({ componentUuid: '1' });
+    expect(mockApplicationDecisionComponentLotRepository.findBy).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotRepository.softRemove).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotRepository.softRemove).toHaveBeenCalledWith(lots);
   });
 
   it('should soft remove by uuids', async () => {
-    const lots = [
-      new ApplicationDecisionComponentLot(),
-      new ApplicationDecisionComponentLot(),
-    ];
-    mockApplicationDecisionComponentLotRepository.findBy.mockResolvedValue(
-      lots,
-    );
-    mockApplicationDecisionComponentLotRepository.softRemove.mockResolvedValue(
-      [] as any,
-    );
+    const lots = [new ApplicationDecisionComponentLot(), new ApplicationDecisionComponentLot()];
+    mockApplicationDecisionComponentLotRepository.findBy.mockResolvedValue(lots);
+    mockApplicationDecisionComponentLotRepository.softRemove.mockResolvedValue([] as any);
     await service.softRemove(['1', '2']);
 
-    expect(mockApplicationDecisionComponentLotRepository.findBy).toBeCalledWith(
-      { uuid: In(['1', '2']) },
-    );
-    expect(
-      mockApplicationDecisionComponentLotRepository.findBy,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentLotRepository.softRemove,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionComponentLotRepository.softRemove,
-    ).toBeCalledWith(lots);
+    expect(mockApplicationDecisionComponentLotRepository.findBy).toHaveBeenCalledWith({ uuid: In(['1', '2']) });
+    expect(mockApplicationDecisionComponentLotRepository.findBy).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotRepository.softRemove).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionComponentLotRepository.softRemove).toHaveBeenCalledWith(lots);
   });
 });

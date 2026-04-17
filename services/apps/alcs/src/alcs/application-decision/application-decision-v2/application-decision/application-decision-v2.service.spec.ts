@@ -210,13 +210,13 @@ describe('ApplicationDecisionV2Service', () => {
 
       expect(mockDecisionRepository.save.mock.calls[0][0].modifies).toBeNull();
       expect(mockDecisionRepository.save.mock.calls[0][0].reconsiders).toBeNull();
-      expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
+      expect(mockDecisionRepository.softRemove).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(mockApplication.uuid, {
         decisionDate: null,
       });
-      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
-      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
         mockApplication.fileNumber,
         SUBMISSION_STATUS.ALC_DECISION,
         null,
@@ -308,7 +308,7 @@ describe('ApplicationDecisionV2Service', () => {
 
       await service.create(decisionToCreate, mockApplication, undefined, undefined);
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -347,7 +347,7 @@ describe('ApplicationDecisionV2Service', () => {
 
       await service.create(decisionToCreate, mockApplication, undefined, undefined, 'mock-uuid');
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(3);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(3);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
       const finalDecision = mockDecisionRepository.save.mock.calls[2][0];
 
@@ -378,7 +378,7 @@ describe('ApplicationDecisionV2Service', () => {
         ),
       );
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -402,7 +402,7 @@ describe('ApplicationDecisionV2Service', () => {
         new ServiceValidationException('Draft decision already exists for this application.'),
       );
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
     });
 
@@ -421,7 +421,7 @@ describe('ApplicationDecisionV2Service', () => {
 
       await service.create(decisionToCreate, mockApplication, undefined, undefined);
 
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.update).not.toHaveBeenCalled();
       expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).not.toHaveBeenCalled();
     });
@@ -453,14 +453,14 @@ describe('ApplicationDecisionV2Service', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate, undefined, undefined);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
       expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(mockApplication.uuid, {
         decisionDate,
       });
-      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
-      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
         mockApplication.fileNumber,
         SUBMISSION_STATUS.ALC_DECISION,
         decisionDate,
@@ -477,14 +477,14 @@ describe('ApplicationDecisionV2Service', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate, undefined, undefined);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
-      expect(mockApplicationService.updateByUuid).toBeCalledWith('1111-1111-1111-1111', {
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith('1111-1111-1111-1111', {
         decisionDate: null,
       });
-      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledTimes(1);
-      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toBeCalledWith(
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+      expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
         mockApplication.fileNumber,
         SUBMISSION_STATUS.ALC_DECISION,
         null,
@@ -505,8 +505,8 @@ describe('ApplicationDecisionV2Service', () => {
 
       await service.update(mockDecision.uuid, decisionUpdate, undefined, undefined);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.update).not.toHaveBeenCalled();
       expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).not.toHaveBeenCalled();
     });
@@ -524,7 +524,7 @@ describe('ApplicationDecisionV2Service', () => {
       await expect(promise).rejects.toMatchObject(
         new ServiceNotFoundException(`Decision with UUID ${nonExistantUuid} not found`),
       );
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
     });
 
     it('should fail on update if trying to set ceo criterion but decision maker is not CEO', async () => {
@@ -539,7 +539,7 @@ describe('ApplicationDecisionV2Service', () => {
       await expect(promise).rejects.toMatchObject(
         new ServiceValidationException(`Cannot set ceo criterion code unless ceo the decision maker`),
       );
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
     });
 
     it('should allow updating the ceo criterion and decision maker to CEO', async () => {
@@ -552,8 +552,8 @@ describe('ApplicationDecisionV2Service', () => {
 
       await service.update(uuid, decisionUpdate, undefined, undefined);
 
-      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
     });
 
     it('should fail on update if trying to set time extension when ceo criterion is not correct', async () => {
@@ -568,7 +568,7 @@ describe('ApplicationDecisionV2Service', () => {
       await expect(promise).rejects.toMatchObject(
         new ServiceValidationException(`Cannot set time extension unless ceo criterion is modification`),
       );
-      expect(mockDecisionRepository.save).toBeCalledTimes(0);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(0);
     });
 
     it('should call through for get code', async () => {

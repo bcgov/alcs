@@ -164,7 +164,7 @@ describe('BoardController', () => {
     await controller.getBoardWithCards(mockBoard.uuid);
 
     expect(appService.getByBoard).toHaveBeenCalledTimes(1);
-    expect(appService.getByBoard).toBeCalledWith(mockBoard.uuid);
+    expect(appService.getByBoard).toHaveBeenCalledWith(mockBoard.uuid);
     expect(appService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(modificationService.getByBoard).toHaveBeenCalledTimes(0);

@@ -67,9 +67,7 @@ describe('ApplicationParcelController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationParcelController>(
-      ApplicationParcelController,
-    );
+    controller = module.get<ApplicationParcelController>(ApplicationParcelController);
   });
 
   it('should be defined', () => {
@@ -77,45 +75,33 @@ describe('ApplicationParcelController', () => {
   });
 
   it('should call out to service when fetching parcels', async () => {
-    mockApplicationParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue(
-      [],
-    );
+    mockApplicationParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([]);
 
     const parcels = await controller.fetchByFileId('mockFileID');
 
     expect(parcels).toBeDefined();
-    expect(
-      mockApplicationParcelService.fetchByApplicationSubmissionUuid,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationParcelService.fetchByApplicationSubmissionUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating parcels', async () => {
-    mockApplicationService.getOrFailByUuid.mockResolvedValue(
-      {} as ApplicationSubmission,
-    );
-    mockApplicationParcelService.create.mockResolvedValue(
-      {} as ApplicationParcel,
-    );
+    mockApplicationService.getOrFailByUuid.mockResolvedValue({} as ApplicationSubmission);
+    mockApplicationParcelService.create.mockResolvedValue({} as ApplicationParcel);
     mockApplicationOwnerService.attachToParcel.mockResolvedValue();
 
     const parcel = await controller.create({
       applicationSubmissionUuid: 'fake',
     });
 
-    expect(mockApplicationService.getOrFailByUuid).toBeCalledTimes(1);
-    expect(mockApplicationParcelService.create).toBeCalledTimes(1);
-    expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(0);
+    expect(mockApplicationService.getOrFailByUuid).toHaveBeenCalledTimes(1);
+    expect(mockApplicationParcelService.create).toHaveBeenCalledTimes(1);
+    expect(mockApplicationOwnerService.attachToParcel).toHaveBeenCalledTimes(0);
     expect(parcel).toBeDefined();
   });
 
   it('should call out to service and revert newly created "other" parcel if failed to link it to and owner during creation process', async () => {
     const mockError = new Error('mock error');
-    mockApplicationService.getOrFailByUuid.mockResolvedValue(
-      {} as ApplicationSubmission,
-    );
-    mockApplicationParcelService.create.mockResolvedValue(
-      {} as ApplicationParcel,
-    );
+    mockApplicationService.getOrFailByUuid.mockResolvedValue({} as ApplicationSubmission);
+    mockApplicationParcelService.create.mockResolvedValue({} as ApplicationParcel);
     mockApplicationOwnerService.attachToParcel.mockRejectedValue(mockError);
     mockApplicationParcelService.deleteMany.mockResolvedValue([]);
 
@@ -126,10 +112,10 @@ describe('ApplicationParcelController', () => {
       }),
     ).rejects.toMatchObject(mockError);
 
-    expect(mockApplicationService.getOrFailByUuid).toBeCalledTimes(1);
-    expect(mockApplicationParcelService.create).toBeCalledTimes(1);
-    expect(mockApplicationParcelService.deleteMany).toBeCalledTimes(1);
-    expect(mockApplicationOwnerService.attachToParcel).toBeCalledTimes(1);
+    expect(mockApplicationService.getOrFailByUuid).toHaveBeenCalledTimes(1);
+    expect(mockApplicationParcelService.create).toHaveBeenCalledTimes(1);
+    expect(mockApplicationParcelService.deleteMany).toHaveBeenCalledTimes(1);
+    expect(mockApplicationOwnerService.attachToParcel).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when updating parcel', async () => {
@@ -148,13 +134,11 @@ describe('ApplicationParcelController', () => {
       },
     ];
 
-    mockApplicationParcelService.update.mockResolvedValue([
-      {},
-    ] as ApplicationParcel[]);
+    mockApplicationParcelService.update.mockResolvedValue([{}] as ApplicationParcel[]);
 
     const parcel = await controller.update(mockUpdateDto);
 
-    expect(mockApplicationParcelService.update).toBeCalledTimes(1);
+    expect(mockApplicationParcelService.update).toHaveBeenCalledTimes(1);
     expect(parcel).toBeDefined();
   });
 
@@ -164,7 +148,7 @@ describe('ApplicationParcelController', () => {
 
     const result = await controller.delete([fakeUuid]);
 
-    expect(mockApplicationParcelService.deleteMany).toBeCalledTimes(1);
+    expect(mockApplicationParcelService.deleteMany).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 });

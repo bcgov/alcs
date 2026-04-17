@@ -88,26 +88,22 @@ describe('GenerateReviewDocumentService', () => {
       }),
     );
 
-    mockSubmissionReviewService.getByFileNumber.mockResolvedValue(
-      new ApplicationSubmissionReview(),
-    );
+    mockSubmissionReviewService.getByFileNumber.mockResolvedValue(new ApplicationSubmissionReview());
 
     mockApplicationDocumentService.list.mockResolvedValue([]);
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
       localGovernmentUuid: 'cats',
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(
-      new LocalGovernment(),
-    );
+    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(new LocalGovernment());
     const userEntity = new User({
       name: 'Bruce Wayne',
     });
 
     const res = await service.generate('fake', userEntity);
 
-    expect(mockCdogsService.generateDocument).toBeCalledTimes(1);
-    expect(mockApplicationLocalGovernmentService.getByUuid).toBeCalledTimes(1);
+    expect(mockCdogsService.generateDocument).toHaveBeenCalledTimes(1);
+    expect(mockApplicationLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
   });
 });

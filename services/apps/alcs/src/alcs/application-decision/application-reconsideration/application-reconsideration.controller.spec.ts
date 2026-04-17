@@ -23,12 +23,9 @@ describe('ApplicationReconsiderationController', () => {
   let mockBoardService: DeepMocked<BoardService>;
 
   beforeEach(async () => {
-    mockReconsiderationService =
-      createMock<ApplicationReconsiderationService>();
+    mockReconsiderationService = createMock<ApplicationReconsiderationService>();
     mockBoardService = createMock<BoardService>();
-    mockReconsiderationService.mapToDtos.mockResolvedValue([
-      {},
-    ] as ApplicationReconsiderationDto[]);
+    mockReconsiderationService.mapToDtos.mockResolvedValue([{}] as ApplicationReconsiderationDto[]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -55,9 +52,7 @@ describe('ApplicationReconsiderationController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationReconsiderationController>(
-      ApplicationReconsiderationController,
-    );
+    controller = module.get<ApplicationReconsiderationController>(ApplicationReconsiderationController);
   });
 
   it('should be defined', () => {
@@ -65,28 +60,24 @@ describe('ApplicationReconsiderationController', () => {
   });
 
   it('should call service delete method on delete', async () => {
-    mockReconsiderationService.delete.mockResolvedValue([
-      {},
-    ] as ApplicationReconsideration[]);
+    mockReconsiderationService.delete.mockResolvedValue([{}] as ApplicationReconsideration[]);
     await controller.delete('fake');
-    expect(mockReconsiderationService.delete).toBeCalledTimes(1);
-    expect(mockReconsiderationService.delete).toBeCalledWith('fake');
+    expect(mockReconsiderationService.delete).toHaveBeenCalledTimes(1);
+    expect(mockReconsiderationService.delete).toHaveBeenCalledWith('fake');
   });
 
   it('should call service get by card method', async () => {
-    mockReconsiderationService.getByCardUuid.mockResolvedValue(
-      {} as ApplicationReconsideration,
-    );
+    mockReconsiderationService.getByCardUuid.mockResolvedValue({} as ApplicationReconsideration);
     await controller.getByCard('fake');
-    expect(mockReconsiderationService.getByCardUuid).toBeCalledTimes(1);
-    expect(mockReconsiderationService.getByCardUuid).toBeCalledWith('fake');
+    expect(mockReconsiderationService.getByCardUuid).toHaveBeenCalledTimes(1);
+    expect(mockReconsiderationService.getByCardUuid).toHaveBeenCalledWith('fake');
   });
 
   it('should call service update method', async () => {
     const recon = initApplicationReconsiderationMockEntity();
     mockReconsiderationService.update.mockResolvedValue(recon);
     await controller.update('fake', {} as ApplicationReconsiderationUpdateDto);
-    expect(mockReconsiderationService.update).toBeCalledTimes(1);
+    expect(mockReconsiderationService.update).toHaveBeenCalledTimes(1);
   });
 
   it('should call service create method', async () => {
@@ -94,22 +85,20 @@ describe('ApplicationReconsiderationController', () => {
     mockReconsiderationService.create.mockResolvedValue(recon);
     mockBoardService.getOneOrFail.mockResolvedValue({} as Board);
     await controller.create({} as ApplicationReconsiderationCreateDto);
-    expect(mockReconsiderationService.create).toBeCalledTimes(1);
+    expect(mockReconsiderationService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call service getByApplication method', async () => {
     const fakeNumber = 'fake';
     mockReconsiderationService.getByApplication.mockResolvedValue([]);
     await controller.getByApplication(fakeNumber);
-    expect(mockReconsiderationService.getByApplication).toBeCalledTimes(1);
-    expect(mockReconsiderationService.getByApplication).toBeCalledWith(
-      fakeNumber,
-    );
+    expect(mockReconsiderationService.getByApplication).toHaveBeenCalledTimes(1);
+    expect(mockReconsiderationService.getByApplication).toHaveBeenCalledWith(fakeNumber);
   });
 
   it('should call service getCodes method', async () => {
     mockReconsiderationService.getCodes.mockResolvedValue([]);
     await controller.getCodes();
-    expect(mockReconsiderationService.getCodes).toBeCalledTimes(1);
+    expect(mockReconsiderationService.getCodes).toHaveBeenCalledTimes(1);
   });
 });

@@ -127,14 +127,14 @@ describe('DecisionMeetingController', () => {
   it('should get all for application', async () => {
     const result = await controller.getAllForApplication('fake-number');
 
-    expect(mockMeetingService.getByAppFileNumber).toBeCalledTimes(1);
+    expect(mockMeetingService.getByAppFileNumber).toHaveBeenCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockMeeting.uuid);
   });
 
   it('should get a specific meeting', async () => {
     const result = await controller.get('fake-uuid');
 
-    expect(mockMeetingService.get).toBeCalledTimes(1);
+    expect(mockMeetingService.get).toHaveBeenCalledTimes(1);
     expect(result.uuid).toStrictEqual(mockMeeting.uuid);
   });
 
@@ -143,8 +143,8 @@ describe('DecisionMeetingController', () => {
 
     await controller.delete('fake-uuid');
 
-    expect(mockMeetingService.delete).toBeCalledTimes(1);
-    expect(mockMeetingService.delete).toBeCalledWith('fake-uuid');
+    expect(mockMeetingService.delete).toHaveBeenCalledTimes(1);
+    expect(mockMeetingService.delete).toHaveBeenCalledWith('fake-uuid');
   });
 
   it('should create meeting', async () => {
@@ -158,8 +158,8 @@ describe('DecisionMeetingController', () => {
 
     await controller.create(meetingToUpdate);
 
-    expect(mockMeetingService.createOrUpdate).toBeCalledTimes(1);
-    expect(mockMeetingService.createOrUpdate).toBeCalledWith({
+    expect(mockMeetingService.createOrUpdate).toHaveBeenCalledTimes(1);
+    expect(mockMeetingService.createOrUpdate).toHaveBeenCalledWith({
       date: new Date(meetingToUpdate.date),
       applicationUuid: mockApplication.uuid,
     });
@@ -173,8 +173,8 @@ describe('DecisionMeetingController', () => {
 
     await controller.update(meetingToUpdate);
 
-    expect(mockMeetingService.createOrUpdate).toBeCalledTimes(1);
-    expect(mockMeetingService.createOrUpdate).toBeCalledWith({
+    expect(mockMeetingService.createOrUpdate).toHaveBeenCalledTimes(1);
+    expect(mockMeetingService.createOrUpdate).toHaveBeenCalledWith({
       uuid: meetingToUpdate.uuid,
       date: new Date(meetingToUpdate.date),
     });

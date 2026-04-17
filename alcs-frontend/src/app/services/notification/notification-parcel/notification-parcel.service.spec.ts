@@ -37,6 +37,6 @@ describe('NotificationParcelService', () => {
     const result = await service.fetchParcels('1');
 
     expect(result).toEqual([]);
-    expect(mockHttpClient.get).toBeCalledTimes(1);
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
   });
 });

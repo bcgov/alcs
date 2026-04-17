@@ -9,10 +9,7 @@ import {
 import { NoticeOfIntent } from '../notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent.service';
 import { NoticeOfIntentMeetingType } from './notice-of-intent-meeting-type.entity';
-import {
-  CreateNoticeOfIntentMeetingServiceDto,
-  UpdateNoticeOfIntentMeetingDto,
-} from './notice-of-intent-meeting.dto';
+import { CreateNoticeOfIntentMeetingServiceDto, UpdateNoticeOfIntentMeetingDto } from './notice-of-intent-meeting.dto';
 import { NoticeOfIntentMeeting } from './notice-of-intent-meeting.entity';
 import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting.service';
 
@@ -20,9 +17,7 @@ describe('NoticeOfIntentMeetingService', () => {
   let service: NoticeOfIntentMeetingService;
 
   let mockNoiMeetingRepository: DeepMocked<Repository<NoticeOfIntentMeeting>>;
-  let mockNoiMeetingTypeRepository: DeepMocked<
-    Repository<NoticeOfIntentMeetingType>
-  >;
+  let mockNoiMeetingTypeRepository: DeepMocked<Repository<NoticeOfIntentMeetingType>>;
   let mockNoiService: DeepMocked<NoticeOfIntentService>;
 
   let mockNoi;
@@ -51,9 +46,7 @@ describe('NoticeOfIntentMeetingService', () => {
       ],
     }).compile();
 
-    service = module.get<NoticeOfIntentMeetingService>(
-      NoticeOfIntentMeetingService,
-    );
+    service = module.get<NoticeOfIntentMeetingService>(NoticeOfIntentMeetingService);
 
     mockNoi = createMock<NoticeOfIntent>();
     mockMeeting = createMock<NoticeOfIntentMeeting>();
@@ -92,14 +85,14 @@ describe('NoticeOfIntentMeetingService', () => {
     mockNoiMeetingRepository.softRemove.mockResolvedValue({} as any);
     await service.remove(mockMeeting);
 
-    expect(mockNoiMeetingRepository.softRemove).toBeCalledTimes(1);
+    expect(mockNoiMeetingRepository.softRemove).toHaveBeenCalledTimes(1);
   });
 
   it('should create meeting', async () => {
     await service.create({} as CreateNoticeOfIntentMeetingServiceDto);
 
-    expect(mockNoiMeetingRepository.findOne).toBeCalledTimes(1);
-    expect(mockNoiMeetingRepository.save).toBeCalledTimes(1);
+    expect(mockNoiMeetingRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockNoiMeetingRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should update meeting', async () => {
@@ -113,14 +106,14 @@ describe('NoticeOfIntentMeetingService', () => {
       description: '',
     });
 
-    expect(mockNoiMeetingRepository.findOne).toBeCalledTimes(2);
-    expect(mockNoiMeetingRepository.findOne).toBeCalledWith({
+    expect(mockNoiMeetingRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockNoiMeetingRepository.findOne).toHaveBeenCalledWith({
       where: { uuid: meetingToUpdate.uuid },
       relations: {
         type: true,
       },
     });
-    expect(mockNoiMeetingRepository.save).toBeCalledTimes(1);
+    expect(mockNoiMeetingRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should allow setting end date to null', async () => {
@@ -134,39 +127,33 @@ describe('NoticeOfIntentMeetingService', () => {
       description: '',
     });
 
-    expect(mockNoiMeetingRepository.findOne).toBeCalledTimes(2);
-    expect(mockNoiMeetingRepository.findOne).toBeCalledWith({
+    expect(mockNoiMeetingRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockNoiMeetingRepository.findOne).toHaveBeenCalledWith({
       where: { uuid: meetingToUpdate.uuid },
       relations: {
         type: true,
       },
     });
-    expect(mockNoiMeetingRepository.save).toBeCalledTimes(1);
+    expect(mockNoiMeetingRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should fail on update if meeting not found', async () => {
     mockNoiMeetingRepository.findOne.mockResolvedValue(null);
 
-    expect(mockNoiMeetingRepository.save).toBeCalledTimes(0);
-    await expect(
-      service.update('fake-uuid', {} as UpdateNoticeOfIntentMeetingDto),
-    ).rejects.toMatchObject(
+    expect(mockNoiMeetingRepository.save).toHaveBeenCalledTimes(0);
+    await expect(service.update('fake-uuid', {} as UpdateNoticeOfIntentMeetingDto)).rejects.toMatchObject(
       new ServiceNotFoundException(`Meeting not found fake-uuid`),
     );
   });
 
   it('should fail on update if meeting start date > end date', async () => {
-    expect(mockNoiMeetingRepository.save).toBeCalledTimes(0);
+    expect(mockNoiMeetingRepository.save).toHaveBeenCalledTimes(0);
     await expect(
       service.update('fake-uuid', {
         meetingStartDate: 5,
         meetingEndDate: 1,
         description: '',
       }),
-    ).rejects.toMatchObject(
-      new ServiceValidationException(
-        'Start Date must be smaller than End Date',
-      ),
-    );
+    ).rejects.toMatchObject(new ServiceValidationException('Start Date must be smaller than End Date'));
   });
 });

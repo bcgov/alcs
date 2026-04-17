@@ -88,7 +88,7 @@ describe('TagCategoryService', () => {
     await expect(service.update(mockTagCategoryEntity.uuid, payload)).rejects.toMatchObject(
       new ServiceValidationException(`Tag Category for with ${mockTagCategoryEntity.uuid} not found`),
     );
-    expect(tagCategoryRepositoryMock.save).toBeCalledTimes(0);
+    expect(tagCategoryRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
   it('should call save when tag successfully create', async () => {
@@ -99,6 +99,6 @@ describe('TagCategoryService', () => {
 
     await service.create(payload);
 
-    expect(tagCategoryRepositoryMock.save).toBeCalledTimes(1);
+    expect(tagCategoryRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 });

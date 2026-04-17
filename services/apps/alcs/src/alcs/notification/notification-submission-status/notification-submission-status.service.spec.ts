@@ -17,15 +17,9 @@ dayjs.extend(timezone);
 
 describe('NotificationSubmissionStatusService', () => {
   let service: NotificationSubmissionStatusService;
-  let mockSubmissionToSubmissionStatusRepository: DeepMocked<
-    Repository<NotificationSubmissionToSubmissionStatus>
-  >;
-  let mockSubmissionStatusTypeRepository: DeepMocked<
-    Repository<NotificationSubmissionStatusType>
-  >;
-  let mockNotificationSubmissionRepository: DeepMocked<
-    Repository<NotificationSubmission>
-  >;
+  let mockSubmissionToSubmissionStatusRepository: DeepMocked<Repository<NotificationSubmissionToSubmissionStatus>>;
+  let mockSubmissionStatusTypeRepository: DeepMocked<Repository<NotificationSubmissionStatusType>>;
+  let mockNotificationSubmissionRepository: DeepMocked<Repository<NotificationSubmission>>;
 
   beforeEach(async () => {
     jest.useFakeTimers().setSystemTime(new Date('2022-01-01'));
@@ -52,9 +46,7 @@ describe('NotificationSubmissionStatusService', () => {
       ],
     }).compile();
 
-    service = module.get<NotificationSubmissionStatusService>(
-      NotificationSubmissionStatusService,
-    );
+    service = module.get<NotificationSubmissionStatusService>(NotificationSubmissionStatusService);
   });
 
   it('should be defined', () => {
@@ -87,16 +79,14 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     ];
 
-    mockSubmissionToSubmissionStatusRepository.save.mockResolvedValue(
-      savedStatuses as any,
-    );
+    mockSubmissionToSubmissionStatusRepository.save.mockResolvedValue(savedStatuses as any);
 
     const result = await service.setInitialStatuses(fakeSubmissionUuid);
 
-    expect(mockSubmissionStatusTypeRepository.find).toBeCalledTimes(1);
-    expect(mockSubmissionStatusTypeRepository.find).toBeCalledWith();
+    expect(mockSubmissionStatusTypeRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionStatusTypeRepository.find).toHaveBeenCalledWith();
 
-    expect(mockSubmissionToSubmissionStatusRepository.save).toBeCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.save).toHaveBeenCalledTimes(1);
     expect(result).toMatchObject(savedStatuses);
   });
 
@@ -110,18 +100,12 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     ];
 
-    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(
-      mockStatuses,
-    );
+    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(mockStatuses);
 
     const statuses = await service.getCurrentStatusesBy(fakeSubmissionUuid);
 
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findBy,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findBy,
-    ).toHaveBeenCalledWith({
+    expect(mockSubmissionToSubmissionStatusRepository.findBy).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.findBy).toHaveBeenCalledWith({
       submissionUuid: fakeSubmissionUuid,
     });
     expect(statuses).toEqual(mockStatuses);
@@ -138,9 +122,7 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     ];
 
-    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(
-      mockStatuses,
-    );
+    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(mockStatuses);
     mockNotificationSubmissionRepository.findOneBy.mockResolvedValue(
       new NotificationSubmission({
         uuid: fakeSubmissionUuid,
@@ -148,27 +130,17 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     );
 
-    const statuses = await service.getCurrentStatusesByFileNumber(
-      fakeFileNumber,
-    );
+    const statuses = await service.getCurrentStatusesByFileNumber(fakeFileNumber);
 
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findBy,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findBy,
-    ).toHaveBeenCalledWith({
+    expect(mockSubmissionToSubmissionStatusRepository.findBy).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.findBy).toHaveBeenCalledWith({
       submissionUuid: fakeSubmissionUuid,
     });
     expect(statuses).toEqual(mockStatuses);
-    expect(
-      mockNotificationSubmissionRepository.findOneBy,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledWith(
-      {
-        fileNumber: fakeFileNumber,
-      },
-    );
+    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledWith({
+      fileNumber: fakeFileNumber,
+    });
   });
 
   it('Should fail return current statuses by fileNumber if submission not found', async () => {
@@ -182,25 +154,17 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     ];
 
-    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(
-      mockStatuses,
-    );
+    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(mockStatuses);
     mockNotificationSubmissionRepository.findOneBy.mockResolvedValue(null);
 
-    await expect(
-      service.getCurrentStatusesByFileNumber(fakeFileNumber),
-    ).rejects.toMatchObject(
+    await expect(service.getCurrentStatusesByFileNumber(fakeFileNumber)).rejects.toMatchObject(
       new ServiceNotFoundException(
         `Submission does not exist for provided notification ${fakeFileNumber}. Only notifications originated in portal have statuses.`,
       ),
     );
 
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findBy,
-    ).toHaveBeenCalledTimes(0);
-    expect(
-      mockNotificationSubmissionRepository.findOneBy,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.findBy).toHaveBeenCalledTimes(0);
+    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledTimes(1);
   });
 
   it('Should set status effective date to now if no effective date passed', async () => {
@@ -211,24 +175,13 @@ describe('NotificationSubmissionStatusService', () => {
       effectiveDate: new Date(),
     });
 
-    mockSubmissionToSubmissionStatusRepository.findOneOrFail.mockResolvedValue(
-      mockStatus,
-    );
-    mockSubmissionToSubmissionStatusRepository.save.mockResolvedValue(
-      mockStatus,
-    );
+    mockSubmissionToSubmissionStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
+    mockSubmissionToSubmissionStatusRepository.save.mockResolvedValue(mockStatus);
 
-    const result = await service.setStatusDate(
-      fakeSubmissionUuid,
-      NOTIFICATION_STATUS.IN_PROGRESS,
-    );
+    const result = await service.setStatusDate(fakeSubmissionUuid, NOTIFICATION_STATUS.IN_PROGRESS);
 
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockSubmissionToSubmissionStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.findOneOrFail).toHaveBeenCalledWith({
       where: {
         submissionUuid: fakeSubmissionUuid,
         statusTypeCode: NOTIFICATION_STATUS.IN_PROGRESS,
@@ -245,9 +198,7 @@ describe('NotificationSubmissionStatusService', () => {
       effectiveDate: new Date(),
     });
 
-    mockSubmissionToSubmissionStatusRepository.findOneOrFail.mockResolvedValue(
-      mockStatus,
-    );
+    mockSubmissionToSubmissionStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
     mockSubmissionToSubmissionStatusRepository.save.mockResolvedValue(
       new NotificationSubmissionToSubmissionStatus({
         ...mockStatus,
@@ -255,17 +206,10 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     );
 
-    const result = await service.setStatusDate(
-      fakeSubmissionUuid,
-      NOTIFICATION_STATUS.IN_PROGRESS,
-    );
+    const result = await service.setStatusDate(fakeSubmissionUuid, NOTIFICATION_STATUS.IN_PROGRESS);
 
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockSubmissionToSubmissionStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.findOneOrFail).toHaveBeenCalledWith({
       where: {
         submissionUuid: fakeSubmissionUuid,
         statusTypeCode: NOTIFICATION_STATUS.IN_PROGRESS,
@@ -288,12 +232,8 @@ describe('NotificationSubmissionStatusService', () => {
       effectiveDate: new Date(),
     });
 
-    mockSubmissionToSubmissionStatusRepository.findOneOrFail.mockResolvedValue(
-      mockStatus,
-    );
-    mockSubmissionToSubmissionStatusRepository.save.mockResolvedValue(
-      mockStatus,
-    );
+    mockSubmissionToSubmissionStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
+    mockSubmissionToSubmissionStatusRepository.save.mockResolvedValue(mockStatus);
     mockNotificationSubmissionRepository.findOneBy.mockResolvedValue(
       new NotificationSubmission({
         uuid: fakeSubmissionUuid,
@@ -301,31 +241,20 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     );
 
-    const result = await service.setStatusDateByFileNumber(
-      fakeFileNumber,
-      NOTIFICATION_STATUS.IN_PROGRESS,
-    );
+    const result = await service.setStatusDateByFileNumber(fakeFileNumber, NOTIFICATION_STATUS.IN_PROGRESS);
 
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockSubmissionToSubmissionStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.findOneOrFail).toHaveBeenCalledWith({
       where: {
         submissionUuid: fakeSubmissionUuid,
         statusTypeCode: NOTIFICATION_STATUS.IN_PROGRESS,
       },
     });
     expect(result).toMatchObject(mockStatus);
-    expect(
-      mockNotificationSubmissionRepository.findOneBy,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledWith(
-      {
-        fileNumber: fakeFileNumber,
-      },
-    );
+    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledWith({
+      fileNumber: fakeFileNumber,
+    });
   });
 
   it('Should return current status by fileNumber', async () => {
@@ -348,14 +277,10 @@ describe('NotificationSubmissionStatusService', () => {
     const status = await service.getCurrentStatusByFileNumber(fakeFileNumber);
 
     expect(status).toEqual(mockStatus);
-    expect(
-      mockNotificationSubmissionRepository.findOneBy,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledWith(
-      {
-        fileNumber: fakeFileNumber,
-      },
-    );
+    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionRepository.findOneBy).toHaveBeenCalledWith({
+      fileNumber: fakeFileNumber,
+    });
   });
 
   it('Should remove statuses', async () => {
@@ -368,28 +293,16 @@ describe('NotificationSubmissionStatusService', () => {
       }),
     ];
 
-    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(
-      mockStatuses,
-    );
-    mockSubmissionToSubmissionStatusRepository.remove.mockResolvedValue(
-      {} as any,
-    );
+    mockSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(mockStatuses);
+    mockSubmissionToSubmissionStatusRepository.remove.mockResolvedValue({} as any);
 
     await service.removeStatuses(fakeSubmissionUuid);
 
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findBy,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockSubmissionToSubmissionStatusRepository.findBy,
-    ).toHaveBeenCalledWith({
+    expect(mockSubmissionToSubmissionStatusRepository.findBy).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.findBy).toHaveBeenCalledWith({
       submissionUuid: fakeSubmissionUuid,
     });
-    expect(mockSubmissionToSubmissionStatusRepository.remove).toBeCalledTimes(
-      1,
-    );
-    expect(mockSubmissionToSubmissionStatusRepository.remove).toBeCalledWith(
-      mockStatuses,
-    );
+    expect(mockSubmissionToSubmissionStatusRepository.remove).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionToSubmissionStatusRepository.remove).toHaveBeenCalledWith(mockStatuses);
   });
 });

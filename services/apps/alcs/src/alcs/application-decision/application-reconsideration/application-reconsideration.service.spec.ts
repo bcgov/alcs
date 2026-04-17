@@ -162,7 +162,7 @@ describe('ReconsiderationService', () => {
 
     await service.getByBoard(fakeBoardUuid);
 
-    expect(reconsiderationRepositoryMock.find).toBeCalledWith(findOptions);
+    expect(reconsiderationRepositoryMock.find).toHaveBeenCalledWith(findOptions);
   });
 
   it('should successfully create application and reconsideration card if app does not exist', async () => {
@@ -180,16 +180,16 @@ describe('ReconsiderationService', () => {
     await service.create(mockReconsiderationCreateDto, {} as Board);
 
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
-    expect(applicationServiceMock.create).toBeCalledWith(mockApplicationCreateDto, false);
+    expect(cardServiceMock.create).toHaveBeenCalledWith('RECON', {} as Board, false);
+    expect(applicationServiceMock.create).toHaveBeenCalledWith(mockApplicationCreateDto, false);
   });
 
   it('should successfully create reconsideration and link to existing application', async () => {
     await service.create(mockReconsiderationCreateDto, {} as Board);
 
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
-    expect(applicationServiceMock.create).toBeCalledTimes(0);
+    expect(cardServiceMock.create).toHaveBeenCalledWith('RECON', {} as Board, false);
+    expect(applicationServiceMock.create).toHaveBeenCalledTimes(0);
   });
 
   it('should successfully create reconsideration and link to decisions', async () => {
@@ -209,8 +209,8 @@ describe('ReconsiderationService', () => {
     );
 
     expect(reconsiderationRepositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(cardServiceMock.create).toBeCalledWith('RECON', {} as Board, false);
-    expect(applicationServiceMock.create).toBeCalledTimes(0);
+    expect(cardServiceMock.create).toHaveBeenCalledWith('RECON', {} as Board, false);
+    expect(applicationServiceMock.create).toHaveBeenCalledTimes(0);
     expect(decisionServiceMock.getMany).toHaveBeenCalledTimes(1);
     expect(decisionServiceMock.getMany).toHaveBeenCalledWith([decisionUuid]);
     expect(reconsiderationRepositoryMock.save.mock.calls[0][0].reconsidersDecisions).toEqual([mockDecision]);
@@ -316,7 +316,7 @@ describe('ReconsiderationService', () => {
 
     await service.getByCardUuid(cardUuid);
 
-    expect(reconsiderationRepositoryMock.findOneOrFail).toBeCalledWith(findOptions);
+    expect(reconsiderationRepositoryMock.findOneOrFail).toHaveBeenCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getByUuid', async () => {
@@ -328,7 +328,7 @@ describe('ReconsiderationService', () => {
 
     await service.getByUuid(uuid);
 
-    expect(reconsiderationRepositoryMock.findOneOrFail).toBeCalledWith(findOptions);
+    expect(reconsiderationRepositoryMock.findOneOrFail).toHaveBeenCalledWith(findOptions);
   });
 
   it('should have correct filter condition in getSubtasks', async () => {
@@ -360,7 +360,7 @@ describe('ReconsiderationService', () => {
     };
     await service.getWithIncompleteSubtaskByType(subtaskType);
 
-    expect(reconsiderationRepositoryMock.find).toBeCalledWith(findOptions);
+    expect(reconsiderationRepositoryMock.find).toHaveBeenCalledWith(findOptions);
   });
 
   it('should load deleted cards', async () => {

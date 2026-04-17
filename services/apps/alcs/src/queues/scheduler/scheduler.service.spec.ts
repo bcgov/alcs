@@ -95,9 +95,9 @@ describe('SchedulerService', () => {
   //Job Disabled for now
   // it('should call add for scheduleApplicationExpiry', async () => {
   //   await schedulerService.setup();
-  //   expect(mockAppExpiryQueue.getRepeatableJobs).toBeCalledTimes(1);
-  //   expect(mockAppExpiryQueue.add).toBeCalledTimes(1);
-  //   expect(mockAppExpiryQueue.add).toBeCalledWith(
+  //   expect(mockAppExpiryQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
+  //   expect(mockAppExpiryQueue.add).toHaveBeenCalledTimes(1);
+  //   expect(mockAppExpiryQueue.add).toHaveBeenCalledWith(
   //     'applicationExpiry',
   //     {},
   //     {
@@ -112,16 +112,14 @@ describe('SchedulerService', () => {
 
   it('should call add for notification cleanup', async () => {
     await schedulerService.setup();
-    expect(mockNotificationCleanUpQueue.getRepeatableJobs).toBeCalledTimes(1);
-    expect(mockNotificationCleanUpQueue.add).toBeCalledTimes(1);
-    expect(mockNotificationCleanUpQueue.add).toBeCalledWith(
+    expect(mockNotificationCleanUpQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.add).toHaveBeenCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.add).toHaveBeenCalledWith(
       'cleanupNotifications',
       {},
       {
         repeat: {
-          pattern: isDST()
-            ? EVERYDAY_MIDNIGHT_PDT_IN_UTC
-            : EVERYDAY_MIDNIGHT_PST_IN_UTC,
+          pattern: isDST() ? EVERYDAY_MIDNIGHT_PDT_IN_UTC : EVERYDAY_MIDNIGHT_PST_IN_UTC,
         },
       },
     );
@@ -129,11 +127,9 @@ describe('SchedulerService', () => {
 
   it('should call add for application status email', async () => {
     await schedulerService.setup();
-    expect(mockApplicationStatusEmailsQueue.getRepeatableJobs).toBeCalledTimes(
-      1,
-    );
-    expect(mockApplicationStatusEmailsQueue.add).toBeCalledTimes(1);
-    expect(mockApplicationStatusEmailsQueue.add).toBeCalledWith(
+    expect(mockApplicationStatusEmailsQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
+    expect(mockApplicationStatusEmailsQueue.add).toHaveBeenCalledTimes(1);
+    expect(mockApplicationStatusEmailsQueue.add).toHaveBeenCalledWith(
       'applicationSubmissionStatusEmails',
       {},
       {
@@ -148,11 +144,9 @@ describe('SchedulerService', () => {
 
   it('should call add for application emails', async () => {
     await schedulerService.setup();
-    expect(
-      mockApplicationDecisionEmailsQueue.getRepeatableJobs,
-    ).toBeCalledTimes(1);
-    expect(mockApplicationDecisionEmailsQueue.add).toBeCalledTimes(1);
-    expect(mockApplicationDecisionEmailsQueue.add).toBeCalledWith(
+    expect(mockApplicationDecisionEmailsQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionEmailsQueue.add).toHaveBeenCalledTimes(1);
+    expect(mockApplicationDecisionEmailsQueue.add).toHaveBeenCalledWith(
       'applicationDecisionEmails',
       {},
       {
@@ -167,11 +161,9 @@ describe('SchedulerService', () => {
 
   it('should call add for notice of intent decision emails', async () => {
     await schedulerService.setup();
-    expect(
-      mockNoticeOfIntentDecisionEmailsQueue.getRepeatableJobs,
-    ).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toBeCalledWith(
+    expect(mockNoticeOfIntentDecisionEmailsQueue.getRepeatableJobs).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toHaveBeenCalledTimes(1);
+    expect(mockNoticeOfIntentDecisionEmailsQueue.add).toHaveBeenCalledWith(
       'noticeOfIntentDecisionEmails',
       {},
       {

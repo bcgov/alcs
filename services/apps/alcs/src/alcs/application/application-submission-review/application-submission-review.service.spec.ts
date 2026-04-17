@@ -9,9 +9,7 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
 
 describe('ApplicationSubmissionReviewService', () => {
   let service: ApplicationSubmissionReviewService;
-  let mockApplicationSubmissionRepository: DeepMocked<
-    Repository<ApplicationSubmissionReview>
-  >;
+  let mockApplicationSubmissionRepository: DeepMocked<Repository<ApplicationSubmissionReview>>;
   let mapper: DeepMocked<Mapper>;
 
   beforeEach(async () => {
@@ -32,9 +30,7 @@ describe('ApplicationSubmissionReviewService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationSubmissionReviewService>(
-      ApplicationSubmissionReviewService,
-    );
+    service = module.get<ApplicationSubmissionReviewService>(ApplicationSubmissionReviewService);
   });
 
   it('should be defined', () => {
@@ -44,15 +40,13 @@ describe('ApplicationSubmissionReviewService', () => {
   it('should successfully find ApplicationSubmissionReview', async () => {
     const fakeFileNumber = 'fake';
 
-    mockApplicationSubmissionRepository.findOne.mockResolvedValue(
-      {} as ApplicationSubmissionReview,
-    );
+    mockApplicationSubmissionRepository.findOne.mockResolvedValue({} as ApplicationSubmissionReview);
 
     const result = await service.get(fakeFileNumber);
 
     expect(result).toBeDefined();
-    expect(mockApplicationSubmissionRepository.findOne).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionRepository.findOne).toBeCalledWith({
+    expect(mockApplicationSubmissionRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionRepository.findOne).toHaveBeenCalledWith({
       where: { applicationFileNumber: fakeFileNumber },
     });
   });
@@ -64,7 +58,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const result = await service.mapToDto(fakeSubmission);
 
-    expect(mapper.mapAsync).toBeCalledTimes(1);
+    expect(mapper.mapAsync).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 });

@@ -59,8 +59,8 @@ describe('NoticeOfIntentDecisionConditionService', () => {
 
     const result = await service.getOneOrFail('fake');
 
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledWith({
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'fake' },
       relations: { type: true },
     });
@@ -74,7 +74,7 @@ describe('NoticeOfIntentDecisionConditionService', () => {
 
     await service.remove(conditions);
 
-    expect(mockNOIDecisionConditionRepository.remove).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.remove).toHaveBeenCalledTimes(1);
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
@@ -86,7 +86,7 @@ describe('NoticeOfIntentDecisionConditionService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(0);
   });
 
   it('should update existing components when given a DTO with a UUID', async () => {
@@ -104,8 +104,8 @@ describe('NoticeOfIntentDecisionConditionService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledWith({
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: 'uuid' },
       relations: { type: true },
     });
@@ -121,8 +121,8 @@ describe('NoticeOfIntentDecisionConditionService', () => {
     const result = await service.createOrUpdate(updateDtos, [], [], true);
 
     expect(result).toBeDefined();
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockNOIDecisionConditionRepository.save).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.save).toHaveBeenCalledTimes(1);
   });
 
   it('should not persist entity if persist flag is false', async () => {
@@ -134,8 +134,8 @@ describe('NoticeOfIntentDecisionConditionService', () => {
     const result = await service.createOrUpdate(updateDtos, [], [], false);
 
     expect(result).toBeDefined();
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
-    expect(mockNOIDecisionConditionRepository.save).toBeCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.save).toHaveBeenCalledTimes(0);
   });
 
   it('should update on the repo for update', async () => {
@@ -148,8 +148,8 @@ describe('NoticeOfIntentDecisionConditionService', () => {
     });
 
     expect(result).toBeDefined();
-    expect(mockNOIDecisionConditionRepository.update).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.update).toHaveBeenCalledTimes(1);
     expect(mockNOIDecisionConditionRepository.update.mock.calls[0][1]['administrativeFee']).toEqual(50);
-    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toHaveBeenCalledTimes(1);
   });
 });

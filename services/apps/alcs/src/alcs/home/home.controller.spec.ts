@@ -270,7 +270,7 @@ describe('HomeController', () => {
       const res = await controller.getIncompleteSubtasksByType(CARD_SUBTASK_TYPE.GIS);
 
       expect(res.length).toEqual(1);
-      expect(mockApplicationService.getWithIncompleteSubtaskByType).toBeCalledTimes(1);
+      expect(mockApplicationService.getWithIncompleteSubtaskByType).toHaveBeenCalledTimes(1);
       expect(res[0].title).toContain(mockApplication.fileNumber);
       expect(res[0].title).toContain(mockApplication.applicant);
       expect(res[0].activeDays).toBe(activeDays);
@@ -301,7 +301,7 @@ describe('HomeController', () => {
       const res = await controller.getIncompleteSubtasksByType(CARD_SUBTASK_TYPE.GIS);
 
       expect(res.length).toEqual(1);
-      expect(mockApplicationService.getWithIncompleteSubtaskByType).toBeCalledTimes(1);
+      expect(mockApplicationService.getWithIncompleteSubtaskByType).toHaveBeenCalledTimes(1);
       expect(res[0].title).toContain(mockApplication.fileNumber);
       expect(res[0].title).toContain(mockApplication.applicant);
       expect(res[0].activeDays).toBe(activeDays);
@@ -318,7 +318,7 @@ describe('HomeController', () => {
       const res = await controller.getIncompleteSubtasksByType(CARD_SUBTASK_TYPE.GIS);
 
       expect(res.length).toEqual(1);
-      expect(mockApplicationReconsiderationService.getWithIncompleteSubtaskByType).toBeCalledTimes(1);
+      expect(mockApplicationReconsiderationService.getWithIncompleteSubtaskByType).toHaveBeenCalledTimes(1);
       expect(res[0].title).toContain(mockReconsideration.application.fileNumber);
       expect(res[0].title).toContain(mockReconsideration.application.applicant);
       expect(res[0].activeDays).toBeUndefined();

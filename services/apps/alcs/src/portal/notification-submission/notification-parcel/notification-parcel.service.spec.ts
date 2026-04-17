@@ -49,8 +49,8 @@ describe('NotificationParcelService', () => {
     const result = await service.fetchByFileId(mockFileNumber);
 
     expect(result).toEqual([mockNOIParcel]);
-    expect(mockParcelRepo.find).toBeCalledTimes(1);
-    expect(mockParcelRepo.find).toBeCalledWith({
+    expect(mockParcelRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.find).toHaveBeenCalledWith({
       where: {
         notificationSubmission: {
           fileNumber: mockFileNumber,
@@ -69,8 +69,8 @@ describe('NotificationParcelService', () => {
     const result = await service.getOneOrFail(mockUuid);
 
     expect(result).toEqual(mockNOIParcel);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
   });
@@ -78,11 +78,9 @@ describe('NotificationParcelService', () => {
   it('should raise error on get parcel by uuid if the parcel does not exist', async () => {
     mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
 
-    await expect(service.getOneOrFail(mockUuid)).rejects.toMatchObject(
-      mockError,
-    );
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    await expect(service.getOneOrFail(mockUuid)).rejects.toMatchObject(mockError);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
   });
@@ -105,11 +103,11 @@ describe('NotificationParcelService', () => {
 
     await service.update(updateParcelDto);
 
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
-    expect(mockParcelRepo.save).toBeCalledTimes(1);
+    expect(mockParcelRepo.save).toHaveBeenCalledTimes(1);
   });
 
   it('it should fail to update a parcel if the parcel does not exist. ', async () => {
@@ -129,14 +127,12 @@ describe('NotificationParcelService', () => {
     mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
     mockParcelRepo.save.mockResolvedValue(new NotificationParcel());
 
-    await expect(service.update(updateParcelDto)).rejects.toMatchObject(
-      mockError,
-    );
-    expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
-    expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
+    await expect(service.update(updateParcelDto)).rejects.toMatchObject(mockError);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.findOneOrFail).toHaveBeenCalledWith({
       where: { uuid: mockUuid },
     });
-    expect(mockParcelRepo.save).toBeCalledTimes(0);
+    expect(mockParcelRepo.save).toHaveBeenCalledTimes(0);
   });
 
   it('should successfully delete a parcel and update applicant', async () => {
@@ -146,30 +142,26 @@ describe('NotificationParcelService', () => {
     const result = await service.deleteMany([mockUuid]);
 
     expect(result).toBeDefined();
-    expect(mockParcelRepo.find).toBeCalledTimes(1);
-    expect(mockParcelRepo.find).toBeCalledWith({
+    expect(mockParcelRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.find).toHaveBeenCalledWith({
       where: { uuid: In([mockUuid]) },
     });
-    expect(mockParcelRepo.remove).toBeCalledWith([mockNOIParcel]);
-    expect(mockParcelRepo.remove).toBeCalledTimes(1);
+    expect(mockParcelRepo.remove).toHaveBeenCalledWith([mockNOIParcel]);
+    expect(mockParcelRepo.remove).toHaveBeenCalledTimes(1);
   });
 
   it('should not call remove if the parcel does not exist', async () => {
-    const exception = new ServiceValidationException(
-      `Unable to find parcels with provided uuids: ${mockUuid}.`,
-    );
+    const exception = new ServiceValidationException(`Unable to find parcels with provided uuids: ${mockUuid}.`);
 
     mockParcelRepo.find.mockResolvedValue([]);
     mockParcelRepo.remove.mockResolvedValue(new NotificationParcel());
 
-    await expect(service.deleteMany([mockUuid])).rejects.toMatchObject(
-      exception,
-    );
-    expect(mockParcelRepo.find).toBeCalledTimes(1);
-    expect(mockParcelRepo.find).toBeCalledWith({
+    await expect(service.deleteMany([mockUuid])).rejects.toMatchObject(exception);
+    expect(mockParcelRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockParcelRepo.find).toHaveBeenCalledWith({
       where: { uuid: In([mockUuid]) },
     });
-    expect(mockParcelRepo.remove).toBeCalledTimes(0);
+    expect(mockParcelRepo.remove).toHaveBeenCalledTimes(0);
   });
 
   it('should successfully create a parcel', async () => {
@@ -186,6 +178,6 @@ describe('NotificationParcelService', () => {
     const result = await service.create(mockFileNumber);
 
     expect(result).toEqual(mockParcel);
-    expect(mockParcelRepo.save).toBeCalledTimes(1);
+    expect(mockParcelRepo.save).toHaveBeenCalledTimes(1);
   });
 });

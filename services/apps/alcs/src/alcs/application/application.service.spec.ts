@@ -15,14 +15,8 @@ import { ApplicationRegion } from '../code/application-code/application-region/a
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
 import { LocalGovernmentService } from '../local-government/local-government.service';
-import {
-  ApplicationTimeData,
-  ApplicationTimeTrackingService,
-} from './application-time-tracking.service';
-import {
-  ApplicationUpdateServiceDto,
-  CreateApplicationServiceDto,
-} from './application.dto';
+import { ApplicationTimeData, ApplicationTimeTrackingService } from './application-time-tracking.service';
+import { ApplicationUpdateServiceDto, CreateApplicationServiceDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
 
@@ -110,9 +104,7 @@ describe('ApplicationService', () => {
 
     applicationRepositoryMock.find.mockResolvedValue([applicationMockEntity]);
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
-    applicationRepositoryMock.findOneOrFail.mockResolvedValue(
-      applicationMockEntity,
-    );
+    applicationRepositoryMock.findOneOrFail.mockResolvedValue(applicationMockEntity);
     applicationRepositoryMock.save.mockReturnValue(applicationMockEntity);
     applicationRepositoryMock.update.mockReturnValue(applicationMockEntity);
     applicationRepositoryMock.exist.mockResolvedValue(true);
@@ -123,9 +115,7 @@ describe('ApplicationService', () => {
   });
 
   it('should get all applications', async () => {
-    expect(await applicationService.getMany({})).toStrictEqual([
-      applicationMockEntity,
-    ]);
+    expect(await applicationService.getMany({})).toStrictEqual([applicationMockEntity]);
   });
 
   it('should delete application', async () => {
@@ -150,9 +140,7 @@ describe('ApplicationService', () => {
       dateSubmittedToAlc: new Date(),
     };
 
-    expect(await applicationService.create(payload)).toStrictEqual(
-      applicationMockEntity,
-    );
+    expect(await applicationService.create(payload)).toStrictEqual(applicationMockEntity);
     expect(mockFileNumberService.checkValidFileNumber).toHaveBeenCalledTimes(1);
     expect(mockCodeService.fetchRegion).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
@@ -166,12 +154,9 @@ describe('ApplicationService', () => {
       applicant: applicationMockEntity.applicant,
     };
 
-    expect(
-      await applicationService.updateByFileNumber(
-        applicationMockEntity.fileNumber,
-        payload,
-      ),
-    ).toStrictEqual(applicationMockEntity);
+    expect(await applicationService.updateByFileNumber(applicationMockEntity.fileNumber, payload)).toStrictEqual(
+      applicationMockEntity,
+    );
     expect(applicationRepositoryMock.update).toHaveBeenCalledTimes(1);
   });
 
@@ -180,10 +165,7 @@ describe('ApplicationService', () => {
     const applicationMockEntity2 = initApplicationMockEntity();
     applicationMockEntity2.uuid = applicationMockEntity2.uuid + '2';
 
-    applicationRepositoryMock.find.mockResolvedValue([
-      applicationMockEntity,
-      applicationMockEntity2,
-    ]);
+    applicationRepositoryMock.find.mockResolvedValue([applicationMockEntity, applicationMockEntity2]);
 
     const mockApplicationTimeMap = new Map<string, ApplicationTimeData>();
     mockApplicationTimeMap.set(applicationMockEntity.uuid, {
@@ -195,37 +177,25 @@ describe('ApplicationService', () => {
       pausedDays: 50,
     });
 
-    mockApplicationTimeService.fetchActiveTimes.mockResolvedValue(
-      mockApplicationTimeMap,
-    );
+    mockApplicationTimeService.fetchActiveTimes.mockResolvedValue(mockApplicationTimeMap);
 
-    const result = await applicationService.getAllNearExpiryDates(
-      new Date(10, 5),
-      new Date(11, 6),
-    );
+    const result = await applicationService.getAllNearExpiryDates(new Date(10, 5), new Date(11, 6));
 
     expect(result).toStrictEqual([applicationMockEntity]);
-    expect(mockApplicationTimeService.fetchActiveTimes).toBeCalledTimes(1);
+    expect(mockApplicationTimeService.fetchActiveTimes).toHaveBeenCalledTimes(1);
   });
 
   it('should not return applications near expiry', async () => {
     const applicationMockEntity = initApplicationMockEntity();
 
-    applicationRepositoryMock.find.mockResolvedValueOnce([
-      applicationMockEntity,
-    ]);
+    applicationRepositoryMock.find.mockResolvedValueOnce([applicationMockEntity]);
 
-    mockApplicationTimeService.fetchActiveTimes.mockResolvedValue(
-      new Map<string, ApplicationTimeData>(),
-    );
+    mockApplicationTimeService.fetchActiveTimes.mockResolvedValue(new Map<string, ApplicationTimeData>());
 
-    const result = await applicationService.getAllNearExpiryDates(
-      new Date(10, 5),
-      new Date(11, 6),
-    );
+    const result = await applicationService.getAllNearExpiryDates(new Date(10, 5), new Date(11, 6));
 
     expect(result).toStrictEqual([]);
-    expect(mockApplicationTimeService.fetchActiveTimes).toBeCalledTimes(1);
+    expect(mockApplicationTimeService.fetchActiveTimes).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for updateByUuid', async () => {
@@ -249,17 +219,12 @@ describe('ApplicationService', () => {
   it('should fail to update if application does not exist', async () => {
     applicationRepositoryMock.exist.mockResolvedValue(false);
 
-    const promise = applicationService.updateByUuid(
-      applicationMockEntity.uuid,
-      {
-        applicant: 'new-applicant',
-      },
-    );
+    const promise = applicationService.updateByUuid(applicationMockEntity.uuid, {
+      applicant: 'new-applicant',
+    });
 
     await expect(promise).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Application not found with file number ${applicationMockEntity.uuid}`,
-      ),
+      new ServiceNotFoundException(`Application not found with file number ${applicationMockEntity.uuid}`),
     );
 
     expect(applicationRepositoryMock.exist).toHaveBeenCalledTimes(1);
@@ -272,9 +237,7 @@ describe('ApplicationService', () => {
     await applicationService.getDeletedCard('card');
 
     expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
-    expect(
-      applicationRepositoryMock.findOne.mock.calls[0][0].withDeleted,
-    ).toEqual(true);
+    expect(applicationRepositoryMock.findOne.mock.calls[0][0].withDeleted).toEqual(true);
   });
 
   it('should get application by uuid', async () => {
@@ -312,12 +275,11 @@ describe('ApplicationService', () => {
       new ApplicationSubmissionToSubmissionStatus(),
     );
     await applicationService.cancel('');
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-    ).toHaveBeenCalledWith('', SUBMISSION_STATUS.CANCELLED);
+    expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
+      '',
+      SUBMISSION_STATUS.CANCELLED,
+    );
   });
 
   it('should clear the cancelled status for uncancel', async () => {
@@ -325,11 +287,11 @@ describe('ApplicationService', () => {
       new ApplicationSubmissionToSubmissionStatus(),
     );
     await applicationService.uncancel('');
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
-    ).toHaveBeenCalledWith('', SUBMISSION_STATUS.CANCELLED, null);
+    expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDateByFileNumber).toHaveBeenCalledWith(
+      '',
+      SUBMISSION_STATUS.CANCELLED,
+      null,
+    );
   });
 });

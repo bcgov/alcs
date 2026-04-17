@@ -127,7 +127,7 @@ describe('CardService', () => {
     await expect(service.update(new User(), mockCardEntity.uuid, payload)).rejects.toMatchObject(
       new ServiceValidationException(`Card for with ${mockCardEntity.uuid} not found`),
     );
-    expect(cardRepositoryMock.save).toBeCalledTimes(0);
+    expect(cardRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
   it('should call save when card successfully create', async () => {
@@ -143,7 +143,7 @@ describe('CardService', () => {
 
     await service.create(CARD_TYPE.APP, board);
 
-    expect(cardRepositoryMock.save).toBeCalledTimes(1);
+    expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
   it('should fail on create if type does not exist', async () => {
@@ -160,7 +160,7 @@ describe('CardService', () => {
       new ServiceValidationException(`Provided type does not exist ${fakeType}`),
     );
 
-    expect(cardRepositoryMock.save).toBeCalledTimes(0);
+    expect(cardRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
   it('should call the repo for listing types', async () => {
@@ -169,7 +169,7 @@ describe('CardService', () => {
     const types = await service.getCardTypes();
     expect(types.length).toEqual(1);
 
-    expect(cardTypeRepositoryMock.find).toBeCalledTimes(1);
+    expect(cardTypeRepositoryMock.find).toHaveBeenCalledTimes(1);
   });
 
   it('should call the repo for listing portal card types', async () => {
@@ -178,7 +178,7 @@ describe('CardService', () => {
     const types = await service.getPortalCardTypes();
     expect(types.length).toEqual(1);
 
-    expect(cardTypeRepositoryMock.find).toBeCalledTimes(1);
+    expect(cardTypeRepositoryMock.find).toHaveBeenCalledTimes(1);
   });
 
   it('should call the repo for getWithBoard', async () => {
@@ -186,7 +186,7 @@ describe('CardService', () => {
 
     const card = await service.getWithBoard('');
     expect(card).toBeDefined();
-    expect(cardRepositoryMock.findOne).toBeCalledTimes(1);
+    expect(cardRepositoryMock.findOne).toHaveBeenCalledTimes(1);
   });
 
   it('should call the repo for getByBoard', async () => {
@@ -194,7 +194,7 @@ describe('CardService', () => {
 
     const card = await service.getByBoard('');
     expect(card).toBeDefined();
-    expect(cardRepositoryMock.find).toBeCalledTimes(1);
+    expect(cardRepositoryMock.find).toHaveBeenCalledTimes(1);
   });
 
   it('should call the repo for getByCardStatus', async () => {
@@ -202,7 +202,7 @@ describe('CardService', () => {
 
     const card = await service.getByCardStatus('');
     expect(card).toBeDefined();
-    expect(cardRepositoryMock.find).toBeCalledTimes(1);
+    expect(cardRepositoryMock.find).toHaveBeenCalledTimes(1);
   });
 
   it('should call the repo for save', async () => {
@@ -211,7 +211,7 @@ describe('CardService', () => {
 
     const card = await service.save(new Card());
     expect(card).toBeDefined();
-    expect(cardRepositoryMock.findOne).toBeCalledTimes(1);
+    expect(cardRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
@@ -251,7 +251,7 @@ describe('CardService', () => {
     mockSubtaskService.deleteMany.mockResolvedValue();
 
     await service.archive('uuid');
-    expect(cardRepositoryMock.findOneOrFail).toBeCalledTimes(1);
+    expect(cardRepositoryMock.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.softRemove).toHaveBeenCalledTimes(1);
     expect(mockSubtaskService.deleteMany).toHaveBeenCalledTimes(1);
@@ -272,7 +272,7 @@ describe('CardService', () => {
     mockSubtaskService.recoverMany.mockResolvedValue();
 
     await service.recover('uuid');
-    expect(cardRepositoryMock.findOneOrFail).toBeCalledTimes(1);
+    expect(cardRepositoryMock.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.recover).toHaveBeenCalledTimes(1);
     expect(mockSubtaskService.recoverMany).toHaveBeenCalledTimes(1);

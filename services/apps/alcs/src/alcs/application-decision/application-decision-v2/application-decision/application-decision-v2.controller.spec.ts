@@ -3,10 +3,7 @@ import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import {
-  initApplicationDecisionMock,
-  initApplicationMockEntity,
-} from '../../../../../test/mocks/mockEntities';
+import { initApplicationDecisionMock, initApplicationMockEntity } from '../../../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
 import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v2.automapper.profile';
 import { ApplicationProfile } from '../../../../common/automapper/application.automapper.profile';
@@ -19,10 +16,7 @@ import { ApplicationModificationService } from '../../application-modification/a
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionV2Controller } from './application-decision-v2.controller';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
-import {
-  CreateApplicationDecisionDto,
-  UpdateApplicationDecisionDto,
-} from './application-decision.dto';
+import { CreateApplicationDecisionDto, UpdateApplicationDecisionDto } from './application-decision.dto';
 
 describe('ApplicationDecisionV2Controller', () => {
   let controller: ApplicationDecisionV2Controller;
@@ -84,9 +78,7 @@ describe('ApplicationDecisionV2Controller', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationDecisionV2Controller>(
-      ApplicationDecisionV2Controller,
-    );
+    controller = module.get<ApplicationDecisionV2Controller>(ApplicationDecisionV2Controller);
 
     mockDecisionService.fetchCodes.mockResolvedValue({
       outcomes: [
@@ -112,7 +104,7 @@ describe('ApplicationDecisionV2Controller', () => {
 
     const result = await controller.getByFileNumber('fake-number');
 
-    expect(mockDecisionService.getByAppFileNumber).toBeCalledTimes(1);
+    expect(mockDecisionService.getByAppFileNumber).toHaveBeenCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -120,7 +112,7 @@ describe('ApplicationDecisionV2Controller', () => {
     mockDecisionService.get.mockResolvedValue(mockDecision);
     const result = await controller.get('fake-uuid');
 
-    expect(mockDecisionService.get).toBeCalledTimes(1);
+    expect(mockDecisionService.get).toHaveBeenCalledTimes(1);
     expect(result.uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -129,8 +121,8 @@ describe('ApplicationDecisionV2Controller', () => {
 
     await controller.delete('fake-uuid');
 
-    expect(mockDecisionService.delete).toBeCalledTimes(1);
-    expect(mockDecisionService.delete).toBeCalledWith('fake-uuid');
+    expect(mockDecisionService.delete).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.delete).toHaveBeenCalledWith('fake-uuid');
   });
 
   it('should create the decision if application exists', async () => {
@@ -146,8 +138,8 @@ describe('ApplicationDecisionV2Controller', () => {
 
     await controller.create(decisionToCreate);
 
-    expect(mockDecisionService.create).toBeCalledTimes(1);
-    expect(mockDecisionService.create).toBeCalledWith(
+    expect(mockDecisionService.create).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.create).toHaveBeenCalledWith(
       {
         applicationFileNumber: mockApplication.fileNumber,
         outcomeCode: 'outcome',
@@ -164,9 +156,7 @@ describe('ApplicationDecisionV2Controller', () => {
   it('should update the decision', async () => {
     mockApplicationService.getFileNumber.mockResolvedValue('file-number');
     mockDecisionService.get.mockResolvedValue(new ApplicationDecision());
-    mockDecisionService.getByAppFileNumber.mockResolvedValue([
-      new ApplicationDecision(),
-    ]);
+    mockDecisionService.getByAppFileNumber.mockResolvedValue([new ApplicationDecision()]);
     mockDecisionService.update.mockResolvedValue(mockDecision);
 
     const updates = {
@@ -177,8 +167,8 @@ describe('ApplicationDecisionV2Controller', () => {
 
     await controller.update('fake-uuid', updates);
 
-    expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith(
+    expect(mockDecisionService.update).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.update).toHaveBeenCalledWith(
       'fake-uuid',
       {
         outcome: 'New Outcome',
@@ -202,7 +192,7 @@ describe('ApplicationDecisionV2Controller', () => {
       },
     });
 
-    expect(mockDecisionService.attachDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.attachDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception if there is no file for file upload', async () => {
@@ -215,9 +205,7 @@ describe('ApplicationDecisionV2Controller', () => {
       },
     });
 
-    await expect(promise).rejects.toMatchObject(
-      new Error('Request is not multipart'),
-    );
+    await expect(promise).rejects.toMatchObject(new Error('Request is not multipart'));
   });
 
   it('should call through for getting download url', async () => {
@@ -225,7 +213,7 @@ describe('ApplicationDecisionV2Controller', () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
     const res = await controller.getDownloadUrl('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
 
@@ -235,7 +223,7 @@ describe('ApplicationDecisionV2Controller', () => {
       fileName: '',
     });
 
-    expect(mockDecisionService.updateDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.updateDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for getting open url', async () => {
@@ -243,7 +231,7 @@ describe('ApplicationDecisionV2Controller', () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
     const res = await controller.getOpenUrl('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
+    expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
   });
 
@@ -251,14 +239,14 @@ describe('ApplicationDecisionV2Controller', () => {
     mockDecisionService.deleteDocument.mockResolvedValue({} as any);
     await controller.deleteDocument('fake-uuid', 'document-uuid');
 
-    expect(mockDecisionService.deleteDocument).toBeCalledTimes(1);
+    expect(mockDecisionService.deleteDocument).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for resolution number generation', async () => {
     mockDecisionService.generateResolutionNumber.mockResolvedValue(1);
     await controller.getNextAvailableResolutionNumber(2023);
 
-    expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
-    expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
+    expect(mockDecisionService.generateResolutionNumber).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.generateResolutionNumber).toHaveBeenCalledWith(2023);
   });
 });

@@ -73,9 +73,7 @@ describe('NoticeOfIntentParcelController', () => {
       ],
     }).compile();
 
-    controller = module.get<NoticeOfIntentParcelController>(
-      NoticeOfIntentParcelController,
-    );
+    controller = module.get<NoticeOfIntentParcelController>(NoticeOfIntentParcelController);
   });
 
   it('should be defined', () => {
@@ -88,9 +86,7 @@ describe('NoticeOfIntentParcelController', () => {
     const parcels = await controller.fetchByFileId('mockFileID');
 
     expect(parcels).toBeDefined();
-    expect(
-      mockNOIParcelService.fetchByApplicationSubmissionUuid,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockNOIParcelService.fetchByApplicationSubmissionUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when creating parcels', async () => {
@@ -109,9 +105,9 @@ describe('NoticeOfIntentParcelController', () => {
       },
     );
 
-    expect(mockNOIService.getByUuid).toBeCalledTimes(1);
-    expect(mockNOIParcelService.create).toBeCalledTimes(1);
-    expect(mockNOIOwnerService.attachToParcel).toBeCalledTimes(0);
+    expect(mockNOIService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNOIParcelService.create).toHaveBeenCalledTimes(1);
+    expect(mockNOIOwnerService.attachToParcel).toHaveBeenCalledTimes(0);
     expect(parcel).toBeDefined();
   });
 
@@ -138,10 +134,10 @@ describe('NoticeOfIntentParcelController', () => {
       ),
     ).rejects.toMatchObject(mockError);
 
-    expect(mockNOIService.getByUuid).toBeCalledTimes(1);
-    expect(mockNOIParcelService.create).toBeCalledTimes(1);
-    expect(mockNOIParcelService.deleteMany).toBeCalledTimes(1);
-    expect(mockNOIOwnerService.attachToParcel).toBeCalledTimes(1);
+    expect(mockNOIService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNOIParcelService.create).toHaveBeenCalledTimes(1);
+    expect(mockNOIParcelService.deleteMany).toHaveBeenCalledTimes(1);
+    expect(mockNOIOwnerService.attachToParcel).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when updating parcel', async () => {
@@ -160,9 +156,7 @@ describe('NoticeOfIntentParcelController', () => {
       },
     ];
 
-    mockNOIParcelService.update.mockResolvedValue([
-      {},
-    ] as NoticeOfIntentParcel[]);
+    mockNOIParcelService.update.mockResolvedValue([{}] as NoticeOfIntentParcel[]);
 
     const parcel = await controller.update(mockUpdateDto, {
       user: {
@@ -170,7 +164,7 @@ describe('NoticeOfIntentParcelController', () => {
       },
     });
 
-    expect(mockNOIParcelService.update).toBeCalledTimes(1);
+    expect(mockNOIParcelService.update).toHaveBeenCalledTimes(1);
     expect(parcel).toBeDefined();
   });
 
@@ -184,7 +178,7 @@ describe('NoticeOfIntentParcelController', () => {
       },
     });
 
-    expect(mockNOIParcelService.deleteMany).toBeCalledTimes(1);
+    expect(mockNOIParcelService.deleteMany).toHaveBeenCalledTimes(1);
     expect(result).toBeDefined();
   });
 });

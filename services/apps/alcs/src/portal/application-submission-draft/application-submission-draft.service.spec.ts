@@ -74,9 +74,7 @@ describe('ApplicationSubmissionDraftService', () => {
       ],
     }).compile();
 
-    service = module.get<ApplicationSubmissionDraftService>(
-      ApplicationSubmissionDraftService,
-    );
+    service = module.get<ApplicationSubmissionDraftService>(ApplicationSubmissionDraftService);
   });
 
   it('should be defined', () => {
@@ -107,17 +105,13 @@ describe('ApplicationSubmissionDraftService', () => {
     mockParcelService.update.mockResolvedValue([]);
     const mockTransaction = jest.fn();
     mockSubmissionRepo.manager.transaction = mockTransaction;
-    mockApplicationSubmissionStatusService.getCopiedStatuses.mockResolvedValue(
-      [],
-    );
+    mockApplicationSubmissionStatusService.getCopiedStatuses.mockResolvedValue([]);
 
     const draft = await service.getOrCreateDraft('fileNumber');
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(3);
     expect(mockSubmissionRepo.save).toHaveBeenCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.getCopiedStatuses,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.getCopiedStatuses).toHaveBeenCalledTimes(1);
     expect(draft).toBeDefined();
   });
 
@@ -131,26 +125,18 @@ describe('ApplicationSubmissionDraftService', () => {
 
     mockSubmissionRepo.remove.mockResolvedValue(new ApplicationSubmission());
     mockParcelService.deleteMany.mockResolvedValueOnce([]);
-    mockApplicationSubmissionStatusService.removeStatuses.mockResolvedValue(
-      {} as any,
-    );
-    mockTransfereeService.fetchBySubmissionUuid.mockResolvedValue([
-      new CovenantTransferee(),
-    ]);
+    mockApplicationSubmissionStatusService.removeStatuses.mockResolvedValue({} as any);
+    mockTransfereeService.fetchBySubmissionUuid.mockResolvedValue([new CovenantTransferee()]);
     mockTransfereeService.delete.mockResolvedValue({} as any);
 
     await service.deleteDraft('fileNumber');
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.remove).toHaveBeenCalledTimes(1);
-    expect(mockTransfereeService.fetchBySubmissionUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockTransfereeService.fetchBySubmissionUuid).toHaveBeenCalledTimes(1);
     expect(mockTransfereeService.delete).toHaveBeenCalledTimes(1);
     expect(mockParcelService.deleteMany).toHaveBeenCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.removeStatuses,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.removeStatuses).toHaveBeenCalledTimes(1);
   });
 
   it('should load two submissions and save one as not draft when publishing', async () => {
@@ -166,12 +152,8 @@ describe('ApplicationSubmissionDraftService', () => {
     mockSubmissionRepo.save.mockResolvedValue(new ApplicationSubmission());
     mockParcelService.deleteMany.mockResolvedValueOnce([]);
     mockGenerateSubmissionDocumentService.generateUpdate.mockResolvedValue();
-    mockApplicationSubmissionStatusService.removeStatuses.mockResolvedValue(
-      {} as any,
-    );
-    mockTransfereeService.fetchBySubmissionUuid.mockResolvedValue([
-      new CovenantTransferee(),
-    ]);
+    mockApplicationSubmissionStatusService.removeStatuses.mockResolvedValue({} as any);
+    mockTransfereeService.fetchBySubmissionUuid.mockResolvedValue([new CovenantTransferee()]);
     mockTransfereeService.delete.mockResolvedValue({} as any);
     mockApplicationService.updateApplicant.mockResolvedValue();
 
@@ -179,20 +161,14 @@ describe('ApplicationSubmissionDraftService', () => {
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(2);
     expect(mockSubmissionRepo.delete).toHaveBeenCalledTimes(1);
-    expect(mockSubmissionRepo.delete).toBeCalledWith({ uuid: 'fake' });
-    expect(mockTransfereeService.fetchBySubmissionUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockSubmissionRepo.delete).toHaveBeenCalledWith({ uuid: 'fake' });
+    expect(mockTransfereeService.fetchBySubmissionUuid).toHaveBeenCalledTimes(1);
     expect(mockTransfereeService.delete).toHaveBeenCalledTimes(1);
     expect(mockParcelService.deleteMany).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.save).toHaveBeenCalledTimes(1);
-    expect(
-      mockApplicationSubmissionStatusService.removeStatuses,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.removeStatuses).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.save.mock.calls[0][0].isDraft).toEqual(false);
-    expect(
-      mockGenerateSubmissionDocumentService.generateUpdate,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockGenerateSubmissionDocumentService.generateUpdate).toHaveBeenCalledTimes(1);
     expect(mockApplicationService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 

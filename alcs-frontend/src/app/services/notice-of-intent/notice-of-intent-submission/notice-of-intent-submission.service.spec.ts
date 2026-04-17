@@ -99,6 +99,6 @@ describe('NoticeOfIntentSubmissionService', () => {
     const result = await service.fetchSubmission('1');
 
     expect(result).toEqual(mockSubmittedNOI);
-    expect(mockHttpClient.get).toBeCalledTimes(1);
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
   });
 });
